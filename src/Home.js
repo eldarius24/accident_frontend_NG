@@ -14,7 +14,6 @@ import {
 } from '@mui/material';
 import axios from 'axios';
 import RefreshIcon from '@mui/icons-material/Refresh';
-import GetAppIcon from '@mui/icons-material/GetApp';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import EditIcon from '@mui/icons-material/Edit';
 import InputAdornment from '@mui/material/InputAdornment';
@@ -42,8 +41,7 @@ function Home() {
                 }
             })
             .catch(error => {
-                // Gérer les erreurs
-                console.error(error);
+                console.log(error);
             });
     };
 
@@ -55,7 +53,7 @@ function Home() {
             })
             .catch(error => {
                 // Gérer les erreurs
-                console.error(error);
+                console.log(error);
             });
     };
 
@@ -70,7 +68,7 @@ function Home() {
             })
             .catch((error) => {
                 // Gérer les erreurs
-                console.error(error);
+                console.log(error);
                 setLoading(false);
             });
     };
@@ -86,23 +84,14 @@ function Home() {
         setSearchTerm(event.target.value);
     };
 
-    // Déclare une variable filteredData pour stocker les éléments filtrés.
     const filteredData = data.filter((item) => {
-        // Convertit le terme de recherche en minuscules pour la recherche insensible à la casse.
         const searchTermLower = searchTerm.toLowerCase();
-
-        // Vérifie si au moins une valeur dans l'objet item satisfait la condition.
         return (
-            // Utilise Object.values pour obtenir un tableau des valeurs de l'objet item.
             Object.values(item).some((value) =>
-                // Vérifie si la valeur est une chaîne de caractères (string)
-                // et si cette chaîne de caractères (en minuscules) contient le terme de recherche.
                 typeof value === "string" && value.toLowerCase().includes(searchTermLower)
             )
         );
     });
-    console.log("Données filtrées :");
-    console.log(filteredData);
 
     if (loading) {
         return <LinearProgress color="success" />;
@@ -128,26 +117,6 @@ function Home() {
                     </Button>
                 </Grid>
                 <Grid item xs={6} style={{ marginRight: '20px' }}>
-                    <Button
-                        sx={{ color: 'black', padding: '14px 60px', backgroundColor: '#84a784', '&:hover': { backgroundColor: 'green' }, boxShadow: 3, textTransform: 'none' }}
-                        variant="contained"
-                        color="primary"
-                        onClick={handleExportData}
-                        startIcon={<GetAppIcon />}
-                    >
-                        Accident
-                    </Button>
-                </Grid>
-                <Grid item xs={6} style={{ marginRight: '20px' }}>
-                    <Button
-                        sx={{ color: 'black', padding: '14px 60px', backgroundColor: '#84a784', '&:hover': { backgroundColor: 'green' }, boxShadow: 3, textTransform: 'none' }}
-                        variant="contained"
-                        color="primary"
-                        onClick={handleExportDataAss}
-                        startIcon={<GetAppIcon />}
-                    >
-                        Assurance
-                    </Button>
                 </Grid>
                 <Grid item xs={6} style={{ marginRight: '20px' }}>
                     <TextField
