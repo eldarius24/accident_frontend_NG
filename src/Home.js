@@ -18,16 +18,18 @@ import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import EditIcon from '@mui/icons-material/Edit';
 import InputAdornment from '@mui/material/InputAdornment';
 import SearchIcon from '@mui/icons-material/Search';
-import { CellTowerSharp } from '@mui/icons-material';
+import config from './config.json';
+
 
 function Home() {
+    const apiUrl = config.apiUrl;
     const [data, setData] = useState([]); // Stocker les données de l'API
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
     const [firstLoad, setFirstLoad] = useState(true);
 
     const handleDelete = (accidentIdToDelete) => {
-        axios.delete(`http://82.66.33.1:3100/api/accidents/${accidentIdToDelete}`)
+        axios.delete("http://"+apiUrl+":3100/api/accidents/"+accidentIdToDelete)
             .then(response => {
                 // Vérifier le code de statut de la réponse
                 if (response.status === 204 || response.status === 200) {
@@ -47,9 +49,9 @@ function Home() {
     };
 
     const handleEdit = (accidentIdToModify) => {
-        axios.get(`http://82.66.33.1:3100/api/accidents/${accidentIdToModify}`)
+        axios.get("http://"+apiUrl+":3100/api/accidents/"+accidentIdToModify)
             .then(response => {
-                const accidents = response;
+                const accidents = response.data;
                 console.log(accidents);
             })
             .catch(error => {
@@ -58,7 +60,7 @@ function Home() {
     };
 
     function refreshListAccidents() {
-        axios.get('http://82.66.33.1:3100/api/accidents')
+        axios.get("http://"+apiUrl+":3100/api/accidents")
             .then(response => {
                 // Traiter la réponse de l'API
                 const accidents = response.data;
@@ -146,7 +148,7 @@ function Home() {
                     </TableHead>
                     <TableBody>
                         {filteredData.map((item) => (
-                            <TableRow key={item._ListAccItem1}>
+                            <TableRow key={item._id}>
                                 <TableCell>{item.recordNumberGroupoe}</TableCell>
                                 <TableCell>{item.recordNumberEntreprise}</TableCell>
                                 <TableCell>{item.DateHeureAccident}</TableCell>
@@ -157,7 +159,7 @@ function Home() {
                                 <TableCell>{item.typeAccident}</TableCell>
                                 <TableCell>
                                     <Button variant="contained" color="primary" onClick={() => handleEdit(item._id)}>
-                                        <EditIcon />{/*ajoutez le texte du bouttion edite ici*/}
+                                        <EditIcon />
                                     </Button>
                                     <Button
                                         variant="contained"
@@ -165,7 +167,6 @@ function Home() {
                                         onClick={() => handleDelete(item._id)}
                                         startIcon={<DeleteForeverIcon />}
                                     >
-                                        {/*ajoutez le texte du bouttion delete ici*/}
                                     </Button>
                                 </TableCell>
                             </TableRow>

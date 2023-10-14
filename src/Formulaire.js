@@ -8,11 +8,13 @@ import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import FormulaireEntreprise from './formulaireEntreprise';
 import { useNavigate } from 'react-router-dom';
+import config from './config.json';
 const forms = [
     { id: 0, component: FormulaireEntreprise }
 ];
 
 export default function Formulaire(data) {
+    const apiUrl = config.apiUrl;
     const [activeStep, setActiveStep] = useState(0);
     const navigate = useNavigate();
     const {
@@ -49,7 +51,7 @@ export default function Formulaire(data) {
         console.log(data);
 
         // Enregistrer les données dans la base de données
-        axios.put('http://localhost:3100/api/accidents', data)
+        axios.put("http://"+apiUrl+":3100/api/accidents", data)
             .then(response => {
                 console.log('Réponse du serveur:', response.data);
             })

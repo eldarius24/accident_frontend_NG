@@ -38,7 +38,7 @@ export default function FormulaireEntreprise({ setValue }) {
               });
               setValue('entrepriseName', value);
             }
-          }} > </AutoCompleteP>
+          }} defaultValue=""> </AutoCompleteP>
 
           {listSecteur ? (
             <AutoCompleteP id='Listesecteur' option={listSecteur} label='Secteur' onChange={(value) => 
