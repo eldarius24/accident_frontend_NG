@@ -2,7 +2,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Link, Routes } from 'react-router-dom';
 import Home from './Home';
-import Contact from './Contact';
+import Formulaire from './Formulaire';
 
 const App = () => (
     <Router>
@@ -11,14 +11,14 @@ const App = () => (
             <nav>
                 <ul>
                     <li><Link to="/">Accueil</Link></li>
-                    <li><Link to="/contact">Contact</Link></li>
+                    <li><Link to="/formulaire">Formulaire</Link></li>
                 </ul>
             </nav>
 
             {/* Routes */}
             <Routes>
                 <Route path="/" element={<Home />} />
-                <Route path="/contact" element={<Contact />} />
+                <Route path="/formulaire" element={<Formulaire />} />
             </Routes>
         </div>
     </Router>

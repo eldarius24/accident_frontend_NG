@@ -1,0 +1,91 @@
+{
+    "entreprise": [
+        {
+            "label": "Le Cortil",
+            "secteur": [
+                "APL",
+                "Parcours",
+                "Espace vert",
+                "Batiment",
+                "Collectivité",
+                "Buanderie",
+                "Rebelote",
+                "Boucherie",
+                "St Croix",
+                "Don-Bosco",
+                "Launch",
+                "Chauffeur",
+                "Administration"
+            ]
+        },
+        {
+            "label": "Cortibat",
+            "secteur": [
+                "Batiment",
+                "Administration"
+            ]
+        },
+        {
+            "label": "NNS",
+            "secteur": [
+                "Collectivité",
+                "Buanderie",
+                "Chauffeur",
+                "Administration"
+            ]
+        },
+        {
+            "label": "Cort'idess",
+            "secteur": [
+                "Espace vert",
+                "Administration"
+            ]
+        },
+        {
+            "label": "HMNS",
+            "secteur": [
+                "Collectivité",
+                "Chauffeur",
+                "Administration"
+            ]
+        },
+        {
+            "label": "AVS",
+            "secteur": [
+                "Espace vert",
+                "Administration"
+            ]
+        },
+        {
+            "label": "Cortibel",
+            "secteur": [
+                "Administration"
+            ]
+        },
+        {
+            "label": "Corti'treize",
+            "secteur": [
+                "Horeca",
+                "Administration"
+            ]
+        },
+        {
+            "label": "Bip Expresse",
+            "secteur": [
+                "Collectivité",
+                "Administration"
+            ]
+        },
+        {
+            "label": "NCJ",
+            "secteur": [
+                "Administration"
+            ]
+        }
+    ],
+    "typeTravailleur": [
+        "Employer",
+        "Article 60",
+        "Stagiaire"
+    ]
+}

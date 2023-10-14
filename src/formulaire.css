@@ -1,0 +1,176 @@
+
+
+body {
+  background-color: #bed1be;
+
+}
+
+
+
+.container {
+  display: flex;
+  justify-content: center ;
+  align-items: center ;
+}
+
+.image-container1 {
+  flex-shrink: 0;
+  flex: 1;
+  height: 450px;
+  /*background-image: url('./accident_travail1.png');*/
+  background-position: center ;
+  background-repeat: no-repeat;
+  background-size: contain;
+  
+}
+
+.image-container2 {
+  flex-shrink: 0;
+  flex: 1;
+  height: 450px;
+  /*background-image: url('./accident_travail2.png');*/
+  background-position: center ;
+  background-repeat: no-repeat;
+  background-size: contain;
+  
+}
+
+
+.image-cortigroupe {
+  flex: 1;
+  height: 200px;
+  /*background-image: url('./logo-cortigroupe-1.png');*/
+  background-position: center center ;
+  background-repeat: no-repeat;
+  background-size: contain;
+
+  
+}
+
+.image-container1:hover {
+  animation: vibration 0.1s infinite;
+}
+
+@keyframes vibration {
+  0% {
+    transform: rotate(25deg);
+  }
+  50% {
+    transform: rotate(-25deg);
+  }
+  100% {
+    transform: rotate(25deg);
+  }
+}
+
+
+#text-container {
+  font-size: 5em;
+  text-align: center;
+  color: #000000;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.letter {
+  display: inline-block;
+  opacity: 0;
+  animation: letter-appear 1s forwards;
+  animation-delay: calc(0.1s * var(--index));
+}
+
+@keyframes letter-appear {
+  to {
+    opacity: 1;
+  }
+}
+
+
+h1 {
+  font-size: 5em;
+  text-align: center;
+  color: #000000;
+ 
+}
+
+/* Utiliser des médias queries pour ajuster la taille de police de <h1> */
+@media (max-width: 1200px) {
+  h1 {
+    font-size: 4em; /* Taille de police réduite pour les écrans plus étroits */
+  }
+}
+
+@media (max-width: 1000px) {
+  h1 {
+    font-size: 3em; /* Taille de police encore plus petite pour les écrans très étroits */
+  }
+}
+
+@media (max-width: 800px) {
+  h1 {
+    font-size: 2em; /* Taille de police encore plus petite pour les écrans très étroits */
+  }
+}
+
+
+h2 {
+  color: #257525;
+  font-size: 2.5em;
+  text-align: center;
+  text-decoration: underline;
+
+  
+}
+
+
+h3 {
+  color: #000000;
+  font-size: 1.5em;
+  text-align: center;
+
+}
+
+h3a {
+  color: #000000;
+  font-size: 1.5em;
+  text-align: center;
+
+}
+
+
+h4 {
+  color: #257525;
+  font-size: 1.5em;
+  text-align: center;
+}
+
+h5 {
+  color: #000000;
+  font-size: 0.75em;
+  text-align: center;
+}
+
+h6 {
+  color: #000000;
+  font-size: 1.5em;
+  text-align: center;
+}
+
+/* Utiliser des médias queries pour ajuster la taille de police de <h1> */
+@media (max-width: 1200px) {
+  h6 {
+    font-size: 1.5em; /* Taille de police réduite pour les écrans plus étroits */
+  }
+}
+
+@media (max-width: 1000px) {
+  h6 {
+    font-size: 1em; /* Taille de police encore plus petite pour les écrans très étroits */
+  }
+}
+
+@media (max-width: 650px) {
+  h6 {
+    font-size: 0.70em; /* Taille de police encore plus petite pour les écrans très étroits */
+  }
+}

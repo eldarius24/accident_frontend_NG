@@ -18,6 +18,7 @@ import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import EditIcon from '@mui/icons-material/Edit';
 import InputAdornment from '@mui/material/InputAdornment';
 import SearchIcon from '@mui/icons-material/Search';
+import { CellTowerSharp } from '@mui/icons-material';
 
 function Home() {
     const [data, setData] = useState([]); // Stocker les données de l'API
@@ -52,7 +53,6 @@ function Home() {
                 console.log(accidents);
             })
             .catch(error => {
-                // Gérer les erreurs
                 console.log(error);
             });
     };
@@ -67,7 +67,6 @@ function Home() {
                 setLoading(false);
             })
             .catch((error) => {
-                // Gérer les erreurs
                 console.log(error);
                 setLoading(false);
             });
@@ -97,11 +96,6 @@ function Home() {
         return <LinearProgress color="success" />;
     }
 
-    const handleRefresh = () => {
-        // Actualise les données
-        refreshListAccidents();
-    };
-
     return (
         <div>
             <div style={{ display: 'flex', justifyContent: 'center', margin: '20px 0rem' }}>
@@ -110,7 +104,7 @@ function Home() {
                         sx={{ color: 'black', padding: '14px 60px', backgroundColor: '#84a784', '&:hover': { backgroundColor: 'green' }, boxShadow: 3, textTransform: 'none' }}
                         variant="contained"
                         color="secondary"
-                        onClick={handleRefresh} // Associez la fonction à l'événement onClick
+                        onClick={refreshListAccidents}
                         startIcon={<RefreshIcon />}
                     >
                         Actualiser
@@ -138,7 +132,7 @@ function Home() {
             <TableContainer>
                 <Table>
                     <TableHead>
-                        <TableRow>
+                        <TableRow key={"CellTowerSharp"}>
                             <TableCell>N° Groupe</TableCell>
                             <TableCell>N° Entreprise</TableCell>
                             <TableCell>Date accident</TableCell>
