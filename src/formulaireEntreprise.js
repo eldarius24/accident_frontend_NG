@@ -1,5 +1,4 @@
 import AutoCompleteP from './composants/autoCompleteP';
-import AutoCompleteDisableP from './composants/autoCompleteDisableP';
 import listEntreprises from './listEntreprise.json';
 import React, { useState, useEffect } from 'react';
 
@@ -16,7 +15,15 @@ const frameStyle = {
 };
 
 export default function FormulaireEntreprise({ setValue, accidentData }) {
-  const [listSecteur, setListSecteur] = useState([]);
+
+  const [entreprise, setEntreprise] = useState(accidentData ? accidentData.entrepriseName : listEntreprises.entreprise[0].label);
+  setValue('entrepriseName', entreprise);
+
+  const [listSecteur, setListSecteur] = useState(listEntreprises.entreprise[0].secteur);
+
+  const [secteur, setSecteur] = useState(accidentData ? accidentData.secteur : listSecteur[0]);
+  setValue('secteur', secteur)
+
 
 
   return (
@@ -29,25 +36,28 @@ export default function FormulaireEntreprise({ setValue, accidentData }) {
         </div>
         <div className="autocomplete">
 
-          {/* ***********************************        Autocomplete entreprise **********************************/}
+          {/* *********************************** Autocomplete entreprise **********************************/}
           <AutoCompleteP id='entreprise' option={listEntreprises.entreprise.map((entreprise) => entreprise.label)} label='Entreprise' onChange={(entrepriseSelect) => {
             if (entrepriseSelect) {
               listEntreprises.entreprise.map((entreprise) => {
                 if (entreprise.label === entrepriseSelect) {
                   setListSecteur(entreprise.secteur);
+                  setSecteur(entreprise.secteur[0]);
+                  setEntreprise(entreprise.label);
                 }
               });
+              console.log("entrepriseSelect");
+              console.log(entrepriseSelect);
               setValue('entrepriseName', entrepriseSelect);
             }
-          }} defaultValue={accidentData ? accidentData.entrepriseName : null}> </AutoCompleteP>
+          }} defaultValue={entreprise}> </AutoCompleteP>
 
-          {listSecteur.length >0 || accidentData ? (
-            <AutoCompleteP id='secteur' option={listSecteur} label='Secteur' onChange={(value) => 
-              setValue('secteur', value)} defaultValue={accidentData ? accidentData.secteur : null} > </AutoCompleteP>
-          ) : (
-            <AutoCompleteDisableP id='secteur' label='Secteur' > </AutoCompleteDisableP>
-          )}
+          {/* *********************************** Autocomplete secteur **********************************/}
+          <AutoCompleteP id='secteur' option={listSecteur} label='Secteur' onChange={(value) => 
+          {setSecteur(value);
+              setValue('secteur', value)}} defaultValue={secteur} > </AutoCompleteP>
 
+          {/* *********************************** Autocomplete typeTravailleur **********************************/}
           <AutoCompleteP id='typeTravailleur' option={listEntreprises.typeTravailleur} label="Type de travailleur" onChange={(value) => setValue('typeTravailleur', value)} defaultValue={accidentData ? accidentData.typeTravailleur : null}> </AutoCompleteP>
         </div>
       </div >

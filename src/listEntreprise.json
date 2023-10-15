@@ -3,6 +3,7 @@
         {
             "label": "Le Cortil",
             "secteur": [
+                "...",
                 "APL",
                 "Parcours",
                 "Espace vert",
@@ -21,6 +22,7 @@
         {
             "label": "Cortibat",
             "secteur": [
+                "...",
                 "Batiment",
                 "Administration"
             ]
@@ -28,6 +30,7 @@
         {
             "label": "NNS",
             "secteur": [
+                "...",
                 "Collectivité",
                 "Buanderie",
                 "Chauffeur",
@@ -37,6 +40,7 @@
         {
             "label": "Cort'idess",
             "secteur": [
+                "...",
                 "Espace vert",
                 "Administration"
             ]
@@ -44,6 +48,7 @@
         {
             "label": "HMNS",
             "secteur": [
+                "...",
                 "Collectivité",
                 "Chauffeur",
                 "Administration"
@@ -52,6 +57,7 @@
         {
             "label": "AVS",
             "secteur": [
+                "...",
                 "Espace vert",
                 "Administration"
             ]
@@ -59,12 +65,14 @@
         {
             "label": "Cortibel",
             "secteur": [
+                "...",
                 "Administration"
             ]
         },
         {
             "label": "Corti'treize",
             "secteur": [
+                "...",
                 "Horeca",
                 "Administration"
             ]
@@ -72,6 +80,7 @@
         {
             "label": "Bip Expresse",
             "secteur": [
+                "...",
                 "Collectivité",
                 "Administration"
             ]
@@ -79,6 +88,7 @@
         {
             "label": "NCJ",
             "secteur": [
+                "...",
                 "Administration"
             ]
         }
