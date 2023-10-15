@@ -7,13 +7,14 @@ import axios from 'axios';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import FormulaireEntreprise from './formulaireEntreprise';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation} from 'react-router-dom';
 import config from './config.json';
 const forms = [
     { id: 0, component: FormulaireEntreprise }
 ];
 
-export default function Formulaire(data) {
+export default function Formulaire() {
+    const accidentData  = useLocation().state;
     const apiUrl = config.apiUrl;
     const [activeStep, setActiveStep] = useState(0);
     const navigate = useNavigate();
@@ -50,15 +51,27 @@ export default function Formulaire(data) {
         console.log("Données à enregistrer :");
         console.log(data);
 
-        // Enregistrer les données dans la base de données
-        axios.put("http://"+apiUrl+":3100/api/accidents", data)
+        if (accidentData) {
+            //mode EDITION
+            axios.put("http://"+apiUrl+":3100/api/accidents/"+accidentData._id, data)
             .then(response => {
                 console.log('Réponse du serveur:', response.data);
             })
             .catch(error => {
                 console.error('Erreur de requête:', error.message);
             });
-
+        } else {
+            //mode CREATION
+            axios.put("http://"+apiUrl+":3100/api/accidents", data)
+            .then(response => {
+                console.log('Réponse du serveur:', response.data);
+            })
+            .catch(error => {
+                console.error('Erreur de requête:', error.message);
+            });
+        }
+        
+        
         // Naviguer vers la page d'accueil
         navigate('/');
     };
@@ -68,7 +81,7 @@ export default function Formulaire(data) {
      * ************************************************************************/
     return (
         <form className="background-image" onSubmit={handleSubmit(onSubmit)}>
-            {React.createElement(forms[activeStep].component, {setValue})}
+            {React.createElement(forms[activeStep].component, {setValue, accidentData})}
             {/* Boutons de navigation pour passer à l'étape suivante ou revenir à l'étape précédente */}
             <div style={{ display: 'flex', justifyContent: 'center' }}>
                 {activeStep > 0 && (

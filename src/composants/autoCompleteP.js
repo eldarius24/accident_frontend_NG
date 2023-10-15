@@ -7,10 +7,11 @@ import { Autocomplete, TextField } from '@mui/material';
  * @param {*} id identifiant unique
  * @param {*} option liste des suggestions
  * @param {*} label nom de l'autocomplete
- * @param {*} onChange fonction qui se déclenche à chaque changement de valeur
+ * @param {} onChange fonction qui se déclenche à chaque changement de valeur
+ * @param {string} defaultValue /!\ obligatoire /!\ valeur par défaut à afficher dans l'autocomplete
  * @returns 
  */
-export default function AutoCompleteP({ id, option, label, onChange }) {
+export default function AutoCompleteP({ id, option, label, onChange, defaultValue }) {
 
     const handleChange = (_, value) => {
         console.log('change');
@@ -26,6 +27,7 @@ export default function AutoCompleteP({ id, option, label, onChange }) {
                 disablePortal
                 id={id}
                 options={option}
+                value={defaultValue}
                 sx={{ backgroundColor: '#84a784', width: '50%', boxShadow: 3, margin: '0 auto 1rem' }}
                 onChange={handleChange}
                 renderOption={(props, option) => <li {...props}>{option}</li>}

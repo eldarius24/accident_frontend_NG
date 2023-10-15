@@ -19,9 +19,12 @@ import EditIcon from '@mui/icons-material/Edit';
 import InputAdornment from '@mui/material/InputAdornment';
 import SearchIcon from '@mui/icons-material/Search';
 import config from './config.json';
+import { useNavigate } from 'react-router-dom';
+
 
 
 function Home() {
+    const navigate = useNavigate();
     const apiUrl = config.apiUrl;
     const [data, setData] = useState([]); // Stocker les données de l'API
     const [loading, setLoading] = useState(true);
@@ -48,16 +51,27 @@ function Home() {
             });
     };
 
-    const handleEdit = (accidentIdToModify) => {
+    /*const handleEdit = (accidentIdToModify) => {
+
         axios.get("http://"+apiUrl+":3100/api/accidents/"+accidentIdToModify)
             .then(response => {
                 const accidents = response.data;
                 console.log(accidents);
+                redirect("/formulaire")
             })
             .catch(error => {
                 console.log(error);
             });
-    };
+    };*/
+    const handleEdit = async (accidentIdToModify) => {
+        try {
+          const response = await axios.get(`http://${apiUrl}:3100/api/accidents/${accidentIdToModify}`);
+          const accidents = response.data;
+          navigate("/formulaire", { state: accidents });
+        } catch (error) {
+          console.log(error);
+        }
+      };
 
     function refreshListAccidents() {
         axios.get("http://"+apiUrl+":3100/api/accidents")
