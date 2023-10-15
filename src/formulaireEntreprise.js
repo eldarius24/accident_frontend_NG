@@ -29,6 +29,7 @@ export default function FormulaireEntreprise({ setValue, accidentData }) {
         </div>
         <div className="autocomplete">
 
+          {/* ***********************************        Autocomplete entreprise **********************************/}
           <AutoCompleteP id='entreprise' option={listEntreprises.entreprise.map((entreprise) => entreprise.label)} label='Entreprise' onChange={(entrepriseSelect) => {
             if (entrepriseSelect) {
               listEntreprises.entreprise.map((entreprise) => {
