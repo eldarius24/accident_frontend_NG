@@ -1,42 +1,38 @@
 /* IMPORT REACT */
-import { useState} from 'react';
+import { useState } from 'react';
 /* IMPORT MUI */
-import { TextField, FormGroup} from '@mui/material';
-import datePickerP from '../composants/datePickerP';
+import { FormGroup, TextField } from '@mui/material';
+import DatePickerP from '../composants/datePickerP';
 /* IMPORT PERSO */
 import listAssureur from '../liste/listAssureur.json';
 import AutoCompleteP from '../composants/autoCompleteP';
-import controlLabelP from '../composants/controlLabelP';
+import ControlLabelP from '../composants/controlLabelP';
+import TextFieldP from '../composants/textFieldP';
 
 
 
-export default function FormulaireAssureur({setValue, accidentData}) {
+export default function FormulaireAssureur({ setValue, accidentData }) {
 
-  const [ NumeroPoliceAssurance, setNumeroPoliceAssurance] = useState(accidentData ? accidentData.NumeroPoliceAssurance : "");
+  const [NumeroPoliceAssurance, setNumeroPoliceAssurance] = useState(accidentData ? accidentData.NumeroPoliceAssurance : "");
   setValue('NumeroPoliceAssurance', NumeroPoliceAssurance)
 
-  const [ assureurStatus, setAssureurStatus] = useState(accidentData ? accidentData.AssureurStatus : listAssureur.AssureurStatus[0]);
+  const [referenceduSinistre, setreferenceduSinistre] = useState(accidentData ? accidentData.referenceduSinistre : "");
+  setValue('referenceduSinistre', referenceduSinistre)
+
+  const [DateEnvoieDeclarationAccident, setDateEnvoieDeclarationAccident] = useState(accidentData ? accidentData.DateEnvoieDeclarationAccident : "");
+  setValue('DateEnvoieDeclarationAccident', DateEnvoieDeclarationAccident)
+
+  const [commentaireetSuivit, setcommentaireetSuivit] = useState(accidentData ? accidentData.commentaireetSuivit : "");
+  setValue('commentaireetSuivit', commentaireetSuivit)
+
+  const [Getionnaiesinistre, setGetionnaiesinistre] = useState(accidentData ? accidentData.Getionnaiesinistre : "");
+  setValue('Getionnaiesinistre', Getionnaiesinistre)
+
+  const [assureurStatus, setAssureurStatus] = useState(accidentData ? accidentData.AssureurStatus : listAssureur.AssureurStatus[0]);
   setValue('AssureurStatus', assureurStatus)
 
-
-
-  //nouveau textfield personnalisé
-  function textFieldPerso(id, label) {
-    return (
-      <div style={{ display: 'flex', justifyContent: 'center', margin: '0 auto 1rem' }}>
-        <TextField
-          id={id}
-          onChange={(e) => setValue({ id }, e.target.value)}
-          label={label}
-          sx={{ backgroundColor: '#84a784', width: '50%', boxShadow: 3 }}
-          multiline
-        />
-      </div>
-    );
-  };  
-
- 
-
+  const [boolAsCloture, setboolAsCloture] = useState(accidentData ? accidentData.boolAsCloture : false);
+  setValue('boolAsCloture', boolAsCloture)
 
   return (
     <div>
@@ -44,21 +40,55 @@ export default function FormulaireAssureur({setValue, accidentData}) {
         <h2>Infos Assureur</h2>
         <h3>Rentrez les informations relative a l'assurance.</h3>
 
-        {textFieldPerso("NumeroPoliceAssurance", "Numéro de police d'assurance")}
-        {textFieldPerso("referenceduSinistre", "Réference du sinistre")}
-        { datePickerP("DateEnvoieDeclarationAccident", "Date d'envoie de la déclaration d'accident") }
-        {textFieldPerso("commentaireetSuivit", "Commentaires et suivi (courier, mail)")}
-        {textFieldPerso("Getionnaiesinistre", "Getionnaire du sinistre au sein de l'ASBL")}
+        {/* *********************************** Numéro de police d'assurance **********************************/}
+        <TextFieldP id="NumeroPoliceAssurance" label="Numéro de police d'assurance" onChange={(NumeroPoliceAssuranceSelect) => {
+          setNumeroPoliceAssurance(NumeroPoliceAssuranceSelect);
+          setValue('NumeroPoliceAssurance', NumeroPoliceAssuranceSelect);
+        }}></TextFieldP>
+
+        {/* *********************************** Réference du sinistre **********************************/}
+        <TextFieldP id="referenceduSinistre" label="Réference du sinistre" onChange={(referenceduSinistreText) => {
+          setreferenceduSinistre(referenceduSinistreText);
+          setValue('referenceduSinistre', referenceduSinistreText);
+        }}></TextFieldP>
+
+        {/* *********************************** Date d'envoie de la déclaration d'accident **********************************/}
+        <DatePickerP id="DateEnvoieDeclarationAccident" label="Date d'envoie de la déclaration d'accident" onChange={(DateEnvoieDeclarationAccidentChoose) => {
+          console.log(DateEnvoieDeclarationAccidentChoose);
+          setDateEnvoieDeclarationAccident(DateEnvoieDeclarationAccidentChoose);
+          setValue('DateEnvoieDeclarationAccident', DateEnvoieDeclarationAccidentChoose);
+        }}></DatePickerP>
+
+        {/* *********************************** Date d'envoie de la déclaration d'accident **********************************/}
+        <TextFieldP id="DateEnvoieDeclarationAccident" label="Date d'envoie de la déclaration d'accident" onChange={(DateEnvoieDeclarationAccidentText) => {
+          setValue('DateEnvoieDeclarationAccident', DateEnvoieDeclarationAccidentText);
+        }}></TextFieldP>
+
+        {/* *********************************** Commentaires et suivi (courier, mail) **********************************/}
+        <TextFieldP id="commentaireetSuivit" label="Commentaires et suivi (courier, mail)" onChange={(commentaireetSuivitText) => {
+          setcommentaireetSuivit(commentaireetSuivitText);
+          setValue('commentaireetSuivit', commentaireetSuivitText);
+        }
+        }></TextFieldP>
+
+        {/* *********************************** Gestionnaire du sinistre au sein de l'ASBL **********************************/}
+        <TextFieldP id="Getionnaiesinistre" label="Gestionnaire du sinistre au sein de l'ASBL" onChange={(GetionnaiesinistreText) => {
+          setGetionnaiesinistre(GetionnaiesinistreText);
+          setValue('Getionnaiesinistre', GetionnaiesinistreText);
+        }}></TextFieldP>
 
         {/* *********************************** Autocomplete AssureurStatus **********************************/}
         <AutoCompleteP id='AssureurStatus' option={listAssureur.AssureurStatus} label='Status' onChange={(AssureurStatusSelect) => {
-              setAssureurStatus(AssureurStatusSelect);
-              setValue('AssureurStatus', AssureurStatusSelect);
-          }} defaultValue={assureurStatus}> </AutoCompleteP>
+          setAssureurStatus(AssureurStatusSelect);
+          setValue('AssureurStatus', AssureurStatusSelect);
+        }} defaultValue={assureurStatus}> </AutoCompleteP>
 
         <div>
           <FormGroup>
-            {controlLabelP("boolAssColture", "Cloturé")}
+            <ControlLabelP id="boolAsCloture" label="Cloturé" onChange={(boolAsClotureCoche) => {
+              setboolAsCloture(boolAsClotureCoche);
+              setValue('boolAsCloture', boolAsClotureCoche);
+            }}></ControlLabelP>
           </FormGroup>
         </div>
       </div>
