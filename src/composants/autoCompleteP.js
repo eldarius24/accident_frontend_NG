@@ -7,15 +7,14 @@ import { Autocomplete, TextField } from '@mui/material';
  * @param {*} id identifiant unique
  * @param {*} option liste des suggestions
  * @param {*} label nom de l'autocomplete
- * @param {} onChange fonction qui se déclenche à chaque changement de valeur
+ * @param {} onChange fonction qui se déclenche à chaque changement de valeur (setValue({ id }, value))
  * @param {string} defaultValue /!\ obligatoire /!\ valeur par défaut à afficher dans l'autocomplete
  * @returns 
  */
 export default function AutoCompleteP({ id, option, label, onChange, defaultValue }) {
 
     const handleChange = (_, value) => {
-        console.log('change');
-        console.log(value);
+        console.log('Autocomplet change to "',value,'"');
         if (onChange) {
             onChange(value);
         }

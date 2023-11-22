@@ -1,0 +1,16 @@
+{
+
+    "AssureurStatus": [
+        "...",
+        "En attente",
+        "Reconnu comme AT ",
+        "Non reconnu comme AT"
+    ],
+
+    
+    "NomAssureur": [
+        "Belfius",
+        "Axa"
+    ]
+
+}

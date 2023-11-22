@@ -1,28 +1,21 @@
-import AutoCompleteP from './composants/autoCompleteP';
-import listEntreprises from './listEntreprise.json';
+import AutoCompleteP from '../composants/autoCompleteP';
+import listEntreprises from '../liste/listEntreprise.json';
 import React, { useState, useEffect } from 'react';
 
-// Styles
-const frameStyle = {
-  display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center',
-  border: '2px solid #84a784',
-  borderRadius: '10px',
-  cursor: 'pointer',
-  margin: '20px 1rem',
-  backgroundColor: '#d2e2d2',
-};
-
 export default function FormulaireEntreprise({ setValue, accidentData }) {
+
+  console.log("accidentData",accidentData);
 
   const [entreprise, setEntreprise] = useState(accidentData ? accidentData.entrepriseName : listEntreprises.entreprise[0].label);
   setValue('entrepriseName', entreprise);
 
-  const [listSecteur, setListSecteur] = useState(listEntreprises.entreprise[0].secteur);
+  const [listSecteur, setListSecteur] = useState(accidentData ? listEntreprises.entreprise.find((entreprise) => entreprise.label === accidentData.entrepriseName).secteur : listEntreprises.entreprise[0].secteur);
 
   const [secteur, setSecteur] = useState(accidentData ? accidentData.secteur : listSecteur[0]);
   setValue('secteur', secteur)
+
+  const [typeTravailleur, setTypeTravailleur] = useState(accidentData ? accidentData.typeTravailleur : null);
+
 
 
 
@@ -53,12 +46,26 @@ export default function FormulaireEntreprise({ setValue, accidentData }) {
           }} defaultValue={entreprise}> </AutoCompleteP>
 
           {/* *********************************** Autocomplete secteur **********************************/}
-          <AutoCompleteP id='secteur' option={listSecteur} label='Secteur' onChange={(value) => 
-          {setSecteur(value);
-              setValue('secteur', value)}} defaultValue={secteur} > </AutoCompleteP>
+          <AutoCompleteP id='secteur'
+            option={listSecteur}
+            label='Secteur'
+            onChange={(value) => {
+              setSecteur(value);
+              setValue('secteur', value)
+            }}
+            defaultValue={secteur} >
+          </AutoCompleteP>
 
           {/* *********************************** Autocomplete typeTravailleur **********************************/}
-          <AutoCompleteP id='typeTravailleur' option={listEntreprises.typeTravailleur} label="Type de travailleur" onChange={(value) => setValue('typeTravailleur', value)} defaultValue={accidentData ? accidentData.typeTravailleur : null}> </AutoCompleteP>
+          <AutoCompleteP id='typeTravailleur'
+            option={listEntreprises.typeTravailleur}
+            label="Type de travailleur"
+            onChange={(value) => {
+              setTypeTravailleur(value);
+              setValue('typeTravailleur', value)
+            }}
+            defaultValue={typeTravailleur}>
+          </AutoCompleteP>
         </div>
       </div >
     </div >

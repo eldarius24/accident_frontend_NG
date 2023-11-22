@@ -1,16 +1,23 @@
-import './formulaire.css';
-import * as React from 'react';
-import Button from '@mui/material/Button';
-import { useForm } from "react-hook-form";
-import { useCallback, useState, useEffect } from 'react';
 import axios from 'axios';
+/* IMPORT REACT */
+import * as React from 'react';
+import { useCallback, useState, useEffect } from 'react';
+import { useForm } from "react-hook-form";
+import { useNavigate, useLocation} from 'react-router-dom';
+/* IMPORT MUI */
+import Button from '@mui/material/Button';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+/* IMPORT PERSO */
+import './formulaire.css';
 import FormulaireEntreprise from './formulaireEntreprise';
-import { useNavigate, useLocation} from 'react-router-dom';
-import config from './config.json';
+import FormulaireAssureur from './formulaireAssureur';
+import config from '../config.json';
+
+
 const forms = [
-    { id: 0, component: FormulaireEntreprise }
+    { id: 0, component: FormulaireEntreprise },
+    { id: 1, component: FormulaireAssureur }
 ];
 
 export default function Formulaire() {
@@ -48,14 +55,14 @@ export default function Formulaire() {
 
     const onSubmit = (data) => {
 
-        console.log("Données à enregistrer :");
-        console.log(data);
+        console.log("onSubmit -> Données à enregistrer :",data);
 
         if (accidentData) {
+
             //mode EDITION
             axios.put("http://"+apiUrl+":3100/api/accidents/"+accidentData._id, data)
             .then(response => {
-                console.log('Réponse du serveur:', response.data);
+                console.log('Réponse du serveur en modification :', response.data);
             })
             .catch(error => {
                 console.error('Erreur de requête:', error.message);
@@ -64,7 +71,7 @@ export default function Formulaire() {
             //mode CREATION
             axios.put("http://"+apiUrl+":3100/api/accidents", data)
             .then(response => {
-                console.log('Réponse du serveur:', response.data);
+                console.log('Réponse du serveur en création :', response.data);
             })
             .catch(error => {
                 console.error('Erreur de requête:', error.message);
@@ -86,7 +93,7 @@ export default function Formulaire() {
             <div style={{ display: 'flex', justifyContent: 'center' }}>
                 {activeStep > 0 && (
                     <Button
-                        onClick={setActiveStep((prevStep) => prevStep - 1)}
+                        onClick={() => setActiveStep((prevStep) => prevStep - 1)}
                         sx={{
                             backgroundColor: '#84a784',
                             '&:hover': { backgroundColor: 'green' },
@@ -100,7 +107,7 @@ export default function Formulaire() {
                 )}
                 {activeStep < forms.length - 1 && (
                     <Button
-                        onClick={setActiveStep((prevStep) => prevStep + 1)}
+                        onClick={() => setActiveStep((prevStep) => prevStep + 1)}
                         sx={{
                             backgroundColor: '#84a784',
                             '&:hover': { backgroundColor: 'green' },
@@ -111,7 +118,6 @@ export default function Formulaire() {
                         Suivant
                     </Button>
                 )}
-
             </div>
             
             {/************* Telechargement de fichier **************************/}
@@ -170,7 +176,7 @@ export default function Formulaire() {
             <h3>Pour savoir s'il s'agit d'un accident grave, rendez-vous sur le site Fedris via le lien ci-dessous</h3>
 
             <div style={{ display: 'flex', justifyContent: 'center' }}>
-                <Button target="_blank" rel="noopener noreferrer" type="submit" sx={{ color: 'black', backgroundColor: '#84a784', '&:hover': { backgroundColor: 'green' }, padding: '10px 20px', width: '50%', marginTop: '1cm', height: '300%', fontSize: '300%' }} href="https://www.socialsecurity.be/app001/drselearning/aoat/aoat000/jsp/index_fatdecision.jsp">Fedris</Button>
+                <Button target="_blank" rel="noopener noreferrer" sx={{ color: 'black', backgroundColor: '#84a784', '&:hover': { backgroundColor: 'green' }, padding: '10px 20px', width: '50%', marginTop: '1cm', height: '300%', fontSize: '300%' }} href="https://www.socialsecurity.be/app001/drselearning/aoat/aoat000/jsp/index_fatdecision.jsp">Fedris</Button>
             </div>
 
             <h4>Vous n'êtes pas obligé de remplir toutes les données pour les enregistrer.</h4>

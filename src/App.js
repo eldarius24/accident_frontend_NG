@@ -2,7 +2,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Link, Routes } from 'react-router-dom';
 import Home from './Home';
-import Formulaire from './Formulaire';
+import Formulaire from './pageFormulaire/Formulaire';
 
 const App = () => (
     <Router>
