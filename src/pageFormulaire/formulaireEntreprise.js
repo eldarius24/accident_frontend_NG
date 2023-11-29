@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 
 export default function FormulaireEntreprise({ setValue, accidentData }) {
 
-  console.log("accidentData",accidentData);
+  console.log("accidentData", accidentData);
 
   const [entreprise, setEntreprise] = useState(accidentData ? accidentData.entrepriseName : listEntreprises.entreprise[0].label);
   setValue('entrepriseName', entreprise);

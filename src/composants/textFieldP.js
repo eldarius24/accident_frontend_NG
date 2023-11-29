@@ -7,12 +7,12 @@ import { TextField } from '@mui/material';
  * @param {*} onChange fonction qui se déclenche à chaque changement de valeur (setValue({ id }, value))
  * @returns
  */
-export default function textFieldP({ id, label, onChange }) {
+export default function textFieldP({ id, label, onChange, defaultValue }) {
 
-    const handleChange = (_, value) => {
-        console.log('Autocomplet change to "', value, '"');
+    const handleChange = (event) => {
+        console.log('textfield change to "', event.target.value, '"');
         if (onChange) {
-            onChange(value);
+            onChange(event.target.value);
         }
     }
 
@@ -22,6 +22,7 @@ export default function textFieldP({ id, label, onChange }) {
                 id={id}
                 onChange={handleChange}
                 label={label}
+                defaultValue={defaultValue ? defaultValue : ""}
                 sx={{ backgroundColor: '#84a784', width: '50%', boxShadow: 3 }}
                 multiline
             />

@@ -11,7 +11,7 @@ import TextFieldP from '../composants/textFieldP';
 
 
 
-export default function FormulaireAssureur({ setValue, accidentData }) {
+export default function FormulaireAssureur({ setValue, accidentData}) {
 
   const [NumeroPoliceAssurance, setNumeroPoliceAssurance] = useState(accidentData ? accidentData.NumeroPoliceAssurance : "");
   setValue('NumeroPoliceAssurance', NumeroPoliceAssurance)
@@ -44,38 +44,32 @@ export default function FormulaireAssureur({ setValue, accidentData }) {
         <TextFieldP id="NumeroPoliceAssurance" label="Numéro de police d'assurance" onChange={(NumeroPoliceAssuranceSelect) => {
           setNumeroPoliceAssurance(NumeroPoliceAssuranceSelect);
           setValue('NumeroPoliceAssurance', NumeroPoliceAssuranceSelect);
-        }}></TextFieldP>
+        }} defaultValue={NumeroPoliceAssurance}></TextFieldP>
 
         {/* *********************************** Réference du sinistre **********************************/}
         <TextFieldP id="referenceduSinistre" label="Réference du sinistre" onChange={(referenceduSinistreText) => {
           setreferenceduSinistre(referenceduSinistreText);
           setValue('referenceduSinistre', referenceduSinistreText);
-        }}></TextFieldP>
+        }} defaultValue={referenceduSinistre}></TextFieldP>
 
         {/* *********************************** Date d'envoie de la déclaration d'accident **********************************/}
         <DatePickerP id="DateEnvoieDeclarationAccident" label="Date d'envoie de la déclaration d'accident" onChange={(DateEnvoieDeclarationAccidentChoose) => {
           console.log(DateEnvoieDeclarationAccidentChoose);
           setDateEnvoieDeclarationAccident(DateEnvoieDeclarationAccidentChoose);
           setValue('DateEnvoieDeclarationAccident', DateEnvoieDeclarationAccidentChoose);
-        }}></DatePickerP>
-
-        {/* *********************************** Date d'envoie de la déclaration d'accident **********************************/}
-        <TextFieldP id="DateEnvoieDeclarationAccident" label="Date d'envoie de la déclaration d'accident" onChange={(DateEnvoieDeclarationAccidentText) => {
-          setValue('DateEnvoieDeclarationAccident', DateEnvoieDeclarationAccidentText);
-        }}></TextFieldP>
+        }} defaultValue={DateEnvoieDeclarationAccident}></DatePickerP>
 
         {/* *********************************** Commentaires et suivi (courier, mail) **********************************/}
         <TextFieldP id="commentaireetSuivit" label="Commentaires et suivi (courier, mail)" onChange={(commentaireetSuivitText) => {
           setcommentaireetSuivit(commentaireetSuivitText);
           setValue('commentaireetSuivit', commentaireetSuivitText);
-        }
-        }></TextFieldP>
+        }} defaultValue={commentaireetSuivit}></TextFieldP>
 
         {/* *********************************** Gestionnaire du sinistre au sein de l'ASBL **********************************/}
         <TextFieldP id="Getionnaiesinistre" label="Gestionnaire du sinistre au sein de l'ASBL" onChange={(GetionnaiesinistreText) => {
           setGetionnaiesinistre(GetionnaiesinistreText);
           setValue('Getionnaiesinistre', GetionnaiesinistreText);
-        }}></TextFieldP>
+        }} defaultValue={Getionnaiesinistre}></TextFieldP>
 
         {/* *********************************** Autocomplete AssureurStatus **********************************/}
         <AutoCompleteP id='AssureurStatus' option={listAssureur.AssureurStatus} label='Status' onChange={(AssureurStatusSelect) => {
@@ -83,12 +77,13 @@ export default function FormulaireAssureur({ setValue, accidentData }) {
           setValue('AssureurStatus', AssureurStatusSelect);
         }} defaultValue={assureurStatus}> </AutoCompleteP>
 
+        {/* *********************************** Checkbox Cloturé **********************************/}
         <div>
           <FormGroup>
             <ControlLabelP id="boolAsCloture" label="Cloturé" onChange={(boolAsClotureCoche) => {
               setboolAsCloture(boolAsClotureCoche);
               setValue('boolAsCloture', boolAsClotureCoche);
-            }}></ControlLabelP>
+            }} defaultValue={boolAsCloture}></ControlLabelP>
           </FormGroup>
         </div>
       </div>
