@@ -53,6 +53,9 @@ export default function Formulaire() {
         window.scrollTo(0, 0);
     }, [activeStep])
 
+    /**************************************************************************
+     * METHODE ON SUBMIT
+     * ************************************************************************/
     const onSubmit = (data) => {
 
         console.log("onSubmit -> Données à enregistrer :",data);
@@ -139,7 +142,7 @@ export default function Formulaire() {
                 onDrop={handleDrop}
                 onDragOver={(e) => {
                     e.preventDefault();
-                    e.stopPropagation();
+                    e.stopPropagation(); 
                 }}
             >
 
