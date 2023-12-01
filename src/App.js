@@ -3,17 +3,13 @@ import React from 'react';
 import { BrowserRouter as Router, Route, Link, Routes } from 'react-router-dom';
 import Home from './Home';
 import Formulaire from './pageFormulaire/Formulaire';
+import ResponsiveAppBar from './toolbar';
 
 const App = () => (
     <Router>
         <div>
-            {/* Navigation */}
-            <nav>
-                <ul>
-                    <li><Link to="/">Accueil</Link></li>
-                    <li><Link to="/formulaire">Formulaire</Link></li>
-                </ul>
-            </nav>
+            {/* Utilisation de ResponsiveAppBar avec la navigation */}
+            <ResponsiveAppBar  />
 
             {/* Routes */}
             <Routes>
