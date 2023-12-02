@@ -91,7 +91,7 @@ export default function Formulaire() {
      * ************************************************************************/
     return (
         <form className="background-image" onSubmit={handleSubmit(onSubmit)}>
-            {React.createElement(forms[activeStep].component, {setValue, accidentData})}
+            {React.createElement(forms[activeStep].component, {setValue, accidentData, watch})}
             {/* Boutons de navigation pour passer à l'étape suivante ou revenir à l'étape précédente */}
             <div style={{ display: 'flex', justifyContent: 'center' }}>
                 {activeStep > 0 && (
