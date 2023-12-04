@@ -7,6 +7,8 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import AddIcon from '@mui/icons-material/Add';
 
 function ResponsiveAppBar({ navigation }) {
   const location = useLocation();
@@ -59,10 +61,10 @@ function ResponsiveAppBar({ navigation }) {
             component={Link}
             to={isFormulairePage ? '/' : '/formulaire'}
             variant="contained"
-            sx={{ backgroundColor: '#84a784', '&:hover': { backgroundColor: 'green' }
-           }}
+            sx={{ backgroundColor: '#84a784', '&:hover': { backgroundColor: 'green' } }}
+            startIcon={isFormulairePage ? <ArrowBackIcon /> : <AddIcon />}
           >
-            {isFormulairePage ? 'Accueil' : 'Formulaire'}
+            {isFormulairePage ? 'Retour' : 'Ajouter'}
           </Button>
 
 
