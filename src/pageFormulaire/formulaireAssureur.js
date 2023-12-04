@@ -1,9 +1,9 @@
 /* IMPORT REACT */
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 /* IMPORT MUI */
-import { FormGroup, TextField } from '@mui/material';
-import DatePickerP from '../composants/datePickerP';
+import { FormGroup} from '@mui/material';
 /* IMPORT PERSO */
+import DatePickerP from '../composants/datePickerP';
 import listAssureur from '../liste/listAssureur.json';
 import AutoCompleteP from '../composants/autoCompleteP';
 import ControlLabelP from '../composants/controlLabelP';
@@ -11,29 +11,37 @@ import TextFieldP from '../composants/textFieldP';
 
 
 
-export default function FormulaireAssureur({ setValue, accidentData}) {
+export default function FormulaireAssureur({ setValue, accidentData, watch}) {
 
-  const [NumeroPoliceAssurance, setNumeroPoliceAssurance] = useState(accidentData ? accidentData.NumeroPoliceAssurance : "");
-  setValue('NumeroPoliceAssurance', NumeroPoliceAssurance)
+    /**
+   * Etape 1 : stocker les données dans des variables locales et les initialiser avec les données de l'accident si elles existent
+   * 
+   */
+  const [NumeroPoliceAssurance, setNumeroPoliceAssurance] = useState(watch('NumeroPoliceAssurance') ? watch('NumeroPoliceAssurance') : (accidentData && accidentData.NumeroPoliceAssurance ? accidentData.NumeroPoliceAssurance : ""));
+  const [referenceduSinistre, setreferenceduSinistre] = useState(watch('referenceduSinistre') ? watch('referenceduSinistre') : (accidentData && accidentData.referenceduSinistre ? accidentData.referenceduSinistre : ""));
+  const [DateEnvoieDeclarationAccident, setDateEnvoieDeclarationAccident] = useState(watch('DateEnvoieDeclarationAccident') ? watch('DateEnvoieDeclarationAccident') : (accidentData && accidentData.DateEnvoieDeclarationAccident ? accidentData.DateEnvoieDeclarationAccident : ""));
+  const [commentaireetSuivit, setcommentaireetSuivit] = useState(watch('commentaireetSuivit') ? watch('commentaireetSuivit') : (accidentData && accidentData.commentaireetSuivit ? accidentData.commentaireetSuivit : ""));
+  const [Getionnaiesinistre, setGetionnaiesinistre] = useState(watch('Getionnaiesinistre') ? watch('Getionnaiesinistre') : (accidentData && accidentData.Getionnaiesinistre ? accidentData.Getionnaiesinistre : ""));
+  const [assureurStatus, setAssureurStatus] = useState(watch('AssureurStatus') ? watch('AssureurStatus') : (accidentData && accidentData.AssureurStatus ? accidentData.AssureurStatus : listAssureur.AssureurStatus[0]));
+  const [boolAsCloture, setboolAsCloture] = useState(watch('boolAsCloture') ? watch('boolAsCloture') : (accidentData && accidentData.boolAsCloture ? accidentData.boolAsCloture : false));
 
-  const [referenceduSinistre, setreferenceduSinistre] = useState(accidentData ? accidentData.referenceduSinistre : "");
-  setValue('referenceduSinistre', referenceduSinistre)
+  /**
+   * Etape 2 : mettre à jour les données du formulaire à chaque modification d'un des champs
+   */
+  useEffect(() => () => {
+    setValue('NumeroPoliceAssurance', NumeroPoliceAssurance)
+    setValue('referenceduSinistre', referenceduSinistre)
+    setValue('DateEnvoieDeclarationAccident', DateEnvoieDeclarationAccident)
+    setValue('commentaireetSuivit', commentaireetSuivit)
+    setValue('Getionnaiesinistre', Getionnaiesinistre)
+    setValue('AssureurStatus', assureurStatus)
+    setValue('boolAsCloture', boolAsCloture)
+  }, [NumeroPoliceAssurance, referenceduSinistre, DateEnvoieDeclarationAccident, commentaireetSuivit, Getionnaiesinistre, assureurStatus, boolAsCloture, setValue]);
+  
 
-  const [DateEnvoieDeclarationAccident, setDateEnvoieDeclarationAccident] = useState(accidentData ? accidentData.DateEnvoieDeclarationAccident : "");
-  setValue('DateEnvoieDeclarationAccident', DateEnvoieDeclarationAccident)
-
-  const [commentaireetSuivit, setcommentaireetSuivit] = useState(accidentData ? accidentData.commentaireetSuivit : "");
-  setValue('commentaireetSuivit', commentaireetSuivit)
-
-  const [Getionnaiesinistre, setGetionnaiesinistre] = useState(accidentData ? accidentData.Getionnaiesinistre : "");
-  setValue('Getionnaiesinistre', Getionnaiesinistre)
-
-  const [assureurStatus, setAssureurStatus] = useState(accidentData ? accidentData.AssureurStatus : listAssureur.AssureurStatus[0]);
-  setValue('AssureurStatus', assureurStatus)
-
-  const [boolAsCloture, setboolAsCloture] = useState(accidentData ? accidentData.boolAsCloture : false);
-  setValue('boolAsCloture', boolAsCloture)
-
+  /**
+   * Etape 3 : retourner le formulaire (IHMs)
+   */
   return (
     <div>
       <div className="infoAssureur">

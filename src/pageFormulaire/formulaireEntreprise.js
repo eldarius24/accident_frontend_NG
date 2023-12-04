@@ -4,18 +4,25 @@ import React, { useState, useEffect } from 'react';
 
 export default function FormulaireEntreprise({ setValue, accidentData, watch }) {
   
+  /**
+   * Etape 1 : stocker les données dans des variables locales et les initialiser avec les données de l'accident si elles existent
+   * 
+   */
   const [entreprise, setEntreprise] = useState(watch('entrepriseName') ? watch('entrepriseName') : (accidentData && accidentData.entrepriseName ? accidentData.entrepriseName : listEntreprises.entreprise[0].label));
   const [listSecteur, setListSecteur] = useState([]);
   const [secteur, setSecteur] = useState(watch('secteur') ? watch('secteur') : (accidentData && accidentData.secteur ? accidentData.secteur : listEntreprises.entreprise[0].secteur[0]));
   const [typeTravailleur, setTypeTravailleur] = useState(watch('typeTravailleur') ? watch('typeTravailleur') : (accidentData && accidentData.typeTravailleur ? accidentData.typeTravailleur : null));
 
-  //rentre dans cette fonction quand on change de page ou quand on modifie entreprise, secteur ou typeTravailleur
+  /**
+   * Etape 2 : mettre à jour les données du formulaire à chaque modification d'un des champs
+   */
   useEffect(() => () => {
     setValue('entrepriseName', entreprise);
     setValue('secteur', secteur);
     setValue('typeTravailleur', typeTravailleur);
   }, [entreprise, secteur, typeTravailleur, setValue]);
 
+  //fonction qui permet de mettre à jour les secteurs en fonction de l'entreprise choisie
   const handleEntrepriseSelect = (entrepriseSelect) => {
     const entrepriseData = listEntreprises.entreprise.find((e) => e.label === entrepriseSelect);
     if (entrepriseData) {
@@ -25,6 +32,9 @@ export default function FormulaireEntreprise({ setValue, accidentData, watch }) 
     }
   };
 
+  /**
+   * Etape 3 : retourner le formulaire (IHMs)
+   */
   return (
     <div>
       <div>
