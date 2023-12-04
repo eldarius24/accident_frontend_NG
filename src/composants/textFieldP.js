@@ -5,6 +5,7 @@ import { TextField } from '@mui/material';
  * @param {*} id identifiant unique
  * @param {*} label nom du TextField
  * @param {*} onChange fonction qui se déclenche à chaque changement de valeur (setValue({ id }, value))
+ * @param {*} defaultValue valeur par défaut
  * @returns
  */
 export default function textFieldP({ id, label, onChange, defaultValue }) {

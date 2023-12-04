@@ -1,7 +1,7 @@
 /* IMPORT REACT */
 import { useState, useEffect } from 'react';
 /* IMPORT MUI */
-import { FormGroup} from '@mui/material';
+import { FormGroup } from '@mui/material';
 /* IMPORT PERSO */
 import DatePickerP from '../composants/datePickerP';
 import listAssureur from '../liste/listAssureur.json';
@@ -11,12 +11,12 @@ import TextFieldP from '../composants/textFieldP';
 
 
 
-export default function FormulaireAssureur({ setValue, accidentData, watch}) {
+export default function FormulaireAssureur({ setValue, accidentData, watch }) {
 
-    /**
-   * Etape 1 : stocker les données dans des variables locales et les initialiser avec les données de l'accident si elles existent
-   * 
-   */
+  /**
+ * Etape 1 : stocker les données dans des variables locales et les initialiser avec les données de l'accident si elles existent
+ * 
+ */
   const [NumeroPoliceAssurance, setNumeroPoliceAssurance] = useState(watch('NumeroPoliceAssurance') ? watch('NumeroPoliceAssurance') : (accidentData && accidentData.NumeroPoliceAssurance ? accidentData.NumeroPoliceAssurance : ""));
   const [referenceduSinistre, setreferenceduSinistre] = useState(watch('referenceduSinistre') ? watch('referenceduSinistre') : (accidentData && accidentData.referenceduSinistre ? accidentData.referenceduSinistre : ""));
   const [DateEnvoieDeclarationAccident, setDateEnvoieDeclarationAccident] = useState(watch('DateEnvoieDeclarationAccident') ? watch('DateEnvoieDeclarationAccident') : (accidentData && accidentData.DateEnvoieDeclarationAccident ? accidentData.DateEnvoieDeclarationAccident : ""));
@@ -37,7 +37,7 @@ export default function FormulaireAssureur({ setValue, accidentData, watch}) {
     setValue('AssureurStatus', assureurStatus)
     setValue('boolAsCloture', boolAsCloture)
   }, [NumeroPoliceAssurance, referenceduSinistre, DateEnvoieDeclarationAccident, commentaireetSuivit, Getionnaiesinistre, assureurStatus, boolAsCloture, setValue]);
-  
+
 
   /**
    * Etape 3 : retourner le formulaire (IHMs)

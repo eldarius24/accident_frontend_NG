@@ -11,10 +11,17 @@ import { Autocomplete, TextField } from '@mui/material';
  * @param {string} defaultValue /!\ obligatoire /!\ valeur par défaut à afficher dans l'autocomplete
  * @returns 
  */
-export default function AutoCompleteP({ id, option, label, onChange, defaultValue }) {
+export default function AutoCompleteP({
+    id,
+    option,
+    label,
+    onChange,
+    defaultValue,
+    sx = { backgroundColor: '#84a784', width: '50%', boxShadow: 3, margin: '0 auto 1rem' }
+}) {
 
     const handleChange = (_, value) => {
-        console.log('Autocomplet change to "',value,'"');
+        console.log('Autocomplet change to "', value, '"');
         if (onChange) {
             onChange(value);
         }
@@ -27,10 +34,11 @@ export default function AutoCompleteP({ id, option, label, onChange, defaultValu
                 id={id}
                 options={option}
                 value={defaultValue}
-                sx={{ backgroundColor: '#84a784', width: '50%', boxShadow: 3, margin: '0 auto 1rem' }}
+                sx={sx}
                 onChange={handleChange}
                 renderOption={(props, option) => <li {...props}>{option}</li>}
                 renderInput={(params) => <TextField {...params} label={label} />}
+                fullWidth={true}
             />
         </div>
     );
