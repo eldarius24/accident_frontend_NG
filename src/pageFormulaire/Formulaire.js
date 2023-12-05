@@ -12,12 +12,14 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import './formulaire.css';
 import FormulaireEntreprise from './formulaireEntreprise';
 import FormulaireAssureur from './formulaireAssureur';
+import FormulaireAccident from './formulaireAccident';
 import config from '../config.json';
 
 
 const forms = [
     { id: 0, component: FormulaireEntreprise },
-    { id: 1, component: FormulaireAssureur }
+    { id: 1, component: FormulaireAssureur },
+    { id: 2, component: FormulaireAccident },
 ];
 
 export default function Formulaire() {
@@ -26,7 +28,6 @@ export default function Formulaire() {
     const [activeStep, setActiveStep] = useState(0);
     const navigate = useNavigate();
     const {
-        register,
         setValue,
         control,
         handleSubmit,
