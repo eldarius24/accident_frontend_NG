@@ -20,8 +20,8 @@ import InputAdornment from '@mui/material/InputAdornment';
 import SearchIcon from '@mui/icons-material/Search';
 import config from './config.json';
 import { useNavigate } from 'react-router-dom';
-
-
+import GetAppIcon from '@mui/icons-material/GetApp';
+import * as ExcelJS from 'exceljs';
 
 function Home() {
     const navigate = useNavigate();
@@ -32,7 +32,7 @@ function Home() {
     const [firstLoad, setFirstLoad] = useState(true);
 
     const handleDelete = (accidentIdToDelete) => {
-        axios.delete("http://"+apiUrl+":3100/api/accidents/"+accidentIdToDelete)
+        axios.delete("http://" + apiUrl + ":3100/api/accidents/" + accidentIdToDelete)
             .then(response => {
                 // Vérifier le code de statut de la réponse
                 if (response.status === 204 || response.status === 200) {
@@ -65,16 +65,16 @@ function Home() {
     };*/
     const handleEdit = async (accidentIdToModify) => {
         try {
-          const response = await axios.get(`http://${apiUrl}:3100/api/accidents/${accidentIdToModify}`);
-          const accidents = response.data;
-          navigate("/formulaire", { state: accidents });
+            const response = await axios.get(`http://${apiUrl}:3100/api/accidents/${accidentIdToModify}`);
+            const accidents = response.data;
+            navigate("/formulaire", { state: accidents });
         } catch (error) {
-          console.log(error);
+            console.log(error);
         }
-      };
+    };
 
     function refreshListAccidents() {
-        axios.get("http://"+apiUrl+":3100/api/accidents")
+        axios.get("http://" + apiUrl + ":3100/api/accidents")
             .then(response => {
                 // Traiter la réponse de l'API
                 const accidents = response.data;
@@ -112,6 +112,138 @@ function Home() {
         return <LinearProgress color="success" />;
     }
 
+    //=======================================================================================================
+    //===========================================Comportement======================================
+    //=======================================================================================================
+
+    /**
+     * Fonction pour exporter les données vers Excel
+     * @returns {void}
+     * @param {void}
+     */
+    const handleExportData = () => {
+        const workbook = new ExcelJS.Workbook();
+        const worksheet = workbook.addWorksheet('Accidents');
+
+        worksheet.addRow([
+
+            'Nom de l entreprise',
+            'Nom du secteur',
+            'Type de travailleur',
+            'Status assureur',
+            'Date d envoie de la déclaration a l assurance',
+            'Getionnaire du sinistre',
+            'Numéro de la police d assurance',
+            'Cloturer ou pas',
+            'Commentaire et suivit',
+            'référence du sinistre',
+
+        ]);
+
+        filteredData.forEach(item => {
+            worksheet.addRow([
+
+                item.entrepriseName,
+                item.secteur,
+                item.typetravailleur,
+                item.AssureurStatus,
+                item.DateEnvoieDeclarationAccident,
+                item.Getionnaiesinistre,
+                item.NumeroPoliceAssurance,
+                item.boolAsCloture,
+                item.commentaireetSuivit,
+                item.referenceduSinistre,
+            ]);
+        });
+
+        workbook.xlsx.writeBuffer().then(buffer => {
+            const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+
+            const fileName = 'accidents.xlsx';
+
+            if (window.navigator && window.navigator.msSaveOrOpenBlob) {
+                // Pour Internet Explorer
+                window.navigator.msSaveOrOpenBlob(blob, fileName);
+            } else {
+                // Pour les autres navigateurs
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = fileName;
+                link.click();
+                URL.revokeObjectURL(url); // Libérer l'URL
+            }
+        });
+    };
+
+
+    /**
+     * Fonction pour exporter les données filtrées
+     * @returns {void}
+     * @param {void}
+     */
+    const handleExportDataAss = () => {
+        const workbook = new ExcelJS.Workbook();
+        const worksheet = workbook.addWorksheet('Accidents');
+
+        // Ajouter l'en-tête
+        worksheet.addRow([
+
+            'Nom de l entreprise',
+            'Nom du secteur',
+            'Type de travailleur',
+            'Status assureur',
+            'Date d envoie de la déclaration a l assurance',
+            'Getionnaire du sinistre',
+            'Numéro de la police d assurance',
+            'Cloturer ou pas',
+            'Commentaire et suivit',
+            'référence du sinistre',
+
+        ]);
+
+        // Ajouter les données filtrées
+        filteredData.forEach(item => {
+            worksheet.addRow([
+                
+                item.entrepriseName,
+                item.secteur,
+                item.typetravailleur,
+                item.AssureurStatus,
+                item.DateEnvoieDeclarationAccident,
+                item.Getionnaiesinistre,
+                item.NumeroPoliceAssurance,
+                item.boolAsCloture,
+                item.commentaireetSuivit,
+                item.referenceduSinistre,
+
+            ]);
+        });
+
+
+
+        // Générer le fichier Excel et le télécharger
+        workbook.xlsx.writeBuffer().then(buffer => {
+            const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+
+            const fileName = 'accidents.xlsx';
+
+            if (window.navigator && window.navigator.msSaveOrOpenBlob) {
+                // Pour Internet Explorer
+                window.navigator.msSaveOrOpenBlob(blob, fileName);
+            } else {
+                // Pour les autres navigateurs
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = fileName;
+                link.click();
+                URL.revokeObjectURL(url); // Libérer l'URL
+            }
+        });
+    };
+
+
     return (
         <div>
             <div style={{ display: 'flex', justifyContent: 'center', margin: '20px 0rem' }}>
@@ -127,8 +259,6 @@ function Home() {
                     </Button>
                 </Grid>
                 <Grid item xs={6} style={{ marginRight: '20px' }}>
-                </Grid>
-                <Grid item xs={6} style={{ marginRight: '20px' }}>
                     <TextField
                         value={searchTerm}
                         onChange={handleSearch}
@@ -142,6 +272,28 @@ function Home() {
                             ),
                         }}
                     />
+                </Grid>
+                <Grid item xs={6} style={{ marginRight: '20px' }}>
+                    <Button
+                        sx={{ color: 'black', padding: '14px 60px', backgroundColor: '#84a784', '&:hover': { backgroundColor: 'green' }, boxShadow: 3, textTransform: 'none' }}
+                        variant="contained"
+                        color="primary"
+                        onClick={handleExportData}
+                        startIcon={<GetAppIcon />}
+                    >
+                        Accident
+                    </Button>
+                </Grid>
+                <Grid item xs={6} style={{ marginRight: '20px' }}>
+                    <Button
+                        sx={{ color: 'black', padding: '14px 60px', backgroundColor: '#84a784', '&:hover': { backgroundColor: 'green' }, boxShadow: 3, textTransform: 'none' }}
+                        variant="contained"
+                        color="primary"
+                        onClick={handleExportDataAss}
+                        startIcon={<GetAppIcon />}
+                    >
+                        Assurance
+                    </Button>
                 </Grid>
             </div>
 
