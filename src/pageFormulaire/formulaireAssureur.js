@@ -28,7 +28,7 @@ export default function FormulaireAssureur({ setValue, accidentData, watch }) {
   /**
    * Etape 2 : mettre à jour les données du formulaire à chaque modification d'un des champs
    */
-  useEffect(() => () => {
+  useEffect(() => {
     setValue('NumeroPoliceAssurance', NumeroPoliceAssurance)
     setValue('referenceduSinistre', referenceduSinistre)
     setValue('DateEnvoieDeclarationAccident', DateEnvoieDeclarationAccident)

@@ -52,7 +52,7 @@ export default function FormulaireAccident({ setValue, accidentData, watch }) {
   /**
    * Etape 2 : mettre à jour les données du formulaire à chaque modification d'un des champs
    */
-  useEffect(() => () => {
+  useEffect(() => {
     setValue('typeAccident', typeAccident)
     setValue('circonstanceAccident', circonstanceAccident)
     setValue('DateHeureAccident', DateHeureAccident)
