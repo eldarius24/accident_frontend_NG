@@ -44,10 +44,13 @@ export default function FormulaireAccident({ setValue, accidentData, watch }) {
   const [boolMaire, setBoolMaire] = useState(watch('boolMaire') ? watch('boolMaire') : (accidentData && accidentData.boolMaire ? accidentData.boolMaire : false));
   const [boolChute, setBoolChute] = useState(watch('boolChute') ? watch('boolChute') : (accidentData && accidentData.boolChute ? accidentData.boolChute : false));
   const [boolAutre, setBoolAutre] = useState(watch('boolAutre') ? watch('boolAutre') : (accidentData && accidentData.boolAutre ? accidentData.boolAutre : false));
+
+
   const [codeDeviation, setCodeDeviation] = useState(watch('codeDeviation') ? watch('codeDeviation') : (accidentData && accidentData.codeDeviation ? accidentData.codeDeviation : null));
   const [codeAgentMateriel, setCodeAgentMateriel] = useState(watch('codeAgentMateriel') ? watch('codeAgentMateriel') : (accidentData && accidentData.codeAgentMateriel ? accidentData.codeAgentMateriel : null));
   const [codeNatureLesion, setCodeNatureLesion] = useState(watch('codeNatureLesion') ? watch('codeNatureLesion') : (accidentData && accidentData.codeNatureLesion ? accidentData.codeNatureLesion : null));
   const [codeSiegeLesion, setCodeSiegeLesion] = useState(watch('codeSiegeLesion') ? watch('codeSiegeLesion') : (accidentData && accidentData.codeSiegeLesion ? accidentData.codeSiegeLesion : null));
+
 
   /**
    * Etape 2 : mettre à jour les données du formulaire à chaque modification d'un des champs
@@ -111,104 +114,101 @@ export default function FormulaireAccident({ setValue, accidentData, watch }) {
         }} defaultValue={DateJourIncapFin}></DatePickerP>
         {/*TextFieldP("indemnisationAccident", "Indemnisation")*/}
 
-        {/************* Lien vers les sites**************************
-        {
-          [
-            {
-              label: 'Code Déviation',
-              name: 'codeDeviation',
-              options: listAccident.CodeDeviation,
-              infoLink: 'https://www.fedris.be/sites/default/files/assets/FR/Statistiques/SEAT/deviation.pdf',
-              defaultValue: codeDeviation,
-              onchangeTest: (info, value) => {
-                setValue(info, value);
-                setCodeDeviation(value);
-              }
-            },
-            {
-              label: 'Code Agent matériel',
-              name: 'codeAgentMateriel',
-              options: listAccident.CodeAgentMateriel,
-              infoLink: 'https://www.fedris.be/sites/default/files/assets/FR/Statistiques/SEAT/agentmateriel4.pdf',
-              defaultValue: codeAgentMateriel,
-              onchangeTest: (info, value) => {
-                setValue(info, value);
-                setCodeAgentMateriel(value);
-              }
-            },
-            {
-              label: 'Code Nature de la lésion',
-              name: 'codeNatureLesion',
-              options: listAccident.CodeNatureLésion,
-              infoLink: 'https://www.fedris.be/sites/default/files/assets/FR/Statistiques/SEAT/natureblessure.pdf',
-              defaultValue: codeNatureLesion,
-              onchangeTest: (info, value) => {
-                setValue(info, value);
-                setCodeNatureLesion(value);
-              }
-            },
-            {
-              label: 'Code siège lésion',
-              name: 'codeSiegeLesion',
-              options: listAccident.CodeSiegeLésion,
-              infoLink: 'https://www.fedris.be/sites/default/files/assets/FR/Statistiques/SEAT/localisationblessure.pdf',
-              defaultValue: codeSiegeLesion,
-              onchangeTest: (info, value) => {
-                console.log("value", value);
-                console.log("info", info);
-                setValue(info, value);
-                setCodeSiegeLesion(value);
-              }
-            },
-          ].map((fieldInfo, index) => (
-            <div key={index} style={{ width: '50%', display: 'flex', justifyContent: 'center', margin: '0 auto 1rem' }}>
-              <Grid container spacing={0} alignItems="center">
-                <Grid item xs={11.99999}>
-                  {console.log("field info name",fieldInfo.name)}
-                  <div>
-                    <AutoCompleteP
-                      id={fieldInfo.name}
-                      option={fieldInfo.options}
-                      label={fieldInfo.label}
-                      onChange={fieldInfo.onchangeTest}
-                      defaultValue={fieldInfo.defaultValue}
-                      sx={{ backgroundColor: '#84a784', boxShadow: 3 }}
-                    />
-                  </div>
-                </Grid>
-                <Grid item xs={0.00001}>
-                  <InfoIcon onClick={() => window.open(fieldInfo.infoLink, '_blank')}>
-                    <a
-                      href={fieldInfo.infoLink}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      style={{
-                        margin: 0,
-                        color: 'black',
-                        padding: '10px 20px',
-                        width: '100%',
-                        height: '100%',
-                        fontSize: '100%',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        backgroundColor: '#84a784',
-                        '&:hover': { backgroundColor: 'green' },
-                      }}
-                    >
-                      Infos sur les codes {fieldInfo.label}
-                    </a>
-                  </InfoIcon>
-                </Grid>
-              </Grid>
-            </div>
-          ))
-        }*/}
-        <AutoCompleteP id='codeDeviation' option={listAccident.CodeDeviation} label='Code Déviation' onChange={setCodeDeviation} defaultValue={codeDeviation} />
-        <AutoCompleteP id='codeAgentMateriel' option={listAccident.CodeAgentMateriel} label='Code Agent matériel' onChange={setCodeAgentMateriel} defaultValue={codeAgentMateriel} />
-        <AutoCompleteP id='codeNatureLesion' option={listAccident.CodeNatureLésion} label='Code Nature de la lésion' onChange={setCodeNatureLesion} defaultValue={codeNatureLesion} />
-        <AutoCompleteP id='codeSiegeLesion' option={listAccident.CodeSiegeLésion} label='Code siège lésion' onChange={setCodeSiegeLesion} defaultValue={codeSiegeLesion} />
 
+
+        {/************** Lien vers les sites et autocomplete des codes***************************/}
+
+        <Grid container direction="row" alignItems="center">
+          <Grid item xs={11.99999} >
+            <AutoCompleteP id='codeDeviation' option={listAccident.CodeDeviation} label='Code Déviation' onChange={setCodeDeviation} defaultValue={codeDeviation} />
+          </Grid>
+          <Grid item xs={0.00001} style={{ margin: '-25%' }}>
+            <a href="https://www.fedris.be/sites/default/files/assets/FR/Statistiques/SEAT/deviation.pdf" target="_blank" rel="noopener noreferrer"
+              style={{
+                margin: 0,
+                color: 'black',
+                padding: '10px 20px',
+                width: '100%',
+                height: '100%',
+                fontSize: '100%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                '&:hover': { backgroundColor: 'green' },
+              }}>
+              <InfoIcon />
+            </a>
+          </Grid>
+        </Grid>
+
+        <Grid container direction="row" alignItems="center">
+          <Grid item xs={11.99999} >
+            <AutoCompleteP id='codeAgentMateriel' option={listAccident.CodeAgentMateriel} label='Code Agent matériel' onChange={setCodeAgentMateriel} defaultValue={codeAgentMateriel} />
+          </Grid>
+          <Grid item xs={0.00001} style={{ margin: '-25%' }}>
+            <a href="https://www.fedris.be/sites/default/files/assets/FR/Statistiques/SEAT/agentmateriel4.pdf" target="_blank" rel="noopener noreferrer"
+              style={{
+                margin: 0,
+                color: 'black',
+                padding: '10px 20px',
+                width: '100%',
+                height: '100%',
+                fontSize: '100%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                '&:hover': { backgroundColor: 'green' },
+              }}>
+              <InfoIcon />
+            </a>
+          </Grid>
+        </Grid>
+
+        <Grid container direction="row" alignItems="center">
+          <Grid item xs={11.99999} >
+            <AutoCompleteP id='codeNatureLesion' option={listAccident.CodeNatureLésion} label='Code Nature de la lésion' onChange={setCodeNatureLesion} defaultValue={codeNatureLesion} />
+          </Grid>
+          <Grid item xs={0.00001} style={{ margin: '-25%' }}>
+            <a href="https://www.fedris.be/sites/default/files/assets/FR/Statistiques/SEAT/natureblessure.pdf" target="_blank" rel="noopener noreferrer"
+              style={{
+                margin: 0,
+                color: 'black',
+                padding: '10px 20px',
+                width: '100%',
+                height: '100%',
+                fontSize: '100%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                '&:hover': { backgroundColor: 'green' },
+              }}>
+              <InfoIcon />
+            </a>
+          </Grid>
+        </Grid>
+
+        <Grid container direction="row" alignItems="center">
+          <Grid item xs={11.99999} >
+            <AutoCompleteP id='codeSiegeLesion' option={listAccident.CodeSiegeLésion} label='Code siège lésion' onChange={setCodeSiegeLesion} defaultValue={codeSiegeLesion} />
+          </Grid>
+          <Grid item xs={0.00001} style={{ margin: '-25%' }} >
+            <a href="https://www.fedris.be/sites/default/files/assets/FR/Statistiques/SEAT/localisationblessure.pdf" target="_blank" rel="noopener noreferrer"
+              style={{
+                margin: 0,
+                color: 'black',
+                padding: '10px 20px',
+                width: '100%',
+                height: '100%',
+                fontSize: '100%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                '&:hover': { backgroundColor: 'green' },
+              }}>
+              <InfoIcon />
+            </a>
+          </Grid>
+        </Grid>
 
 
 
