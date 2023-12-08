@@ -177,7 +177,7 @@ function Home() {
 
                 item.entrepriseName,
                 item.secteur,
-                item.typetravailleur,
+                item.typeTravailleur,
                 item.AssureurStatus,
                 item.DateEnvoieDeclarationAccident,
                 item.Getionnaiesinistre,
@@ -253,7 +253,6 @@ function Home() {
 
         // Ajouter l'en-tête
         worksheet.addRow([
-
             'Nom de l entreprise',
             'Nom du secteur',
             'Type de travailleur',
@@ -302,10 +301,10 @@ function Home() {
         // Ajouter les données filtrées
         filteredData.forEach(item => {
             worksheet.addRow([
-
+                
                 item.entrepriseName,
                 item.secteur,
-                item.typetravailleur,
+                item.typeTravailleur,
                 item.AssureurStatus,
                 item.DateEnvoieDeclarationAccident,
                 item.Getionnaiesinistre,

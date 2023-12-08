@@ -20,9 +20,6 @@ export default function FormulaireEntreprise({ setValue, accidentData, watch }) 
     setValue('entrepriseName', entreprise);
     setValue('secteur', secteur);
     setValue('typeTravailleur', typeTravailleur);
-    console.log("FormulaireEntreprise -> setValue('entrepriseName', entreprise);", entreprise);
-    console.log("FormulaireEntreprise -> setValue('secteur', secteur);", secteur);
-    console.log("FormulaireEntreprise -> setValue('typeTravailleur', typeTravailleur);", typeTravailleur);
   }, [entreprise, secteur, typeTravailleur, setValue]);
 
   //fonction qui permet de mettre à jour les secteurs en fonction de l'entreprise choisie

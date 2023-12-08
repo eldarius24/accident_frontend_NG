@@ -11,7 +11,6 @@ import { TextField } from '@mui/material';
 export default function textFieldP({ id, label, onChange, defaultValue }) {
 
     const handleChange = (event) => {
-        console.log('textfield change to "', event.target.value, '"');
         if (onChange) {
             onChange(event.target.value);
         }

@@ -13,6 +13,7 @@ import './formulaire.css';
 import FormulaireEntreprise from './formulaireEntreprise';
 import FormulaireAssureur from './formulaireAssureur';
 import FormulaireAccident from './formulaireAccident';
+import FormulaireSalarie from './formulaireSalarie';
 import config from '../config.json';
 
 
@@ -20,6 +21,7 @@ const forms = [
     { id: 0, component: FormulaireEntreprise },
     { id: 1, component: FormulaireAssureur },
     { id: 2, component: FormulaireAccident },
+    { id: 3, component: FormulaireSalarie },
 ];
 
 export default function Formulaire() {
@@ -60,6 +62,7 @@ export default function Formulaire() {
     const onSubmit = (data) => {
 
         console.log("onSubmit -> Données à enregistrer :",data);
+        console.log("onSubmit -> Données à editer accidentData :",accidentData);
 
         if (accidentData) {
 

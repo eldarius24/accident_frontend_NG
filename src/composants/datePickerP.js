@@ -8,6 +8,7 @@ dayjs.locale('fr');
 
 /**
  * Date Picker composant qui affiche un calendrier pour choisir une date
+ * @param {*} id identifiant du composant
  * @param {*} label texte à afficher 
  * @param {*} defaultValue Valeur par défaut format dayjs '2021-10-10'
  * @param {*} onChange 

@@ -22,7 +22,7 @@ export default function FormulaireAssureur({ setValue, accidentData, watch }) {
   const [DateEnvoieDeclarationAccident, setDateEnvoieDeclarationAccident] = useState(watch('DateEnvoieDeclarationAccident') ? watch('DateEnvoieDeclarationAccident') : (accidentData && accidentData.DateEnvoieDeclarationAccident ? accidentData.DateEnvoieDeclarationAccident : ""));
   const [commentaireetSuivit, setcommentaireetSuivit] = useState(watch('commentaireetSuivit') ? watch('commentaireetSuivit') : (accidentData && accidentData.commentaireetSuivit ? accidentData.commentaireetSuivit : ""));
   const [Getionnaiesinistre, setGetionnaiesinistre] = useState(watch('Getionnaiesinistre') ? watch('Getionnaiesinistre') : (accidentData && accidentData.Getionnaiesinistre ? accidentData.Getionnaiesinistre : ""));
-  const [assureurStatus, setAssureurStatus] = useState(watch('AssureurStatus') ? watch('AssureurStatus') : (accidentData && accidentData.AssureurStatus ? accidentData.AssureurStatus : listAssureur.AssureurStatus[0]));
+  const [assureurStatus, setAssureurStatus] = useState(watch('AssureurStatus') ? watch('AssureurStatus') : (accidentData && accidentData.AssureurStatus ? accidentData.AssureurStatus : null));
   const [boolAsCloture, setboolAsCloture] = useState(watch('boolAsCloture') ? watch('boolAsCloture') : (accidentData && accidentData.boolAsCloture ? accidentData.boolAsCloture : false));
 
   /**
