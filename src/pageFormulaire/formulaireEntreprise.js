@@ -22,6 +22,12 @@ export default function FormulaireEntreprise({ setValue, accidentData, watch }) 
     setValue('typeTravailleur', typeTravailleur);
   }, [entreprise, secteur, typeTravailleur, setValue]);
 
+  //initialisation des secteurs en fonction de l'entreprise choisie
+  useEffect(() => {
+    const entrepriseData = listEntreprises.entreprise.find((e) => e.label === entreprise);
+    setListSecteur(entrepriseData.secteur)
+  }, []);
+
   //fonction qui permet de mettre à jour les secteurs en fonction de l'entreprise choisie
   const handleEntrepriseSelect = (entrepriseSelect) => {
     const entrepriseData = listEntreprises.entreprise.find((e) => e.label === entrepriseSelect);
