@@ -39,7 +39,7 @@ body {
 .image-cortigroupe {
   flex: 1;
   height: 200px;
-  /*background-image: url('./logo-cortigroupe-1.png');*/
+  background-image: url('./logo-cortigroupe-1.png');
   background-position: center center ;
   background-repeat: no-repeat;
   background-size: contain;
