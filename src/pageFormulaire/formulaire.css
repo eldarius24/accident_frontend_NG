@@ -17,7 +17,7 @@ body {
   flex-shrink: 0;
   flex: 1;
   height: 450px;
-  /*background-image: url('./accident_travail1.png');*/
+  background-image: url('./accident_travail1.png');
   background-position: center ;
   background-repeat: no-repeat;
   background-size: contain;
@@ -28,7 +28,7 @@ body {
   flex-shrink: 0;
   flex: 1;
   height: 450px;
-  /*background-image: url('./accident_travail2.png');*/
+  background-image: url('./accident_travail2.png');
   background-position: center ;
   background-repeat: no-repeat;
   background-size: contain;
