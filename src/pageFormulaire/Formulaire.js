@@ -14,6 +14,7 @@ import FormulaireEntreprise from './formulaireEntreprise';
 import FormulaireAssureur from './formulaireAssureur';
 import FormulaireAccident from './formulaireAccident';
 import FormulaireSalarie from './formulaireSalarie';
+import FormulaireDeclarationASSBelfius from './formulaireDeclarationAssBelfius';
 import config from '../config.json';
 
 
@@ -22,6 +23,7 @@ const forms = [
     { id: 1, component: FormulaireAssureur },
     { id: 2, component: FormulaireAccident },
     { id: 3, component: FormulaireSalarie },
+    { id: 4, component: FormulaireDeclarationASSBelfius },
 ];
 
 export default function Formulaire() {
