@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { TextField } from '@mui/material';
 import { useForm } from 'react-hook-form';
-import Home from '../Home';
+import Home from './Home';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 
-const FormulaireLogin = (props) => {
+const Login = (props) => {
   const { register } = useForm();
   const [password, setPassword] = useState('');
   const [frameWidth, setFrameWidth] = useState(window.innerWidth * -0.5);
@@ -105,4 +105,4 @@ const FormulaireLogin = (props) => {
   );
 };
 
-export default FormulaireLogin;
+export default Login;

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import FormulaireLogin from './pageFormulaire/formulaireLogin';
+import Login from './Login';
 import Home from './Home';
 import Formulaire from './pageFormulaire/Formulaire';
 import ResponsiveAppBar from './toolbar';
@@ -15,7 +15,7 @@ const App = () => {
         <Routes>
           <Route
             path="/"
-            element={<FormulaireLogin isFormVisible={isFormVisible} setFormVisible={setFormVisible} />}
+            element={<Login isFormVisible={isFormVisible} setFormVisible={setFormVisible} />}
           />
           <Route path="/accueil" element={<Home />} />
           <Route path="/formulaire" element={<Formulaire />} />
