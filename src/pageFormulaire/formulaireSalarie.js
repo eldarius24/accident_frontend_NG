@@ -221,9 +221,7 @@ export default function FormulaireSalarie({ setValue, accidentData, watch }) {
                 <TextFieldP id="telephoneCorrespondance" label="Téléphone" onChange={settelephoneCorrespondance} defaultValue={telephoneCorrespondance} />
             )}
             {!showSecondTextField && (
-                <AutoCompleteP id="ListeLangueCorr" option={listeDeclarationAss.ListeLangueCorr} label="Mesures de prévention prises pour éviter la répétition d’un tel accident" onChange={setListeLangueCorr} defaultValue={ListeLangueCorr} />
-
-        
+                <AutoCompleteP id="ListeLangueCorr" option={listeDeclarationAss.ListeLangueCorr} label="Langue de correspondance avec la victime" onChange={setListeLangueCorr} defaultValue={ListeLangueCorr} />
             )}
 
 
