@@ -388,7 +388,7 @@ export default function FormulaireDeclarationASSBelfius({ setValue, accidentData
             <TextFieldP id="numCompteBancaire" label="Numéro de compte bancaire" onChange={setnumCompteBancaire} defaultValue={numCompteBancaire} />
             <TextFieldP id="etabliFinancier" label="Etablissement Financier BIC" onChange={setetabliFinancier} defaultValue={etabliFinancier} />
             <TextFieldP id="numDimona" label="Numéro de la Dimona" onChange={setnumDimona} defaultValue={numDimona} />
-            <AutoCompleteP id="ListeDurContra" option={ListeDurContra.ListeDurContra} label="Durée du contrat de travail" onChange={(value) => { setListeDurContra(value); setShowListeDurContra(value === 'Déterminée') }} defaultValue={ListeDurContra} />
+            <AutoCompleteP id="ListeDurContra" option={listeDeclarationAss.ListeDurContra} label="Durée du contrat de travail" onChange={(value) => { setListeDurContra(value); setShowListeDurContra(value === 'Déterminée') }} defaultValue={ListeDurContra} />
             {showvingtdeusTextField && (
                 <AutoCompleteP id="ListeDateSortie" option={listeDeclarationAss.ListeDateSortie} label="Date de sortie" onChange={(value) => { setListeDateSortie(value); setShowListeDateSortie(value === 'Oui') }} defaultValue={ListeDateSortie} />
 
@@ -399,7 +399,7 @@ export default function FormulaireDeclarationASSBelfius({ setValue, accidentData
             )}
 
             <TextFieldP id="profesEntreprise" label="Profession habituelle dans l’entreprise" onChange={setprofesEntreprise} defaultValue={profesEntreprise} />
-            <AutoCompleteP id="ListeDureeDsEntreprise" label="Durée d'exercice de cette profession par la victime dans l'entreprise" onChange={setListeDureeDsEntreprise} defaultValue={ListeDureeDsEntreprise} />
+            <AutoCompleteP id="ListeDureeDsEntreprise" option={listeDeclarationAss.ListeDureeDsEntreprise} label="Durée d'exercice de cette profession par la victime dans l'entreprise" onChange={setListeDureeDsEntreprise} defaultValue={ListeDureeDsEntreprise} />
             <div>
                 <AutoCompleteP id="ListeVicInterimaire" option={listeDeclarationAss.ListeVicInterimaire} label="La victime est-elle un(e) intérimaire" onChange={(value) => { setListeVicInterimaire(value); setShowListeVicInterimaire(value === 'Oui') }} defaultValue={ListeVicInterimaire} />
 
@@ -695,8 +695,8 @@ export default function FormulaireDeclarationASSBelfius({ setValue, accidentData
                         <h5>total des rémunérations et des avantages assujettis à l’ONSS, sans heures supplémentaires, pécule de vacances complémentaire et prime de find’année
                             (le montant déclaré doit correspondre à l’unité de temps ou à l’unité de temps et au cycle)</h5>
                     </div>
-                    <TextFieldP id="remunerationTotalAssOnns" option={listeDeclarationAss.remunerationTotalAssOnns} label="Rémunérations" onChange={setremunerationTotalAssOnns} defaultValue={remunerationTotalAssOnns} />
-                    <AutoCompleteP id="ListePrimeFinAnnee" label="Prime de fin d’'état" onChange={setListePrimeFinAnnee} defaultValue={ListePrimeFinAnnee} />
+                    <TextFieldP id="remunerationTotalAssOnns" label="Rémunérations" onChange={setremunerationTotalAssOnns} defaultValue={remunerationTotalAssOnns} />
+                    <AutoCompleteP id="ListePrimeFinAnnee" option={listeDeclarationAss.ListePrimeFinAnnee} label="Prime de fin d’'état" onChange={setListePrimeFinAnnee} defaultValue={ListePrimeFinAnnee} />
                     <TextFieldP id="PrimeFinAnneeRemuAnnuel" label="Si oui, % de la rémuneration annuelle" onChange={setPrimeFinAnneeRemuAnnuel} defaultValue={PrimeFinAnneeRemuAnnuel} />
                     <TextFieldP id="PrimeFinAnneeRemuAnnuelForfetaire" label="Si oui, montant forfaitaire de €" onChange={setPrimeFinAnneeRemuAnnuelForfetaire} defaultValue={PrimeFinAnneeRemuAnnuelForfetaire} />
                     <TextFieldP id="PrimeFinAnneeRemuAnnuelNbrHeure" label="Si oui, émuniration d’un nombre d’heures" onChange={setPrimeFinAnneeRemuAnnuelNbrHeure} defaultValue={PrimeFinAnneeRemuAnnuelNbrHeure} />
@@ -717,7 +717,7 @@ export default function FormulaireDeclarationASSBelfius({ setValue, accidentData
             )}
 
             {showSeizeTextField && showdixseptTextField && (
-                <AutoCompleteP id="ListechangementFonction" option={ListechangementFonction.ListechangementFonction} label="Durée du contrat de travail" onChange={(value) => { setListechangementFonction(value); setShowListechangementFonction(value === 'Oui') }} defaultValue={ListechangementFonction} />
+                <AutoCompleteP id="ListechangementFonction" option={listeDeclarationAss.ListechangementFonction} label="Durée du contrat de travail" onChange={(value) => { setListechangementFonction(value); setShowListechangementFonction(value === 'Oui') }} defaultValue={ListechangementFonction} />
 
             )}
 
