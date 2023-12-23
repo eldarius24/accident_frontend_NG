@@ -11,23 +11,36 @@ import listeDeclarationAss from '../liste/listeDeclarationAssBelfius.json';
 
 export default function FormulaireSalarie({ setValue, accidentData, watch }) {
 
-/*    const handleadresseCodecorrespondance = (event) => {
-        const leadresseCodecorrespondance = event.target.value;
-        setShowSecondTextField(leadresseCodecorrespondance !== '');
-    };*/
+  /*    const handleadresseCodecorrespondance = (event) => {
+          const leadresseCodecorrespondance = event.target.value;
+          setShowSecondTextField(leadresseCodecorrespondance !== '');
+      };*/
 
+  const [frameWidth, setFrameWidth] = useState(window.innerWidth * -0.5);
 
-    const frameStyle = {
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
-      //height: `${frameWidth * 1.3}px`, // Adjust the coefficient as needed
-      border: '2px solid #84a784',
-      borderRadius: '10px',
-      cursor: 'pointer',
-      margin: '20px 1rem',
-      backgroundColor: '#d2e2d2',
+  useEffect(() => {
+    const handleResize = () => {
+      setFrameWidth(window.innerWidth * -0.5); // Adjust the coefficient as needed
     };
+
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
+  const frameStyle = {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: `${frameWidth * 1.3}px`, // Adjust the coefficient as needed
+    border: '2px solid #84a784',
+    borderRadius: '10px',
+    cursor: 'pointer',
+    margin: '20px 1rem',
+    backgroundColor: '#d2e2d2',
+  };
 
   const [showSecondTextField, setShowadresseRuecorrespondance] = useState(true);
 
@@ -55,7 +68,7 @@ export default function FormulaireSalarie({ setValue, accidentData, watch }) {
   const [adressePays, setadressePays] = useState(watch('adressePays') ? watch('adressePays') : (accidentData && accidentData.adressePays ? accidentData.adressePays : null));
   const [adresseMail, setadresseMail] = useState(watch('adresseMail') ? watch('adresseMail') : (accidentData && accidentData.adresseMail ? accidentData.adresseMail : null));
   const [telephone, settelephone] = useState(watch('telephone') ? watch('telephone') : (accidentData && accidentData.telephone ? accidentData.telephone : null));
- 
+
   const [adresseRuecorrespondance, setadresseRuecorrespondance] = useState(watch('adresseRuecorrespondance') ? watch('adresseRuecorrespondance') : (accidentData && accidentData.adresseRuecorrespondance ? accidentData.adresseRuecorrespondance : null));
   const [adresseCodecorrespondance, setadresseCodecorrespondance] = useState(watch('adresseCodecorrespondance') ? watch('adresseCodecorrespondance') : (accidentData && accidentData.adresseCodecorrespondance ? accidentData.adresseCodecorrespondance : null));
   const [adresseCommunecorrespondance, setadresseCommunecorrespondance] = useState(watch('adresseCommunecorrespondance') ? watch('adresseCommunecorrespondance') : (accidentData && accidentData.adresseCommunecorrespondance ? accidentData.adresseCommunecorrespondance : null));
@@ -92,7 +105,7 @@ export default function FormulaireSalarie({ setValue, accidentData, watch }) {
     setValue('telephoneCorrespondance', telephoneCorrespondance)
     setValue('ListeLangueCorr', ListeLangueCorr)
   }
-    , [nomTravailleur, prenomTravailleur, dateNaissance, lieuxnaissance, nbHeuresSemaine, dateDebutArret, dateFinArret, dateEntrEntreprise, sexe, nationalité, etatCivil, adresseRue, adresseCodepostal, adresseCommune, adressePays, adresseMail, telephone,adresseRuecorrespondance,adresseCodecorrespondance,adresseCommunecorrespondance,ListeadressePaysCorrespondance,telephoneCorrespondance,ListeLangueCorr, setValue]);
+    , [nomTravailleur, prenomTravailleur, dateNaissance, lieuxnaissance, nbHeuresSemaine, dateDebutArret, dateFinArret, dateEntrEntreprise, sexe, nationalité, etatCivil, adresseRue, adresseCodepostal, adresseCommune, adressePays, adresseMail, telephone, adresseRuecorrespondance, adresseCodecorrespondance, adresseCommunecorrespondance, ListeadressePaysCorrespondance, telephoneCorrespondance, ListeLangueCorr, setValue]);
 
   /**
    * Etape 3 : retourner le formulaire (IHMs)
@@ -158,11 +171,11 @@ export default function FormulaireSalarie({ setValue, accidentData, watch }) {
         defaultValue={dateEntrEntreprise}
       />
 
-      <AutoCompleteP id='sexe' label='Sexe' onChange={setsexe} option={listeDeclarationAssBelfius.ListeSexe} defaultValue={sexe}  />
+      <AutoCompleteP id='sexe' label='Sexe' onChange={setsexe} option={listeDeclarationAssBelfius.ListeSexe} defaultValue={sexe} />
 
-      <AutoCompleteP id='nationalité' label='Nationalité' onChange={setnationalité} option={listeDeclarationAssBelfius.ListeNationalite} defaultValue={nationalité}  />
+      <AutoCompleteP id='nationalité' label='Nationalité' onChange={setnationalité} option={listeDeclarationAssBelfius.ListeNationalite} defaultValue={nationalité} />
 
-      <AutoCompleteP id='etatCivil' label='Etat civil' onChange={setetatCivil} option={listeDeclarationAssBelfius.ListeEtatCivil} defaultValue={etatCivil}  />
+      <AutoCompleteP id='etatCivil' label='Etat civil' onChange={setetatCivil} option={listeDeclarationAssBelfius.ListeEtatCivil} defaultValue={etatCivil} />
 
       <TextFieldP
         id='adresseRue'
@@ -200,32 +213,28 @@ export default function FormulaireSalarie({ setValue, accidentData, watch }) {
         onChange={settelephone}
         defaultValue={telephone}
       />
-      
-            <div style={frameStyle}>
-                <h5> Adresse de correspondance (à mentionner si elle diffère de la résidence principale)</h5>
-            </div>
-            <TextFieldP id="adresseRuecorrespondance" label="Rue / numéro / boite"  onChange={(value) => { setadresseRuecorrespondance(value); setShowadresseRuecorrespondance(value === '') }} defaultValue={adresseRuecorrespondance} />
-            {!showSecondTextField && (
-                <TextFieldP id="adresseCodecorrespondance" label="Code postal" onChange={setadresseCodecorrespondance} defaultValue={adresseCodecorrespondance} />
-               
-            )}
-            {!showSecondTextField && (
-                <TextFieldP id="adresseCommunecorrespondance" label="Commune" onChange={setadresseCommunecorrespondance} defaultValue={adresseCommunecorrespondance} />
-              
-            )}
-            {!showSecondTextField && (
-                <TextFieldP id="ListeadressePaysCorrespondance" label="Pays" onChange={setListeadressePaysCorrespondance} defaultValue={ListeadressePaysCorrespondance} />
 
-            )}
-            {!showSecondTextField && (
-                <TextFieldP id="telephoneCorrespondance" label="Téléphone" onChange={settelephoneCorrespondance} defaultValue={telephoneCorrespondance} />
-            )}
-            {!showSecondTextField && (
-                <AutoCompleteP id="ListeLangueCorr" option={listeDeclarationAss.ListeLangueCorr} label="Langue de correspondance avec la victime" onChange={setListeLangueCorr} defaultValue={ListeLangueCorr} />
-            )}
+      <div style={frameStyle}>
+        <h5> Adresse de correspondance (à mentionner si elle diffère de la résidence principale)</h5>
+      </div>
+      <TextFieldP id="adresseRuecorrespondance" label="Rue / numéro / boite" onChange={(value) => { setadresseRuecorrespondance(value); setShowadresseRuecorrespondance(value === '') }} defaultValue={adresseRuecorrespondance} />
+      {!showSecondTextField && (
+        <TextFieldP id="adresseCodecorrespondance" label="Code postal" onChange={setadresseCodecorrespondance} defaultValue={adresseCodecorrespondance} />
+      )}
+      {!showSecondTextField && (
+        <TextFieldP id="adresseCommunecorrespondance" label="Commune" onChange={setadresseCommunecorrespondance} defaultValue={adresseCommunecorrespondance} />
 
+      )}
+      {!showSecondTextField && (
+        <TextFieldP id="ListeadressePaysCorrespondance" label="Pays" onChange={setListeadressePaysCorrespondance} defaultValue={ListeadressePaysCorrespondance} />
 
+      )}
+      {!showSecondTextField && (
+        <TextFieldP id="telephoneCorrespondance" label="Téléphone" onChange={settelephoneCorrespondance} defaultValue={telephoneCorrespondance} />
+      )}
+      {!showSecondTextField && (
+        <AutoCompleteP id="ListeLangueCorr" option={listeDeclarationAss.ListeLangueCorr} label="Langue de correspondance avec la victime" onChange={setListeLangueCorr} defaultValue={ListeLangueCorr} />
+      )}
     </div>
-            
   );
 }

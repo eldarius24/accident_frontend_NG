@@ -17,14 +17,25 @@ dayjs.locale('fr');
 
 export default function FormulaireDeclarationASSBelfius({ setValue, accidentData, watch }) {
 
+    const [frameWidth, setFrameWidth] = useState(window.innerWidth * -0.5);
 
+    useEffect(() => {
+        const handleResize = () => {
+            setFrameWidth(window.innerWidth * -0.5); // Adjust the coefficient as needed
+        };
 
+        window.addEventListener('resize', handleResize);
+
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
+    }, []);
 
     const frameStyle = {
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        //height: `${frameWidth * 1.3}px`, // Adjust the coefficient as needed
+        height: `${frameWidth * 1.3}px`, // Adjust the coefficient as needed
         border: '2px solid #84a784',
         borderRadius: '10px',
         cursor: 'pointer',
@@ -44,15 +55,7 @@ export default function FormulaireDeclarationASSBelfius({ setValue, accidentData
     const [showdouzeTextField, setShowListeSoinsMedicauxMedecin] = useState(false);
     const [showtreizeTextField, setShowListeSoinsMedicauxHopital] = useState(false);
     const [showquatorzeTextField, setShowListeVictimeOnss] = useState(false);
-
-    // modifier le TextFieldP comme l'AutoCompleteP ligne 621
     const [showquinzeTextField, setShowcodeTravailleurSocial] = useState(false);
-
-    /*const handloutlinedmultilinecodeTravailleurSocial = (event) => {
-        const outlinedmultilinecodeTravailleurSocial = event.target.value;
-        setshowquinzeTextField(outlinedmultilinecodeTravailleurSocial === '');
-    };*/
-
     const [showSeizeTextField, setShowListeNonOnss] = useState(false);
     const [showdixseptTextField, setShowListeApprentiFormat] = useState(false);
     const [showdixhuitTextField, setShowListeModeRemuneration] = useState(false);
@@ -60,10 +63,6 @@ export default function FormulaireDeclarationASSBelfius({ setValue, accidentData
     const [showvingtTextField, setShowListeCategoProfess] = useState(false);
     const [showvingtetunTextField, setShowListeDateSortie] = useState(false);
     const [showvingtdeusTextField, setShowListeDurContra] = useState(false);
-
-
-
-
 
     const [CodeMutuelle, setCodeMutuelle] = useState(watch('CodeMutuelle') ? watch('CodeMutuelle') : (accidentData && accidentData.CodeMutuelle ? accidentData.CodeMutuelle : ''));
     const [adresseRueMutuelle, setadresseRueMutuelle] = useState(watch('adresseRueMutuelle') ? watch('adresseRueMutuelle') : (accidentData && accidentData.adresseRueMutuelle ? accidentData.adresseRueMutuelle : ''));
@@ -371,12 +370,8 @@ export default function FormulaireDeclarationASSBelfius({ setValue, accidentData
         setValue
     ]);
 
-
-
     return (
         <div className="infoDeclarationAss">
-
-
             <div style={frameStyle}>
                 <h5> Informations sur la Mutuelle</h5>
             </div>
@@ -453,14 +448,12 @@ export default function FormulaireDeclarationASSBelfius({ setValue, accidentData
             )}
             <TextFieldP id="NumdeChantier" label="Numéro du chantier" onChange={setNumdeChantier} defaultValue={NumdeChantier} />
 
-
             <div style={frameStyle}>
                 <h5> Dans quel environnement ou dans quel type de lieu la victime se trouvait-elle lorsque l’accident s’est produit ? (p.ex. , aire de maintenance, chantier de
                     construction d’un tunnel, lieu d’élevage de bétail, bureau, école, magasin, hôpital, parking, salle de sports, toit d’un hôtel, maison privée, égout, jardin,
                     autoroute, navire à quai, sous l’eau, etc.). </h5>
             </div>
             <TextFieldP id="environementLieux" label="Expliquez" onChange={setenvironementLieux} defaultValue={environementLieux} />
-
 
             <div style={frameStyle}>
                 <h5> Précisez l’activité général (le type de travail) qu’effectuait la victime ou la tâche (au sens large) qu’elle accomplissait lorsque l’accident s’est produit.
