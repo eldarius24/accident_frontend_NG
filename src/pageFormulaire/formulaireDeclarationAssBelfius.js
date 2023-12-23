@@ -130,7 +130,6 @@ export default function FormulaireDeclarationASSBelfius({ setValue, accidentData
                 </>
             )}
             
-            
 
             <DatePickerP id="dateNotifAEmployeur" label="Date de notification à l’employeur" onChange={setdateNotifAEmployeur} defaultValue={dateNotifAEmployeur} />
 

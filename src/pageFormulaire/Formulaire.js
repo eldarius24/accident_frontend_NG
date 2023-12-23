@@ -14,7 +14,7 @@ import FormulaireEntreprise from './formulaireEntreprise';
 import FormulaireAssureur from './formulaireAssureur';
 import FormulaireAccident from './formulaireAccident';
 import FormulaireSalarie from './formulaireSalarie';
-import FormulaireDeclarationASSBelfius from './formulaireDeclarationAssBelfius';
+import FormulaireDeclarationASSBelfius from './formulaireDeclarationAssBelfius1';
 import config from '../config.json';
 
 
