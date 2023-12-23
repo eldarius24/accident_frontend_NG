@@ -48,10 +48,10 @@ export default function FormulaireDeclarationASSBelfius({ setValue, accidentData
     // modifier le TextFieldP comme l'AutoCompleteP ligne 621
     const [showquinzeTextField, setShowcodeTravailleurSocial] = useState(false);
 
-    const handloutlinedmultilinecodeTravailleurSocial = (event) => {
+    /*const handloutlinedmultilinecodeTravailleurSocial = (event) => {
         const outlinedmultilinecodeTravailleurSocial = event.target.value;
         setshowquinzeTextField(outlinedmultilinecodeTravailleurSocial === '');
-    };
+    };*/
 
     const [showSeizeTextField, setShowListeNonOnss] = useState(false);
     const [showdixseptTextField, setShowListeApprentiFormat] = useState(false);
@@ -618,7 +618,7 @@ export default function FormulaireDeclarationASSBelfius({ setValue, accidentData
             {showquatorzeTextField && (
                 <TextFieldP id="victimeOnssNon" label="Si non, donnée le motif" onChange={setvictimeOnssNon} defaultValue={victimeOnssNon} />
             )}
-            <TextFieldP id="codeTravailleurSocial" label="Code du travailleur de l'assurance sociale" onChange={(value) => { setcodeTravailleurSocial(value); setShowcodeTravailleurSocial(value === 'Autre (à préciser)') }} defaultValue={codeTravailleurSocial} />
+            <TextFieldP id="codeTravailleurSocial" label="Code du travailleur de l'assurance sociale" onChange={(value) => { setcodeTravailleurSocial(value); setShowcodeTravailleurSocial(value === '') }} defaultValue={codeTravailleurSocial} />
             {/*textFieldchangePerso("codeTravailleurSocial", "Code du travailleur de l'assurance sociale", handloutlinedmultilinecodeTravailleurSocial)*/}
 
             {showquinzeTextField && (

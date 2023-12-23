@@ -7,9 +7,31 @@ import TextFieldP from '../composants/textFieldP';
 import DatePickerP from '../composants/datePickerP';
 import AutoCompleteP from '../composants/autoCompleteP';
 import listeDeclarationAssBelfius from '../liste/listeDeclarationAssBelfius.json';
-
+import listeDeclarationAss from '../liste/listeDeclarationAssBelfius.json';
 
 export default function FormulaireSalarie({ setValue, accidentData, watch }) {
+
+/*    const handleadresseCodecorrespondance = (event) => {
+        const leadresseCodecorrespondance = event.target.value;
+        setShowSecondTextField(leadresseCodecorrespondance !== '');
+    };*/
+
+
+    const frameStyle = {
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      //height: `${frameWidth * 1.3}px`, // Adjust the coefficient as needed
+      border: '2px solid #84a784',
+      borderRadius: '10px',
+      cursor: 'pointer',
+      margin: '20px 1rem',
+      backgroundColor: '#d2e2d2',
+    };
+
+  const [showSecondTextField, setShowadresseRuecorrespondance] = useState(true);
+
+
 
   /**
    * Etape 1 : stocker les données dans des variables locales et les initialiser avec les données de l'accident si elles existent
@@ -33,32 +55,44 @@ export default function FormulaireSalarie({ setValue, accidentData, watch }) {
   const [adressePays, setadressePays] = useState(watch('adressePays') ? watch('adressePays') : (accidentData && accidentData.adressePays ? accidentData.adressePays : null));
   const [adresseMail, setadresseMail] = useState(watch('adresseMail') ? watch('adresseMail') : (accidentData && accidentData.adresseMail ? accidentData.adresseMail : null));
   const [telephone, settelephone] = useState(watch('telephone') ? watch('telephone') : (accidentData && accidentData.telephone ? accidentData.telephone : null));
+ 
   const [adresseRuecorrespondance, setadresseRuecorrespondance] = useState(watch('adresseRuecorrespondance') ? watch('adresseRuecorrespondance') : (accidentData && accidentData.adresseRuecorrespondance ? accidentData.adresseRuecorrespondance : null));
+  const [adresseCodecorrespondance, setadresseCodecorrespondance] = useState(watch('adresseCodecorrespondance') ? watch('adresseCodecorrespondance') : (accidentData && accidentData.adresseCodecorrespondance ? accidentData.adresseCodecorrespondance : null));
+  const [adresseCommunecorrespondance, setadresseCommunecorrespondance] = useState(watch('adresseCommunecorrespondance') ? watch('adresseCommunecorrespondance') : (accidentData && accidentData.adresseCommunecorrespondance ? accidentData.adresseCommunecorrespondance : null));
+  const [ListeadressePaysCorrespondance, setListeadressePaysCorrespondance] = useState(watch('ListeadressePaysCorrespondance') ? watch('ListeadressePaysCorrespondance') : (accidentData && accidentData.ListeadressePaysCorrespondance ? accidentData.ListeadressePaysCorrespondance : null));
+  const [telephoneCorrespondance, settelephoneCorrespondance] = useState(watch('telephoneCorrespondance') ? watch('telephoneCorrespondance') : (accidentData && accidentData.telephoneCorrespondance ? accidentData.telephoneCorrespondance : null));
+  const [ListeLangueCorr, setListeLangueCorr] = useState(watch('ListeLangueCorr') ? watch('ListeLangueCorr') : (accidentData && accidentData.ListeLangueCorr ? accidentData.ListeLangueCorr : null));
+
 
   /**
    * Etape 2 : mettre à jour les données du formulaire à chaque modification d'un des champs
    */
   useEffect(() => {
-    setValue('nomTravailleur', nomTravailleur);
-    setValue('prenomTravailleur', prenomTravailleur);
-    setValue('dateNaissance', dateNaissance);
-    setValue('lieuxnaissance', lieuxnaissance);
-    setValue('nbHeuresSemaine', nbHeuresSemaine);
-    setValue('dateDebutArret', dateDebutArret);
-    setValue('dateFinArret', dateFinArret);
-    setValue('dateEntrEntreprise', dateEntrEntreprise);
-    setValue('sexe', sexe);
-    setValue('nationalité', nationalité);
-    setValue('etatCivil', etatCivil);
-    setValue('adresseRue', adresseRue);
-    setValue('adresseCodepostal', adresseCodepostal);
-    setValue('adresseCommune', adresseCommune);
-    setValue('adressePays', adressePays);
-    setValue('adresseMail', adresseMail);
-    setValue('telephone', telephone);
-    setValue('adresseRuecorrespondance', adresseRuecorrespondance);
+    setValue('nomTravailleur', nomTravailleur)
+    setValue('prenomTravailleur', prenomTravailleur)
+    setValue('dateNaissance', dateNaissance)
+    setValue('lieuxnaissance', lieuxnaissance)
+    setValue('nbHeuresSemaine', nbHeuresSemaine)
+    setValue('dateDebutArret', dateDebutArret)
+    setValue('dateFinArret', dateFinArret)
+    setValue('dateEntrEntreprise', dateEntrEntreprise)
+    setValue('sexe', sexe)
+    setValue('nationalité', nationalité)
+    setValue('etatCivil', etatCivil)
+    setValue('adresseRue', adresseRue)
+    setValue('adresseCodepostal', adresseCodepostal)
+    setValue('adresseCommune', adresseCommune)
+    setValue('adressePays', adressePays)
+    setValue('adresseMail', adresseMail)
+    setValue('telephone', telephone)
+    setValue('adresseRuecorrespondance', adresseRuecorrespondance)
+    setValue('adresseCodecorrespondance', adresseCodecorrespondance)
+    setValue('adresseCommunecorrespondance', adresseCommunecorrespondance)
+    setValue('ListeadressePaysCorrespondance', ListeadressePaysCorrespondance)
+    setValue('telephoneCorrespondance', telephoneCorrespondance)
+    setValue('ListeLangueCorr', ListeLangueCorr)
   }
-    , [nomTravailleur, prenomTravailleur, dateNaissance, lieuxnaissance, nbHeuresSemaine, dateDebutArret, dateFinArret, dateEntrEntreprise, sexe, nationalité, etatCivil, adresseRue, adresseCodepostal, adresseCommune, adressePays, adresseMail, telephone, adresseRuecorrespondance, setValue]);
+    , [nomTravailleur, prenomTravailleur, dateNaissance, lieuxnaissance, nbHeuresSemaine, dateDebutArret, dateFinArret, dateEntrEntreprise, sexe, nationalité, etatCivil, adresseRue, adresseCodepostal, adresseCommune, adressePays, adresseMail, telephone,adresseRuecorrespondance,adresseCodecorrespondance,adresseCommunecorrespondance,ListeadressePaysCorrespondance,telephoneCorrespondance,ListeLangueCorr, setValue]);
 
   /**
    * Etape 3 : retourner le formulaire (IHMs)
@@ -166,7 +200,34 @@ export default function FormulaireSalarie({ setValue, accidentData, watch }) {
         onChange={settelephone}
         defaultValue={telephone}
       />
+      
+            <div style={frameStyle}>
+                <h5> Adresse de correspondance (à mentionner si elle diffère de la résidence principale)</h5>
+            </div>
+            <TextFieldP id="adresseRuecorrespondance" label="Rue / numéro / boite"  onChange={(value) => { setadresseRuecorrespondance(value); setShowadresseRuecorrespondance(value === '') }} defaultValue={adresseRuecorrespondance} />
+            {!showSecondTextField && (
+                <TextFieldP id="adresseCodecorrespondance" label="Code postal" onChange={setadresseCodecorrespondance} defaultValue={adresseCodecorrespondance} />
+               
+            )}
+            {!showSecondTextField && (
+                <TextFieldP id="adresseCommunecorrespondance" label="Commune" onChange={setadresseCommunecorrespondance} defaultValue={adresseCommunecorrespondance} />
+              
+            )}
+            {!showSecondTextField && (
+                <TextFieldP id="ListeadressePaysCorrespondance" label="Pays" onChange={setListeadressePaysCorrespondance} defaultValue={ListeadressePaysCorrespondance} />
+
+            )}
+            {!showSecondTextField && (
+                <TextFieldP id="telephoneCorrespondance" label="Téléphone" onChange={settelephoneCorrespondance} defaultValue={telephoneCorrespondance} />
+            )}
+            {!showSecondTextField && (
+                <AutoCompleteP id="ListeLangueCorr" option={listeDeclarationAss.ListeLangueCorr} label="Mesures de prévention prises pour éviter la répétition d’un tel accident" onChange={setListeLangueCorr} defaultValue={ListeLangueCorr} />
+
+        
+            )}
+
 
     </div>
+            
   );
 }
