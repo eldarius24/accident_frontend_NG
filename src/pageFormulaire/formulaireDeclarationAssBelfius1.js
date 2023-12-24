@@ -5,7 +5,6 @@ import { useState, useEffect } from 'react';
 import dayjs from 'dayjs';
 import 'dayjs/locale/fr';
 dayjs.locale('fr');
-import { InputAdornment, Autocomplete, TextField } from '@mui/material';
 /* IMPORT PERSO */
 import listeDeclarationAss from '../liste/listeDeclarationAssBelfius.json';
 import AutoCompleteP from '../composants/autoCompleteP';
@@ -17,20 +16,17 @@ dayjs.locale('fr');
 
 export default function FormulaireDeclarationASSBelfius({ setValue, accidentData, watch }) {
 
+    // Mise en forme des cadres texte
     const [frameWidth, setFrameWidth] = useState(window.innerWidth * -0.5);
-
     useEffect(() => {
         const handleResize = () => {
             setFrameWidth(window.innerWidth * -0.5); // Adjust the coefficient as needed
         };
-
         window.addEventListener('resize', handleResize);
-
         return () => {
             window.removeEventListener('resize', handleResize);
         };
     }, []);
-
     const frameStyle = {
         display: 'flex',
         justifyContent: 'center',
@@ -266,109 +262,7 @@ export default function FormulaireDeclarationASSBelfius({ setValue, accidentData
         setValue('heureTravaillePerdu', heureTravaillePerdu)
         setValue('salaireTravaillePerdu', salaireTravaillePerdu)
         setValue('activiteGenerale', activiteGenerale)
-
-    }, [CodeMutuelle,
-        adresseRueMutuelle,
-        adresseCodepostalMutuelle,
-        adresseCommuneMutuelle,
-        numAffiliation,
-        numCompteBancaire,
-        etabliFinancier,
-        numDimona,
-        ListeDurContra,
-        ListeDateSortie,
-        dateSortie,
-        profesEntreprise,
-        ListeDureeDsEntreprise,
-        ListeVicInterimaire,
-        VicInterimaireOui,
-        VicInterimaireOuiNom,
-        VicInterimaireOuiAdresse,
-        ListeVicTravailExt,
-        VicTravailExtOui,
-        VicTravailExtOuiNom,
-        VicTravailExtOuiAdresse,
-        dateNotifEmployeur,
-        ListeLieuxAt,
-        ListeVoiePublic,
-        LieuxAtAdresse,
-        LieuxAtCodePostal,
-        LieuxAtCommune,
-        ListeLieuxAtPays,
-        NumdeChantier,
-        environementLieux,
-        activiteGeneral,
-        activiteSpecifique,
-        ListeTypedePost,
-        ListeProfHabituelle,
-        ListeProfHabituelleNon,
-        evenementDeviant,
-        ListeProcesVerbal,
-        ProcesVerbalOui,
-        ProcesVerbalOuiRedige,
-        dateProcesVerbalOuiRedigeQuand,
-        ProcesVerbalOuiPar,
-        ListeTierResponsable,
-        TierResponsableOui,
-        TierResponsableOuiNomAdresse,
-        TierResponsableOuiNumPolice,
-        ListeTemoins,
-        TemoinsOui,
-        blessureVictume,
-        ListeSoinsMedicaux,
-        dateSoinsMedicauxDate,
-        SoinsMedicauxDispansateur,
-        SoinsMedicauxDescriptions,
-        ListeSoinsMedicauxMedecin,
-        dateSoinsMedicauxMedecin,
-        SoinsMedicauxMedecinInami,
-        SoinsMedicauxMedecinNom,
-        SoinsMedicauxMedecinRue,
-        SoinsMedicauxMedecinCodePostal,
-        SoinsMedicauxMedecinCommune,
-        ListeSoinsMedicauxHopital,
-        dateSoinsMedicauxHopital,
-        SoinsMedicauxHopitalInami,
-        SoinsMedicauxHopitaldenomi,
-        SoinsMedicauxHopitalRue,
-        SoinsMedicauxHopitalCodePostal,
-        SoinsMedicauxHopitalCommune,
-        ListeConseqAccident,
-        dateRepriseEffective,
-        JourIncaCompl,
-        ListeMesureRepetition,
-        CodeRisqueEntreprise,
-        ListeVictimeOnss,
-        victimeOnssNon,
-        codeTravailleurSocial,
-        ListeCategoProfess,
-        CategoProfessAutre,
-        ListeNonOnss,
-        ListeApprentiFormat,
-        CommissionParitaireDénomination,
-        CommissionParitaireNumn,
-        ListeTypeContrat,
-        Nbrjoursregime,
-        NbrHeureSemaine,
-        NbrHeureSemaineReference,
-        ListeVictiPension,
-        ListeModeRemuneration,
-        ListeMontantRemuneration,
-        MontantRemunerationVariable,
-        remunerationTotalAssOnns,
-        ListePrimeFinAnnee,
-        PrimeFinAnneeRemuAnnuel,
-        PrimeFinAnneeRemuAnnuelForfetaire,
-        PrimeFinAnneeRemuAnnuelNbrHeure,
-        AvantegeAssujOnns,
-        AvantegeAssujOnnsNature,
-        ListechangementFonction,
-        dateChangementFonction,
-        heureTravaillePerdu,
-        salaireTravaillePerdu,
-        activiteGenerale,
-        setValue
-    ]);
+    }, [CodeMutuelle, adresseRueMutuelle, adresseCodepostalMutuelle, adresseCommuneMutuelle, numAffiliation, numCompteBancaire, etabliFinancier, numDimona, ListeDurContra, ListeDateSortie, dateSortie, profesEntreprise, ListeDureeDsEntreprise, ListeVicInterimaire, VicInterimaireOui, VicInterimaireOuiNom, VicInterimaireOuiAdresse, ListeVicTravailExt, VicTravailExtOui, VicTravailExtOuiNom, VicTravailExtOuiAdresse, dateNotifEmployeur, ListeLieuxAt, ListeVoiePublic, LieuxAtAdresse, LieuxAtCodePostal, LieuxAtCommune, ListeLieuxAtPays, NumdeChantier, environementLieux, activiteGeneral, activiteSpecifique, ListeTypedePost, ListeProfHabituelle, ListeProfHabituelleNon, evenementDeviant, ListeProcesVerbal, ProcesVerbalOui, ProcesVerbalOuiRedige, dateProcesVerbalOuiRedigeQuand, ProcesVerbalOuiPar, ListeTierResponsable, TierResponsableOui, TierResponsableOuiNomAdresse, TierResponsableOuiNumPolice, ListeTemoins, TemoinsOui, blessureVictume, ListeSoinsMedicaux, dateSoinsMedicauxDate, SoinsMedicauxDispansateur, SoinsMedicauxDescriptions, ListeSoinsMedicauxMedecin, dateSoinsMedicauxMedecin, SoinsMedicauxMedecinInami, SoinsMedicauxMedecinNom, SoinsMedicauxMedecinRue, SoinsMedicauxMedecinCodePostal, SoinsMedicauxMedecinCommune, ListeSoinsMedicauxHopital, dateSoinsMedicauxHopital, SoinsMedicauxHopitalInami, SoinsMedicauxHopitaldenomi, SoinsMedicauxHopitalRue, SoinsMedicauxHopitalCodePostal, SoinsMedicauxHopitalCommune, ListeConseqAccident, dateRepriseEffective, JourIncaCompl, ListeMesureRepetition, CodeRisqueEntreprise, ListeVictimeOnss, victimeOnssNon, codeTravailleurSocial, ListeCategoProfess, CategoProfessAutre, ListeNonOnss, ListeApprentiFormat, CommissionParitaireDénomination, CommissionParitaireNumn, ListeTypeContrat, Nbrjoursregime, NbrHeureSemaine, NbrHeureSemaineReference, ListeVictiPension, ListeModeRemuneration, ListeMontantRemuneration, MontantRemunerationVariable, remunerationTotalAssOnns, ListePrimeFinAnnee, PrimeFinAnneeRemuAnnuel, PrimeFinAnneeRemuAnnuelForfetaire, PrimeFinAnneeRemuAnnuelNbrHeure, AvantegeAssujOnns, AvantegeAssujOnnsNature, ListechangementFonction, dateChangementFonction, heureTravaillePerdu, salaireTravaillePerdu, activiteGenerale, setValue]);
 
     return (
         <div className="infoDeclarationAss">
@@ -384,9 +278,9 @@ export default function FormulaireDeclarationASSBelfius({ setValue, accidentData
             <TextFieldP id="etabliFinancier" label="Etablissement Financier BIC" onChange={setetabliFinancier} defaultValue={etabliFinancier} />
             <TextFieldP id="numDimona" label="Numéro de la Dimona" onChange={setnumDimona} defaultValue={numDimona} />
             <AutoCompleteP id="ListeDurContra" option={listeDeclarationAss.ListeDurContra} label="Durée du contrat de travail" onChange={(value) => { setListeDurContra(value); setShowListeDurContra(value === 'Déterminée') }} defaultValue={ListeDurContra} />
+
             {showvingtdeusTextField && (
                 <AutoCompleteP id="ListeDateSortie" option={listeDeclarationAss.ListeDateSortie} label="Date de sortie" onChange={(value) => { setListeDateSortie(value); setShowListeDateSortie(value === 'Oui') }} defaultValue={ListeDateSortie} />
-
             )}
 
             {showvingtetunTextField && (
@@ -395,35 +289,23 @@ export default function FormulaireDeclarationASSBelfius({ setValue, accidentData
 
             <TextFieldP id="profesEntreprise" label="Profession habituelle dans l’entreprise" onChange={setprofesEntreprise} defaultValue={profesEntreprise} />
             <AutoCompleteP id="ListeDureeDsEntreprise" option={listeDeclarationAss.ListeDureeDsEntreprise} label="Durée d'exercice de cette profession par la victime dans l'entreprise" onChange={setListeDureeDsEntreprise} defaultValue={ListeDureeDsEntreprise} />
-            <div>
-                <AutoCompleteP id="ListeVicInterimaire" option={listeDeclarationAss.ListeVicInterimaire} label="La victime est-elle un(e) intérimaire" onChange={(value) => { setListeVicInterimaire(value); setShowListeVicInterimaire(value === 'Oui') }} defaultValue={ListeVicInterimaire} />
+            <AutoCompleteP id="ListeVicInterimaire" option={listeDeclarationAss.ListeVicInterimaire} label="La victime est-elle un(e) intérimaire" onChange={(value) => { setListeVicInterimaire(value); setShowListeVicInterimaire(value === 'Oui') }} defaultValue={ListeVicInterimaire} />
 
-                {showtroiTextField && (
-                    <TextFieldP id="VicInterimaireOui" label="Numéro ONSS de l’entreprise utilisatrice" onChange={setVicInterimaireOui} defaultValue={VicInterimaireOui} />
-                )}
+            {showtroiTextField && (
+                [<TextFieldP id="VicInterimaireOui" label="Numéro ONSS de l’entreprise utilisatrice" onChange={setVicInterimaireOui} defaultValue={VicInterimaireOui} />,
+                <TextFieldP id="VicInterimaireOuiNom" label="Nom" onChange={setVicInterimaireOuiNom} defaultValue={VicInterimaireOuiNom} />,
+                <TextFieldP id="VicInterimaireOuiAdresse" label="Adresse" onChange={setVicInterimaireOuiAdresse} defaultValue={VicInterimaireOuiAdresse} />]
+            )}
 
-                {showtroiTextField && (
-                    <TextFieldP id="VicInterimaireOuiNom" label="Nom" onChange={setVicInterimaireOuiNom} defaultValue={VicInterimaireOuiNom} />
-                )}
-
-                {showtroiTextField && (
-                    <TextFieldP id="VicInterimaireOuiAdresse" label="Adresse" onChange={setVicInterimaireOuiAdresse} defaultValue={VicInterimaireOuiAdresse} />
-                )}
-            </div>
             <AutoCompleteP id="ListeVicTravailExt" option={listeDeclarationAss.ListeVicTravailExt} label="Au moment de l'accident, la victime travaillait-elle dans l'établissement d'un autre employeur dans le cadre de travaux effectuées par une entreprise extérieure" onChange={(value) => { setListeVicTravailExt(value); setShowListeVicTravailExt(value === 'Oui') }} defaultValue={ListeVicTravailExt} />
 
             {showquatreTextField && (
-                <TextFieldP id="VicTravailExtOui" label="Numéro ONSS de l’entreprise de cet autre employeur" onChange={setVicTravailExtOui} defaultValue={VicTravailExtOui} />
-            )}
-            {showquatreTextField && (
-                <TextFieldP id="VicTravailExtOuiNom" label="Nom" onChange={setVicTravailExtOuiNom} defaultValue={VicTravailExtOuiNom} />
-            )}
-            {showquatreTextField && (
-                <TextFieldP id="VicTravailExtOuiAdresse" label="Adresse" onChange={setVicTravailExtOuiAdresse} defaultValue={VicTravailExtOuiAdresse} />
+                [<TextFieldP id="VicTravailExtOui" label="Numéro ONSS de l’entreprise de cet autre employeur" onChange={setVicTravailExtOui} defaultValue={VicTravailExtOui} />,
+                <TextFieldP id="VicTravailExtOuiNom" label="Nom" onChange={setVicTravailExtOuiNom} defaultValue={VicTravailExtOuiNom} />,
+                <TextFieldP id="VicTravailExtOuiAdresse" label="Adresse" onChange={setVicTravailExtOuiAdresse} defaultValue={VicTravailExtOuiAdresse} />]
             )}
 
             <DatePickerP id="dateNotifEmployeur" label="Date de notification à l’employeur" onChange={setdateNotifEmployeur} defaultValue={dateNotifEmployeur} />
-
             <AutoCompleteP id="ListeLieuxAt" option={listeDeclarationAss.ListeLieuxAt} label="Lieu de l’accident" onChange={(value) => { setListeLieuxAt(value); setShowListeLieuxAt(value === 'Sur la voie publique') }} defaultValue={ListeLieuxAt} />
 
             {showsixTextField && (
@@ -431,30 +313,19 @@ export default function FormulaireDeclarationASSBelfius({ setValue, accidentData
             )}
 
             {showcinqTextField && (
-                <TextFieldP id="LieuxAtAdresse" label="Rue/numero/boite" onChange={setLieuxAtAdresse} defaultValue={LieuxAtAdresse} />
+                [<TextFieldP id="LieuxAtAdresse" label="Rue/numero/boite" onChange={setLieuxAtAdresse} defaultValue={LieuxAtAdresse} />,
+                <TextFieldP id="LieuxAtCodePostal" label="Code postal" onChange={setLieuxAtCodePostal} defaultValue={LieuxAtCodePostal} />,
+                <TextFieldP id="LieuxAtCommune" label="Commune" onChange={setLieuxAtCommune} defaultValue={LieuxAtCommune} />,
+                <AutoCompleteP id="ListeLieuxAtPays" option={listeDeclarationAss.ListeLieuxAtPays} label="Pays" onChange={setListeLieuxAtPays} defaultValue={ListeLieuxAtPays} />]
             )}
 
-            {showcinqTextField && (
-                <TextFieldP id="LieuxAtCodePostal" label="Code postal" onChange={setLieuxAtCodePostal} defaultValue={LieuxAtCodePostal} />
-            )}
-
-            {showcinqTextField && (
-                <TextFieldP id="LieuxAtCommune" label="Commune" onChange={setLieuxAtCommune} defaultValue={LieuxAtCommune} />
-            )}
-
-            {showcinqTextField && (
-                <AutoCompleteP id="ListeLieuxAtPays" option={listeDeclarationAss.ListeLieuxAtPays} label="Pays" onChange={setListeLieuxAtPays} defaultValue={ListeLieuxAtPays} />
-
-            )}
             <TextFieldP id="NumdeChantier" label="Numéro du chantier" onChange={setNumdeChantier} defaultValue={NumdeChantier} />
-
             <div style={frameStyle}>
                 <h5> Dans quel environnement ou dans quel type de lieu la victime se trouvait-elle lorsque l’accident s’est produit ? (p.ex. , aire de maintenance, chantier de
                     construction d’un tunnel, lieu d’élevage de bétail, bureau, école, magasin, hôpital, parking, salle de sports, toit d’un hôtel, maison privée, égout, jardin,
                     autoroute, navire à quai, sous l’eau, etc.). </h5>
             </div>
             <TextFieldP id="environementLieux" label="Expliquez" onChange={setenvironementLieux} defaultValue={environementLieux} />
-
             <div style={frameStyle}>
                 <h5> Précisez l’activité général (le type de travail) qu’effectuait la victime ou la tâche (au sens large) qu’elle accomplissait lorsque l’accident s’est produit.
                     (p.ex., transformation de produits, stockage, terrassement, construction ou démolition d’un bâtiment, tâches de type agricole on forestier, tâches avec
@@ -462,7 +333,6 @@ export default function FormulaireDeclarationASSBelfius({ setValue, accidentData
                     de ces différents travaux comme l’installation, le désassemblage, la maintenance, la réparation, le nettoyage, etc.)  </h5>
             </div>
             <TextFieldP id="activiteGenerale" label="Expliquez" onChange={setactiviteGenerale} defaultValue={activiteGenerale} />
-
             <div style={frameStyle}>
                 <h5> Précisez l’activité spécifique de la victime lorsque l’accident s’est produit : (p.ex. , remplissage de la machine, utilisation d’ outillage à main, conduite d’un
                     moyen de transport, saisie, levage, roulage, portage d’un objet, fermeture d’une boite, montée d’une échelle, marche, prise de position assise, etc.) ET les
@@ -475,6 +345,7 @@ export default function FormulaireDeclarationASSBelfius({ setValue, accidentData
             {showseptTextField && (
                 <TextFieldP id="ListeProfHabituelleNon" label="Si non, quelle activité exerçait-elle" onChange={setListeProfHabituelleNon} defaultValue={ListeProfHabituelleNon} />
             )}
+
             <div style={frameStyle}>
                 <h5> Quels événements déviant par rapport au processus normal du travail ont provoqué l’accident ? (p.ex. , problème électrique, explosion, feu, déborde-
                     ment, renversement, écoulement, émission de gaz, rupture, chute ou effondrement d’objet, démarrage ou fonctionnement anormal d’une machine, perte
@@ -483,38 +354,21 @@ export default function FormulaireDeclarationASSBelfius({ setValue, accidentData
                     aux, objets, instruments, substances, etc.) </h5>
             </div>
             <TextFieldP id="evenementDeviant" label="Expliquez" onChange={setevenementDeviant} defaultValue={evenementDeviant} />
-
             <AutoCompleteP id="ListeProcesVerbal" option={listeDeclarationAss.ListeProcesVerbal} label="Un procès-verbal a-t-il été dressé" onChange={(value) => { setListeProcesVerbal(value); setShowListeProcesVerbal(value === 'Oui') }} defaultValue={ListeProcesVerbal} />
 
             {showhuitTextField && (
-                <TextFieldP id="ProcesVerbalOui" label="Le procès-verbal porte le numéro d’identification" onChange={setProcesVerbalOui} defaultValue={ProcesVerbalOui} />
-            )}
-
-            {showhuitTextField && (
-                <TextFieldP id="ProcesVerbalOuiRedige" label="Il a été rédigé à" onChange={setProcesVerbalOuiRedige} defaultValue={ProcesVerbalOuiRedige} />
-            )}
-
-            {showhuitTextField && (
-                <DatePickerP id="dateProcesVerbalOuiRedigeQuand" label="Date de rédaction du PV" onChange={setdateProcesVerbalOuiRedigeQuand} defaultValue={dateProcesVerbalOuiRedigeQuand} />
-
-            )}
-
-            {showhuitTextField && (
-                <TextFieldP id="ProcesVerbalOuiPar" label="Il a été rédigé par" onChange={setProcesVerbalOuiPar} defaultValue={ProcesVerbalOuiPar} />
+                [<TextFieldP id="ProcesVerbalOui" label="Le procès-verbal porte le numéro d’identification" onChange={setProcesVerbalOui} defaultValue={ProcesVerbalOui} />,
+                <TextFieldP id="ProcesVerbalOuiRedige" label="Il a été rédigé à" onChange={setProcesVerbalOuiRedige} defaultValue={ProcesVerbalOuiRedige} />,
+                <DatePickerP id="dateProcesVerbalOuiRedigeQuand" label="Date de rédaction du PV" onChange={setdateProcesVerbalOuiRedigeQuand} defaultValue={dateProcesVerbalOuiRedigeQuand} />,
+                <TextFieldP id="ProcesVerbalOuiPar" label="Il a été rédigé par" onChange={setProcesVerbalOuiPar} defaultValue={ProcesVerbalOuiPar} />]
             )}
 
             <AutoCompleteP id="ListeTierResponsable" option={listeDeclarationAss.ListeTierResponsable} label="Un tiers peut-il être rendu responsable de l’accident" onChange={(value) => { setListeTierResponsable(value); setShowListeTierResponsable(value === 'Oui') }} defaultValue={ListeTierResponsable} />
 
             {showneufTextField && (
-                <TextFieldP id="TierResponsableOui" label="Nom et adresse" onChange={setTierResponsableOui} defaultValue={TierResponsableOui} />
-            )}
-
-            {showneufTextField && (
-                <TextFieldP id="TierResponsableOuiNomAdresse" label="Nom et adresse de l’assureur" onChange={setTierResponsableOuiNomAdresse} defaultValue={TierResponsableOuiNomAdresse} />
-            )}
-
-            {showneufTextField && (
-                <TextFieldP id="TierResponsableOuiNumPolice" label="Numéro de police" onChange={setTierResponsableOuiNumPolice} defaultValue={TierResponsableOuiNumPolice} />
+                [<TextFieldP id="TierResponsableOui" label="Nom et adresse" onChange={setTierResponsableOui} defaultValue={TierResponsableOui} />,
+                <TextFieldP id="TierResponsableOuiNomAdresse" label="Nom et adresse de l’assureur" onChange={setTierResponsableOuiNomAdresse} defaultValue={TierResponsableOuiNomAdresse} />,
+                <TextFieldP id="TierResponsableOuiNumPolice" label="Numéro de police" onChange={setTierResponsableOuiNumPolice} defaultValue={TierResponsableOuiNumPolice} />]
             )}
 
             <AutoCompleteP id="ListeTemoins" option={listeDeclarationAss.ListeTemoins} label="Y a-t-il eu des témoins" onChange={(value) => { setListeTemoins(value); setShowListeTemoins(value === 'Oui') }} defaultValue={ListeTemoins} />
@@ -522,6 +376,7 @@ export default function FormulaireDeclarationASSBelfius({ setValue, accidentData
             {showdixTextField && (
                 <TextFieldP id="TemoinsOui" label="Nom - rue/n°/boite - Code postal - Commune" onChange={setTemoinsOui} defaultValue={TemoinsOui} />
             )}
+
             <div style={frameStyle}>
                 <h5> Comment la victime a-t-elle été blessée (lésion physique au psychique) ? Précisez chaque fois par ordre d’importance tous les différents contacts qui ont
                     provoqué la (les) blessure(s) (p. ex. , contact avec un courant électrique, avec une source de chaleur ou des substances dangereuses, noyade, ensevelis-
@@ -533,77 +388,40 @@ export default function FormulaireDeclarationASSBelfius({ setValue, accidentData
             <AutoCompleteP id="ListeSoinsMedicaux" option={listeDeclarationAss.ListeSoinsMedicaux} label="Des soins médicaux ont-ils été dispensés chez l’employeur" onChange={(value) => { setListeSoinsMedicaux(value); setShowListeSoinsMedicaux(value === 'Oui') }} defaultValue={ListeSoinsMedicaux} />
 
             {showonzeTextField && (
-                <DatePickerP id="dateSoinsMedicauxDate" label="Date et heure" onChange={setdateSoinsMedicauxDate} defaultValue={dateSoinsMedicauxDate} />
-            )}
-
-            {showonzeTextField && (
-                <TextFieldP id="SoinsMedicauxDispansateur" label="Qualité du dispensateur" onChange={setSoinsMedicauxDispansateur} defaultValue={SoinsMedicauxDispansateur} />
-            )}
-
-            {showonzeTextField && (
-                <TextFieldP id="SoinsMedicauxDescriptions" label="Description des soins dispensés" onChange={setSoinsMedicauxDescriptions} defaultValue={SoinsMedicauxDescriptions} />
+                [<DatePickerP id="dateSoinsMedicauxDate" label="Date et heure" onChange={setdateSoinsMedicauxDate} defaultValue={dateSoinsMedicauxDate} />,
+                <TextFieldP id="SoinsMedicauxDispansateur" label="Qualité du dispensateur" onChange={setSoinsMedicauxDispansateur} defaultValue={SoinsMedicauxDispansateur} />,
+                <TextFieldP id="SoinsMedicauxDescriptions" label="Description des soins dispensés" onChange={setSoinsMedicauxDescriptions} defaultValue={SoinsMedicauxDescriptions} />]
             )}
 
             <AutoCompleteP id="ListeSoinsMedicauxMedecin" option={listeDeclarationAss.ListeSoinsMedicauxMedecin} label="Des soins médicaux ont-ils été dispensés par un médecin externe" onChange={(value) => { setListeSoinsMedicauxMedecin(value); setShowListeSoinsMedicauxMedecin(value === 'Oui') }} defaultValue={ListeSoinsMedicauxMedecin} />
 
             {showdouzeTextField && (
-                <DatePickerP id="dateSoinsMedicauxMedecin" label="Date et heure" onChange={setdateSoinsMedicauxMedecin} defaultValue={dateSoinsMedicauxMedecin} />
-            )}
-
-            {showdouzeTextField && (
-                <TextFieldP id="SoinsMedicauxMedecinInami" label="Numéro d’identification du médecin externe à l’INAMI" onChange={setSoinsMedicauxMedecinInami} defaultValue={SoinsMedicauxMedecinInami} />
-            )}
-
-            {showdouzeTextField && (
-                <TextFieldP id="SoinsMedicauxMedecinNom" label="Nom et prénom du médecin externe" onChange={setSoinsMedicauxMedecinNom} defaultValue={SoinsMedicauxMedecinNom} />
-            )}
-
-            {showdouzeTextField && (
-                <TextFieldP id="SoinsMedicauxMedecinRue" label="Rue / n° / boite" onChange={setSoinsMedicauxMedecinRue} defaultValue={SoinsMedicauxMedecinRue} />
-            )}
-
-            {showdouzeTextField && (
-                <TextFieldP id="SoinsMedicauxMedecinCodePostal" label="Code postal" onChange={setSoinsMedicauxMedecinCodePostal} defaultValue={SoinsMedicauxMedecinCodePostal} />
-            )}
-
-            {showdouzeTextField && (
-                <TextFieldP id="SoinsMedicauxMedecinCommune" label="Commune" onChange={setSoinsMedicauxMedecinCommune} defaultValue={SoinsMedicauxMedecinCommune} />
+                [<DatePickerP id="dateSoinsMedicauxMedecin" label="Date et heure" onChange={setdateSoinsMedicauxMedecin} defaultValue={dateSoinsMedicauxMedecin} />,
+                <TextFieldP id="SoinsMedicauxMedecinInami" label="Numéro d’identification du médecin externe à l’INAMI" onChange={setSoinsMedicauxMedecinInami} defaultValue={SoinsMedicauxMedecinInami} />,
+                <TextFieldP id="SoinsMedicauxMedecinNom" label="Nom et prénom du médecin externe" onChange={setSoinsMedicauxMedecinNom} defaultValue={SoinsMedicauxMedecinNom} />,
+                <TextFieldP id="SoinsMedicauxMedecinRue" label="Rue / n° / boite" onChange={setSoinsMedicauxMedecinRue} defaultValue={SoinsMedicauxMedecinRue} />,
+                <TextFieldP id="SoinsMedicauxMedecinCodePostal" label="Code postal" onChange={setSoinsMedicauxMedecinCodePostal} defaultValue={SoinsMedicauxMedecinCodePostal} />,
+                <TextFieldP id="SoinsMedicauxMedecinCommune" label="Commune" onChange={setSoinsMedicauxMedecinCommune} defaultValue={SoinsMedicauxMedecinCommune} />]
             )}
 
             <AutoCompleteP id="ListeSoinsMedicauxHopital" option={listeDeclarationAss.ListeSoinsMedicauxHopital} label="Des soins médicaux ont-ils été dispensés à l’hôpital" onChange={(value) => { setListeSoinsMedicauxHopital(value); setShowListeSoinsMedicauxHopital(value === 'Oui') }} defaultValue={ListeSoinsMedicauxHopital} />
 
             {showtreizeTextField && (
-                <DatePickerP id="dateSoinsMedicauxHopital" label="Date et heure" onChange={setdateSoinsMedicauxHopital} defaultValue={dateSoinsMedicauxHopital} />
+                [<DatePickerP id="dateSoinsMedicauxHopital" label="Date et heure" onChange={setdateSoinsMedicauxHopital} defaultValue={dateSoinsMedicauxHopital} />,
+                <TextFieldP id="SoinsMedicauxHopitalInami" label="Numéro d’identification de l’hôpital à l’INAMI" onChange={setSoinsMedicauxHopitalInami} defaultValue={SoinsMedicauxHopitalInami} />,
+                <TextFieldP id="SoinsMedicauxHopitaldenomi" label="Dénomination de I*hôpital" onChange={setSoinsMedicauxHopitaldenomi} defaultValue={SoinsMedicauxHopitaldenomi} />,
+                <TextFieldP id="SoinsMedicauxHopitalRue" label="Rue / n° / boite" onChange={setSoinsMedicauxHopitalRue} defaultValue={SoinsMedicauxHopitalRue} />,
+                <TextFieldP id="SoinsMedicauxHopitalCodePostal" label="Code postal" onChange={setSoinsMedicauxHopitalCodePostal} defaultValue={SoinsMedicauxHopitalCodePostal} />,
+                <TextFieldP id="SoinsMedicauxHopitalCommune" label="Commune" onChange={setSoinsMedicauxHopitalCommune} defaultValue={SoinsMedicauxHopitalCommune} />]
             )}
 
-            {showtreizeTextField && (
-                <TextFieldP id="SoinsMedicauxHopitalInami" label="Numéro d’identification de l’hôpital à l’INAMI" onChange={setSoinsMedicauxHopitalInami} defaultValue={SoinsMedicauxHopitalInami} />
-            )}
-
-            {showtreizeTextField && (
-                <TextFieldP id="SoinsMedicauxHopitaldenomi" label="Dénomination de I*hôpital" onChange={setSoinsMedicauxHopitaldenomi} defaultValue={SoinsMedicauxHopitaldenomi} />
-            )}
-
-            {showtreizeTextField && (
-                <TextFieldP id="SoinsMedicauxHopitalRue" label="Rue / n° / boite" onChange={setSoinsMedicauxHopitalRue} defaultValue={SoinsMedicauxHopitalRue} />
-            )}
-
-            {showtreizeTextField && (
-                <TextFieldP id="SoinsMedicauxHopitalCodePostal" label="Code postal" onChange={setSoinsMedicauxHopitalCodePostal} defaultValue={SoinsMedicauxHopitalCodePostal} />
-            )}
-
-            {showtreizeTextField && (
-                <TextFieldP id="SoinsMedicauxHopitalCommune" label="Commune" onChange={setSoinsMedicauxHopitalCommune} defaultValue={SoinsMedicauxHopitalCommune} />
-            )}
             <AutoCompleteP id="ListeConseqAccident" option={listeDeclarationAss.ListeConseqAccident} label="Conséquences de l’accident" onChange={setListeConseqAccident} defaultValue={ListeConseqAccident} />
             <DatePickerP id="dateRepriseEffective" label="Date de reprise effective du travail habituel/au poste d’origine" onChange={setdateRepriseEffective} defaultValue={dateRepriseEffective} />
-
             <div style={frameStyle}>
                 <h5>  S'il n'y a pas encore eu de reprise complète du travail habituel/au poste d’origine durée probable de l'incapacité temporaire
                     totale ou partielle de travail </h5>
             </div>
             <TextFieldP id="JourIncaCompl" label="Jours" onChange={setJourIncaCompl} defaultValue={JourIncaCompl} />
-
             <AutoCompleteP id="ListeMesureRepetition" option={listeDeclarationAss.ListeMesureRepetition} label="Mesures de prévention prises pour éviter la répétition d’un tel accident" onChange={setListeMesureRepetition} defaultValue={ListeMesureRepetition} />
             <TextFieldP id="CodeRisqueEntreprise" label="Codes risques propres à l’entreprise" onChange={setCodeRisqueEntreprise} defaultValue={CodeRisqueEntreprise} />
             <AutoCompleteP id="ListeVictimeOnss" option={listeDeclarationAss.ListeVictimeOnss} label="La victime est-elle affiliée à l’ONSS" onChange={(value) => { setListeVictimeOnss(value); setShowListeVictimeOnss(value === 'Non') }} defaultValue={ListeVictimeOnss} />
@@ -611,13 +429,11 @@ export default function FormulaireDeclarationASSBelfius({ setValue, accidentData
             {showquatorzeTextField && (
                 <TextFieldP id="victimeOnssNon" label="Si non, donnée le motif" onChange={setvictimeOnssNon} defaultValue={victimeOnssNon} />
             )}
+
             <TextFieldP id="codeTravailleurSocial" label="Code du travailleur de l'assurance sociale" onChange={(value) => { setcodeTravailleurSocial(value); setShowcodeTravailleurSocial(value === '') }} defaultValue={codeTravailleurSocial} />
-            {/*textFieldchangePerso("codeTravailleurSocial", "Code du travailleur de l'assurance sociale", handloutlinedmultilinecodeTravailleurSocial)*/}
 
             {showquinzeTextField && (
-
                 <AutoCompleteP id="ListeCategoProfess" option={listeDeclarationAss.ListeCategoProfess} label="S'il n'est pas connu, mentionnez la catégorie professionnelle" onChange={(value) => { setListeCategoProfess(value); setShowListeCategoProfess(value === 'Autre (à préciser)') }} defaultValue={ListeCategoProfess} />
-
             )}
 
             {showvingtTextField && (
@@ -628,11 +444,9 @@ export default function FormulaireDeclarationASSBelfius({ setValue, accidentData
 
             {showSeizeTextField && (
                 <AutoCompleteP id="ListeApprentiFormat" option={listeDeclarationAss.ListeApprentiFormat} label="S’agit-il d’un apprenti en formation pour devenir chef d’entreprise" onChange={(value) => { setListeApprentiFormat(value); setShowListeApprentiFormat(value === 'Non') }} defaultValue={ListeApprentiFormat} />
-
             )}
 
             {/*{showSeizeTextField && showdixseptTextField && (
-
                 <div style={{ display: 'flex', justifyContent: 'center', margin: '0 auto 1rem' }}>
                     <TextField
                         id="CommissionParitaire"
@@ -642,48 +456,23 @@ export default function FormulaireDeclarationASSBelfius({ setValue, accidentData
                         multiline
                     />
                 </div>
-
             )}*/}
 
             {showSeizeTextField && showdixseptTextField && (
-                <TextFieldP id="CommissionParitaireDénomination" label="Commission paritaire Denomination" onChange={setCommissionParitaireDénomination} defaultValue={CommissionParitaireDénomination} />
-            )}
-
-            {showSeizeTextField && showdixseptTextField && (
-                <TextFieldP id="CommissionParitaireNumn" label="Commission paritaire Numéro" onChange={setCommissionParitaireNumn} defaultValue={CommissionParitaireNumn} />
-            )}
-
-            {showSeizeTextField && showdixseptTextField && (
-                <AutoCompleteP id="ListeTypeContrat" option={listeDeclarationAss.ListeTypeContrat} label="Type de contrat de travail" onChange={setListeTypeContrat} defaultValue={ListeTypeContrat} />
-            )}
-
-            {showSeizeTextField && showdixseptTextField && (
-                <TextFieldP id="Nbrjoursregime" label="Nombre de jours par semaine du régime de travail" onChange={setNbrjoursregime} defaultValue={Nbrjoursregime} />
-            )}
-
-            {showSeizeTextField && showdixseptTextField && (
-                <TextFieldP id="NbrHeureSemaine" label="Nombre moyen d’heures par semaine la victime" onChange={setNbrHeureSemaine} defaultValue={NbrHeureSemaine} />
-            )}
-
-            {showSeizeTextField && showdixseptTextField && (
-                <TextFieldP id="NbrHeureSemaineReference" label="Nombre moyen d’heures par semaine la personne de sélection" onChange={setNbrHeureSemaineReference} defaultValue={NbrHeureSemaineReference} />
-            )}
-
-            {showSeizeTextField && showdixseptTextField && (
-                <AutoCompleteP id="ListeVictiPension" option={listeDeclarationAss.ListeVictiPension} label="La victime est-elle une personne pensionnée exerçant encore une activité professionnelle" onChange={setListeVictiPension} defaultValue={ListeVictiPension} />
-            )}
-
-            {showSeizeTextField && showdixseptTextField && (
-
-                <AutoCompleteP id="ListeModeRemuneration" option={listeDeclarationAss.ListeModeRemuneration} label="Mode de rémunération" onChange={(value) => { setListeModeRemuneration(value); setShowListeModeRemuneration(value === 'Rémunération fixe') }} defaultValue={ListeModeRemuneration} />
-
+                [<TextFieldP id="CommissionParitaireDénomination" label="Commission paritaire Denomination" onChange={setCommissionParitaireDénomination} defaultValue={CommissionParitaireDénomination} />,
+                <TextFieldP id="CommissionParitaireNumn" label="Commission paritaire Numéro" onChange={setCommissionParitaireNumn} defaultValue={CommissionParitaireNumn} />,
+                <AutoCompleteP id="ListeTypeContrat" option={listeDeclarationAss.ListeTypeContrat} label="Type de contrat de travail" onChange={setListeTypeContrat} defaultValue={ListeTypeContrat} />,
+                <TextFieldP id="Nbrjoursregime" label="Nombre de jours par semaine du régime de travail" onChange={setNbrjoursregime} defaultValue={Nbrjoursregime} />,
+                <TextFieldP id="NbrHeureSemaine" label="Nombre moyen d’heures par semaine la victime" onChange={setNbrHeureSemaine} defaultValue={NbrHeureSemaine} />,
+                <TextFieldP id="NbrHeureSemaineReference" label="Nombre moyen d’heures par semaine la personne de sélection" onChange={setNbrHeureSemaineReference} defaultValue={NbrHeureSemaineReference} />,
+                <AutoCompleteP id="ListeVictiPension" option={listeDeclarationAss.ListeVictiPension} label="La victime est-elle une personne pensionnée exerçant encore une activité professionnelle" onChange={setListeVictiPension} defaultValue={ListeVictiPension} />,
+                <AutoCompleteP id="ListeModeRemuneration" option={listeDeclarationAss.ListeModeRemuneration} label="Mode de rémunération" onChange={(value) => { setListeModeRemuneration(value); setShowListeModeRemuneration(value === 'Rémunération fixe') }} defaultValue={ListeModeRemuneration} />]
             )}
 
             {showSeizeTextField && showdixseptTextField && showdixhuitTextField && (
                 <div>
                     <AutoCompleteP id="ListeMontantRemuneration" option={listeDeclarationAss.ListeMontantRemuneration} label="Unité de temps" onChange={setListeMontantRemuneration} defaultValue={ListeMontantRemuneration} />
                     <TextFieldP id="MontantRemunerationVariable" label="En cas de rémunération variable, cycle correspondant à l’unité de temps déclarée" onChange={setMontantRemunerationVariable} defaultValue={MontantRemunerationVariable} />
-
                     <div style={frameStyle}>
                         <h5>total des rémunérations et des avantages assujettis à l’ONSS, sans heures supplémentaires, pécule de vacances complémentaire et prime de find’année
                             (le montant déclaré doit correspondre à l’unité de temps ou à l’unité de temps et au cycle)</h5>
@@ -698,30 +487,19 @@ export default function FormulaireDeclarationASSBelfius({ setValue, accidentData
             )}
 
             {showSeizeTextField && showdixseptTextField && (
-                <h3>Questions 63</h3>
+                [<h3>Questions 63</h3>,
+                <TextFieldP id="AvantegeAssujOnns" label="Autres avantages assujettis ou non à l’ONSS (exprimés sur base annuelle)" onChange={setAvantegeAssujOnns} defaultValue={AvantegeAssujOnns} />,
+                <TextFieldP id="AvantegeAssujOnnsNature" label="Nature des avantages" onChange={setAvantegeAssujOnnsNature} defaultValue={AvantegeAssujOnnsNature} />,
+                <AutoCompleteP id="ListechangementFonction" option={listeDeclarationAss.ListechangementFonction} label="Durée du contrat de travail" onChange={(value) => { setListechangementFonction(value); setShowListechangementFonction(value === 'Oui') }} defaultValue={ListechangementFonction} />]
             )}
 
-            {showSeizeTextField && showdixseptTextField && (
-                <TextFieldP id="AvantegeAssujOnns" label="Autres avantages assujettis ou non à l’ONSS (exprimés sur base annuelle)" onChange={setAvantegeAssujOnns} defaultValue={AvantegeAssujOnns} />
-            )}
-
-            {showSeizeTextField && showdixseptTextField && (
-                <TextFieldP id="AvantegeAssujOnnsNature" label="Nature des avantages" onChange={setAvantegeAssujOnnsNature} defaultValue={AvantegeAssujOnnsNature} />
-            )}
-
-            {showSeizeTextField && showdixseptTextField && (
-                <AutoCompleteP id="ListechangementFonction" option={listeDeclarationAss.ListechangementFonction} label="Durée du contrat de travail" onChange={(value) => { setListechangementFonction(value); setShowListechangementFonction(value === 'Oui') }} defaultValue={ListechangementFonction} />
-
-            )}
-
-            {showSeizeTextField && showdixseptTextField && showdixneufTextField && (
+            {showdixneufTextField && (
                 <DatePickerP id="dateChangementFonction" label="Si oui, date du dernier changement de fonction" onChange={setdateChangementFonction} defaultValue={dateChangementFonction} />
             )}
 
             <h3>Questions 65</h3>
             <TextFieldP id="heureTravaillePerdu" label="Nombre d’heures de travail perdues le jour de l’accident" onChange={setheureTravaillePerdu} defaultValue={heureTravaillePerdu} />
             <TextFieldP id="salaireTravaillePerdu" label="Perte salariale pour les heures de travail perdues" onChange={setsalaireTravaillePerdu} defaultValue={salaireTravaillePerdu} />
-
 
         </div>
     );
