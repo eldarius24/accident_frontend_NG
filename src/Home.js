@@ -76,17 +76,23 @@ function Home() {
     function refreshListAccidents() {
         axios.get("http://" + apiUrl + ":3100/api/accidents")
             .then(response => {
-                // Traiter la réponse de l'API
                 const accidents = response.data;
                 console.log(accidents);
-                setData(accidents);
+
+                if (Array.isArray(accidents)) {
+                    setData(accidents);
+                } else {
+                    console.error("La réponse de l'API n'est pas un tableau.");
+                }
+
                 setLoading(false);
             })
             .catch((error) => {
                 console.log(error);
                 setLoading(false);
             });
-    };
+    }
+
 
     useEffect(() => {
         if (firstLoad) {
@@ -126,7 +132,7 @@ function Home() {
         const worksheet = workbook.addWorksheet('Accidents');
 
         worksheet.addRow([
-            'Nom de l\'entreprise',
+            'Nom de l entreprise',
             'Nom du secteur',
             'Type de travailleur',
             //'Numéro d\'accident du groupe',
@@ -134,12 +140,12 @@ function Home() {
             //'Jours de l\'accident',
             //'Heure de l\'accident',
             //'Date de l\'accident',
-            'Date de débu\'t de l incapacité',
+            'Date de début de l incapacité',
             'Nom du travailleur',
             'Prénon du Travailleur',
             //'Age du travailleur le jours de l\'accident',
             'Date de naissance',
-            'Circonstance de l\'accident',
+            'Circonstance de l accident',
             'Code siège lésion',
             'Code nature lésion',
             'Code déviation',
@@ -148,11 +154,11 @@ function Home() {
             'Date ce début de la derniere absence longue avant AT (+ 15 jours)',
             'Date de fin de la derniere absence longue avant AT (+ 15 jours)',
             'Blessures',
-            'Date de fin de l\'incapacité',
+            'Date de fin de l incapacité',
             //'Nombre de jours d\'IT',
             'Indeminisation',
-            'Type d\'accident',
-            'Nombre d\'heures de travail par semaine',
+            'Type d accident',
+            'Nombre d heures de travail par semaine',
             //'Nombre de jours de travail perdus',
             //'Ancienneté en Années',
             //'Ancienneté en jours',
@@ -229,223 +235,451 @@ function Home() {
 
         // Ajouter l'en-tête
         worksheet.addRow([
-            'Nom de l entreprise',
-            'Nom du secteur',
-            'Type de travailleur',
-            'Status assureur',
-            'Date d envoie de la déclaration a l assurance',
-            'Getionnaire du sinistre',
-            'Numéro de la police d assurance',
-            'Cloturer ou pas',
-            'Commentaire et suivit',
-            'référence du sinistre',
-            'Nom du travailleur',
-            'Prenom du Travailleur',
-            'Date de naissance du travailleur',
-            'Lieux de naissance du travailleur',
+            'entrepriseName',
+            'secteur',
+            'typeTravailleur',
+            'AssureurStatus',
+            'DateEnvoieDeclarationAccide',
+            'Getionnaiesinistre',
+            'NumeroPoliceAssurance',
+            'boolAsCloture',
+            'commentaireetSuivit',
+            'referenceduSinistre',
+            'typeAccident',
+            'circonstanceAccident',
+            'DateHeureAccide',
+            'DateJourIncapDeb',
+            'DateJourIncapF',
+            'indemnisationAccident',
+            'blessures',
+            'boolAucun',
+            'boolChausure',
+            'boolLunette',
+            'boolGant',
+            'boolCasque',
+            'boolAuditive',
+            'boolMasque',
+            'boolEcran',
+            'boolTenue',
+            'boolFiltre',
+            'boolVeste',
+            'boolMaire',
+            'boolChute',
+            'boolAutre',
+            'codeDeviation',
+            'codeAgentMateriel',
+            'codeNatureLesion',
+            'codeSiegeLesion',
+            'nomTravailleur',
+            'prenomTravailleur',
+            'dateNaissan',
+            'lieuxnaissance',
             'nbHeuresSemaine',
-            'Date de debut du dernier arret',
-            'Date de Fin du dernier arret',
-            'Date d entrée dans l entreprise',
-            'Type d accident',
-            'Circonstance de l accident',
-            'Date de l accident',
-            'Date de début de l incapacité',
-            'Date de fin de l incapacité',
-            'Indemnisation Accident',
-            'Blessures',
-            'aucun API',
-            'Chausure de sécurité',
-            'Lunette de sécurité',
-            'Gants',
-            'Casque',
-            'Protection de l ouie',
-            'Masque respiratoire avec apport d air frais',
-            'Ecran facial',
-            'Tenue de signalisation',
-            'Masque respiratoire à filtre',
-            'Veste de protection',
-            'Masque antiseptique',
-            'Protection contre les chutes',
-            'Autre',
-            'Code déviation',
-            'code agent materiel',
-            'code nature lesion',
-            'code siege lesion',
+            'dateDebutArr',
+            'dateFinArr',
+            'dateEntrEntrepri',
+            'sexe',
+            'nationalité',
+            'etatCivil',
+            'adresseRue',
+            'adresseCodepostal',
+            'adresseCommune',
+            'adressePays',
+            'adresseMail',
+            'telephone',
+            'adresseRuecorrespondance',
+            'adresseCodecorrespondance',
+            'adresseCommunecorrespondance',
+            'ListeadressePaysCorrespondance',
+            'telephoneCorrespondance',
+            'ListeLangueCorr',
+            'adresseRueMutuelle',
+            'adresseCodepostalMutuelle',
+            'adresseCommuneMutuelle',
+            'numAffiliation',
+            'numCompteBancaire',
+            'etabliFinancier',
+            'numDimona',
+            'ListeDurContra',
+            'ListeDateSortie',
+            'dateSort',
+            'profesEntreprise',
+            'ListeDureeDsEntreprise',
+            'ListeVicInterimaire',
+            'VicInterimaireOui',
+            'VicInterimaireOuiNom',
+            'VicInterimaireOuiAdresse',
+            'ListeVicTravailExt',
+            'VicTravailExtOui',
+            'VicTravailExtOuiNom',
+            'VicTravailExtOuiAdresse',
+            'dateNotifEmploye',
+            'ListeLieuxAt',
+            'ListeVoiePublic',
+            'LieuxAtAdresse',
+            'LieuxAtCodePostal',
+            'LieuxAtCommune',
+            'ListeLieuxAtPays',
+            'NumdeChantier',
+            'environementLieux',
+            'activiteSpecifique',
+            'ListeTypedePost',
+            'ListeProfHabituelle',
+            'ListeProfHabituelleNon',
+            'evenementDeviant',
+            'ListeProcesVerbal',
+            'ProcesVerbalOui',
+            'ProcesVerbalOuiRedige',
+            'dateProcesVerbalOuiRedigeQua',
+            'ProcesVerbalOuiPar',
+            'ListeTierResponsable',
+            'TierResponsableOui',
+            'TierResponsableOuiNomAdresse',
+            'TierResponsableOuiNumPolice',
+            'ListeTemoins',
+            'TemoinsOui',
+            'blessureVictume',
+            'ListeSoinsMedicaux',
+            'dateSoinsMedicauxDa',
+            'SoinsMedicauxDispansateur',
+            'SoinsMedicauxDescriptions',
+            'ListeSoinsMedicauxMedecin',
+            'dateSoinsMedicauxMedec',
+            'SoinsMedicauxMedecinInami',
+            'SoinsMedicauxMedecinNom',
+            'SoinsMedicauxMedecinRue',
+            'SoinsMedicauxMedecinCodePostal',
+            'SoinsMedicauxMedecinCommune',
+            'ListeSoinsMedicauxHopital',
+            'dateSoinsMedicauxHopit',
+            'SoinsMedicauxHopitalInami',
+            'SoinsMedicauxHopitaldenomi',
+            'SoinsMedicauxHopitalRue',
+            'SoinsMedicauxHopitalCodePostal',
+            'SoinsMedicauxHopitalCommune',
+            'ListeConseqAccident',
+            'dateRepriseEffecti',
+            'JourIncaCompl',
+            'ListeMesureRepetition',
+            'CodeRisqueEntreprise',
+            'ListeVictimeOnss',
+            'victimeOnssNon',
+            'codeTravailleurSocial',
+            'ListeCategoProfess',
+            'CategoProfessAutre',
+            'ListeNonOnss',
+            'ListeApprentiFormat',
+            'CommissionParitaireDénomination',
+            'CommissionParitaireNumn',
+            'ListeTypeContrat',
+            'Nbrjoursregime',
+            'NbrHeureSemaine',
+            'NbrHeureSemaineReference',
+            'ListeVictiPension',
+            'ListeModeRemuneration',
+            'ListeMontantRemuneration',
+            'MontantRemunerationVariable',
+            'remunerationTotalAssOnns',
+            'ListePrimeFinAnnee',
+            'PrimeFinAnneeRemuAnnuel',
+            'PrimeFinAnneeRemuAnnuelForfetaire',
+            'PrimeFinAnneeRemuAnnuelNbrHeure',
+            'AvantegeAssujOnns',
+            'AvantegeAssujOnnsNature',
+            'ListechangementFonction',
+            'dateChangementFoncti',
+            'heureTravaillePerdu',
+            'salaireTravaillePerdu',
+            'activiteGenerale',
         ]);
 
-        // Ajouter les données filtrées
-        filteredData.forEach(item => {
-            worksheet.addRow([
-
-                item.entrepriseName,
-                item.secteur,
-                item.typeTravailleur,
-                item.AssureurStatus,
-                item.DateEnvoieDeclarationAccident,
-                item.Getionnaiesinistre,
-                item.NumeroPoliceAssurance,
-                item.boolAsCloture,
-                item.commentaireetSuivit,
-                item.referenceduSinistre,
-                item.nomTravailleur,
-                item.prenomTravailleur,
-                item.dateNaissance,
-                item.lieuxnaissance,
-                item.nbHeuresSemaine,
-                item.dateDebutArret,
-                item.dateFinArret,
-                item.dateEntrEntreprise,
-                item.typeAccident,
-                item.circonstanceAccident,
-                item.DateHeureAccident,
-                item.DateJourIncapDebut,
-                item.DateJourIncapFin,
-                item.indemnisationAccident,
-                item.blessures,
-                item.boolAucun,
-                item.boolChausure,
-                item.boolLunette,
-                item.boolGant,
-                item.boolCasque,
-                item.boolAuditive,
-                item.boolMasque,
-                item.boolEcran,
-                item.boolTenue,
-                item.boolFiltre,
-                item.boolVeste,
-                item.boolMaire,
-                item.boolChute,
-                item.boolAutre,
-                item.codeDeviation,
-                item.codeAgentMateriel,
-                item.codeNatureLesion,
-                item.codeSiegeLesion
-            ]);
-        });
+    // Ajouter les données filtrées
+    filteredData.forEach(item => {
+        worksheet.addRow([
 
 
+            item.entrepriseName,
+            item.secteur,
+            item.typeTravailleur,
+            item.AssureurStatus,
+            item.DateEnvoieDeclarationAccide,
+            item.Getionnaiesinistre,
+            item.NumeroPoliceAssurance,
+            item.boolAsCloture,
+            item.commentaireetSuivit,
+            item.referenceduSinistre,
+            item.typeAccident,
+            item.circonstanceAccident,
+            item.DateHeureAccide,
+            item.DateJourIncapDeb,
+            item.DateJourIncapF,
+            item.indemnisationAccident,
+            item.blessures,
+            item.boolAucun,
+            item.boolChausure,
+            item.boolLunette,
+            item.boolGant,
+            item.boolCasque,
+            item.boolAuditive,
+            item.boolMasque,
+            item.boolEcran,
+            item.boolTenue,
+            item.boolFiltre,
+            item.boolVeste,
+            item.boolMaire,
+            item.boolChute,
+            item.boolAutre,
+            item.codeDeviation,
+            item.codeAgentMateriel,
+            item.codeNatureLesion,
+            item.codeSiegeLesion,
+            item.nomTravailleur,
+            item.prenomTravailleur,
+            item.dateNaissan,
+            item.lieuxnaissance,
+            item.nbHeuresSemaine,
+            item.dateDebutArr,
+            item.dateFinArr,
+            item.dateEntrEntrepri,
+            item.sexe,
+            item.nationalité,
+            item.etatCivil,
+            item.adresseRue,
+            item.adresseCodepostal,
+            item.adresseCommune,
+            item.adressePays,
+            item.adresseMail,
+            item.telephone,
+            item.adresseRuecorrespondance,
+            item.adresseCodecorrespondance,
+            item.adresseCommunecorrespondance,
+            item.ListeadressePaysCorrespondance,
+            item.telephoneCorrespondance,
+            item.ListeLangueCorr,
+            item.adresseRueMutuelle,
+            item.adresseCodepostalMutuelle,
+            item.adresseCommuneMutuelle,
+            item.numAffiliation,
+            item.numCompteBancaire,
+            item.etabliFinancier,
+            item.numDimona,
+            item.ListeDurContra,
+            item.ListeDateSortie,
+            item.dateSort,
+            item.profesEntreprise,
+            item.ListeDureeDsEntreprise,
+            item.ListeVicInterimaire,
+            item.VicInterimaireOui,
+            item.VicInterimaireOuiNom,
+            item.VicInterimaireOuiAdresse,
+            item.ListeVicTravailExt,
+            item.VicTravailExtOui,
+            item.VicTravailExtOuiNom,
+            item.VicTravailExtOuiAdresse,
+            item.dateNotifEmploye,
+            item.ListeLieuxAt,
+            item.ListeVoiePublic,
+            item.LieuxAtAdresse,
+            item.LieuxAtCodePostal,
+            item.LieuxAtCommune,
+            item.ListeLieuxAtPays,
+            item.NumdeChantier,
+            item.environementLieux,
+            item.activiteSpecifique,
+            item.ListeTypedePost,
+            item.ListeProfHabituelle,
+            item.ListeProfHabituelleNon,
+            item.evenementDeviant,
+            item.ListeProcesVerbal,
+            item.ProcesVerbalOui,
+            item.ProcesVerbalOuiRedige,
+            item.dateProcesVerbalOuiRedigeQua,
+            item.ProcesVerbalOuiPar,
+            item.ListeTierResponsable,
+            item.TierResponsableOui,
+            item.TierResponsableOuiNomAdresse,
+            item.TierResponsableOuiNumPolice,
+            item.ListeTemoins,
+            item.TemoinsOui,
+            item.blessureVictume,
+            item.ListeSoinsMedicaux,
+            item.dateSoinsMedicauxDa,
+            item.SoinsMedicauxDispansateur,
+            item.SoinsMedicauxDescriptions,
+            item.ListeSoinsMedicauxMedecin,
+            item.dateSoinsMedicauxMedec,
+            item.SoinsMedicauxMedecinInami,
+            item.SoinsMedicauxMedecinNom,
+            item.SoinsMedicauxMedecinRue,
+            item.SoinsMedicauxMedecinCodePostal,
+            item.SoinsMedicauxMedecinCommune,
+            item.ListeSoinsMedicauxHopital,
+            item.dateSoinsMedicauxHopit,
+            item.SoinsMedicauxHopitalInami,
+            item.SoinsMedicauxHopitaldenomi,
+            item.SoinsMedicauxHopitalRue,
+            item.SoinsMedicauxHopitalCodePostal,
+            item.SoinsMedicauxHopitalCommune,
+            item.ListeConseqAccident,
+            item.dateRepriseEffecti,
+            item.JourIncaCompl,
+            item.ListeMesureRepetition,
+            item.CodeRisqueEntreprise,
+            item.ListeVictimeOnss,
+            item.victimeOnssNon,
+            item.codeTravailleurSocial,
+            item.ListeCategoProfess,
+            item.CategoProfessAutre,
+            item.ListeNonOnss,
+            item.ListeApprentiFormat,
+            item.CommissionParitaireDénomination,
+            item.CommissionParitaireNumn,
+            item.ListeTypeContrat,
+            item.Nbrjoursregime,
+            item.NbrHeureSemaine,
+            item.NbrHeureSemaineReference,
+            item.ListeVictiPension,
+            item.ListeModeRemuneration,
+            item.ListeMontantRemuneration,
+            item.MontantRemunerationVariable,
+            item.remunerationTotalAssOnns,
+            item.ListePrimeFinAnnee,
+            item.PrimeFinAnneeRemuAnnuel,
+            item.PrimeFinAnneeRemuAnnuelForfetaire,
+            item.PrimeFinAnneeRemuAnnuelNbrHeure,
+            item.AvantegeAssujOnns,
+            item.AvantegeAssujOnnsNature,
+            item.ListechangementFonction,
+            item.dateChangementFoncti,
+            item.heureTravaillePerdu,
+            item.salaireTravaillePerdu,
+            item.activiteGenerale,
 
-        // Générer le fichier Excel et le télécharger
-        workbook.xlsx.writeBuffer().then(buffer => {
-            const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-
-            const fileName = 'accidents.xlsx';
-
-            if (window.navigator && window.navigator.msSaveOrOpenBlob) {
-                // Pour Internet Explorer
-                window.navigator.msSaveOrOpenBlob(blob, fileName);
-            } else {
-                // Pour les autres navigateurs
-                const url = URL.createObjectURL(blob);
-                const link = document.createElement('a');
-                link.href = url;
-                link.download = fileName;
-                link.click();
-                URL.revokeObjectURL(url); // Libérer l'URL
-            }
-        });
-    };
+        ]);
+    });
 
 
-    return (
-        <div>
-            <div style={{ display: 'flex', justifyContent: 'center', margin: '20px 0rem' }}>
-                <Grid item xs={6} style={{ marginRight: '20px' }}>
-                    <Button
-                        sx={{ color: 'black', padding: '14px 60px', backgroundColor: '#84a784', '&:hover': { backgroundColor: 'green' }, boxShadow: 3, textTransform: 'none' }}
-                        variant="contained"
-                        color="secondary"
-                        onClick={refreshListAccidents}
-                        startIcon={<RefreshIcon />}
-                    >
-                        Actualiser
-                    </Button>
-                </Grid>
-                <Grid item xs={6} style={{ marginRight: '20px' }}>
-                    <TextField
-                        value={searchTerm}
-                        onChange={handleSearch}
-                        variant="outlined"
-                        sx={{ boxShadow: 3, backgroundColor: '#84a784' }}
-                        InputProps={{
-                            startAdornment: (
-                                <InputAdornment position="start">
-                                    <SearchIcon />
-                                </InputAdornment>
-                            ),
-                        }}
-                    />
-                </Grid>
-                <Grid item xs={6} style={{ marginRight: '20px' }}>
-                    <Button
-                        sx={{ color: 'black', padding: '14px 60px', backgroundColor: '#84a784', '&:hover': { backgroundColor: 'green' }, boxShadow: 3, textTransform: 'none' }}
-                        variant="contained"
-                        color="primary"
-                        onClick={handleExportData}
-                        startIcon={<GetAppIcon />}
-                    >
-                        Accident
-                    </Button>
-                </Grid>
-                <Grid item xs={6} style={{ marginRight: '20px' }}>
-                    <Button
-                        sx={{ color: 'black', padding: '14px 60px', backgroundColor: '#84a784', '&:hover': { backgroundColor: 'green' }, boxShadow: 3, textTransform: 'none' }}
-                        variant="contained"
-                        color="primary"
-                        onClick={handleExportDataAss}
-                        startIcon={<GetAppIcon />}
-                    >
-                        Assurance
-                    </Button>
-                </Grid>
-            </div>
 
-            <TableContainer>
-                <Table>
-                    <TableHead>
-                        <TableRow key={"CellTowerSharp"}>
-                            <TableCell>N° Groupe</TableCell>
-                            <TableCell>N° Entreprise</TableCell>
-                            <TableCell>Date accident</TableCell>
-                            <TableCell>Entreprise</TableCell>
-                            <TableCell>Secteur</TableCell>
-                            <TableCell>Nom du travailleur</TableCell>
-                            <TableCell>Prénom du travailleur</TableCell>
-                            <TableCell>Type accident</TableCell>
-                            <TableCell>Actions</TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {filteredData.map((item) => (
-                            <TableRow key={item._id}>
-                                <TableCell>{item.recordNumberGroupoe}</TableCell>
-                                <TableCell>{item.recordNumberEntreprise}</TableCell>
-                                <TableCell>{item.DateHeureAccident}</TableCell>
-                                <TableCell>{item.entrepriseName}</TableCell>
-                                <TableCell>{item.secteur}</TableCell>
-                                <TableCell>{item.nomTravailleur}</TableCell>
-                                <TableCell>{item.prenomTravailleur}</TableCell>
-                                <TableCell>{item.typeAccident}</TableCell>
-                                <TableCell>
-                                    <Button variant="contained" color="primary" onClick={() => handleEdit(item._id)}>
-                                        <EditIcon />
-                                    </Button>
-                                    <Button
-                                        variant="contained"
-                                        color="secondary"
-                                        onClick={() => handleDelete(item._id)}
-                                        startIcon={<DeleteForeverIcon />}
-                                    >
-                                    </Button>
-                                </TableCell>
-                            </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
-            </TableContainer>
+    // Générer le fichier Excel et le télécharger
+    workbook.xlsx.writeBuffer().then(buffer => {
+        const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+
+        const fileName = 'accidents.xlsx';
+
+        if (window.navigator && window.navigator.msSaveOrOpenBlob) {
+            // Pour Internet Explorer
+            window.navigator.msSaveOrOpenBlob(blob, fileName);
+        } else {
+            // Pour les autres navigateurs
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = fileName;
+            link.click();
+            URL.revokeObjectURL(url); // Libérer l'URL
+        }
+    });
+};
+
+
+return (
+    <div>
+        <div style={{ display: 'flex', justifyContent: 'center', margin: '20px 0rem' }}>
+            <Grid item xs={6} style={{ marginRight: '20px' }}>
+                <Button
+                    sx={{ color: 'black', padding: '14px 60px', backgroundColor: '#84a784', '&:hover': { backgroundColor: 'green' }, boxShadow: 3, textTransform: 'none' }}
+                    variant="contained"
+                    color="secondary"
+                    onClick={refreshListAccidents}
+                    startIcon={<RefreshIcon />}
+                >
+                    Actualiser
+                </Button>
+            </Grid>
+            <Grid item xs={6} style={{ marginRight: '20px' }}>
+                <TextField
+                    value={searchTerm}
+                    onChange={handleSearch}
+                    variant="outlined"
+                    sx={{ boxShadow: 3, backgroundColor: '#84a784' }}
+                    InputProps={{
+                        startAdornment: (
+                            <InputAdornment position="start">
+                                <SearchIcon />
+                            </InputAdornment>
+                        ),
+                    }}
+                />
+            </Grid>
+            <Grid item xs={6} style={{ marginRight: '20px' }}>
+                <Button
+                    sx={{ color: 'black', padding: '14px 60px', backgroundColor: '#84a784', '&:hover': { backgroundColor: 'green' }, boxShadow: 3, textTransform: 'none' }}
+                    variant="contained"
+                    color="primary"
+                    onClick={handleExportData}
+                    startIcon={<GetAppIcon />}
+                >
+                    Accident
+                </Button>
+            </Grid>
+            <Grid item xs={6} style={{ marginRight: '20px' }}>
+                <Button
+                    sx={{ color: 'black', padding: '14px 60px', backgroundColor: '#84a784', '&:hover': { backgroundColor: 'green' }, boxShadow: 3, textTransform: 'none' }}
+                    variant="contained"
+                    color="primary"
+                    onClick={handleExportDataAss}
+                    startIcon={<GetAppIcon />}
+                >
+                    Assurance
+                </Button>
+            </Grid>
         </div>
-    );
+
+        <TableContainer>
+            <Table>
+                <TableHead>
+                    <TableRow key={"CellTowerSharp"}>
+                        <TableCell>N° Groupe</TableCell>
+                        <TableCell>N° Entreprise</TableCell>
+                        <TableCell>Date accident</TableCell>
+                        <TableCell>Entreprise</TableCell>
+                        <TableCell>Secteur</TableCell>
+                        <TableCell>Nom du travailleur</TableCell>
+                        <TableCell>Prénom du travailleur</TableCell>
+                        <TableCell>Type accident</TableCell>
+                        <TableCell>Actions</TableCell>
+                    </TableRow>
+                </TableHead>
+                <TableBody>
+                    {filteredData.map((item) => (
+                        <TableRow key={item._id}>
+                            <TableCell>{item.recordNumberGroupoe}</TableCell>
+                            <TableCell>{item.recordNumberEntreprise}</TableCell>
+                            <TableCell>{item.DateHeureAccident}</TableCell>
+                            <TableCell>{item.entrepriseName}</TableCell>
+                            <TableCell>{item.secteur}</TableCell>
+                            <TableCell>{item.nomTravailleur}</TableCell>
+                            <TableCell>{item.prenomTravailleur}</TableCell>
+                            <TableCell>{item.typeAccident}</TableCell>
+                            <TableCell>
+                                <Button variant="contained" color="primary" onClick={() => handleEdit(item._id)}>
+                                    <EditIcon />
+                                </Button>
+                                <Button
+                                    variant="contained"
+                                    color="secondary"
+                                    onClick={() => handleDelete(item._id)}
+                                    startIcon={<DeleteForeverIcon />}
+                                >
+                                </Button>
+                            </TableCell>
+                        </TableRow>
+                    ))}
+                </TableBody>
+            </Table>
+        </TableContainer>
+    </div>
+);
 }
 
 export default Home;
