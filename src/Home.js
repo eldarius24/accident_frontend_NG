@@ -578,7 +578,7 @@ return (
             <Grid item xs={6} style={{ marginRight: '20px' }}>
                 <TextField
                     value={searchTerm}
-                    onChange={handleSearch}
+                    onChange={setSearchTerm(event.target.value)}
                     variant="outlined"
                     sx={{ boxShadow: 3, backgroundColor: '#84a784' }}
                     InputProps={{
