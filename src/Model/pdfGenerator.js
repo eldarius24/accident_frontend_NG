@@ -16,7 +16,7 @@ const { Edit } = require('@mui/icons-material');
  */
 function EditPdfTextField(form, textFielName, data) {
     const textField = form.getTextField(textFielName); //'18 naam getroffene'
-    if (data !== null) {
+    if (data !== undefined) {
         textField.setText(data.toString()); //'LEFEVRE REMY'
     }
 }
@@ -49,7 +49,7 @@ export default async function editPDF(data) {
             //EditPdfCheckBox(form, '22 checkbox man', true); sexe de autocomplete a chekbox '23 checkbox vrouw' sexe
             EditPdfTextField(form, '24 nationaliteit', data.nationalité);
             //EditPdfCheckBox(form, '25 checkbox ', true); etat civil de autocomplete a chekbox '26 checkbox  1' '27 checkbox  2' '28 checkbox  3' etatCivil
-            EditPdfTextField (form, '29 mailadres', data.adresseMail);
+            EditPdfTextField(form, '29 mailadres', data.adresseMail);
             EditPdfTextField(form, '30 straat', data.adresseRue);
             EditPdfTextField(form, '31 telefoon', data.telephone);
             EditPdfTextField(form, '32 postcode', data.adresseCodepostal);
