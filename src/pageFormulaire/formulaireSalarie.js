@@ -45,6 +45,7 @@ export default function FormulaireSalarie({ setValue, accidentData, watch }) {
   const [prenomTravailleur, setPrenomTravailleur] = useState(watch('prenomTravailleur') ? watch('prenomTravailleur') : (accidentData && accidentData.prenomTravailleur ? accidentData.prenomTravailleur : null));
   const [dateNaissance, setDateNaissance] = useState(watch('dateNaissance') ? watch('dateNaissance') : (accidentData && accidentData.dateNaissance ? accidentData.dateNaissance : null));
   const [lieuxnaissance, setLieuxnaissance] = useState(watch('lieuxnaissance') ? watch('lieuxnaissance') : (accidentData && accidentData.lieuxnaissance ? accidentData.lieuxnaissance : null));
+  const [niss, setNiss] = useState(watch('niss') ? watch('niss') : (accidentData && accidentData.niss ? accidentData.niss : null));
   const [nbHeuresSemaine, setNbHeuresSemaine] = useState(watch('nbHeuresSemaine') ? watch('nbHeuresSemaine') : (accidentData && accidentData.nbHeuresSemaine ? accidentData.nbHeuresSemaine : null));
   const [dateDebutArret, setDateDebutArret] = useState(watch('dateDebutArret') ? watch('dateDebutArret') : (accidentData && accidentData.dateDebutArret ? accidentData.dateDebutArret : null));
   const [dateFinArret, setDateFinArret] = useState(watch('dateFinArret') ? watch('dateFinArret') : (accidentData && accidentData.dateFinArret ? accidentData.dateFinArret : null));
@@ -74,6 +75,7 @@ export default function FormulaireSalarie({ setValue, accidentData, watch }) {
     setValue('prenomTravailleur', prenomTravailleur)
     setValue('dateNaissance', dateNaissance)
     setValue('lieuxnaissance', lieuxnaissance)
+    setValue('niss', niss)
     setValue('nbHeuresSemaine', nbHeuresSemaine)
     setValue('dateDebutArret', dateDebutArret)
     setValue('dateFinArret', dateFinArret)
@@ -94,7 +96,7 @@ export default function FormulaireSalarie({ setValue, accidentData, watch }) {
     setValue('telephoneCorrespondance', telephoneCorrespondance)
     setValue('ListeLangueCorr', ListeLangueCorr)
   }
-    , [nomTravailleur, prenomTravailleur, dateNaissance, lieuxnaissance, nbHeuresSemaine, dateDebutArret, dateFinArret, dateEntrEntreprise, sexe, nationalité, etatCivil, adresseRue, adresseCodepostal, adresseCommune, adressePays, adresseMail, telephone, adresseRuecorrespondance, adresseCodecorrespondance, adresseCommunecorrespondance, ListeadressePaysCorrespondance, telephoneCorrespondance, ListeLangueCorr, setValue]);
+    , [nomTravailleur, prenomTravailleur, dateNaissance, lieuxnaissance, niss, nbHeuresSemaine, dateDebutArret, dateFinArret, dateEntrEntreprise, sexe, nationalité, etatCivil, adresseRue, adresseCodepostal, adresseCommune, adressePays, adresseMail, telephone, adresseRuecorrespondance, adresseCodecorrespondance, adresseCommunecorrespondance, ListeadressePaysCorrespondance, telephoneCorrespondance, ListeLangueCorr, setValue]);
 
   /**
    * Etape 3 : retourner le formulaire (IHMs)
@@ -108,6 +110,7 @@ export default function FormulaireSalarie({ setValue, accidentData, watch }) {
       <TextFieldP id='prenomTravailleur' label='Prénom du travailleur' onChange={setPrenomTravailleur} defaultValue={prenomTravailleur} />
       <DatePickerP id='dateNaissance' label='Date de naissance' onChange={setDateNaissance} defaultValue={dateNaissance} />
       <TextFieldP id='lieuxnaissance' label='Lieu de naissance' onChange={setLieuxnaissance} defaultValue={lieuxnaissance} />
+      <TextFieldP id='niss' label='NISS du travailleur' onChange={setNiss} defaultValue={niss} />
       <TextFieldP id='nbHeuresSemaine' label="Nombre d'heures travaillées par semaine" onChange={setNbHeuresSemaine} defaultValue={nbHeuresSemaine} />
       <DatePickerP id='dateDebutArret' label="Date de début du dernier arrêt de travail(>15j)" onChange={setDateDebutArret} defaultValue={dateDebutArret} />
       <DatePickerP id='dateFinArret' label="Date de fin du denier arrêt de travail (>15j)" onChange={setDateFinArret} defaultValue={dateFinArret} />

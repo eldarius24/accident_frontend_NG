@@ -61,6 +61,7 @@ export default function FormulaireDeclarationASSBelfius({ setValue, accidentData
     const [showvingtdeusTextField, setShowListeDurContra] = useState(false);
 
     const [CodeMutuelle, setCodeMutuelle] = useState(watch('CodeMutuelle') ? watch('CodeMutuelle') : (accidentData && accidentData.CodeMutuelle ? accidentData.CodeMutuelle : ''));
+    const [nomMutuelle, setnomMutuelle] = useState(watch('nomMutuelle') ? watch('nomMutuelle') : (accidentData && accidentData.nomMutuelle ? accidentData.nomMutuelle : ''));
     const [adresseRueMutuelle, setadresseRueMutuelle] = useState(watch('adresseRueMutuelle') ? watch('adresseRueMutuelle') : (accidentData && accidentData.adresseRueMutuelle ? accidentData.adresseRueMutuelle : ''));
     const [adresseCodepostalMutuelle, setadresseCodepostalMutuelle] = useState(watch('adresseCodepostalMutuelle') ? watch('adresseCodepostalMutuelle') : (accidentData && accidentData.adresseCodepostalMutuelle ? accidentData.adresseCodepostalMutuelle : ''));
     const [adresseCommuneMutuelle, setadresseCommuneMutuelle] = useState(watch('adresseCommuneMutuelle') ? watch('adresseCommuneMutuelle') : (accidentData && accidentData.adresseCommuneMutuelle ? accidentData.adresseCommuneMutuelle : ''));
@@ -72,6 +73,7 @@ export default function FormulaireDeclarationASSBelfius({ setValue, accidentData
     const [ListeDateSortie, setListeDateSortie] = useState(watch('ListeDateSortie') ? watch('ListeDateSortie') : (accidentData && accidentData.ListeDateSortie ? accidentData.ListeDateSortie : ''));
     const [dateSortie, setdateSortie] = useState(watch('dateSortie') ? watch('dateSortie') : (accidentData && accidentData.dateSortie ? accidentData.dateSortie : ''));
     const [profesEntreprise, setprofesEntreprise] = useState(watch('profesEntreprise') ? watch('profesEntreprise') : (accidentData && accidentData.profesEntreprise ? accidentData.profesEntreprise : ''));
+    const [citp, setcitp] = useState(watch('citp') ? watch('citp') : (accidentData && accidentData.citp ? accidentData.citp : ''));
     const [ListeDureeDsEntreprise, setListeDureeDsEntreprise] = useState(watch('ListeDureeDsEntreprise') ? watch('ListeDureeDsEntreprise') : (accidentData && accidentData.ListeDureeDsEntreprise ? accidentData.ListeDureeDsEntreprise : ''));
     const [ListeVicInterimaire, setListeVicInterimaire] = useState(watch('ListeVicInterimaire') ? watch('ListeVicInterimaire') : (accidentData && accidentData.ListeVicInterimaire ? accidentData.ListeVicInterimaire : ''));
     const [VicInterimaireOui, setVicInterimaireOui] = useState(watch('VicInterimaireOui') ? watch('VicInterimaireOui') : (accidentData && accidentData.VicInterimaireOui ? accidentData.VicInterimaireOui : ''));
@@ -106,6 +108,7 @@ export default function FormulaireDeclarationASSBelfius({ setValue, accidentData
     const [TierResponsableOuiNumPolice, setTierResponsableOuiNumPolice] = useState(watch('TierResponsableOuiNumPolice') ? watch('TierResponsableOuiNumPolice') : (accidentData && accidentData.TierResponsableOuiNumPolice ? accidentData.TierResponsableOuiNumPolice : ''));
     const [ListeTemoins, setListeTemoins] = useState(watch('ListeTemoins') ? watch('ListeTemoins') : (accidentData && accidentData.ListeTemoins ? accidentData.ListeTemoins : ''));
     const [TemoinsOui, setTemoinsOui] = useState(watch('TemoinsOui') ? watch('TemoinsOui') : (accidentData && accidentData.TemoinsOui ? accidentData.TemoinsOui : ''));
+    const [TemoinDirecte, setTemoinDirecte] = useState(watch('TemoinDirecte') ? watch('TemoinDirecte') : (accidentData && accidentData.TemoinDirecte ? accidentData.TemoinDirecte : ''));
     const [blessureVictume, setblessureVictume] = useState(watch('blessureVictume') ? watch('blessureVictume') : (accidentData && accidentData.blessureVictume ? accidentData.blessureVictume : ''));
     const [ListeSoinsMedicaux, setListeSoinsMedicaux] = useState(watch('ListeSoinsMedicaux') ? watch('ListeSoinsMedicaux') : (accidentData && accidentData.ListeSoinsMedicaux ? accidentData.ListeSoinsMedicaux : ''));
     const [dateSoinsMedicauxDate, setdateSoinsMedicauxDate] = useState(watch('dateSoinsMedicauxDate') ? watch('dateSoinsMedicauxDate') : (accidentData && accidentData.dateSoinsMedicauxDate ? accidentData.dateSoinsMedicauxDate : ''));
@@ -162,6 +165,7 @@ export default function FormulaireDeclarationASSBelfius({ setValue, accidentData
 
     useEffect(() => {
         setValue('CodeMutuelle', CodeMutuelle)
+        setValue('nomMutuelle', nomMutuelle)
         setValue('adresseRueMutuelle', adresseRueMutuelle)
         setValue('adresseCodepostalMutuelle', adresseCodepostalMutuelle)
         setValue('adresseCommuneMutuelle', adresseCommuneMutuelle)
@@ -173,6 +177,7 @@ export default function FormulaireDeclarationASSBelfius({ setValue, accidentData
         setValue('ListeDateSortie', ListeDateSortie)
         setValue('dateSortie', dateSortie)
         setValue('profesEntreprise', profesEntreprise)
+        setValue('citp', citp)
         setValue('ListeDureeDsEntreprise', ListeDureeDsEntreprise)
         setValue('ListeVicInterimaire', ListeVicInterimaire)
         setValue('VicInterimaireOui', VicInterimaireOui)
@@ -207,6 +212,7 @@ export default function FormulaireDeclarationASSBelfius({ setValue, accidentData
         setValue('TierResponsableOuiNumPolice', TierResponsableOuiNumPolice)
         setValue('ListeTemoins', ListeTemoins)
         setValue('TemoinsOui', TemoinsOui)
+        setValue('TemoinDirecte', TemoinDirecte)
         setValue('blessureVictume', blessureVictume)
         setValue('ListeSoinsMedicaux', ListeSoinsMedicaux)
         setValue('dateSoinsMedicauxDate', dateSoinsMedicauxDate)
@@ -260,7 +266,7 @@ export default function FormulaireDeclarationASSBelfius({ setValue, accidentData
         setValue('heureTravaillePerdu', heureTravaillePerdu)
         setValue('salaireTravaillePerdu', salaireTravaillePerdu)
         setValue('activiteGenerale', activiteGenerale)
-    }, [CodeMutuelle, adresseRueMutuelle, adresseCodepostalMutuelle, adresseCommuneMutuelle, numAffiliation, numCompteBancaire, etabliFinancier, numDimona, ListeDurContra, ListeDateSortie, dateSortie, profesEntreprise, ListeDureeDsEntreprise, ListeVicInterimaire, VicInterimaireOui, VicInterimaireOuiNom, VicInterimaireOuiAdresse, ListeVicTravailExt, VicTravailExtOui, VicTravailExtOuiNom, VicTravailExtOuiAdresse, dateNotifEmployeur, ListeLieuxAt, ListeVoiePublic, LieuxAtAdresse, LieuxAtCodePostal, LieuxAtCommune, ListeLieuxAtPays, NumdeChantier, environementLieux, activiteSpecifique, ListeTypedePost, ListeProfHabituelle, ListeProfHabituelleNon, evenementDeviant, ListeProcesVerbal, ProcesVerbalOui, ProcesVerbalOuiRedige, dateProcesVerbalOuiRedigeQuand, ProcesVerbalOuiPar, ListeTierResponsable, TierResponsableOui, TierResponsableOuiNomAdresse, TierResponsableOuiNumPolice, ListeTemoins, TemoinsOui, blessureVictume, ListeSoinsMedicaux, dateSoinsMedicauxDate, SoinsMedicauxDispansateur, SoinsMedicauxDescriptions, ListeSoinsMedicauxMedecin, dateSoinsMedicauxMedecin, SoinsMedicauxMedecinInami, SoinsMedicauxMedecinNom, SoinsMedicauxMedecinRue, SoinsMedicauxMedecinCodePostal, SoinsMedicauxMedecinCommune, ListeSoinsMedicauxHopital, dateSoinsMedicauxHopital, SoinsMedicauxHopitalInami, SoinsMedicauxHopitaldenomi, SoinsMedicauxHopitalRue, SoinsMedicauxHopitalCodePostal, SoinsMedicauxHopitalCommune, ListeConseqAccident, dateRepriseEffective, JourIncaCompl, ListeMesureRepetition, CodeRisqueEntreprise, ListeVictimeOnss, victimeOnssNon, codeTravailleurSocial, ListeCategoProfess, CategoProfessAutre, ListeNonOnss, ListeApprentiFormat, CommissionParitaireDénomination, CommissionParitaireNumn, ListeTypeContrat, Nbrjoursregime, NbrHeureSemaine, NbrHeureSemaineReference, ListeVictiPension, ListeModeRemuneration, ListeMontantRemuneration, MontantRemunerationVariable, remunerationTotalAssOnns, ListePrimeFinAnnee, PrimeFinAnneeRemuAnnuel, PrimeFinAnneeRemuAnnuelForfetaire, PrimeFinAnneeRemuAnnuelNbrHeure, AvantegeAssujOnns, AvantegeAssujOnnsNature, ListechangementFonction, dateChangementFonction, heureTravaillePerdu, salaireTravaillePerdu, activiteGenerale, setValue]);
+    }, [CodeMutuelle, nomMutuelle, adresseRueMutuelle, adresseCodepostalMutuelle, adresseCommuneMutuelle, numAffiliation, numCompteBancaire, etabliFinancier, numDimona, ListeDurContra, ListeDateSortie, dateSortie, profesEntreprise, citp, ListeDureeDsEntreprise, ListeVicInterimaire, VicInterimaireOui, VicInterimaireOuiNom, VicInterimaireOuiAdresse, ListeVicTravailExt, VicTravailExtOui, VicTravailExtOuiNom, VicTravailExtOuiAdresse, dateNotifEmployeur, ListeLieuxAt, ListeVoiePublic, LieuxAtAdresse, LieuxAtCodePostal, LieuxAtCommune, ListeLieuxAtPays, NumdeChantier, environementLieux, activiteSpecifique, ListeTypedePost, ListeProfHabituelle, ListeProfHabituelleNon, evenementDeviant, ListeProcesVerbal, ProcesVerbalOui, ProcesVerbalOuiRedige, dateProcesVerbalOuiRedigeQuand, ProcesVerbalOuiPar, ListeTierResponsable, TierResponsableOui, TierResponsableOuiNomAdresse, TierResponsableOuiNumPolice, ListeTemoins, TemoinsOui, TemoinDirecte, blessureVictume, ListeSoinsMedicaux, dateSoinsMedicauxDate, SoinsMedicauxDispansateur, SoinsMedicauxDescriptions, ListeSoinsMedicauxMedecin, dateSoinsMedicauxMedecin, SoinsMedicauxMedecinInami, SoinsMedicauxMedecinNom, SoinsMedicauxMedecinRue, SoinsMedicauxMedecinCodePostal, SoinsMedicauxMedecinCommune, ListeSoinsMedicauxHopital, dateSoinsMedicauxHopital, SoinsMedicauxHopitalInami, SoinsMedicauxHopitaldenomi, SoinsMedicauxHopitalRue, SoinsMedicauxHopitalCodePostal, SoinsMedicauxHopitalCommune, ListeConseqAccident, dateRepriseEffective, JourIncaCompl, ListeMesureRepetition, CodeRisqueEntreprise, ListeVictimeOnss, victimeOnssNon, codeTravailleurSocial, ListeCategoProfess, CategoProfessAutre, ListeNonOnss, ListeApprentiFormat, CommissionParitaireDénomination, CommissionParitaireNumn, ListeTypeContrat, Nbrjoursregime, NbrHeureSemaine, NbrHeureSemaineReference, ListeVictiPension, ListeModeRemuneration, ListeMontantRemuneration, MontantRemunerationVariable, remunerationTotalAssOnns, ListePrimeFinAnnee, PrimeFinAnneeRemuAnnuel, PrimeFinAnneeRemuAnnuelForfetaire, PrimeFinAnneeRemuAnnuelNbrHeure, AvantegeAssujOnns, AvantegeAssujOnnsNature, ListechangementFonction, dateChangementFonction, heureTravaillePerdu, salaireTravaillePerdu, activiteGenerale, setValue]);
 
     return (
         <div className="infoDeclarationAss">
@@ -270,6 +276,7 @@ export default function FormulaireDeclarationASSBelfius({ setValue, accidentData
                 <h5> Informations sur la Mutuelle</h5>
             </div>
             <TextFieldP id="CodeMutuelle" label="Code mutuelle" onChange={setCodeMutuelle} defaultValue={CodeMutuelle} />
+            <TextFieldP id="nomMutuelle" label="Nom mutuelle" onChange={setnomMutuelle} defaultValue={nomMutuelle} />
             <TextFieldP id="adresseRueMutuelle" label="Rue / numéro / boite" onChange={setadresseRueMutuelle} defaultValue={adresseRueMutuelle} />
             <TextFieldP id="adresseCodepostalMutuelle" label="Code postal" onChange={setadresseCodepostalMutuelle} defaultValue={adresseCodepostalMutuelle} />
             <TextFieldP id="adresseCommuneMutuelle" label="Commune" onChange={setadresseCommuneMutuelle} defaultValue={adresseCommuneMutuelle} />
@@ -288,6 +295,7 @@ export default function FormulaireDeclarationASSBelfius({ setValue, accidentData
             )}
 
             <TextFieldP id="profesEntreprise" label="Profession habituelle dans l’entreprise" onChange={setprofesEntreprise} defaultValue={profesEntreprise} />
+            <TextFieldP id="citp" label="Code CITP" onChange={setcitp} defaultValue={citp} />
             <AutoCompleteP id="ListeDureeDsEntreprise" option={listeDeclarationAss.ListeDureeDsEntreprise} label="Durée d'exercice de cette profession par la victime dans l'entreprise" onChange={setListeDureeDsEntreprise} defaultValue={ListeDureeDsEntreprise} />
             <AutoCompleteP id="ListeVicInterimaire" option={listeDeclarationAss.ListeVicInterimaire} label="La victime est-elle un(e) intérimaire" onChange={(value) => { setListeVicInterimaire(value); setShowListeVicInterimaire(value === 'Oui') }} defaultValue={ListeVicInterimaire} />
 
@@ -374,7 +382,8 @@ export default function FormulaireDeclarationASSBelfius({ setValue, accidentData
             <AutoCompleteP id="ListeTemoins" option={listeDeclarationAss.ListeTemoins} label="Y a-t-il eu des témoins" onChange={(value) => { setListeTemoins(value); setShowListeTemoins(value === 'Oui') }} defaultValue={ListeTemoins} />
 
             {showdixTextField && (
-                <TextFieldP id="TemoinsOui" label="Nom - rue/n°/boite - Code postal - Commune" onChange={setTemoinsOui} defaultValue={TemoinsOui} />
+                [<TextFieldP id="TemoinsOui" label="Nom - rue/n°/boite - Code postal - Commune" onChange={setTemoinsOui} defaultValue={TemoinsOui} />,
+                <AutoCompleteP id="TemoinDirecte" option={listeDeclarationAss.TemoinDirecte} label="Est-ce un témoin directe (D) ou indirecte (I)" onChange={setTemoinDirecte} defaultValue={TemoinDirecte} />]
             )}
 
             <div style={frameStyle}>
