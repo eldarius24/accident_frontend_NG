@@ -38,6 +38,13 @@ export default function Formulaire() {
         watch
     } = useForm();
 
+    //au chargement de la page on retourn vers le haut de la page
+    React.useEffect(() => {
+        window.scrollTo(0, 0);
+    }, [activeStep])
+
+
+
     /**************************************************************************
      * Gestion du téléchargement de fichiers
         **************************************************************************/
@@ -54,9 +61,7 @@ export default function Formulaire() {
         console.log("Fichier téléchargé :", file.name);
     };
     /**************************************************************************/
-    React.useEffect(() => {
-        window.scrollTo(0, 0);
-    }, [activeStep])
+
 
     /**************************************************************************
      * METHODE ON SUBMIT

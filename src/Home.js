@@ -29,7 +29,11 @@ function Home() {
     const [data, setData] = useState([]); // Stocker les données de l'API
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
-    const [firstLoad, setFirstLoad] = useState(true);
+
+    //au chargerment de la page, on met à jour les données de la liste des accidents
+    useEffect(() => {
+            refreshListAccidents();
+    }, []);
 
     const handleDelete = (accidentIdToDelete) => {
         axios.delete("http://" + apiUrl + ":3100/api/accidents/" + accidentIdToDelete)
@@ -51,18 +55,6 @@ function Home() {
             });
     };
 
-    /*const handleEdit = (accidentIdToModify) => {
-
-        axios.get("http://"+apiUrl+":3100/api/accidents/"+accidentIdToModify)
-            .then(response => {
-                const accidents = response.data;
-                console.log(accidents);
-                redirect("/formulaire")
-            })
-            .catch(error => {
-                console.log(error);
-            });
-    };*/
     const handleEdit = async (accidentIdToModify) => {
         try {
             const response = await axios.get(`http://${apiUrl}:3100/api/accidents/${accidentIdToModify}`);
@@ -83,27 +75,15 @@ function Home() {
                 setLoading(false);
             })
             .catch((error) => {
-                console.log(error);
+                console.log("Home.js => refresh list accident error =>",error);
                 setLoading(false);
             });
     };
 
-    useEffect(() => {
-        if (firstLoad) {
-            refreshListAccidents();
-            setFirstLoad(false)
-        }
-    });
-
-    const handleSearch = (event) => {
-        setSearchTerm(event.target.value);
-    };
-
     const filteredData = data.filter((item) => {
-        const searchTermLower = searchTerm.toLowerCase();
         return (
             Object.values(item).some((value) =>
-                typeof value === "string" && value.toLowerCase().includes(searchTermLower)
+                typeof value === "string" && value.toLowerCase().includes(searchTerm.toLowerCase())
             )
         );
     });
@@ -389,7 +369,7 @@ function Home() {
                 <Grid item xs={6} style={{ marginRight: '20px' }}>
                     <TextField
                         value={searchTerm}
-                        onChange={handleSearch}
+                        onChange={(event) => setSearchTerm(event.target.value)}
                         variant="outlined"
                         sx={{ boxShadow: 3, backgroundColor: '#84a784' }}
                         InputProps={{
