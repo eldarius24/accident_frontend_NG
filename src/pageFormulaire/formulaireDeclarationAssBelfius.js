@@ -10,7 +10,7 @@ import listeDeclarationAss from '../liste/listeDeclarationAssBelfius.json';
 import AutoCompleteP from '../composants/autoCompleteP';
 import TextFieldP from '../composants/textFieldP';
 import DatePickerP from '../composants/datePickerP';
-
+import DateHeurePickerP from '../composants/dateHeurePickerP';
 
 dayjs.locale('fr');
 
@@ -303,7 +303,7 @@ export default function FormulaireDeclarationASSBelfius({ setValue, accidentData
                 <TextFieldP id="VicTravailExtOuiAdresse" label="Adresse" onChange={setVicTravailExtOuiAdresse} defaultValue={VicTravailExtOuiAdresse} />]
             )}
 
-            <DatePickerP id="dateNotifEmployeur" label="Date de notification à l’employeur" onChange={setdateNotifEmployeur} defaultValue={dateNotifEmployeur} />
+            <DateHeurePickerP id="dateNotifEmployeur" label="Date de notification à l’employeur" onChange={setdateNotifEmployeur} defaultValue={dateNotifEmployeur} />
             <AutoCompleteP id="ListeLieuxAt" option={listeDeclarationAss.ListeLieuxAt} label="Lieu de l’accident" onChange={(value) => { setListeLieuxAt(value); setShowListeLieuxAt(value === 'Sur la voie publique') }} defaultValue={ListeLieuxAt} />
 
             {showsixTextField && (
@@ -386,7 +386,7 @@ export default function FormulaireDeclarationASSBelfius({ setValue, accidentData
             <AutoCompleteP id="ListeSoinsMedicaux" option={listeDeclarationAss.ListeSoinsMedicaux} label="Des soins médicaux ont-ils été dispensés chez l’employeur" onChange={(value) => { setListeSoinsMedicaux(value); setShowListeSoinsMedicaux(value === 'Oui') }} defaultValue={ListeSoinsMedicaux} />
 
             {showonzeTextField && (
-                [<DatePickerP id="dateSoinsMedicauxDate" label="Date et heure" onChange={setdateSoinsMedicauxDate} defaultValue={dateSoinsMedicauxDate} />,
+                [<DateHeurePickerP id="dateSoinsMedicauxDate" label="Date et heure" onChange={setdateSoinsMedicauxDate} defaultValue={dateSoinsMedicauxDate} />,
                 <TextFieldP id="SoinsMedicauxDispansateur" label="Qualité du dispensateur" onChange={setSoinsMedicauxDispansateur} defaultValue={SoinsMedicauxDispansateur} />,
                 <TextFieldP id="SoinsMedicauxDescriptions" label="Description des soins dispensés" onChange={setSoinsMedicauxDescriptions} defaultValue={SoinsMedicauxDescriptions} />]
             )}
@@ -394,7 +394,7 @@ export default function FormulaireDeclarationASSBelfius({ setValue, accidentData
             <AutoCompleteP id="ListeSoinsMedicauxMedecin" option={listeDeclarationAss.ListeSoinsMedicauxMedecin} label="Des soins médicaux ont-ils été dispensés par un médecin externe" onChange={(value) => { setListeSoinsMedicauxMedecin(value); setShowListeSoinsMedicauxMedecin(value === 'Oui') }} defaultValue={ListeSoinsMedicauxMedecin} />
 
             {showdouzeTextField && (
-                [<DatePickerP id="dateSoinsMedicauxMedecin" label="Date et heure" onChange={setdateSoinsMedicauxMedecin} defaultValue={dateSoinsMedicauxMedecin} />,
+                [<DateHeurePickerP id="dateSoinsMedicauxMedecin" label="Date et heure" onChange={setdateSoinsMedicauxMedecin} defaultValue={dateSoinsMedicauxMedecin} />,
                 <TextFieldP id="SoinsMedicauxMedecinInami" label="Numéro d’identification du médecin externe à l’INAMI" onChange={setSoinsMedicauxMedecinInami} defaultValue={SoinsMedicauxMedecinInami} />,
                 <TextFieldP id="SoinsMedicauxMedecinNom" label="Nom et prénom du médecin externe" onChange={setSoinsMedicauxMedecinNom} defaultValue={SoinsMedicauxMedecinNom} />,
                 <TextFieldP id="SoinsMedicauxMedecinRue" label="Rue / n° / boite" onChange={setSoinsMedicauxMedecinRue} defaultValue={SoinsMedicauxMedecinRue} />,
@@ -405,7 +405,7 @@ export default function FormulaireDeclarationASSBelfius({ setValue, accidentData
             <AutoCompleteP id="ListeSoinsMedicauxHopital" option={listeDeclarationAss.ListeSoinsMedicauxHopital} label="Des soins médicaux ont-ils été dispensés à l’hôpital" onChange={(value) => { setListeSoinsMedicauxHopital(value); setShowListeSoinsMedicauxHopital(value === 'Oui') }} defaultValue={ListeSoinsMedicauxHopital} />
 
             {showtreizeTextField && (
-                [<DatePickerP id="dateSoinsMedicauxHopital" label="Date et heure" onChange={setdateSoinsMedicauxHopital} defaultValue={dateSoinsMedicauxHopital} />,
+                [<DateHeurePickerP id="dateSoinsMedicauxHopital" label="Date et heure" onChange={setdateSoinsMedicauxHopital} defaultValue={dateSoinsMedicauxHopital} />,
                 <TextFieldP id="SoinsMedicauxHopitalInami" label="Numéro d’identification de l’hôpital à l’INAMI" onChange={setSoinsMedicauxHopitalInami} defaultValue={SoinsMedicauxHopitalInami} />,
                 <TextFieldP id="SoinsMedicauxHopitaldenomi" label="Dénomination de I*hôpital" onChange={setSoinsMedicauxHopitaldenomi} defaultValue={SoinsMedicauxHopitaldenomi} />,
                 <TextFieldP id="SoinsMedicauxHopitalRue" label="Rue / n° / boite" onChange={setSoinsMedicauxHopitalRue} defaultValue={SoinsMedicauxHopitalRue} />,
