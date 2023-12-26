@@ -66,7 +66,8 @@
             "label": "Cortibel",
             "secteur": [
                 "...",
-                "Administration"
+                "Administration",
+                "Maintenance"
             ]
         },
         {
@@ -96,6 +97,8 @@
     "typeTravailleur": [
         "Employer",
         "Article 60",
-        "Stagiaire"
+        "Stagiaire",
+        "Intérimaire",
+        "Bénévole"
     ]
 }

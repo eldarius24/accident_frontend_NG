@@ -19,6 +19,33 @@ import DateHeurePickerP from '../composants/dateHeurePickerP';
 
 export default function FormulaireAccident({ setValue, accidentData, watch }) {
 
+
+  const [frameWidth, setFrameWidth] = useState(window.innerWidth * -0.5);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setFrameWidth(window.innerWidth * -0.5); // Adjust the coefficient as needed
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
+  const frameStyle = {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: `${frameWidth * 1.3}px`, // Adjust the coefficient as needed
+    border: '2px solid #84a784',
+    borderRadius: '10px',
+    cursor: 'pointer',
+    margin: '20px 1rem',
+    backgroundColor: '#d2e2d2',
+  };
+
   /**
    * Etape 1 : stocker les données dans des variables locales et les initialiser avec les données de l'accident si elles existent
    * 
@@ -44,8 +71,6 @@ export default function FormulaireAccident({ setValue, accidentData, watch }) {
   const [boolMaire, setBoolMaire] = useState(watch('boolMaire') ? watch('boolMaire') : (accidentData && accidentData.boolMaire ? accidentData.boolMaire : false));
   const [boolChute, setBoolChute] = useState(watch('boolChute') ? watch('boolChute') : (accidentData && accidentData.boolChute ? accidentData.boolChute : false));
   const [boolAutre, setBoolAutre] = useState(watch('boolAutre') ? watch('boolAutre') : (accidentData && accidentData.boolAutre ? accidentData.boolAutre : false));
-
-
   const [codeDeviation, setCodeDeviation] = useState(watch('codeDeviation') ? watch('codeDeviation') : (accidentData && accidentData.codeDeviation ? accidentData.codeDeviation : null));
   const [codeAgentMateriel, setCodeAgentMateriel] = useState(watch('codeAgentMateriel') ? watch('codeAgentMateriel') : (accidentData && accidentData.codeAgentMateriel ? accidentData.codeAgentMateriel : null));
   const [codeNatureLesion, setCodeNatureLesion] = useState(watch('codeNatureLesion') ? watch('codeNatureLesion') : (accidentData && accidentData.codeNatureLesion ? accidentData.codeNatureLesion : null));
@@ -211,7 +236,7 @@ export default function FormulaireAccident({ setValue, accidentData, watch }) {
 
 
 
-        <div>
+        <div style={frameStyle}>
           <h5>De quels moyens de protection la victime était-elle équipée lors de l'accident ?</h5>
         </div>
         <div>

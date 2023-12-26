@@ -8,7 +8,7 @@ import { TextField } from '@mui/material';
  * @param {*} defaultValue valeur par défaut
  * @returns
  */
-export default function textFieldP({ id, label, onChange, defaultValue }) {
+export default function textFieldP({ id, option, label, onChange, defaultValue }) {
 
     const handleChange = (event) => {
         if (onChange) {
@@ -20,6 +20,7 @@ export default function textFieldP({ id, label, onChange, defaultValue }) {
         <div style={{ display: 'flex', justifyContent: 'center', margin: '0 auto 1rem' }}>
             <TextField
                 id={id}
+                options={option}
                 onChange={handleChange}
                 label={label}
                 defaultValue={defaultValue ? defaultValue : ""}
