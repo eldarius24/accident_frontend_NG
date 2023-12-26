@@ -23,6 +23,7 @@ import { useNavigate } from 'react-router-dom';
 import GetAppIcon from '@mui/icons-material/GetApp';
 import * as ExcelJS from 'exceljs';
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
+import editPDF from './Model/pdfGenerator.js';
 
 function Home() {
     const navigate = useNavigate();
@@ -54,6 +55,16 @@ function Home() {
             .catch(error => {
                 console.log(error);
             });
+    };
+
+    const handleGeneratePDF = async (accidentIdToGenerate) => {
+        try {
+            const response = await axios.get(`http://${apiUrl}:3100/api/accidents/${accidentIdToGenerate}`);
+            const accidents = response.data;
+            editPDF(accidents);
+        } catch (error) {
+            console.log(error);
+        }
     };
 
     const handleEdit = async (accidentIdToModify) => {
@@ -647,7 +658,7 @@ function Home() {
                                 <TableCell>{item.typeAccident}</TableCell>
                                 <TableCell>
                                     <Button variant="contained" color="primary" onClick={() => handleEdit(item._id)}> <EditIcon /></Button>
-                                    <Button variant="contained" color="success" onClick={() => handleEdit(item._id)}> <PictureAsPdfIcon /></Button>
+                                    <Button variant="contained" color="success" onClick={() => handleGeneratePDF(item._id)}> <PictureAsPdfIcon /></Button>
                                     <Button variant="contained" color="error" onClick={() => handleDelete(item._id)}> <DeleteForeverIcon /></Button>
                                 </TableCell>
                             </TableRow>
