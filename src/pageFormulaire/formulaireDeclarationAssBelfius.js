@@ -264,6 +264,8 @@ export default function FormulaireDeclarationASSBelfius({ setValue, accidentData
 
     return (
         <div className="infoDeclarationAss">
+            <h2>Infos Déclaration</h2>
+            <h3>Rentrez les informations relative a la déclaration.</h3>
             <div style={frameStyle}>
                 <h5> Informations sur la Mutuelle</h5>
             </div>
