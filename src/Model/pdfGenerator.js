@@ -162,6 +162,48 @@ export default async function editPDF(data) {
             EditPdfCheckBox(form, 'p3_47 12', data.boolMasque);
             EditPdfCheckBox(form, 'p3_47 13', data.boolEcran);
             EditPdfCheckBox(form, 'p3_47 14', data.boolChausure);
+            EditPdfTextField(form, 'p3_48 1', data.ListeMesureRepetition);
+            //code
+            EditPdfTextField(form, 'p3_48 3', data.ListeMesureRepetition2);
+            //code
+            EditPdfTextField(form, 'p3_49 1', data.CodeRisqueEntreprise);
+            //affiliée onss
+            EditPdfTextField(form, '3 reden', data.victimeOnssNon);
+            EditPdfTextField(form, '4', data.codeTravailleurSocial);
+            //cat professionnel
+            EditPdfTextField(form, '11 andere', data.CategoProfessAutre);
+            //F1 ou F2
+            //apprenti en formation chef d'entreprise
+            EditPdfTextField(form, '16', data.CommissionParitaireDénomination);
+            //com par num
+            //type de contra
+            //nbr jours/semaine centieme
+            //nbr heures/semaine centieme
+            //nbr heures/semaine reference
+            //type de rémuneation
+            //unité de temps
+            EditPdfTextField(form, '39', data.MontantRemunerationVariable);
+            EditPdfTextField(form, '40', data.remunerationTotalAssOnns);
+            //prime fin d'annee
+            EditPdfTextField(form, '45', data.PrimeFinAnneeRemuAnnuel);
+            EditPdfTextField(form, '47', data.PrimeFinAnneeRemuAnnuelForfetaire);
+            EditPdfTextField(form, '49', data.PrimeFinAnneeRemuAnnuelNbrHeure);
+            EditPdfTextField(form, '50', data.AvantegeAssujOnns);
+            EditPdfTextField(form, '51', data.AvantegeAssujOnnsNature);
+            //change fonction
+            //date
+            EditPdfTextField(form, '57', data.heureTravaillePerdu);
+            EditPdfTextField(form, '58', data.salaireTravaillePerdu);
+            //secrétaria social nom
+            //numéro affiliation
+            //rue
+            //code postal
+            //commune
+
+
+
+
+
         
             
 
