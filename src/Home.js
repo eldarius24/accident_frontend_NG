@@ -673,10 +673,10 @@ function Home() {
                                 <TableCell>{item.prenomTravailleur}</TableCell>
                                 <TableCell>{item.typeAccident}</TableCell>
                                 <TableCell>
-                                    <Button variant="contained" color="primary" onClick={() => handleEdit(item._id)}> <EditIcon /></Button>
-                                    <Button style={{ marginLeft: '8px' }} variant="contained" color="success" onClick={() => handleGeneratePDF(item._id)}> <PictureAsPdfIcon /></Button>
+                                    <Button style={{ margin : '2px' }} variant="contained" color="primary" onClick={() => handleEdit(item._id)}> <EditIcon /></Button>
+                                    <Button style={{ margin : '2px' }} variant="contained" color="success" onClick={() => handleGeneratePDF(item._id)}> <PictureAsPdfIcon /></Button>
                                     <Button
-                                        style={{ marginLeft: '38px' }}
+                                        style={{ margin : '2px' }}
                                         variant="contained"
                                         color="error"
                                         onClick={() => {
