@@ -6,7 +6,7 @@
  * fonction qui permet de modifier un pdf
  */
 const { PDFDocument, StandardFonts, rgb } = require('pdf-lib');
-const { Edit } = require('@mui/icons-material');
+
 
 /**
  * fonction qui permet d'editer un textfield dans un pdf
@@ -17,7 +17,7 @@ const { Edit } = require('@mui/icons-material');
 function EditPdfTextField(form, textFielName, data) {
     const textField = form.getTextField(textFielName); //'18 naam getroffene'
     if (data !== undefined) {
-        textField.setText(data.toString()); //'LEFEVRE REMY'
+        textField.setText(data || ""); //'LEFEVRE REMY'
     }
 }
 /**
@@ -204,7 +204,7 @@ export default async function editPDF(data) {
         const pdfBytes = await pdfDoc.save();
         const blob = new Blob([pdfBytes], { type: 'application/pdf' });
 
-        const fileName = `${data.DateHeureAccident}_${data.entrepriseName}_${data.nomTravailleur}_${data.prenomTravailleur}.pdf`;
+        const fileName = `test.pdf`;
 
 
         if (window.navigator && window.navigator.msSaveOrOpenBlob) {

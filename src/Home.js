@@ -81,6 +81,20 @@ function Home() {
         }
     };
 
+    function dateConverter(date, isHour = false) {
+        if (!date) {
+            return ""; // Retourne une chaîne vide si la date est vide
+        }
+    
+        const dateConvertit = new Date(date);
+        
+        if (isHour) {
+            return `${dateConvertit.getFullYear()}-${(dateConvertit.getMonth() + 1).toString().padStart(2, '0')}-${dateConvertit.getDate().toString().padStart(2, '0')} : ${dateConvertit.getHours().toString().padStart(2, '0')}:${dateConvertit.getMinutes().toString().padStart(2, '0')}`;
+        } else {
+            return `${dateConvertit.getFullYear()}-${(dateConvertit.getMonth() + 1).toString().padStart(2, '0')}-${dateConvertit.getDate().toString().padStart(2, '0')}`;
+        }
+    }
+
     function refreshListAccidents() {
         axios.get("http://" + apiUrl + ":3100/api/accidents")
             .then(response => {
@@ -88,6 +102,27 @@ function Home() {
                 console.log(accidents);
 
                 if (Array.isArray(accidents)) {
+                    accidents.forEach(item => {
+                        item.DateHeureAccident = dateConverter(item.DateHeureAccident, true);
+                        item.DateEnvoieDeclarationAccident = dateConverter(item.DateEnvoieDeclarationAccident, false);
+                        item.DateJourIncapDebut = dateConverter(item.DateJourIncapDebut, false);
+                        item.DateJourIncapFin = dateConverter(item.DateJourIncapFin, false);
+                        item.dateNaissance = dateConverter(item.dateNaissance, false);
+                        item.dateDebutArret = dateConverter(item.dateDebutArret, false);
+                        item.dateFinArret = dateConverter(item.dateFinArret, false);
+                        item.dateEntrEntreprise = dateConverter(item.dateEntrEntreprise, false);
+                        item.dateSortie = dateConverter(item.dateSortie, false);
+                        item.dateNotifEmployeur = dateConverter(item.dateNotifEmployeur, true);
+                        item.dateProcesVerbalOuiRedigeQuand = dateConverter(item.dateProcesVerbalOuiRedigeQuand, false);
+                        item.dateSoinsMedicauxDate = dateConverter(item.dateSoinsMedicauxDate, true);
+                        item.dateSoinsMedicauxMedecin = dateConverter(item.dateSoinsMedicauxMedecin, true);
+                        item.dateSoinsMedicauxHopital = dateConverter(item.dateSoinsMedicauxHopital, true);
+                        item.dateRepriseEffective = dateConverter(item.dateRepriseEffective, false);
+                        item.dateChangementFonction = dateConverter(item.dateChangementFonction, false);
+
+
+
+                    });
                     setData(accidents);
                 } else {
                     console.error("La réponse de l'API n'est pas un tableau.");
@@ -99,7 +134,8 @@ function Home() {
                 console.log("Home.js => refresh list accident error =>", error);
                 setLoading(false);
             });
-    };
+    }
+
 
     const filteredData = data.filter((item) => {
         return (
@@ -673,10 +709,10 @@ function Home() {
                                 <TableCell>{item.prenomTravailleur}</TableCell>
                                 <TableCell>{item.typeAccident}</TableCell>
                                 <TableCell>
-                                    <Button style={{ margin : '2px' }} variant="contained" color="primary" onClick={() => handleEdit(item._id)}> <EditIcon /></Button>
-                                    <Button style={{ margin : '2px' }} variant="contained" color="success" onClick={() => handleGeneratePDF(item._id)}> <PictureAsPdfIcon /></Button>
+                                    <Button style={{ margin: '2px' }} variant="contained" color="primary" onClick={() => handleEdit(item._id)}> <EditIcon /></Button>
+                                    <Button style={{ margin: '2px' }} variant="contained" color="success" onClick={() => handleGeneratePDF(item._id)}> <PictureAsPdfIcon /></Button>
                                     <Button
-                                        style={{ margin : '2px' }}
+                                        style={{ margin: '2px' }}
                                         variant="contained"
                                         color="error"
                                         onClick={() => {

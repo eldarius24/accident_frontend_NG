@@ -18,7 +18,7 @@ export default function DateHeurePickerP({id, label, defaultValue, onChange}) {
     const handleChange = (event, _) => {
         console.log('DatePicker event "', event, '"');
         if (onChange) {
-            const date = dayjs(event).format('YYYY-MM-DD');
+            const date = dayjs(event).format('YYYY-MM-DD:HH:mm');
             onChange(date);
         }
     }
