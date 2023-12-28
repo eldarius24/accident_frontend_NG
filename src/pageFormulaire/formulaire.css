@@ -235,3 +235,7 @@ background-color: #bed1be;
   /* Bordure du bouton au survol */
 
 }
+
+.table-row-separator {
+  border-bottom: 2px solid #84a784;
+}

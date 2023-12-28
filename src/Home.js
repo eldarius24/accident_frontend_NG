@@ -41,6 +41,9 @@ function Home() {
         refreshListAccidents();
     }, []);
 
+    const frameStyle = { justifyContent: 'center', alignItems: 'center', border: '2px solid #84a784', borderRadius: '10px', cursor: 'pointer', margin: '20px 1rem', backgroundColor: '#d2e2d2', };
+
+
     const handleDelete = (accidentIdToDelete) => {
         axios.delete("http://" + apiUrl + ":3100/api/accidents/" + accidentIdToDelete)
             .then(response => {
@@ -85,9 +88,9 @@ function Home() {
         if (!date) {
             return ""; // Retourne une chaîne vide si la date est vide
         }
-    
+
         const dateConvertit = new Date(date);
-        
+
         if (isHour) {
             return `${dateConvertit.getFullYear()}-${(dateConvertit.getMonth() + 1).toString().padStart(2, '0')}-${dateConvertit.getDate().toString().padStart(2, '0')} : ${dateConvertit.getHours().toString().padStart(2, '0')}:${dateConvertit.getMinutes().toString().padStart(2, '0')}`;
         } else {
@@ -255,7 +258,9 @@ function Home() {
             }
         });
     };
-
+    const alternateRowStyle = {
+        background: '#f2f2f2', // Couleur de fond alternative
+    };
 
     /**
      * Fonction pour exporter les données filtrées
@@ -628,6 +633,7 @@ function Home() {
         });
     };
 
+    const rowColors = ['#bed1be', '#d2e2d2']; // Tableau de couleurs pour les lignes
 
     return (
         <div>
@@ -683,73 +689,82 @@ function Home() {
             </div>
 
             <TableContainer>
-                <Table>
-                    <TableHead>
-                        <TableRow key={"CellTowerSharp"}>
-                            <TableCell>N° Groupe</TableCell>
-                            <TableCell>N° Entreprise</TableCell>
-                            <TableCell>Date accident</TableCell>
-                            <TableCell>Entreprise</TableCell>
-                            <TableCell>Secteur</TableCell>
-                            <TableCell>Nom du travailleur</TableCell>
-                            <TableCell>Prénom du travailleur</TableCell>
-                            <TableCell>Type accident</TableCell>
-                            <TableCell>Actions</TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {filteredData.map((item) => (
-                            <TableRow key={item._id}>
-                                <TableCell>{item.recordNumberGroupoe}</TableCell>
-                                <TableCell>{item.recordNumberEntreprise}</TableCell>
-                                <TableCell>{item.DateHeureAccident}</TableCell>
-                                <TableCell>{item.entrepriseName}</TableCell>
-                                <TableCell>{item.secteur}</TableCell>
-                                <TableCell>{item.nomTravailleur}</TableCell>
-                                <TableCell>{item.prenomTravailleur}</TableCell>
-                                <TableCell>{item.typeAccident}</TableCell>
-                                <TableCell>
-                                    <Button style={{ margin: '2px' }} variant="contained" color="primary" onClick={() => handleEdit(item._id)}> <EditIcon /></Button>
-                                    <Button style={{ margin: '2px' }} variant="contained" color="success" onClick={() => handleGeneratePDF(item._id)}> <PictureAsPdfIcon /></Button>
-                                    <Button
-                                        style={{ margin: '2px' }}
-                                        variant="contained"
-                                        color="error"
-                                        onClick={() => {
-                                            confirmAlert({
-                                                customUI: ({ onClose }) => {
-                                                    return (
-                                                        <div className="custom-confirm-dialog">
-                                                            <h1 className="custom-confirm-title">Supprimer</h1>
-                                                            <p className="custom-confirm-message">Êtes-vous sûr de vouloir supprimer cet élément?</p>
-                                                            <div className="custom-confirm-buttons">
-                                                                <button
-                                                                    className="custom-confirm-button"
-                                                                    onClick={() => {
-                                                                        handleDelete(item._id);
-                                                                        onClose();
-                                                                    }}
-                                                                >
-                                                                    Oui
-                                                                </button>
-                                                                <button className="custom-confirm-button custom-confirm-no" onClick={onClose}>
-                                                                    Non
-                                                                </button>
-                                                            </div>
-                                                        </div>
-                                                    );
-                                                }
-                                            });
-                                        }}
-                                    >
-                                        <DeleteForeverIcon />
-                                    </Button>
-                                </TableCell>
+                <div style={frameStyle}>
+                    <Table>
+                        <TableHead>
+                            <TableRow style={{ backgroundColor: '#84a784' }} key={"CellTowerSharp"}>
+                                <TableCell style={{ color: '' }} >N° Groupe</TableCell>
+                                <TableCell>N° Entreprise</TableCell>
+                                <TableCell>Date accident</TableCell>
+                                <TableCell>Entreprise</TableCell>
+                                <TableCell>Secteur</TableCell>
+                                <TableCell>Nom du travailleur</TableCell>
+                                <TableCell>Prénom du travailleur</TableCell>
+                                <TableCell>Type accident</TableCell>
+                                <TableCell>Actions</TableCell>
                             </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
+                        </TableHead>
+                        <TableBody>
+                            {filteredData.map((item, index) => (
+                                <React.Fragment key={item._id}>
+                                    <TableRow key={item._id} style={{ backgroundColor: rowColors[index % rowColors.length] }} // Utilisez le style alternatif pour chaque deuxième ligne
+                                    >
+                                        <TableCell>{item.recordNumberGroupoe}</TableCell>
+                                        <TableCell>{item.recordNumberEntreprise}</TableCell>
+                                        <TableCell>{item.DateHeureAccident}</TableCell>
+                                        <TableCell>{item.entrepriseName}</TableCell>
+                                        <TableCell>{item.secteur}</TableCell>
+                                        <TableCell>{item.nomTravailleur}</TableCell>
+                                        <TableCell>{item.prenomTravailleur}</TableCell>
+                                        <TableCell>{item.typeAccident}</TableCell>
+                                        <TableCell>
+                                            <Button style={{ margin: '2px' }} variant="contained" color="primary" onClick={() => handleEdit(item._id)}> <EditIcon /></Button>
+                                            <Button style={{ margin: '2px' }} variant="contained" color="success" onClick={() => handleGeneratePDF(item._id)}> <PictureAsPdfIcon /></Button>
+                                            <Button
+                                                style={{ margin: '2px' }}
+                                                variant="contained"
+                                                color="error"
+                                                onClick={() => {
+                                                    confirmAlert({
+                                                        customUI: ({ onClose }) => {
+                                                            return (
+                                                                <div className="custom-confirm-dialog">
+                                                                    <h1 className="custom-confirm-title">Supprimer</h1>
+                                                                    <p className="custom-confirm-message">Êtes-vous sûr de vouloir supprimer cet élément?</p>
+                                                                    <div className="custom-confirm-buttons">
+                                                                        <button
+                                                                            className="custom-confirm-button"
+                                                                            onClick={() => {
+                                                                                handleDelete(item._id);
+                                                                                onClose();
+                                                                            }}
+                                                                        >
+                                                                            Oui
+                                                                        </button>
+                                                                        <button className="custom-confirm-button custom-confirm-no" onClick={onClose}>
+                                                                            Non
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+                                                            );
+                                                        }
+                                                    });
+                                                }}
+                                            >
+                                                <DeleteForeverIcon />
+                                            </Button>
+                                        </TableCell>
+                                    </TableRow>
+                                    {/* Ligne de séparation */}
+                                    <TableRow className="table-row-separator">
+                                    </TableRow>
+                                </React.Fragment>
+                            ))}
+                        </TableBody>
+                    </Table>
+                </div>
             </TableContainer>
+
         </div>
     );
 }

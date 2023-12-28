@@ -13,6 +13,9 @@ import TextFieldP from '../composants/textFieldP';
 
 export default function FormulaireAssureur({ setValue, accidentData, watch }) {
 
+
+  const frameStyle = { justifyContent: 'center', alignItems: 'center', border: '2px solid #84a784', borderRadius: '10px', cursor: 'pointer', margin: '20px 1rem', backgroundColor: '#d2e2d2', };
+
   /**
  * Etape 1 : stocker les données dans des variables locales et les initialiser avec les données de l'accident si elles existent
  * 
@@ -43,56 +46,58 @@ export default function FormulaireAssureur({ setValue, accidentData, watch }) {
    * Etape 3 : retourner le formulaire (IHMs)
    */
   return (
-    <div>
-      <div className="infoAssureur">
-        <h2>Infos Assureur</h2>
-        <h3>Rentrez les informations relative a l'assurance.</h3>
+    <div style={frameStyle}>
+      <div>
+        <div className="infoAssureur">
+          <h2>Infos Assureur</h2>
+          <h3>Rentrez les informations relative a l'assurance.</h3>
 
-        {/* *********************************** Numéro de police d'assurance **********************************/}
-        <TextFieldP id="NumeroPoliceAssurance" label="Numéro de police d'assurance" onChange={(NumeroPoliceAssuranceSelect) => {
-          setNumeroPoliceAssurance(NumeroPoliceAssuranceSelect);
-          setValue('NumeroPoliceAssurance', NumeroPoliceAssuranceSelect);
-        }} defaultValue={NumeroPoliceAssurance}></TextFieldP>
+          {/* *********************************** Numéro de police d'assurance **********************************/}
+          <TextFieldP id="NumeroPoliceAssurance" label="Numéro de police d'assurance" onChange={(NumeroPoliceAssuranceSelect) => {
+            setNumeroPoliceAssurance(NumeroPoliceAssuranceSelect);
+            setValue('NumeroPoliceAssurance', NumeroPoliceAssuranceSelect);
+          }} defaultValue={NumeroPoliceAssurance}></TextFieldP>
 
-        {/* *********************************** Réference du sinistre **********************************/}
-        <TextFieldP id="referenceduSinistre" label="Réference du sinistre" onChange={(referenceduSinistreText) => {
-          setreferenceduSinistre(referenceduSinistreText);
-          setValue('referenceduSinistre', referenceduSinistreText);
-        }} defaultValue={referenceduSinistre}></TextFieldP>
+          {/* *********************************** Réference du sinistre **********************************/}
+          <TextFieldP id="referenceduSinistre" label="Réference du sinistre" onChange={(referenceduSinistreText) => {
+            setreferenceduSinistre(referenceduSinistreText);
+            setValue('referenceduSinistre', referenceduSinistreText);
+          }} defaultValue={referenceduSinistre}></TextFieldP>
 
-        {/* *********************************** Date d'envoie de la déclaration d'accident **********************************/}
-        <DatePickerP id="DateEnvoieDeclarationAccident" label="Date d'envoie de la déclaration d'accident" onChange={(DateEnvoieDeclarationAccidentChoose) => {
-          console.log(DateEnvoieDeclarationAccidentChoose);
-          setDateEnvoieDeclarationAccident(DateEnvoieDeclarationAccidentChoose);
-          setValue('DateEnvoieDeclarationAccident', DateEnvoieDeclarationAccidentChoose);
-        }} defaultValue={DateEnvoieDeclarationAccident}></DatePickerP>
+          {/* *********************************** Date d'envoie de la déclaration d'accident **********************************/}
+          <DatePickerP id="DateEnvoieDeclarationAccident" label="Date d'envoie de la déclaration d'accident" onChange={(DateEnvoieDeclarationAccidentChoose) => {
+            console.log(DateEnvoieDeclarationAccidentChoose);
+            setDateEnvoieDeclarationAccident(DateEnvoieDeclarationAccidentChoose);
+            setValue('DateEnvoieDeclarationAccident', DateEnvoieDeclarationAccidentChoose);
+          }} defaultValue={DateEnvoieDeclarationAccident}></DatePickerP>
 
-        {/* *********************************** Commentaires et suivi (courier, mail) **********************************/}
-        <TextFieldP id="commentaireetSuivit" label="Commentaires et suivi (courier, mail)" onChange={(commentaireetSuivitText) => {
-          setcommentaireetSuivit(commentaireetSuivitText);
-          setValue('commentaireetSuivit', commentaireetSuivitText);
-        }} defaultValue={commentaireetSuivit}></TextFieldP>
+          {/* *********************************** Commentaires et suivi (courier, mail) **********************************/}
+          <TextFieldP id="commentaireetSuivit" label="Commentaires et suivi (courier, mail)" onChange={(commentaireetSuivitText) => {
+            setcommentaireetSuivit(commentaireetSuivitText);
+            setValue('commentaireetSuivit', commentaireetSuivitText);
+          }} defaultValue={commentaireetSuivit}></TextFieldP>
 
-        {/* *********************************** Gestionnaire du sinistre au sein de l'ASBL **********************************/}
-        <TextFieldP id="Getionnaiesinistre" label="Gestionnaire du sinistre au sein de l'ASBL" onChange={(GetionnaiesinistreText) => {
-          setGetionnaiesinistre(GetionnaiesinistreText);
-          setValue('Getionnaiesinistre', GetionnaiesinistreText);
-        }} defaultValue={Getionnaiesinistre}></TextFieldP>
+          {/* *********************************** Gestionnaire du sinistre au sein de l'ASBL **********************************/}
+          <TextFieldP id="Getionnaiesinistre" label="Gestionnaire du sinistre au sein de l'ASBL" onChange={(GetionnaiesinistreText) => {
+            setGetionnaiesinistre(GetionnaiesinistreText);
+            setValue('Getionnaiesinistre', GetionnaiesinistreText);
+          }} defaultValue={Getionnaiesinistre}></TextFieldP>
 
-        {/* *********************************** Autocomplete AssureurStatus **********************************/}
-        <AutoCompleteP id='AssureurStatus' option={listAssureur.AssureurStatus} label='Status' onChange={(AssureurStatusSelect) => {
-          setAssureurStatus(AssureurStatusSelect);
-          setValue('AssureurStatus', AssureurStatusSelect);
-        }} defaultValue={assureurStatus}> </AutoCompleteP>
+          {/* *********************************** Autocomplete AssureurStatus **********************************/}
+          <AutoCompleteP id='AssureurStatus' option={listAssureur.AssureurStatus} label='Status' onChange={(AssureurStatusSelect) => {
+            setAssureurStatus(AssureurStatusSelect);
+            setValue('AssureurStatus', AssureurStatusSelect);
+          }} defaultValue={assureurStatus}> </AutoCompleteP>
 
-        {/* *********************************** Checkbox Cloturé **********************************/}
-        <div>
-          <FormGroup>
-            <ControlLabelP id="boolAsCloture" label="Cloturé" onChange={(boolAsClotureCoche) => {
-              setboolAsCloture(boolAsClotureCoche);
-              setValue('boolAsCloture', boolAsClotureCoche);
-            }} defaultValue={boolAsCloture}></ControlLabelP>
-          </FormGroup>
+          {/* *********************************** Checkbox Cloturé **********************************/}
+          <div>
+            <FormGroup>
+              <ControlLabelP id="boolAsCloture" label="Cloturé" onChange={(boolAsClotureCoche) => {
+                setboolAsCloture(boolAsClotureCoche);
+                setValue('boolAsCloture', boolAsClotureCoche);
+              }} defaultValue={boolAsCloture}></ControlLabelP>
+            </FormGroup>
+          </div>
         </div>
       </div>
     </div>

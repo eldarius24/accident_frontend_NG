@@ -21,17 +21,8 @@ export default function FormulaireSalarie({ setValue, accidentData, watch }) {
       window.removeEventListener('resize', handleResize);
     };
   }, []);
-  const frameStyle = {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    height: `${frameWidth * 1.3}px`, // Adjust the coefficient as needed
-    border: '2px solid #84a784',
-    borderRadius: '10px',
-    cursor: 'pointer',
-    margin: '20px 1rem',
-    backgroundColor: '#d2e2d2',
-  };
+  const frameStyle = { justifyContent: 'center', alignItems: 'center', border: '2px solid #84a784', borderRadius: '10px', cursor: 'pointer', margin: '20px 1rem', backgroundColor: '#d2e2d2', };
+
 
   const [showSecondTextField, setShowadresseRuecorrespondance] = useState(true);
 
@@ -102,41 +93,43 @@ export default function FormulaireSalarie({ setValue, accidentData, watch }) {
    * Etape 3 : retourner le formulaire (IHMs)
    */
   return (
-    <div>
-      <h2>Infos du travailleur</h2>
-      <h3>Rentrez les informations sur la personne victime de l'accident de travail.</h3>
+    <div style={frameStyle}>
+      <div>
+        <h2>Infos du travailleur</h2>
+        <h3>Rentrez les informations sur la personne victime de l'accident de travail.</h3>
 
-      <TextFieldP id='nomTravailleur' label='Nom du travailleur' onChange={setNomTravailleur} defaultValue={nomTravailleur} />
-      <TextFieldP id='prenomTravailleur' label='Prénom du travailleur' onChange={setPrenomTravailleur} defaultValue={prenomTravailleur} />
-      <DatePickerP id='dateNaissance' label='Date de naissance' onChange={setDateNaissance} defaultValue={dateNaissance} />
-      <TextFieldP id='lieuxnaissance' label='Lieu de naissance' onChange={setLieuxnaissance} defaultValue={lieuxnaissance} />
-      <TextFieldP id='niss' label='NISS du travailleur' onChange={setNiss} defaultValue={niss} />
-      <TextFieldP id='nbHeuresSemaine' label="Nombre d'heures travaillées par semaine" onChange={setNbHeuresSemaine} defaultValue={nbHeuresSemaine} />
-      <DatePickerP id='dateDebutArret' label="Date de début du dernier arrêt de travail(>15j)" onChange={setDateDebutArret} defaultValue={dateDebutArret} />
-      <DatePickerP id='dateFinArret' label="Date de fin du denier arrêt de travail (>15j)" onChange={setDateFinArret} defaultValue={dateFinArret} />
-      <DatePickerP id='dateEntrEntreprise' label="Date d'entrée dans l'entreprise" onChange={setDateEntrEntreprise} defaultValue={dateEntrEntreprise} />
-      <AutoCompleteP id='sexe' label='Sexe' onChange={setsexe} option={listeDeclarationAssBelfius.ListeSexe} defaultValue={sexe} />
-      <AutoCompleteP id='nationalité' label='Nationalité' onChange={setnationalité} option={listeDeclarationAssBelfius.ListeNationalite} defaultValue={nationalité} />
-      <AutoCompleteP id='etatCivil' label='Etat civil' onChange={setetatCivil} option={listeDeclarationAssBelfius.ListeEtatCivil} defaultValue={etatCivil} />
-      <TextFieldP id='adresseRue' label='Adresse du travailleur' onChange={setadresseRue} defaultValue={adresseRue} />
-      <TextFieldP id='adresseCodepostal' label='Code postal' onChange={setadresseCodepostal} defaultValue={adresseCodepostal} />
-      <TextFieldP id='adresseCommune' label='Commune' onChange={setadresseCommune} defaultValue={adresseCommune} />
-      <AutoCompleteP id='adressePays' label='Pays' onChange={setadressePays} defaultValue={adressePays} option={listeDeclarationAssBelfius.ListeNationalite} />
-      <TextFieldP id='adresseMail' label='Adresse mail' onChange={setadresseMail} defaultValue={adresseMail} />
-      <TextFieldP id='telephone' label='Téléphone' onChange={settelephone} defaultValue={telephone} />
+        <TextFieldP id='nomTravailleur' label='Nom du travailleur' onChange={setNomTravailleur} defaultValue={nomTravailleur} />
+        <TextFieldP id='prenomTravailleur' label='Prénom du travailleur' onChange={setPrenomTravailleur} defaultValue={prenomTravailleur} />
+        <DatePickerP id='dateNaissance' label='Date de naissance' onChange={setDateNaissance} defaultValue={dateNaissance} />
+        <TextFieldP id='lieuxnaissance' label='Lieu de naissance' onChange={setLieuxnaissance} defaultValue={lieuxnaissance} />
+        <TextFieldP id='niss' label='NISS du travailleur' onChange={setNiss} defaultValue={niss} />
+        <TextFieldP id='nbHeuresSemaine' label="Nombre d'heures travaillées par semaine" onChange={setNbHeuresSemaine} defaultValue={nbHeuresSemaine} />
+        <DatePickerP id='dateDebutArret' label="Date de début du dernier arrêt de travail(>15j)" onChange={setDateDebutArret} defaultValue={dateDebutArret} />
+        <DatePickerP id='dateFinArret' label="Date de fin du denier arrêt de travail (>15j)" onChange={setDateFinArret} defaultValue={dateFinArret} />
+        <DatePickerP id='dateEntrEntreprise' label="Date d'entrée dans l'entreprise" onChange={setDateEntrEntreprise} defaultValue={dateEntrEntreprise} />
+        <AutoCompleteP id='sexe' label='Sexe' onChange={setsexe} option={listeDeclarationAssBelfius.ListeSexe} defaultValue={sexe} />
+        <AutoCompleteP id='nationalité' label='Nationalité' onChange={setnationalité} option={listeDeclarationAssBelfius.ListeNationalite} defaultValue={nationalité} />
+        <AutoCompleteP id='etatCivil' label='Etat civil' onChange={setetatCivil} option={listeDeclarationAssBelfius.ListeEtatCivil} defaultValue={etatCivil} />
+        <TextFieldP id='adresseRue' label='Adresse du travailleur' onChange={setadresseRue} defaultValue={adresseRue} />
+        <TextFieldP id='adresseCodepostal' label='Code postal' onChange={setadresseCodepostal} defaultValue={adresseCodepostal} />
+        <TextFieldP id='adresseCommune' label='Commune' onChange={setadresseCommune} defaultValue={adresseCommune} />
+        <AutoCompleteP id='adressePays' label='Pays' onChange={setadressePays} defaultValue={adressePays} option={listeDeclarationAssBelfius.ListeNationalite} />
+        <TextFieldP id='adresseMail' label='Adresse mail' onChange={setadresseMail} defaultValue={adresseMail} />
+        <TextFieldP id='telephone' label='Téléphone' onChange={settelephone} defaultValue={telephone} />
 
-      <div style={frameStyle}>
-        <h5> Adresse de correspondance (à mentionner si elle diffère de la résidence principale)</h5>
+        <div style={frameStyle}>
+          <h5> Adresse de correspondance (à mentionner si elle diffère de la résidence principale)</h5>
+        </div>
+        <TextFieldP id="adresseRuecorrespondance" label="Rue / numéro / boite" onChange={(value) => { setadresseRuecorrespondance(value); setShowadresseRuecorrespondance(value === '') }} defaultValue={adresseRuecorrespondance} />
+
+        {!showSecondTextField && (
+          [<TextFieldP id="adresseCodecorrespondance" label="Code postal" onChange={setadresseCodecorrespondance} defaultValue={adresseCodecorrespondance} />,
+          <TextFieldP id="adresseCommunecorrespondance" label="Commune" onChange={setadresseCommunecorrespondance} defaultValue={adresseCommunecorrespondance} />,
+          <TextFieldP id="ListeadressePaysCorrespondance" label="Pays" onChange={setListeadressePaysCorrespondance} defaultValue={ListeadressePaysCorrespondance} />,
+          <TextFieldP id="telephoneCorrespondance" label="Téléphone" onChange={settelephoneCorrespondance} defaultValue={telephoneCorrespondance} />,
+          <AutoCompleteP id="ListeLangueCorr" option={listeDeclarationAssBelfius.ListeLangueCorr} label="Langue de correspondance avec la victime" onChange={setListeLangueCorr} defaultValue={ListeLangueCorr} />]
+        )}
       </div>
-      <TextFieldP id="adresseRuecorrespondance" label="Rue / numéro / boite" onChange={(value) => { setadresseRuecorrespondance(value); setShowadresseRuecorrespondance(value === '') }} defaultValue={adresseRuecorrespondance} />
-
-      {!showSecondTextField && (
-        [<TextFieldP id="adresseCodecorrespondance" label="Code postal" onChange={setadresseCodecorrespondance} defaultValue={adresseCodecorrespondance} />,
-        <TextFieldP id="adresseCommunecorrespondance" label="Commune" onChange={setadresseCommunecorrespondance} defaultValue={adresseCommunecorrespondance} />,
-        <TextFieldP id="ListeadressePaysCorrespondance" label="Pays" onChange={setListeadressePaysCorrespondance} defaultValue={ListeadressePaysCorrespondance} />,
-        <TextFieldP id="telephoneCorrespondance" label="Téléphone" onChange={settelephoneCorrespondance} defaultValue={telephoneCorrespondance} />,
-        <AutoCompleteP id="ListeLangueCorr" option={listeDeclarationAssBelfius.ListeLangueCorr} label="Langue de correspondance avec la victime" onChange={setListeLangueCorr} defaultValue={ListeLangueCorr} />]
-      )}
     </div>
   );
 }
