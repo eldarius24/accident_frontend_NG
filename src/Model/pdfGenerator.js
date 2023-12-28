@@ -204,7 +204,7 @@ export default async function editPDF(data) {
         const pdfBytes = await pdfDoc.save();
         const blob = new Blob([pdfBytes], { type: 'application/pdf' });
 
-        const fileName = `test.pdf`;
+        const fileName = `${data.DateHeureAccident}_${data.entrepriseName}_${data.nomTravailleur}_${data.prenomTravailleur}.pdf`;
 
 
         if (window.navigator && window.navigator.msSaveOrOpenBlob) {
