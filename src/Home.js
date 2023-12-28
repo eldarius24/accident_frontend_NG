@@ -24,6 +24,10 @@ import GetAppIcon from '@mui/icons-material/GetApp';
 import * as ExcelJS from 'exceljs';
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 import editPDF from './Model/pdfGenerator.js';
+import { confirmAlert } from 'react-confirm-alert';
+import 'react-confirm-alert/src/react-confirm-alert.css';
+/* IMPORT PERSO */
+import './pageFormulaire/formulaire.css';
 
 function Home() {
     const navigate = useNavigate();
@@ -670,8 +674,40 @@ function Home() {
                                 <TableCell>{item.typeAccident}</TableCell>
                                 <TableCell>
                                     <Button variant="contained" color="primary" onClick={() => handleEdit(item._id)}> <EditIcon /></Button>
-                                    <Button variant="contained" color="success" onClick={() => handleGeneratePDF(item._id)}> <PictureAsPdfIcon /></Button>
-                                    <Button variant="contained" color="error" onClick={() => handleDelete(item._id)}> <DeleteForeverIcon /></Button>
+                                    <Button style={{ marginLeft: '8px' }} variant="contained" color="success" onClick={() => handleGeneratePDF(item._id)}> <PictureAsPdfIcon /></Button>
+                                    <Button
+                                        style={{ marginLeft: '38px' }}
+                                        variant="contained"
+                                        color="error"
+                                        onClick={() => {
+                                            confirmAlert({
+                                                customUI: ({ onClose }) => {
+                                                    return (
+                                                        <div className="custom-confirm-dialog">
+                                                            <h1 className="custom-confirm-title">Supprimer</h1>
+                                                            <p className="custom-confirm-message">Êtes-vous sûr de vouloir supprimer cet élément?</p>
+                                                            <div className="custom-confirm-buttons">
+                                                                <button
+                                                                    className="custom-confirm-button"
+                                                                    onClick={() => {
+                                                                        handleDelete(item._id);
+                                                                        onClose();
+                                                                    }}
+                                                                >
+                                                                    Oui
+                                                                </button>
+                                                                <button className="custom-confirm-button custom-confirm-no" onClick={onClose}>
+                                                                    Non
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    );
+                                                }
+                                            });
+                                        }}
+                                    >
+                                        <DeleteForeverIcon />
+                                    </Button>
                                 </TableCell>
                             </TableRow>
                         ))}
