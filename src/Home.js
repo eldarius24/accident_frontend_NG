@@ -692,6 +692,7 @@ function Home() {
                 <div style={frameStyle}>
                     <Table>
                         <TableHead>
+                        <React.Fragment>
                             <TableRow style={{ backgroundColor: '#84a784' }} key={"CellTowerSharp"}>
                                 <TableCell style={{ color: '' }} >N° Groupe</TableCell>
                                 <TableCell>N° Entreprise</TableCell>
@@ -703,6 +704,8 @@ function Home() {
                                 <TableCell>Type accident</TableCell>
                                 <TableCell>Actions</TableCell>
                             </TableRow>
+                            <TableRow className="table-row-separatormenu"></TableRow>
+                            </React.Fragment>
                         </TableHead>
                         <TableBody>
                             {filteredData.map((item, index) => (
