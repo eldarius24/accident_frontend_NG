@@ -3,7 +3,7 @@ import axios from 'axios';
 import * as React from 'react';
 import { useCallback, useState, useEffect } from 'react';
 import { useForm } from "react-hook-form";
-import { useNavigate, useLocation} from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 /* IMPORT MUI */
 import Button from '@mui/material/Button';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
@@ -27,7 +27,7 @@ const forms = [
 ];
 
 export default function Formulaire() {
-    const accidentData  = useLocation().state;
+    const accidentData = useLocation().state;
     const apiUrl = config.apiUrl;
     const [activeStep, setActiveStep] = useState(0);
     const navigate = useNavigate();
@@ -68,31 +68,31 @@ export default function Formulaire() {
      * ************************************************************************/
     const onSubmit = (data) => {
 
-        console.log("onSubmit -> Données à enregistrer :",data);
-        console.log("onSubmit -> Données à editer accidentData :",accidentData);
+        console.log("onSubmit -> Données à enregistrer :", data);
+        console.log("onSubmit -> Données à editer accidentData :", accidentData);
 
         if (accidentData) {
 
             //mode EDITION
-            axios.put("http://"+apiUrl+":3100/api/accidents/"+accidentData._id, data)
-            .then(response => {
-                console.log('Réponse du serveur en modification :', response.data);
-            })
-            .catch(error => {
-                console.error('Erreur de requête:', error.message);
-            });
+            axios.put("http://" + apiUrl + ":3100/api/accidents/" + accidentData._id, data)
+                .then(response => {
+                    console.log('Réponse du serveur en modification :', response.data);
+                })
+                .catch(error => {
+                    console.error('Erreur de requête:', error.message);
+                });
         } else {
             //mode CREATION
-            axios.put("http://"+apiUrl+":3100/api/accidents", data)
-            .then(response => {
-                console.log('Réponse du serveur en création :', response.data);
-            })
-            .catch(error => {
-                console.error('Erreur de requête:', error.message);
-            });
+            axios.put("http://" + apiUrl + ":3100/api/accidents", data)
+                .then(response => {
+                    console.log('Réponse du serveur en création :', response.data);
+                })
+                .catch(error => {
+                    console.error('Erreur de requête:', error.message);
+                });
         }
-        
-        
+
+
         // Naviguer vers la page d'accueil
         navigate('/');
     };
@@ -102,7 +102,7 @@ export default function Formulaire() {
      * ************************************************************************/
     return (
         <form className="background-image" onSubmit={handleSubmit(onSubmit)}>
-            {React.createElement(forms[activeStep].component, {setValue, accidentData, watch})}
+            {React.createElement(forms[activeStep].component, { setValue, accidentData, watch })}
             {/* Boutons de navigation pour passer à l'étape suivante ou revenir à l'étape précédente */}
             <div style={{ display: 'flex', justifyContent: 'center' }}>
                 {activeStep > 0 && (
@@ -133,7 +133,7 @@ export default function Formulaire() {
                     </Button>
                 )}
             </div>
-            
+
             {/************* Telechargement de fichier **************************/}
             <h3>Vous pouvez ajouter des pièces à joindre au dossier (courriers, e-mails, etc..).</h3>
 
@@ -153,7 +153,7 @@ export default function Formulaire() {
                 onDrop={handleDrop}
                 onDragOver={(e) => {
                     e.preventDefault();
-                    e.stopPropagation(); 
+                    e.stopPropagation();
                 }}
             >
 
@@ -222,6 +222,8 @@ export default function Formulaire() {
                 </Button>
             </div>
             <h3>Une fois les données enregistrées, vous pouvez les retrouver et les re-éditer dans la base de données.</h3>
+            <div className="image-cortigroupe"></div>
+            <h5> Développé par Remy et Benoit pour Le Cortigroupe. Support: bgillet.lecortil@cortigroupe.be</h5>
         </form>
     );
 }
