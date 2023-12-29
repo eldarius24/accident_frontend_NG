@@ -27,7 +27,11 @@ export default function FormulaireDeclarationASSBelfius({ setValue, accidentData
             window.removeEventListener('resize', handleResize);
         };
     }, []);
-    
+
+    /**
+    * Etape 1 : stocker les données dans des variables locales et les initialiser avec les données de l'accident si elles existent
+    * 
+    */
 
     const [showtroiTextField, setShowListeVicInterimaire] = useState(false);
     const [showquatreTextField, setShowListeVicTravailExt] = useState(false);
@@ -48,7 +52,6 @@ export default function FormulaireDeclarationASSBelfius({ setValue, accidentData
     const [showdixneufTextField, setShowListechangementFonction] = useState(false);
     const [showvingtTextField, setShowListeCategoProfess] = useState(false);
     const [showvingtetunTextField, setShowListeDateSortie] = useState(false);
-    const [showvingtdeusTextField, setShowListeDurContra] = useState(false);
 
     const [CodeMutuelle, setCodeMutuelle] = useState(watch('CodeMutuelle') ? watch('CodeMutuelle') : (accidentData && accidentData.CodeMutuelle ? accidentData.CodeMutuelle : ''));
     const [nomMutuelle, setnomMutuelle] = useState(watch('nomMutuelle') ? watch('nomMutuelle') : (accidentData && accidentData.nomMutuelle ? accidentData.nomMutuelle : ''));
@@ -154,6 +157,9 @@ export default function FormulaireDeclarationASSBelfius({ setValue, accidentData
     const [salaireTravaillePerdu, setsalaireTravaillePerdu] = useState(watch('salaireTravaillePerdu') ? watch('salaireTravaillePerdu') : (accidentData && accidentData.salaireTravaillePerdu ? accidentData.salaireTravaillePerdu : ''));
     const [activiteGenerale, setactiviteGenerale] = useState(watch('activiteGenerale') ? watch('activiteGenerale') : (accidentData && accidentData.activiteGenerale ? accidentData.activiteGenerale : ''));
 
+    /**
+     * Etape 2 : mettre à jour les données du formulaire à chaque modification d'un des champs
+     */
     useEffect(() => {
         setValue('CodeMutuelle', CodeMutuelle)
         setValue('nomMutuelle', nomMutuelle)
@@ -260,12 +266,15 @@ export default function FormulaireDeclarationASSBelfius({ setValue, accidentData
         setValue('activiteGenerale', activiteGenerale)
     }, [CodeMutuelle, nomMutuelle, adresseRueMutuelle, adresseCodepostalMutuelle, adresseCommuneMutuelle, numAffiliation, numCompteBancaire, etabliFinancier, numDimona, ListeDurContra, ListeDateSortie, dateSortie, profesEntreprise, citp, ListeDureeDsEntreprise, ListeVicInterimaire, VicInterimaireOui, VicInterimaireOuiNom, VicInterimaireOuiAdresse, ListeVicTravailExt, VicTravailExtOui, VicTravailExtOuiNom, VicTravailExtOuiAdresse, dateNotifEmployeur, ListeLieuxAt, ListeVoiePublic, LieuxAtAdresse, LieuxAtCodePostal, LieuxAtCommune, ListeLieuxAtPays, NumdeChantier, environementLieux, activiteSpecifique, ListeTypedePost, ListeProfHabituelle, ListeProfHabituelleNon, evenementDeviant, ListeProcesVerbal, ProcesVerbalOui, ProcesVerbalOuiRedige, dateProcesVerbalOuiRedigeQuand, ProcesVerbalOuiPar, ListeTierResponsable, TierResponsableOui, TierResponsableOuiNomAdresse, TierResponsableOuiNumPolice, ListeTemoins, TemoinsOui, TemoinDirecte, blessureVictume, ListeSoinsMedicaux, dateSoinsMedicauxDate, SoinsMedicauxDispansateur, SoinsMedicauxDescriptions, ListeSoinsMedicauxMedecin, dateSoinsMedicauxMedecin, SoinsMedicauxMedecinInami, SoinsMedicauxMedecinNom, SoinsMedicauxMedecinRue, SoinsMedicauxMedecinCodePostal, SoinsMedicauxMedecinCommune, ListeSoinsMedicauxHopital, dateSoinsMedicauxHopital, SoinsMedicauxHopitalInami, SoinsMedicauxHopitaldenomi, SoinsMedicauxHopitalRue, SoinsMedicauxHopitalCodePostal, SoinsMedicauxHopitalCommune, ListeConseqAccident, dateRepriseEffective, JourIncaCompl, ListeMesureRepetition, ListeMesureRepetition2, CodeRisqueEntreprise, ListeVictimeOnss, victimeOnssNon, codeTravailleurSocial, ListeCategoProfess, CategoProfessAutre, ListeNonOnss, ListeApprentiFormat, CommissionParitaireDénomination, CommissionParitaireNumn, ListeTypeContrat, Nbrjoursregime, NbrHeureSemaine, NbrHeureSemaineReference, ListeVictiPension, ListeModeRemuneration, ListeMontantRemuneration, MontantRemunerationVariable, remunerationTotalAssOnns, ListePrimeFinAnnee, PrimeFinAnneeRemuAnnuel, PrimeFinAnneeRemuAnnuelForfetaire, PrimeFinAnneeRemuAnnuelNbrHeure, AvantegeAssujOnns, AvantegeAssujOnnsNature, ListechangementFonction, dateChangementFonction, heureTravaillePerdu, salaireTravaillePerdu, activiteGenerale, setValue]);
 
+    /**
+   * Etape 3 : retourner le formulaire (IHMs)
+   */
     return (
-        <div className= "frameStyle-style">
+        <div className="frameStyle-style">
             <div className="infoDeclarationAss">
                 <h2>Infos Déclaration</h2>
                 <h3>Rentrez les informations relative a la déclaration.</h3>
-                <div className= "frameStyle-style">
+                <div className="frameStyle-style">
                     <h5> Informations sur la Mutuelle</h5>
                 </div>
                 <TextFieldP id="CodeMutuelle" label="Code mutuelle" onChange={setCodeMutuelle} defaultValue={CodeMutuelle} />
@@ -277,9 +286,9 @@ export default function FormulaireDeclarationASSBelfius({ setValue, accidentData
                 <TextFieldP id="numCompteBancaire" label="Numéro de compte bancaire" onChange={setnumCompteBancaire} defaultValue={numCompteBancaire} />
                 <TextFieldP id="etabliFinancier" label="Etablissement Financier BIC" onChange={setetabliFinancier} defaultValue={etabliFinancier} />
                 <TextFieldP id="numDimona" label="Numéro de la Dimona" onChange={setnumDimona} defaultValue={numDimona} />
-                <AutoCompleteP id="ListeDurContra" option={listeDeclarationAss.ListeDurContra} label="Durée du contrat de travail" onChange={(value) => { setListeDurContra(value); setShowListeDurContra(value === 'Déterminée') }} defaultValue={ListeDurContra} />
+                <AutoCompleteP id="ListeDurContra" option={listeDeclarationAss.ListeDurContra} label="Durée du contrat de travail" onChange={(value) => { setListeDurContra(value)}} defaultValue={ListeDurContra} />
 
-                {showvingtdeusTextField && (
+                {(ListeDurContra === 'Déterminée') && (
                     <AutoCompleteP id="ListeDateSortie" option={listeDeclarationAss.ListeDateSortie} label="Date de sortie" onChange={(value) => { setListeDateSortie(value); setShowListeDateSortie(value === 'Oui') }} defaultValue={ListeDateSortie} />
                 )}
 
@@ -321,20 +330,20 @@ export default function FormulaireDeclarationASSBelfius({ setValue, accidentData
                 )}
 
                 <TextFieldP id="NumdeChantier" label="Numéro du chantier" onChange={setNumdeChantier} defaultValue={NumdeChantier} />
-                <div className= "frameStyle-style">
+                <div className="frameStyle-style">
                     <h5> Dans quel environnement ou dans quel type de lieu la victime se trouvait-elle lorsque l’accident s’est produit ? (p.ex. , aire de maintenance, chantier de
                         construction d’un tunnel, lieu d’élevage de bétail, bureau, école, magasin, hôpital, parking, salle de sports, toit d’un hôtel, maison privée, égout, jardin,
                         autoroute, navire à quai, sous l’eau, etc.). </h5>
                 </div>
                 <TextFieldP id="environementLieux" label="Expliquez" onChange={setenvironementLieux} defaultValue={environementLieux} />
-                <div className= "frameStyle-style">
+                <div className="frameStyle-style">
                     <h5> Précisez l’activité général (le type de travail) qu’effectuait la victime ou la tâche (au sens large) qu’elle accomplissait lorsque l’accident s’est produit.
                         (p.ex., transformation de produits, stockage, terrassement, construction ou démolition d’un bâtiment, tâches de type agricole on forestier, tâches avec
                         des animaux, soins, assistance d’une personne ou de plusieurs, formation, travil de bureau, achat, vente, activité artistique, etc. ou les tâches auxiliaires
                         de ces différents travaux comme l’installation, le désassemblage, la maintenance, la réparation, le nettoyage, etc.)  </h5>
                 </div>
                 <TextFieldP id="activiteGenerale" label="Expliquez" onChange={setactiviteGenerale} defaultValue={activiteGenerale} />
-                <div className= "frameStyle-style">
+                <div className="frameStyle-style">
                     <h5> Précisez l’activité spécifique de la victime lorsque l’accident s’est produit : (p.ex. , remplissage de la machine, utilisation d’ outillage à main, conduite d’un
                         moyen de transport, saisie, levage, roulage, portage d’un objet, fermeture d’une boite, montée d’une échelle, marche, prise de position assise, etc.) ET les
                         objets impliqués (p.ex. , outillage, machine, équipement, matériaux, objets, instruments, substances, etc.)</h5>
@@ -347,7 +356,7 @@ export default function FormulaireDeclarationASSBelfius({ setValue, accidentData
                     <TextFieldP id="ListeProfHabituelleNon" label="Si non, quelle activité exerçait-elle" onChange={setListeProfHabituelleNon} defaultValue={ListeProfHabituelleNon} />
                 )}
 
-                <div className= "frameStyle-style">
+                <div className="frameStyle-style">
                     <h5> Quels événements déviant par rapport au processus normal du travail ont provoqué l’accident ? (p.ex. , problème électrique, explosion, feu, déborde-
                         ment, renversement, écoulement, émission de gaz, rupture, chute ou effondrement d’objet, démarrage ou fonctionnement anormal d’une machine, perte
                         de contrôle d’un moyen de transport ou d’un objet, glissade ou chute de personne, action inopportune, faux mouvement, surprise, frayeur, violence,
@@ -379,7 +388,7 @@ export default function FormulaireDeclarationASSBelfius({ setValue, accidentData
                     <AutoCompleteP id="TemoinDirecte" option={listeDeclarationAss.TemoinDirecte} label="Est-ce un témoin directe (D) ou indirecte (I)" onChange={setTemoinDirecte} defaultValue={TemoinDirecte} />]
                 )}
 
-                <div className= "frameStyle-style">
+                <div className="frameStyle-style">
                     <h5> Comment la victime a-t-elle été blessée (lésion physique au psychique) ? Précisez chaque fois par ordre d’importance tous les différents contacts qui ont
                         provoqué la (les) blessure(s) (p. ex. , contact avec un courant électrique, avec une source de chaleur ou des substances dangereuses, noyade, ensevelis-
                         sement, enveloppement par quelque chose (gaz, liquide, solide), écrasement contre un objet ou heurt par un objet, collision, contact avec un objet coupant
@@ -419,7 +428,7 @@ export default function FormulaireDeclarationASSBelfius({ setValue, accidentData
 
                 <AutoCompleteP id="ListeConseqAccident" option={listeDeclarationAss.ListeConseqAccident} label="Conséquences de l’accident" onChange={setListeConseqAccident} defaultValue={ListeConseqAccident} />
                 <DatePickerP id="dateRepriseEffective" label="Date de reprise effective du travail habituel/au poste d’origine" onChange={setdateRepriseEffective} defaultValue={dateRepriseEffective} />
-                <div className= "frameStyle-style">
+                <div className="frameStyle-style">
                     <h5>  S'il n'y a pas encore eu de reprise complète du travail habituel/au poste d’origine durée probable de l'incapacité temporaire
                         totale ou partielle de travail </h5>
                 </div>
@@ -476,7 +485,7 @@ export default function FormulaireDeclarationASSBelfius({ setValue, accidentData
                     <div>
                         <AutoCompleteP id="ListeMontantRemuneration" option={listeDeclarationAss.ListeMontantRemuneration} label="Unité de temps" onChange={setListeMontantRemuneration} defaultValue={ListeMontantRemuneration} />
                         <TextFieldP id="MontantRemunerationVariable" label="En cas de rémunération variable, cycle correspondant à l’unité de temps déclarée" onChange={setMontantRemunerationVariable} defaultValue={MontantRemunerationVariable} />
-                        <div className= "frameStyle-style">
+                        <div className="frameStyle-style">
                             <h5>total des rémunérations et des avantages assujettis à l’ONSS, sans heures supplémentaires, pécule de vacances complémentaire et prime de find’année
                                 (le montant déclaré doit correspondre à l’unité de temps ou à l’unité de temps et au cycle)</h5>
                         </div>

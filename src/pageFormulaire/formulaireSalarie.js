@@ -23,9 +23,6 @@ export default function FormulaireSalarie({ setValue, accidentData, watch }) {
   }, []);
 
 
-  const [showSecondTextField, setShowadresseRuecorrespondance] = useState(true);
-
-
 
   /**
    * Etape 1 : stocker les données dans des variables locales et les initialiser avec les données de l'accident si elles existent
@@ -119,9 +116,9 @@ export default function FormulaireSalarie({ setValue, accidentData, watch }) {
         <div className= "frameStyle-style">
           <h5> Adresse de correspondance (à mentionner si elle diffère de la résidence principale)</h5>
         </div>
-        <TextFieldP id="adresseRuecorrespondance" label="Rue / numéro / boite" onChange={(value) => { setadresseRuecorrespondance(value); setShowadresseRuecorrespondance(value === '') }} defaultValue={adresseRuecorrespondance} />
+        <TextFieldP id="adresseRuecorrespondance" label="Rue / numéro / boite" onChange={(value) => { setadresseRuecorrespondance(value);}} defaultValue={adresseRuecorrespondance} />
 
-        {!showSecondTextField && (
+        {adresseRuecorrespondance && (
           [<TextFieldP id="adresseCodecorrespondance" label="Code postal" onChange={setadresseCodecorrespondance} defaultValue={adresseCodecorrespondance} />,
           <TextFieldP id="adresseCommunecorrespondance" label="Commune" onChange={setadresseCommunecorrespondance} defaultValue={adresseCommunecorrespondance} />,
           <AutoCompleteP id='ListeadressePaysCorrespondance' label='Pays' onChange={setListeadressePaysCorrespondance} defaultValue={ListeadressePaysCorrespondance} option={listeDeclarationAssBelfius.ListeadressePaysCorrespondance} />,
