@@ -41,7 +41,7 @@ function Home() {
         refreshListAccidents();
     }, []);
 
-    
+
 
     const handleDelete = (accidentIdToDelete) => {
         axios.delete("http://" + apiUrl + ":3100/api/accidents/" + accidentIdToDelete)
@@ -688,22 +688,22 @@ function Home() {
             </div>
 
             <TableContainer>
-                <div className= "frameStyle-style">
+                <div className="frameStyle-style">
                     <Table>
                         <TableHead>
-                        <React.Fragment>
-                            <TableRow style={{ backgroundColor: '#84a784' }} key={"CellTowerSharp"}>
-                                <TableCell style={{ color: '' }} >N° Groupe</TableCell>
-                                <TableCell>N° Entreprise</TableCell>
-                                <TableCell>Date accident</TableCell>
-                                <TableCell>Entreprise</TableCell>
-                                <TableCell>Secteur</TableCell>
-                                <TableCell>Nom du travailleur</TableCell>
-                                <TableCell>Prénom du travailleur</TableCell>
-                                <TableCell>Type accident</TableCell>
-                                <TableCell>Actions</TableCell>
-                            </TableRow>
-                            <TableRow className="table-row-separatormenu"></TableRow>
+                            <React.Fragment>
+                                <TableRow style={{ backgroundColor: '#84a784' }} key={"CellTowerSharp"}>
+                                    <TableCell style={{ fontWeight: 'bold' }}>N° Groupe</TableCell>
+                                    <TableCell style={{ fontWeight: 'bold' }}>N° Entreprise</TableCell>
+                                    <TableCell style={{ fontWeight: 'bold' }}>Date accident</TableCell>
+                                    <TableCell style={{ fontWeight: 'bold' }}>Entreprise</TableCell>
+                                    <TableCell style={{ fontWeight: 'bold' }}>Secteur</TableCell>
+                                    <TableCell style={{ fontWeight: 'bold' }}>Nom du travailleur</TableCell>
+                                    <TableCell style={{ fontWeight: 'bold' }}>Prénom du travailleur</TableCell>
+                                    <TableCell style={{ fontWeight: 'bold' }}>Type accident</TableCell>
+                                    <TableCell style={{ fontWeight: 'bold' }}>Actions</TableCell>
+                                </TableRow>
+                                <TableRow className="table-row-separatormenu"></TableRow>
                             </React.Fragment>
                         </TableHead>
                         <TableBody>
