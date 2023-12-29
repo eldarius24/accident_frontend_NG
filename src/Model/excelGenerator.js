@@ -1,9 +1,32 @@
 import * as ExcelJS from 'exceljs';
 
+// Générer le fichier Excel et le télécharger
+function generateExcelFile(workbook) {
+    workbook.xlsx.writeBuffer().then(buffer => {
+        const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+
+        const fileName = 'accidents.xlsx';
+
+        if (window.navigator && window.navigator.msSaveOrOpenBlob) {
+            // Pour Internet Explorer
+            window.navigator.msSaveOrOpenBlob(blob, fileName);
+        } else {
+            // Pour les autres navigateurs
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = fileName;
+            link.click();
+            URL.revokeObjectURL(url); // Libérer l'URL
+        }
+    });
+}
+
+
 /**
      * Fonction pour exporter les données vers Excel
      * @returns {void}
-     * @param {void}
+     * @param {void} filteredData Données filtrées à exporter
      */
 export function handleExportData(filteredData) {
     const workbook = new ExcelJS.Workbook();
@@ -83,30 +106,13 @@ export function handleExportData(filteredData) {
         ]);
     });
 
-    workbook.xlsx.writeBuffer().then(buffer => {
-        const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-
-        const fileName = 'accidents.xlsx';
-
-        if (window.navigator && window.navigator.msSaveOrOpenBlob) {
-            // Pour Internet Explorer
-            window.navigator.msSaveOrOpenBlob(blob, fileName);
-        } else {
-            // Pour les autres navigateurs
-            const url = URL.createObjectURL(blob);
-            const link = document.createElement('a');
-            link.href = url;
-            link.download = fileName;
-            link.click();
-            URL.revokeObjectURL(url); // Libérer l'URL
-        }
-    });
+    generateExcelFile(workbook);
 };
 
 /**
  * Fonction pour exporter les données filtrées
- * @returns {void}
- * @param {void}
+ * @returns {void} null
+ * @param {void} filteredData Données filtrées à exporter
  */
 export function handleExportDataAss(filteredData) {
     const workbook = new ExcelJS.Workbook();
@@ -282,8 +288,6 @@ export function handleExportDataAss(filteredData) {
     // Ajouter les données filtrées
     filteredData.forEach(item => {
         worksheet.addRow([
-
-
             item.entrepriseName,
             item.secteur,
             item.typeTravailleur,
@@ -450,26 +454,5 @@ export function handleExportDataAss(filteredData) {
 
         ]);
     });
-
-
-
-    // Générer le fichier Excel et le télécharger
-    workbook.xlsx.writeBuffer().then(buffer => {
-        const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-
-        const fileName = 'accidents.xlsx';
-
-        if (window.navigator && window.navigator.msSaveOrOpenBlob) {
-            // Pour Internet Explorer
-            window.navigator.msSaveOrOpenBlob(blob, fileName);
-        } else {
-            // Pour les autres navigateurs
-            const url = URL.createObjectURL(blob);
-            const link = document.createElement('a');
-            link.href = url;
-            link.download = fileName;
-            link.click();
-            URL.revokeObjectURL(url); // Libérer l'URL
-        }
-    });
+    generateExcelFile(workbook);      
 };
