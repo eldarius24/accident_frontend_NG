@@ -9,6 +9,7 @@ import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import AddIcon from '@mui/icons-material/Add';
+import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 
 function ResponsiveAppBar({ navigation }) {
   const location = useLocation();
@@ -19,6 +20,14 @@ function ResponsiveAppBar({ navigation }) {
     <AppBar position="sticky" sx={{ backgroundColor: '#84a784' }}>
       <Container maxWidth="lg">
         <Toolbar disableGutters>
+        <Button
+            component={Link}
+            variant="contained"
+            sx={{ backgroundColor: '#84a784',  '&:hover': { backgroundColor: 'green' } }}
+            
+          >
+            <AdminPanelSettingsIcon />
+          </Button>
           <Typography
             variant="h5"
             noWrap
@@ -30,17 +39,17 @@ function ResponsiveAppBar({ navigation }) {
               fontWeight: 700,
               letterSpacing: '.3rem',
               color: 'inherit',
-              '@media (min-width: 750px)': {
+              '@media (min-width: 850px)': {
                 fontSize: '2rem',
               },
-              '@media (max-width: 630px)': {
+              '@media (max-width: 750px)': {
                 fontSize: '1.5rem',
                 letterSpacing: '.1rem',
                 mr: -20,
               },
-              '@media (max-width: 500px)': {
-                fontSize: '1.2rem',
-                letterSpacing: '.1rem',
+              '@media (max-width: 600px)': {
+                fontSize: '0.7rem',
+                letterSpacing: '.04rem',
                 mr: -20,
               },
             }}
@@ -57,6 +66,7 @@ function ResponsiveAppBar({ navigation }) {
             }}
           ></Box>
           {/* Condition pour le texte et la destination du bouton */}
+          
           <Button
             component={Link}
             to={isFormulairePage ? '/' : '/formulaire'}
@@ -65,9 +75,7 @@ function ResponsiveAppBar({ navigation }) {
             startIcon={isFormulairePage ? <ArrowBackIcon /> : <AddIcon />}
           >
             {isFormulairePage ? 'Retour' : 'Ajouter'}
-          </Button>
-
-
+          </Button>          
           {/* Le reste de votre contenu */}
         </Toolbar>
       </Container>
