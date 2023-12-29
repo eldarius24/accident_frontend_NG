@@ -21,7 +21,6 @@ export default function FormulaireSalarie({ setValue, accidentData, watch }) {
       window.removeEventListener('resize', handleResize);
     };
   }, []);
-  const frameStyle = { justifyContent: 'center', alignItems: 'center', border: '2px solid #84a784', borderRadius: '10px', cursor: 'pointer', margin: '20px 1rem', backgroundColor: '#d2e2d2', };
 
 
   const [showSecondTextField, setShowadresseRuecorrespondance] = useState(true);
@@ -93,7 +92,7 @@ export default function FormulaireSalarie({ setValue, accidentData, watch }) {
    * Etape 3 : retourner le formulaire (IHMs)
    */
   return (
-    <div style={frameStyle}>
+    <div className= "frameStyle-style">
       <div>
         <h2>Infos du travailleur</h2>
         <h3>Rentrez les informations sur la personne victime de l'accident de travail.</h3>
@@ -117,7 +116,7 @@ export default function FormulaireSalarie({ setValue, accidentData, watch }) {
         <TextFieldP id='adresseMail' label='Adresse mail' onChange={setadresseMail} defaultValue={adresseMail} />
         <TextFieldP id='telephone' label='Téléphone' onChange={settelephone} defaultValue={telephone} />
 
-        <div style={frameStyle}>
+        <div className= "frameStyle-style">
           <h5> Adresse de correspondance (à mentionner si elle diffère de la résidence principale)</h5>
         </div>
         <TextFieldP id="adresseRuecorrespondance" label="Rue / numéro / boite" onChange={(value) => { setadresseRuecorrespondance(value); setShowadresseRuecorrespondance(value === '') }} defaultValue={adresseRuecorrespondance} />

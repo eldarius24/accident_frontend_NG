@@ -41,8 +41,7 @@ function Home() {
         refreshListAccidents();
     }, []);
 
-    const frameStyle = { justifyContent: 'center', alignItems: 'center', border: '2px solid #84a784', borderRadius: '10px', cursor: 'pointer', margin: '20px 1rem', backgroundColor: '#d2e2d2', };
-
+    
 
     const handleDelete = (accidentIdToDelete) => {
         axios.delete("http://" + apiUrl + ":3100/api/accidents/" + accidentIdToDelete)
@@ -689,7 +688,7 @@ function Home() {
             </div>
 
             <TableContainer>
-                <div style={frameStyle}>
+                <div className= "frameStyle-style">
                     <Table>
                         <TableHead>
                         <React.Fragment>

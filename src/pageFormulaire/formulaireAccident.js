@@ -19,8 +19,6 @@ import DateHeurePickerP from '../composants/dateHeurePickerP';
 
 export default function FormulaireAccident({ setValue, accidentData, watch }) {
 
-  const frameStyle = { justifyContent: 'center', alignItems: 'center', border: '2px solid #84a784', borderRadius: '10px', cursor: 'pointer', margin: '20px 1rem', backgroundColor: '#d2e2d2', };
-
   const [frameWidth, setFrameWidth] = useState(window.innerWidth * -0.5);
 
   useEffect(() => {
@@ -101,7 +99,7 @@ export default function FormulaireAccident({ setValue, accidentData, watch }) {
    * Etape 3 : retourner le formulaire (IHMs)
    */
   return (
-    <div style={frameStyle}>
+    <div className="frameStyle-style">
       <div>
         <div className="infoAccident">
           <h2>Infos Accident</h2>
@@ -137,21 +135,9 @@ export default function FormulaireAccident({ setValue, accidentData, watch }) {
             <Grid item xs={11.99999} >
               <AutoCompleteP id='codeDeviation' option={listAccident.CodeDeviation} label='Code Déviation' onChange={setCodeDeviation} defaultValue={codeDeviation} />
             </Grid>
-            <Grid item xs={0.00001} style={{ margin: '-25%' }}>
-              <a href="https://www.fedris.be/sites/default/files/assets/FR/Statistiques/SEAT/deviation.pdf" target="_blank" rel="noopener noreferrer"
-                style={{
-                  margin: 0,
-                  color: 'black',
-                  padding: '10px 20px',
-                  width: '100%',
-                  height: '100%',
-                  fontSize: '100%',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  '&:hover': { backgroundColor: 'green' },
-                }}>
-                <InfoIcon />
+            <Grid item xs={0.00001} style={{ margin: '-24.5%' }}>
+              <a href="https://www.fedris.be/sites/default/files/assets/FR/Statistiques/SEAT/deviation.pdf" target="_blank" rel="noopener noreferrer">
+                <InfoIcon style={{ color: 'black' }} />
               </a>
             </Grid>
           </Grid>
@@ -160,21 +146,9 @@ export default function FormulaireAccident({ setValue, accidentData, watch }) {
             <Grid item xs={11.99999} >
               <AutoCompleteP id='codeAgentMateriel' option={listAccident.CodeAgentMateriel} label='Code Agent matériel' onChange={setCodeAgentMateriel} defaultValue={codeAgentMateriel} />
             </Grid>
-            <Grid item xs={0.00001} style={{ margin: '-25%' }}>
-              <a href="https://www.fedris.be/sites/default/files/assets/FR/Statistiques/SEAT/agentmateriel4.pdf" target="_blank" rel="noopener noreferrer"
-                style={{
-                  margin: 0,
-                  color: 'black',
-                  padding: '10px 20px',
-                  width: '100%',
-                  height: '100%',
-                  fontSize: '100%',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  '&:hover': { backgroundColor: 'green' },
-                }}>
-                <InfoIcon />
+            <Grid item xs={0.00001} style={{ margin: '-24.5%' }}>
+              <a href="https://www.fedris.be/sites/default/files/assets/FR/Statistiques/SEAT/agentmateriel4.pdf" target="_blank" rel="noopener noreferrer">
+                <InfoIcon style={{ color: 'black' }} />
               </a>
             </Grid>
           </Grid>
@@ -183,21 +157,9 @@ export default function FormulaireAccident({ setValue, accidentData, watch }) {
             <Grid item xs={11.99999} >
               <AutoCompleteP id='codeNatureLesion' option={listAccident.CodeNatureLésion} label='Code Nature de la lésion' onChange={setCodeNatureLesion} defaultValue={codeNatureLesion} />
             </Grid>
-            <Grid item xs={0.00001} style={{ margin: '-25%' }}>
-              <a href="https://www.fedris.be/sites/default/files/assets/FR/Statistiques/SEAT/natureblessure.pdf" target="_blank" rel="noopener noreferrer"
-                style={{
-                  margin: 0,
-                  color: 'black',
-                  padding: '10px 20px',
-                  width: '100%',
-                  height: '100%',
-                  fontSize: '100%',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  '&:hover': { backgroundColor: 'green' },
-                }}>
-                <InfoIcon />
+            <Grid item xs={0.00001} style={{ margin: '-24.5%' }}>
+              <a href="https://www.fedris.be/sites/default/files/assets/FR/Statistiques/SEAT/natureblessure.pdf" target="_blank" rel="noopener noreferrer">
+                <InfoIcon style={{ color: 'black' }}/>
               </a>
             </Grid>
           </Grid>
@@ -206,28 +168,16 @@ export default function FormulaireAccident({ setValue, accidentData, watch }) {
             <Grid item xs={11.99999} >
               <AutoCompleteP id='codeSiegeLesion' option={listAccident.CodeSiegeLésion} label='Code siège lésion' onChange={setCodeSiegeLesion} defaultValue={codeSiegeLesion} />
             </Grid>
-            <Grid item xs={0.00001} style={{ margin: '-25%' }} >
-              <a href="https://www.fedris.be/sites/default/files/assets/FR/Statistiques/SEAT/localisationblessure.pdf" target="_blank" rel="noopener noreferrer"
-                style={{
-                  margin: 0,
-                  color: 'black',
-                  padding: '10px 20px',
-                  width: '100%',
-                  height: '100%',
-                  fontSize: '100%',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  '&:hover': { backgroundColor: 'green' },
-                }}>
-                <InfoIcon />
+            <Grid item xs={0.00001} style={{ margin: '-24.5%' }} >
+              <a href="https://www.fedris.be/sites/default/files/assets/FR/Statistiques/SEAT/localisationblessure.pdf" target="_blank" rel="noopener noreferrer">
+                <InfoIcon style={{ color: 'black' }} />
               </a>
             </Grid>
           </Grid>
 
 
 
-          <div style={frameStyle}>
+          <div className="frameStyle-style">
             <h5>De quels moyens de protection la victime était-elle équipée lors de l'accident ?</h5>
           </div>
           <div>

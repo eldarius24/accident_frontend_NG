@@ -185,7 +185,7 @@ h6 {
 .custom-confirm-dialog {
   border-radius: 10px;
   box-shadow: 0 0 20px rgb(255, 0, 0);
-background-color: #bed1be;
+  background-color: #bed1be;
 }
 
 .custom-confirm-title {
@@ -211,9 +211,11 @@ background-color: #bed1be;
 
 .custom-confirm-buttons {
   display: flex;
-  justify-content: flex-end; /* Ajustez cette propriété pour aligner à droite */
+  justify-content: flex-end;
+  /* Ajustez cette propriété pour aligner à droite */
   margin-top: 20px;
 }
+
 .custom-confirm-button {
   background-color: #257525;
   /* Couleur du bouton */
@@ -225,7 +227,7 @@ background-color: #bed1be;
   /* Bordure du bouton */
   margin-right: 20px;
   margin-bottom: 20px;
-  
+
 }
 
 .custom-confirm-button:hover {
@@ -242,4 +244,14 @@ background-color: #bed1be;
 
 .table-row-separatormenu {
   border-bottom: 2px solid #0000008a;
+}
+
+.frameStyle-style {
+  justify-content: center;
+  align-items: center;
+  border: 2px solid #84a784;
+  border-radius: 10px;
+  cursor: pointer;
+  margin: 20px 1rem;
+  background-color: #d2e2d2;
 }

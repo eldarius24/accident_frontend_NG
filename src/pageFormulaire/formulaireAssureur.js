@@ -13,9 +13,6 @@ import TextFieldP from '../composants/textFieldP';
 
 export default function FormulaireAssureur({ setValue, accidentData, watch }) {
 
-
-  const frameStyle = { justifyContent: 'center', alignItems: 'center', border: '2px solid #84a784', borderRadius: '10px', cursor: 'pointer', margin: '20px 1rem', backgroundColor: '#d2e2d2', };
-
   /**
  * Etape 1 : stocker les données dans des variables locales et les initialiser avec les données de l'accident si elles existent
  * 
@@ -46,7 +43,7 @@ export default function FormulaireAssureur({ setValue, accidentData, watch }) {
    * Etape 3 : retourner le formulaire (IHMs)
    */
   return (
-    <div style={frameStyle}>
+    <div className= "frameStyle-style">
       <div>
         <div className="infoAssureur">
           <h2>Infos Assureur</h2>

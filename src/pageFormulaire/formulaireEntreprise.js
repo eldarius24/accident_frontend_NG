@@ -12,8 +12,7 @@ export default function FormulaireEntreprise({ setValue, accidentData, watch }) 
   const [listSecteur, setListSecteur] = useState([]);
   const [secteur, setSecteur] = useState(watch('secteur') ? watch('secteur') : (accidentData && accidentData.secteur ? accidentData.secteur : listEntreprises.entreprise[0].secteur[0]));
   const [typeTravailleur, setTypeTravailleur] = useState(watch('typeTravailleur') ? watch('typeTravailleur') : (accidentData && accidentData.typeTravailleur ? accidentData.typeTravailleur : null));
-  const frameStyle = { justifyContent: 'center', alignItems: 'center', border: '2px solid #84a784', borderRadius: '10px', cursor: 'pointer', margin: '20px 1rem', backgroundColor: '#d2e2d2', };
-  /**
+   /**
    * Etape 2 : mettre à jour les données du formulaire à chaque modification d'un des champs
    */
   useEffect(() => {
@@ -42,7 +41,7 @@ export default function FormulaireEntreprise({ setValue, accidentData, watch }) 
    * Etape 3 : retourner le formulaire (IHMs)
    */
   return (
-    <div style={frameStyle}>
+    <div className= "frameStyle-style">
       <div>
         <div>
           <div>
