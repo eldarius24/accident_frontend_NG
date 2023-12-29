@@ -112,7 +112,7 @@ export default function FormulaireSalarie({ setValue, accidentData, watch }) {
         <TextFieldP id='adresseRue' label='Adresse du travailleur' onChange={setadresseRue} defaultValue={adresseRue} />
         <TextFieldP id='adresseCodepostal' label='Code postal' onChange={setadresseCodepostal} defaultValue={adresseCodepostal} />
         <TextFieldP id='adresseCommune' label='Commune' onChange={setadresseCommune} defaultValue={adresseCommune} />
-        <AutoCompleteP id='adressePays' label='Pays' onChange={setadressePays} defaultValue={adressePays} option={listeDeclarationAssBelfius.ListeNationalite} />
+        <AutoCompleteP id='adressePays' label='Pays' onChange={setadressePays} defaultValue={adressePays} option={listeDeclarationAssBelfius.ListeadressePays} />
         <TextFieldP id='adresseMail' label='Adresse mail' onChange={setadresseMail} defaultValue={adresseMail} />
         <TextFieldP id='telephone' label='Téléphone' onChange={settelephone} defaultValue={telephone} />
 
@@ -124,7 +124,7 @@ export default function FormulaireSalarie({ setValue, accidentData, watch }) {
         {!showSecondTextField && (
           [<TextFieldP id="adresseCodecorrespondance" label="Code postal" onChange={setadresseCodecorrespondance} defaultValue={adresseCodecorrespondance} />,
           <TextFieldP id="adresseCommunecorrespondance" label="Commune" onChange={setadresseCommunecorrespondance} defaultValue={adresseCommunecorrespondance} />,
-          <TextFieldP id="ListeadressePaysCorrespondance" label="Pays" onChange={setListeadressePaysCorrespondance} defaultValue={ListeadressePaysCorrespondance} />,
+          <AutoCompleteP id='ListeadressePaysCorrespondance' label='Pays' onChange={setListeadressePaysCorrespondance} defaultValue={ListeadressePaysCorrespondance} option={listeDeclarationAssBelfius.ListeadressePaysCorrespondance} />,
           <TextFieldP id="telephoneCorrespondance" label="Téléphone" onChange={settelephoneCorrespondance} defaultValue={telephoneCorrespondance} />,
           <AutoCompleteP id="ListeLangueCorr" option={listeDeclarationAssBelfius.ListeLangueCorr} label="Langue de correspondance avec la victime" onChange={setListeLangueCorr} defaultValue={ListeLangueCorr} />]
         )}
