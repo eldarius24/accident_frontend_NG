@@ -189,7 +189,7 @@ function Home() {
                         sx={{ color: 'black', padding: '14px 60px', backgroundColor: '#84a784', '&:hover': { backgroundColor: 'green' }, boxShadow: 3, textTransform: 'none' }}
                         variant="contained"
                         color="primary"
-                        onClick={handleExportData(filteredData)}
+                        onClick= {() => handleExportData(filteredData)}
                         startIcon={<GetAppIcon />}
                     >
                         Accident
@@ -200,7 +200,7 @@ function Home() {
                         sx={{ color: 'black', padding: '14px 60px', backgroundColor: '#84a784', '&:hover': { backgroundColor: 'green' }, boxShadow: 3, textTransform: 'none' }}
                         variant="contained"
                         color="primary"
-                        onClick={handleExportDataAss(filteredData)}
+                        onClick= {() =>handleExportDataAss(filteredData)}
                         startIcon={<GetAppIcon />}
                     >
                         Assurance
@@ -222,7 +222,7 @@ function Home() {
                                     <TableCell style={{ fontWeight: 'bold' }}>Nom du travailleur</TableCell>
                                     <TableCell style={{ fontWeight: 'bold' }}>Prénom du travailleur</TableCell>
                                     <TableCell style={{ fontWeight: 'bold' }}>Type accident</TableCell>
-                                    <TableCell style={{ fontWeight: 'bold' }}>Actions</TableCell>
+                                    <TableCell style={{ fontWeight: 'bold' }}>&nbsp;&nbsp;&nbsp;Editer&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;PDF&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Supprimer</TableCell>
                                 </TableRow>
                                 <TableRow className="table-row-separatormenu"></TableRow>
                             </React.Fragment>
@@ -244,7 +244,7 @@ function Home() {
                                             <Button style={{ margin: '2px' }} variant="contained" color="primary" onClick={() => handleEdit(item._id)}> <EditIcon /></Button>
                                             <Button style={{ margin: '2px' }} variant="contained" color="success" onClick={() => handleGeneratePDF(item._id)}> <PictureAsPdfIcon /></Button>
                                             <Button
-                                                style={{ margin: '2px' }}
+                                                style={{ margin: '2px'}}
                                                 variant="contained"
                                                 color="error"
                                                 onClick={() => {

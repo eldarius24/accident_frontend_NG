@@ -33,129 +33,110 @@ export default function FormulaireDeclarationASSBelfius({ setValue, accidentData
     * 
     */
 
-    const [showtroiTextField, setShowListeVicInterimaire] = useState(false);
-    const [showquatreTextField, setShowListeVicTravailExt] = useState(false);
-    const [showcinqTextField, setShowListeVoiePublic] = useState(false);
-    const [showsixTextField, setShowListeLieuxAt] = useState(false);
-    const [showseptTextField, setShowListeProfHabituelle] = useState(false);
-    const [showhuitTextField, setShowListeProcesVerbal] = useState(false);
-    const [showneufTextField, setShowListeTierResponsable] = useState(false);
-    const [showdixTextField, setShowListeTemoins] = useState(false);
-    const [showonzeTextField, setShowListeSoinsMedicaux] = useState(false);
-    const [showdouzeTextField, setShowListeSoinsMedicauxMedecin] = useState(false);
-    const [showtreizeTextField, setShowListeSoinsMedicauxHopital] = useState(false);
-    const [showquatorzeTextField, setShowListeVictimeOnss] = useState(false);
-    const [showquinzeTextField, setShowcodeTravailleurSocial] = useState(false);
-    const [showSeizeTextField, setShowListeNonOnss] = useState(false);
-    const [showdixseptTextField, setShowListeApprentiFormat] = useState(false);
-    const [showdixhuitTextField, setShowListeModeRemuneration] = useState(false);
-    const [showdixneufTextField, setShowListechangementFonction] = useState(false);
-    const [showvingtTextField, setShowListeCategoProfess] = useState(false);
-    const [showvingtetunTextField, setShowListeDateSortie] = useState(false);
 
-    const [CodeMutuelle, setCodeMutuelle] = useState(watch('CodeMutuelle') ? watch('CodeMutuelle') : (accidentData && accidentData.CodeMutuelle ? accidentData.CodeMutuelle : ''));
-    const [nomMutuelle, setnomMutuelle] = useState(watch('nomMutuelle') ? watch('nomMutuelle') : (accidentData && accidentData.nomMutuelle ? accidentData.nomMutuelle : ''));
-    const [adresseRueMutuelle, setadresseRueMutuelle] = useState(watch('adresseRueMutuelle') ? watch('adresseRueMutuelle') : (accidentData && accidentData.adresseRueMutuelle ? accidentData.adresseRueMutuelle : ''));
-    const [adresseCodepostalMutuelle, setadresseCodepostalMutuelle] = useState(watch('adresseCodepostalMutuelle') ? watch('adresseCodepostalMutuelle') : (accidentData && accidentData.adresseCodepostalMutuelle ? accidentData.adresseCodepostalMutuelle : ''));
-    const [adresseCommuneMutuelle, setadresseCommuneMutuelle] = useState(watch('adresseCommuneMutuelle') ? watch('adresseCommuneMutuelle') : (accidentData && accidentData.adresseCommuneMutuelle ? accidentData.adresseCommuneMutuelle : ''));
-    const [numAffiliation, setnumAffiliation] = useState(watch('numAffiliation') ? watch('numAffiliation') : (accidentData && accidentData.numAffiliation ? accidentData.numAffiliation : ''));
-    const [numCompteBancaire, setnumCompteBancaire] = useState(watch('numCompteBancaire') ? watch('numCompteBancaire') : (accidentData && accidentData.numCompteBancaire ? accidentData.numCompteBancaire : ''));
-    const [etabliFinancier, setetabliFinancier] = useState(watch('etabliFinancier') ? watch('etabliFinancier') : (accidentData && accidentData.etabliFinancier ? accidentData.etabliFinancier : ''));
-    const [numDimona, setnumDimona] = useState(watch('numDimona') ? watch('numDimona') : (accidentData && accidentData.numDimona ? accidentData.numDimona : ''));
-    const [ListeDurContra, setListeDurContra] = useState(watch('ListeDurContra') ? watch('ListeDurContra') : (accidentData && accidentData.ListeDurContra ? accidentData.ListeDurContra : ''));
-    const [ListeDateSortie, setListeDateSortie] = useState(watch('ListeDateSortie') ? watch('ListeDateSortie') : (accidentData && accidentData.ListeDateSortie ? accidentData.ListeDateSortie : ''));
-    const [dateSortie, setdateSortie] = useState(watch('dateSortie') ? watch('dateSortie') : (accidentData && accidentData.dateSortie ? accidentData.dateSortie : ''));
-    const [profesEntreprise, setprofesEntreprise] = useState(watch('profesEntreprise') ? watch('profesEntreprise') : (accidentData && accidentData.profesEntreprise ? accidentData.profesEntreprise : ''));
-    const [citp, setcitp] = useState(watch('citp') ? watch('citp') : (accidentData && accidentData.citp ? accidentData.citp : ''));
-    const [ListeDureeDsEntreprise, setListeDureeDsEntreprise] = useState(watch('ListeDureeDsEntreprise') ? watch('ListeDureeDsEntreprise') : (accidentData && accidentData.ListeDureeDsEntreprise ? accidentData.ListeDureeDsEntreprise : ''));
-    const [ListeVicInterimaire, setListeVicInterimaire] = useState(watch('ListeVicInterimaire') ? watch('ListeVicInterimaire') : (accidentData && accidentData.ListeVicInterimaire ? accidentData.ListeVicInterimaire : ''));
-    const [VicInterimaireOui, setVicInterimaireOui] = useState(watch('VicInterimaireOui') ? watch('VicInterimaireOui') : (accidentData && accidentData.VicInterimaireOui ? accidentData.VicInterimaireOui : ''));
-    const [VicInterimaireOuiNom, setVicInterimaireOuiNom] = useState(watch('VicInterimaireOuiNom') ? watch('VicInterimaireOuiNom') : (accidentData && accidentData.VicInterimaireOuiNom ? accidentData.VicInterimaireOuiNom : ''));
-    const [VicInterimaireOuiAdresse, setVicInterimaireOuiAdresse] = useState(watch('VicInterimaireOuiAdresse') ? watch('VicInterimaireOuiAdresse') : (accidentData && accidentData.VicInterimaireOuiAdresse ? accidentData.VicInterimaireOuiAdresse : ''));
-    const [ListeVicTravailExt, setListeVicTravailExt] = useState(watch('ListeVicTravailExt') ? watch('ListeVicTravailExt') : (accidentData && accidentData.ListeVicTravailExt ? accidentData.ListeVicTravailExt : ''));
-    const [VicTravailExtOui, setVicTravailExtOui] = useState(watch('VicTravailExtOui') ? watch('VicTravailExtOui') : (accidentData && accidentData.VicTravailExtOui ? accidentData.VicTravailExtOui : ''));
-    const [VicTravailExtOuiNom, setVicTravailExtOuiNom] = useState(watch('VicTravailExtOuiNom') ? watch('VicTravailExtOuiNom') : (accidentData && accidentData.VicTravailExtOuiNom ? accidentData.VicTravailExtOuiNom : ''));
-    const [VicTravailExtOuiAdresse, setVicTravailExtOuiAdresse] = useState(watch('VicTravailExtOuiAdresse') ? watch('VicTravailExtOuiAdresse') : (accidentData && accidentData.VicTravailExtOuiAdresse ? accidentData.VicTravailExtOuiAdresse : ''));
-    const [dateNotifEmployeur, setdateNotifEmployeur] = useState(watch('dateNotifEmployeur') ? watch('dateNotifEmployeur') : (accidentData && accidentData.dateNotifEmployeur ? accidentData.dateNotifEmployeur : ''));
-    const [ListeLieuxAt, setListeLieuxAt] = useState(watch('ListeLieuxAt') ? watch('ListeLieuxAt') : (accidentData && accidentData.ListeLieuxAt ? accidentData.ListeLieuxAt : ''));
-    const [ListeVoiePublic, setListeVoiePublic] = useState(watch('ListeVoiePublic') ? watch('ListeVoiePublic') : (accidentData && accidentData.ListeVoiePublic ? accidentData.ListeVoiePublic : ''));
-    const [LieuxAtAdresse, setLieuxAtAdresse] = useState(watch('LieuxAtAdresse') ? watch('LieuxAtAdresse') : (accidentData && accidentData.LieuxAtAdresse ? accidentData.LieuxAtAdresse : ''));
-    const [LieuxAtCodePostal, setLieuxAtCodePostal] = useState(watch('LieuxAtCodePostal') ? watch('LieuxAtCodePostal') : (accidentData && accidentData.LieuxAtCodePostal ? accidentData.LieuxAtCodePostal : ''));
-    const [LieuxAtCommune, setLieuxAtCommune] = useState(watch('LieuxAtCommune') ? watch('LieuxAtCommune') : (accidentData && accidentData.LieuxAtCommune ? accidentData.LieuxAtCommune : ''));
-    const [ListeLieuxAtPays, setListeLieuxAtPays] = useState(watch('ListeLieuxAtPays') ? watch('ListeLieuxAtPays') : (accidentData && accidentData.ListeLieuxAtPays ? accidentData.ListeLieuxAtPays : ''));
-    const [NumdeChantier, setNumdeChantier] = useState(watch('NumdeChantier') ? watch('NumdeChantier') : (accidentData && accidentData.NumdeChantier ? accidentData.NumdeChantier : ''));
-    const [environementLieux, setenvironementLieux] = useState(watch('environementLieux') ? watch('environementLieux') : (accidentData && accidentData.environementLieux ? accidentData.environementLieux : ''));
-    const [activiteSpecifique, setactiviteSpecifique] = useState(watch('activiteSpecifique') ? watch('activiteSpecifique') : (accidentData && accidentData.activiteSpecifique ? accidentData.activiteSpecifique : ''));
-    const [ListeTypedePost, setListeTypedePost] = useState(watch('ListeTypedePost') ? watch('ListeTypedePost') : (accidentData && accidentData.ListeTypedePost ? accidentData.ListeTypedePost : ''));
-    const [ListeProfHabituelle, setListeProfHabituelle] = useState(watch('ListeProfHabituelle') ? watch('ListeProfHabituelle') : (accidentData && accidentData.ListeProfHabituelle ? accidentData.ListeProfHabituelle : ''));
-    const [ListeProfHabituelleNon, setListeProfHabituelleNon] = useState(watch('ListeProfHabituelleNon') ? watch('ListeProfHabituelleNon') : (accidentData && accidentData.ListeProfHabituelleNon ? accidentData.ListeProfHabituelleNon : ''));
-    const [evenementDeviant, setevenementDeviant] = useState(watch('evenementDeviant') ? watch('evenementDeviant') : (accidentData && accidentData.evenementDeviant ? accidentData.evenementDeviant : ''));
-    const [ListeProcesVerbal, setListeProcesVerbal] = useState(watch('ListeProcesVerbal') ? watch('ListeProcesVerbal') : (accidentData && accidentData.ListeProcesVerbal ? accidentData.ListeProcesVerbal : ''));
-    const [ProcesVerbalOui, setProcesVerbalOui] = useState(watch('ProcesVerbalOui') ? watch('ProcesVerbalOui') : (accidentData && accidentData.ProcesVerbalOui ? accidentData.ProcesVerbalOui : ''));
-    const [ProcesVerbalOuiRedige, setProcesVerbalOuiRedige] = useState(watch('ProcesVerbalOuiRedige') ? watch('ProcesVerbalOuiRedige') : (accidentData && accidentData.ProcesVerbalOuiRedige ? accidentData.ProcesVerbalOuiRedige : ''));
-    const [dateProcesVerbalOuiRedigeQuand, setdateProcesVerbalOuiRedigeQuand] = useState(watch('dateProcesVerbalOuiRedigeQuand') ? watch('dateProcesVerbalOuiRedigeQuand') : (accidentData && accidentData.dateProcesVerbalOuiRedigeQuand ? accidentData.dateProcesVerbalOuiRedigeQuand : ''));
-    const [ProcesVerbalOuiPar, setProcesVerbalOuiPar] = useState(watch('ProcesVerbalOuiPar') ? watch('ProcesVerbalOuiPar') : (accidentData && accidentData.ProcesVerbalOuiPar ? accidentData.ProcesVerbalOuiPar : ''));
-    const [ListeTierResponsable, setListeTierResponsable] = useState(watch('ListeTierResponsable') ? watch('ListeTierResponsable') : (accidentData && accidentData.ListeTierResponsable ? accidentData.ListeTierResponsable : ''));
-    const [TierResponsableOui, setTierResponsableOui] = useState(watch('TierResponsableOui') ? watch('TierResponsableOui') : (accidentData && accidentData.TierResponsableOui ? accidentData.TierResponsableOui : ''));
-    const [TierResponsableOuiNomAdresse, setTierResponsableOuiNomAdresse] = useState(watch('TierResponsableOuiNomAdresse') ? watch('TierResponsableOuiNomAdresse') : (accidentData && accidentData.TierResponsableOuiNomAdresse ? accidentData.TierResponsableOuiNomAdresse : ''));
-    const [TierResponsableOuiNumPolice, setTierResponsableOuiNumPolice] = useState(watch('TierResponsableOuiNumPolice') ? watch('TierResponsableOuiNumPolice') : (accidentData && accidentData.TierResponsableOuiNumPolice ? accidentData.TierResponsableOuiNumPolice : ''));
-    const [ListeTemoins, setListeTemoins] = useState(watch('ListeTemoins') ? watch('ListeTemoins') : (accidentData && accidentData.ListeTemoins ? accidentData.ListeTemoins : ''));
-    const [TemoinsOui, setTemoinsOui] = useState(watch('TemoinsOui') ? watch('TemoinsOui') : (accidentData && accidentData.TemoinsOui ? accidentData.TemoinsOui : ''));
-    const [TemoinDirecte, setTemoinDirecte] = useState(watch('TemoinDirecte') ? watch('TemoinDirecte') : (accidentData && accidentData.TemoinDirecte ? accidentData.TemoinDirecte : ''));
-    const [blessureVictume, setblessureVictume] = useState(watch('blessureVictume') ? watch('blessureVictume') : (accidentData && accidentData.blessureVictume ? accidentData.blessureVictume : ''));
-    const [ListeSoinsMedicaux, setListeSoinsMedicaux] = useState(watch('ListeSoinsMedicaux') ? watch('ListeSoinsMedicaux') : (accidentData && accidentData.ListeSoinsMedicaux ? accidentData.ListeSoinsMedicaux : ''));
-    const [dateSoinsMedicauxDate, setdateSoinsMedicauxDate] = useState(watch('dateSoinsMedicauxDate') ? watch('dateSoinsMedicauxDate') : (accidentData && accidentData.dateSoinsMedicauxDate ? accidentData.dateSoinsMedicauxDate : ''));
-    const [SoinsMedicauxDispansateur, setSoinsMedicauxDispansateur] = useState(watch('SoinsMedicauxDispansateur') ? watch('SoinsMedicauxDispansateur') : (accidentData && accidentData.SoinsMedicauxDispansateur ? accidentData.SoinsMedicauxDispansateur : ''));
-    const [SoinsMedicauxDescriptions, setSoinsMedicauxDescriptions] = useState(watch('SoinsMedicauxDescriptions') ? watch('SoinsMedicauxDescriptions') : (accidentData && accidentData.SoinsMedicauxDescriptions ? accidentData.SoinsMedicauxDescriptions : ''));
-    const [ListeSoinsMedicauxMedecin, setListeSoinsMedicauxMedecin] = useState(watch('ListeSoinsMedicauxMedecin') ? watch('ListeSoinsMedicauxMedecin') : (accidentData && accidentData.ListeSoinsMedicauxMedecin ? accidentData.ListeSoinsMedicauxMedecin : ''));
-    const [dateSoinsMedicauxMedecin, setdateSoinsMedicauxMedecin] = useState(watch('dateSoinsMedicauxMedecin') ? watch('dateSoinsMedicauxMedecin') : (accidentData && accidentData.dateSoinsMedicauxMedecin ? accidentData.dateSoinsMedicauxMedecin : ''));
-    const [SoinsMedicauxMedecinInami, setSoinsMedicauxMedecinInami] = useState(watch('SoinsMedicauxMedecinInami') ? watch('SoinsMedicauxMedecinInami') : (accidentData && accidentData.SoinsMedicauxMedecinInami ? accidentData.SoinsMedicauxMedecinInami : ''));
-    const [SoinsMedicauxMedecinNom, setSoinsMedicauxMedecinNom] = useState(watch('SoinsMedicauxMedecinNom') ? watch('SoinsMedicauxMedecinNom') : (accidentData && accidentData.SoinsMedicauxMedecinNom ? accidentData.SoinsMedicauxMedecinNom : ''));
-    const [SoinsMedicauxMedecinRue, setSoinsMedicauxMedecinRue] = useState(watch('SoinsMedicauxMedecinRue') ? watch('SoinsMedicauxMedecinRue') : (accidentData && accidentData.SoinsMedicauxMedecinRue ? accidentData.SoinsMedicauxMedecinRue : ''));
-    const [SoinsMedicauxMedecinCodePostal, setSoinsMedicauxMedecinCodePostal] = useState(watch('SoinsMedicauxMedecinCodePostal') ? watch('SoinsMedicauxMedecinCodePostal') : (accidentData && accidentData.SoinsMedicauxMedecinCodePostal ? accidentData.SoinsMedicauxMedecinCodePostal : ''));
-    const [SoinsMedicauxMedecinCommune, setSoinsMedicauxMedecinCommune] = useState(watch('SoinsMedicauxMedecinCommune') ? watch('SoinsMedicauxMedecinCommune') : (accidentData && accidentData.SoinsMedicauxMedecinCommune ? accidentData.SoinsMedicauxMedecinCommune : ''));
-    const [ListeSoinsMedicauxHopital, setListeSoinsMedicauxHopital] = useState(watch('ListeSoinsMedicauxHopital') ? watch('ListeSoinsMedicauxHopital') : (accidentData && accidentData.ListeSoinsMedicauxHopital ? accidentData.ListeSoinsMedicauxHopital : ''));
-    const [dateSoinsMedicauxHopital, setdateSoinsMedicauxHopital] = useState(watch('dateSoinsMedicauxHopital') ? watch('dateSoinsMedicauxHopital') : (accidentData && accidentData.dateSoinsMedicauxHopital ? accidentData.dateSoinsMedicauxHopital : ''));
-    const [SoinsMedicauxHopitalInami, setSoinsMedicauxHopitalInami] = useState(watch('SoinsMedicauxHopitalInami') ? watch('SoinsMedicauxHopitalInami') : (accidentData && accidentData.SoinsMedicauxHopitalInami ? accidentData.SoinsMedicauxHopitalInami : ''));
-    const [SoinsMedicauxHopitaldenomi, setSoinsMedicauxHopitaldenomi] = useState(watch('SoinsMedicauxHopitaldenomi') ? watch('SoinsMedicauxHopitaldenomi') : (accidentData && accidentData.SoinsMedicauxHopitaldenomi ? accidentData.SoinsMedicauxHopitaldenomi : ''));
-    const [SoinsMedicauxHopitalRue, setSoinsMedicauxHopitalRue] = useState(watch('SoinsMedicauxHopitalRue') ? watch('SoinsMedicauxHopitalRue') : (accidentData && accidentData.SoinsMedicauxHopitalRue ? accidentData.SoinsMedicauxHopitalRue : ''));
-    const [SoinsMedicauxHopitalCodePostal, setSoinsMedicauxHopitalCodePostal] = useState(watch('SoinsMedicauxHopitalCodePostal') ? watch('SoinsMedicauxHopitalCodePostal') : (accidentData && accidentData.SoinsMedicauxHopitalCodePostal ? accidentData.SoinsMedicauxHopitalCodePostal : ''));
-    const [SoinsMedicauxHopitalCommune, setSoinsMedicauxHopitalCommune] = useState(watch('SoinsMedicauxHopitalCommune') ? watch('SoinsMedicauxHopitalCommune') : (accidentData && accidentData.SoinsMedicauxHopitalCommune ? accidentData.SoinsMedicauxHopitalCommune : ''));
-    const [ListeConseqAccident, setListeConseqAccident] = useState(watch('ListeConseqAccident') ? watch('ListeConseqAccident') : (accidentData && accidentData.ListeConseqAccident ? accidentData.ListeConseqAccident : ''));
-    const [dateRepriseEffective, setdateRepriseEffective] = useState(watch('dateRepriseEffective') ? watch('dateRepriseEffective') : (accidentData && accidentData.dateRepriseEffective ? accidentData.dateRepriseEffective : ''));
-    const [JourIncaCompl, setJourIncaCompl] = useState(watch('JourIncaCompl') ? watch('JourIncaCompl') : (accidentData && accidentData.JourIncaCompl ? accidentData.JourIncaCompl : ''));
-    const [ListeMesureRepetition, setListeMesureRepetition] = useState(watch('ListeMesureRepetition') ? watch('ListeMesureRepetition') : (accidentData && accidentData.ListeMesureRepetition ? accidentData.ListeMesureRepetition : ''));
-    const [ListeMesureRepetition2, setListeMesureRepetition2] = useState(watch('ListeMesureRepetition2') ? watch('ListeMesureRepetition2') : (accidentData && accidentData.ListeMesureRepetition2 ? accidentData.ListeMesureRepetition2 : ''));
-    const [CodeRisqueEntreprise, setCodeRisqueEntreprise] = useState(watch('CodeRisqueEntreprise') ? watch('CodeRisqueEntreprise') : (accidentData && accidentData.CodeRisqueEntreprise ? accidentData.CodeRisqueEntreprise : ''));
-    const [ListeVictimeOnss, setListeVictimeOnss] = useState(watch('ListeVictimeOnss') ? watch('ListeVictimeOnss') : (accidentData && accidentData.ListeVictimeOnss ? accidentData.ListeVictimeOnss : ''));
-    const [victimeOnssNon, setvictimeOnssNon] = useState(watch('victimeOnssNon') ? watch('victimeOnssNon') : (accidentData && accidentData.victimeOnssNon ? accidentData.victimeOnssNon : ''));
-    const [codeTravailleurSocial, setcodeTravailleurSocial] = useState(watch('codeTravailleurSocial') ? watch('codeTravailleurSocial') : (accidentData && accidentData.codeTravailleurSocial ? accidentData.codeTravailleurSocial : ''));
-    const [ListeCategoProfess, setListeCategoProfess] = useState(watch('ListeCategoProfess') ? watch('ListeCategoProfess') : (accidentData && accidentData.ListeCategoProfess ? accidentData.ListeCategoProfess : ''));
-    const [CategoProfessAutre, setCategoProfessAutre] = useState(watch('CategoProfessAutre') ? watch('CategoProfessAutre') : (accidentData && accidentData.CategoProfessAutre ? accidentData.CategoProfessAutre : ''));
-    const [ListeNonOnss, setListeNonOnss] = useState(watch('ListeNonOnss') ? watch('ListeNonOnss') : (accidentData && accidentData.ListeNonOnss ? accidentData.ListeNonOnss : ''));
-    const [ListeApprentiFormat, setListeApprentiFormat] = useState(watch('ListeApprentiFormat') ? watch('ListeApprentiFormat') : (accidentData && accidentData.ListeApprentiFormat ? accidentData.ListeApprentiFormat : ''));
-    const [CommissionParitaireDénomination, setCommissionParitaireDénomination] = useState(watch('CommissionParitaireDénomination') ? watch('CommissionParitaireDénomination') : (accidentData && accidentData.CommissionParitaireDénomination ? accidentData.CommissionParitaireDénomination : ''));
-    const [CommissionParitaireNumn, setCommissionParitaireNumn] = useState(watch('CommissionParitaireNumn') ? watch('CommissionParitaireNumn') : (accidentData && accidentData.CommissionParitaireNumn ? accidentData.CommissionParitaireNumn : ''));
-    const [ListeTypeContrat, setListeTypeContrat] = useState(watch('ListeTypeContrat') ? watch('ListeTypeContrat') : (accidentData && accidentData.ListeTypeContrat ? accidentData.ListeTypeContrat : ''));
-    const [Nbrjoursregime, setNbrjoursregime] = useState(watch('Nbrjoursregime') ? watch('Nbrjoursregime') : (accidentData && accidentData.Nbrjoursregime ? accidentData.Nbrjoursregime : ''));
-    const [NbrHeureSemaine, setNbrHeureSemaine] = useState(watch('NbrHeureSemaine') ? watch('NbrHeureSemaine') : (accidentData && accidentData.NbrHeureSemaine ? accidentData.NbrHeureSemaine : ''));
-    const [NbrHeureSemaineReference, setNbrHeureSemaineReference] = useState(watch('NbrHeureSemaineReference') ? watch('NbrHeureSemaineReference') : (accidentData && accidentData.NbrHeureSemaineReference ? accidentData.NbrHeureSemaineReference : ''));
-    const [ListeVictiPension, setListeVictiPension] = useState(watch('ListeVictiPension') ? watch('ListeVictiPension') : (accidentData && accidentData.ListeVictiPension ? accidentData.ListeVictiPension : ''));
-    const [ListeModeRemuneration, setListeModeRemuneration] = useState(watch('ListeModeRemuneration') ? watch('ListeModeRemuneration') : (accidentData && accidentData.ListeModeRemuneration ? accidentData.ListeModeRemuneration : ''));
-    const [ListeMontantRemuneration, setListeMontantRemuneration] = useState(watch('ListeMontantRemuneration') ? watch('ListeMontantRemuneration') : (accidentData && accidentData.ListeMontantRemuneration ? accidentData.ListeMontantRemuneration : ''));
-    const [MontantRemunerationVariable, setMontantRemunerationVariable] = useState(watch('MontantRemunerationVariable') ? watch('MontantRemunerationVariable') : (accidentData && accidentData.MontantRemunerationVariable ? accidentData.MontantRemunerationVariable : ''));
-    const [remunerationTotalAssOnns, setremunerationTotalAssOnns] = useState(watch('remunerationTotalAssOnns') ? watch('remunerationTotalAssOnns') : (accidentData && accidentData.remunerationTotalAssOnns ? accidentData.remunerationTotalAssOnns : ''));
-    const [ListePrimeFinAnnee, setListePrimeFinAnnee] = useState(watch('ListePrimeFinAnnee') ? watch('ListePrimeFinAnnee') : (accidentData && accidentData.ListePrimeFinAnnee ? accidentData.ListePrimeFinAnnee : ''));
-    const [PrimeFinAnneeRemuAnnuel, setPrimeFinAnneeRemuAnnuel] = useState(watch('PrimeFinAnneeRemuAnnuel') ? watch('PrimeFinAnneeRemuAnnuel') : (accidentData && accidentData.PrimeFinAnneeRemuAnnuel ? accidentData.PrimeFinAnneeRemuAnnuel : ''));
-    const [PrimeFinAnneeRemuAnnuelForfetaire, setPrimeFinAnneeRemuAnnuelForfetaire] = useState(watch('PrimeFinAnneeRemuAnnuelForfetaire') ? watch('PrimeFinAnneeRemuAnnuelForfetaire') : (accidentData && accidentData.PrimeFinAnneeRemuAnnuelForfetaire ? accidentData.PrimeFinAnneeRemuAnnuelForfetaire : ''));
-    const [PrimeFinAnneeRemuAnnuelNbrHeure, setPrimeFinAnneeRemuAnnuelNbrHeure] = useState(watch('PrimeFinAnneeRemuAnnuelNbrHeure') ? watch('PrimeFinAnneeRemuAnnuelNbrHeure') : (accidentData && accidentData.PrimeFinAnneeRemuAnnuelNbrHeure ? accidentData.PrimeFinAnneeRemuAnnuelNbrHeure : ''));
-    const [AvantegeAssujOnns, setAvantegeAssujOnns] = useState(watch('AvantegeAssujOnns') ? watch('AvantegeAssujOnns') : (accidentData && accidentData.AvantegeAssujOnns ? accidentData.AvantegeAssujOnns : ''));
-    const [AvantegeAssujOnnsNature, setAvantegeAssujOnnsNature] = useState(watch('AvantegeAssujOnnsNature') ? watch('AvantegeAssujOnnsNature') : (accidentData && accidentData.AvantegeAssujOnnsNature ? accidentData.AvantegeAssujOnnsNature : ''));
-    const [ListechangementFonction, setListechangementFonction] = useState(watch('ListechangementFonction') ? watch('ListechangementFonction') : (accidentData && accidentData.ListechangementFonction ? accidentData.ListechangementFonction : ''));
-    const [dateChangementFonction, setdateChangementFonction] = useState(watch('dateChangementFonction') ? watch('dateChangementFonction') : (accidentData && accidentData.dateChangementFonction ? accidentData.dateChangementFonction : ''));
-    const [heureTravaillePerdu, setheureTravaillePerdu] = useState(watch('heureTravaillePerdu') ? watch('heureTravaillePerdu') : (accidentData && accidentData.heureTravaillePerdu ? accidentData.heureTravaillePerdu : ''));
-    const [salaireTravaillePerdu, setsalaireTravaillePerdu] = useState(watch('salaireTravaillePerdu') ? watch('salaireTravaillePerdu') : (accidentData && accidentData.salaireTravaillePerdu ? accidentData.salaireTravaillePerdu : ''));
-    const [activiteGenerale, setactiviteGenerale] = useState(watch('activiteGenerale') ? watch('activiteGenerale') : (accidentData && accidentData.activiteGenerale ? accidentData.activiteGenerale : ''));
+    const [CodeMutuelle, setCodeMutuelle] = useState(watch('CodeMutuelle') ? watch('CodeMutuelle') : (accidentData && accidentData.CodeMutuelle ? accidentData.CodeMutuelle : null));
+    const [nomMutuelle, setnomMutuelle] = useState(watch('nomMutuelle') ? watch('nomMutuelle') : (accidentData && accidentData.nomMutuelle ? accidentData.nomMutuelle : null));
+    const [adresseRueMutuelle, setadresseRueMutuelle] = useState(watch('adresseRueMutuelle') ? watch('adresseRueMutuelle') : (accidentData && accidentData.adresseRueMutuelle ? accidentData.adresseRueMutuelle : null));
+    const [adresseCodepostalMutuelle, setadresseCodepostalMutuelle] = useState(watch('adresseCodepostalMutuelle') ? watch('adresseCodepostalMutuelle') : (accidentData && accidentData.adresseCodepostalMutuelle ? accidentData.adresseCodepostalMutuelle : null));
+    const [adresseCommuneMutuelle, setadresseCommuneMutuelle] = useState(watch('adresseCommuneMutuelle') ? watch('adresseCommuneMutuelle') : (accidentData && accidentData.adresseCommuneMutuelle ? accidentData.adresseCommuneMutuelle : null));
+    const [numAffiliation, setnumAffiliation] = useState(watch('numAffiliation') ? watch('numAffiliation') : (accidentData && accidentData.numAffiliation ? accidentData.numAffiliation : null));
+    const [numCompteBancaire, setnumCompteBancaire] = useState(watch('numCompteBancaire') ? watch('numCompteBancaire') : (accidentData && accidentData.numCompteBancaire ? accidentData.numCompteBancaire : null));
+    const [etabliFinancier, setetabliFinancier] = useState(watch('etabliFinancier') ? watch('etabliFinancier') : (accidentData && accidentData.etabliFinancier ? accidentData.etabliFinancier : null));
+    const [numDimona, setnumDimona] = useState(watch('numDimona') ? watch('numDimona') : (accidentData && accidentData.numDimona ? accidentData.numDimona : null));
+    const [ListeDurContra, setListeDurContra] = useState(watch('ListeDurContra') ? watch('ListeDurContra') : (accidentData && accidentData.ListeDurContra ? accidentData.ListeDurContra : null));
+    const [ListeDateSortie, setListeDateSortie] = useState(watch('ListeDateSortie') ? watch('ListeDateSortie') : (accidentData && accidentData.ListeDateSortie ? accidentData.ListeDateSortie : null));
+    const [dateSortie, setdateSortie] = useState(watch('dateSortie') ? watch('dateSortie') : (accidentData && accidentData.dateSortie ? accidentData.dateSortie : null));
+    const [profesEntreprise, setprofesEntreprise] = useState(watch('profesEntreprise') ? watch('profesEntreprise') : (accidentData && accidentData.profesEntreprise ? accidentData.profesEntreprise : null));
+    const [citp, setcitp] = useState(watch('citp') ? watch('citp') : (accidentData && accidentData.citp ? accidentData.citp : null));
+    const [ListeDureeDsEntreprise, setListeDureeDsEntreprise] = useState(watch('ListeDureeDsEntreprise') ? watch('ListeDureeDsEntreprise') : (accidentData && accidentData.ListeDureeDsEntreprise ? accidentData.ListeDureeDsEntreprise : null));
+    const [ListeVicInterimaire, setListeVicInterimaire] = useState(watch('ListeVicInterimaire') ? watch('ListeVicInterimaire') : (accidentData && accidentData.ListeVicInterimaire ? accidentData.ListeVicInterimaire : null));
+    const [VicInterimaireOui, setVicInterimaireOui] = useState(watch('VicInterimaireOui') ? watch('VicInterimaireOui') : (accidentData && accidentData.VicInterimaireOui ? accidentData.VicInterimaireOui : null));
+    const [VicInterimaireOuiNom, setVicInterimaireOuiNom] = useState(watch('VicInterimaireOuiNom') ? watch('VicInterimaireOuiNom') : (accidentData && accidentData.VicInterimaireOuiNom ? accidentData.VicInterimaireOuiNom : null));
+    const [VicInterimaireOuiAdresse, setVicInterimaireOuiAdresse] = useState(watch('VicInterimaireOuiAdresse') ? watch('VicInterimaireOuiAdresse') : (accidentData && accidentData.VicInterimaireOuiAdresse ? accidentData.VicInterimaireOuiAdresse : null));
+    const [ListeVicTravailExt, setListeVicTravailExt] = useState(watch('ListeVicTravailExt') ? watch('ListeVicTravailExt') : (accidentData && accidentData.ListeVicTravailExt ? accidentData.ListeVicTravailExt : null));
+    const [VicTravailExtOui, setVicTravailExtOui] = useState(watch('VicTravailExtOui') ? watch('VicTravailExtOui') : (accidentData && accidentData.VicTravailExtOui ? accidentData.VicTravailExtOui : null));
+    const [VicTravailExtOuiNom, setVicTravailExtOuiNom] = useState(watch('VicTravailExtOuiNom') ? watch('VicTravailExtOuiNom') : (accidentData && accidentData.VicTravailExtOuiNom ? accidentData.VicTravailExtOuiNom : null));
+    const [VicTravailExtOuiAdresse, setVicTravailExtOuiAdresse] = useState(watch('VicTravailExtOuiAdresse') ? watch('VicTravailExtOuiAdresse') : (accidentData && accidentData.VicTravailExtOuiAdresse ? accidentData.VicTravailExtOuiAdresse : null));
+    const [dateNotifEmployeur, setdateNotifEmployeur] = useState(watch('dateNotifEmployeur') ? watch('dateNotifEmployeur') : (accidentData && accidentData.dateNotifEmployeur ? accidentData.dateNotifEmployeur : null));
+    const [ListeLieuxAt, setListeLieuxAt] = useState(watch('ListeLieuxAt') ? watch('ListeLieuxAt') : (accidentData && accidentData.ListeLieuxAt ? accidentData.ListeLieuxAt : null));
+    const [ListeVoiePublic, setListeVoiePublic] = useState(watch('ListeVoiePublic') ? watch('ListeVoiePublic') : (accidentData && accidentData.ListeVoiePublic ? accidentData.ListeVoiePublic : null));
+    const [LieuxAtAdresse, setLieuxAtAdresse] = useState(watch('LieuxAtAdresse') ? watch('LieuxAtAdresse') : (accidentData && accidentData.LieuxAtAdresse ? accidentData.LieuxAtAdresse : null));
+    const [LieuxAtCodePostal, setLieuxAtCodePostal] = useState(watch('LieuxAtCodePostal') ? watch('LieuxAtCodePostal') : (accidentData && accidentData.LieuxAtCodePostal ? accidentData.LieuxAtCodePostal : null));
+    const [LieuxAtCommune, setLieuxAtCommune] = useState(watch('LieuxAtCommune') ? watch('LieuxAtCommune') : (accidentData && accidentData.LieuxAtCommune ? accidentData.LieuxAtCommune : null));
+    const [ListeLieuxAtPays, setListeLieuxAtPays] = useState(watch('ListeLieuxAtPays') ? watch('ListeLieuxAtPays') : (accidentData && accidentData.ListeLieuxAtPays ? accidentData.ListeLieuxAtPays : null));
+    const [NumdeChantier, setNumdeChantier] = useState(watch('NumdeChantier') ? watch('NumdeChantier') : (accidentData && accidentData.NumdeChantier ? accidentData.NumdeChantier : null));
+    const [environementLieux, setenvironementLieux] = useState(watch('environementLieux') ? watch('environementLieux') : (accidentData && accidentData.environementLieux ? accidentData.environementLieux : null));
+    const [activiteSpecifique, setactiviteSpecifique] = useState(watch('activiteSpecifique') ? watch('activiteSpecifique') : (accidentData && accidentData.activiteSpecifique ? accidentData.activiteSpecifique : null));
+    const [ListeTypedePost, setListeTypedePost] = useState(watch('ListeTypedePost') ? watch('ListeTypedePost') : (accidentData && accidentData.ListeTypedePost ? accidentData.ListeTypedePost : null));
+    const [ListeProfHabituelle, setListeProfHabituelle] = useState(watch('ListeProfHabituelle') ? watch('ListeProfHabituelle') : (accidentData && accidentData.ListeProfHabituelle ? accidentData.ListeProfHabituelle : null));
+    const [ListeProfHabituelleNon, setListeProfHabituelleNon] = useState(watch('ListeProfHabituelleNon') ? watch('ListeProfHabituelleNon') : (accidentData && accidentData.ListeProfHabituelleNon ? accidentData.ListeProfHabituelleNon : null));
+    const [evenementDeviant, setevenementDeviant] = useState(watch('evenementDeviant') ? watch('evenementDeviant') : (accidentData && accidentData.evenementDeviant ? accidentData.evenementDeviant : null));
+    const [ListeProcesVerbal, setListeProcesVerbal] = useState(watch('ListeProcesVerbal') ? watch('ListeProcesVerbal') : (accidentData && accidentData.ListeProcesVerbal ? accidentData.ListeProcesVerbal : null));
+    const [ProcesVerbalOui, setProcesVerbalOui] = useState(watch('ProcesVerbalOui') ? watch('ProcesVerbalOui') : (accidentData && accidentData.ProcesVerbalOui ? accidentData.ProcesVerbalOui : null));
+    const [ProcesVerbalOuiRedige, setProcesVerbalOuiRedige] = useState(watch('ProcesVerbalOuiRedige') ? watch('ProcesVerbalOuiRedige') : (accidentData && accidentData.ProcesVerbalOuiRedige ? accidentData.ProcesVerbalOuiRedige : null));
+    const [dateProcesVerbalOuiRedigeQuand, setdateProcesVerbalOuiRedigeQuand] = useState(watch('dateProcesVerbalOuiRedigeQuand') ? watch('dateProcesVerbalOuiRedigeQuand') : (accidentData && accidentData.dateProcesVerbalOuiRedigeQuand ? accidentData.dateProcesVerbalOuiRedigeQuand : null));
+    const [ProcesVerbalOuiPar, setProcesVerbalOuiPar] = useState(watch('ProcesVerbalOuiPar') ? watch('ProcesVerbalOuiPar') : (accidentData && accidentData.ProcesVerbalOuiPar ? accidentData.ProcesVerbalOuiPar : null));
+    const [ListeTierResponsable, setListeTierResponsable] = useState(watch('ListeTierResponsable') ? watch('ListeTierResponsable') : (accidentData && accidentData.ListeTierResponsable ? accidentData.ListeTierResponsable : null));
+    const [TierResponsableOui, setTierResponsableOui] = useState(watch('TierResponsableOui') ? watch('TierResponsableOui') : (accidentData && accidentData.TierResponsableOui ? accidentData.TierResponsableOui : null));
+    const [TierResponsableOuiNomAdresse, setTierResponsableOuiNomAdresse] = useState(watch('TierResponsableOuiNomAdresse') ? watch('TierResponsableOuiNomAdresse') : (accidentData && accidentData.TierResponsableOuiNomAdresse ? accidentData.TierResponsableOuiNomAdresse : null));
+    const [TierResponsableOuiNumPolice, setTierResponsableOuiNumPolice] = useState(watch('TierResponsableOuiNumPolice') ? watch('TierResponsableOuiNumPolice') : (accidentData && accidentData.TierResponsableOuiNumPolice ? accidentData.TierResponsableOuiNumPolice : null));
+    const [ListeTemoins, setListeTemoins] = useState(watch('ListeTemoins') ? watch('ListeTemoins') : (accidentData && accidentData.ListeTemoins ? accidentData.ListeTemoins : null));
+    const [TemoinsOui, setTemoinsOui] = useState(watch('TemoinsOui') ? watch('TemoinsOui') : (accidentData && accidentData.TemoinsOui ? accidentData.TemoinsOui : null));
+    const [TemoinDirecte, setTemoinDirecte] = useState(watch('TemoinDirecte') ? watch('TemoinDirecte') : (accidentData && accidentData.TemoinDirecte ? accidentData.TemoinDirecte : null));
+    const [blessureVictume, setblessureVictume] = useState(watch('blessureVictume') ? watch('blessureVictume') : (accidentData && accidentData.blessureVictume ? accidentData.blessureVictume : null));
+    const [ListeSoinsMedicaux, setListeSoinsMedicaux] = useState(watch('ListeSoinsMedicaux') ? watch('ListeSoinsMedicaux') : (accidentData && accidentData.ListeSoinsMedicaux ? accidentData.ListeSoinsMedicaux : null));
+    const [dateSoinsMedicauxDate, setdateSoinsMedicauxDate] = useState(watch('dateSoinsMedicauxDate') ? watch('dateSoinsMedicauxDate') : (accidentData && accidentData.dateSoinsMedicauxDate ? accidentData.dateSoinsMedicauxDate : null));
+    const [SoinsMedicauxDispansateur, setSoinsMedicauxDispansateur] = useState(watch('SoinsMedicauxDispansateur') ? watch('SoinsMedicauxDispansateur') : (accidentData && accidentData.SoinsMedicauxDispansateur ? accidentData.SoinsMedicauxDispansateur : null));
+    const [SoinsMedicauxDescriptions, setSoinsMedicauxDescriptions] = useState(watch('SoinsMedicauxDescriptions') ? watch('SoinsMedicauxDescriptions') : (accidentData && accidentData.SoinsMedicauxDescriptions ? accidentData.SoinsMedicauxDescriptions : null));
+    const [ListeSoinsMedicauxMedecin, setListeSoinsMedicauxMedecin] = useState(watch('ListeSoinsMedicauxMedecin') ? watch('ListeSoinsMedicauxMedecin') : (accidentData && accidentData.ListeSoinsMedicauxMedecin ? accidentData.ListeSoinsMedicauxMedecin : null));
+    const [dateSoinsMedicauxMedecin, setdateSoinsMedicauxMedecin] = useState(watch('dateSoinsMedicauxMedecin') ? watch('dateSoinsMedicauxMedecin') : (accidentData && accidentData.dateSoinsMedicauxMedecin ? accidentData.dateSoinsMedicauxMedecin : null));
+    const [SoinsMedicauxMedecinInami, setSoinsMedicauxMedecinInami] = useState(watch('SoinsMedicauxMedecinInami') ? watch('SoinsMedicauxMedecinInami') : (accidentData && accidentData.SoinsMedicauxMedecinInami ? accidentData.SoinsMedicauxMedecinInami : null));
+    const [SoinsMedicauxMedecinNom, setSoinsMedicauxMedecinNom] = useState(watch('SoinsMedicauxMedecinNom') ? watch('SoinsMedicauxMedecinNom') : (accidentData && accidentData.SoinsMedicauxMedecinNom ? accidentData.SoinsMedicauxMedecinNom : null));
+    const [SoinsMedicauxMedecinRue, setSoinsMedicauxMedecinRue] = useState(watch('SoinsMedicauxMedecinRue') ? watch('SoinsMedicauxMedecinRue') : (accidentData && accidentData.SoinsMedicauxMedecinRue ? accidentData.SoinsMedicauxMedecinRue : null));
+    const [SoinsMedicauxMedecinCodePostal, setSoinsMedicauxMedecinCodePostal] = useState(watch('SoinsMedicauxMedecinCodePostal') ? watch('SoinsMedicauxMedecinCodePostal') : (accidentData && accidentData.SoinsMedicauxMedecinCodePostal ? accidentData.SoinsMedicauxMedecinCodePostal : null));
+    const [SoinsMedicauxMedecinCommune, setSoinsMedicauxMedecinCommune] = useState(watch('SoinsMedicauxMedecinCommune') ? watch('SoinsMedicauxMedecinCommune') : (accidentData && accidentData.SoinsMedicauxMedecinCommune ? accidentData.SoinsMedicauxMedecinCommune : null));
+    const [ListeSoinsMedicauxHopital, setListeSoinsMedicauxHopital] = useState(watch('ListeSoinsMedicauxHopital') ? watch('ListeSoinsMedicauxHopital') : (accidentData && accidentData.ListeSoinsMedicauxHopital ? accidentData.ListeSoinsMedicauxHopital : null));
+    const [dateSoinsMedicauxHopital, setdateSoinsMedicauxHopital] = useState(watch('dateSoinsMedicauxHopital') ? watch('dateSoinsMedicauxHopital') : (accidentData && accidentData.dateSoinsMedicauxHopital ? accidentData.dateSoinsMedicauxHopital : null));
+    const [SoinsMedicauxHopitalInami, setSoinsMedicauxHopitalInami] = useState(watch('SoinsMedicauxHopitalInami') ? watch('SoinsMedicauxHopitalInami') : (accidentData && accidentData.SoinsMedicauxHopitalInami ? accidentData.SoinsMedicauxHopitalInami : null));
+    const [SoinsMedicauxHopitaldenomi, setSoinsMedicauxHopitaldenomi] = useState(watch('SoinsMedicauxHopitaldenomi') ? watch('SoinsMedicauxHopitaldenomi') : (accidentData && accidentData.SoinsMedicauxHopitaldenomi ? accidentData.SoinsMedicauxHopitaldenomi : null));
+    const [SoinsMedicauxHopitalRue, setSoinsMedicauxHopitalRue] = useState(watch('SoinsMedicauxHopitalRue') ? watch('SoinsMedicauxHopitalRue') : (accidentData && accidentData.SoinsMedicauxHopitalRue ? accidentData.SoinsMedicauxHopitalRue : null));
+    const [SoinsMedicauxHopitalCodePostal, setSoinsMedicauxHopitalCodePostal] = useState(watch('SoinsMedicauxHopitalCodePostal') ? watch('SoinsMedicauxHopitalCodePostal') : (accidentData && accidentData.SoinsMedicauxHopitalCodePostal ? accidentData.SoinsMedicauxHopitalCodePostal : null));
+    const [SoinsMedicauxHopitalCommune, setSoinsMedicauxHopitalCommune] = useState(watch('SoinsMedicauxHopitalCommune') ? watch('SoinsMedicauxHopitalCommune') : (accidentData && accidentData.SoinsMedicauxHopitalCommune ? accidentData.SoinsMedicauxHopitalCommune : null));
+    const [ListeConseqAccident, setListeConseqAccident] = useState(watch('ListeConseqAccident') ? watch('ListeConseqAccident') : (accidentData && accidentData.ListeConseqAccident ? accidentData.ListeConseqAccident : null));
+    const [dateRepriseEffective, setdateRepriseEffective] = useState(watch('dateRepriseEffective') ? watch('dateRepriseEffective') : (accidentData && accidentData.dateRepriseEffective ? accidentData.dateRepriseEffective : null));
+    const [JourIncaCompl, setJourIncaCompl] = useState(watch('JourIncaCompl') ? watch('JourIncaCompl') : (accidentData && accidentData.JourIncaCompl ? accidentData.JourIncaCompl : null));
+    const [ListeMesureRepetition, setListeMesureRepetition] = useState(watch('ListeMesureRepetition') ? watch('ListeMesureRepetition') : (accidentData && accidentData.ListeMesureRepetition ? accidentData.ListeMesureRepetition : null));
+    const [ListeMesureRepetition2, setListeMesureRepetition2] = useState(watch('ListeMesureRepetition2') ? watch('ListeMesureRepetition2') : (accidentData && accidentData.ListeMesureRepetition2 ? accidentData.ListeMesureRepetition2 : null));
+    const [CodeRisqueEntreprise, setCodeRisqueEntreprise] = useState(watch('CodeRisqueEntreprise') ? watch('CodeRisqueEntreprise') : (accidentData && accidentData.CodeRisqueEntreprise ? accidentData.CodeRisqueEntreprise : null));
+    const [ListeVictimeOnss, setListeVictimeOnss] = useState(watch('ListeVictimeOnss') ? watch('ListeVictimeOnss') : (accidentData && accidentData.ListeVictimeOnss ? accidentData.ListeVictimeOnss : null));
+    const [victimeOnssNon, setvictimeOnssNon] = useState(watch('victimeOnssNon') ? watch('victimeOnssNon') : (accidentData && accidentData.victimeOnssNon ? accidentData.victimeOnssNon : null));
+    const [codeTravailleurSocial, setcodeTravailleurSocial] = useState(watch('codeTravailleurSocial') ? watch('codeTravailleurSocial') : (accidentData && accidentData.codeTravailleurSocial ? accidentData.codeTravailleurSocial : null));
+    const [ListeCategoProfess, setListeCategoProfess] = useState(watch('ListeCategoProfess') ? watch('ListeCategoProfess') : (accidentData && accidentData.ListeCategoProfess ? accidentData.ListeCategoProfess : null));
+    const [CategoProfessAutre, setCategoProfessAutre] = useState(watch('CategoProfessAutre') ? watch('CategoProfessAutre') : (accidentData && accidentData.CategoProfessAutre ? accidentData.CategoProfessAutre : null));
+    const [ListeNonOnss, setListeNonOnss] = useState(watch('ListeNonOnss') ? watch('ListeNonOnss') : (accidentData && accidentData.ListeNonOnss ? accidentData.ListeNonOnss : null));
+    const [ListeApprentiFormat, setListeApprentiFormat] = useState(watch('ListeApprentiFormat') ? watch('ListeApprentiFormat') : (accidentData && accidentData.ListeApprentiFormat ? accidentData.ListeApprentiFormat : null));
+    const [CommissionParitaireDénomination, setCommissionParitaireDénomination] = useState(watch('CommissionParitaireDénomination') ? watch('CommissionParitaireDénomination') : (accidentData && accidentData.CommissionParitaireDénomination ? accidentData.CommissionParitaireDénomination : null));
+    const [CommissionParitaireNumn, setCommissionParitaireNumn] = useState(watch('CommissionParitaireNumn') ? watch('CommissionParitaireNumn') : (accidentData && accidentData.CommissionParitaireNumn ? accidentData.CommissionParitaireNumn : null));
+    const [ListeTypeContrat, setListeTypeContrat] = useState(watch('ListeTypeContrat') ? watch('ListeTypeContrat') : (accidentData && accidentData.ListeTypeContrat ? accidentData.ListeTypeContrat : null));
+    const [Nbrjoursregime, setNbrjoursregime] = useState(watch('Nbrjoursregime') ? watch('Nbrjoursregime') : (accidentData && accidentData.Nbrjoursregime ? accidentData.Nbrjoursregime : null));
+    const [NbrHeureSemaine, setNbrHeureSemaine] = useState(watch('NbrHeureSemaine') ? watch('NbrHeureSemaine') : (accidentData && accidentData.NbrHeureSemaine ? accidentData.NbrHeureSemaine : null));
+    const [NbrHeureSemaineReference, setNbrHeureSemaineReference] = useState(watch('NbrHeureSemaineReference') ? watch('NbrHeureSemaineReference') : (accidentData && accidentData.NbrHeureSemaineReference ? accidentData.NbrHeureSemaineReference : null));
+    const [ListeVictiPension, setListeVictiPension] = useState(watch('ListeVictiPension') ? watch('ListeVictiPension') : (accidentData && accidentData.ListeVictiPension ? accidentData.ListeVictiPension : null));
+    const [ListeModeRemuneration, setListeModeRemuneration] = useState(watch('ListeModeRemuneration') ? watch('ListeModeRemuneration') : (accidentData && accidentData.ListeModeRemuneration ? accidentData.ListeModeRemuneration : null));
+    const [ListeMontantRemuneration, setListeMontantRemuneration] = useState(watch('ListeMontantRemuneration') ? watch('ListeMontantRemuneration') : (accidentData && accidentData.ListeMontantRemuneration ? accidentData.ListeMontantRemuneration : null));
+    const [MontantRemunerationVariable, setMontantRemunerationVariable] = useState(watch('MontantRemunerationVariable') ? watch('MontantRemunerationVariable') : (accidentData && accidentData.MontantRemunerationVariable ? accidentData.MontantRemunerationVariable : null));
+    const [remunerationTotalAssOnns, setremunerationTotalAssOnns] = useState(watch('remunerationTotalAssOnns') ? watch('remunerationTotalAssOnns') : (accidentData && accidentData.remunerationTotalAssOnns ? accidentData.remunerationTotalAssOnns : null));
+    const [ListePrimeFinAnnee, setListePrimeFinAnnee] = useState(watch('ListePrimeFinAnnee') ? watch('ListePrimeFinAnnee') : (accidentData && accidentData.ListePrimeFinAnnee ? accidentData.ListePrimeFinAnnee : null));
+    const [PrimeFinAnneeRemuAnnuel, setPrimeFinAnneeRemuAnnuel] = useState(watch('PrimeFinAnneeRemuAnnuel') ? watch('PrimeFinAnneeRemuAnnuel') : (accidentData && accidentData.PrimeFinAnneeRemuAnnuel ? accidentData.PrimeFinAnneeRemuAnnuel : null));
+    const [PrimeFinAnneeRemuAnnuelForfetaire, setPrimeFinAnneeRemuAnnuelForfetaire] = useState(watch('PrimeFinAnneeRemuAnnuelForfetaire') ? watch('PrimeFinAnneeRemuAnnuelForfetaire') : (accidentData && accidentData.PrimeFinAnneeRemuAnnuelForfetaire ? accidentData.PrimeFinAnneeRemuAnnuelForfetaire : null));
+    const [PrimeFinAnneeRemuAnnuelNbrHeure, setPrimeFinAnneeRemuAnnuelNbrHeure] = useState(watch('PrimeFinAnneeRemuAnnuelNbrHeure') ? watch('PrimeFinAnneeRemuAnnuelNbrHeure') : (accidentData && accidentData.PrimeFinAnneeRemuAnnuelNbrHeure ? accidentData.PrimeFinAnneeRemuAnnuelNbrHeure : null));
+    const [AvantegeAssujOnns, setAvantegeAssujOnns] = useState(watch('AvantegeAssujOnns') ? watch('AvantegeAssujOnns') : (accidentData && accidentData.AvantegeAssujOnns ? accidentData.AvantegeAssujOnns : null));
+    const [AvantegeAssujOnnsNature, setAvantegeAssujOnnsNature] = useState(watch('AvantegeAssujOnnsNature') ? watch('AvantegeAssujOnnsNature') : (accidentData && accidentData.AvantegeAssujOnnsNature ? accidentData.AvantegeAssujOnnsNature : null));
+    const [ListechangementFonction, setListechangementFonction] = useState(watch('ListechangementFonction') ? watch('ListechangementFonction') : (accidentData && accidentData.ListechangementFonction ? accidentData.ListechangementFonction : null));
+    const [dateChangementFonction, setdateChangementFonction] = useState(watch('dateChangementFonction') ? watch('dateChangementFonction') : (accidentData && accidentData.dateChangementFonction ? accidentData.dateChangementFonction : null));
+    const [heureTravaillePerdu, setheureTravaillePerdu] = useState(watch('heureTravaillePerdu') ? watch('heureTravaillePerdu') : (accidentData && accidentData.heureTravaillePerdu ? accidentData.heureTravaillePerdu : null));
+    const [salaireTravaillePerdu, setsalaireTravaillePerdu] = useState(watch('salaireTravaillePerdu') ? watch('salaireTravaillePerdu') : (accidentData && accidentData.salaireTravaillePerdu ? accidentData.salaireTravaillePerdu : null));
+    const [activiteGenerale, setactiviteGenerale] = useState(watch('activiteGenerale') ? watch('activiteGenerale') : (accidentData && accidentData.activiteGenerale ? accidentData.activiteGenerale : null));
 
     /**
      * Etape 2 : mettre à jour les données du formulaire à chaque modification d'un des champs
@@ -289,40 +270,40 @@ export default function FormulaireDeclarationASSBelfius({ setValue, accidentData
                 <AutoCompleteP id="ListeDurContra" option={listeDeclarationAss.ListeDurContra} label="Durée du contrat de travail" onChange={(value) => { setListeDurContra(value)}} defaultValue={ListeDurContra} />
 
                 {(ListeDurContra === 'Déterminée') && (
-                    <AutoCompleteP id="ListeDateSortie" option={listeDeclarationAss.ListeDateSortie} label="Date de sortie" onChange={(value) => { setListeDateSortie(value); setShowListeDateSortie(value === 'Oui') }} defaultValue={ListeDateSortie} />
+                    <AutoCompleteP id="ListeDateSortie" option={listeDeclarationAss.ListeDateSortie} label="Date de sortie" onChange={(value) => { setListeDateSortie(value);}} defaultValue={ListeDateSortie} />
                 )}
 
-                {showvingtetunTextField && (
+                {(ListeDateSortie === 'Oui') && (
                     <DatePickerP id="dateSortie" label="Date de sortie" onChange={setdateSortie} defaultValue={dateSortie} />
                 )}
 
                 <TextFieldP id="profesEntreprise" label="Profession habituelle dans l’entreprise" onChange={setprofesEntreprise} defaultValue={profesEntreprise} />
                 <TextFieldP id="citp" label="Code CITP" onChange={setcitp} defaultValue={citp} />
                 <AutoCompleteP id="ListeDureeDsEntreprise" option={listeDeclarationAss.ListeDureeDsEntreprise} label="Durée d'exercice de cette profession par la victime dans l'entreprise" onChange={setListeDureeDsEntreprise} defaultValue={ListeDureeDsEntreprise} />
-                <AutoCompleteP id="ListeVicInterimaire" option={listeDeclarationAss.ListeVicInterimaire} label="La victime est-elle un(e) intérimaire" onChange={(value) => { setListeVicInterimaire(value); setShowListeVicInterimaire(value === 'Oui') }} defaultValue={ListeVicInterimaire} />
+                <AutoCompleteP id="ListeVicInterimaire" option={listeDeclarationAss.ListeVicInterimaire} label="La victime est-elle un(e) intérimaire" onChange={(value) => { setListeVicInterimaire(value); }} defaultValue={ListeVicInterimaire} />
 
-                {showtroiTextField && (
+                {(ListeVicInterimaire === 'Oui') && (
                     [<TextFieldP id="VicInterimaireOui" label="Numéro ONSS de l’entreprise utilisatrice" onChange={setVicInterimaireOui} defaultValue={VicInterimaireOui} />,
                     <TextFieldP id="VicInterimaireOuiNom" label="Nom" onChange={setVicInterimaireOuiNom} defaultValue={VicInterimaireOuiNom} />,
                     <TextFieldP id="VicInterimaireOuiAdresse" label="Adresse" onChange={setVicInterimaireOuiAdresse} defaultValue={VicInterimaireOuiAdresse} />]
                 )}
 
-                <AutoCompleteP id="ListeVicTravailExt" option={listeDeclarationAss.ListeVicTravailExt} label="Au moment de l'accident, la victime travaillait-elle dans l'établissement d'un autre employeur dans le cadre de travaux effectuées par une entreprise extérieure" onChange={(value) => { setListeVicTravailExt(value); setShowListeVicTravailExt(value === 'Oui') }} defaultValue={ListeVicTravailExt} />
+                <AutoCompleteP id="ListeVicTravailExt" option={listeDeclarationAss.ListeVicTravailExt} label="Au moment de l'accident, la victime travaillait-elle dans l'établissement d'un autre employeur dans le cadre de travaux effectuées par une entreprise extérieure" onChange={(value) => { setListeVicTravailExt(value);}} defaultValue={ListeVicTravailExt} />
 
-                {showquatreTextField && (
+                {(ListeVicTravailExt === 'Oui') && (
                     [<TextFieldP id="VicTravailExtOui" label="Numéro ONSS de l’entreprise de cet autre employeur" onChange={setVicTravailExtOui} defaultValue={VicTravailExtOui} />,
                     <TextFieldP id="VicTravailExtOuiNom" label="Nom" onChange={setVicTravailExtOuiNom} defaultValue={VicTravailExtOuiNom} />,
                     <TextFieldP id="VicTravailExtOuiAdresse" label="Adresse" onChange={setVicTravailExtOuiAdresse} defaultValue={VicTravailExtOuiAdresse} />]
                 )}
 
                 <DateHeurePickerP id="dateNotifEmployeur" label="Date de notification à l’employeur" onChange={setdateNotifEmployeur} defaultValue={dateNotifEmployeur} />
-                <AutoCompleteP id="ListeLieuxAt" option={listeDeclarationAss.ListeLieuxAt} label="Lieu de l’accident" onChange={(value) => { setListeLieuxAt(value); setShowListeLieuxAt(value === 'Sur la voie publique') }} defaultValue={ListeLieuxAt} />
+                <AutoCompleteP id="ListeLieuxAt" option={listeDeclarationAss.ListeLieuxAt} label="Lieu de l’accident" onChange={(value) => { setListeLieuxAt(value);}} defaultValue={ListeLieuxAt} />
 
-                {showsixTextField && (
-                    <AutoCompleteP id="ListeVoiePublic" option={listeDeclarationAss.ListeVoiePublic} label="Est-ce un accident de la circulation" onChange={(value) => { setListeVoiePublic(value); setShowListeVoiePublic(value === 'Oui') }} defaultValue={ListeVoiePublic} />
+                {(ListeLieuxAt === 'Sur la voie publique') && (
+                    <AutoCompleteP id="ListeVoiePublic" option={listeDeclarationAss.ListeVoiePublic} label="Est-ce un accident de la circulation" onChange={(value) => { setListeVoiePublic(value);}} defaultValue={ListeVoiePublic} />
                 )}
 
-                {showcinqTextField && (
+                {(ListeVoiePublic === 'Oui') && (
                     [<TextFieldP id="LieuxAtAdresse" label="Rue/numero/boite" onChange={setLieuxAtAdresse} defaultValue={LieuxAtAdresse} />,
                     <TextFieldP id="LieuxAtCodePostal" label="Code postal" onChange={setLieuxAtCodePostal} defaultValue={LieuxAtCodePostal} />,
                     <TextFieldP id="LieuxAtCommune" label="Commune" onChange={setLieuxAtCommune} defaultValue={LieuxAtCommune} />,
@@ -350,9 +331,9 @@ export default function FormulaireDeclarationASSBelfius({ setValue, accidentData
                 </div>
                 <TextFieldP id="activiteSpecifique" label="Expliquez" onChange={setactiviteSpecifique} defaultValue={activiteSpecifique} />
                 <AutoCompleteP id="ListeTypedePost" option={listeDeclarationAss.ListeTypedePost} label="A quel type de poste de travail la victime se trouvait-elle" onChange={setListeTypedePost} defaultValue={ListeTypedePost} />
-                <AutoCompleteP id="ListeProfHabituelle" option={listeDeclarationAss.ListeProfHabituelle} label="Lors de l'accident, la victime exerçait-elle une activité dans le cadre de sa profession habituelle" onChange={(value) => { setListeProfHabituelle(value); setShowListeProfHabituelle(value === 'Non') }} defaultValue={ListeProfHabituelle} />
+                <AutoCompleteP id="ListeProfHabituelle" option={listeDeclarationAss.ListeProfHabituelle} label="Lors de l'accident, la victime exerçait-elle une activité dans le cadre de sa profession habituelle" onChange={(value) => { setListeProfHabituelle(value);}} defaultValue={ListeProfHabituelle} />
 
-                {showseptTextField && (
+                {(ListeProfHabituelle === 'Non') && (
                     <TextFieldP id="ListeProfHabituelleNon" label="Si non, quelle activité exerçait-elle" onChange={setListeProfHabituelleNon} defaultValue={ListeProfHabituelleNon} />
                 )}
 
@@ -364,26 +345,26 @@ export default function FormulaireDeclarationASSBelfius({ setValue, accidentData
                         aux, objets, instruments, substances, etc.) </h5>
                 </div>
                 <TextFieldP id="evenementDeviant" label="Expliquez" onChange={setevenementDeviant} defaultValue={evenementDeviant} />
-                <AutoCompleteP id="ListeProcesVerbal" option={listeDeclarationAss.ListeProcesVerbal} label="Un procès-verbal a-t-il été dressé" onChange={(value) => { setListeProcesVerbal(value); setShowListeProcesVerbal(value === 'Oui') }} defaultValue={ListeProcesVerbal} />
+                <AutoCompleteP id="ListeProcesVerbal" option={listeDeclarationAss.ListeProcesVerbal} label="Un procès-verbal a-t-il été dressé" onChange={(value) => { setListeProcesVerbal(value);}} defaultValue={ListeProcesVerbal} />
 
-                {showhuitTextField && (
+                {(ListeProcesVerbal === 'Oui') && (
                     [<TextFieldP id="ProcesVerbalOui" label="Le procès-verbal porte le numéro d’identification" onChange={setProcesVerbalOui} defaultValue={ProcesVerbalOui} />,
                     <TextFieldP id="ProcesVerbalOuiRedige" label="Il a été rédigé à" onChange={setProcesVerbalOuiRedige} defaultValue={ProcesVerbalOuiRedige} />,
                     <DatePickerP id="dateProcesVerbalOuiRedigeQuand" label="Date de rédaction du PV" onChange={setdateProcesVerbalOuiRedigeQuand} defaultValue={dateProcesVerbalOuiRedigeQuand} />,
                     <TextFieldP id="ProcesVerbalOuiPar" label="Il a été rédigé par" onChange={setProcesVerbalOuiPar} defaultValue={ProcesVerbalOuiPar} />]
                 )}
 
-                <AutoCompleteP id="ListeTierResponsable" option={listeDeclarationAss.ListeTierResponsable} label="Un tiers peut-il être rendu responsable de l’accident" onChange={(value) => { setListeTierResponsable(value); setShowListeTierResponsable(value === 'Oui') }} defaultValue={ListeTierResponsable} />
+                <AutoCompleteP id="ListeTierResponsable" option={listeDeclarationAss.ListeTierResponsable} label="Un tiers peut-il être rendu responsable de l’accident" onChange={(value) => { setListeTierResponsable(value);}} defaultValue={ListeTierResponsable} />
 
-                {showneufTextField && (
+                {(ListeTierResponsable === 'Oui') && (
                     [<TextFieldP id="TierResponsableOui" label="Nom et adresse" onChange={setTierResponsableOui} defaultValue={TierResponsableOui} />,
                     <TextFieldP id="TierResponsableOuiNomAdresse" label="Nom et adresse de l’assureur" onChange={setTierResponsableOuiNomAdresse} defaultValue={TierResponsableOuiNomAdresse} />,
                     <TextFieldP id="TierResponsableOuiNumPolice" label="Numéro de police" onChange={setTierResponsableOuiNumPolice} defaultValue={TierResponsableOuiNumPolice} />]
                 )}
 
-                <AutoCompleteP id="ListeTemoins" option={listeDeclarationAss.ListeTemoins} label="Y a-t-il eu des témoins" onChange={(value) => { setListeTemoins(value); setShowListeTemoins(value === 'Oui') }} defaultValue={ListeTemoins} />
+                <AutoCompleteP id="ListeTemoins" option={listeDeclarationAss.ListeTemoins} label="Y a-t-il eu des témoins" onChange={(value) => { setListeTemoins(value);}} defaultValue={ListeTemoins} />
 
-                {showdixTextField && (
+                {(ListeTemoins === 'Oui') && (
                     [<TextFieldP id="TemoinsOui" label="Nom - rue/n°/boite - Code postal - Commune" onChange={setTemoinsOui} defaultValue={TemoinsOui} />,
                     <AutoCompleteP id="TemoinDirecte" option={listeDeclarationAss.TemoinDirecte} label="Est-ce un témoin directe (D) ou indirecte (I)" onChange={setTemoinDirecte} defaultValue={TemoinDirecte} />]
                 )}
@@ -396,17 +377,17 @@ export default function FormulaireDeclarationASSBelfius({ setValue, accidentData
                         etc.) ET les objets impliqués (p. ex. , outillage, machine, équipement, matériaux, objets, instruments, substances, etc.). </h5>
                 </div>
                 <TextFieldP id="blessureVictume" label="Expliquez" onChange={setblessureVictume} defaultValue={blessureVictume} />
-                <AutoCompleteP id="ListeSoinsMedicaux" option={listeDeclarationAss.ListeSoinsMedicaux} label="Des soins médicaux ont-ils été dispensés chez l’employeur" onChange={(value) => { setListeSoinsMedicaux(value); setShowListeSoinsMedicaux(value === 'Oui') }} defaultValue={ListeSoinsMedicaux} />
+                <AutoCompleteP id="ListeSoinsMedicaux" option={listeDeclarationAss.ListeSoinsMedicaux} label="Des soins médicaux ont-ils été dispensés chez l’employeur" onChange={(value) => { setListeSoinsMedicaux(value);}} defaultValue={ListeSoinsMedicaux} />
 
-                {showonzeTextField && (
+                {(ListeSoinsMedicaux === 'Oui') && (
                     [<DateHeurePickerP id="dateSoinsMedicauxDate" label="Date et heure" onChange={setdateSoinsMedicauxDate} defaultValue={dateSoinsMedicauxDate} />,
                     <TextFieldP id="SoinsMedicauxDispansateur" label="Qualité du dispensateur" onChange={setSoinsMedicauxDispansateur} defaultValue={SoinsMedicauxDispansateur} />,
                     <TextFieldP id="SoinsMedicauxDescriptions" label="Description des soins dispensés" onChange={setSoinsMedicauxDescriptions} defaultValue={SoinsMedicauxDescriptions} />]
                 )}
 
-                <AutoCompleteP id="ListeSoinsMedicauxMedecin" option={listeDeclarationAss.ListeSoinsMedicauxMedecin} label="Des soins médicaux ont-ils été dispensés par un médecin externe" onChange={(value) => { setListeSoinsMedicauxMedecin(value); setShowListeSoinsMedicauxMedecin(value === 'Oui') }} defaultValue={ListeSoinsMedicauxMedecin} />
+                <AutoCompleteP id="ListeSoinsMedicauxMedecin" option={listeDeclarationAss.ListeSoinsMedicauxMedecin} label="Des soins médicaux ont-ils été dispensés par un médecin externe" onChange={(value) => { setListeSoinsMedicauxMedecin(value);}} defaultValue={ListeSoinsMedicauxMedecin} />
 
-                {showdouzeTextField && (
+                {(ListeSoinsMedicauxMedecin === 'Oui') && (
                     [<DateHeurePickerP id="dateSoinsMedicauxMedecin" label="Date et heure" onChange={setdateSoinsMedicauxMedecin} defaultValue={dateSoinsMedicauxMedecin} />,
                     <TextFieldP id="SoinsMedicauxMedecinInami" label="Numéro d’identification du médecin externe à l’INAMI" onChange={setSoinsMedicauxMedecinInami} defaultValue={SoinsMedicauxMedecinInami} />,
                     <TextFieldP id="SoinsMedicauxMedecinNom" label="Nom et prénom du médecin externe" onChange={setSoinsMedicauxMedecinNom} defaultValue={SoinsMedicauxMedecinNom} />,
@@ -415,9 +396,9 @@ export default function FormulaireDeclarationASSBelfius({ setValue, accidentData
                     <TextFieldP id="SoinsMedicauxMedecinCommune" label="Commune" onChange={setSoinsMedicauxMedecinCommune} defaultValue={SoinsMedicauxMedecinCommune} />]
                 )}
 
-                <AutoCompleteP id="ListeSoinsMedicauxHopital" option={listeDeclarationAss.ListeSoinsMedicauxHopital} label="Des soins médicaux ont-ils été dispensés à l’hôpital" onChange={(value) => { setListeSoinsMedicauxHopital(value); setShowListeSoinsMedicauxHopital(value === 'Oui') }} defaultValue={ListeSoinsMedicauxHopital} />
+                <AutoCompleteP id="ListeSoinsMedicauxHopital" option={listeDeclarationAss.ListeSoinsMedicauxHopital} label="Des soins médicaux ont-ils été dispensés à l’hôpital" onChange={(value) => { setListeSoinsMedicauxHopital(value);}} defaultValue={ListeSoinsMedicauxHopital} />
 
-                {showtreizeTextField && (
+                {(ListeSoinsMedicauxHopital === 'Oui') && (
                     [<DateHeurePickerP id="dateSoinsMedicauxHopital" label="Date et heure" onChange={setdateSoinsMedicauxHopital} defaultValue={dateSoinsMedicauxHopital} />,
                     <TextFieldP id="SoinsMedicauxHopitalInami" label="Numéro d’identification de l’hôpital à l’INAMI" onChange={setSoinsMedicauxHopitalInami} defaultValue={SoinsMedicauxHopitalInami} />,
                     <TextFieldP id="SoinsMedicauxHopitaldenomi" label="Dénomination de I*hôpital" onChange={setSoinsMedicauxHopitaldenomi} defaultValue={SoinsMedicauxHopitaldenomi} />,
@@ -436,26 +417,26 @@ export default function FormulaireDeclarationASSBelfius({ setValue, accidentData
                 <AutoCompleteP id="ListeMesureRepetition" option={listeDeclarationAss.ListeMesureRepetition} label="1 Mesures de prévention prises pour éviter la répétition d’un tel accident" onChange={setListeMesureRepetition} defaultValue={ListeMesureRepetition} />
                 <AutoCompleteP id="ListeMesureRepetition2" option={listeDeclarationAss.ListeMesureRepetition} label="2 Mesures de prévention prises pour éviter la répétition d’un tel accident" onChange={setListeMesureRepetition2} defaultValue={ListeMesureRepetition2} />
                 <TextFieldP id="CodeRisqueEntreprise" label="Codes risques propres à l’entreprise" onChange={setCodeRisqueEntreprise} defaultValue={CodeRisqueEntreprise} />
-                <AutoCompleteP id="ListeVictimeOnss" option={listeDeclarationAss.ListeVictimeOnss} label="La victime est-elle affiliée à l’ONSS" onChange={(value) => { setListeVictimeOnss(value); setShowListeVictimeOnss(value === 'Non') }} defaultValue={ListeVictimeOnss} />
+                <AutoCompleteP id="ListeVictimeOnss" option={listeDeclarationAss.ListeVictimeOnss} label="La victime est-elle affiliée à l’ONSS" onChange={(value) => { setListeVictimeOnss(value);}} defaultValue={ListeVictimeOnss} />
 
-                {showquatorzeTextField && (
+                {(ListeVictimeOnss === 'Non') && (
                     <TextFieldP id="victimeOnssNon" label="Si non, donnée le motif" onChange={setvictimeOnssNon} defaultValue={victimeOnssNon} />
                 )}
 
-                <TextFieldP id="codeTravailleurSocial" label="Code du travailleur de l'assurance sociale" onChange={(value) => { setcodeTravailleurSocial(value); setShowcodeTravailleurSocial(value === '') }} defaultValue={codeTravailleurSocial} />
+                <TextFieldP id="codeTravailleurSocial" label="Code du travailleur de l'assurance sociale" onChange={(value) => { setcodeTravailleurSocial(value);}} defaultValue={codeTravailleurSocial} />
 
-                {showquinzeTextField && (
-                    <AutoCompleteP id="ListeCategoProfess" option={listeDeclarationAss.ListeCategoProfess} label="S'il n'est pas connu, mentionnez la catégorie professionnelle" onChange={(value) => { setListeCategoProfess(value); setShowListeCategoProfess(value === 'Autre (à préciser)') }} defaultValue={ListeCategoProfess} />
+                {codeTravailleurSocial === '' && (
+                    <AutoCompleteP id="ListeCategoProfess" option={listeDeclarationAss.ListeCategoProfess} label="S'il n'est pas connu, mentionnez la catégorie professionnelle" onChange={(value) => { setListeCategoProfess(value);}} defaultValue={ListeCategoProfess} />
                 )}
 
-                {showvingtTextField && (
+                {(ListeCategoProfess === 'Autre (à préciser)') && (
                     <TextFieldP id="CategoProfessAutre" label="Si autre, preciser" onChange={setCategoProfessAutre} defaultValue={CategoProfessAutre} />
                 )}
 
-                <AutoCompleteP id="ListeNonOnss" option={listeDeclarationAss.ListeNonOnss} label="Si « apprenti/stagiaire non assujetti à l’ONSS », type de stage ou de formation" onChange={(value) => { setListeNonOnss(value); setShowListeNonOnss(value === 'F1') }} defaultValue={ListeNonOnss} />
+                <AutoCompleteP id="ListeNonOnss" option={listeDeclarationAss.ListeNonOnss} label="Si « apprenti/stagiaire non assujetti à l’ONSS », type de stage ou de formation" onChange={(value) => { setListeNonOnss(value);}} defaultValue={ListeNonOnss} />
 
-                {showSeizeTextField && (
-                    <AutoCompleteP id="ListeApprentiFormat" option={listeDeclarationAss.ListeApprentiFormat} label="S’agit-il d’un apprenti en formation pour devenir chef d’entreprise" onChange={(value) => { setListeApprentiFormat(value); setShowListeApprentiFormat(value === 'Non') }} defaultValue={ListeApprentiFormat} />
+                {(ListeNonOnss === 'F1') && (
+                    <AutoCompleteP id="ListeApprentiFormat" option={listeDeclarationAss.ListeApprentiFormat} label="S’agit-il d’un apprenti en formation pour devenir chef d’entreprise" onChange={(value) => { setListeApprentiFormat(value);}} defaultValue={ListeApprentiFormat} />
                 )}
 
                 {/*{showSeizeTextField && showdixseptTextField && (
@@ -470,7 +451,7 @@ export default function FormulaireDeclarationASSBelfius({ setValue, accidentData
                 </div>
             )}*/}
 
-                {showSeizeTextField && showdixseptTextField && (
+                {(ListeNonOnss === 'F1' && ListeApprentiFormat === 'Non') && (
                     [<TextFieldP id="CommissionParitaireDénomination" label="Commission paritaire Denomination" onChange={setCommissionParitaireDénomination} defaultValue={CommissionParitaireDénomination} />,
                     <TextFieldP id="CommissionParitaireNumn" label="Commission paritaire Numéro" onChange={setCommissionParitaireNumn} defaultValue={CommissionParitaireNumn} />,
                     <AutoCompleteP id="ListeTypeContrat" option={listeDeclarationAss.ListeTypeContrat} label="Type de contrat de travail" onChange={setListeTypeContrat} defaultValue={ListeTypeContrat} />,
@@ -478,10 +459,10 @@ export default function FormulaireDeclarationASSBelfius({ setValue, accidentData
                     <TextFieldP id="NbrHeureSemaine" label="Nombre moyen d’heures par semaine la victime" onChange={setNbrHeureSemaine} defaultValue={NbrHeureSemaine} />,
                     <TextFieldP id="NbrHeureSemaineReference" label="Nombre moyen d’heures par semaine la personne de sélection" onChange={setNbrHeureSemaineReference} defaultValue={NbrHeureSemaineReference} />,
                     <AutoCompleteP id="ListeVictiPension" option={listeDeclarationAss.ListeVictiPension} label="La victime est-elle une personne pensionnée exerçant encore une activité professionnelle" onChange={setListeVictiPension} defaultValue={ListeVictiPension} />,
-                    <AutoCompleteP id="ListeModeRemuneration" option={listeDeclarationAss.ListeModeRemuneration} label="Mode de rémunération" onChange={(value) => { setListeModeRemuneration(value); setShowListeModeRemuneration(value === 'Rémunération fixe') }} defaultValue={ListeModeRemuneration} />]
+                    <AutoCompleteP id="ListeModeRemuneration" option={listeDeclarationAss.ListeModeRemuneration} label="Mode de rémunération" onChange={(value) => { setListeModeRemuneration(value);}} defaultValue={ListeModeRemuneration} />]
                 )}
 
-                {showSeizeTextField && showdixseptTextField && showdixhuitTextField && (
+                {(ListeNonOnss === 'F1' && ListeApprentiFormat === 'Non' && ListeModeRemuneration === 'Rémunération fixe') && (
                     <div>
                         <AutoCompleteP id="ListeMontantRemuneration" option={listeDeclarationAss.ListeMontantRemuneration} label="Unité de temps" onChange={setListeMontantRemuneration} defaultValue={ListeMontantRemuneration} />
                         <TextFieldP id="MontantRemunerationVariable" label="En cas de rémunération variable, cycle correspondant à l’unité de temps déclarée" onChange={setMontantRemunerationVariable} defaultValue={MontantRemunerationVariable} />
@@ -498,14 +479,14 @@ export default function FormulaireDeclarationASSBelfius({ setValue, accidentData
                     </div>
                 )}
 
-                {showSeizeTextField && showdixseptTextField && (
+                {(ListeNonOnss === 'F1' && ListeApprentiFormat === 'Non') && (
                     [<h3>Questions 63</h3>,
                     <TextFieldP id="AvantegeAssujOnns" label="Autres avantages assujettis ou non à l’ONSS (exprimés sur base annuelle)" onChange={setAvantegeAssujOnns} defaultValue={AvantegeAssujOnns} />,
                     <TextFieldP id="AvantegeAssujOnnsNature" label="Nature des avantages" onChange={setAvantegeAssujOnnsNature} defaultValue={AvantegeAssujOnnsNature} />,
-                    <AutoCompleteP id="ListechangementFonction" option={listeDeclarationAss.ListechangementFonction} label="Durée du contrat de travail" onChange={(value) => { setListechangementFonction(value); setShowListechangementFonction(value === 'Oui') }} defaultValue={ListechangementFonction} />]
+                    <AutoCompleteP id="ListechangementFonction" option={listeDeclarationAss.ListechangementFonction} label="Durée du contrat de travail" onChange={(value) => { setListechangementFonction(value);}} defaultValue={ListechangementFonction} />]
                 )}
 
-                {showdixneufTextField && (
+                {(ListechangementFonction === 'Oui') && (
                     <DatePickerP id="dateChangementFonction" label="Si oui, date du dernier changement de fonction" onChange={setdateChangementFonction} defaultValue={dateChangementFonction} />
                 )}
 
