@@ -16,7 +16,7 @@ const { PDFDocument, StandardFonts, rgb } = require('pdf-lib');
  */
 function EditPdfTextField(form, textFielName, data) {
     const textField = form.getTextField(textFielName); //'18 naam getroffene'
-    if (data !== undefined) {
+    if (data !== undefined ) {
         textField.setText(data || ""); //'LEFEVRE REMY'
     }
 }
@@ -46,6 +46,11 @@ export default async function editPDF(data) {
         EditPdfTextField(form, '19 voornaam getroffene', data.prenomTravailleur);
         EditPdfTextField(form, '20 geboorteplaats', data.lieuxnaissance);
         //date naissance '21 geboortedatum' '21 geboortedatum 1' '21 geboortedatum 2'
+        /*
+        EditPdfTextField(form, '21 geboortedatum 2',( data.dateNaissance.substring( 0,4 )));
+        EditPdfTextField(form, '21 geboortedatum 1',( data.dateNaissance.substring( 5,7 )));
+        EditPdfTextField(form, '21 geboortedatum',( data.dateNaissance.substring( 8,10 )));
+        */
         //EditPdfCheckBox(form, '22 checkbox man', true); sexe de autocomplete a chekbox '23 checkbox vrouw' sexe
         EditPdfTextField(form, '24 nationaliteit', data.nationalité);
         //EditPdfCheckBox(form, '25 checkbox ', true); etat civil de autocomplete a chekbox '26 checkbox  1' '27 checkbox  2' '28 checkbox  3' etatCivil
@@ -73,9 +78,19 @@ export default async function editPDF(data) {
         //BIC etabliFinancier
         EditPdfTextField(form, '55 nummer tewerkstelling', data.numDimona);
         //date d entrée en service
+        /*
+        EditPdfTextField(form, '56 datum 2',( data.dateEntrEntreprise.substring( 0,4 )));
+        EditPdfTextField(form, '56 datum 1',( data.dateEntrEntreprise.substring( 5,7 )));
+        EditPdfTextField(form, '56 datum',( data.dateEntrEntreprise.substring( 8,10 )));
+        */
         //durée du contra
         //date de sortie
         //si oui date
+        /*
+        EditPdfTextField(form, '61 datum 5',( data.dateSortie.substring( 0,4 )));
+        EditPdfTextField(form, '61 datum 4',( data.dateSortie.substring( 5,7 )));
+        EditPdfTextField(form, '61 datum 3',( data.dateSortie.substring( 8,10 )));
+        */
         EditPdfTextField(form, '62 onderneming', data.profesEntreprise);
         EditPdfTextField(form, '63 code', data.citp);
         //EditPdfTextField(form, '63bis', data.ListeDureeDsEntreprise); chekbox
