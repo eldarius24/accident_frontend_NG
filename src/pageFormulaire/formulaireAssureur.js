@@ -75,7 +75,7 @@ export default function FormulaireAssureur({ setValue, accidentData, watch }) {
           }} defaultValue={commentaireetSuivit}></TextFieldP>
 
           {/* *********************************** Gestionnaire du sinistre au sein de l'ASBL **********************************/}
-          <TextFieldP id="Getionnaiesinistre" label="Gestionnaire du sinistre au sein de l'ASBL" onChange={(GetionnaiesinistreText) => {
+          <TextFieldP id="Getionnaiesinistre" label="Gestionnaire du sinistre au sein de l'entreprise" onChange={(GetionnaiesinistreText) => {
             setGetionnaiesinistre(GetionnaiesinistreText);
             setValue('Getionnaiesinistre', GetionnaiesinistreText);
           }} defaultValue={Getionnaiesinistre}></TextFieldP>

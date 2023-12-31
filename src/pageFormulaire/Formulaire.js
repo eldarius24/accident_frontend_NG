@@ -21,8 +21,8 @@ import config from '../config.json';
 const forms = [
     { id: 0, component: FormulaireEntreprise },
     { id: 1, component: FormulaireAssureur },
-    { id: 2, component: FormulaireAccident },
-    { id: 3, component: FormulaireSalarie },
+    { id: 2, component: FormulaireSalarie },
+    { id: 3, component: FormulaireAccident },
     { id: 4, component: FormulaireDeclarationASSBelfius },
 ];
 
