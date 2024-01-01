@@ -142,11 +142,24 @@ function Home() {
      * Fonction qui permet de filtrer les données de la table en fonction du contenu de la barre de recherche
      */
     const filteredData = data.filter((item) => {
-        return (
-            Object.values(item).some((value) =>
-                typeof value === "string" && value.toLowerCase().includes(searchTerm.toLowerCase())
-            )
-        );
+        const filterProperties = [
+            'recordNumberGroupoe',
+            'recordNumberEntreprise',
+            'DateHeureAccident',
+            'entrepriseName',
+            'secteur',
+            'nomTravailleur',
+            'prenomTravailleur',
+            'typeAccident'
+        ];
+        return filterProperties.some((property) => {
+            const value = item[property];
+            return (
+                value &&
+                typeof value === 'string' &&
+                value.toLowerCase().includes(searchTerm.toLowerCase())
+            );
+        });
     });
 
     if (loading) {
