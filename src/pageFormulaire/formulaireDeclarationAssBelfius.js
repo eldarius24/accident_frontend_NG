@@ -12,8 +12,6 @@ import TextFieldP from '../composants/textFieldP';
 import DatePickerP from '../composants/datePickerP';
 import DateHeurePickerP from '../composants/dateHeurePickerP';
 
-dayjs.locale('fr');
-
 export default function FormulaireDeclarationASSBelfius({ setValue, accidentData, watch }) {
 
     // Mise en forme des cadres texte

@@ -16,7 +16,7 @@ const { PDFDocument, StandardFonts, rgb } = require('pdf-lib');
  */
 function EditPdfTextField(form, textFielName, data) {
     const textField = form.getTextField(textFielName); //'18 naam getroffene'
-    if (data !== undefined) {
+    if (data !== null) {
         textField.setText(data || ""); //'LEFEVRE REMY'
     }
 }
@@ -45,7 +45,7 @@ export default async function editPDF(data) {
         EditPdfTextField(form, '18 naam getroffene', data.nomTravailleur);
         EditPdfTextField(form, '19 voornaam getroffene', data.prenomTravailleur);
         EditPdfTextField(form, '20 geboorteplaats', data.lieuxnaissance);
-        if (data.dateNaissance !== null) {
+        if (data.dateNaissance !== undefined && data.dateNaissance !== null) {
             EditPdfTextField(form, '21 geboortedatum 2', (data.dateNaissance.substring(0, 4)));
             EditPdfTextField(form, '21 geboortedatum 1', (data.dateNaissance.substring(5, 7)));
             EditPdfTextField(form, '21 geboortedatum', (data.dateNaissance.substring(8, 10)));
@@ -76,13 +76,13 @@ export default async function editPDF(data) {
         //num de compte bancaire numCompteBancaire
         //BIC etabliFinancier
         EditPdfTextField(form, '55 nummer tewerkstelling', data.numDimona);
-        if (data.dateEntrEntreprise !== null) {
+        if (data.dateEntrEntreprise !== undefined && data.dateEntrEntreprise !== null) {
             EditPdfTextField(form, '56 datum 2', (data.dateEntrEntreprise.substring(0, 4)));
             EditPdfTextField(form, '56 datum 1', (data.dateEntrEntreprise.substring(5, 7)));
             EditPdfTextField(form, '56 datum', (data.dateEntrEntreprise.substring(8, 10)));
         };
         //durée du contra
-        if (data.dateSortie !== null) {
+        if (data.dateSortie !== undefined && data.dateSortie !== null) {
             EditPdfTextField(form, '61 datum 5', (data.dateSortie.substring(0, 4)));
             EditPdfTextField(form, '61 datum 4', (data.dateSortie.substring(5, 7)));
             EditPdfTextField(form, '61 datum 3', (data.dateSortie.substring(8, 10)));
@@ -100,7 +100,7 @@ export default async function editPDF(data) {
         EditPdfTextField(form, '78', data.VicTravailExtOuiAdresse);
         //jour de l'accident
         //date de l'accident
-        if (data.DateHeureAccident !== null) {
+        if (data.DateHeureAccident !== undefined && data.DateHeureAccident !== null) {
             EditPdfTextField(form, 'p2_4', (data.DateHeureAccident.substring(0, 4)));
             EditPdfTextField(form, 'p2_3', (data.DateHeureAccident.substring(5, 7)));
             EditPdfTextField(form, 'p2_2', (data.DateHeureAccident.substring(8, 10)));
@@ -108,7 +108,7 @@ export default async function editPDF(data) {
             EditPdfTextField(form, 'p2_6', (data.DateHeureAccident.substring(14, 16)));
         };
         //date et heure de notification a l'employeur
-        if (data.dateNotifEmployeur !== null) {
+        if (data.dateNotifEmployeur !== undefined && data.dateNotifEmployeur !== null) {
             EditPdfTextField(form, 'p2_9', (data.dateNotifEmployeur.substring(0, 4)));
             EditPdfTextField(form, 'p2_8', (data.dateNotifEmployeur.substring(5, 7)));
             EditPdfTextField(form, 'p2_7', (data.dateNotifEmployeur.substring(8, 10)));
@@ -138,7 +138,7 @@ export default async function editPDF(data) {
         EditPdfTextField(form, 'p2_37', data.ProcesVerbalOui);
         EditPdfTextField(form, 'p2_38', data.ProcesVerbalOuiRedige);
         //date du proces verbal
-        if (data.dateProcesVerbalOuiRedigeQuand !== null) {
+        if (data.dateProcesVerbalOuiRedigeQuand !== undefined && data.dateProcesVerbalOuiRedigeQuand !== null) {
             EditPdfTextField(form, 'p2_41', (data.dateProcesVerbalOuiRedigeQuand.substring(0, 4)));
             EditPdfTextField(form, 'p2_40', (data.dateProcesVerbalOuiRedigeQuand.substring(5, 7)));
             EditPdfTextField(form, 'p2_39', (data.dateProcesVerbalOuiRedigeQuand.substring(8, 10)));
@@ -158,7 +158,7 @@ export default async function editPDF(data) {
         //code p3_40 2
         //soin médic chez employeur oui  non
         //si oui date et heure soin médic chez employeur
-        if (data.dateSoinsMedicauxDate !== null) {
+        if (data.dateSoinsMedicauxDate !== undefined && data.dateSoinsMedicauxDate !== null) {
             EditPdfTextField(form, 'p3_41 5', (data.dateSoinsMedicauxDate.substring(0, 4)));
             EditPdfTextField(form, 'p3_41 4', (data.dateSoinsMedicauxDate.substring(5, 7)));
             EditPdfTextField(form, 'p3_41 3', (data.dateSoinsMedicauxDate.substring(8, 10)));
@@ -169,7 +169,7 @@ export default async function editPDF(data) {
         EditPdfTextField(form, 'p3_14', data.SoinsMedicauxDescriptions);
         //soin medic medecin externe oui non
         //date et heure soin medic medecin externe
-        if (data.dateSoinsMedicauxMedecin !== null) {
+        if (data.dateSoinsMedicauxMedecin !== undefined && data.dateSoinsMedicauxMedecin !== null) {
             EditPdfTextField(form, 'p3_20', (data.dateSoinsMedicauxMedecin.substring(0, 4)));
             EditPdfTextField(form, 'p3_19', (data.dateSoinsMedicauxMedecin.substring(5, 7)));
             EditPdfTextField(form, 'p3_18', (data.dateSoinsMedicauxMedecin.substring(8, 10)));
@@ -183,7 +183,7 @@ export default async function editPDF(data) {
         EditPdfTextField(form, 'p3_29', data.SoinsMedicauxMedecinCommune);
         //soin hopital oui non
         //si oui date et heure soin hopital
-        if (data.dateSoinsMedicauxHopital !== null) {
+        if (data.dateSoinsMedicauxHopital !== undefined && data.dateSoinsMedicauxHopital !== null) {
             EditPdfTextField(form, 'p3_35', (data.dateSoinsMedicauxHopital.substring(0, 4)));
             EditPdfTextField(form, 'p3_34', (data.dateSoinsMedicauxHopital.substring(5, 7)));
             EditPdfTextField(form, 'p3_33', (data.dateSoinsMedicauxHopital.substring(8, 10)));
@@ -197,13 +197,13 @@ export default async function editPDF(data) {
         EditPdfTextField(form, 'p3_44', data.SoinsMedicauxHopitalCommune);
         //conséquences 
         //date occupation temporaire addapté
-        if (data.dateTravailAddapte !== null) {
+        if (data.dateTravailAddapte !== undefined && data.dateTravailAddapte !== null) {
             EditPdfTextField(form, 'p3_65', (data.dateTravailAddapte.substring(0, 4)));
             EditPdfTextField(form, 'p3_64', (data.dateTravailAddapte.substring(5, 7)));
             EditPdfTextField(form, 'p3_63', (data.dateTravailAddapte.substring(8, 10)));
         };
         //date et heure incapacité temporaire
-        if (data.dateIncapaciteTemporaire !== null) {
+        if (data.dateIncapaciteTemporaire !== undefined && data.dateIncapaciteTemporaire !== null) {
             EditPdfTextField(form, 'p3_51', (data.dateIncapaciteTemporaire.substring(0, 4)));
             EditPdfTextField(form, 'p3_50', (data.dateIncapaciteTemporaire.substring(5, 7)));
             EditPdfTextField(form, 'p3_49', (data.dateIncapaciteTemporaire.substring(8, 10)));
@@ -212,13 +212,13 @@ export default async function editPDF(data) {
         };
         //date reprise du travail
         //date déces
-        if (data.dateDece !== null) {
+        if (data.dateDece !== undefined && data.dateDece !== null) {
             EditPdfTextField(form, 'p3_58', (data.dateDece.substring(0, 4)));
             EditPdfTextField(form, 'p3_57', (data.dateDece.substring(5, 7)));
             EditPdfTextField(form, 'p3_56', (data.dateDece.substring(8, 10)));
         };
         //date reprise effective
-        if (data.dateRepriseEffective !== null) {
+        if (data.dateRepriseEffective !== undefined && data.dateRepriseEffective !== null) {
             EditPdfTextField(form, 'p3_61', (data.dateRepriseEffective.substring(0, 4)));
             EditPdfTextField(form, 'p3_60', (data.dateRepriseEffective.substring(5, 7)));
             EditPdfTextField(form, 'p3_59', (data.dateRepriseEffective.substring(8, 10)));
@@ -268,7 +268,7 @@ export default async function editPDF(data) {
         EditPdfTextField(form, '51', data.AvantegeAssujOnnsNature);
         //change fonction
         //date chang de fonction
-        if (data.dateChangementFonction !== null) {
+        if (data.dateChangementFonction !== undefined && data.dateChangementFonction !== null) {
             EditPdfTextField(form, '56', (data.dateChangementFonction.substring(0, 4)));
             EditPdfTextField(form, '55', (data.dateChangementFonction.substring(5, 7)));
             EditPdfTextField(form, '54', (data.dateChangementFonction.substring(8, 10)));
