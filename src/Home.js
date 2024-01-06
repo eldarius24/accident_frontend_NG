@@ -121,7 +121,9 @@ function Home() {
                         item.dateSoinsMedicauxHopital = dateConverter(item.dateSoinsMedicauxHopital, true);
                         item.dateRepriseEffective = dateConverter(item.dateRepriseEffective, false);
                         item.dateChangementFonction = dateConverter(item.dateChangementFonction, false);
-
+                        item.dateDecede = dateConverter(item.dateDecede, false);
+                        item.dateIncapaciteTemporaire = dateConverter(item.dateIncapaciteTemporaire, true);
+                        item.dateTravailAddapte = dateConverter(item.dateTravailAddapte, false);
 
 
                     });
@@ -202,7 +204,7 @@ function Home() {
                         sx={{ color: 'black', padding: '14px 60px', backgroundColor: '#84a784', '&:hover': { backgroundColor: 'green' }, boxShadow: 3, textTransform: 'none' }}
                         variant="contained"
                         color="primary"
-                        onClick= {() => handleExportData(filteredData)}
+                        onClick={() => handleExportData(filteredData)}
                         startIcon={<GetAppIcon />}
                     >
                         Accident
@@ -213,7 +215,7 @@ function Home() {
                         sx={{ color: 'black', padding: '14px 60px', backgroundColor: '#84a784', '&:hover': { backgroundColor: 'green' }, boxShadow: 3, textTransform: 'none' }}
                         variant="contained"
                         color="primary"
-                        onClick= {() =>handleExportDataAss(filteredData)}
+                        onClick={() => handleExportDataAss(filteredData)}
                         startIcon={<GetAppIcon />}
                     >
                         Assurance
@@ -257,7 +259,7 @@ function Home() {
                                             <Button style={{ margin: '2px' }} variant="contained" color="primary" onClick={() => handleEdit(item._id)}> <EditIcon /></Button>
                                             <Button style={{ margin: '2px' }} variant="contained" color="success" onClick={() => handleGeneratePDF(item._id)}> <PictureAsPdfIcon /></Button>
                                             <Button
-                                                style={{ margin: '2px'}}
+                                                style={{ margin: '2px' }}
                                                 variant="contained"
                                                 color="error"
                                                 onClick={() => {
