@@ -35,7 +35,7 @@ function EditPdfCheckBox(form, checBkoxName, data) {
 
 export default async function editPDF(data) {
     try {
-        const response = await fetch('./LeCortilDeclarationBELFIUS.pdf');
+                const response = await fetch('./LeCortilDeclarationBELFIUS.pdf');
         const buffer = await response.arrayBuffer();
         const pdfDoc = await PDFDocument.load(buffer);
         console.log(pdfDoc);
@@ -285,7 +285,7 @@ export default async function editPDF(data) {
         const pdfBytes = await pdfDoc.save();
         const blob = new Blob([pdfBytes], { type: 'application/pdf' });
 
-        const fileName = `${data.DateHeureAccident}_${data.entrepriseName}_${data.nomTravailleur}_${data.prenomTravailleur}.pdf`;
+        const fileName = `${data.DateHeureAccident.substring(0, 10)}_${data.entrepriseName}_${data.nomTravailleur}_${data.prenomTravailleur}.pdf`;
 
 
         if (window.navigator && window.navigator.msSaveOrOpenBlob) {
