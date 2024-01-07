@@ -1,13 +1,10 @@
 {
     "typeAccident": [
-        "AT",
-        "AT en attente",
-        "AT CHT",
-        "AT CHT attente",
         "Incident benin",
         "AT n'impliquand que des biens matériel",
-        "AT Grave",
-        "AT Grave en attente"
+        "AT",
+        "AT CHT",
+        "AT Grave"
     ],
     "CodeSiegeLésion": [
         "00 Localisation de la blessure non déterminée",
