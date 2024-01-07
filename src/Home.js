@@ -65,8 +65,7 @@ function Home() {
 
     const handleGeneratePDF = async (accidentIdToGenerate) => {
         try {
-            const response = await axios.get(`http://${apiUrl}:3100/api/accidents/${accidentIdToGenerate}`);
-            const accidents = response.data;
+            const accidents = data.find(item => item._id == accidentIdToGenerate);
             editPDF(accidents);
         } catch (error) {
             console.log(error);

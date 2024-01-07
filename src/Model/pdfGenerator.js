@@ -35,7 +35,8 @@ function EditPdfCheckBox(form, checBkoxName, data) {
 
 export default async function editPDF(data) {
     try {
-                const response = await fetch('./LeCortilDeclarationBELFIUS.pdf');
+        console.log("pdfGenerator.js => parametre data => ",data.DateHeureAccident.substring(13, 18));
+        const response = await fetch('./LeCortilDeclarationBELFIUS.pdf');
         const buffer = await response.arrayBuffer();
         const pdfDoc = await PDFDocument.load(buffer);
         console.log(pdfDoc);
@@ -104,16 +105,16 @@ export default async function editPDF(data) {
             EditPdfTextField(form, 'p2_4', (data.DateHeureAccident.substring(0, 4)));
             EditPdfTextField(form, 'p2_3', (data.DateHeureAccident.substring(5, 7)));
             EditPdfTextField(form, 'p2_2', (data.DateHeureAccident.substring(8, 10)));
-            EditPdfTextField(form, 'p2_5', (data.DateHeureAccident.substring(11, 13)));
-            EditPdfTextField(form, 'p2_6', (data.DateHeureAccident.substring(14, 16)));
+            EditPdfTextField(form, 'p2_5', (data.DateHeureAccident.substring(13, 15)));
+            EditPdfTextField(form, 'p2_6', (data.DateHeureAccident.substring(16, 18)));
         };
         //date et heure de notification a l'employeur
         if (data.dateNotifEmployeur !== undefined && data.dateNotifEmployeur !== null) {
             EditPdfTextField(form, 'p2_9', (data.dateNotifEmployeur.substring(0, 4)));
             EditPdfTextField(form, 'p2_8', (data.dateNotifEmployeur.substring(5, 7)));
             EditPdfTextField(form, 'p2_7', (data.dateNotifEmployeur.substring(8, 10)));
-            EditPdfTextField(form, 'p2_10', (data.dateNotifEmployeur.substring(11, 13)));
-            EditPdfTextField(form, 'p2_11', (data.dateNotifEmployeur.substring(14, 16)));
+            EditPdfTextField(form, 'p2_10', (data.dateNotifEmployeur.substring(13, 15)));
+            EditPdfTextField(form, 'p2_11', (data.dateNotifEmployeur.substring(16, 18)));
         };
         //Nature de l'accident
         //Horaire de la victime je jours de l'AT
@@ -162,8 +163,8 @@ export default async function editPDF(data) {
             EditPdfTextField(form, 'p3_41 5', (data.dateSoinsMedicauxDate.substring(0, 4)));
             EditPdfTextField(form, 'p3_41 4', (data.dateSoinsMedicauxDate.substring(5, 7)));
             EditPdfTextField(form, 'p3_41 3', (data.dateSoinsMedicauxDate.substring(8, 10)));
-            EditPdfTextField(form, 'p3_11', (data.dateSoinsMedicauxDate.substring(11, 13)));
-            EditPdfTextField(form, 'p3_12', (data.dateSoinsMedicauxDate.substring(14, 16)));
+            EditPdfTextField(form, 'p3_11', (data.dateSoinsMedicauxDate.substring(13, 15)));
+            EditPdfTextField(form, 'p3_12', (data.dateSoinsMedicauxDate.substring(16, 18)));
         };
         EditPdfTextField(form, 'p3_13', data.SoinsMedicauxDispansateur);
         EditPdfTextField(form, 'p3_14', data.SoinsMedicauxDescriptions);
@@ -173,8 +174,8 @@ export default async function editPDF(data) {
             EditPdfTextField(form, 'p3_20', (data.dateSoinsMedicauxMedecin.substring(0, 4)));
             EditPdfTextField(form, 'p3_19', (data.dateSoinsMedicauxMedecin.substring(5, 7)));
             EditPdfTextField(form, 'p3_18', (data.dateSoinsMedicauxMedecin.substring(8, 10)));
-            EditPdfTextField(form, 'p3_21', (data.dateSoinsMedicauxMedecin.substring(11, 13)));
-            EditPdfTextField(form, 'p3_22', (data.dateSoinsMedicauxMedecin.substring(14, 16)));
+            EditPdfTextField(form, 'p3_21', (data.dateSoinsMedicauxMedecin.substring(13, 15)));
+            EditPdfTextField(form, 'p3_22', (data.dateSoinsMedicauxMedecin.substring(16, 18)));
         };
         //num inami
         EditPdfTextField(form, 'p3_26', data.SoinsMedicauxMedecinNom);
@@ -187,8 +188,8 @@ export default async function editPDF(data) {
             EditPdfTextField(form, 'p3_35', (data.dateSoinsMedicauxHopital.substring(0, 4)));
             EditPdfTextField(form, 'p3_34', (data.dateSoinsMedicauxHopital.substring(5, 7)));
             EditPdfTextField(form, 'p3_33', (data.dateSoinsMedicauxHopital.substring(8, 10)));
-            EditPdfTextField(form, 'p3_36', (data.dateSoinsMedicauxHopital.substring(11, 13)));
-            EditPdfTextField(form, 'p3_37', (data.dateSoinsMedicauxHopital.substring(14, 16)));
+            EditPdfTextField(form, 'p3_36', (data.dateSoinsMedicauxHopital.substring(13, 15)));
+            EditPdfTextField(form, 'p3_37', (data.dateSoinsMedicauxHopital.substring(16, 18)));
         };
         //inami
         EditPdfTextField(form, 'p3_41', data.SoinsMedicauxHopitaldenomi);
@@ -207,8 +208,8 @@ export default async function editPDF(data) {
             EditPdfTextField(form, 'p3_51', (data.dateIncapaciteTemporaire.substring(0, 4)));
             EditPdfTextField(form, 'p3_50', (data.dateIncapaciteTemporaire.substring(5, 7)));
             EditPdfTextField(form, 'p3_49', (data.dateIncapaciteTemporaire.substring(8, 10)));
-            EditPdfTextField(form, 'p3_52', (data.dateIncapaciteTemporaire.substring(11, 13)));
-            EditPdfTextField(form, 'p3_53', (data.dateIncapaciteTemporaire.substring(14, 16)));
+            EditPdfTextField(form, 'p3_52', (data.dateIncapaciteTemporaire.substring(13, 15)));
+            EditPdfTextField(form, 'p3_53', (data.dateIncapaciteTemporaire.substring(16, 18)));
         };
         //date reprise du travail
         //date déces
