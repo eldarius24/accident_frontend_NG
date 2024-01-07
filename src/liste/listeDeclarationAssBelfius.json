@@ -4,6 +4,7 @@
         "Féminin "
     ],
     "ListeNationalite": [
+        "Belge",
         "Afghane",
         "Albanaise",
         "Algerienne",
@@ -21,7 +22,6 @@
         "Bahreinienne",
         "Bangladaise",
         "Barbadienne",
-        "Belge",
         "Belizienne",
         "Beninoise",
         "Bhoutanaise",
@@ -208,7 +208,7 @@
     "ListeLangueCorr": [
         "Français",
         "Néerlandais",
-        "Allemend"
+        "Allemand"
     ],
     "ListeDurContra": [
         "Indéterminée",
@@ -238,13 +238,13 @@
         "Non"
     ],
     "ListeLieuxAtPays": [
+        "Belgique",
         "Albanie",
         "Allemagne",
         "Andorre",
         "Arménie",
         "Autriche",
         "Azerbaïdjan",
-        "Belgique",
         "Biélorussie",
         "Bosnie-Herzégovine",
         "Bulgarie",
@@ -402,13 +402,13 @@
         "Non"
     ],
     "ListeadressePays": [
+        "Belgique",
         "Albanie",
         "Allemagne",
         "Andorre",
         "Arménie",
         "Autriche",
         "Azerbaïdjan",
-        "Belgique",
         "Biélorussie",
         "Bosnie-Herzégovine",
         "Bulgarie",
@@ -454,13 +454,13 @@
         "Vatican"
     ],
     "ListeadressePaysCorrespondance": [
+        "Belgique",
         "Albanie",
         "Allemagne",
         "Andorre",
         "Arménie",
         "Autriche",
         "Azerbaïdjan",
-        "Belgique",
         "Biélorussie",
         "Bosnie-Herzégovine",
         "Bulgarie",
