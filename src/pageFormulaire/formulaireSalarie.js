@@ -4,6 +4,7 @@ import * as React from 'react';
 import { useState, useEffect } from 'react';
 /* IMPORT PERSO */
 import TextFieldP from '../composants/textFieldP';
+import TextFieldMaskP from '../composants/textFieldMaskP';
 import DatePickerP from '../composants/datePickerP';
 import AutoCompleteP from '../composants/autoCompleteP';
 import listeDeclarationAssBelfius from '../liste/listeDeclarationAssBelfius.json';
@@ -135,7 +136,7 @@ export default function FormulaireSalarie({ setValue, accidentData, watch }) {
         <DatePickerP id='dateNaissance' label='Date de naissance' onChange={setDateNaissance} defaultValue={dateNaissance} />
         <TextFieldP id='lieuxnaissance' label='Lieu de naissance' onChange={setLieuxnaissance} defaultValue={lieuxnaissance} />
         <TextFieldP id='niss' label='NISS du travailleur' onChange={setNiss} defaultValue={niss} />
-        <TextFieldP id="numCompteBancaire" label="Numéro de compte bancaire" onChange={setnumCompteBancaire} defaultValue={numCompteBancaire} />
+        <TextFieldMaskP id="numCompteBancaire" label="Numéro de compte bancaire" onChange={setnumCompteBancaire} defaultValue={numCompteBancaire} mask="AA00-0000-0000-0000-0000" />
         <TextFieldP id="etabliFinancier" label="Etablissement Financier BIC" onChange={setetabliFinancier} defaultValue={etabliFinancier} />
         <TextFieldP id="numDimona" label="Numéro de la Dimona" onChange={setnumDimona} defaultValue={numDimona} />
         <AutoCompleteP id='sexe' label='Sexe' onChange={setsexe} option={listeDeclarationAssBelfius.ListeSexe} defaultValue={sexe} />
