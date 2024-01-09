@@ -11,7 +11,7 @@ import AutoCompleteP from '../composants/autoCompleteP';
 import TextFieldP from '../composants/textFieldP';
 import DatePickerP from '../composants/datePickerP';
 import DateHeurePickerP from '../composants/dateHeurePickerP';
-
+import TextFieldMaskP from '../composants/textFieldMaskP';
 export default function FormulaireDeclarationASSBelfius({ setValue, accidentData, watch }) {
 
     // Mise en forme des cadres texte
@@ -245,7 +245,7 @@ export default function FormulaireDeclarationASSBelfius({ setValue, accidentData
                     <AutoCompleteP id="ListeLieuxAtPays" option={listeDeclarationAss.ListeLieuxAtPays} label="Pays" onChange={setListeLieuxAtPays} defaultValue={ListeLieuxAtPays} />]
                 )}
 
-                <TextFieldP id="NumdeChantier" label="Numéro du chantier" onChange={setNumdeChantier} defaultValue={NumdeChantier} />
+                <TextFieldMaskP id="NumdeChantier" label="Numéro du chantier" onChange={setNumdeChantier} defaultValue={NumdeChantier} mask="00000-00000-00000-00000"/>
                 <div className="frameStyle-style">
                     <h5> Dans quel environnement ou dans quel type de lieu la victime se trouvait-elle lorsque l’accident s’est produit ? (p.ex. , aire de maintenance, chantier de
                         construction d’un tunnel, lieu d’élevage de bétail, bureau, école, magasin, hôpital, parking, salle de sports, toit d’un hôtel, maison privée, égout, jardin,
@@ -370,7 +370,7 @@ export default function FormulaireDeclarationASSBelfius({ setValue, accidentData
                 <TextFieldP id="JourIncaCompl" label="Jours" onChange={setJourIncaCompl} defaultValue={JourIncaCompl} />
                 <AutoCompleteP id="ListeMesureRepetition" option={listeDeclarationAss.ListeMesureRepetition} label="1 Mesures de prévention prises pour éviter la répétition d’un tel accident" onChange={setListeMesureRepetition} defaultValue={ListeMesureRepetition} />
                 <AutoCompleteP id="ListeMesureRepetition2" option={listeDeclarationAss.ListeMesureRepetition} label="2 Mesures de prévention prises pour éviter la répétition d’un tel accident" onChange={setListeMesureRepetition2} defaultValue={ListeMesureRepetition2} />
-                <TextFieldP id="CodeRisqueEntreprise" label="Codes risques propres à l’entreprise" onChange={setCodeRisqueEntreprise} defaultValue={CodeRisqueEntreprise} />
+                <TextFieldMaskP id="CodeRisqueEntreprise" label="Codes risques propres à l’entreprise" onChange={setCodeRisqueEntreprise} defaultValue={CodeRisqueEntreprise} mask="#########-#########-#########-#########-#########" />
                 <AutoCompleteP id="ListeVictimeOnss" option={listeDeclarationAss.ListeVictimeOnss} label="La victime est-elle affiliée à l’ONSS" onChange={(value) => { setListeVictimeOnss(value); }} defaultValue={ListeVictimeOnss} />
 
                 {(ListeVictimeOnss === 'Non') && (

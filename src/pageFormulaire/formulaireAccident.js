@@ -13,7 +13,7 @@ import TextFieldP from '../composants/textFieldP';
 import AutoCompleteP from '../composants/autoCompleteP';
 import DatePickerP from '../composants/datePickerP';
 import DateHeurePickerP from '../composants/dateHeurePickerP';
-
+import TextFieldMaskP from '../composants/textFieldMaskP';
 
 
 
@@ -63,7 +63,7 @@ export default function FormulaireAccident({ setValue, accidentData, watch }) {
   const [codeAgentMateriel, setCodeAgentMateriel] = useState(watch('codeAgentMateriel') ? watch('codeAgentMateriel') : (accidentData && accidentData.codeAgentMateriel ? accidentData.codeAgentMateriel : null));
   const [codeNatureLesion, setCodeNatureLesion] = useState(watch('codeNatureLesion') ? watch('codeNatureLesion') : (accidentData && accidentData.codeNatureLesion ? accidentData.codeNatureLesion : null));
   const [codeSiegeLesion, setCodeSiegeLesion] = useState(watch('codeSiegeLesion') ? watch('codeSiegeLesion') : (accidentData && accidentData.codeSiegeLesion ? accidentData.codeSiegeLesion : null));
-
+  const [horaireJourAccident, sethoraireJourAccident] = useState(watch('horaireJourAccident') ? watch('horaireJourAccident') : (accidentData && accidentData.horaireJourAccident ? accidentData.horaireJourAccident : false));
   /**
    * Etape 2 : mettre à jour les données du formulaire à chaque modification d'un des champs
    */
@@ -93,7 +93,8 @@ export default function FormulaireAccident({ setValue, accidentData, watch }) {
     setValue('codeAgentMateriel', codeAgentMateriel)
     setValue('codeNatureLesion', codeNatureLesion)
     setValue('codeSiegeLesion', codeSiegeLesion)
-  }, [typeAccident, circonstanceAccident, DateHeureAccident, DateJourIncapDebut, DateJourIncapFin, indemnisationAccident, blessures, boolAucun, boolChausure, boolLunette, boolGant, boolCasque, boolAuditive, boolMasque, boolEcran, boolTenue, boolFiltre, boolVeste, boolMaire, boolChute, boolAutre, codeDeviation, codeAgentMateriel, codeNatureLesion, codeSiegeLesion, setValue]);
+    setValue('horaireJourAccident', horaireJourAccident)
+  }, [horaireJourAccident, typeAccident, circonstanceAccident, DateHeureAccident, DateJourIncapDebut, DateJourIncapFin, indemnisationAccident, blessures, boolAucun, boolChausure, boolLunette, boolGant, boolCasque, boolAuditive, boolMasque, boolEcran, boolTenue, boolFiltre, boolVeste, boolMaire, boolChute, boolAutre, codeDeviation, codeAgentMateriel, codeNatureLesion, codeSiegeLesion, setValue]);
 
   /**
    * Etape 3 : retourner le formulaire (IHMs)
@@ -115,6 +116,9 @@ export default function FormulaireAccident({ setValue, accidentData, watch }) {
             setDateHeureAccident(DateHeureAccidentChoose);
             setValue('DateHeureAccident', DateHeureAccidentChoose);
           }} defaultValue={DateHeureAccident}></DateHeurePickerP>
+
+
+          <TextFieldMaskP id='horaireJourAccident' label='Horaire de la victime le jour de l accident' onChange={sethoraireJourAccident} defaultValue={horaireJourAccident} mask="de 00h00 à 00h00 et de 00h00 à 00h00"/>
 
           <DatePickerP id="DateJourIncapDebut" label="Date 1er jours incapacité" onChange={(DateJourIncapDebutChoose) => {
             setDateJourIncapDebut(DateJourIncapDebutChoose);
@@ -159,7 +163,7 @@ export default function FormulaireAccident({ setValue, accidentData, watch }) {
             </Grid>
             <Grid item xs={0.00001} style={{ margin: '-24.5%' }}>
               <a href="https://www.fedris.be/sites/default/files/assets/FR/Statistiques/SEAT/natureblessure.pdf" target="_blank" rel="noopener noreferrer">
-                <InfoIcon style={{ color: 'black' }}/>
+                <InfoIcon style={{ color: 'black' }} />
               </a>
             </Grid>
           </Grid>

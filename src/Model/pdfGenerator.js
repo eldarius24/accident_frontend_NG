@@ -117,7 +117,7 @@ export default async function editPDF(data) {
             EditPdfTextField(form, 'p2_11', (data.dateNotifEmployeur.substring(16, 18)));
         };
         //Nature de l'accident
-        //Horaire de la victime je jours de l'AT
+        //Horaire de la victime le jours de l'AT
         //Lieux de l'at
         //+++++++++++++++++++++++++++++++CONTINUER A LA QUESTION 27++++++++++++++++++++++++++
         EditPdfTextField(form, 'p2_20', data.LieuxAtAdresse);
