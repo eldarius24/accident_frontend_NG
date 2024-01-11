@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { TextField } from '@mui/material';
-import { useForm } from 'react-hook-form';
+import { useForm, watch } from 'react-hook-form';
 import Home from './Home';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
@@ -8,13 +8,18 @@ import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import TextFieldP from './composants/textFieldP';
+
+
 
 const Login = (props) => {
-  const { register } = useForm();
+  const { register, setValue, watch, accidentData } = useForm();
   const [password, setPassword] = useState('');
   const [frameWidth, setFrameWidth] = useState(window.innerWidth * -0.5);
   const [isPasswordValid, setIsPasswordValid] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
+
+
 
   const handleClicktest = () => {
     if (password === '123456') {
@@ -51,6 +56,12 @@ const Login = (props) => {
     backgroundColor: '#d2e2d2',
   };
 
+  const [nameLogin, setnameLogin] = useState(watch('nameLogin') ? watch('nameLogin') : (accidentData && accidentData.nameLogin ? accidentData.nameLogin : null));
+
+  useEffect(() => {
+    setValue('nameLogin', nameLogin)
+  }, [nameLogin]);
+
   return (
     <div>
       {props.isFormVisible ? (
@@ -72,15 +83,8 @@ const Login = (props) => {
                 </Grid>
               </Grid>
             </div>
-            <div style={{ display: 'flex', justifyContent: 'center', margin: '0 auto 1rem' }}>
-              <TextField
-                {...register('nameLogin')}
-                id="outlined-multiline-nameLogin"
-                label="Identifiant"
-                sx={{ backgroundColor: '#84a784', width: '50%', boxShadow: 3 }}
-                multiline
-              />
-            </div>
+            
+            <TextFieldP id='nameLogin' label="Nom de l'utilisateur" onChange={setnameLogin} defaultValue={nameLogin}></TextFieldP>            
 
             <div style={{ display: 'flex', justifyContent: 'center', margin: '0 auto 1rem' }}>
 
@@ -100,7 +104,7 @@ const Login = (props) => {
                         aria-label="toggle password visibility"
                         onClick={() => setShowPassword(!showPassword)}
                       >
-                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                        {showPassword ? <Visibility /> : <VisibilityOff  />}
                       </IconButton>
                     </InputAdornment>
                   ),                  
