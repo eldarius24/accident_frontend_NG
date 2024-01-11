@@ -14,20 +14,7 @@ const Login = (props) => {
   const [password, setPassword] = useState('');
   const [frameWidth, setFrameWidth] = useState(window.innerWidth * -0.5);
   const [isPasswordValid, setIsPasswordValid] = useState(true);
-  const [showPassword, setShowPassword] = useState(true);
-  const handleChangePassword = (event) => {
-    setPassword(event.target.value);
-  };
-
-
-  const handleClickShowPassword = () => {
-    setShowPassword((show) => !show);
-  };
-
-  const handleMouseDownPassword = (event) => {
-    event.preventDefault();
-  };
-
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleClicktest = () => {
     if (password === '123456') {
@@ -102,18 +89,16 @@ const Login = (props) => {
                 id="outlined-multiline-mdpLogin"
                 label="Mot de passe"
                 sx={{ backgroundColor: '#84a784', width: '50%', boxShadow: 3 }}
-                multiline
-                type={showPassword ? 'text' : 'password'}
+                type={showPassword ? 'text' : "password"}
                 error={!isPasswordValid}
                 helperText={!isPasswordValid && 'Mot de passe incorrect'}
-                onChange={handleChangePassword}
+                onChange={(event) => setPassword(event.target.value)}
                 InputProps={{
                   endAdornment: (
                     <InputAdornment position="end">
                       <IconButton
                         aria-label="toggle password visibility"
-                        onClick={handleClickShowPassword}
-                        onMouseDown={handleMouseDownPassword}
+                        onClick={() => setShowPassword(!showPassword)}
                       >
                         {showPassword ? <VisibilityOff /> : <Visibility />}
                       </IconButton>
