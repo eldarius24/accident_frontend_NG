@@ -4,21 +4,41 @@ import { useForm } from 'react-hook-form';
 import Home from './Home';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
+import IconButton from '@mui/material/IconButton';
+import InputAdornment from '@mui/material/InputAdornment';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
 const Login = (props) => {
   const { register } = useForm();
   const [password, setPassword] = useState('');
   const [frameWidth, setFrameWidth] = useState(window.innerWidth * -0.5);
-
+  const [isPasswordValid, setIsPasswordValid] = useState(true);
+  const [showPassword, setShowPassword] = useState(true);
   const handleChangePassword = (event) => {
     setPassword(event.target.value);
   };
 
+
+  const handleClickShowPassword = () => {
+    setShowPassword((show) => !show);
+  };
+
+  const handleMouseDownPassword = (event) => {
+    event.preventDefault();
+  };
+
+
   const handleClicktest = () => {
     if (password === '123456') {
+      setIsPasswordValid(true);
       props.setFormVisible(true);
+    } else {
+      setIsPasswordValid(false);
     }
   };
+
+
 
   useEffect(() => {
     const handleResize = () => {
@@ -76,14 +96,30 @@ const Login = (props) => {
             </div>
 
             <div style={{ display: 'flex', justifyContent: 'center', margin: '0 auto 1rem' }}>
+
               <TextField
                 {...register('mdpLogin')}
                 id="outlined-multiline-mdpLogin"
                 label="Mot de passe"
                 sx={{ backgroundColor: '#84a784', width: '50%', boxShadow: 3 }}
                 multiline
-                type="password"
+                type={showPassword ? 'text' : 'password'}
+                error={!isPasswordValid}
+                helperText={!isPasswordValid && 'Mot de passe incorrect'}
                 onChange={handleChangePassword}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton
+                        aria-label="toggle password visibility"
+                        onClick={handleClickShowPassword}
+                        onMouseDown={handleMouseDownPassword}
+                      >
+                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    </InputAdornment>
+                  ),                  
+                }}
               />
             </div>
 

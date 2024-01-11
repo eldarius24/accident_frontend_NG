@@ -140,7 +140,7 @@ export default function FormulaireAccident({ setValue, accidentData, watch }) {
               <AutoCompleteP id='codeDeviation' option={listAccident.CodeDeviation} label='Code Déviation' onChange={setCodeDeviation} defaultValue={codeDeviation} />
             </Grid>
             <Grid item xs={0.00001} style={{ margin: '-24.5%' }}>
-              <a href="https://www.fedris.be/sites/default/files/assets/FR/Statistiques/SEAT/deviation.pdf" target="_blank" rel="noopener noreferrer">
+              <a href="https://www.socialsecurity.be/app001/drselearning/common/jsp/utils/help.jsp?item=helpLastEventCodeList&labelOnly&messageKey=common.help.lasteventcode" target="_blank" rel="noopener noreferrer">
                 <InfoIcon style={{ color: 'black' }} />
               </a>
             </Grid>
@@ -151,7 +151,7 @@ export default function FormulaireAccident({ setValue, accidentData, watch }) {
               <AutoCompleteP id='codeAgentMateriel' option={listAccident.CodeAgentMateriel} label='Code Agent matériel' onChange={setCodeAgentMateriel} defaultValue={codeAgentMateriel} />
             </Grid>
             <Grid item xs={0.00001} style={{ margin: '-24.5%' }}>
-              <a href="https://www.fedris.be/sites/default/files/assets/FR/Statistiques/SEAT/agentmateriel4.pdf" target="_blank" rel="noopener noreferrer">
+              <a href="https://www.socialsecurity.be/app001/drselearning/common/jsp/utils/help.jsp?item=helpObjectCodeList&labelOnly&messageKey=common.help.objectcode" target="_blank" rel="noopener noreferrer">
                 <InfoIcon style={{ color: 'black' }} />
               </a>
             </Grid>
@@ -162,7 +162,7 @@ export default function FormulaireAccident({ setValue, accidentData, watch }) {
               <AutoCompleteP id='codeNatureLesion' option={listAccident.CodeNatureLésion} label='Code Nature de la lésion' onChange={setCodeNatureLesion} defaultValue={codeNatureLesion} />
             </Grid>
             <Grid item xs={0.00001} style={{ margin: '-24.5%' }}>
-              <a href="https://www.fedris.be/sites/default/files/assets/FR/Statistiques/SEAT/natureblessure.pdf" target="_blank" rel="noopener noreferrer">
+              <a href="https://www.socialsecurity.be/app001/drselearning/common/jsp/utils/helpMap.jsp?item=helpInjuriesNatureCodeMap&labelOnly&messageKey=common.help.injuriesnaturecode" target="_blank" rel="noopener noreferrer">
                 <InfoIcon style={{ color: 'black' }} />
               </a>
             </Grid>
