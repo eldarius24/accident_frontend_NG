@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { TextField } from '@mui/material';
-import { useForm, watch } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import Home from './Home';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
@@ -12,8 +12,8 @@ import TextFieldP from './composants/textFieldP';
 
 
 
-const Login = (props) => {
-  const { register, setValue, watch, accidentData } = useForm();
+const Login = (props,accidentData) => {
+  const { register, setValue, watch } = useForm();
   const [password, setPassword] = useState('');
   const [frameWidth, setFrameWidth] = useState(window.innerWidth * -0.5);
   const [isPasswordValid, setIsPasswordValid] = useState(true);
