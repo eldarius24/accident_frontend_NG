@@ -6,7 +6,7 @@ import Formulaire from './pageFormulaire/Formulaire';
 import ResponsiveAppBar from './toolbar';
 
 const App = () => {
-  const [isFormVisible, setFormVisible] = useState(false);
+  const [isFormVisible, setFormVisible] = useState(true);
 
   return (
     <Router>
