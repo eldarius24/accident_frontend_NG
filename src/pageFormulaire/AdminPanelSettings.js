@@ -4,7 +4,7 @@ import TextFieldP from '../composants/textFieldP';
 import './formulaire.css';
 import ControlLabelP from '../composants/controlLabelP';
 import { Box } from '@mui/material';
-
+import Button from '@mui/material/Button';
 
 export default function AdminPanelSettings({ accidentData }) {
     const { setValue, watch } = useForm();
@@ -211,6 +211,32 @@ export default function AdminPanelSettings({ accidentData }) {
                 }} defaultValue={boolNCJ}></ControlLabelP>
 
             </Box>
+
+            <div style={{ display: 'flex', justifyContent: 'center' }}>
+                <Button
+                    type="submit"
+                    sx={{
+                        backgroundColor: '#84a784',
+                        '&:hover': { backgroundColor: 'green' },
+                        padding: '10px 20px',
+                        width: '50%',
+                        marginTop: '1cm',
+                        height: '300%',
+                        fontSize: '2rem', // Taille de police de base
+
+                        // Utilisation de Media Queries pour ajuster la taille de police
+                        '@media (min-width: 750px)': {
+                            fontSize: '3rem', // Taille de police plus grande pour les écrans plus larges
+                        },
+                        '@media (max-width: 550px)': {
+                            fontSize: '1.5rem', // Taille de police plus petite pour les écrans plus étroits
+                        },
+                    }}
+                    variant="contained"
+                >
+                    Enregistrer les données
+                </Button>
+            </div>
 
         </div>
 
