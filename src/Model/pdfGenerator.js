@@ -42,7 +42,12 @@ export default async function editPDF(data) {
         console.log(pdfDoc);
         const form = pdfDoc.getForm();
 
-        EditPdfTextField(form, '17 iban 12', data.niss);
+
+        if (data.niss !== undefined && data.niss !== null) {
+            EditPdfTextField(form, '17 iban 12', (data.niss.substring(0, 6)));
+            EditPdfTextField(form, '17 iban 13', (data.niss.substring(7, 10)));
+            EditPdfTextField(form, '17 iban 14', (data.niss.substring(11, 13)));
+        };
         EditPdfTextField(form, '18 naam getroffene', data.nomTravailleur);
         EditPdfTextField(form, '19 voornaam getroffene', data.prenomTravailleur);
         EditPdfTextField(form, '20 geboorteplaats', data.lieuxnaissance);
@@ -75,6 +80,12 @@ export default async function editPDF(data) {
         EditPdfTextField(form, '51 gemeente', data.adresseCommuneMutuelle);
         EditPdfTextField(form, '52 aansluitingsnummer', data.numAffiliation);
         //num de compte bancaire numCompteBancaire
+        if (data.numCompteBancaire !== undefined && data.numCompteBancaire !== null) {
+            EditPdfTextField(form, '53 iban', (data.numCompteBancaire.substring(0, 4)));
+            EditPdfTextField(form, '53 iban 1', (data.numCompteBancaire.substring(5, 9)));
+            EditPdfTextField(form, '53 iban 2', (data.numCompteBancaire.substring(10, 14)));
+            EditPdfTextField(form, '53 iban 3', (data.numCompteBancaire.substring(15, 19)));
+        };
         //BIC etabliFinancier
         EditPdfTextField(form, '55 nummer tewerkstelling', data.numDimona);
         if (data.dateEntrEntreprise !== undefined && data.dateEntrEntreprise !== null) {
@@ -118,8 +129,17 @@ export default async function editPDF(data) {
         };
         //Nature de l'accident
         //Horaire de la victime le jours de l'AT
+        if (data.horaireJourAccident !== undefined && data.horaireJourAccident !== null) {
+            EditPdfTextField(form, 'p2_12', (data.horaireJourAccident.substring(3, 5)));
+            EditPdfTextField(form, 'p2_13', (data.horaireJourAccident.substring(6, 8)));
+            EditPdfTextField(form, 'p2_14', (data.horaireJourAccident.substring(11, 13)));
+            EditPdfTextField(form, 'p2_15', (data.horaireJourAccident.substring(14, 16)));
+            EditPdfTextField(form, 'p2_16', (data.horaireJourAccident.substring(23, 25)));
+            EditPdfTextField(form, 'p2_17', (data.horaireJourAccident.substring(26, 28)));
+            EditPdfTextField(form, 'p2_18', (data.horaireJourAccident.substring(31, 33)));
+            EditPdfTextField(form, 'p2_19', (data.horaireJourAccident.substring(34, 36)));
+        };
         //Lieux de l'at
-        //+++++++++++++++++++++++++++++++CONTINUER A LA QUESTION 27++++++++++++++++++++++++++
         EditPdfTextField(form, 'p2_20', data.LieuxAtAdresse);
         EditPdfTextField(form, 'p2_21', data.LieuxAtCodePostal);
         EditPdfTextField(form, 'p2_22', data.LieuxAtCommune);
