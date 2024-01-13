@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import TextFieldP from '../composants/textFieldP';
 import './formulaire.css';
-import ControlLabelP from '../composants/controlLabelP';
+import ControlLabelAdminP from '../composants/controlLabelAdminP';
 import { Box } from '@mui/material';
 import Button from '@mui/material/Button';
 
@@ -75,7 +75,7 @@ export default function AdminPanelSettings({ accidentData }) {
         <div className="frameStyle-style">
             <h3>Administration des droits</h3>
 
-            <h3>Rentrez un nouvelle utilisateur</h3>
+            <h3>Crée un nouvelle utilisateur</h3>
 
             <TextFieldP id='nameLogin' label="Adresse email" onChange={setnameLogin} defaultValue={nameLogin}></TextFieldP>
 
@@ -85,130 +85,130 @@ export default function AdminPanelSettings({ accidentData }) {
 
             <Box sx={{ display: 'flex', justifyContent: 'center' }}>
 
-                <ControlLabelP id="booladministrateur" label="Administrateur du site" onChange={(booladministrateurCoche) => {
+                <ControlLabelAdminP id="booladministrateur" label="Administrateur du site" onChange={(booladministrateurCoche) => {
                     setbooladministrateur(booladministrateurCoche);
                     setValue('booladministrateur', booladministrateurCoche);
-                }} defaultValue={booladministrateur}></ControlLabelP>
+                }} defaultValue={booladministrateur}></ControlLabelAdminP>
 
             </Box>
 
             <h3>Donnez les accès conseiller en prévention:</h3>
 
             <Box sx={{ display: 'flex', justifyContent: 'center', marginLeft: '120px', marginRight: '120px' }}>
-                <ControlLabelP id="boolCortil" label="Cortil" onChange={(boolCortilCoche) => {
+                <ControlLabelAdminP id="boolCortil" label="Cortil" onChange={(boolCortilCoche) => {
                     setboolCortil(boolCortilCoche);
                     setValue('boolCortil', boolCortilCoche);
-                }} defaultValue={boolCortil}></ControlLabelP>
+                }} defaultValue={boolCortil}></ControlLabelAdminP>
 
-                <ControlLabelP id="boolCortibat" label="Cortibat" onChange={(boolCortibatCoche) => {
+                <ControlLabelAdminP id="boolCortibat" label="Cortibat" onChange={(boolCortibatCoche) => {
                     setboolCortibat(boolCortibatCoche);
                     setValue('boolCortibat', boolCortibatCoche);
-                }} defaultValue={boolCortibat}></ControlLabelP>
+                }} defaultValue={boolCortibat}></ControlLabelAdminP>
 
-                <ControlLabelP id="boolCortibel" label="Cortibel" onChange={(boolCortibelCoche) => {
+                <ControlLabelAdminP id="boolCortibel" label="Cortibel" onChange={(boolCortibelCoche) => {
                     setboolCortibel(boolCortibelCoche);
                     setValue('boolCortibel', boolCortibelCoche);
-                }} defaultValue={boolCortibel}></ControlLabelP>
+                }} defaultValue={boolCortibel}></ControlLabelAdminP>
 
-                <ControlLabelP id="boolNns" label="NNS" onChange={(boolNnsCoche) => {
+                <ControlLabelAdminP id="boolNns" label="NNS" onChange={(boolNnsCoche) => {
                     setboolNns(boolNnsCoche);
                     setValue('boolNns', boolNnsCoche);
-                }} defaultValue={boolNns}></ControlLabelP>
+                }} defaultValue={boolNns}></ControlLabelAdminP>
 
-                <ControlLabelP id="boolHmns" label="Hmns" onChange={(boolHmnsCoche) => {
+                <ControlLabelAdminP id="boolHmns" label="Hmns" onChange={(boolHmnsCoche) => {
                     setboolHmns(boolHmnsCoche);
                     setValue('boolHmns', boolHmnsCoche);
-                }} defaultValue={boolHmns}></ControlLabelP>
+                }} defaultValue={boolHmns}></ControlLabelAdminP>
 
 
             </Box>
-            <Box sx={{ display: 'flex', justifyContent: 'center' , marginLeft: '120px', marginRight: '120px' }}>
+            <Box sx={{ display: 'flex', justifyContent: 'center', marginLeft: '120px', marginRight: '120px' }}>
 
-                <ControlLabelP id="boolCortidess" label="Cortidess" onChange={(boolCortidessCoche) => {
+                <ControlLabelAdminP id="boolCortidess" label="Cortidess" onChange={(boolCortidessCoche) => {
                     setboolCortidess(boolCortidessCoche);
                     setValue('boolCortidess', boolCortidessCoche);
-                }} defaultValue={boolCortidess}></ControlLabelP>
+                }} defaultValue={boolCortidess}></ControlLabelAdminP>
 
-                <ControlLabelP id="boolAvs" label="Avs" onChange={(boolAvsCoche) => {
+                <ControlLabelAdminP id="boolAvs" label="Avs" onChange={(boolAvsCoche) => {
                     setboolAvs(boolAvsCoche);
                     setValue('boolAvs', boolAvsCoche);
-                }} defaultValue={boolAvs}></ControlLabelP>
+                }} defaultValue={boolAvs}></ControlLabelAdminP>
 
-                <ControlLabelP id="boolCortitreize" label="Cortitreize" onChange={(boolCortitreizeCoche) => {
+                <ControlLabelAdminP id="boolCortitreize" label="Cortitreize" onChange={(boolCortitreizeCoche) => {
                     setboolCortitreize(boolCortitreizeCoche);
                     setValue('boolCortitreize', boolCortitreizeCoche);
-                }} defaultValue={boolCortitreize}></ControlLabelP>
+                }} defaultValue={boolCortitreize}></ControlLabelAdminP>
 
-                <ControlLabelP id="boolBipExpresse" label="Bip Expresse" onChange={(boolBipExpresseCoche) => {
+                <ControlLabelAdminP id="boolBipExpresse" label="Bip Expresse" onChange={(boolBipExpresseCoche) => {
                     setboolBipExpresse(boolBipExpresseCoche);
                     setValue('boolBipExpresse', boolBipExpresseCoche);
-                }} defaultValue={boolBipExpresse}></ControlLabelP>
+                }} defaultValue={boolBipExpresse}></ControlLabelAdminP>
 
-                <ControlLabelP id="boolNCJ" label="NCJ" onChange={(boolNCJCoche) => {
+                <ControlLabelAdminP id="boolNCJ" label="NCJ" onChange={(boolNCJCoche) => {
                     setboolNCJ(boolNCJCoche);
                     setValue('boolNCJ', boolNCJCoche);
-                }} defaultValue={boolNCJ}></ControlLabelP>
+                }} defaultValue={boolNCJ}></ControlLabelAdminP>
 
             </Box>
 
             <h3>Donnez les accès uniquement consulté les ATs:</h3>
 
-            <Box sx={{ display: 'flex', justifyContent: 'center' , marginLeft: '120px', marginRight: '120px' }}>
-                <ControlLabelP id="boolCortilr" label="Cortil" onChange={(boolCortilrCoche) => {
+            <Box sx={{ display: 'flex', justifyContent: 'center', marginLeft: '120px', marginRight: '120px' }}>
+                <ControlLabelAdminP id="boolCortilr" label="Cortil" onChange={(boolCortilrCoche) => {
                     setboolCortilr(boolCortilrCoche);
                     setValue('boolCortilr', boolCortilrCoche);
-                }} defaultValue={boolCortilr}></ControlLabelP>
+                }} defaultValue={boolCortilr}></ControlLabelAdminP>
 
-                <ControlLabelP id="boolCortibatr" label="Cortibat" onChange={(boolCortibatrCoche) => {
+                <ControlLabelAdminP id="boolCortibatr" label="Cortibat" onChange={(boolCortibatrCoche) => {
                     setboolCortibatr(boolCortibatrCoche);
                     setValue('boolCortibatr', boolCortibatrCoche);
-                }} defaultValue={boolCortibatr}></ControlLabelP>
+                }} defaultValue={boolCortibatr}></ControlLabelAdminP>
 
-                <ControlLabelP id="boolCortibelr" label="Cortibel" onChange={(boolCortibelrCoche) => {
+                <ControlLabelAdminP id="boolCortibelr" label="Cortibel" onChange={(boolCortibelrCoche) => {
                     setboolCortibelr(boolCortibelrCoche);
                     setValue('boolCortibelr', boolCortibelrCoche);
-                }} defaultValue={boolCortibelr}></ControlLabelP>
+                }} defaultValue={boolCortibelr}></ControlLabelAdminP>
 
-                <ControlLabelP id="boolNnsr" label="NNS" onChange={(boolNnsrCoche) => {
+                <ControlLabelAdminP id="boolNnsr" label="NNS" onChange={(boolNnsrCoche) => {
                     setboolNnsr(boolNnsrCoche);
                     setValue('boolNnsr', boolNnsrCoche);
-                }} defaultValue={boolNnsr}></ControlLabelP>
+                }} defaultValue={boolNnsr}></ControlLabelAdminP>
 
-                <ControlLabelP id="boolHmnsr" label="Hmns" onChange={(boolHmnsrCoche) => {
+                <ControlLabelAdminP id="boolHmnsr" label="Hmns" onChange={(boolHmnsrCoche) => {
                     setboolHmnsr(boolHmnsrCoche);
                     setValue('boolHmnsr', boolHmnsrCoche);
-                }} defaultValue={boolHmnsr}></ControlLabelP>
+                }} defaultValue={boolHmnsr}></ControlLabelAdminP>
 
-                
+
 
 
             </Box>
-            <Box sx={{ display: 'flex', justifyContent: 'center' , marginLeft: '120px', marginRight: '120px' }}>
+            <Box sx={{ display: 'flex', justifyContent: 'center', marginLeft: '120px', marginRight: '120px' }}>
 
-                <ControlLabelP id="boolCortidessr" label="Cortidess" onChange={(boolCortidessrCoche) => {
+                <ControlLabelAdminP id="boolCortidessr" label="Cortidess" onChange={(boolCortidessrCoche) => {
                     setboolCortidessr(boolCortidessrCoche);
                     setValue('boolCortidessr', boolCortidessrCoche);
-                }} defaultValue={boolCortidess}></ControlLabelP>
+                }} defaultValue={boolCortidess}></ControlLabelAdminP>
 
-                <ControlLabelP id="boolAvsr" label="Avs" onChange={(boolAvsrCoche) => {
+                <ControlLabelAdminP id="boolAvsr" label="Avs" onChange={(boolAvsrCoche) => {
                     setboolAvsr(boolAvsrCoche);
                     setValue('boolAvsr', boolAvsrCoche);
-                }} defaultValue={boolAvs}></ControlLabelP>
+                }} defaultValue={boolAvs}></ControlLabelAdminP>
 
-                <ControlLabelP id="boolCortitreizer" label="Cortitreize" onChange={(boolCortitreizerCoche) => {
+                <ControlLabelAdminP id="boolCortitreizer" label="Cortitreize" onChange={(boolCortitreizerCoche) => {
                     setboolCortitreizer(boolCortitreizerCoche);
                     setValue('boolCortitreizer', boolCortitreizerCoche);
-                }} defaultValue={boolCortitreize}></ControlLabelP>
+                }} defaultValue={boolCortitreize}></ControlLabelAdminP>
 
-                <ControlLabelP id="boolBipExpresser" label="Bip Expresse" onChange={(boolBipExpresserCoche) => {
+                <ControlLabelAdminP id="boolBipExpresser" label="Bip Expresse" onChange={(boolBipExpresserCoche) => {
                     setboolBipExpresser(boolBipExpresserCoche);
                     setValue('boolBipExpresser', boolBipExpresserCoche);
-                }} defaultValue={boolBipExpresse}></ControlLabelP>
+                }} defaultValue={boolBipExpresse}></ControlLabelAdminP>
 
-                <ControlLabelP id="boolNCJr" label="NCJ" onChange={(boolNCJrCoche) => {
+                <ControlLabelAdminP id="boolNCJr" label="NCJ" onChange={(boolNCJrCoche) => {
                     setboolNCJr(boolNCJrCoche);
                     setValue('boolNCJr', boolNCJrCoche);
-                }} defaultValue={boolNCJ}></ControlLabelP>
+                }} defaultValue={boolNCJ}></ControlLabelAdminP>
 
             </Box>
 
@@ -237,6 +237,16 @@ export default function AdminPanelSettings({ accidentData }) {
                     Enregistrer les données
                 </Button>
             </div>
+
+            <h3>Actions</h3>
+            <Box sx={{ display: 'flex', justifyContent: 'center', marginLeft: '120px', marginRight: '120px' }}>
+
+                <Button type="submit" sx={{margin: '10px', backgroundColor: '#84a784', '&:hover': { backgroundColor: 'green' } }} variant="contained"> Supprimer toutes les données</Button>
+                <Button type="submit" sx={{margin: '10px', backgroundColor: '#84a784', '&:hover': { backgroundColor: 'green' } }} variant="contained"> Archivez toutes les données</Button>
+
+
+            </Box>
+
 
         </div>
 
