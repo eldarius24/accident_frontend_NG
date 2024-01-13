@@ -8,7 +8,6 @@ import TextFieldMaskP from '../composants/textFieldMaskP';
 import DatePickerP from '../composants/datePickerP';
 import AutoCompleteP from '../composants/autoCompleteP';
 import listeDeclarationAssBelfius from '../liste/listeDeclarationAssBelfius.json';
-import listeDeclarationAss from '../liste/listeDeclarationAssBelfius.json';
 export default function FormulaireSalarie({ setValue, accidentData, watch }) {
 
   // Mise en forme des cadres texte
@@ -165,7 +164,7 @@ export default function FormulaireSalarie({ setValue, accidentData, watch }) {
         <DatePickerP id='dateDebutArret' label="Date de début du dernier arrêt de travail(>15j)" onChange={setDateDebutArret} defaultValue={dateDebutArret} />
         <DatePickerP id='dateFinArret' label="Date de fin du denier arrêt de travail (>15j)" onChange={setDateFinArret} defaultValue={dateFinArret} />
         <DatePickerP id='dateEntrEntreprise' label="Date d'entrée dans l'entreprise" onChange={setDateEntrEntreprise} defaultValue={dateEntrEntreprise} />
-        <AutoCompleteP id="ListeDurContra" option={listeDeclarationAss.ListeDurContra} label="Durée du contrat de travail" onChange={(value) => { setListeDurContra(value) }} defaultValue={ListeDurContra} />
+        <AutoCompleteP id="ListeDurContra" option={listeDeclarationAssBelfius.ListeDurContra} label="Durée du contrat de travail" onChange={(value) => { setListeDurContra(value) }} defaultValue={ListeDurContra} />
 
         {(ListeDurContra === 'Déterminée') && (
           <DatePickerP id="dateSortie" label="Date de sortie si elle est connue" onChange={setdateSortie} defaultValue={dateSortie} />
@@ -173,8 +172,8 @@ export default function FormulaireSalarie({ setValue, accidentData, watch }) {
 
         <TextFieldP id="profesEntreprise" label="Profession habituelle dans l’entreprise" onChange={setprofesEntreprise} defaultValue={profesEntreprise} />
         <TextFieldP id="citp" label="Code CITP" onChange={setcitp} defaultValue={citp} />
-        <AutoCompleteP id="ListeDureeDsEntreprise" option={listeDeclarationAss.ListeDureeDsEntreprise} label="Durée d'exercice de cette profession par la victime dans l'entreprise" onChange={setListeDureeDsEntreprise} defaultValue={ListeDureeDsEntreprise} />
-        <AutoCompleteP id="ListeVicInterimaire" option={listeDeclarationAss.ListeVicInterimaire} label="La victime est-elle un(e) intérimaire" onChange={(value) => { setListeVicInterimaire(value); }} defaultValue={ListeVicInterimaire} />
+        <AutoCompleteP id="ListeDureeDsEntreprise" option={listeDeclarationAssBelfius.ListeDureeDsEntreprise} label="Durée d'exercice de cette profession par la victime dans l'entreprise" onChange={setListeDureeDsEntreprise} defaultValue={ListeDureeDsEntreprise} />
+        <AutoCompleteP id="ListeVicInterimaire" option={listeDeclarationAssBelfius.ListeVicInterimaire} label="La victime est-elle un(e) intérimaire" onChange={(value) => { setListeVicInterimaire(value); }} defaultValue={ListeVicInterimaire} />
 
         {(ListeVicInterimaire === 'Oui') && (
           [<TextFieldP id="VicInterimaireOui" label="Numéro ONSS de l’entreprise utilisatrice" onChange={setVicInterimaireOui} defaultValue={VicInterimaireOui} />,
