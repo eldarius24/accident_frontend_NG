@@ -85,6 +85,11 @@ export default async function editPDF(data) {
             EditPdfTextField(form, '53 iban 1', (data.numCompteBancaire.substring(5, 9)));
             EditPdfTextField(form, '53 iban 2', (data.numCompteBancaire.substring(10, 14)));
             EditPdfTextField(form, '53 iban 3', (data.numCompteBancaire.substring(15, 19)));
+            EditPdfTextField(form, '53 iban 4', (data.numCompteBancaire.substring(20, 24)));
+            EditPdfTextField(form, '53 iban 5', (data.numCompteBancaire.substring(25, 29)));
+            EditPdfTextField(form, '53 iban 6', (data.numCompteBancaire.substring(30, 34)));
+            EditPdfTextField(form, '53 iban 7', (data.numCompteBancaire.substring(35, 39)));
+            EditPdfTextField(form, '53 iban 8', (data.numCompteBancaire.substring(40, 42)));
         };
         //BIC etabliFinancier
         EditPdfTextField(form, '55 nummer tewerkstelling', data.numDimona);
@@ -102,7 +107,6 @@ export default async function editPDF(data) {
         EditPdfTextField(form, '62 onderneming', data.profesEntreprise);
         EditPdfTextField(form, '63 code', data.citp);
         //EditPdfTextField(form, '63bis', data.ListeDureeDsEntreprise); chekbox
-        EditPdfTextField(form, '64', data.numCompteBancaire);
         //interimaire
         //si interimaire num onss de l'entreprise
         EditPdfTextField(form, '71', data.VicInterimaireOuiNom);
@@ -152,8 +156,15 @@ export default async function editPDF(data) {
         EditPdfTextField(form, 'p2_31 6', data.ListeProfHabituelleNon);
         EditPdfTextField(form, 'p2_51', data.evenementDeviant);
         EditPdfTextField(form, 'p2_33', data.codeDeviation);
+        if (data.codeDeviation !== undefined && data.codeDeviation !== null) {
+            EditPdfTextField(form, 'p2_33-2', (data.codeDeviation.substring(0, 2)));
+        };
         //code p2_33-2
         EditPdfTextField(form, 'p2_34', data.codeAgentMateriel);
+        if (data.codeAgentMateriel !== undefined && data.codeAgentMateriel !== null) {
+            EditPdfTextField(form, 'p2_35', (data.codeAgentMateriel.substring(0, 2)));
+            EditPdfTextField(form, 'p2_36', (data.codeAgentMateriel.substring(3, 5)));
+        };
         //code p2_35 p2_36
         //proces verbal
         EditPdfTextField(form, 'p2_37', data.ProcesVerbalOui);
@@ -174,8 +185,14 @@ export default async function editPDF(data) {
         //+++++++++++EditPdfTextField(form, 'p2_47', data.TemoinDirecte);+++++++++++ probleme fait un bug
         EditPdfTextField(form, 'p3_38-1', data.blessureVictume);
         EditPdfTextField(form, 'p3_39', data.codeNatureLesion);
+        if (data.codeNatureLesion !== undefined && data.codeNatureLesion !== null) {
+            EditPdfTextField(form, 'p3_39 2', (data.codeNatureLesion.substring(0, 3)));
+        };
         //code p3_39 2
         EditPdfTextField(form, 'p3_40', data.codeSiegeLesion);
+        if (data.codeSiegeLesion !== undefined && data.codeSiegeLesion !== null) {
+            EditPdfTextField(form, 'p3_40 2', (data.codeSiegeLesion.substring(0, 2)));
+        };
         //code p3_40 2
         //soin médic chez employeur oui  non
         //si oui date et heure soin médic chez employeur
@@ -260,8 +277,14 @@ export default async function editPDF(data) {
         EditPdfCheckBox(form, 'p3_47 13', data.boolEcran);
         EditPdfCheckBox(form, 'p3_47 14', data.boolChausure);
         EditPdfTextField(form, 'p3_48 1', data.ListeMesureRepetition);
+        if (data.ListeMesureRepetition !== undefined && data.ListeMesureRepetition !== null) {
+            EditPdfTextField(form, 'p3_48 2', (data.ListeMesureRepetition.substring(0, 2))); 
+        };
         //code
         EditPdfTextField(form, 'p3_48 3', data.ListeMesureRepetition2);
+        if (data.ListeMesureRepetition2 !== undefined && data.ListeMesureRepetition2 !== null) {
+            EditPdfTextField(form, 'p3_48 4', (data.ListeMesureRepetition2.substring(0, 2))); 
+        };
         //code
         EditPdfTextField(form, 'p3_49 1', data.CodeRisqueEntreprise);
         //affiliée onss

@@ -16,17 +16,21 @@ function ResponsiveAppBar({ navigation }) {
 
   const isFormulairePage = location.pathname === '/formulaire';
 
+
   return (
     <AppBar position="sticky" sx={{ backgroundColor: '#84a784' }}>
       <Container maxWidth="lg">
         <Toolbar disableGutters>
         <Button
             component={Link}
+            to={'/admin'}
             variant="contained"
             sx={{ backgroundColor: '#84a784',  '&:hover': { backgroundColor: 'green' } }}
             
           >
-            <AdminPanelSettingsIcon />
+            <AdminPanelSettingsIcon 
+            
+            />
           </Button>
           <Typography
             variant="h5"
