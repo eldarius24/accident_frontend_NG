@@ -15,7 +15,7 @@ function ResponsiveAppBar({ navigation }) {
   const location = useLocation();
 
   const isFormulairePage = location.pathname === '/formulaire';
-  const isFormulairePage1 = location.pathname === '/accueil';
+  const isFormulairePage1 = location.pathname === '/adminaction';
 
   return (
     <AppBar position="sticky" sx={{ backgroundColor: '#84a784' }}>
@@ -23,7 +23,7 @@ function ResponsiveAppBar({ navigation }) {
         <Toolbar disableGutters>
         <Button
             component={Link}
-            to={isFormulairePage1 ? '/adminaction' :'/accueil'}
+            to={isFormulairePage1 ? '/' :'/adminaction'}
             variant="contained"
             sx={{ backgroundColor: '#84a784',  '&:hover': { backgroundColor: 'green' } }}
             
