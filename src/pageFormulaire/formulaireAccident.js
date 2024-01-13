@@ -1,7 +1,7 @@
 /*IMPORT REACT */
 import { useState, useEffect } from 'react';
 /* IMPORT MUI */
-import { FormGroup, Grid, Autocomplete, TextField } from '@mui/material';
+import { FormGroup, Grid } from '@mui/material';
 import InfoIcon from '@mui/icons-material/Info';
 import dayjs from 'dayjs';
 import 'dayjs/locale/fr';
@@ -63,7 +63,7 @@ export default function FormulaireAccident({ setValue, accidentData, watch }) {
   const [codeAgentMateriel, setCodeAgentMateriel] = useState(watch('codeAgentMateriel') ? watch('codeAgentMateriel') : (accidentData && accidentData.codeAgentMateriel ? accidentData.codeAgentMateriel : null));
   const [codeNatureLesion, setCodeNatureLesion] = useState(watch('codeNatureLesion') ? watch('codeNatureLesion') : (accidentData && accidentData.codeNatureLesion ? accidentData.codeNatureLesion : null));
   const [codeSiegeLesion, setCodeSiegeLesion] = useState(watch('codeSiegeLesion') ? watch('codeSiegeLesion') : (accidentData && accidentData.codeSiegeLesion ? accidentData.codeSiegeLesion : null));
-  const [horaireJourAccident, sethoraireJourAccident] = useState(watch('horaireJourAccident') ? watch('horaireJourAccident') : (accidentData && accidentData.horaireJourAccident ? accidentData.horaireJourAccident : false));
+  const [horaireJourAccident, sethoraireJourAccident] = useState(watch('horaireJourAccident') ? watch('horaireJourAccident') : (accidentData && accidentData.horaireJourAccident ? accidentData.horaireJourAccident : null));
   /**
    * Etape 2 : mettre à jour les données du formulaire à chaque modification d'un des champs
    */
