@@ -23,7 +23,7 @@ function ResponsiveAppBar({ navigation }) {
         <Toolbar disableGutters>
         <Button
             component={Link}
-            to={isFormulairePage1 ? '/admin' :'/accueil'}
+            to={isFormulairePage1 ? '/adminaction' :'/accueil'}
             variant="contained"
             sx={{ backgroundColor: '#84a784',  '&:hover': { backgroundColor: 'green' } }}
             
