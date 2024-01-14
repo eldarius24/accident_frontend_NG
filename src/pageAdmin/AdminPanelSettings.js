@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import TextFieldP from '../composants/textFieldP';
-import './formulaire.css';
+import '../pageFormulaire/formulaire.css';
 import ControlLabelAdminP from '../composants/controlLabelAdminP';
 import { Box } from '@mui/material';
 import Button from '@mui/material/Button';
@@ -10,9 +10,9 @@ export default function AdminPanelSettings({ accidentData }) {
     const { setValue, watch } = useForm();
 
 
-    const [nameLogin, setnameLogin] = useState(watch('nameLogin') ? watch('nameLogin') : (accidentData && accidentData.nameLogin ? accidentData.nameLogin : null));
+    const [adminNameLogin, setadminNameLogin] = useState(watch('adminNameLogin') ? watch('adminNameLogin') : (accidentData && accidentData.adminNameLogin ? accidentData.adminNameLogin : null));
     const [adminPanelSettingsmdp, setadminPanelSettingsmdp] = useState(watch('adminPanelSettingsmdp') ? watch('adminPanelSettingsmdp') : (accidentData && accidentData.adminPanelSettingsmdp ? accidentData.adminPanelSettingsmdp : null));
-
+    const [adminPrenomNom, setadminPrenomNom] = useState(watch('adminPrenomNom') ? watch('adminPrenomNom') : (accidentData && accidentData.adminPrenomNom ? accidentData.adminPrenomNom : null));
 
     const [boolCortil, setboolCortil] = useState(watch('boolCortil') ? watch('boolCortil') : (accidentData && accidentData.boolCortil ? accidentData.boolCortil : false));
     const [boolCortibat, setboolCortibat] = useState(watch('boolCortibat') ? watch('boolCortibat') : (accidentData && accidentData.boolCortibat ? accidentData.boolCortibat : false));
@@ -39,8 +39,9 @@ export default function AdminPanelSettings({ accidentData }) {
 
 
     useEffect(() => {
-        setValue('nameLogin', nameLogin)
+        setValue('adminNameLogin', adminNameLogin)
         setValue('adminPanelSettingsmdp', adminPanelSettingsmdp)
+        setValue('adminPrenomNom', adminPrenomNom)
         setValue('boolCortil', boolCortil)
         setValue('boolCortibat', boolCortibat)
         setValue('boolCortibel', boolCortibel)
@@ -63,7 +64,7 @@ export default function AdminPanelSettings({ accidentData }) {
         setValue('boolBipExpresser', boolBipExpresser)
         setValue('boolNCJr', boolNCJr)
 
-    }, [nameLogin, adminPanelSettingsmdp, boolCortil, boolCortibat, boolCortibel, boolNns, boolHmns, boolCortidess, boolAvs, boolCortitreize, boolBipExpresse, boolNCJ, booladministrateur, boolCortilr, boolCortibatr, boolCortibelr, boolNnsr, boolHmnsr, boolCortidessr, boolAvsr, boolCortitreizer, boolBipExpresser, boolNCJr]);
+    }, [adminNameLogin, adminPanelSettingsmdp, adminPrenomNom, boolCortil, boolCortibat, boolCortibel, boolNns, boolHmns, boolCortidess, boolAvs, boolCortitreize, boolBipExpresse, boolNCJ, booladministrateur, boolCortilr, boolCortibatr, boolCortibelr, boolNnsr, boolHmnsr, boolCortidessr, boolAvsr, boolCortitreizer, boolBipExpresser, boolNCJr]);
 
 
 
@@ -77,9 +78,12 @@ export default function AdminPanelSettings({ accidentData }) {
 
             <h3>Créer un nouvelle utilisateur</h3>
 
-            <TextFieldP id='nameLogin' label="Adresse email" onChange={setnameLogin} defaultValue={nameLogin}></TextFieldP>
+            <TextFieldP id='adminNameLogin' label="Adresse email" onChange={setadminNameLogin} defaultValue={adminNameLogin}></TextFieldP>
 
             <TextFieldP id='adminPanelSettingsmdp' label="Mot de passe" onChange={setadminPanelSettingsmdp} defaultValue={adminPanelSettingsmdp}></TextFieldP>
+
+            <TextFieldP id='adminPrenomNom' label="Nom et Prénom" onChange={setadminPrenomNom} defaultValue={adminPrenomNom}></TextFieldP>
+
 
             <h3>Donner les accès administration du site:</h3>
 

@@ -1,6 +1,6 @@
 import React, { } from 'react';
 
-import './formulaire.css';
+import '../pageFormulaire/formulaire.css';
 
 import { Box } from '@mui/material';
 import Button from '@mui/material/Button';

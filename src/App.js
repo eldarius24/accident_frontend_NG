@@ -3,8 +3,8 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Login from './Login';
 import Home from './Home';
 import Formulaire from './pageFormulaire/Formulaire';
-import AdminPanelSettings from './pageFormulaire/AdminPanelSettings';
-import AdminPanelSettingsAction from './pageFormulaire/AdminPanelSettingsaction';
+import AdminPanelSettings from './pageAdmin/AdminPanelSettings';
+import AdminPanelSettingsAction from './pageAdmin/AdminPanelSettingsaction';
 import ResponsiveAppBar from './toolbar';
 
 const App = () => {
