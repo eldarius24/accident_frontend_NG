@@ -136,7 +136,7 @@ export default function FormulaireSalarie({ setValue, accidentData, watch }) {
         <TextFieldP id='lieuxnaissance' label='Lieu de naissance' onChange={setLieuxnaissance} defaultValue={lieuxnaissance} />
         <TextFieldMaskP id='niss' label='NISS du travailleur' onChange={setNiss} defaultValue={niss} mask="000000-000-00"/>
         <TextFieldMaskP id="numCompteBancaire" label="Numéro de compte bancaire" onChange={setnumCompteBancaire} defaultValue={numCompteBancaire} mask="AA00-0000-0000-0000-0000-0000-0000-0000-00" />
-        <TextFieldP id="etabliFinancier" label="Etablissement Financier BIC" onChange={setetabliFinancier} defaultValue={etabliFinancier} />
+        <TextFieldMaskP id="etabliFinancier" label="Etablissement Financier BIC" onChange={setetabliFinancier} defaultValue={etabliFinancier} mask="####-##-#####" />
         <TextFieldP id="numDimona" label="Numéro de la Dimona" onChange={setnumDimona} defaultValue={numDimona} />
         <AutoCompleteP id='sexe' label='Sexe' onChange={setsexe} option={listeDeclarationAssBelfius.ListeSexe} defaultValue={sexe} />
         <AutoCompleteP id='nationalité' label='Nationalité' onChange={setnationalité} option={listeDeclarationAssBelfius.ListeNationalite} defaultValue={nationalité} />

@@ -32,7 +32,7 @@ export default function FormulaireDeclarationASSBelfius({ setValue, accidentData
     */
 
 
-        const [ListeVicTravailExt, setListeVicTravailExt] = useState(watch('ListeVicTravailExt') ? watch('ListeVicTravailExt') : (accidentData && accidentData.ListeVicTravailExt ? accidentData.ListeVicTravailExt : null));
+    const [ListeVicTravailExt, setListeVicTravailExt] = useState(watch('ListeVicTravailExt') ? watch('ListeVicTravailExt') : (accidentData && accidentData.ListeVicTravailExt ? accidentData.ListeVicTravailExt : null));
     const [VicTravailExtOui, setVicTravailExtOui] = useState(watch('VicTravailExtOui') ? watch('VicTravailExtOui') : (accidentData && accidentData.VicTravailExtOui ? accidentData.VicTravailExtOui : null));
     const [VicTravailExtOuiNom, setVicTravailExtOuiNom] = useState(watch('VicTravailExtOuiNom') ? watch('VicTravailExtOuiNom') : (accidentData && accidentData.VicTravailExtOuiNom ? accidentData.VicTravailExtOuiNom : null));
     const [VicTravailExtOuiAdresse, setVicTravailExtOuiAdresse] = useState(watch('VicTravailExtOuiAdresse') ? watch('VicTravailExtOuiAdresse') : (accidentData && accidentData.VicTravailExtOuiAdresse ? accidentData.VicTravailExtOuiAdresse : null));
@@ -123,8 +123,8 @@ export default function FormulaireDeclarationASSBelfius({ setValue, accidentData
      * Etape 2 : mettre à jour les données du formulaire à chaque modification d'un des champs
      */
     useEffect(() => {
-        
-        
+
+
         setValue('ListeVicTravailExt', ListeVicTravailExt)
         setValue('VicTravailExtOui', VicTravailExtOui)
         setValue('VicTravailExtOuiNom', VicTravailExtOuiNom)
@@ -245,7 +245,7 @@ export default function FormulaireDeclarationASSBelfius({ setValue, accidentData
                     <AutoCompleteP id="ListeLieuxAtPays" option={listeDeclarationAss.ListeLieuxAtPays} label="Pays" onChange={setListeLieuxAtPays} defaultValue={ListeLieuxAtPays} />]
                 )}
 
-                <TextFieldMaskP id="NumdeChantier" label="Numéro du chantier" onChange={setNumdeChantier} defaultValue={NumdeChantier} mask="00000-00000-00000-00000"/>
+                <TextFieldMaskP id="NumdeChantier" label="Numéro du chantier" onChange={setNumdeChantier} defaultValue={NumdeChantier} mask="00000-00000-00000-00000" />
                 <div className="frameStyle-style">
                     <h5> Dans quel environnement ou dans quel type de lieu la victime se trouvait-elle lorsque l’accident s’est produit ? (p.ex. , aire de maintenance, chantier de
                         construction d’un tunnel, lieu d’élevage de bétail, bureau, école, magasin, hôpital, parking, salle de sports, toit d’un hôtel, maison privée, égout, jardin,
@@ -324,7 +324,7 @@ export default function FormulaireDeclarationASSBelfius({ setValue, accidentData
 
                 {(ListeSoinsMedicauxMedecin === 'Oui') && (
                     [<DateHeurePickerP id="dateSoinsMedicauxMedecin" label="Date et heure" onChange={setdateSoinsMedicauxMedecin} defaultValue={dateSoinsMedicauxMedecin} />,
-                    <TextFieldP id="SoinsMedicauxMedecinInami" label="Numéro d’identification du médecin externe à l’INAMI" onChange={setSoinsMedicauxMedecinInami} defaultValue={SoinsMedicauxMedecinInami} />,
+                    <TextFieldMaskP id="SoinsMedicauxMedecinInami" label="Numéro d’identification du médecin externe à l’INAMI" onChange={setSoinsMedicauxMedecinInami} defaultValue={SoinsMedicauxMedecinInami} mask="00000000-000" />,
                     <TextFieldP id="SoinsMedicauxMedecinNom" label="Nom et prénom du médecin externe" onChange={setSoinsMedicauxMedecinNom} defaultValue={SoinsMedicauxMedecinNom} />,
                     <TextFieldP id="SoinsMedicauxMedecinRue" label="Rue / n° / boite" onChange={setSoinsMedicauxMedecinRue} defaultValue={SoinsMedicauxMedecinRue} />,
                     <TextFieldP id="SoinsMedicauxMedecinCodePostal" label="Code postal" onChange={setSoinsMedicauxMedecinCodePostal} defaultValue={SoinsMedicauxMedecinCodePostal} />,
@@ -335,7 +335,7 @@ export default function FormulaireDeclarationASSBelfius({ setValue, accidentData
 
                 {(ListeSoinsMedicauxHopital === 'Oui') && (
                     [<DateHeurePickerP id="dateSoinsMedicauxHopital" label="Date et heure" onChange={setdateSoinsMedicauxHopital} defaultValue={dateSoinsMedicauxHopital} />,
-                    <TextFieldP id="SoinsMedicauxHopitalInami" label="Numéro d’identification de l’hôpital à l’INAMI" onChange={setSoinsMedicauxHopitalInami} defaultValue={SoinsMedicauxHopitalInami} />,
+                    <TextFieldMaskP id="SoinsMedicauxHopitalInami" label="Numéro d’identification de l’hôpital à l’INAMI" onChange={setSoinsMedicauxHopitalInami} defaultValue={SoinsMedicauxHopitalInami} mask="00000000-000" />,
                     <TextFieldP id="SoinsMedicauxHopitaldenomi" label="Dénomination de I*hôpital" onChange={setSoinsMedicauxHopitaldenomi} defaultValue={SoinsMedicauxHopitaldenomi} />,
                     <TextFieldP id="SoinsMedicauxHopitalRue" label="Rue / n° / boite" onChange={setSoinsMedicauxHopitalRue} defaultValue={SoinsMedicauxHopitalRue} />,
                     <TextFieldP id="SoinsMedicauxHopitalCodePostal" label="Code postal" onChange={setSoinsMedicauxHopitalCodePostal} defaultValue={SoinsMedicauxHopitalCodePostal} />,

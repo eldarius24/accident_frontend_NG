@@ -48,6 +48,7 @@ export default async function editPDF(data) {
             EditPdfTextField(form, '17 iban 13', (data.niss.substring(7, 10)));
             EditPdfTextField(form, '17 iban 14', (data.niss.substring(11, 13)));
         };
+        
         EditPdfTextField(form, '18 naam getroffene', data.nomTravailleur);
         EditPdfTextField(form, '19 voornaam getroffene', data.prenomTravailleur);
         EditPdfTextField(form, '20 geboorteplaats', data.lieuxnaissance);
@@ -92,6 +93,14 @@ export default async function editPDF(data) {
             EditPdfTextField(form, '53 iban 8', (data.numCompteBancaire.substring(40, 42)));
         };
         //BIC etabliFinancier
+
+        
+        if (data.etabliFinancier !== undefined && data.etabliFinancier !== null) {
+            EditPdfTextField(form, '54 BIC', (data.etabliFinancier.substring(0, 4)));
+            EditPdfTextField(form, '54 BIC 1', (data.etabliFinancier.substring(5, 7)));
+            EditPdfTextField(form, '54 BIC 2', (data.etabliFinancier.substring(8, 13)));
+        };
+
         EditPdfTextField(form, '55 nummer tewerkstelling', data.numDimona);
         if (data.dateEntrEntreprise !== undefined && data.dateEntrEntreprise !== null) {
             EditPdfTextField(form, '56 datum 2', (data.dateEntrEntreprise.substring(0, 4)));
@@ -215,6 +224,10 @@ export default async function editPDF(data) {
             EditPdfTextField(form, 'p3_22', (data.dateSoinsMedicauxMedecin.substring(16, 18)));
         };
         //num inami
+        if (data.SoinsMedicauxMedecinInami !== undefined && data.SoinsMedicauxMedecinInami !== null) {
+            EditPdfTextField(form, 'p3_23', (data.SoinsMedicauxMedecinInami.substring(0, 8)));
+            EditPdfTextField(form, 'p3_24', (data.SoinsMedicauxMedecinInami.substring(9, 12)));
+        };
         EditPdfTextField(form, 'p3_26', data.SoinsMedicauxMedecinNom);
         EditPdfTextField(form, 'p3_27', data.SoinsMedicauxMedecinRue);
         EditPdfTextField(form, 'p3_28', data.SoinsMedicauxMedecinCodePostal);
@@ -229,6 +242,11 @@ export default async function editPDF(data) {
             EditPdfTextField(form, 'p3_37', (data.dateSoinsMedicauxHopital.substring(16, 18)));
         };
         //inami
+        if (data.SoinsMedicauxHopitalInami !== undefined && data.SoinsMedicauxHopitalInami !== null) {
+            EditPdfTextField(form, 'p3_38', (data.SoinsMedicauxHopitalInami.substring(0, 8)));
+            EditPdfTextField(form, 'p3_39_1', (data.SoinsMedicauxHopitalInami.substring(9, 12)));
+        };
+
         EditPdfTextField(form, 'p3_41', data.SoinsMedicauxHopitaldenomi);
         EditPdfTextField(form, 'p3_42', data.SoinsMedicauxHopitalRue);
         EditPdfTextField(form, 'p3_43', data.SoinsMedicauxHopitalCodePostal);
@@ -286,7 +304,14 @@ export default async function editPDF(data) {
             EditPdfTextField(form, 'p3_48 4', (data.ListeMesureRepetition2.substring(0, 2))); 
         };
         //code
-        EditPdfTextField(form, 'p3_49 1', data.CodeRisqueEntreprise);
+        if (data.CodeRisqueEntreprise !== undefined && data.CodeRisqueEntreprise !== null) {
+            EditPdfTextField(form, 'p3_49 1', (data.CodeRisqueEntreprise.substring(0, 9))); 
+            EditPdfTextField(form, 'p3_49 2', (data.CodeRisqueEntreprise.substring(10, 19)));
+            EditPdfTextField(form, 'p3_49 3', (data.CodeRisqueEntreprise.substring(20, 29)));
+            EditPdfTextField(form, 'p3_49 4', (data.CodeRisqueEntreprise.substring(30, 39)));
+            EditPdfTextField(form, 'p3_49 5', (data.CodeRisqueEntreprise.substring(40, 49)));
+        };
+
         //affiliée onss
         EditPdfTextField(form, '3 reden', data.victimeOnssNon);
         EditPdfTextField(form, '4', data.codeTravailleurSocial);
