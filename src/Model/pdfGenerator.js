@@ -1,9 +1,5 @@
 /**
- * @fileoverview This file contains the functions to generate a pdf file.
- * @packageDocumentation
- * @module pdfGenerator
- * @requires pdf-lib
- * fonction qui permet de modifier un pdf
+ * importation des librairies pour la génération du pdf
  */
 const { PDFDocument, StandardFonts, rgb } = require('pdf-lib');
 
@@ -15,9 +11,9 @@ const { PDFDocument, StandardFonts, rgb } = require('pdf-lib');
  * @param {*} data donnée à mettre dans le textfield
  */
 function EditPdfTextField(form, textFielName, data) {
-    const textField = form.getTextField(textFielName); //'18 naam getroffene'
+    const textField = form.getTextField(textFielName); 
     if (data !== null) {
-        textField.setText(data || ""); //'LEFEVRE REMY'
+        textField.setText(data || "");
     }
 }
 /**
@@ -27,19 +23,17 @@ function EditPdfTextField(form, textFielName, data) {
  * @param {*} data donnée à mettre dans le checkbox
  */
 function EditPdfCheckBox(form, checBkoxName, data) {
-    const checkBox = form.getCheckBox(checBkoxName); //'22 checkbox man'
-    checkBox.check(data); //true
+    const checkBox = form.getCheckBox(checBkoxName); 
+    if (data) checkBox.check();
 }
 
 
 
 export default async function editPDF(data) {
     try {
-        console.log("pdfGenerator.js => parametre data => ",data.DateHeureAccident.substring(13, 18));
         const response = await fetch('./LeCortilDeclarationBELFIUS.pdf');
         const buffer = await response.arrayBuffer();
         const pdfDoc = await PDFDocument.load(buffer);
-        console.log(pdfDoc);
         const form = pdfDoc.getForm();
 
 
