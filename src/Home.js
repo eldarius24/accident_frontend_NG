@@ -123,14 +123,11 @@ function Home() {
                         item.dateDecede = dateConverter(item.dateDecede, false);
                         item.dateIncapaciteTemporaire = dateConverter(item.dateIncapaciteTemporaire, true);
                         item.dateTravailAddapte = dateConverter(item.dateTravailAddapte, false);
-
-
                     });
                     setData(accidents);
                 } else {
                     console.error("La réponse de l'API n'est pas un tableau.");
                 }
-
                 setLoading(false);
             })
             .catch((error) => {
