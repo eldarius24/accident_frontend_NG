@@ -40,12 +40,7 @@ export default async function editPDF(data) {
         const dataEntreprise = dataEntreprises.entreprises.find((entreprise) => entreprise.name === data.entrepriseName).data;
         console.log(" dataEntreprise => ",dataEntreprise);
         
-        if (data.niss !== undefined && data.niss !== null) {
-            EditPdfTextField(form, '17 iban 12', (data.niss.substring(0, 6)));
-            EditPdfTextField(form, '17 iban 13', (data.niss.substring(7, 10)));
-            EditPdfTextField(form, '17 iban 14', (data.niss.substring(11, 13)));
-        };
-        
+        //donnée selon entreprise
         EditPdfTextField(form, '11 straat', dataEntreprise.rue);
         EditPdfTextField(form, '1 verzekeringspolis', dataEntreprise.Police);
         EditPdfTextField(form, '8 bedrijfsnummer', dataEntreprise.numEntreprise);
@@ -74,14 +69,19 @@ export default async function editPDF(data) {
         EditPdfTextField(form, '61', dataEntreprise.scAdresse);
         EditPdfTextField(form, '62', dataEntreprise.scCodePostal);
         EditPdfTextField(form, '63', dataEntreprise.scLocalite);
-
-
-
-
         if (data.DateHeureAccident !== undefined && data.DateHeureAccident !== null) {
             EditPdfTextField(form, '2 jaar', (data.DateHeureAccident.substring(0, 4)));
-            EditPdfTextField(form, '3 nummer', data.DateHeureAccident);
+            EditPdfTextField(form, '3 nummer', (data.DateHeureAccident.substring(0, 4) + data.DateHeureAccident.substring(5, 7) + data.DateHeureAccident.substring(8, 10) + data.DateHeureAccident.substring(13, 15) + data.DateHeureAccident.substring(16, 18) ));
         };
+
+        //-------------------------
+
+        if (data.niss !== undefined && data.niss !== null) {
+            EditPdfTextField(form, '17 iban 12', (data.niss.substring(0, 6)));
+            EditPdfTextField(form, '17 iban 13', (data.niss.substring(7, 10)));
+            EditPdfTextField(form, '17 iban 14', (data.niss.substring(11, 13)));
+        };
+        
 
         EditPdfTextField(form, '18 naam getroffene', data.nomTravailleur);
         EditPdfTextField(form, '19 voornaam getroffene', data.prenomTravailleur);
