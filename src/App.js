@@ -8,7 +8,7 @@ import AdminPanelSettingsAction from './pageAdmin/AdminPanelSettingsaction';
 import ResponsiveAppBar from './toolbar';
 
 const App = () => {
-  const [isFormVisible, setFormVisible] = useState(false);
+  const [isFormVisible, setFormVisible] = useState(true);
 
   return (
     <Router>
