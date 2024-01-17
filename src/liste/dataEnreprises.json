@@ -1,0 +1,19 @@
+{
+    "entreprises": [
+        {
+            "name": "Le Cortil",
+            "data": {
+                "RIB": "FR76 055451 15 351 ",
+                "codePostal": "5030",
+                "localite": "Gembloux",
+                "tel": "081/61.48.00",
+                "fax": "081/61.48.01",
+                "email": "cadffafa"
+            }
+        },
+        {
+            "name": "Cortibat",
+            "data": {}
+        }
+    ]
+}

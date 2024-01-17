@@ -2,6 +2,7 @@
  * importation des librairies pour la génération du pdf
  */
 const { PDFDocument, StandardFonts, rgb } = require('pdf-lib');
+import dataEntreprises from '../liste/dataEnreprises.json'
 
 
 /**
@@ -36,12 +37,16 @@ export default async function editPDF(data) {
         const pdfDoc = await PDFDocument.load(buffer);
         const form = pdfDoc.getForm();
 
-
+        const dataEntreprise = dataEntreprises.entreprises.find((entreprise) => entreprise.name === data.entrepriseName).data;
+        console.log(" dataEntreprise => ",dataEntreprise);
+        
         if (data.niss !== undefined && data.niss !== null) {
             EditPdfTextField(form, '17 iban 12', (data.niss.substring(0, 6)));
             EditPdfTextField(form, '17 iban 13', (data.niss.substring(7, 10)));
             EditPdfTextField(form, '17 iban 14', (data.niss.substring(11, 13)));
         };
+        
+        EditPdfTextField(form, '11 straat', dataEntreprise.RIB);
         
         EditPdfTextField(form, '18 naam getroffene', data.nomTravailleur);
         EditPdfTextField(form, '19 voornaam getroffene', data.prenomTravailleur);
