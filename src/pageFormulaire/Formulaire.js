@@ -68,8 +68,8 @@ export default function Formulaire() {
      * ************************************************************************/
     const onSubmit = (data) => {
 
-        console.log("onSubmit -> Données à enregistrer :", data);
-        console.log("onSubmit -> Données à editer accidentData :", accidentData);
+        console.log("Formulaire.js -> onSubmit -> Données à enregistrer :", data);
+        console.log("Formulaire.js -> onSubmit -> Données à editer accidentData :", accidentData);
 
         if (accidentData) {
 

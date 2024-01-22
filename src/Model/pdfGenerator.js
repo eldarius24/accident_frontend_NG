@@ -56,7 +56,22 @@ export default async function editPDF(data) {
             EditPdfTextField(form, '21 geboortedatum 1', (data.dateNaissance.substring(5, 7)));
             EditPdfTextField(form, '21 geboortedatum', (data.dateNaissance.substring(8, 10)));
         };
-        //EditPdfCheckBox(form, '22 checkbox man', true); sexe de autocomplete a chekbox '23 checkbox vrouw' sexe
+        //si le sexe est masculin on coche la case homme sinon on coche la case femme
+        if (data.sexe == "Masculin") {
+            EditPdfCheckBox(form, '22 checkbox man', true)
+        } else {
+            EditPdfCheckBox(form, '23 checkbox vrouw', true)
+        }
+
+        /* EXEMPLE DE CODE POUR COCHER UNE CASE
+        switch (data.nationalité) {
+            case "Belge":
+                EditPdfCheckBox(form, '24 checkbox belg', true)
+                break;
+            case "Française":
+                EditPdfCheckBox(form, '24 checkbox frans', true)
+                break;
+        }*/
         EditPdfTextField(form, '24 nationaliteit', data.nationalité);
         //EditPdfCheckBox(form, '25 checkbox ', true); etat civil de autocomplete a chekbox '26 checkbox  1' '27 checkbox  2' '28 checkbox  3' etatCivil
         EditPdfTextField(form, '29 mailadres', data.adresseMail);
