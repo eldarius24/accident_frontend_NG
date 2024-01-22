@@ -40,14 +40,49 @@ export default async function editPDF(data) {
         const dataEntreprise = dataEntreprises.entreprises.find((entreprise) => entreprise.name === data.entrepriseName).data;
         console.log(" dataEntreprise => ",dataEntreprise);
         
+        //donnée selon entreprise
+        EditPdfTextField(form, '11 straat', dataEntreprise.rue);
+        EditPdfTextField(form, '1 verzekeringspolis', dataEntreprise.Police);
+        EditPdfTextField(form, '8 bedrijfsnummer', dataEntreprise.numEntreprise);
+        EditPdfTextField(form, '12 postcode', dataEntreprise.codePostal);
+        EditPdfTextField(form, '13 gemeente', dataEntreprise.localite);
+        EditPdfTextField(form, '16 emailadres', dataEntreprise.email);
+        EditPdfTextField(form, '15 telefoon', dataEntreprise.tel);
+        EditPdfTextField(form, '17 iban', dataEntreprise.IBAN1);
+        EditPdfTextField(form, '17 iban 1', dataEntreprise.IBAN2);
+        EditPdfTextField(form, '17 iban 2', dataEntreprise.IBAN3);
+        EditPdfTextField(form, '17 iban 3', dataEntreprise.IBAN4);
+        EditPdfTextField(form, '17 iban 9', dataEntreprise.BIC1);
+        EditPdfTextField(form, '17 iban 10', dataEntreprise.BIC2);
+        EditPdfTextField(form, '17 iban 11', dataEntreprise.BIC3);
+        EditPdfTextField(form, '10 naam of handelsnaam', dataEntreprise.nom);
+        EditPdfTextField(form, '9 RSZ 3', dataEntreprise.unitetablissement1);
+        EditPdfTextField(form, '9 RSZ 4', dataEntreprise.unitetablissement2);
+        EditPdfTextField(form, '9 RSZ 5', dataEntreprise.unitetablissement3);
+        EditPdfTextField(form, '9 RSZ 6', dataEntreprise.unitetablissement4);
+        EditPdfTextField(form, '9 RSZ', dataEntreprise.ONSS1);
+        EditPdfTextField(form, '9 RSZ 1', dataEntreprise.ONSS2);
+        EditPdfTextField(form, '9 RSZ 2', dataEntreprise.ONSS3);
+        EditPdfTextField(form, '14 activiteit', dataEntreprise.activEntreprise);
+        EditPdfTextField(form, '60', dataEntreprise.numAffi);
+        EditPdfTextField(form, '59', dataEntreprise.secretariasociale);
+        EditPdfTextField(form, '61', dataEntreprise.scAdresse);
+        EditPdfTextField(form, '62', dataEntreprise.scCodePostal);
+        EditPdfTextField(form, '63', dataEntreprise.scLocalite);
+        if (data.DateHeureAccident !== undefined && data.DateHeureAccident !== null) {
+            EditPdfTextField(form, '2 jaar', (data.DateHeureAccident.substring(0, 4)));
+            EditPdfTextField(form, '3 nummer', (data.DateHeureAccident.substring(0, 4) + data.DateHeureAccident.substring(5, 7) + data.DateHeureAccident.substring(8, 10) + data.DateHeureAccident.substring(13, 15) + data.DateHeureAccident.substring(16, 18) ));
+        };
+
+        //-------------------------
+
         if (data.niss !== undefined && data.niss !== null) {
             EditPdfTextField(form, '17 iban 12', (data.niss.substring(0, 6)));
             EditPdfTextField(form, '17 iban 13', (data.niss.substring(7, 10)));
             EditPdfTextField(form, '17 iban 14', (data.niss.substring(11, 13)));
         };
         
-        EditPdfTextField(form, '11 straat', dataEntreprise.RIB);
-        
+
         EditPdfTextField(form, '18 naam getroffene', data.nomTravailleur);
         EditPdfTextField(form, '19 voornaam getroffene', data.prenomTravailleur);
         EditPdfTextField(form, '20 geboorteplaats', data.lieuxnaissance);
