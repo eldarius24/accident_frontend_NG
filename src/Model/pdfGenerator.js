@@ -92,11 +92,15 @@ export default async function editPDF(data) {
             EditPdfTextField(form, '21 geboortedatum', (data.dateNaissance.substring(8, 10)));
         };
         //si le sexe est masculin on coche la case homme sinon on coche la case femme
-        if (data.sexe == "Masculin") {
+        switch (data.sexe) {
+            case "Masculin":
             EditPdfCheckBox(form, '22 checkbox man', true);
-        } else {
+            break;
+            case "Féminin":
             EditPdfCheckBox(form, '23 checkbox vrouw', true);
+            break;
         }
+
 
         // EXEMPLE DE CODE POUR COCHER UNE CASE
         switch (data.etatCivil) {
