@@ -51,6 +51,7 @@ export default function FormulaireSalarie({ setValue, accidentData, watch }) {
   const [adresseCommunecorrespondance, setadresseCommunecorrespondance] = useState(watch('adresseCommunecorrespondance') ? watch('adresseCommunecorrespondance') : (accidentData && accidentData.adresseCommunecorrespondance ? accidentData.adresseCommunecorrespondance : null));
   const [ListeadressePaysCorrespondance, setListeadressePaysCorrespondance] = useState(watch('ListeadressePaysCorrespondance') ? watch('ListeadressePaysCorrespondance') : (accidentData && accidentData.ListeadressePaysCorrespondance ? accidentData.ListeadressePaysCorrespondance : null));
   const [telephoneCorrespondance, settelephoneCorrespondance] = useState(watch('telephoneCorrespondance') ? watch('telephoneCorrespondance') : (accidentData && accidentData.telephoneCorrespondance ? accidentData.telephoneCorrespondance : null));
+  const [parentEmployeur, setparentEmployeur] = useState(watch('parentEmployeur') ? watch('parentEmployeur') : (accidentData && accidentData.parentEmployeur ? accidentData.parentEmployeur : null));
   const [ListeLangueCorr, setListeLangueCorr] = useState(watch('ListeLangueCorr') ? watch('ListeLangueCorr') : (accidentData && accidentData.ListeLangueCorr ? accidentData.ListeLangueCorr : null));
   const [CodeMutuelle, setCodeMutuelle] = useState(watch('CodeMutuelle') ? watch('CodeMutuelle') : (accidentData && accidentData.CodeMutuelle ? accidentData.CodeMutuelle : null));
   const [nomMutuelle, setnomMutuelle] = useState(watch('nomMutuelle') ? watch('nomMutuelle') : (accidentData && accidentData.nomMutuelle ? accidentData.nomMutuelle : null));
@@ -118,8 +119,9 @@ export default function FormulaireSalarie({ setValue, accidentData, watch }) {
     setValue('VicInterimaireOui', VicInterimaireOui)
     setValue('VicInterimaireOuiNom', VicInterimaireOuiNom)
     setValue('VicInterimaireOuiAdresse', VicInterimaireOuiAdresse)
+    setValue('parentEmployeur', parentEmployeur)
   }
-    , [ListeDurContra, dateSortie, profesEntreprise, citp, ListeDureeDsEntreprise, ListeVicInterimaire, VicInterimaireOui, VicInterimaireOuiNom, VicInterimaireOuiAdresse, numDimona, CodeMutuelle, nomMutuelle, adresseRueMutuelle, adresseCodepostalMutuelle, adresseCommuneMutuelle, numAffiliation, numCompteBancaire, etabliFinancier, nomTravailleur, prenomTravailleur, dateNaissance, lieuxnaissance, niss, nbHeuresSemaine, dateDebutArret, dateFinArret, dateEntrEntreprise, sexe, nationalité, etatCivil, adresseRue, adresseCodepostal, adresseCommune, adressePays, adresseMail, telephone, adresseRuecorrespondance, adresseCodecorrespondance, adresseCommunecorrespondance, ListeadressePaysCorrespondance, telephoneCorrespondance, ListeLangueCorr, setValue]);
+    , [parentEmployeur, ListeDurContra, dateSortie, profesEntreprise, citp, ListeDureeDsEntreprise, ListeVicInterimaire, VicInterimaireOui, VicInterimaireOuiNom, VicInterimaireOuiAdresse, numDimona, CodeMutuelle, nomMutuelle, adresseRueMutuelle, adresseCodepostalMutuelle, adresseCommuneMutuelle, numAffiliation, numCompteBancaire, etabliFinancier, nomTravailleur, prenomTravailleur, dateNaissance, lieuxnaissance, niss, nbHeuresSemaine, dateDebutArret, dateFinArret, dateEntrEntreprise, sexe, nationalité, etatCivil, adresseRue, adresseCodepostal, adresseCommune, adressePays, adresseMail, telephone, adresseRuecorrespondance, adresseCodecorrespondance, adresseCommunecorrespondance, ListeadressePaysCorrespondance, telephoneCorrespondance, ListeLangueCorr, setValue]);
 
   /**
    * Etape 3 : retourner le formulaire (IHMs)
@@ -160,6 +162,7 @@ export default function FormulaireSalarie({ setValue, accidentData, watch }) {
           <TextFieldP id="telephoneCorrespondance" label="Téléphone" onChange={settelephoneCorrespondance} defaultValue={telephoneCorrespondance} />,
           <AutoCompleteP id="ListeLangueCorr" option={listeDeclarationAssBelfius.ListeLangueCorr} label="Langue de correspondance avec la victime" onChange={setListeLangueCorr} defaultValue={ListeLangueCorr} />]
         )}
+        <AutoCompleteP id="parentEmployeur" option={listeDeclarationAssBelfius.ListeParentEmployeur} label="Parent Employeur" onChange={setparentEmployeur} defaultValue={parentEmployeur} />
         <TextFieldP id='nbHeuresSemaine' label="Nombre d'heures travaillées par semaine" onChange={setNbHeuresSemaine} defaultValue={nbHeuresSemaine} />
         <DatePickerP id='dateDebutArret' label="Date de début du dernier arrêt de travail(>15j)" onChange={setDateDebutArret} defaultValue={dateDebutArret} />
         <DatePickerP id='dateFinArret' label="Date de fin du denier arrêt de travail (>15j)" onChange={setDateFinArret} defaultValue={dateFinArret} />

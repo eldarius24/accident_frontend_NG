@@ -12,7 +12,7 @@ import dataEntreprises from '../liste/dataEnreprises.json'
  * @param {*} data donnée à mettre dans le textfield
  */
 function EditPdfTextField(form, textFielName, data) {
-    const textField = form.getTextField(textFielName); 
+    const textField = form.getTextField(textFielName);
     if (data !== null) {
         textField.setText(data || "");
     }
@@ -24,7 +24,7 @@ function EditPdfTextField(form, textFielName, data) {
  * @param {*} data donnée à mettre dans le checkbox
  */
 function EditPdfCheckBox(form, checBkoxName, data) {
-    const checkBox = form.getCheckBox(checBkoxName); 
+    const checkBox = form.getCheckBox(checBkoxName);
     if (data) checkBox.check();
 }
 
@@ -38,8 +38,8 @@ export default async function editPDF(data) {
         const form = pdfDoc.getForm();
 
         const dataEntreprise = dataEntreprises.entreprises.find((entreprise) => entreprise.name === data.entrepriseName).data;
-        console.log(" dataEntreprise => ",dataEntreprise);
-        
+        console.log(" dataEntreprise => ", dataEntreprise);
+
         //donnée selon entreprise
         EditPdfTextField(form, '11 straat', dataEntreprise.rue);
         EditPdfTextField(form, '1 verzekeringspolis', dataEntreprise.Police);
@@ -71,7 +71,7 @@ export default async function editPDF(data) {
         EditPdfTextField(form, '63', dataEntreprise.scLocalite);
         if (data.DateHeureAccident !== undefined && data.DateHeureAccident !== null) {
             EditPdfTextField(form, '2 jaar', (data.DateHeureAccident.substring(0, 4)));
-            EditPdfTextField(form, '3 nummer', (data.DateHeureAccident.substring(0, 4) + data.DateHeureAccident.substring(5, 7) + data.DateHeureAccident.substring(8, 10) + data.DateHeureAccident.substring(13, 15) + data.DateHeureAccident.substring(16, 18) ));
+            EditPdfTextField(form, '3 nummer', (data.DateHeureAccident.substring(0, 4) + data.DateHeureAccident.substring(5, 7) + data.DateHeureAccident.substring(8, 10) + data.DateHeureAccident.substring(13, 15) + data.DateHeureAccident.substring(16, 18)));
         };
 
         //-------------------------
@@ -81,7 +81,7 @@ export default async function editPDF(data) {
             EditPdfTextField(form, '17 iban 13', (data.niss.substring(7, 10)));
             EditPdfTextField(form, '17 iban 14', (data.niss.substring(11, 13)));
         };
-        
+
 
         EditPdfTextField(form, '18 naam getroffene', data.nomTravailleur);
         EditPdfTextField(form, '19 voornaam getroffene', data.prenomTravailleur);
@@ -93,22 +93,366 @@ export default async function editPDF(data) {
         };
         //si le sexe est masculin on coche la case homme sinon on coche la case femme
         if (data.sexe == "Masculin") {
-            EditPdfCheckBox(form, '22 checkbox man', true)
+            EditPdfCheckBox(form, '22 checkbox man', true);
         } else {
-            EditPdfCheckBox(form, '23 checkbox vrouw', true)
+            EditPdfCheckBox(form, '23 checkbox vrouw', true);
         }
 
-        /* EXEMPLE DE CODE POUR COCHER UNE CASE
-        switch (data.nationalité) {
-            case "Belge":
-                EditPdfCheckBox(form, '24 checkbox belg', true)
+        // EXEMPLE DE CODE POUR COCHER UNE CASE
+        switch (data.etatCivil) {
+            case "Célibataire":
+                EditPdfCheckBox(form, '25 checkbox ', true);
                 break;
-            case "Française":
-                EditPdfCheckBox(form, '24 checkbox frans', true)
+            case "Marié(e)":
+                EditPdfCheckBox(form, '26 checkbox  1', true);
                 break;
-        }*/
+            case "Divorcé(e)":
+                EditPdfCheckBox(form, '27 checkbox  2', true);
+                break;
+            case "Veuf(Veuve)":
+                EditPdfCheckBox(form, '28 checkbox  3', true);
+                break;
+        }
+
+        switch (data.ListeLangueCorr) {
+            case "Français":
+                EditPdfCheckBox(form, '41 checkbox  1', true);
+                break;
+            case "Néerlandais":
+                EditPdfCheckBox(form, '42 checkbox  2', true);
+                break;
+            case "Allemand":
+                EditPdfCheckBox(form, '43 checkbox  3', true);
+                break;
+        }
+
+        switch (data.parentEmployeur) {
+            case "pas parent(e)":
+                EditPdfCheckBox(form, '44 checkbox  5', true);
+                break;
+            case "au premier degré (parents et enfants)":
+                EditPdfCheckBox(form, '45 checkbox  4', true);
+                break;
+            case "autre (p. ex., oncle ou grands-parents)":
+                EditPdfCheckBox(form, '46 checkbox  6', true);
+                break;
+        }
+
+        switch (data.ListeDurContra) {
+            case "Indéterminée":
+                EditPdfCheckBox(form, '57 checkbox  7', true);
+                break;
+            case "Déterminée":
+                EditPdfCheckBox(form, '58 checkbox  10', true);
+                break;
+        }
+
+        //date de sortie connue ?
+
+        switch (data.ListeDureeDsEntreprise) {
+            case "Moins d'une semaine":
+                EditPdfCheckBox(form, '64 checkbox  13', true);
+                break;
+            case "D'une semaine à un mois":
+                EditPdfCheckBox(form, '65 checkbox  12', true);
+                break;
+            case "D'un mois à un an":
+                EditPdfCheckBox(form, '66 checkbox  11', true);
+                break;
+            case "Plus d'un an":
+                EditPdfCheckBox(form, '67 checkbox  12', true);
+                break;
+        }
+
+        switch (data.typeTravailleur) {
+            case "Employer":
+                EditPdfCheckBox(form, '69 checkbox  15', true);
+                break;
+            case "Article 60":
+                EditPdfCheckBox(form, '69 checkbox  15', true);
+                break;
+            case "Stagiaire":
+                EditPdfCheckBox(form, '69 checkbox  15', true);
+                break;
+            case "Intérimaire":
+                EditPdfCheckBox(form, '68 checkbox  14', true);
+                break;
+            case "Bénévole":
+                EditPdfCheckBox(form, '69 checkbox  15', true);
+                break;
+        }
+
+        switch (data.ListeVicTravailExt) {
+            case "Oui":
+                EditPdfCheckBox(form, '69 checkbox  16', true);
+                break;
+            case "Non":
+                EditPdfCheckBox(form, '69 checkbox  17', true);
+                break;
+        }
+
+        switch (data.typeAccident) {
+            case "AT":
+                EditPdfCheckBox(form, 'p2 - checkbox 12', true);
+                break;
+            case "AT CHT":
+                EditPdfCheckBox(form, 'p2 - checkbox 13', true);
+                break;
+            case "AT Grave":
+                EditPdfCheckBox(form, 'p2 - checkbox 12', true);
+                break;
+        }
+
+        switch (data.ListeLieuxAt) {
+            case "Dans l'entreprise à l'adresse mentionnée ci haut":
+                EditPdfCheckBox(form, 'p2 - checkbox 14', true);
+                break;
+            case "Sur la voie publique":
+                EditPdfCheckBox(form, 'p2 - checkbox 15', true);
+                break;
+            case "A un autre endroit":
+                EditPdfCheckBox(form, 'p2 - checkbox 18', true);
+                break;
+        }
+
+        switch (data.ListeVoiePublic) {
+            case "Oui":
+                EditPdfCheckBox(form, 'p2 - checkbox 16', true);
+                break;
+            case "Non":
+                EditPdfCheckBox(form, 'p2 - checkbox 17', true);
+                break;
+        }
+
+        switch (data.ListeTypedePost) {
+            case "Poste de travail habituel ou unité locale habituelle":
+                EditPdfCheckBox(form, 'p2 - checkbox 31 1', true);
+                break;
+            case "Poste de travail occasionnel ou mobile ou en route pour le compte de l'employeur":
+                EditPdfCheckBox(form, 'p2 - checkbox 31 2', true);
+                break;
+            case "Autre poste de travail":
+                EditPdfCheckBox(form, 'p2 - checkbox 31 3', true);
+                break;
+        }
+
+        switch (data.ListeProfHabituelle) {
+            case "Oui":
+                EditPdfCheckBox(form, 'p2 - checkbox 31 4', true);
+                break;
+            case "Non":
+                EditPdfCheckBox(form, 'p2 - checkbox 31 5', true);
+                break;
+        }
+
+        switch (data.ListeProcesVerbal) {
+            case "Oui":
+                EditPdfCheckBox(form, 'p2 - checkbox 35 1', true);
+                break;
+            case "Non":
+                EditPdfCheckBox(form, 'p2 - checkbox 35 2', true);
+                break;
+            case "Réponce inconnue":
+                EditPdfCheckBox(form, 'p2 - checkbox 35 3', true);
+                break;
+        }
+
+        switch (data.ListeTierResponsable) {
+            case "Oui":
+                EditPdfCheckBox(form, 'p2 - checkbox 36 1', true);
+                break;
+            case "Non":
+                EditPdfCheckBox(form, 'p2 - checkbox 36 2', true);
+                break;
+            case "Réponce inconnue":
+                EditPdfCheckBox(form, 'p2 - checkbox 36 3', true);
+                break;
+        }
+
+        switch (data.ListeTemoins) {
+            case "Oui":
+                EditPdfCheckBox(form, 'p2 - checkbox 37 1', true);
+                break;
+            case "Non":
+                EditPdfCheckBox(form, 'p2 - checkbox 37 2', true);
+                break;
+            case "Réponce inconnue":
+                EditPdfCheckBox(form, 'p2 - checkbox 37 3', true);
+                break;
+        }
+
+        switch (data.ListeSoinsMedicaux) {
+            case "Oui":
+                EditPdfCheckBox(form, 'p3_41 1', true);
+                break;
+            case "Non":
+                EditPdfCheckBox(form, 'p3_41 2', true);
+                break;
+        }
+
+        switch (data.ListeSoinsMedicauxMedecin) {
+            case "Oui":
+                EditPdfCheckBox(form, 'p3_15', true);
+                break;
+            case "Non":
+                EditPdfCheckBox(form, 'p3_16', true);
+                break;
+            case "Réponce inconnue":
+                EditPdfCheckBox(form, 'p3_17', true);
+                break;
+        }
+
+        switch (data.ListeSoinsMedicauxHopital) {
+            case "Oui":
+                EditPdfCheckBox(form, 'p3_30', true);
+                break;
+            case "Non":
+                EditPdfCheckBox(form, 'p3_31', true);
+                break;
+            case "Réponce inconnue":
+                EditPdfCheckBox(form, 'p3_32', true);
+                break;
+        }
+
+        switch (data.ListeConseqAccident) {
+            case "Pas d'incapacité temporaire de travail, pas de prothèses à prévoir":
+                EditPdfCheckBox(form, 'p3_45', true);
+                break;
+            case "Pas d'incapacité temporaire de travail, mais des prothèses à prévoir":
+                EditPdfCheckBox(form, 'p3_46', true);
+                break;
+            case "Occupation temporaire avec travail adapté (prestations réduites ou autre fonction, sans perte de salaire)":
+                EditPdfCheckBox(form, 'p3_47', true);
+                break;
+            case "Incapacité temporaire totale de travail":
+                EditPdfCheckBox(form, 'p3_48', true);
+                break;
+            case "Incapacité permanente de travail à prévoir":
+                EditPdfCheckBox(form, 'p3_54', true);
+                break;
+            case "Décès":
+                EditPdfCheckBox(form, 'p3_55', true);
+                break;
+        }
+
+        switch (data.ListeVictimeOnss) {
+            case "Oui":
+                EditPdfCheckBox(form, '1 checkbox', true);
+                break;
+            case "Non":
+                EditPdfCheckBox(form, '2 checkbox 1', true);
+                break;
+        }
+
+        switch (data.ListeCategoProfess) {
+            case "Ouvrier":
+                EditPdfCheckBox(form, '5 checkbox 2', true);
+                break;
+            case "Employé":
+                EditPdfCheckBox(form, '6 checkbox 3', true);
+                break;
+            case "Apprenti/stagiaire assujetti à L’ONSS":
+                EditPdfCheckBox(form, '7 checkbox 4', true);
+                break;
+            case "Apprenti/stagiaire non assujetti à l’ONSS":
+                EditPdfCheckBox(form, '8 checkbox 5', true);
+                break;
+            case "Employé de maison":
+                EditPdfCheckBox(form, '9 checkbox 5', true);
+                break;
+            case "Autre (à préciser)":
+                EditPdfCheckBox(form, '10 checkbox 6', true);
+                break;
+        }
+
+        switch (data.ListeNonOnss) {
+            case "F1":
+                EditPdfCheckBox(form, '12 F1', true);
+                break;
+            case "F2 passez à la question 65":
+                EditPdfCheckBox(form, '13 F2', true);
+                break;
+        }
+
+        switch (data.ListeApprentiFormat) {
+            case "Oui (passez à la question 65)":
+                EditPdfCheckBox(form, '14 checkbox 9', true);
+                break;
+            case "Non":
+                EditPdfCheckBox(form, '15 checkbox 10', true);
+                break;
+        }
+
+        switch (data.ListeTypeContrat) {
+            case "A temps plein":
+                EditPdfCheckBox(form, '20 checkbox 11', true);
+                break;
+            case "A temps partiel":
+                EditPdfCheckBox(form, '21 checkbox 12', true);
+                break;
+        }
+
+        switch (data.ListeVictiPension) {
+            case "Oui":
+                EditPdfCheckBox(form, '28 checkbox 14', true);
+                break;
+            case "Non":
+                EditPdfCheckBox(form, '29 checkbox 15', true);
+                break;
+        }
+
+        switch (data.ListeModeRemuneration) {
+            case "Rémunération fixe":
+                EditPdfCheckBox(form, '30 checkbox 13', true);
+                break;
+            case "A la pièce ou à la tâche ou à façon":
+                EditPdfCheckBox(form, '31 checkbox 14', true);
+                break;
+            case "A la commission (totalement ou partiellement)":
+                EditPdfCheckBox(form, '32 checkbox 15', true);
+                break;
+        }
+
+        switch (data.ListeMontantRemuneration) {
+            case "Heure":
+                EditPdfCheckBox(form, '33 checkbox 16', true);
+                break;
+            case "Jour":
+                EditPdfCheckBox(form, '34 checkbox 17', true);
+                break;
+            case "Semaine":
+                EditPdfCheckBox(form, '35', true);
+                break;
+            case "Mois":
+                EditPdfCheckBox(form, '37', true);
+                break;
+            case "Trimestre":
+                EditPdfCheckBox(form, '37 1', true);
+                break;
+            case "Année":
+                EditPdfCheckBox(form, '38', true);
+                break;
+        }
+
+        switch (data.ListePrimeFinAnnee) {
+            case "Oui":
+                EditPdfCheckBox(form, '41', true);
+                break;
+            case "Non":
+                EditPdfCheckBox(form, '42', true);
+                break;
+        }
+
+        switch (data.ListechangementFonction) {
+            case "Oui":
+                EditPdfCheckBox(form, '52', true);
+                break;
+            case "Non":
+                EditPdfCheckBox(form, '53', true);
+                break;
+        }
+
         EditPdfTextField(form, '24 nationaliteit', data.nationalité);
-        //EditPdfCheckBox(form, '25 checkbox ', true); etat civil de autocomplete a chekbox '26 checkbox  1' '27 checkbox  2' '28 checkbox  3' etatCivil
         EditPdfTextField(form, '29 mailadres', data.adresseMail);
         EditPdfTextField(form, '30 straat', data.adresseRue);
         EditPdfTextField(form, '31 telefoon', data.telephone);
@@ -121,8 +465,6 @@ export default async function editPDF(data) {
         EditPdfTextField(form, '38 postcode 1', data.adresseCodecorrespondance);
         EditPdfTextField(form, '39 gemeente', data.adresseCommunecorrespondance);
         EditPdfTextField(form, '40 land 4', data.ListeadressePaysCorrespondance);
-        //langue de correspondance
-        //Parenté avec l'employeur
         EditPdfTextField(form, '47 code', data.CodeMutuelle);
         EditPdfTextField(form, '48 naam', data.nomMutuelle);
         EditPdfTextField(form, '49 straat', data.adresseRueMutuelle);
@@ -143,7 +485,7 @@ export default async function editPDF(data) {
         };
         //BIC etabliFinancier
 
-        
+
         if (data.etabliFinancier !== undefined && data.etabliFinancier !== null) {
             EditPdfTextField(form, '54 BIC', (data.etabliFinancier.substring(0, 4)));
             EditPdfTextField(form, '54 BIC 1', (data.etabliFinancier.substring(5, 7)));
@@ -156,7 +498,6 @@ export default async function editPDF(data) {
             EditPdfTextField(form, '56 datum 1', (data.dateEntrEntreprise.substring(5, 7)));
             EditPdfTextField(form, '56 datum', (data.dateEntrEntreprise.substring(8, 10)));
         };
-        //durée du contra
         if (data.dateSortie !== undefined && data.dateSortie !== null) {
             EditPdfTextField(form, '61 datum 5', (data.dateSortie.substring(0, 4)));
             EditPdfTextField(form, '61 datum 4', (data.dateSortie.substring(5, 7)));
@@ -345,16 +686,16 @@ export default async function editPDF(data) {
         EditPdfCheckBox(form, 'p3_47 14', data.boolChausure);
         EditPdfTextField(form, 'p3_48 1', data.ListeMesureRepetition);
         if (data.ListeMesureRepetition !== undefined && data.ListeMesureRepetition !== null) {
-            EditPdfTextField(form, 'p3_48 2', (data.ListeMesureRepetition.substring(0, 2))); 
+            EditPdfTextField(form, 'p3_48 2', (data.ListeMesureRepetition.substring(0, 2)));
         };
         //code
         EditPdfTextField(form, 'p3_48 3', data.ListeMesureRepetition2);
         if (data.ListeMesureRepetition2 !== undefined && data.ListeMesureRepetition2 !== null) {
-            EditPdfTextField(form, 'p3_48 4', (data.ListeMesureRepetition2.substring(0, 2))); 
+            EditPdfTextField(form, 'p3_48 4', (data.ListeMesureRepetition2.substring(0, 2)));
         };
         //code
         if (data.CodeRisqueEntreprise !== undefined && data.CodeRisqueEntreprise !== null) {
-            EditPdfTextField(form, 'p3_49 1', (data.CodeRisqueEntreprise.substring(0, 9))); 
+            EditPdfTextField(form, 'p3_49 1', (data.CodeRisqueEntreprise.substring(0, 9)));
             EditPdfTextField(form, 'p3_49 2', (data.CodeRisqueEntreprise.substring(10, 19)));
             EditPdfTextField(form, 'p3_49 3', (data.CodeRisqueEntreprise.substring(20, 29)));
             EditPdfTextField(form, 'p3_49 4', (data.CodeRisqueEntreprise.substring(30, 39)));

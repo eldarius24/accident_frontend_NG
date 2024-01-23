@@ -210,6 +210,16 @@
         "Néerlandais",
         "Allemand"
     ],
+
+    "ListeParentEmployeur": [
+        "pas parent(e)",
+        "au premier degré (parents et enfants)",
+        "autre (p. ex., oncle ou grands-parents)"
+    ],
+
+
+
+
     "ListeDurContra": [
         "Indéterminée",
         "Déterminée"
@@ -382,8 +392,8 @@
     ],
     "ListeModeRemuneration": [
         "Rémunération fixe",
-        "A la pièce ou à la tâche ou à façon ",
-        "A la commission (totalement ou partiellement) "
+        "A la pièce ou à la tâche ou à façon",
+        "A la commission (totalement ou partiellement)"
     ],
     "ListeMontantRemuneration": [
         "Heure",

@@ -425,7 +425,7 @@ export default function FormulaireDeclarationASSBelfius({ setValue, accidentData
                                 (le montant déclaré doit correspondre à l’unité de temps ou à l’unité de temps et au cycle)</h5>
                         </div>
                         <TextFieldP id="remunerationTotalAssOnns" label="Rémunérations" onChange={setremunerationTotalAssOnns} defaultValue={remunerationTotalAssOnns} />
-                        <AutoCompleteP id="ListePrimeFinAnnee" option={listeDeclarationAss.ListePrimeFinAnnee} label="Prime de fin d’'état" onChange={setListePrimeFinAnnee} defaultValue={ListePrimeFinAnnee} />
+                        <AutoCompleteP id="ListePrimeFinAnnee" option={listeDeclarationAss.ListePrimeFinAnnee} label="Prime de fin d'année" onChange={setListePrimeFinAnnee} defaultValue={ListePrimeFinAnnee} />
                         <TextFieldP id="PrimeFinAnneeRemuAnnuel" label="Si oui, % de la rémuneration annuelle" onChange={setPrimeFinAnneeRemuAnnuel} defaultValue={PrimeFinAnneeRemuAnnuel} />
                         <TextFieldP id="PrimeFinAnneeRemuAnnuelForfetaire" label="Si oui, montant forfaitaire de €" onChange={setPrimeFinAnneeRemuAnnuelForfetaire} defaultValue={PrimeFinAnneeRemuAnnuelForfetaire} />
                         <TextFieldP id="PrimeFinAnneeRemuAnnuelNbrHeure" label="Si oui, émuniration d’un nombre d’heures" onChange={setPrimeFinAnneeRemuAnnuelNbrHeure} defaultValue={PrimeFinAnneeRemuAnnuelNbrHeure} />
