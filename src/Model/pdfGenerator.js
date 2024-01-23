@@ -94,11 +94,11 @@ export default async function editPDF(data) {
         //si le sexe est masculin on coche la case homme sinon on coche la case femme
         switch (data.sexe) {
             case "Masculin":
-            EditPdfCheckBox(form, '22 checkbox man', true);
-            break;
+                EditPdfCheckBox(form, '22 checkbox man', true);
+                break;
             case "Féminin":
-            EditPdfCheckBox(form, '23 checkbox vrouw', true);
-            break;
+                EditPdfCheckBox(form, '23 checkbox vrouw', true);
+                break;
         }
 
 
