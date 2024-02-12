@@ -29,6 +29,7 @@ import 'react-confirm-alert/src/react-confirm-alert.css';
 import './pageFormulaire/formulaire.css';
 import { handleExportData, handleExportDataAss } from './Model/excelGenerator.js';
 import dateConverter from './Model/dateConverter.js';
+import CountNumberAccident from './Model/CountNumberAccident.js';
 
 function Home() {
     const navigate = useNavigate();
@@ -83,44 +84,55 @@ function Home() {
         }
     };
 
-    
+
 
     function refreshListAccidents() {
-        axios.get("http://" + apiUrl + ":3100/api/accidents")
+        axios.get(`http://${apiUrl}:3100/api/accidents`)
             .then(response => {
-                const accidents = response.data;
-                console.log(accidents);
+                let accidents = response.data;
+
+                accidents = CountNumberAccident(accidents);
+
+                console.log("Home.js => refresh list accident =>", accidents);
 
                 if (Array.isArray(accidents)) {
                     accidents.forEach(item => {
-                        item.DateHeureAccident = dateConverter(item.DateHeureAccident, true);
-                        item.DateEnvoieDeclarationAccident = dateConverter(item.DateEnvoieDeclarationAccident, false);
-                        item.DateJourIncapDebut = dateConverter(item.DateJourIncapDebut, false);
-                        item.DateJourIncapFin = dateConverter(item.DateJourIncapFin, false);
-                        item.dateNaissance = dateConverter(item.dateNaissance, false);
-                        item.dateDebutArret = dateConverter(item.dateDebutArret, false);
-                        item.dateFinArret = dateConverter(item.dateFinArret, false);
-                        item.dateEntrEntreprise = dateConverter(item.dateEntrEntreprise, false);
-                        item.dateSortie = dateConverter(item.dateSortie, false);
-                        item.dateNotifEmployeur = dateConverter(item.dateNotifEmployeur, true);
-                        item.dateProcesVerbalOuiRedigeQuand = dateConverter(item.dateProcesVerbalOuiRedigeQuand, false);
-                        item.dateSoinsMedicauxDate = dateConverter(item.dateSoinsMedicauxDate, true);
-                        item.dateSoinsMedicauxMedecin = dateConverter(item.dateSoinsMedicauxMedecin, true);
-                        item.dateSoinsMedicauxHopital = dateConverter(item.dateSoinsMedicauxHopital, true);
-                        item.dateRepriseEffective = dateConverter(item.dateRepriseEffective, false);
-                        item.dateChangementFonction = dateConverter(item.dateChangementFonction, false);
-                        item.dateDecede = dateConverter(item.dateDecede, false);
-                        item.dateIncapaciteTemporaire = dateConverter(item.dateIncapaciteTemporaire, true);
-                        item.dateTravailAddapte = dateConverter(item.dateTravailAddapte, false);
+                        const dateProperties = [
+                            'DateHeureAccident',
+                            'DateEnvoieDeclarationAccident',
+                            'DateJourIncapDebut',
+                            'DateJourIncapFin',
+                            'dateNaissance',
+                            'dateDebutArret',
+                            'dateFinArret',
+                            'dateEntrEntreprise',
+                            'dateSortie',
+                            'dateNotifEmployeur',
+                            'dateProcesVerbalOuiRedigeQuand',
+                            'dateSoinsMedicauxDate',
+                            'dateSoinsMedicauxMedecin',
+                            'dateSoinsMedicauxHopital',
+                            'dateRepriseEffective',
+                            'dateChangementFonction',
+                            'dateDecede',
+                            'dateIncapaciteTemporaire',
+                            'dateTravailAddapte'
+                        ];
+
+                        dateProperties.forEach(property => {
+                            item[property] = dateConverter(item[property], dateProperties.includes('DateHeureAccident'));
+                        });
                     });
+
                     setData(accidents);
                 } else {
                     console.error("La réponse de l'API n'est pas un tableau.");
                 }
-                setLoading(false);
             })
-            .catch((error) => {
+            .catch(error => {
                 console.log("Home.js => refresh list accident error =>", error);
+            })
+            .finally(() => {
                 setLoading(false);
             });
     }
@@ -232,8 +244,8 @@ function Home() {
                                 <React.Fragment key={item._id}>
                                     <TableRow key={item._id} style={{ backgroundColor: rowColors[index % rowColors.length] }} // Utilisez le style alternatif pour chaque deuxième ligne
                                     >
-                                        <TableCell>{item.recordNumberGroupoe}</TableCell>
-                                        <TableCell>{item.recordNumberEntreprise}</TableCell>
+                                        <TableCell>{item.numeroGroupe}</TableCell>
+                                        <TableCell>{item.numeroEntreprise}</TableCell>
                                         <TableCell>{item.DateHeureAccident}</TableCell>
                                         <TableCell>{item.entrepriseName}</TableCell>
                                         <TableCell>{item.secteur}</TableCell>
@@ -288,7 +300,7 @@ function Home() {
                 </div>
             </TableContainer>
         </div>
-        
+
     );
 }
 
