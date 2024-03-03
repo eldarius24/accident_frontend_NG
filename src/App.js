@@ -6,9 +6,13 @@ import Formulaire from './pageFormulaire/Formulaire';
 import AdminPanelSettings from './pageAdmin/AdminPanelSettings';
 import AdminPanelSettingsAction from './pageAdmin/AdminPanelSettingsaction';
 import ResponsiveAppBar from './toolbar';
+import Deviation from './pageFormulaire/codeDeviation'; // Utilisez le même nom ici
+import Agentmateriel from './pageFormulaire/codeAgentMateriel';
+import Naturelesion from './pageFormulaire/codeNatureLesion';
+import Siegelesion from './pageFormulaire/codeSiegeLesion';
 
 const App = () => {
-  const [isFormVisible, setFormVisible] = useState(true);
+  const [isFormVisible, setFormVisible] = useState(false);
 
   return (
     <Router>
@@ -23,6 +27,10 @@ const App = () => {
           <Route path="/formulaire" element={<Formulaire />} />
           <Route path="/admin" element={<AdminPanelSettings />} />
           <Route path="/adminaction" element={<AdminPanelSettingsAction />} />
+          <Route path="/deviation" element={<Deviation />} /> {/* Utilisez le même nom ici */}
+          <Route path="/agentmateriel" element={<Agentmateriel />} />
+          <Route path="/naturelesion" element={<Naturelesion />} />
+          <Route path="/siegelesion" element={<Siegelesion />} />
         </Routes>
       </div>
     </Router>

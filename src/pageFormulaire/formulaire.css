@@ -256,3 +256,20 @@ h6 {
   background-color: #d2e2d2;
 }
 
+.line-separated h6 {
+  border-bottom: 2px solid #257525; /* Bordure en bas */
+  padding-bottom: 10px; /* Espacement entre les lignes */
+  margin: 0;
+  margin-left: 20px;
+  padding: 0;
+  text-align: left;
+}
+
+.line-separated h6:last-child {
+  border-bottom: none; /* Pas de bordure en bas pour le dernier élément */
+}
+
+.yellow-background {
+  background-color: yellow;
+  
+}

@@ -14,7 +14,7 @@ import AutoCompleteP from '../composants/autoCompleteP';
 import DatePickerP from '../composants/datePickerP';
 import DateHeurePickerP from '../composants/dateHeurePickerP';
 import TextFieldMaskP from '../composants/textFieldMaskP';
-
+import { Link } from 'react-router-dom';
 
 
 export default function FormulaireAccident({ setValue, accidentData, watch }) {
@@ -118,7 +118,7 @@ export default function FormulaireAccident({ setValue, accidentData, watch }) {
           }} defaultValue={DateHeureAccident}></DateHeurePickerP>
 
 
-          <TextFieldMaskP id='horaireJourAccident' label='Horaire de la victime le jour de l accident' onChange={sethoraireJourAccident} defaultValue={horaireJourAccident} mask="de 00h00 à 00h00 et de 00h00 à 00h00"/>
+          <TextFieldMaskP id='horaireJourAccident' label='Horaire de la victime le jour de l accident' onChange={sethoraireJourAccident} defaultValue={horaireJourAccident} mask="de 00h00 à 00h00 et de 00h00 à 00h00" />
 
           <DatePickerP id="DateJourIncapDebut" label="Date 1er jours incapacité" onChange={(DateJourIncapDebutChoose) => {
             setDateJourIncapDebut(DateJourIncapDebutChoose);
@@ -140,9 +140,9 @@ export default function FormulaireAccident({ setValue, accidentData, watch }) {
               <AutoCompleteP id='codeDeviation' option={listAccident.CodeDeviation} label='Code Déviation' onChange={setCodeDeviation} defaultValue={codeDeviation} />
             </Grid>
             <Grid item xs={0.00001} style={{ margin: '-24.5%' }}>
-              <a href="https://www.socialsecurity.be/app001/drselearning/common/jsp/utils/help.jsp?item=helpLastEventCodeList&labelOnly&messageKey=common.help.lasteventcode" target="_blank" rel="noopener noreferrer">
+              <Link to="/deviation" style={{ textDecoration: 'none', color: 'black' }} target="_blank" rel="noopener noreferrer">
                 <InfoIcon style={{ color: 'black' }} />
-              </a>
+              </Link>
             </Grid>
           </Grid>
 
@@ -151,9 +151,9 @@ export default function FormulaireAccident({ setValue, accidentData, watch }) {
               <AutoCompleteP id='codeAgentMateriel' option={listAccident.CodeAgentMateriel} label='Code Agent matériel' onChange={setCodeAgentMateriel} defaultValue={codeAgentMateriel} />
             </Grid>
             <Grid item xs={0.00001} style={{ margin: '-24.5%' }}>
-              <a href="https://www.socialsecurity.be/app001/drselearning/common/jsp/utils/help.jsp?item=helpObjectCodeList&labelOnly&messageKey=common.help.objectcode" target="_blank" rel="noopener noreferrer">
+            <Link to="/agentmateriel" style={{ textDecoration: 'none', color: 'black' }} target="_blank" rel="noopener noreferrer">
                 <InfoIcon style={{ color: 'black' }} />
-              </a>
+              </Link>
             </Grid>
           </Grid>
 
@@ -162,9 +162,9 @@ export default function FormulaireAccident({ setValue, accidentData, watch }) {
               <AutoCompleteP id='codeNatureLesion' option={listAccident.CodeNatureLésion} label='Code Nature de la lésion' onChange={setCodeNatureLesion} defaultValue={codeNatureLesion} />
             </Grid>
             <Grid item xs={0.00001} style={{ margin: '-24.5%' }}>
-              <a href="https://www.socialsecurity.be/app001/drselearning/common/jsp/utils/helpMap.jsp?item=helpInjuriesNatureCodeMap&labelOnly&messageKey=common.help.injuriesnaturecode" target="_blank" rel="noopener noreferrer">
+            <Link to="/naturelesion" style={{ textDecoration: 'none', color: 'black' }} target="_blank" rel="noopener noreferrer">
                 <InfoIcon style={{ color: 'black' }} />
-              </a>
+                </Link>
             </Grid>
           </Grid>
 
@@ -173,9 +173,9 @@ export default function FormulaireAccident({ setValue, accidentData, watch }) {
               <AutoCompleteP id='codeSiegeLesion' option={listAccident.CodeSiegeLésion} label='Code siège lésion' onChange={setCodeSiegeLesion} defaultValue={codeSiegeLesion} />
             </Grid>
             <Grid item xs={0.00001} style={{ margin: '-24.5%' }} >
-              <a href="https://www.fedris.be/sites/default/files/assets/FR/Statistiques/SEAT/localisationblessure.pdf" target="_blank" rel="noopener noreferrer">
+            <Link to="/siegelesion" style={{ textDecoration: 'none', color: 'black' }} target="_blank" rel="noopener noreferrer">
                 <InfoIcon style={{ color: 'black' }} />
-              </a>
+                </Link>
             </Grid>
           </Grid>
 
