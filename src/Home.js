@@ -45,13 +45,13 @@ function Home() {
         refreshListAccidents();
     }, []);
 
-    
+
     const navigate = useNavigate();
     const apiUrl = config.apiUrl;
     /**
      * Années récupérées de l'API pour le filtre
      */
-    const [yearsFromData, setYearsFromData] = useState([]); 
+    const [yearsFromData, setYearsFromData] = useState([]);
     /**
      * Liste des années sélectionnées pour le filtre
      */
@@ -61,7 +61,7 @@ function Home() {
     const [searchTerm, setSearchTerm] = useState('');
 
 
-    
+
 
 
 
@@ -151,6 +151,15 @@ function Home() {
 
                 //mettre à jour les années pour le filtre
                 setYearsFromData([...new Set(accidents.map(accident => new Date(accident.DateHeureAccident).getFullYear()))]);
+
+                // Cocher toutes les cases par défaut
+                setYearsChecked([...new Set(accidents.map(accident => new Date(accident.DateHeureAccident).getFullYear()))]);
+
+                // Cocher l'année en cours par défaut
+                /*const currentYear = new Date().getFullYear();
+                if (!yearsChecked.includes(currentYear)) {
+                    setYearsChecked([...yearsChecked, currentYear]);
+                }*/
             })
             .catch(error => {
                 console.log("Home.js => refresh list accident error =>", error);
@@ -161,8 +170,7 @@ function Home() {
     }
 
     /**
-     * Fonction qui permet de fi});
-ltrer les données de la table en fonction du contenu de la barre de recherche
+     * Fonction qui permet de filtrer les données de la table en fonction du contenu de la barre de recherche
      */
     let filteredData = data.filter((item) => {
         const years = yearsChecked.map(Number);
@@ -207,8 +215,8 @@ ltrer les données de la table en fonction du contenu de la barre de recherche
     return (
         <div>
             <div style={{ display: 'flex', justifyContent: 'center', margin: '20px 0rem' }}>
-                <Grid item xs={12} style={{ marginRight: '20px' }}>
-                    <FormControl sx={{ m: 1, minWidth: 120 }}>
+                <Grid item xs={6} style={{marginRight: '20px', backgroundColor: '#84a784' }}>
+                    <FormControl sx={{minWidth: 120 }}>
                         <InputLabel id="sort-label">Trier par année</InputLabel>
                         <Select
                             labelId="sort-label"
