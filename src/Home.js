@@ -11,6 +11,12 @@ import {
     LinearProgress,
     TextField,
     Grid,
+    FormControl,
+    InputLabel,
+    Select,
+    MenuItem,
+    Checkbox,
+    ListItemText,
 } from '@mui/material';
 import axios from 'axios';
 import RefreshIcon from '@mui/icons-material/Refresh';
@@ -24,6 +30,7 @@ import GetAppIcon from '@mui/icons-material/GetApp';
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 import editPDF from './Model/pdfGenerator.js';
 import { confirmAlert } from 'react-confirm-alert';
+
 import 'react-confirm-alert/src/react-confirm-alert.css';
 /* IMPORT PERSO */
 import './pageFormulaire/formulaire.css';
@@ -31,17 +38,30 @@ import { handleExportData, handleExportDataAss } from './Model/excelGenerator.js
 import dateConverter from './Model/dateConverter.js';
 import CountNumberAccident from './Model/CountNumberAccident.js';
 
-function Home() {
-    const navigate = useNavigate();
-    const apiUrl = config.apiUrl;
-    const [data, setData] = useState([]); // Stocker les données de l'API
-    const [loading, setLoading] = useState(true);
-    const [searchTerm, setSearchTerm] = useState('');
 
+function Home() {
     //au chargerment de la page, on met à jour les données de la liste des accidents
     useEffect(() => {
         refreshListAccidents();
     }, []);
+
+    
+    const navigate = useNavigate();
+    const apiUrl = config.apiUrl;
+    /**
+     * Années récupérées de l'API pour le filtre
+     */
+    const [yearsFromData, setYearsFromData] = useState([]); 
+    /**
+     * Liste des années sélectionnées pour le filtre
+     */
+    const [yearsChecked, setYearsChecked] = useState([]);
+    const [data, setData] = useState([]); // Stocker les données de l'API
+    const [loading, setLoading] = useState(true);
+    const [searchTerm, setSearchTerm] = useState('');
+
+
+    
 
 
 
@@ -128,6 +148,9 @@ function Home() {
                 } else {
                     console.error("La réponse de l'API n'est pas un tableau.");
                 }
+
+                //mettre à jour les années pour le filtre
+                setYearsFromData([...new Set(accidents.map(accident => new Date(accident.DateHeureAccident).getFullYear()))]);
             })
             .catch(error => {
                 console.log("Home.js => refresh list accident error =>", error);
@@ -138,12 +161,17 @@ function Home() {
     }
 
     /**
-     * Fonction qui permet de filtrer les données de la table en fonction du contenu de la barre de recherche
+     * Fonction qui permet de fi});
+ltrer les données de la table en fonction du contenu de la barre de recherche
      */
-    const filteredData = data.filter((item) => {
+    let filteredData = data.filter((item) => {
+        const years = yearsChecked.map(Number);
+        const date = new Date(item.DateHeureAccident).getFullYear();
+        //console.log("===========================================================");
+        //console.log("Home.js => filteredData => item =>", item);
+        //console.log("Home.js => filteredData => years =>", years);
+        //console.log("Home.js => filteredData => date =>", date);
         const filterProperties = [
-            'recordNumberGroupoe',
-            'recordNumberEntreprise',
             'DateHeureAccident',
             'entrepriseName',
             'secteur',
@@ -152,14 +180,22 @@ function Home() {
             'typeAccident'
         ];
         return filterProperties.some((property) => {
+            //console.log("Home.js => filteredData => property =>", property);
             const value = item[property];
-            return (
-                value &&
-                typeof value === 'string' &&
-                value.toLowerCase().includes(searchTerm.toLowerCase())
-            );
+            //console.log("Home.js => filteredData => value =>", value);
+            const result = (value && typeof value === 'string' && value.toLowerCase().includes(searchTerm.toLowerCase())) && years.includes(date);
+            //console.log("Home.js => filteredData => result =>", result);
+            return result
         });
     });
+
+    // Function that filters the data based on the selected year
+    const handleChangeYearsFilter = (event) => {
+        const {
+            target: { value },
+        } = event;
+        setYearsChecked(typeof value === 'string' ? value.split(',') : value);
+    }
 
     if (loading) {
         return <LinearProgress color="success" />;
@@ -167,9 +203,30 @@ function Home() {
 
     const rowColors = ['#bed1be', '#d2e2d2']; // Tableau de couleurs pour les lignes
 
+
     return (
         <div>
             <div style={{ display: 'flex', justifyContent: 'center', margin: '20px 0rem' }}>
+                <Grid item xs={12} style={{ marginRight: '20px' }}>
+                    <FormControl sx={{ m: 1, minWidth: 120 }}>
+                        <InputLabel id="sort-label">Trier par année</InputLabel>
+                        <Select
+                            labelId="sort-label"
+                            id="sort-select"
+                            multiple
+                            value={yearsChecked}
+                            onChange={handleChangeYearsFilter}
+                            renderValue={(selected) => selected.join(', ')} // Affichage des valeurs sélectionnées
+                        >
+                            {yearsFromData.map((year) => (
+                                <MenuItem key={year} value={year}>
+                                    <Checkbox checked={yearsChecked.indexOf(year) > -1} />
+                                    <ListItemText primary={year} />
+                                </MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
+                </Grid>
                 <Grid item xs={6} style={{ marginRight: '20px' }}>
                     <Button
                         sx={{ color: 'black', padding: '14px 60px', backgroundColor: '#84a784', '&:hover': { backgroundColor: 'green' }, boxShadow: 3, textTransform: 'none' }}

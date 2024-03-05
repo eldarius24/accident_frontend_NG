@@ -37,9 +37,9 @@ export default function CountNumberAccidentGroupe(accidents) {
     });
 
     // Affiche les accidents après le tri et l'attribution des numéros
-    accidents.forEach((accident) => {
+    /*accidents.forEach((accident) => {
         console.log("accidents après le tri  => ", accident.numeroGroupe, "->", accident.numeroEntreprise, "->", accident.DateHeureAccident);
-    });
+    });*/
 
     return accidents;
 }

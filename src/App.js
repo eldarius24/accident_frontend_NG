@@ -12,7 +12,7 @@ import Naturelesion from './pageFormulaire/codeNatureLesion';
 import Siegelesion from './pageFormulaire/codeSiegeLesion';
 
 const App = () => {
-  const [isFormVisible, setFormVisible] = useState(false);
+  const [isFormVisible, setFormVisible] = useState(true);
 
   return (
     <Router>
@@ -27,7 +27,7 @@ const App = () => {
           <Route path="/formulaire" element={<Formulaire />} />
           <Route path="/admin" element={<AdminPanelSettings />} />
           <Route path="/adminaction" element={<AdminPanelSettingsAction />} />
-          <Route path="/deviation" element={<Deviation />} /> {/* Utilisez le même nom ici */}
+          <Route path="/deviation" element={<Deviation />} />
           <Route path="/agentmateriel" element={<Agentmateriel />} />
           <Route path="/naturelesion" element={<Naturelesion />} />
           <Route path="/siegelesion" element={<Siegelesion />} />
