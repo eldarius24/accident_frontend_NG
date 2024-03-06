@@ -239,7 +239,7 @@ function Home() {
                 </Grid>
                 <Grid item xs={6} style={{ marginRight: '20px', backgroundColor: '#84a784' }}>
                     <FormControl sx={{ boxShadow: 3, minWidth: 120 }}>
-                        <InputLabel id="sort-label">Trier par année</InputLabel>
+                        <InputLabel id="sort-label">Année</InputLabel>
                         <Select
                             labelId="sort-label"
                             id="sort-select"
