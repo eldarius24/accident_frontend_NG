@@ -18,6 +18,7 @@ export default function AutoCompleteP({
     onChange,
     defaultValue,
     sx = { backgroundColor: '#84a784', width: '50%', boxShadow: 3, margin: '0 auto 1rem' }
+    
 }) {
 
     const handleChange = (_, value) => {
@@ -38,7 +39,7 @@ export default function AutoCompleteP({
                 onChange={handleChange}
                 renderOption={(props, option) => <li {...props}>{option}</li>}
                 renderInput={(params) => <TextField {...params} label={label} />}
-                fullWidth={true}
+                fullWidth={true}               
             />
         </div>
     );

@@ -237,8 +237,8 @@ function Home() {
                         Actualiser
                     </Button>
                 </Grid>
-                <Grid item xs={6} style={{marginRight: '20px', backgroundColor: '#84a784' }}>
-                    <FormControl sx={{boxShadow: 3, minWidth: 120 }}>
+                <Grid item xs={6} style={{ marginRight: '20px', backgroundColor: '#84a784' }}>
+                    <FormControl sx={{ boxShadow: 3, minWidth: 120 }}>
                         <InputLabel id="sort-label">Trier par année</InputLabel>
                         <Select
                             labelId="sort-label"
@@ -247,17 +247,26 @@ function Home() {
                             value={selectAllYears ? yearsFromData : yearsChecked}
                             onChange={handleChangeYearsFilter}
                             renderValue={(selected) => selected.join(', ')} // Affichage des valeurs sélectionnées
+                            MenuProps={{
+                                PaperProps: {
+                                    style: {
+                                        backgroundColor: '#bed1be', // Couleur de fond du menu
+                                    },
+                                },
+                            }}
                         >
                             <MenuItem>
                                 <Checkbox
                                     checked={selectAllYears}
                                     onChange={handleSelectAllYears}
+                                    style={{ color: 'red' }}
+
                                 />
                                 <ListItemText primary="All" />
                             </MenuItem>
                             {yearsFromData.map((year) => (
                                 <MenuItem key={year} value={year}>
-                                    <Checkbox checked={yearsChecked.indexOf(year) > -1} />
+                                    <Checkbox checked={yearsChecked.indexOf(year) > -1} style={{ color: '#257525' }} />
                                     <ListItemText primary={year} />
                                 </MenuItem>
                             ))}
