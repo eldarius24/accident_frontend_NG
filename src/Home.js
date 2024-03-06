@@ -1,4 +1,3 @@
-// Home.js
 import React, { useEffect, useState } from 'react';
 import {
     Table,
@@ -56,6 +55,7 @@ function Home() {
      * Liste des années sélectionnées pour le filtre
      */
     const [yearsChecked, setYearsChecked] = useState([]);
+    const [selectAllYears, setSelectAllYears] = useState(false); // State pour la case à cocher "Sélectionner toutes les années"
     const [data, setData] = useState([]); // Stocker les données de l'API
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
@@ -153,13 +153,13 @@ function Home() {
                 setYearsFromData([...new Set(accidents.map(accident => new Date(accident.DateHeureAccident).getFullYear()))]);
 
                 // Cocher toutes les cases par défaut
-                setYearsChecked([...new Set(accidents.map(accident => new Date(accident.DateHeureAccident).getFullYear()))]);
+                //setYearsChecked([...new Set(accidents.map(accident => new Date(accident.DateHeureAccident).getFullYear()))]);
 
                 // Cocher l'année en cours par défaut
-                /*const currentYear = new Date().getFullYear();
+                const currentYear = new Date().getFullYear();
                 if (!yearsChecked.includes(currentYear)) {
                     setYearsChecked([...yearsChecked, currentYear]);
-                }*/
+                }
             })
             .catch(error => {
                 console.log("Home.js => refresh list accident error =>", error);
@@ -205,6 +205,17 @@ function Home() {
         setYearsChecked(typeof value === 'string' ? value.split(',') : value);
     }
 
+    // Function to handle the select all years checkbox
+    const handleSelectAllYears = (event) => {
+        const { checked } = event.target;
+        setSelectAllYears(checked);
+        if (checked) {
+            setYearsChecked(yearsFromData);
+        } else {
+            setYearsChecked([]);
+        }
+    }
+
     if (loading) {
         return <LinearProgress color="success" />;
     }
@@ -215,26 +226,6 @@ function Home() {
     return (
         <div>
             <div style={{ display: 'flex', justifyContent: 'center', margin: '20px 0rem' }}>
-                <Grid item xs={6} style={{marginRight: '20px', backgroundColor: '#84a784' }}>
-                    <FormControl sx={{boxShadow: 3, minWidth: 120 }}>
-                        <InputLabel id="sort-label">Trier par année</InputLabel>
-                        <Select
-                            labelId="sort-label"
-                            id="sort-select"
-                            multiple
-                            value={yearsChecked}
-                            onChange={handleChangeYearsFilter}
-                            renderValue={(selected) => selected.join(', ')} // Affichage des valeurs sélectionnées
-                        >
-                            {yearsFromData.map((year) => (
-                                <MenuItem key={year} value={year}>
-                                    <Checkbox checked={yearsChecked.indexOf(year) > -1} />
-                                    <ListItemText primary={year} />
-                                </MenuItem>
-                            ))}
-                        </Select>
-                    </FormControl>
-                </Grid>
                 <Grid item xs={6} style={{ marginRight: '20px' }}>
                     <Button
                         sx={{ color: 'black', padding: '14px 60px', backgroundColor: '#84a784', '&:hover': { backgroundColor: 'green' }, boxShadow: 3, textTransform: 'none' }}
@@ -245,6 +236,33 @@ function Home() {
                     >
                         Actualiser
                     </Button>
+                </Grid>
+                <Grid item xs={6} style={{marginRight: '20px', backgroundColor: '#84a784' }}>
+                    <FormControl sx={{boxShadow: 3, minWidth: 120 }}>
+                        <InputLabel id="sort-label">Trier par année</InputLabel>
+                        <Select
+                            labelId="sort-label"
+                            id="sort-select"
+                            multiple
+                            value={selectAllYears ? yearsFromData : yearsChecked}
+                            onChange={handleChangeYearsFilter}
+                            renderValue={(selected) => selected.join(', ')} // Affichage des valeurs sélectionnées
+                        >
+                            <MenuItem>
+                                <Checkbox
+                                    checked={selectAllYears}
+                                    onChange={handleSelectAllYears}
+                                />
+                                <ListItemText primary="All" />
+                            </MenuItem>
+                            {yearsFromData.map((year) => (
+                                <MenuItem key={year} value={year}>
+                                    <Checkbox checked={yearsChecked.indexOf(year) > -1} />
+                                    <ListItemText primary={year} />
+                                </MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
                 </Grid>
                 <Grid item xs={6} style={{ marginRight: '20px' }}>
                     <TextField
