@@ -102,9 +102,9 @@ export default function Formulaire() {
      * ************************************************************************/
     return (
         <form className="background-image" onSubmit={handleSubmit(onSubmit)}>
-            {React.createElement(forms[activeStep].component, { setValue, accidentData, watch })}
+            
             {/* Boutons de navigation pour passer à l'étape suivante ou revenir à l'étape précédente */}
-            <div style={{ display: 'flex', justifyContent: 'center' }}>
+            <div style={{ display: 'flex', justifyContent: 'center', marginTop : '1.5rem' }}>
                 {activeStep > 0 && (
                     <Button
                         onClick={() => setActiveStep((prevStep) => prevStep - 1)}
@@ -133,7 +133,7 @@ export default function Formulaire() {
                     </Button>
                 )}
             </div>
-
+            {React.createElement(forms[activeStep].component, { setValue, accidentData, watch })}
             {/************* Telechargement de fichier **************************/}
             <h3>Vous pouvez ajouter des pièces à joindre au dossier (courriers, e-mails, etc..).</h3>
 
