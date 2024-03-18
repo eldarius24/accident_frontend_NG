@@ -39,11 +39,6 @@ import CountNumberAccident from './Model/CountNumberAccident.js';
 
 
 function Home() {
-    //au chargerment de la page, on met à jour les données de la liste des accidents
-    useEffect(() => {
-        refreshListAccidents();
-    }, []);
-
 
     const navigate = useNavigate();
     const apiUrl = config.apiUrl;
@@ -61,8 +56,13 @@ function Home() {
     const [searchTerm, setSearchTerm] = useState('');
 
 
-
-
+    //au chargerment de la page, on met à jour les données de la liste des accidents
+    useEffect(() => {
+        refreshListAccidents();
+        // Cocher l'année en cours par défaut
+        const currentYear = new Date().getFullYear();
+        setYearsChecked([...yearsChecked, currentYear]);
+    }, []);
 
 
     const handleDelete = (accidentIdToDelete) => {
@@ -154,12 +154,6 @@ function Home() {
 
                 // Cocher toutes les cases par défaut
                 //setYearsChecked([...new Set(accidents.map(accident => new Date(accident.DateHeureAccident).getFullYear()))]);
-
-                // Cocher l'année en cours par défaut
-                const currentYear = new Date().getFullYear();
-                if (!yearsChecked.includes(currentYear)) {
-                    setYearsChecked([...yearsChecked, currentYear]);
-                }
             })
             .catch(error => {
                 console.log("Home.js => refresh list accident error =>", error);
@@ -240,6 +234,7 @@ function Home() {
                 <Grid item xs={6} style={{ marginRight: '20px', backgroundColor: '#84a784' }}>
                     <FormControl sx={{ boxShadow: 3, minWidth: 120 }}>
                         <InputLabel id="sort-label">Année</InputLabel>
+                        
                         <Select
                             labelId="sort-label"
                             id="sort-select"
@@ -255,7 +250,7 @@ function Home() {
                                 },
                             }}
                         >
-                            <MenuItem>
+                            <MenuItem key="All" value="All">
                                 <Checkbox
                                     checked={selectAllYears}
                                     onChange={handleSelectAllYears}
@@ -266,7 +261,9 @@ function Home() {
                             </MenuItem>
                             {yearsFromData.map((year) => (
                                 <MenuItem key={year} value={year}>
-                                    <Checkbox checked={yearsChecked.indexOf(year) > -1} style={{ color: '#257525' }} />
+                                    <Checkbox
+                                        checked={yearsChecked.indexOf(year) > -1}
+                                        style={{ color: '#257525' }} />
                                     <ListItemText primary={year} />
                                 </MenuItem>
                             ))}
