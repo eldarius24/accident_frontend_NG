@@ -36,6 +36,7 @@ import './pageFormulaire/formulaire.css';
 import { handleExportData, handleExportDataAss } from './Model/excelGenerator.js';
 import dateConverter from './Model/dateConverter.js';
 import CountNumberAccident from './Model/CountNumberAccident.js';
+import FileUploadIcon from '@mui/icons-material/FileUpload';
 
 
 function Home() {
@@ -291,7 +292,7 @@ function Home() {
                         variant="contained"
                         color="primary"
                         onClick={() => handleExportData(filteredData)}
-                        startIcon={<GetAppIcon />}
+                        startIcon={<FileUploadIcon />}
                     >
                         Accident
                     </Button>
@@ -302,7 +303,7 @@ function Home() {
                         variant="contained"
                         color="primary"
                         onClick={() => handleExportDataAss(filteredData)}
-                        startIcon={<GetAppIcon />}
+                        startIcon={<FileUploadIcon />}
                     >
                         Assurance
                     </Button>
@@ -343,6 +344,7 @@ function Home() {
                                         <TableCell>{item.typeAccident}</TableCell>
                                         <TableCell>
                                             <Button style={{ margin: '2px' }} variant="contained" color="primary" onClick={() => handleEdit(item._id)}> <EditIcon /></Button>
+                                            <Button style={{ margin: '2px' }} variant="contained" color="secondary" onClick={() => handleFileUpload(item._id)}> <GetAppIcon/></Button>
                                             <Button style={{ margin: '2px' }} variant="contained" color="success" onClick={() => handleGeneratePDF(item._id)}> <PictureAsPdfIcon /></Button>
                                             <Button
                                                 style={{ margin: '2px' }}
