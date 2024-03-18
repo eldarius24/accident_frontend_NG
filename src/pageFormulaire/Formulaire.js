@@ -134,6 +134,36 @@ export default function Formulaire() {
                 )}
             </div>
             {React.createElement(forms[activeStep].component, { setValue, accidentData, watch })}
+
+            <div style={{ display: 'flex', justifyContent: 'center', marginTop : '1.5rem' }}>
+                {activeStep > 0 && (
+                    <Button
+                        onClick={() => setActiveStep((prevStep) => prevStep - 1)}
+                        sx={{
+                            backgroundColor: '#84a784',
+                            '&:hover': { backgroundColor: 'green' },
+                            padding: '10px 20px',
+                            marginRight: '1rem',
+                        }}
+                        startIcon={<ArrowBackIcon />}
+                    >
+                        Précédent
+                    </Button>
+                )}
+                {activeStep < forms.length - 1 && (
+                    <Button
+                        onClick={() => setActiveStep((prevStep) => prevStep + 1)}
+                        sx={{
+                            backgroundColor: '#84a784',
+                            '&:hover': { backgroundColor: 'green' },
+                            padding: '10px 20px',
+                        }}
+                        startIcon={<ArrowForwardIcon />}
+                    >
+                        Suivant
+                    </Button>
+                )}
+            </div>
             {/************* Telechargement de fichier **************************/}
             <h3>Vous pouvez ajouter des pièces à joindre au dossier (courriers, e-mails, etc..).</h3>
 
