@@ -1,8 +1,8 @@
-import axios from 'axios';
 import React, { useCallback } from 'react';
+import { Link } from 'react-router-dom';
+import Button from '@mui/material/Button';
 
-export default function Formulaire() {
-
+export default function Formulaire({ location }) {
     const handleFileUpload = (file) => {
         console.log("Fichier téléchargé :", file.name);
     };
@@ -16,9 +16,19 @@ export default function Formulaire() {
         }
     }, []);
 
-    return (
-        <form >
 
+    return (
+        <form>
+            <Button
+                style={{ margin: '20px', marginTop: '20px'}}
+                sx={{ backgroundColor: '#84a784', '&:hover': { backgroundColor: 'green' } }}
+                component={Link}
+                to={'/accueil'}
+                variant="contained"
+                
+            >
+                Accueil
+            </Button>
             <h3>Vous pouvez ajouter des pièces à joindre au dossier (courriers, e-mails, etc..).</h3>
 
             <div
@@ -67,7 +77,6 @@ export default function Formulaire() {
                     Télécharger un document
                 </label>
             </div>
-
         </form>
     );
 }
