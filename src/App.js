@@ -10,6 +10,8 @@ import Deviation from './pageFormulaire/codeDeviation'; // Utilisez le même nom
 import Agentmateriel from './pageFormulaire/codeAgentMateriel';
 import Naturelesion from './pageFormulaire/codeNatureLesion';
 import Siegelesion from './pageFormulaire/codeSiegeLesion';
+import Fichierdll from './pageFormulaire/fichierdll';
+
 
 const App = () => {
   const [isFormVisible, setFormVisible] = useState(true);
@@ -31,6 +33,7 @@ const App = () => {
           <Route path="/agentmateriel" element={<Agentmateriel />} />
           <Route path="/naturelesion" element={<Naturelesion />} />
           <Route path="/siegelesion" element={<Siegelesion />} />
+          <Route path="/fichierdll" element={<Fichierdll />} />
         </Routes>
       </div>
     </Router>

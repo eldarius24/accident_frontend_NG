@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import {
     Table,
     TableBody,
@@ -55,7 +56,7 @@ function Home() {
     const [data, setData] = useState([]); // Stocker les données de l'API
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
-
+    const isFileUploadIcon = location.pathname === '/fichierdll';
 
     //au chargerment de la page, on met à jour les données de la liste des accidents
     useEffect(() => {
@@ -235,7 +236,7 @@ function Home() {
                 <Grid item xs={6} style={{ marginRight: '20px', backgroundColor: '#84a784' }}>
                     <FormControl sx={{ boxShadow: 3, minWidth: 120 }}>
                         <InputLabel id="sort-label">Année</InputLabel>
-                        
+
                         <Select
                             labelId="sort-label"
                             id="sort-select"
@@ -344,8 +345,18 @@ function Home() {
                                         <TableCell>{item.typeAccident}</TableCell>
                                         <TableCell>
                                             <Button style={{ margin: '2px' }} variant="contained" color="primary" onClick={() => handleEdit(item._id)}> <EditIcon /></Button>
-                                            <Button style={{ margin: '2px' }} variant="contained" color="secondary" onClick={() => handleFileUpload(item._id)}> <GetAppIcon/></Button>
                                             <Button style={{ margin: '2px' }} variant="contained" color="success" onClick={() => handleGeneratePDF(item._id)}> <PictureAsPdfIcon /></Button>
+                                            <Button
+                                                style={{ margin: '2px' }}
+                                                component={Link}
+                                                to={isFileUploadIcon ? '/' : '/fichierdll'}
+                                                variant="contained"
+                                                color="secondary"
+                                            >
+                                                <GetAppIcon
+
+                                                />
+                                            </Button>
                                             <Button
                                                 style={{ margin: '2px' }}
                                                 variant="contained"
