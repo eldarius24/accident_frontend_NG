@@ -13,7 +13,6 @@ export default function AdminPanelSettings({ accidentData }) {
     const [adminNameLogin, setadminNameLogin] = useState(watch('adminNameLogin') ? watch('adminNameLogin') : (accidentData && accidentData.adminNameLogin ? accidentData.adminNameLogin : null));
     const [adminPanelSettingsmdp, setadminPanelSettingsmdp] = useState(watch('adminPanelSettingsmdp') ? watch('adminPanelSettingsmdp') : (accidentData && accidentData.adminPanelSettingsmdp ? accidentData.adminPanelSettingsmdp : null));
     const [adminPrenomNom, setadminPrenomNom] = useState(watch('adminPrenomNom') ? watch('adminPrenomNom') : (accidentData && accidentData.adminPrenomNom ? accidentData.adminPrenomNom : null));
-
     const [boolCortil, setboolCortil] = useState(watch('boolCortil') ? watch('boolCortil') : (accidentData && accidentData.boolCortil ? accidentData.boolCortil : false));
     const [boolCortibat, setboolCortibat] = useState(watch('boolCortibat') ? watch('boolCortibat') : (accidentData && accidentData.boolCortibat ? accidentData.boolCortibat : false));
     const [boolCortibel, setboolCortibel] = useState(watch('boolCortibel') ? watch('boolCortibel') : (accidentData && accidentData.boolCortibel ? accidentData.boolCortibel : false));

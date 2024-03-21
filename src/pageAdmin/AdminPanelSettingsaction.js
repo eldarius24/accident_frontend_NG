@@ -24,18 +24,12 @@ export default function AdminPanelSettingsaction() {
         <div className="frameStyle-style">
             <h3>Administration des droits</h3>
 
-            <h3>Actions</h3>
             <Box sx={{ display: 'flex', justifyContent: 'center', marginLeft: '120px', marginRight: '120px' }}>
                 <Button type="submit"
                     component={Link}
                     to={'/admin'}
                     sx={defaultStyle} variant="contained"> Créer un nouvel utilisateur</Button>
                 <Button type="submit" sx={defaultStyle} variant="contained"> Consulter les utilisateurs</Button>
-            </Box>
-            <Box sx={{ display: 'flex', justifyContent: 'center', marginLeft: '120px', marginRight: '120px' }}>
-                <Button type="submit" sx={defaultStyle} variant="contained"> Supprimer toutes les données</Button>
-                <Button type="submit" sx={defaultStyle} variant="contained"> Archiver toutes les données</Button>
-                <Button type="submit" sx={defaultStyle} variant="contained"> Consulter les archives</Button>
             </Box>
         </div>
     );

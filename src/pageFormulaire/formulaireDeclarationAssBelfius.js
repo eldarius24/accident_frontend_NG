@@ -238,7 +238,7 @@ export default function FormulaireDeclarationASSBelfius({ setValue, accidentData
                     <AutoCompleteP id="ListeVoiePublic" option={listeDeclarationAss.ListeVoiePublic} label="Est-ce un accident de la circulation" onChange={(value) => { setListeVoiePublic(value); }} defaultValue={ListeVoiePublic} />
                 )}
 
-                {(ListeVoiePublic === 'Oui') && (
+                {(ListeVoiePublic === 'Oui' || ListeLieuxAt === 'A un autre endroit') && (
                     [<TextFieldP id="LieuxAtAdresse" label="Rue/numero/boite" onChange={setLieuxAtAdresse} defaultValue={LieuxAtAdresse} />,
                     <TextFieldP id="LieuxAtCodePostal" label="Code postal" onChange={setLieuxAtCodePostal} defaultValue={LieuxAtCodePostal} />,
                     <TextFieldP id="LieuxAtCommune" label="Commune" onChange={setLieuxAtCommune} defaultValue={LieuxAtCommune} />,

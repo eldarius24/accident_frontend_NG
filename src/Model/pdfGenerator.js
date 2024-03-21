@@ -73,7 +73,10 @@ export default async function editPDF(data) {
             EditPdfTextField(form, '2 jaar', (data.DateHeureAccident.substring(0, 4)));
             EditPdfTextField(form, '3 nummer', (data.DateHeureAccident.substring(0, 4) + data.DateHeureAccident.substring(5, 7) + data.DateHeureAccident.substring(8, 10) + data.DateHeureAccident.substring(13, 15) + data.DateHeureAccident.substring(16, 18)));
         };
-
+        EditPdfTextField(form, 'p2_20', dataEntreprise.LieuxAtAdresse);
+        EditPdfTextField(form, 'p2_21', dataEntreprise.LieuxAtCodePostal);
+        EditPdfTextField(form, 'p2_22', dataEntreprise.LieuxAtCommune);
+        EditPdfTextField(form, 'p2_23', dataEntreprise.ListeLieuxAtPays);
         //-------------------------
 
         if (data.niss !== undefined && data.niss !== null) {

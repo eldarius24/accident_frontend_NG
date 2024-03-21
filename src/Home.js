@@ -325,7 +325,7 @@ function Home() {
                                     <TableCell style={{ fontWeight: 'bold' }}>Nom du travailleur</TableCell>
                                     <TableCell style={{ fontWeight: 'bold' }}>Prénom du travailleur</TableCell>
                                     <TableCell style={{ fontWeight: 'bold' }}>Type accident</TableCell>
-                                    <TableCell style={{ fontWeight: 'bold' }}>&nbsp;&nbsp;&nbsp;Editer&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;PDF&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Supprimer</TableCell>
+                                    <TableCell style={{ fontWeight: 'bold' }}>&nbsp;&nbsp;&nbsp;Editer&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Add Fichier&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;PDF&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Supprimer</TableCell>
                                 </TableRow>
                                 <TableRow className="table-row-separatormenu"></TableRow>
                             </React.Fragment>
@@ -345,18 +345,8 @@ function Home() {
                                         <TableCell>{item.typeAccident}</TableCell>
                                         <TableCell>
                                             <Button style={{ margin: '2px' }} variant="contained" color="primary" onClick={() => handleEdit(item._id)}> <EditIcon /></Button>
-                                            <Button style={{ margin: '2px' }} variant="contained" color="success" onClick={() => handleGeneratePDF(item._id)}> <PictureAsPdfIcon /></Button>
-                                            <Button
-                                                style={{ margin: '2px' }}
-                                                component={Link}
-                                                to={isFileUploadIcon ? '/' : '/fichierdll'}
-                                                variant="contained"
-                                                color="secondary"
-                                            >
-                                                <GetAppIcon
-
-                                                />
-                                            </Button>
+                                            <Button style={{ margin: '2px' }} component={Link} to={isFileUploadIcon ? '/' : '/fichierdll'} variant="contained" color="secondary"> <GetAppIcon/></Button>
+                                            <Button style={{ margin: '2px' }} variant="contained" color="success" onClick={() => handleGeneratePDF(item._id)}> <PictureAsPdfIcon /></Button>                        
                                             <Button
                                                 style={{ margin: '2px' }}
                                                 variant="contained"
