@@ -325,7 +325,10 @@ function Home() {
                                     <TableCell style={{ fontWeight: 'bold' }}>Nom du travailleur</TableCell>
                                     <TableCell style={{ fontWeight: 'bold' }}>Prénom du travailleur</TableCell>
                                     <TableCell style={{ fontWeight: 'bold' }}>Type accident</TableCell>
-                                    <TableCell style={{ fontWeight: 'bold' }}>&nbsp;&nbsp;&nbsp;Editer&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Add Fichier&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;PDF&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Supprimer</TableCell>
+                                    <TableCell style={{ fontWeight: 'bold',padding: 0,width: '70px'  }}>Editer</TableCell>
+                                    <TableCell style={{ fontWeight: 'bold',padding: 0,width: '70px'  }}>Fichier</TableCell>
+                                    <TableCell style={{ fontWeight: 'bold',padding: 0,width: '70px'  }}>PDF</TableCell>
+                                    <TableCell style={{ fontWeight: 'bold',padding: 0,width: '70px' }}>Supprimer</TableCell>
                                 </TableRow>
                                 <TableRow className="table-row-separatormenu"></TableRow>
                             </React.Fragment>
@@ -343,44 +346,10 @@ function Home() {
                                         <TableCell>{item.nomTravailleur}</TableCell>
                                         <TableCell>{item.prenomTravailleur}</TableCell>
                                         <TableCell>{item.typeAccident}</TableCell>
-                                        <TableCell>
-                                            <Button style={{ margin: '2px' }} variant="contained" color="primary" onClick={() => handleEdit(item._id)}> <EditIcon /></Button>
-                                            <Button style={{ margin: '2px' }} component={Link} to={isFileUploadIcon ? '/' : '/fichierdll'} variant="contained" color="secondary"> <GetAppIcon/></Button>
-                                            <Button style={{ margin: '2px' }} variant="contained" color="success" onClick={() => handleGeneratePDF(item._id)}> <PictureAsPdfIcon /></Button>                        
-                                            <Button
-                                                style={{ margin: '2px' }}
-                                                variant="contained"
-                                                color="error"
-                                                onClick={() => {
-                                                    confirmAlert({
-                                                        customUI: ({ onClose }) => {
-                                                            return (
-                                                                <div className="custom-confirm-dialog">
-                                                                    <h1 className="custom-confirm-title">Supprimer</h1>
-                                                                    <p className="custom-confirm-message">Êtes-vous sûr de vouloir supprimer cet élément?</p>
-                                                                    <div className="custom-confirm-buttons">
-                                                                        <button
-                                                                            className="custom-confirm-button"
-                                                                            onClick={() => {
-                                                                                handleDelete(item._id);
-                                                                                onClose();
-                                                                            }}
-                                                                        >
-                                                                            Oui
-                                                                        </button>
-                                                                        <button className="custom-confirm-button custom-confirm-no" onClick={onClose}>
-                                                                            Non
-                                                                        </button>
-                                                                    </div>
-                                                                </div>
-                                                            );
-                                                        }
-                                                    });
-                                                }}
-                                            >
-                                                <DeleteForeverIcon />
-                                            </Button>
-                                        </TableCell>
+                                        <TableCell style={{ padding: 0,width: '70px' }}><Button  variant="contained" color="primary" onClick={() => handleEdit(item._id)}> <EditIcon /></Button></TableCell>
+                                        <TableCell style={{ padding: 0,width: '70px' }}><Button  component={Link} to={isFileUploadIcon ? '/' : '/fichierdll'} variant="contained" color="secondary"> <GetAppIcon /></Button></TableCell>
+                                        <TableCell style={{ padding: 0,width: '70px' }}><Button  variant="contained" color="success" onClick={() => handleGeneratePDF(item._id)}> <PictureAsPdfIcon /></Button> </TableCell>
+                                        <TableCell style={{ padding: 0,width: '70px' }}><Button  variant="contained" color="error" onClick={() => { confirmAlert({ customUI: ({ onClose }) => { return (<div className="custom-confirm-dialog"> <h1 className="custom-confirm-title">Supprimer</h1> <p className="custom-confirm-message">Êtes-vous sûr de vouloir supprimer cet élément?</p> <div className="custom-confirm-buttons"> <button className="custom-confirm-button" onClick={() => { handleDelete(item._id); onClose(); }} > Oui </button> <button className="custom-confirm-button custom-confirm-no" onClick={onClose}> Non </button> </div> </div>); } }); }} > <DeleteForeverIcon /> </Button> </TableCell>
                                     </TableRow>
                                     {/* Ligne de séparation */}
                                     <TableRow className="table-row-separator">
