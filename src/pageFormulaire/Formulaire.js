@@ -97,17 +97,50 @@ export default function Formulaire() {
         navigate('/');
     };
 
+    //enregistrement des donnée quand suivent ou précédent
+    const onSubmit1 = (data) => {
+
+        console.log("Formulaire.js -> onSubmit -> Données à enregistrer :", data);
+        console.log("Formulaire.js -> onSubmit -> Données à editer accidentData :", accidentData);
+
+        if (accidentData) {
+
+            //mode EDITION
+            axios.put("http://" + apiUrl + ":3100/api/accidents/" + accidentData._id, data)
+                .then(response => {
+                    console.log('Réponse du serveur en modification :', response.data);
+                })
+                .catch(error => {
+                    console.error('Erreur de requête:', error.message);
+                });
+        } else {
+            //mode CREATION
+            axios.put("http://" + apiUrl + ":3100/api/accidents", data)
+                .then(response => {
+                    console.log('Réponse du serveur en création :', response.data);
+                })
+                .catch(error => {
+                    console.error('Erreur de requête:', error.message);
+                });
+        }
+
+    };
+
+
     /**************************************************************************
      * affichage du formulaire
      * ************************************************************************/
     return (
         <form className="background-image" onSubmit={handleSubmit(onSubmit)}>
-            
+
             {/* Boutons de navigation pour passer à l'étape suivante ou revenir à l'étape précédente */}
-            <div style={{ display: 'flex', justifyContent: 'center', marginTop : '1.5rem' }}>
+            <div style={{ display: 'flex', justifyContent: 'center', marginTop: '1.5rem' }}>
                 {activeStep > 0 && (
                     <Button
-                        onClick={() => setActiveStep((prevStep) => prevStep - 1)}
+                        onClick={() => {
+                            //handleSubmit(onSubmit1)();
+                            setActiveStep(prevStep => prevStep - 1);
+                        }}
                         sx={{
                             backgroundColor: '#84a784',
                             '&:hover': { backgroundColor: 'green' },
@@ -121,7 +154,10 @@ export default function Formulaire() {
                 )}
                 {activeStep < forms.length - 1 && (
                     <Button
-                        onClick={() => setActiveStep((prevStep) => prevStep + 1)}
+                        onClick={() => {
+                            //handleSubmit(onSubmit1)();
+                            setActiveStep((prevStep) => prevStep + 1)
+                        }}
                         sx={{
                             backgroundColor: '#84a784',
                             '&:hover': { backgroundColor: 'green' },
@@ -135,10 +171,13 @@ export default function Formulaire() {
             </div>
             {React.createElement(forms[activeStep].component, { setValue, accidentData, watch })}
 
-            <div style={{ display: 'flex', justifyContent: 'center', marginTop : '1.5rem' }}>
+            <div style={{ display: 'flex', justifyContent: 'center', marginTop: '1.5rem' }}>
                 {activeStep > 0 && (
                     <Button
-                        onClick={() => setActiveStep((prevStep) => prevStep - 1)}
+                        onClick={() => {
+                            //handleSubmit(onSubmit1)();
+                            setActiveStep(prevStep => prevStep - 1);
+                        }}
                         sx={{
                             backgroundColor: '#84a784',
                             '&:hover': { backgroundColor: 'green' },
@@ -152,7 +191,10 @@ export default function Formulaire() {
                 )}
                 {activeStep < forms.length - 1 && (
                     <Button
-                        onClick={() => setActiveStep((prevStep) => prevStep + 1)}
+                        onClick={() => {
+                            //handleSubmit(onSubmit1)();
+                            setActiveStep((prevStep) => prevStep + 1)
+                        }}
                         sx={{
                             backgroundColor: '#84a784',
                             '&:hover': { backgroundColor: 'green' },
