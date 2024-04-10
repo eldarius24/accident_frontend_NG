@@ -1,0 +1,23 @@
+version: "3"
+services:
+  samba:
+    image: dockurr/samba
+    container_name: samba
+    environment:
+      USER: "samba"
+      PASS: "Ammo1234!"
+    ports:
+      - 446:445
+    volumes:
+      - /home/storage:/storage
+    restart: on-failure
+  react:
+    image: node:14-alpine
+    container_name: react
+    ports:
+      - 3000:3000
+    volumes:
+      - /path/to/your/react/app:/app
+    working_dir: /app
+    command: npm start
+    restart: always
