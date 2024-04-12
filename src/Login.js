@@ -67,8 +67,11 @@ const Login = (props,accidentData) => {
       {props.isFormVisible ? (
         <Home />
       ) : (
+        
         <div style={frameStyle}>
           <div>
+          <h1 id="h7">T.I.G.R.E</h1>
+          <h4>Traitement Informatisé de Gestions des Risque d'Entreprise</h4>
             <div style={{ display: 'flex', justifyContent: 'center', margin: '0 auto 1rem' }}>
               <Grid container spacing={0} style={{ flexBasis: '60%', maxWidth: '60%' }} justifyContent="center">
                 <Grid item xs={6}>

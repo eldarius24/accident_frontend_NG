@@ -125,6 +125,12 @@ h2 {
 
 }
 
+#h7 {
+  color: #257525;
+  font-size: 5em;
+  text-align: center;
+  text-decoration: underline;
+}
 
 h3 {
   color: #000000;
@@ -158,6 +164,8 @@ h6 {
   font-size: 1.5em;
   text-align: center;
 }
+
+
 
 /* Utiliser des médias queries pour ajuster la taille de police de <h1> */
 @media (max-width: 1200px) {
@@ -257,8 +265,10 @@ h6 {
 }
 
 .line-separated h6 {
-  border-bottom: 2px solid #257525; /* Bordure en bas */
-  padding-bottom: 10px; /* Espacement entre les lignes */
+  border-bottom: 2px solid #257525;
+  /* Bordure en bas */
+  padding-bottom: 10px;
+  /* Espacement entre les lignes */
   margin: 0;
   margin-left: 20px;
   margin-right: 20px;
@@ -267,10 +277,11 @@ h6 {
 }
 
 .line-separated h6:last-child {
-  border-bottom: none; /* Pas de bordure en bas pour le dernier élément */
+  border-bottom: none;
+  /* Pas de bordure en bas pour le dernier élément */
 }
 
 .yellow-background {
   background-color: yellow;
-  
+
 }
