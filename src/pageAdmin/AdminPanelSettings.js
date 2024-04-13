@@ -1,7 +1,6 @@
 import axios from 'axios';
 import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-import { useNavigate, useLocation } from 'react-router-dom';
 import TextFieldP from '../composants/textFieldP';
 import '../pageFormulaire/formulaire.css';
 import ControlLabelAdminP from '../composants/controlLabelAdminP';
@@ -14,7 +13,7 @@ import Autocomplete from '@mui/material/Autocomplete';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 export default function AdminPanelSettings({ accidentData }) {
-    const navigate = useNavigate();
+
     const apiUrl = config.apiUrl;
     const { setValue, watch, handleSubmit } = useForm();
 
@@ -71,9 +70,6 @@ export default function AdminPanelSettings({ accidentData }) {
                 console.error('Erreur de requête:', error.message);
             });
 
-
-        // Naviguer vers la page d'accueil
-        navigate('/');
     };
 
     return (

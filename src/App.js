@@ -14,6 +14,8 @@ import Agentmateriel from './pageFormulaire/codeAgentMateriel';
 import Naturelesion from './pageFormulaire/codeNatureLesion';
 import Siegelesion from './pageFormulaire/codeSiegeLesion';
 import Fichierdll from './pageFormulaire/fichierdll';
+import PlanAction from './planaction/planaction';
+import Fichierdllaction from './pageFormulaire/fichierdllaction';
 
 
 const App = () => {
@@ -40,6 +42,8 @@ const App = () => {
           <Route path="/siegelesion" element={<Siegelesion />} />
           <Route path="/fichierdll" element={<Fichierdll />} />
           <Route path="/adminUser" element={<AdminUser />} />
+          <Route path="/planAction" element={<PlanAction />} />
+          <Route path="/fichierdllaction" element={<Fichierdllaction />} />
         </Routes>
       </div>
     </Router>

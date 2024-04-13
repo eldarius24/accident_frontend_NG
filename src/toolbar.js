@@ -16,6 +16,7 @@ function ResponsiveAppBar({ navigation }) {
 
   const isFormulairePage = location.pathname === '/formulaire';
   const isFormulairePage1 = location.pathname === '/adminaction';
+  const isFormulairePage2 = location.pathname === '/planAction';
 
   return (
     <AppBar position="sticky" sx={{ backgroundColor: '#84a784' }}>
@@ -79,7 +80,16 @@ function ResponsiveAppBar({ navigation }) {
             startIcon={isFormulairePage ? <ArrowBackIcon /> : <AddIcon />}
           >
             {isFormulairePage ? 'Retour' : 'Ajouter'}
-          </Button>          
+          </Button> 
+          <Button
+            component={Link}
+            to={isFormulairePage2 ? '/' : '/planAction'}
+            variant="contained"
+            sx={{ backgroundColor: '#84a784', '&:hover': { backgroundColor: 'green' } }}
+            startIcon={isFormulairePage2 ? <ArrowBackIcon /> : <AddIcon />}
+          >
+            {isFormulairePage2 ? 'Retour' : 'Plan d\'actions'}
+          </Button>              
           {/* Le reste de votre contenu */}
         </Toolbar>
       </Container>

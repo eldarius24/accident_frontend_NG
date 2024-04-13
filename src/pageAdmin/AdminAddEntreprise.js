@@ -1,13 +1,12 @@
 import axios from 'axios';
 import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-import { useNavigate, useLocation } from 'react-router-dom';
 import TextFieldP from '../composants/textFieldP';
 import '../pageFormulaire/formulaire.css';
 import Button from '@mui/material/Button';
 import config from '../config.json';
 export default function AdminPanelSettings({ accidentData }) {
-    const navigate = useNavigate();
+
     const apiUrl = config.apiUrl;
     const { setValue, watch, handleSubmit } = useForm();
 
