@@ -1,7 +1,5 @@
 import React, { } from 'react';
-
 import '../pageFormulaire/formulaire.css';
-
 import { Box } from '@mui/material';
 import Button from '@mui/material/Button';
 import { Link } from 'react-router-dom';
@@ -29,8 +27,24 @@ export default function AdminPanelSettingsaction() {
                     component={Link}
                     to={'/admin'}
                     sx={defaultStyle} variant="contained"> Créer un nouvel utilisateur</Button>
-                <Button type="submit" sx={defaultStyle} variant="contained"> Consulter les utilisateurs</Button>
+                <Button type="submit"
+                    component={Link}
+                    to={'/adminUser'}
+                    sx={defaultStyle} variant="contained">Consulter les utilisateurs</Button>
+            </Box>
+
+            <h3>Administration des entreprises</h3>
+
+            <Box sx={{ display: 'flex', justifyContent: 'center', marginLeft: '120px', marginRight: '120px' }}>
+                <Button type="submit"
+                    component={Link}
+                    to={'/addEntreprise'}
+                    sx={defaultStyle} variant="contained"> Créer une nouvelle entreprise</Button>
+                <Button type="submit" sx={defaultStyle} variant="contained"> Consulter les entreprises</Button>
             </Box>
         </div>
+
+        
+        
     );
 }

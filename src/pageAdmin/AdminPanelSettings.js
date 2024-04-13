@@ -79,7 +79,7 @@ export default function AdminPanelSettings({ accidentData }) {
     return (
         <form className="background-image" onSubmit={handleSubmit(onSubmit)}>
             <div className="frameStyle-style">
-                <h3>Administration des droits</h3>
+                <h2>Administration des droits</h2>
 
                 <h3>Créer un nouvelle utilisateur</h3>
 
@@ -132,7 +132,7 @@ export default function AdminPanelSettings({ accidentData }) {
                     )}
                 />
 
-                <h3>Donner les accès consulter les ATs:</h3>
+                <h3>Donner les accès Visiteur:</h3>
 
                 <Autocomplete
                     multiple
