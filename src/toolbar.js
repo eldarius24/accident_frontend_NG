@@ -58,7 +58,7 @@ function ResponsiveAppBar({ navigation }) {
               },
             }}
           >
-            Gestion des accidents
+            T.I.G.R.E
           </Typography>
 
           {/* Utilisation de la propriété navigation */}

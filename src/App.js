@@ -7,6 +7,7 @@ import AdminPanelSettings from './pageAdmin/AdminPanelSettings';
 import AdminPanelSettingsAction from './pageAdmin/AdminPanelSettingsaction';
 import AdminAddEntreprise from './pageAdmin/AdminAddEntreprise';
 import AdminUser from './pageAdmin/AdminUser';
+import AdminEntreprises from './pageAdmin/AdminEntreprises';
 import ResponsiveAppBar from './toolbar';
 import Deviation from './pageFormulaire/codeDeviation'; // Utilisez le même nom ici
 import Agentmateriel from './pageFormulaire/codeAgentMateriel';
@@ -32,6 +33,7 @@ const App = () => {
           <Route path="/admin" element={<AdminPanelSettings />} />
           <Route path="/adminaction" element={<AdminPanelSettingsAction />} />
           <Route path="/addEntreprise" element={<AdminAddEntreprise />} />
+          <Route path="/adminEntreprises" element={<AdminEntreprises />} />
           <Route path="/deviation" element={<Deviation />} />
           <Route path="/agentmateriel" element={<Agentmateriel />} />
           <Route path="/naturelesion" element={<Naturelesion />} />

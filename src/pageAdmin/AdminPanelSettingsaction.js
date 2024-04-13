@@ -40,7 +40,11 @@ export default function AdminPanelSettingsaction() {
                     component={Link}
                     to={'/addEntreprise'}
                     sx={defaultStyle} variant="contained"> Créer une nouvelle entreprise</Button>
-                <Button type="submit" sx={defaultStyle} variant="contained"> Consulter les entreprises</Button>
+                <Button type="submit"
+                    component={Link}
+                    to={'/adminEntreprises'}
+                    sx={defaultStyle} variant="contained">Consulter les entreprises</Button>
+
             </Box>
         </div>
 
