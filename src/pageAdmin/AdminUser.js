@@ -59,6 +59,7 @@ export default function Adminusern() {
 
     return (
         <TableContainer>
+            <div className="frameStyle-style">
             <Table>
                 <TableHead>
                     <TableRow style={{ backgroundColor: '#84a784' }}>
@@ -71,7 +72,7 @@ export default function Adminusern() {
                 </TableHead>
                 <TableBody>
                     {users.map((user, index) => (
-                        <TableRow key={user._id} style={{ backgroundColor: index % 2 === 0 ? '#bed1be' : '#d2e2d2' }}>
+                        <TableRow key={user._id} style={{ backgroundColor: index % 2 === 0 ? '#bed1be' : '#d2e2d2',  borderBottom: '3px solid #84a784' }}>
                             <TableCell>{user.userLogin}</TableCell>
                             <TableCell>{user.userPassword}</TableCell>
                             <TableCell>{user.userName}</TableCell>
@@ -89,6 +90,7 @@ export default function Adminusern() {
                     ))}
                 </TableBody>
             </Table>
+            </div>
         </TableContainer>
     );
 }

@@ -1,8 +1,18 @@
 import React, { useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import Button from '@mui/material/Button';
-
+/**
+ * Renders a form for uploading files with drag and drop functionality and a button for file selection.
+ *
+ * @param {object} location - The location object containing information about the current location.
+ * @return {JSX.Element} The form component with file upload functionality.
+ */
 export default function Formulaire({ location }) {
+    /**
+     * Handles the upload of a file, logging the name of the uploaded file.
+     *
+     * @param {object} file - The file to be uploaded
+     */
     const handleFileUpload = (file) => {
         console.log("Fichier téléchargé :", file.name);
     };
@@ -20,12 +30,12 @@ export default function Formulaire({ location }) {
     return (
         <form>
             <Button
-                style={{ margin: '20px', marginTop: '20px'}}
+                style={{ margin: '20px', marginTop: '20px' }}
                 sx={{ backgroundColor: '#84a784', '&:hover': { backgroundColor: 'green' } }}
                 component={Link}
                 to={'/planAction'}
                 variant="contained"
-                
+
             >
                 Plan d'actions
             </Button>
