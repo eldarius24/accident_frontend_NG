@@ -257,11 +257,10 @@ function Home() {
                                     checked={selectAllYears}
                                     onChange={handleSelectAllYears}
                                     style={{ color: 'red' }}
-
                                 />
                                 <ListItemText primary="All" />
                             </MenuItem>
-                            {yearsFromData.map((year) => (
+                            {yearsFromData.filter(Boolean).map((year) => (
                                 <MenuItem key={year} value={year}>
                                     <Checkbox
                                         checked={yearsChecked.indexOf(year) > -1}
