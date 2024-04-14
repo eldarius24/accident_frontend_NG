@@ -1,6 +1,7 @@
 import axios from 'axios';
 import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
+import { useLocation } from 'react-router-dom';
 import TextFieldP from '../composants/textFieldP';
 import '../pageFormulaire/formulaire.css';
 import Button from '@mui/material/Button';
@@ -12,7 +13,9 @@ import config from '../config.json';
  * @param {[string]} secteurData Secteur à éditer
  * @returns 
  */
-export default function AddSecteur({entreprise, secteurData }) {
+export default function AddSecteur({secteurData }) {
+    let location = useLocation();
+    let entreprise = location.state.entreprise;
 
     const apiUrl = config.apiUrl;
     const { setValue, watch, handleSubmit } = useForm();
@@ -29,19 +32,27 @@ export default function AddSecteur({entreprise, secteurData }) {
     /**************************************************************************
      * METHODE ON SUBMIT
      * ************************************************************************/
-    const onSubmit = (data) => {
-
-        data.entrepriseId = entreprise._id;
-        console.log("Formulaire.js -> onSubmit -> Données à enregistrer :", data);
-        
-        //mode CREATION
-        axios.put("http://" + apiUrl + ":3100/api/secteur", data)
-            .then(response => {
-                console.log('Réponse du serveur en création :', response.data);
-            })
-            .catch(error => {
-                console.error('Erreur de requête:', error.message);
-            });
+    const onSubmit = async (data) => {
+        try {
+            const baseUrl = `http://${apiUrl}:3100/api`;
+            data.entrepriseId = entreprise._id;
+    
+            console.log("Formulaire.js -> onSubmit -> Données à enregistrer :", data);
+    
+            // Création du secteur
+            const responseSecteur = await axios.put(`${baseUrl}/secteurs`, data);
+            entreprise.SecteursId.push(responseSecteur.data._id);
+            console.log('Réponse du serveur en création :', responseSecteur.data);
+    
+            console.log("Entreprise à modifier :", entreprise);
+    
+            // Ajout du secteur à l'entreprise
+            const responseEntreprise = await axios.put(`${baseUrl}/entreprises/${entreprise._id}`, entreprise);
+            console.log('Réponse du serveur en ajout de secteur à l\'entreprise :', responseEntreprise.data);
+    
+        } catch (error) {
+            console.error('Erreur de requête:', error.message);
+        }
     };
 
     return (

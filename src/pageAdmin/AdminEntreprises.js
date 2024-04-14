@@ -26,8 +26,9 @@ export default function Adminusern() {
     const apiUrl = config.apiUrl;
 
     const handleAddSecteur = (entreprise) => {
+        console.log("AdminEntreprises -> handleAddSecteur -> entreprise", entreprise);
         try {
-            navigate("/addSecteur", { entreprise: entreprise });
+            navigate("/addSecteur", { state: { entreprise } });
         } catch (error) {
             console.log(error);
         }
