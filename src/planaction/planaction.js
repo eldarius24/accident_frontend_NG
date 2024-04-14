@@ -64,7 +64,10 @@ export default function PlanAction({ accidentData }) {
             (addaction.AddActionEntreprise && addaction.AddActionEntreprise.toLowerCase().includes(searchTerm.toLowerCase())) ||
             (addaction.AddActionSecteur && addaction.AddActionSecteur.toLowerCase().includes(searchTerm.toLowerCase())) ||
             (addaction.AddAction && addaction.AddAction.toLowerCase().includes(searchTerm.toLowerCase())) ||
-            (addaction.AddActionQui && addaction.AddActionQui.toLowerCase().includes(searchTerm.toLowerCase()))
+            (addaction.AddActionQui && addaction.AddActionQui.toLowerCase().includes(searchTerm.toLowerCase())) ||
+            (addaction.AddActoinmoi && addaction.AddActoinmoi.toLowerCase().includes(searchTerm.toLowerCase())) ||
+            (addaction.AddActionanne && addaction.AddActionanne.toLowerCase().includes(searchTerm.toLowerCase()))
+
         );
     });
 
@@ -178,7 +181,7 @@ export default function PlanAction({ accidentData }) {
                                         <TableCell style={{ fontWeight: 'bold' }}>Entreprise</TableCell>
                                         <TableCell style={{ fontWeight: 'bold' }}>Secteur</TableCell>
                                         <TableCell style={{ fontWeight: 'bold' }}>Action</TableCell>
-                                        <TableCell style={{ fontWeight: 'bold' }}>A faire pour quand</TableCell>
+                                        <TableCell style={{ fontWeight: 'bold' }}>Crée quand</TableCell>
                                         <TableCell style={{ fontWeight: 'bold' }}>Par qui</TableCell>
                                         <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>Edit</TableCell>
                                         <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>Download</TableCell>
