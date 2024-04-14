@@ -224,7 +224,7 @@ function Home() {
             <div style={{ display: 'flex', justifyContent: 'center', margin: '20px 0rem' }}>
                 <Grid item xs={6} style={{ marginRight: '20px' }}>
                     <Button
-                        sx={{ color: 'black', padding: '14px 60px', backgroundColor: '#84a784', '&:hover': { backgroundColor: 'green' }, boxShadow: 3, textTransform: 'none' }}
+                        sx={{ color: 'black', padding: '15px 60px', backgroundColor: '#84a784', '&:hover': { backgroundColor: 'green' }, boxShadow: 3, textTransform: 'none' }}
                         variant="contained"
                         color="secondary"
                         onClick={refreshListAccidents}
@@ -289,7 +289,7 @@ function Home() {
                 </Grid>
                 <Grid item xs={6} style={{ marginRight: '20px' }}>
                     <Button
-                        sx={{ color: 'black', padding: '14px 60px', backgroundColor: '#84a784', '&:hover': { backgroundColor: 'green' }, boxShadow: 3, textTransform: 'none' }}
+                        sx={{ color: 'black', padding: '15px 60px', backgroundColor: '#84a784', '&:hover': { backgroundColor: 'green' }, boxShadow: 3, textTransform: 'none' }}
                         variant="contained"
                         color="primary"
                         onClick={() => handleExportData(filteredData)}
@@ -300,7 +300,7 @@ function Home() {
                 </Grid>
                 <Grid item xs={6} style={{ marginRight: '20px' }}>
                     <Button
-                        sx={{ color: 'black', padding: '14px 60px', backgroundColor: '#84a784', '&:hover': { backgroundColor: 'green' }, boxShadow: 3, textTransform: 'none' }}
+                        sx={{ color: 'black', padding: '15px 60px', backgroundColor: '#84a784', '&:hover': { backgroundColor: 'green' }, boxShadow: 3, textTransform: 'none' }}
                         variant="contained"
                         color="primary"
                         onClick={() => handleExportDataAss(filteredData)}

@@ -79,7 +79,7 @@ function ResponsiveAppBar({ navigation }) {
             sx={{ backgroundColor: '#84a784', '&:hover': { backgroundColor: 'green' } }}
             startIcon={isFormulairePage ? <ArrowBackIcon /> : <AddIcon />}
           >
-            {isFormulairePage ? 'Retour' : 'Ajouter'}
+            {isFormulairePage ? 'Retour' : 'Ajout d\'un AT'}
           </Button> 
           <Button
             component={Link}

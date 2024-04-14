@@ -12,7 +12,7 @@ import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
-export default function AdminPanelSettings({ accidentData }) {
+export default function AdminAddUser({ accidentData }) {
 
     const apiUrl = config.apiUrl;
     const { setValue, watch, handleSubmit } = useForm();

@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useLocation } from 'react-router-dom'; // Importez useLocation
 import TextFieldP from '../composants/textFieldP';
+import AutoCompleteP from '../composants/autoCompleteP';
 import '../pageFormulaire/formulaire.css';
 import config from '../config.json';
 import { Link } from 'react-router-dom';
@@ -15,6 +16,8 @@ import {
     TableRow,
     Button,
     Checkbox,
+    Grid,
+    TextField,
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
@@ -24,6 +27,9 @@ import 'react-confirm-alert/src/react-confirm-alert.css';
 import DatePickerP from '../composants/datePickerP';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import GetAppIcon from '@mui/icons-material/GetApp';
+import SearchIcon from '@mui/icons-material/Search';
+import InputAdornment from '@mui/material/InputAdornment';
+import listeaddaction from '../liste/listeaddaction.json';
 
 const apiUrl = config.apiUrl;
 
@@ -33,6 +39,7 @@ export default function PlanAction({ accidentData }) {
     const { setValue, watch, handleSubmit } = useForm();
     const location = useLocation(); // Utilisez useLocation
     const isFileUploadIcon = location.pathname === '/fichierdllaction';
+    const [searchTerm, setSearchTerm] = useState('');
 
     useEffect(() => {
         axios.get(`http://${apiUrl}:3100/api/planaction`)
@@ -47,6 +54,20 @@ export default function PlanAction({ accidentData }) {
                 setLoading(false);
             });
     }, []);
+
+    const filteredUsers = users.filter(addaction => {
+        if (!searchTerm) {
+            return true; // Retourne true pour inclure toutes les entrées si searchTerm est vide
+        }
+
+        return (
+            (addaction.AddActionEntreprise && addaction.AddActionEntreprise.toLowerCase().includes(searchTerm.toLowerCase())) ||
+            (addaction.AddActionSecteur && addaction.AddActionSecteur.toLowerCase().includes(searchTerm.toLowerCase())) ||
+            (addaction.AddAction && addaction.AddAction.toLowerCase().includes(searchTerm.toLowerCase())) ||
+            (addaction.AddActionQui && addaction.AddActionQui.toLowerCase().includes(searchTerm.toLowerCase()))
+        );
+    });
+
 
     const handleDelete = (userIdToDelete) => {
         axios.delete(`http://${apiUrl}:3100/api/planaction/${userIdToDelete}`)
@@ -69,7 +90,7 @@ export default function PlanAction({ accidentData }) {
         axios.put(`http://${apiUrl}:3100/api/planaction`, data)
             .then(response => {
                 console.log('Réponse du serveur en création :', response.data);
-
+                window.location.reload();
             })
             .catch(error => {
                 console.error('Erreur de requête:', error.message);
@@ -96,6 +117,9 @@ export default function PlanAction({ accidentData }) {
     const [AddActionSecteur, setAddActionSecteur] = useState(watch('AddActionSecteur') ? watch('AddActionSecteur') : (accidentData && accidentData.AddActionSecteur ? accidentData.AddActionSecteur : null));
     const [AddActionEntreprise, setAddActionEntreprise] = useState(watch('AddActionEntreprise') ? watch('AddActionEntreprise') : (accidentData && accidentData.AddActionEntreprise ? accidentData.AddActionEntreprise : null));
     const [AddboolStatus, setAddboolStatus] = useState(watch('AddboolStatus') ? watch('AddboolStatus') : (accidentData && accidentData.AddboolStatus ? accidentData.AddboolStatus : false));
+    const [AddActionanne, setAddActionanne] = useState(watch('AddActionanne') ? watch('AddActionanne') : (accidentData && accidentData.AddActionanne ? accidentData.AddActionanne : null));
+    const [AddActoinmoi, setAddActoinmoi] = useState(watch('AddActoinmoi') ? watch('AddActoinmoi') : (accidentData && accidentData.AddActoinmoi ? accidentData.AddActoinmoi : null));
+
 
     useEffect(() => {
         setValue('AddAction', AddAction);
@@ -104,7 +128,9 @@ export default function PlanAction({ accidentData }) {
         setValue('AddActionSecteur', AddActionSecteur);
         setValue('AddActionEntreprise', AddActionEntreprise);
         setValue('AddboolStatus', AddboolStatus);
-    }, [AddAction, AddActionDate, AddActionQui, AddActionSecteur, AddActionEntreprise, AddboolStatus, setValue]);
+        setValue('AddActionanne', AddActionanne);
+        setValue('AddActoinmoi', AddActoinmoi);
+    }, [AddAction, AddActionDate, AddActionQui, AddActionSecteur, AddActionEntreprise, AddboolStatus, AddActionanne, AddActoinmoi, setValue]);
 
     if (loading) {
         return <LinearProgress color="success" />;
@@ -116,15 +142,30 @@ export default function PlanAction({ accidentData }) {
         <form className="background-image" onSubmit={handleSubmit(onSubmit)}>
             <div className="frameStyle-style">
                 <h2>Plan d'actions</h2>
-                <Button
-                    sx={{ color: 'black', padding: '14px 60px', backgroundColor: '#84a784', '&:hover': { backgroundColor: 'green' }, boxShadow: 3, textTransform: 'none', margin: '20px' }}
-                    variant="contained"
-                    color="secondary"
-                    onClick={refreshListAccidents}
-                    startIcon={<RefreshIcon />}
-                >
-                    Actualiser
-                </Button>
+                <Grid item xs={6} style={{ marginRight: '20px' }}>
+                    <Button
+                        sx={{ marginLeft: '20px', marginRight: '20px', color: 'black', padding: '15px 60px', backgroundColor: '#84a784', '&:hover': { backgroundColor: 'green' }, boxShadow: 3, textTransform: 'none' }}
+                        variant="contained"
+                        color="secondary"
+                        onClick={refreshListAccidents}
+                        startIcon={<RefreshIcon />}
+                    >
+                        Actualiser
+                    </Button>
+                    <TextField
+                        variant="outlined"
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        sx={{ boxShadow: 3, backgroundColor: '#84a784' }}
+                        InputProps={{
+                            startAdornment: (
+                                <InputAdornment position="start">
+                                    <SearchIcon />
+                                </InputAdornment>
+                            ),
+                        }}
+                    />
+                </Grid>
                 <TableContainer>
                     <div className="frameStyle-style">
                         <Table>
@@ -132,6 +173,8 @@ export default function PlanAction({ accidentData }) {
                                 <React.Fragment>
                                     <TableRow style={{ backgroundColor: '#84a784' }} key={"CellTowerSharp"}>
                                         <TableCell style={{ fontWeight: 'bold' }}>Status</TableCell>
+                                        <TableCell style={{ fontWeight: 'bold' }}>Année</TableCell>
+                                        <TableCell style={{ fontWeight: 'bold' }}>Mois</TableCell>
                                         <TableCell style={{ fontWeight: 'bold' }}>Entreprise</TableCell>
                                         <TableCell style={{ fontWeight: 'bold' }}>Secteur</TableCell>
                                         <TableCell style={{ fontWeight: 'bold' }}>Action</TableCell>
@@ -145,8 +188,8 @@ export default function PlanAction({ accidentData }) {
                                 </React.Fragment>
                             </TableHead>
                             <TableBody>
-                                {users.map((addaction, index) => (
-                                    <TableRow key={addaction._id} style={{ backgroundColor: rowColors[index % rowColors.length], borderBottom: '3px solid #84a784'}}>
+                                {filteredUsers.map((addaction, index) => (
+                                    <TableRow key={addaction._id} style={{ backgroundColor: rowColors[index % rowColors.length], borderBottom: '3px solid #84a784' }}>
                                         <TableCell>
                                             <Checkbox
                                                 defaultChecked
@@ -172,6 +215,8 @@ export default function PlanAction({ accidentData }) {
                                                 }}
                                             />
                                         </TableCell>
+                                        <TableCell>{addaction.AddActionanne}</TableCell>
+                                        <TableCell>{addaction.AddActoinmoi}</TableCell>
                                         <TableCell>{addaction.AddActionEntreprise}</TableCell>
                                         <TableCell>{addaction.AddActionSecteur}</TableCell>
                                         <TableCell>{addaction.AddAction}</TableCell>
@@ -212,11 +257,17 @@ export default function PlanAction({ accidentData }) {
                     </div>
                 </TableContainer>
                 <h3>Ajouter une action</h3>
+                <TextFieldP id='AddActionanne' label="Pour quelle annee" onChange={setAddActionanne} defaultValue={AddActionanne}></TextFieldP>
+                <AutoCompleteP id='AddActoinmoi' option={listeaddaction.AddActoinmoi} label='Réalisation en' onChange={(AddActoinmoiSelect) => {
+                    setAddActoinmoi(AddActoinmoiSelect);
+                    setValue('AddActoinmoi', AddActoinmoiSelect);
+                }} defaultValue={AddActoinmoi}> </AutoCompleteP>
                 <TextFieldP id='AddActionEntreprise' label="Entreprise" onChange={setAddActionEntreprise} defaultValue={AddActionEntreprise}></TextFieldP>
                 <TextFieldP id='AddActionSecteur' label="Ajouter le secteur" onChange={setAddActionSecteur} defaultValue={AddActionSecteur}></TextFieldP>
                 <TextFieldP id='AddAction' label="Ajouter une action" onChange={setAddAction} defaultValue={AddAction}></TextFieldP>
                 <DatePickerP id='AddActionDate' label="Ajouter une date" onChange={setAddActionDate} defaultValue={AddActionDate}></DatePickerP>
                 <TextFieldP id='AddActionQui' label="Ajouter qui" onChange={setAddActionQui} defaultValue={AddActionQui}></TextFieldP>
+
 
                 <div style={{ display: 'flex', justifyContent: 'center' }}>
                     <Button

@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Login from './Login';
 import Home from './Home';
 import Formulaire from './pageFormulaire/Formulaire';
-import AdminPanelSettings from './pageAdmin/AdminPanelSettings';
+import AdminAddUser from './pageAdmin/AdminAddUser';
 import AdminPanelSettingsAction from './pageAdmin/AdminPanelSettingsaction';
 import AdminAddEntreprise from './pageAdmin/AdminAddEntreprise';
 import AdminUser from './pageAdmin/AdminUser';
@@ -32,7 +32,7 @@ const App = () => {
           />
           <Route path="/accueil" element={<Home />} />
           <Route path="/formulaire" element={<Formulaire />} />
-          <Route path="/admin" element={<AdminPanelSettings />} />
+          <Route path="/admin" element={<AdminAddUser />} />
           <Route path="/adminaction" element={<AdminPanelSettingsAction />} />
           <Route path="/addEntreprise" element={<AdminAddEntreprise />} />
           <Route path="/adminEntreprises" element={<AdminEntreprises />} />

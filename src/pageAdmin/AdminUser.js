@@ -58,39 +58,45 @@ export default function Adminusern() {
     }
 
     return (
-        <TableContainer>
+        <form>
             <div className="frameStyle-style">
-            <Table>
-                <TableHead>
-                    <TableRow style={{ backgroundColor: '#84a784' }}>
-                        <TableCell style={{ fontWeight: 'bold' }}>Login</TableCell>
-                        <TableCell style={{ fontWeight: 'bold' }}>Password</TableCell>
-                        <TableCell style={{ fontWeight: 'bold' }}>Name</TableCell>
-                        <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>Edit</TableCell>
-                        <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>Delete</TableCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {users.map((user, index) => (
-                        <TableRow key={user._id} style={{ backgroundColor: index % 2 === 0 ? '#bed1be' : '#d2e2d2',  borderBottom: '3px solid #84a784' }}>
-                            <TableCell>{user.userLogin}</TableCell>
-                            <TableCell>{user.userPassword}</TableCell>
-                            <TableCell>{user.userName}</TableCell>
-                            <TableCell style={{ padding: 0, width: '70px' }}>
-                                <Button variant="contained" color="primary">
-                                    <EditIcon />
-                                </Button>
-                            </TableCell>
-                            <TableCell style={{ padding: 0, width: '70px' }}>
-                                <Button variant="contained" color="error" onClick={() => { confirmAlert({ customUI: ({ onClose }) => { return (<div className="custom-confirm-dialog"> <h1 className="custom-confirm-title">Supprimer</h1> <p className="custom-confirm-message">Êtes-vous sûr de vouloir supprimer cet User?</p> <div className="custom-confirm-buttons"> <button className="custom-confirm-button" onClick={() => { handleDelete(user._id); onClose(); }} > Oui </button> <button className="custom-confirm-button custom-confirm-no" onClick={onClose}> Non </button> </div> </div>); } }); }}>
-                                    <DeleteForeverIcon />
-                                </Button>
-                            </TableCell>
-                        </TableRow>
-                    ))}
-                </TableBody>
-            </Table>
+                <h2>Getion des utilisateur</h2>
+
+                <TableContainer>
+                    <div className="frameStyle-style">
+                        <Table>
+                            <TableHead>
+                                <TableRow style={{ backgroundColor: '#84a784' }}>
+                                    <TableCell style={{ fontWeight: 'bold' }}>Login</TableCell>
+                                    <TableCell style={{ fontWeight: 'bold' }}>Password</TableCell>
+                                    <TableCell style={{ fontWeight: 'bold' }}>Name</TableCell>
+                                    <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>Edit</TableCell>
+                                    <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>Delete</TableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {users.map((user, index) => (
+                                    <TableRow key={user._id} style={{ backgroundColor: index % 2 === 0 ? '#bed1be' : '#d2e2d2', borderBottom: '2px solid #84a784' }}>
+                                        <TableCell>{user.userLogin}</TableCell>
+                                        <TableCell>{user.userPassword}</TableCell>
+                                        <TableCell>{user.userName}</TableCell>
+                                        <TableCell style={{ padding: 0, width: '70px' }}>
+                                            <Button variant="contained" color="primary">
+                                                <EditIcon />
+                                            </Button>
+                                        </TableCell>
+                                        <TableCell style={{ padding: 0, width: '70px' }}>
+                                            <Button variant="contained" color="error" onClick={() => { confirmAlert({ customUI: ({ onClose }) => { return (<div className="custom-confirm-dialog"> <h1 className="custom-confirm-title">Supprimer</h1> <p className="custom-confirm-message">Êtes-vous sûr de vouloir supprimer cet User?</p> <div className="custom-confirm-buttons"> <button className="custom-confirm-button" onClick={() => { handleDelete(user._id); onClose(); }} > Oui </button> <button className="custom-confirm-button custom-confirm-no" onClick={onClose}> Non </button> </div> </div>); } }); }}>
+                                                <DeleteForeverIcon />
+                                            </Button>
+                                        </TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    </div>
+                </TableContainer>
             </div>
-        </TableContainer>
+        </form>
     );
 }
