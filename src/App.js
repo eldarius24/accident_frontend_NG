@@ -6,6 +6,7 @@ import Formulaire from './pageFormulaire/Formulaire';
 import AdminAddUser from './pageAdmin/AdminAddUser';
 import AdminPanelSettingsAction from './pageAdmin/AdminPanelSettingsaction';
 import AdminAddEntreprise from './pageAdmin/AdminAddEntreprise';
+import AddSecteur from './pageAdmin/AdminAddSecteur';
 import AdminUser from './pageAdmin/AdminUser';
 import AdminEntreprises from './pageAdmin/AdminEntreprises';
 import ResponsiveAppBar from './toolbar';
@@ -35,6 +36,7 @@ const App = () => {
           <Route path="/admin" element={<AdminAddUser />} />
           <Route path="/adminaction" element={<AdminPanelSettingsAction />} />
           <Route path="/addEntreprise" element={<AdminAddEntreprise />} />
+          <Route path="/addSecteur" element={<AddSecteur />} />
           <Route path="/adminEntreprises" element={<AdminEntreprises />} />
           <Route path="/deviation" element={<Deviation />} />
           <Route path="/agentmateriel" element={<Agentmateriel />} />
