@@ -107,7 +107,7 @@ export default function AdminAddUser({ accidentData }) {
                     sx={{ backgroundColor: '#84a784', width: '50%', boxShadow: 3, margin: '0 auto 1rem' }}
                     getOptionLabel={(option) => option.title}
                     isOptionEqualToValue={(option, value) => option.title === value.title}
-                    onChange={setentrepriseConseillerPrevention}
+                    onChange={  (event, value) => setentrepriseConseillerPrevention(value.map((item) => item.title))}
                     renderOption={(props, option, { selected }) => (
                         <li {...props}>
                             <Checkbox
@@ -137,6 +137,7 @@ export default function AdminAddUser({ accidentData }) {
                     id="checkboxes-tags-demo"
                     options={CpEntreprise}
                     isOptionEqualToValue={(option, value) => option.title === value.title}
+                    onChange={  (event, value) => setentrepriseVisiteur(value.map((item) => item.title))}
                     disableCloseOnSelect
                     sx={{ backgroundColor: '#84a784', width: '50%', boxShadow: 3, margin: '0 auto 1rem' }}
                     getOptionLabel={(option) => option.title}
