@@ -13,17 +13,16 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import LinearProgress from '@mui/material/LinearProgress';
 import { confirmAlert } from 'react-confirm-alert';
+import config from '../config.json';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 
-// Supposons que vous avez défini apiurl quelque part dans votre code
-const apiurl = "127.0.0.1";
-
 export default function Adminusern() {
+    const apiUrl = config.apiUrl;
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true);
 
     const handleDelete = (userIdToDelete) => {
-        axios.delete(`http://${apiurl}:3100/api/users/${userIdToDelete}`)
+        axios.delete(`http://${apiUrl}:3100/api/users/${userIdToDelete}`)
             .then(response => {
                 // Vérifier le code de statut de la réponse
                 if (response.status === 204 || response.status === 200) {
@@ -40,7 +39,7 @@ export default function Adminusern() {
     };
 
     useEffect(() => {
-        axios.get(`http://${apiurl}:3100/api/users`)
+        axios.get(`http://${apiUrl}:3100/api/users`)
             .then(response => {
                 let users = response.data;
                 setUsers(users);

@@ -9,17 +9,29 @@ import {
     TableRow,
     Button,
 } from '@mui/material';
+import AddRoundedIcon from '@mui/icons-material/AddRounded';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import LinearProgress from '@mui/material/LinearProgress';
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import config from '../config.json';
+import { useNavigate } from 'react-router-dom';
+
 
 export default function Adminusern() {
+    const navigate = useNavigate();
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true);
     const apiUrl = config.apiUrl;
+
+    const handleAddSecteur = (entreprise) => {
+        try {
+            navigate("/addSecteur", { entreprise: entreprise });
+        } catch (error) {
+            console.log(error);
+        }
+    };
 
     const handleDelete = (entrepriseIdToDelete) => {
         axios.delete(`http://${apiUrl}:3100/api/entreprises/${entrepriseIdToDelete}`)
@@ -39,7 +51,7 @@ export default function Adminusern() {
     };
 
     useEffect(() => {
-        axios.get(`http://${apiurl}:3100/api/entreprises`)
+        axios.get(`http://${apiUrl}:3100/api/entreprises`)
             .then(response => {
                 let users = response.data;
                 setUsers(users);
@@ -61,8 +73,8 @@ export default function Adminusern() {
             <div className="frameStyle-style">
                 <h2>Getion des utilisateur</h2>
                 <TableContainer>
-                <div className="frameStyle-style">
-                    <Table>
+                    <div className="frameStyle-style">
+                        <Table>
                             <TableHead>
                                 <TableRow style={{ backgroundColor: '#84a784' }}>
                                     <TableCell style={{ fontWeight: 'bold' }}>Nom</TableCell>
@@ -82,27 +94,8 @@ export default function Adminusern() {
                                     <TableCell style={{ fontWeight: 'bold' }}>N° d'affiliation</TableCell>
                                     <TableCell style={{ fontWeight: 'bold' }}>Rue et n°</TableCell>
                                     <TableCell style={{ fontWeight: 'bold' }}>Code postal</TableCell>
-                                    <TableCell style={{ fontWeight: 'bold' }}>Localité</TableCell>
-                                    <TableCell style={{ fontWeight: 'bold' }}>AddEntrSecteur1</TableCell>
-                                    <TableCell style={{ fontWeight: 'bold' }}>AddEntrSecteur2</TableCell>
-                                    <TableCell style={{ fontWeight: 'bold' }}>AddEntrSecteur3</TableCell>
-                                    <TableCell style={{ fontWeight: 'bold' }}>AddEntrSecteur4</TableCell>
-                                    <TableCell style={{ fontWeight: 'bold' }}>AddEntrSecteur5</TableCell>
-                                    <TableCell style={{ fontWeight: 'bold' }}>AddEntrSecteur6</TableCell>
-                                    <TableCell style={{ fontWeight: 'bold' }}>AddEntrSecteur7</TableCell>
-                                    <TableCell style={{ fontWeight: 'bold' }}>AddEntrSecteur8</TableCell>
-                                    <TableCell style={{ fontWeight: 'bold' }}>AddEntrSecteur9</TableCell>
-                                    <TableCell style={{ fontWeight: 'bold' }}>AddEntrSecteur10</TableCell>
-                                    <TableCell style={{ fontWeight: 'bold' }}>AddEntrSecteur11</TableCell>
-                                    <TableCell style={{ fontWeight: 'bold' }}>AddEntrSecteur12</TableCell>
-                                    <TableCell style={{ fontWeight: 'bold' }}>AddEntrSecteur13</TableCell>
-                                    <TableCell style={{ fontWeight: 'bold' }}>AddEntrSecteur14</TableCell>
-                                    <TableCell style={{ fontWeight: 'bold' }}>AddEntrSecteur15</TableCell>
-                                    <TableCell style={{ fontWeight: 'bold' }}>AddEntrSecteur16</TableCell>
-                                    <TableCell style={{ fontWeight: 'bold' }}>AddEntrSecteur17</TableCell>
-                                    <TableCell style={{ fontWeight: 'bold' }}>AddEntrSecteur18</TableCell>
-                                    <TableCell style={{ fontWeight: 'bold' }}>AddEntrSecteur19</TableCell>
-                                    <TableCell style={{ fontWeight: 'bold' }}>AddEntrSecteur20</TableCell>*/}
+                                    <TableCell style={{ fontWeight: 'bold' }}>Localité</TableCell>*/}
+                                    <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>Secteur</TableCell>
                                     <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>Edit</TableCell>
                                     <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>Delete</TableCell>
                                 </TableRow>
@@ -127,27 +120,12 @@ export default function Adminusern() {
                                         <TableCell>{entreprise.AddEntrNumaffi}</TableCell>
                                         <TableCell>{entreprise.AddEntrScadresse}</TableCell>
                                         <TableCell>{entreprise.AddEntrSccpost}</TableCell>
-                                        <TableCell>{entreprise.AddEntrSclocalite}</TableCell>
-                                        <TableCell>{entreprise.AddEntrSecteur1}</TableCell>
-                                        <TableCell>{entreprise.AddEntrSecteur2}</TableCell>
-                                        <TableCell>{entreprise.AddEntrSecteur3}</TableCell>
-                                        <TableCell>{entreprise.AddEntrSecteur4}</TableCell>
-                                        <TableCell>{entreprise.AddEntrSecteur5}</TableCell>
-                                        <TableCell>{entreprise.AddEntrSecteur6}</TableCell>
-                                        <TableCell>{entreprise.AddEntrSecteur7}</TableCell>
-                                        <TableCell>{entreprise.AddEntrSecteur8}</TableCell>
-                                        <TableCell>{entreprise.AddEntrSecteur9}</TableCell>
-                                        <TableCell>{entreprise.AddEntrSecteur10}</TableCell>
-                                        <TableCell>{entreprise.AddEntrSecteur11}</TableCell>
-                                        <TableCell>{entreprise.AddEntrSecteur12}</TableCell>
-                                        <TableCell>{entreprise.AddEntrSecteur13}</TableCell>
-                                        <TableCell>{entreprise.AddEntrSecteur14}</TableCell>
-                                        <TableCell>{entreprise.AddEntrSecteur15}</TableCell>
-                                        <TableCell>{entreprise.AddEntrSecteur16}</TableCell>
-                                        <TableCell>{entreprise.AddEntrSecteur17}</TableCell>
-                                        <TableCell>{entreprise.AddEntrSecteur18}</TableCell>
-                                        <TableCell>{entreprise.AddEntrSecteur19}</TableCell>
-                                <TableCell>{entreprise.AddEntrSecteur20}</TableCell>*/}
+                                        <TableCell>{entreprise.AddEntrSclocalite}</TableCell>*/}
+                                        <TableCell style={{ padding: 0, width: '70px' }}>
+                                            <Button type="submit" variant="contained" color="secondary" onClick={() => handleAddSecteur(entreprise)}>
+                                                <AddRoundedIcon />
+                                            </Button>
+                                        </TableCell>
                                         <TableCell style={{ padding: 0, width: '70px' }}>
                                             <Button variant="contained" color="primary">
                                                 <EditIcon />
@@ -161,7 +139,7 @@ export default function Adminusern() {
                                     </TableRow>
                                 ))}
                             </TableBody>
-                    </Table>
+                        </Table>
                     </div>
                 </TableContainer>
             </div>
