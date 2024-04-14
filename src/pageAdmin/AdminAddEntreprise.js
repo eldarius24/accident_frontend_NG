@@ -5,7 +5,10 @@ import TextFieldP from '../composants/textFieldP';
 import '../pageFormulaire/formulaire.css';
 import Button from '@mui/material/Button';
 import config from '../config.json';
+import { useNavigate } from 'react-router-dom';
+
 export default function AdminPanelSettings({ accidentData }) {
+    const navigate = useNavigate();
 
     const apiUrl = config.apiUrl;
     const { setValue, watch, handleSubmit } = useForm();
@@ -29,31 +32,6 @@ export default function AdminPanelSettings({ accidentData }) {
     const [AddEntrScadresse, setAddEntrScadresse] = useState(watch('AddEntrScadresse') ? watch('AddEntrScadresse') : (accidentData && accidentData.AddEntrScadresse ? accidentData.AddEntrScadresse : null));
     const [AddEntrSccpost, setAddEntrSccpost] = useState(watch('AddEntrSccpost') ? watch('AddEntrSccpost') : (accidentData && accidentData.AddEntrSccpost ? accidentData.AddEntrSccpost : null));
     const [AddEntrSclocalite, setAddEntrSclocalite] = useState(watch('AddEntrSclocalite') ? watch('AddEntrSclocalite') : (accidentData && accidentData.AddEntrSclocalite ? accidentData.AddEntrSclocalite : null));
-    const [AddEntrSecteur1, setAddEntrSecteur1] = useState(watch('AddEntrSecteur1') ? watch('AddEntrSecteur1') : (accidentData && accidentData.AddEntrSecteur1 ? accidentData.AddEntrSecteur1 : null));
-    const [AddEntrSecteur2, setAddEntrSecteur2] = useState(watch('AddEntrSecteur2') ? watch('AddEntrSecteur2') : (accidentData && accidentData.AddEntrSecteur2 ? accidentData.AddEntrSecteur2 : null));
-    const [AddEntrSecteur3, setAddEntrSecteur3] = useState(watch('AddEntrSecteur3') ? watch('AddEntrSecteur3') : (accidentData && accidentData.AddEntrSecteur3 ? accidentData.AddEntrSecteur3 : null));
-    const [AddEntrSecteur4, setAddEntrSecteur4] = useState(watch('AddEntrSecteur4') ? watch('AddEntrSecteur4') : (accidentData && accidentData.AddEntrSecteur4 ? accidentData.AddEntrSecteur4 : null));
-    const [AddEntrSecteur5, setAddEntrSecteur5] = useState(watch('AddEntrSecteur5') ? watch('AddEntrSecteur5') : (accidentData && accidentData.AddEntrSecteur5 ? accidentData.AddEntrSecteur5 : null));
-    const [AddEntrSecteur6, setAddEntrSecteur6] = useState(watch('AddEntrSecteur6') ? watch('AddEntrSecteur6') : (accidentData && accidentData.AddEntrSecteur6 ? accidentData.AddEntrSecteur6 : null));
-    const [AddEntrSecteur7, setAddEntrSecteur7] = useState(watch('AddEntrSecteur7') ? watch('AddEntrSecteur7') : (accidentData && accidentData.AddEntrSecteur7 ? accidentData.AddEntrSecteur7 : null));
-    const [AddEntrSecteur8, setAddEntrSecteur8] = useState(watch('AddEntrSecteur8') ? watch('AddEntrSecteur8') : (accidentData && accidentData.AddEntrSecteur8 ? accidentData.AddEntrSecteur8 : null));
-    const [AddEntrSecteur9, setAddEntrSecteur9] = useState(watch('AddEntrSecteur9') ? watch('AddEntrSecteur9') : (accidentData && accidentData.AddEntrSecteur9 ? accidentData.AddEntrSecteur9 : null));
-    const [AddEntrSecteur10, setAddEntrSecteur10] = useState(watch('AddEntrSecteur10') ? watch('AddEntrSecteur10') : (accidentData && accidentData.AddEntrSecteur10 ? accidentData.AddEntrSecteur10 : null));
-    const [AddEntrSecteur11, setAddEntrSecteur11] = useState(watch('AddEntrSecteur11') ? watch('AddEntrSecteur11') : (accidentData && accidentData.AddEntrSecteur11 ? accidentData.AddEntrSecteur11 : null));
-    const [AddEntrSecteur12, setAddEntrSecteur12] = useState(watch('AddEntrSecteur12') ? watch('AddEntrSecteur12') : (accidentData && accidentData.AddEntrSecteur12 ? accidentData.AddEntrSecteur12 : null));
-    const [AddEntrSecteur13, setAddEntrSecteur13] = useState(watch('AddEntrSecteur13') ? watch('AddEntrSecteur13') : (accidentData && accidentData.AddEntrSecteur13 ? accidentData.AddEntrSecteur13 : null));
-    const [AddEntrSecteur14, setAddEntrSecteur14] = useState(watch('AddEntrSecteur14') ? watch('AddEntrSecteur14') : (accidentData && accidentData.AddEntrSecteur14 ? accidentData.AddEntrSecteur14 : null));
-    const [AddEntrSecteur15, setAddEntrSecteur15] = useState(watch('AddEntrSecteur15') ? watch('AddEntrSecteur15') : (accidentData && accidentData.AddEntrSecteur15 ? accidentData.AddEntrSecteur15 : null));
-    const [AddEntrSecteur16, setAddEntrSecteur16] = useState(watch('AddEntrSecteur16') ? watch('AddEntrSecteur16') : (accidentData && accidentData.AddEntrSecteur16 ? accidentData.AddEntrSecteur16 : null));
-    const [AddEntrSecteur17, setAddEntrSecteur17] = useState(watch('AddEntrSecteur17') ? watch('AddEntrSecteur17') : (accidentData && accidentData.AddEntrSecteur17 ? accidentData.AddEntrSecteur17 : null));
-    const [AddEntrSecteur18, setAddEntrSecteur18] = useState(watch('AddEntrSecteur18') ? watch('AddEntrSecteur18') : (accidentData && accidentData.AddEntrSecteur18 ? accidentData.AddEntrSecteur18 : null));
-    const [AddEntrSecteur19, setAddEntrSecteur19] = useState(watch('AddEntrSecteur19') ? watch('AddEntrSecteur19') : (accidentData && accidentData.AddEntrSecteur19 ? accidentData.AddEntrSecteur19 : null));
-    const [AddEntrSecteur20, setAddEntrSecteur20] = useState(watch('AddEntrSecteur20') ? watch('AddEntrSecteur20') : (accidentData && accidentData.AddEntrSecteur20 ? accidentData.AddEntrSecteur20 : null));
-
-
-
-
-
 
 
     useEffect(() => {
@@ -75,27 +53,7 @@ export default function AdminPanelSettings({ accidentData }) {
         setValue('AddEntrScadresse', AddEntrScadresse)
         setValue('AddEntrSccpost', AddEntrSccpost)
         setValue('AddEntrSclocalite', AddEntrSclocalite)
-        setValue('AddEntrSecteur1', AddEntrSecteur1)
-        setValue('AddEntrSecteur2', AddEntrSecteur2)
-        setValue('AddEntrSecteur3', AddEntrSecteur3)
-        setValue('AddEntrSecteur4', AddEntrSecteur4)
-        setValue('AddEntrSecteur5', AddEntrSecteur5)
-        setValue('AddEntrSecteur6', AddEntrSecteur6)
-        setValue('AddEntrSecteur7', AddEntrSecteur7)
-        setValue('AddEntrSecteur8', AddEntrSecteur8)
-        setValue('AddEntrSecteur9', AddEntrSecteur9)
-        setValue('AddEntrSecteur10', AddEntrSecteur10)
-        setValue('AddEntrSecteur11', AddEntrSecteur11)
-        setValue('AddEntrSecteur12', AddEntrSecteur12)
-        setValue('AddEntrSecteur13', AddEntrSecteur13)
-        setValue('AddEntrSecteur14', AddEntrSecteur14)
-        setValue('AddEntrSecteur15', AddEntrSecteur15)
-        setValue('AddEntrSecteur16', AddEntrSecteur16)
-        setValue('AddEntrSecteur17', AddEntrSecteur17)
-        setValue('AddEntrSecteur18', AddEntrSecteur18)
-        setValue('AddEntrSecteur19', AddEntrSecteur19)
-        setValue('AddEntrSecteur20', AddEntrSecteur20)
-    }, [AddEntreName, AddEntrePolice, AddEntrOnss, AddEntrEnite, AddEntrIban, AddEntrBic, AddEntrRue, AddEntrCodpost, AddEntrLocalite, AddEntrTel, AddEntrEmail, AddEntreActiventre, AddEntrSecsoci, AddEntrNumaffi, AddEntrScadresse, AddEntrSccpost, AddEntrSclocalite, AddEntrNumentr, AddEntrSecteur1, AddEntrSecteur2, AddEntrSecteur1, AddEntrSecteur2, AddEntrSecteur3, AddEntrSecteur4, AddEntrSecteur5, AddEntrSecteur6, AddEntrSecteur7, AddEntrSecteur8, AddEntrSecteur9, AddEntrSecteur10, AddEntrSecteur11, AddEntrSecteur12, AddEntrSecteur13, AddEntrSecteur14, AddEntrSecteur15, AddEntrSecteur16, AddEntrSecteur17, AddEntrSecteur18, AddEntrSecteur19, AddEntrSecteur20]);
+    }, [AddEntreName, AddEntrePolice, AddEntrOnss, AddEntrEnite, AddEntrIban, AddEntrBic, AddEntrRue, AddEntrCodpost, AddEntrLocalite, AddEntrTel, AddEntrEmail, AddEntreActiventre, AddEntrSecsoci, AddEntrNumaffi, AddEntrScadresse, AddEntrSccpost, AddEntrSclocalite, AddEntrNumentr]);
 
 
 
@@ -114,8 +72,9 @@ export default function AdminPanelSettings({ accidentData }) {
             .catch(error => {
                 console.error('Erreur de requête:', error.message);
             });
-
-
+            
+        // Naviguer vers la page d'accueil
+        navigate('/');
     };
 
     return (
@@ -143,7 +102,7 @@ export default function AdminPanelSettings({ accidentData }) {
                 <TextFieldP id='AddEntrScadresse' label="Adresse du secrétariat sociale" onChange={setAddEntrScadresse} defaultValue={AddEntrScadresse}></TextFieldP>
                 <TextFieldP id='AddEntrSccpost' label="Code postal du secrétariat sociale" onChange={setAddEntrSccpost} defaultValue={AddEntrSccpost}></TextFieldP>
                 <TextFieldP id='AddEntrSclocalite' label="Localité du secrétariat sociale" onChange={setAddEntrSclocalite} defaultValue={AddEntrSclocalite}></TextFieldP>
-                <TextFieldP id='AddEntrSecteur1' label="Secteur 1" onChange={setAddEntrSecteur1} defaultValue={AddEntrSecteur1}></TextFieldP>
+                
                 <div style={{ display: 'flex', justifyContent: 'center' }}>
                     <Button
                         type="submit"
@@ -166,7 +125,7 @@ export default function AdminPanelSettings({ accidentData }) {
                         }}
                         variant="contained"
                     >
-                        Crée l'Entreprise
+                        Créer l'Entreprise
                     </Button>
                 </div>
 
