@@ -9,7 +9,7 @@ import AdminAddEntreprise from './pageAdmin/AdminAddEntreprise';
 import AdminUser from './pageAdmin/AdminUser';
 import AdminEntreprises from './pageAdmin/AdminEntreprises';
 import ResponsiveAppBar from './toolbar';
-import Deviation from './pageFormulaire/codeDeviation'; // Utilisez le même nom ici
+import Deviation from './pageFormulaire/codeDeviation';
 import Agentmateriel from './pageFormulaire/codeAgentMateriel';
 import Naturelesion from './pageFormulaire/codeNatureLesion';
 import Siegelesion from './pageFormulaire/codeSiegeLesion';

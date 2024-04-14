@@ -14,16 +14,15 @@ import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import LinearProgress from '@mui/material/LinearProgress';
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
-
-// Supposons que vous avez défini apiurl quelque part dans votre code
-const apiurl = "127.0.0.1";
+import config from '../config.json';
 
 export default function Adminusern() {
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true);
+    const apiUrl = config.apiUrl;
 
     const handleDelete = (entrepriseIdToDelete) => {
-        axios.delete(`http://${apiurl}:3100/api/entreprises/${entrepriseIdToDelete}`)
+        axios.delete(`http://${apiUrl}:3100/api/entreprises/${entrepriseIdToDelete}`)
             .then(response => {
                 // Vérifier le code de statut de la réponse
                 if (response.status === 204 || response.status === 200) {
