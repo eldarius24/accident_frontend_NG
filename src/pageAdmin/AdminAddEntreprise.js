@@ -95,34 +95,9 @@ export default function AdminPanelSettings({ accidentData }) {
         setValue('AddEntrSecteur18', AddEntrSecteur18)
         setValue('AddEntrSecteur19', AddEntrSecteur19)
         setValue('AddEntrSecteur20', AddEntrSecteur20)
+    }, [AddEntreName, AddEntrePolice, AddEntrOnss, AddEntrEnite, AddEntrIban, AddEntrBic, AddEntrRue, AddEntrCodpost, AddEntrLocalite, AddEntrTel, AddEntrEmail, AddEntreActiventre, AddEntrSecsoci, AddEntrNumaffi, AddEntrScadresse, AddEntrSccpost, AddEntrSclocalite, AddEntrNumentr, AddEntrSecteur1, AddEntrSecteur2, AddEntrSecteur1, AddEntrSecteur2, AddEntrSecteur3, AddEntrSecteur4, AddEntrSecteur5, AddEntrSecteur6, AddEntrSecteur7, AddEntrSecteur8, AddEntrSecteur9, AddEntrSecteur10, AddEntrSecteur11, AddEntrSecteur12, AddEntrSecteur13, AddEntrSecteur14, AddEntrSecteur15, AddEntrSecteur16, AddEntrSecteur17, AddEntrSecteur18, AddEntrSecteur19, AddEntrSecteur20]);
 
 
-
-
-    }, [AddEntreName, AddEntrePolice, AddEntrOnss, AddEntrEnite, AddEntrIban, AddEntrBic, AddEntrRue, AddEntrCodpost, AddEntrLocalite, AddEntrTel, AddEntrEmail, AddEntreActiventre, AddEntrSecsoci, AddEntrNumaffi, AddEntrScadresse, AddEntrSccpost, AddEntrSclocalite, AddEntrNumentr, AddEntrSecteur1, AddEntrSecteur2,
-        AddEntrSecteur1,
-        AddEntrSecteur2,
-        AddEntrSecteur3,
-        AddEntrSecteur4,
-        AddEntrSecteur5,
-        AddEntrSecteur6,
-        AddEntrSecteur7,
-        AddEntrSecteur8,
-        AddEntrSecteur9,
-        AddEntrSecteur10,
-        AddEntrSecteur11,
-        AddEntrSecteur12,
-        AddEntrSecteur13,
-        AddEntrSecteur14,
-        AddEntrSecteur15,
-        AddEntrSecteur16,
-        AddEntrSecteur17,
-        AddEntrSecteur18,
-        AddEntrSecteur19,
-        AddEntrSecteur20,
-    ]);
-
-   
 
     /**************************************************************************
      * METHODE ON SUBMIT
@@ -160,7 +135,7 @@ export default function AdminPanelSettings({ accidentData }) {
                 <TextFieldP id='AddEntrePolice' label="Numéro de la Police d'assurance" onChange={setAddEntrePolice} defaultValue={AddEntrePolice}></TextFieldP>
                 <TextFieldP id='AddEntrOnss' label="Numéro ONSS" onChange={setAddEntrOnss} defaultValue={AddEntrOnss}></TextFieldP>
                 <TextFieldP id='AddEntrEnite' label="Numéro d'unité de l'établissement" onChange={setAddEntrEnite} defaultValue={AddEntrEnite}></TextFieldP>
-                <TextFieldP id='AddEntrIban' label="IBAN" onChange={setAddEntrIban} defaultValue={AddEntrIban}></TextFieldP> 
+                <TextFieldP id='AddEntrIban' label="IBAN" onChange={setAddEntrIban} defaultValue={AddEntrIban}></TextFieldP>
                 <TextFieldP id='AddEntrBic' label="BIC" onChange={setAddEntrBic} defaultValue={AddEntrBic}></TextFieldP>
                 <TextFieldP id='AddEntreActiventre' label="Activité de l'entreprise" onChange={setAddEntreActiventre} defaultValue={AddEntreActiventre}></TextFieldP>
                 <TextFieldP id='AddEntrSecsoci' label="Secrétariat sociale" onChange={setAddEntrSecsoci} defaultValue={AddEntrSecsoci}></TextFieldP>
@@ -169,71 +144,6 @@ export default function AdminPanelSettings({ accidentData }) {
                 <TextFieldP id='AddEntrSccpost' label="Code postal du secrétariat sociale" onChange={setAddEntrSccpost} defaultValue={AddEntrSccpost}></TextFieldP>
                 <TextFieldP id='AddEntrSclocalite' label="Localité du secrétariat sociale" onChange={setAddEntrSclocalite} defaultValue={AddEntrSclocalite}></TextFieldP>
                 <TextFieldP id='AddEntrSecteur1' label="Secteur 1" onChange={setAddEntrSecteur1} defaultValue={AddEntrSecteur1}></TextFieldP>
-                {AddEntrSecteur1  && (
-                <TextFieldP id='AddEntrSecteur2' label="Secteur 2" onChange={setAddEntrSecteur2} defaultValue={AddEntrSecteur2}></TextFieldP>
-                )}
-                {AddEntrSecteur2 && (
-                <TextFieldP id='AddEntrSecteur3' label="Secteur 3" onChange={setAddEntrSecteur3} defaultValue={AddEntrSecteur3}></TextFieldP>
-                )}
-                {AddEntrSecteur3 && (
-                <TextFieldP id='AddEntrSecteur4' label="Secteur 4" onChange={setAddEntrSecteur4} defaultValue={AddEntrSecteur4}></TextFieldP>
-                )}
-                {AddEntrSecteur4 && (
-                <TextFieldP id='AddEntrSecteur5' label="Secteur 5" onChange={setAddEntrSecteur5} defaultValue={AddEntrSecteur5}></TextFieldP>
-                )}
-                {AddEntrSecteur5 && (
-                <TextFieldP id='AddEntrSecteur6' label="Secteur 6" onChange={setAddEntrSecteur6} defaultValue={AddEntrSecteur6}></TextFieldP>
-                )}
-                {AddEntrSecteur6 && (
-                <TextFieldP id='AddEntrSecteur7' label="Secteur 7" onChange={setAddEntrSecteur7} defaultValue={AddEntrSecteur7}></TextFieldP>
-                )}
-                {AddEntrSecteur7 && (
-                <TextFieldP id='AddEntrSecteur8' label="Secteur 8" onChange={setAddEntrSecteur8} defaultValue={AddEntrSecteur8}></TextFieldP>
-                )}
-                {AddEntrSecteur8 && (
-                <TextFieldP id='AddEntrSecteur9' label="Secteur 9" onChange={setAddEntrSecteur9} defaultValue={AddEntrSecteur9}></TextFieldP>
-                )}
-                {AddEntrSecteur9 && (
-                <TextFieldP id='AddEntrSecteur10' label="Secteur 10" onChange={setAddEntrSecteur10} defaultValue={AddEntrSecteur10}></TextFieldP>
-                )}
-                {AddEntrSecteur10 && (
-                <TextFieldP id='AddEntrSecteur11' label="Secteur 11" onChange={setAddEntrSecteur11} defaultValue={AddEntrSecteur11}></TextFieldP>
-                )}
-                {AddEntrSecteur11 && (
-                <TextFieldP id='AddEntrSecteur12' label="Secteur 12" onChange={setAddEntrSecteur12} defaultValue={AddEntrSecteur12}></TextFieldP>
-                )}
-                {AddEntrSecteur12 && (
-                <TextFieldP id='AddEntrSecteur13' label="Secteur 13" onChange={setAddEntrSecteur13} defaultValue={AddEntrSecteur13}></TextFieldP>
-                )}
-                {AddEntrSecteur13 && (
-                <TextFieldP id='AddEntrSecteur14' label="Secteur 14" onChange={setAddEntrSecteur14} defaultValue={AddEntrSecteur14}></TextFieldP>
-                )}
-                {AddEntrSecteur14 && (
-                <TextFieldP id='AddEntrSecteur15' label="Secteur 15" onChange={setAddEntrSecteur15} defaultValue={AddEntrSecteur15}></TextFieldP>
-                )}
-                {AddEntrSecteur15 && (
-                <TextFieldP id='AddEntrSecteur16' label="Secteur 16" onChange={setAddEntrSecteur16} defaultValue={AddEntrSecteur16}></TextFieldP>
-                )}
-                {AddEntrSecteur16 && (
-                <TextFieldP id='AddEntrSecteur17' label="Secteur 17" onChange={setAddEntrSecteur17} defaultValue={AddEntrSecteur17}></TextFieldP>
-                )}
-                {AddEntrSecteur17 && (
-                <TextFieldP id='AddEntrSecteur18' label="Secteur 18" onChange={setAddEntrSecteur18} defaultValue={AddEntrSecteur18}></TextFieldP>
-                )}
-                {AddEntrSecteur18 && (
-                <TextFieldP id='AddEntrSecteur19' label="Secteur 19" onChange={setAddEntrSecteur19} defaultValue={AddEntrSecteur19}></TextFieldP>
-                )}
-                {AddEntrSecteur19 && (
-                <TextFieldP id='AddEntrSecteur20' label="Secteur 20" onChange={setAddEntrSecteur20} defaultValue={AddEntrSecteur20}></TextFieldP>
-                )}
-
-
-
-
-
-
-
-
                 <div style={{ display: 'flex', justifyContent: 'center' }}>
                     <Button
                         type="submit"

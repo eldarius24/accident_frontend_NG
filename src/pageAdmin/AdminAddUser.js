@@ -27,8 +27,8 @@ export default function AdminAddUser({ accidentData }) {
     const [userPassword, setuserPassword] = useState(watch('userPassword') ? watch('userPassword') : (accidentData && accidentData.userPassword ? accidentData.userPassword : null));
     const [userName, setuserName] = useState(watch('userName') ? watch('userName') : (accidentData && accidentData.userName ? accidentData.userName : null));
     const [boolAdministrateur, setboolAdministrateur] = useState(watch('boolAdministrateur') ? watch('boolAdministrateur') : (accidentData && accidentData.boolAdministrateur ? accidentData.boolAdministrateur : false));
-
-
+    const [entrepriseConseillerPrevention, setentrepriseConseillerPrevention] = useState(watch('entrepriseConseillerPrevention') ? watch('entrepriseConseillerPrevention') : (accidentData && accidentData.boolConseiller ? accidentData.boolConseiller : false));
+    const [entrepriseVisiteur, setentrepriseVisiteur] = useState(watch('entrepriseVisiteur') ? watch('entrepriseVisiteur') : (accidentData && accidentData.boolVisiteur ? accidentData.boolVisiteur : false));
 
 
     useEffect(() => {
@@ -36,9 +36,9 @@ export default function AdminAddUser({ accidentData }) {
         setValue('userPassword', userPassword)
         setValue('userName', userName)
         setValue('boolAdministrateur', boolAdministrateur)
-
-
-    }, [userLogin, userPassword, userName, boolAdministrateur]);
+        setValue('entreprisesConseillerPrevention', entrepriseConseillerPrevention)
+        setValue('entreprisesVisiteur', entrepriseVisiteur)
+    }, [userLogin, userPassword, userName, boolAdministrateur, entrepriseConseillerPrevention, entrepriseVisiteur]);
 
     const CpEntreprise = [
         { title: 'Le Cortil' },
@@ -106,6 +106,8 @@ export default function AdminAddUser({ accidentData }) {
                     disableCloseOnSelect
                     sx={{ backgroundColor: '#84a784', width: '50%', boxShadow: 3, margin: '0 auto 1rem' }}
                     getOptionLabel={(option) => option.title}
+                    isOptionEqualToValue={(option, value) => option.title === value.title}
+                    onChange={setentrepriseConseillerPrevention}
                     renderOption={(props, option, { selected }) => (
                         <li {...props}>
                             <Checkbox
@@ -122,7 +124,7 @@ export default function AdminAddUser({ accidentData }) {
                         <TextField
                             {...params}
                             label="Sélectionnez l'entreprise"
-                            placeholder="Favorites"
+                            placeholder="entreprise"
                             sx={{ backgroundColor: '#84a784', color: '#257525', boxShadow: 3 }}
                         />
                     )}
@@ -134,6 +136,7 @@ export default function AdminAddUser({ accidentData }) {
                     multiple
                     id="checkboxes-tags-demo"
                     options={CpEntreprise}
+                    isOptionEqualToValue={(option, value) => option.title === value.title}
                     disableCloseOnSelect
                     sx={{ backgroundColor: '#84a784', width: '50%', boxShadow: 3, margin: '0 auto 1rem' }}
                     getOptionLabel={(option) => option.title}
@@ -153,7 +156,7 @@ export default function AdminAddUser({ accidentData }) {
                         <TextField
                             {...params}
                             label="Sélectionnez l'entreprise"
-                            placeholder="Favorites"
+                            placeholder="entreprise"
                             sx={{ backgroundColor: '#84a784', color: '#257525', boxShadow: 3 }}
                         />
                     )}
