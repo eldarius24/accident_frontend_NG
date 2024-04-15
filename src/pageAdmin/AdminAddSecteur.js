@@ -58,8 +58,8 @@ export default function AddSecteur({secteurData }) {
     return (
         <form className="background-image" onSubmit={handleSubmit(onSubmit)}>
             <div className="frameStyle-style">
-                <h2>Créer une nouvelle entreprise</h2>
-                <h3>Toutes les données doivent êtres obligatoirement remplie</h3>
+                <h2>Créer un nouveau secteur</h2>
+                
 
 
                 <TextFieldP id='secteurName' label="Nom du secteur" onChange={setSecteurName} defaultValue={secteurName}></TextFieldP>

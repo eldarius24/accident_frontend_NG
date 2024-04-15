@@ -72,7 +72,7 @@ export default function Adminusern() {
     return (
         <form>
             <div className="frameStyle-style">
-                <h2>Getion des utilisateur</h2>
+                <h2>Getion des entreprise</h2>
                 <TableContainer>
                     <div className="frameStyle-style">
                         <Table>
