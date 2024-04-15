@@ -14,15 +14,12 @@ import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 
 export default function AdminAddUser({ accidentData }) {
-
+    const [CpEntreprise, setCpEntreprise] = useState([]);
     const apiUrl = config.apiUrl;
     const { setValue, watch, handleSubmit } = useForm();
 
-
     const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
     const checkedIcon = <CheckBoxIcon fontSize="small" />;
-
-
 
     const [userLogin, setuserLogin] = useState(watch('userLogin') ? watch('userLogin') : (accidentData && accidentData.userLogin ? accidentData.userLogin : null));
     const [userPassword, setuserPassword] = useState(watch('userPassword') ? watch('userPassword') : (accidentData && accidentData.userPassword ? accidentData.userPassword : null));
@@ -31,6 +28,27 @@ export default function AdminAddUser({ accidentData }) {
     const [entrepriseConseillerPrevention, setentrepriseConseillerPrevention] = useState(watch('entrepriseConseillerPrevention') ? watch('entrepriseConseillerPrevention') : (accidentData && accidentData.boolConseiller ? accidentData.boolConseiller : false));
     const [entrepriseVisiteur, setentrepriseVisiteur] = useState(watch('entrepriseVisiteur') ? watch('entrepriseVisiteur') : (accidentData && accidentData.boolVisiteur ? accidentData.boolVisiteur : false));
 
+    useEffect(() => {
+        const getEntreprise = async () => {
+          try {
+            const response = await axios.get(`http://${apiUrl}:3100/api/entreprises`);
+            console.log('AdminUser > getEntreprise > Response :', response.data);
+    
+            return response.data.map((item) => (item.AddEntreName ));
+          } catch (error) {
+            console.error('Erreur de requête:', error.message);
+          }
+        };
+    
+        const init = async () => {
+          const entreprise = await getEntreprise();
+          console.log("Entreprise :", entreprise);
+    
+          setCpEntreprise(entreprise || []);
+        };
+    
+        init();
+      }, []);
 
     useEffect(() => {
         setValue('userLogin', userLogin)
@@ -41,20 +59,7 @@ export default function AdminAddUser({ accidentData }) {
         setValue('entreprisesVisiteur', entrepriseVisiteur)
     }, [userLogin, userPassword, userName, boolAdministrateur, entrepriseConseillerPrevention, entrepriseVisiteur]);
 
-    const CpEntreprise = [
-        { title: 'Le Cortil' },
-        { title: 'Cortibat' },
-        { title: 'Cortibel' },
-        { title: 'Nns' },
-        { title: 'Hmns' },
-        { title: 'Cortidess' },
-        { title: 'Avs' },
-        { title: 'Cortitreize' },
-        { title: 'BipExpresse' },
-        { title: 'NCJ' },
-
-    ];
-
+    console.log("CpEntreprise :", CpEntreprise);
     /**************************************************************************
      * METHODE ON SUBMIT
      * ************************************************************************/
@@ -137,8 +142,7 @@ export default function AdminAddUser({ accidentData }) {
                     multiple
                     id="checkboxes-tags-demo"
                     options={CpEntreprise}
-                    isOptionEqualToValue={(option, value) => option.title === value.title}
-                    onChange={  (event, value) => setentrepriseVisiteur(value.map((item) => item.title))}
+                    onChange={setentrepriseVisiteur()}
                     disableCloseOnSelect
                     sx={{ backgroundColor: '#84a784', width: '50%', boxShadow: 3, margin: '0 auto 1rem' }}
                     getOptionLabel={(option) => option.title}
