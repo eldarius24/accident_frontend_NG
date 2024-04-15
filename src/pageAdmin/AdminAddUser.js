@@ -111,8 +111,7 @@ export default function AdminAddUser({ accidentData }) {
                     options={CpEntreprise}
                     disableCloseOnSelect
                     sx={{ backgroundColor: '#84a784', width: '50%', boxShadow: 3, margin: '0 auto 1rem' }}
-                    getOptionLabel={(option) => option.title}
-                    isOptionEqualToValue={(option, value) => option.title === value.title}
+                    getOptionLabel={(option) => option}
                     onChange={  (event, value) => setentrepriseConseillerPrevention(value.map((item) => item.title))}
                     renderOption={(props, option, { selected }) => (
                         <li {...props}>
@@ -122,7 +121,7 @@ export default function AdminAddUser({ accidentData }) {
                                 style={{ marginRight: 8, color: '#257525' }}
                                 checked={selected}
                             />
-                            {option.title}
+                            {option}
                         </li>
                     )}
                     style={{ width: 500 }}
@@ -145,7 +144,7 @@ export default function AdminAddUser({ accidentData }) {
                     onChange={setentrepriseVisiteur}
                     disableCloseOnSelect
                     sx={{ backgroundColor: '#84a784', width: '50%', boxShadow: 3, margin: '0 auto 1rem' }}
-                    getOptionLabel={(option) => option.title}
+                    getOptionLabel={(option) => option}
                     renderOption={(props, option, { selected }) => (
                         <li {...props}>
                             <Checkbox
@@ -154,7 +153,7 @@ export default function AdminAddUser({ accidentData }) {
                                 style={{ marginRight: 8, color: '#257525' }}
                                 checked={selected}
                             />
-                            {option.title}
+                            {option}
                         </li>
                     )}
                     style={{ width: 500 }}
