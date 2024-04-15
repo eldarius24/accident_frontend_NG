@@ -142,7 +142,7 @@ export default function AdminAddUser({ accidentData }) {
                     multiple
                     id="checkboxes-tags-demo"
                     options={CpEntreprise}
-                    onChange={setentrepriseVisiteur()}
+                    onChange={setentrepriseVisiteur}
                     disableCloseOnSelect
                     sx={{ backgroundColor: '#84a784', width: '50%', boxShadow: 3, margin: '0 auto 1rem' }}
                     getOptionLabel={(option) => option.title}
