@@ -32,7 +32,6 @@ export default function AdminAddUser({ accidentData }) {
         const getEntreprise = async () => {
           try {
             const response = await axios.get(`http://${apiUrl}:3100/api/entreprises`);
-            console.log('AdminUser > getEntreprise > Response :', response.data);
     
             return response.data.map((item) => (item.AddEntreName ));
           } catch (error) {
@@ -42,7 +41,6 @@ export default function AdminAddUser({ accidentData }) {
     
         const init = async () => {
           const entreprise = await getEntreprise();
-          console.log("Entreprise :", entreprise);
     
           setCpEntreprise(entreprise || []);
         };
@@ -59,7 +57,6 @@ export default function AdminAddUser({ accidentData }) {
         setValue('entreprisesVisiteur', entrepriseVisiteur)
     }, [userLogin, userPassword, userName, boolAdministrateur, entrepriseConseillerPrevention, entrepriseVisiteur]);
 
-    console.log("CpEntreprise :", CpEntreprise);
     /**************************************************************************
      * METHODE ON SUBMIT
      * ************************************************************************/
