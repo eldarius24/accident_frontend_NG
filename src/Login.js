@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { TextField } from '@mui/material';
-import { useForm } from 'react-hook-form';
+import { set, useForm } from 'react-hook-form';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';
@@ -10,26 +10,29 @@ import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import TextFieldP from './composants/textFieldP';
 import axios from 'axios';
+import { generatePasswordHash } from './Model/password';
 
 
 
-const Login = (props, accidentData) => {
+const Login = () => {
   const navigate = useNavigate();
-  const { register, setValue, watch, handleSubmit } = useForm();
-  const [password, setPassword] = useState('');
+  const { register, handleSubmit } = useForm();
   const [isPasswordValid, setIsPasswordValid] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
-  const [email, setsetEmail] = useState(watch('email') ? watch('email') : (accidentData && accidentData.email ? accidentData.email : null));
+  const [email, setsetEmail] = useState();
 
+  const onSubmit = async (data) => {
+    const passwordHash = data.password;
+    const email = data.email;
+    console.log("data", data);
 
+    if (data && data.password) {
+      const passwordHash = await generatePasswordHash(data.password);
+      console.log("passwordHash", passwordHash);
+    }
 
-  useEffect(() => {
-    setValue('email', email)
-  }, [email]);
-
-  const onSubmit = async () => {
     try {
-      const response = await axios.post('http://localhost:3100/api/login', { email, password }, {
+      const response = await axios.post('http://localhost:3100/api/login', { email, passwordHash }, {
         headers: { 'Content-Type': 'application/json' }
       });
 
@@ -39,6 +42,7 @@ const Login = (props, accidentData) => {
         localStorage.setItem('token', data);
         navigate('/accueil')
       } else {
+        setIsPasswordValid(false);
         alert('Login failed');
       }
     } catch (error) {
@@ -70,20 +74,18 @@ const Login = (props, accidentData) => {
 
 
           <form onSubmit={handleSubmit(onSubmit)}>
-
-            <TextFieldP id='email' label="Email" onChange={setsetEmail} defaultValue={email}></TextFieldP>
+            <TextField {...register('email')} id="outlined-multiline-static" label="Email" sx={{ backgroundColor: '#84a784', width: '50%', boxShadow: 3 }} />
 
             <div style={{ display: 'flex', justifyContent: 'center', margin: '0 auto 1rem' }}>
 
               <TextField
-                {...register('mdpLogin')}
-                id="outlined-multiline-mdpLogin"
+                {...register('password')}
+                id="outlined-multiline-password"
                 label="Mot de passe"
                 sx={{ backgroundColor: '#84a784', width: '50%', boxShadow: 3 }}
                 type={showPassword ? 'text' : "password"}
                 error={!isPasswordValid}
                 helperText={!isPasswordValid && 'Mot de passe incorrect'}
-                onChange={(event) => setPassword(event.target.value)}
                 InputProps={{
                   endAdornment: (
                     <InputAdornment position="end">
