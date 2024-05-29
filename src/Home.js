@@ -359,7 +359,12 @@ function Home() {
                     </Table>
                 </div>
             </TableContainer>
+            <div>
+            </div>
+            <div className="image-cortigroupe"></div>
+            <h5> Développé par Remy et Benoit pour Le Cortigroupe. Support: bgillet.lecortil@cortigroupe.be</h5>
         </div>
+
 
     );
 }
