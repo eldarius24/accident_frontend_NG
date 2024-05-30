@@ -8,9 +8,7 @@ import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import TextFieldP from './composants/textFieldP';
 import axios from 'axios';
-import { generatePasswordHash } from './Model/password';
 
 
 
@@ -19,27 +17,19 @@ const Login = () => {
   const { register, handleSubmit } = useForm();
   const [isPasswordValid, setIsPasswordValid] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
-  const [email, setsetEmail] = useState();
 
   const onSubmit = async (data) => {
-    const passwordHash = data.password;
+    const password = data.password;
     const email = data.email;
-    console.log("data", data);
-
-    if (data && data.password) {
-      const passwordHash = await generatePasswordHash(data.password);
-      console.log("passwordHash", passwordHash);
-    }
 
     try {
-      const response = await axios.post('http://localhost:3100/api/login', { email, passwordHash }, {
+      const response = await axios.post('http://localhost:3100/api/login', { email, password }, {
         headers: { 'Content-Type': 'application/json' }
       });
 
-      const data = await response;
-      console.log("data", data);
-      if (response.status == 200 && data) {
-        localStorage.setItem('token', data);
+      const user = await response;
+      if (response.status == 200 && user) {
+        localStorage.setItem('token', user);
         navigate('/accueil')
       } else {
         setIsPasswordValid(false);
@@ -60,12 +50,10 @@ const Login = () => {
             <Grid container spacing={0} style={{ flexBasis: '60%', maxWidth: '60%' }} justifyContent="center">
               <Grid item xs={6}>
                 <div className="image-container1">
-                  {/* Insérez votre code pour l'image 1 */}
                 </div>
               </Grid>
               <Grid item xs={6}>
                 <div className="image-container2">
-                  {/* Insérez votre code pour l'image 2 */}
                 </div>
               </Grid>
             </Grid>
