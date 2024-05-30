@@ -27,10 +27,9 @@ const Login = () => {
         headers: { 'Content-Type': 'application/json' }
       });
 
-      const data = await response;
-      console.log("data", data);
-      if (response.status == 200 && data) {
-        localStorage.setItem('token', data);
+      const user = await response;
+      if (response.status == 200 && user) {
+        localStorage.setItem('token', user);
         navigate('/accueil')
       } else {
         setIsPasswordValid(false);
