@@ -13,69 +13,64 @@ import Autocomplete from '@mui/material/Autocomplete';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 
-export default function AdminAddUser({ accidentData }) {
-    const [CpEntreprise, setCpEntreprise] = useState([]);
+export default function AdminFormUser({ accidentData }) {
     const apiUrl = config.apiUrl;
     const { setValue, watch, handleSubmit } = useForm();
 
     const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
     const checkedIcon = <CheckBoxIcon fontSize="small" />;
 
-    const [userLogin, setuserLogin] = useState(watch('userLogin') ? watch('userLogin') : (accidentData && accidentData.userLogin ? accidentData.userLogin : null));
-    const [userPassword, setuserPassword] = useState(watch('userPassword') ? watch('userPassword') : (accidentData && accidentData.userPassword ? accidentData.userPassword : null));
-    const [userName, setuserName] = useState(watch('userName') ? watch('userName') : (accidentData && accidentData.userName ? accidentData.userName : null));
-    const [boolAdministrateur, setboolAdministrateur] = useState(watch('boolAdministrateur') ? watch('boolAdministrateur') : (accidentData && accidentData.boolAdministrateur ? accidentData.boolAdministrateur : false));
-    const [entrepriseConseillerPrevention, setentrepriseConseillerPrevention] = useState(watch('entrepriseConseillerPrevention') ? watch('entrepriseConseillerPrevention') : (accidentData && accidentData.boolConseiller ? accidentData.boolConseiller : false));
-    const [entrepriseVisiteur, setentrepriseVisiteur] = useState(watch('entrepriseVisiteur') ? watch('entrepriseVisiteur') : (accidentData && accidentData.boolVisiteur ? accidentData.boolVisiteur : false));
+    const [formData, setFormData] = useState({
+        userLogin: watch('userLogin') || accidentData?.userLogin || null,
+        userPassword: watch('userPassword') || accidentData?.userPassword || null,
+        userName: watch('userName') || accidentData?.userName || null,
+        boolAdministrateur: watch('boolAdministrateur') || accidentData?.boolAdministrateur || false,
+        entrepriseConseillerPrevention: watch('entrepriseConseillerPrevention') || accidentData?.boolConseiller || false,
+        entrepriseVisiteur: watch('entrepriseVisiteur') || accidentData?.boolVisiteur || false,
+    });
 
-    useEffect(() => {
-        const getEntreprise = async () => {
-          try {
-            const response = await axios.get(`http://${apiUrl}:3100/api/entreprises`);
-            console.log('AdminUser > getEntreprise > Response :', response.data);
-    
-            return response.data.map((item) => (item.AddEntreName ));
-          } catch (error) {
+    //listes des entreprises
+    const [entreprises, setEntreprises] = useState([]);
+
+    const fetchData = async (url) => {
+        try {
+            const response = await axios.get(url);
+            return response.data;
+        } catch (error) {
             console.error('Erreur de requête:', error.message);
-          }
-        };
-    
-        const init = async () => {
-          const entreprise = await getEntreprise();
-          console.log("Entreprise :", entreprise);
-    
-          setCpEntreprise(entreprise || []);
-        };
-    
-        init();
-      }, []);
+        }
+    };
 
     useEffect(() => {
-        setValue('userLogin', userLogin)
-        setValue('userPassword', userPassword)
-        setValue('userName', userName)
-        setValue('boolAdministrateur', boolAdministrateur)
-        setValue('entreprisesConseillerPrevention', entrepriseConseillerPrevention)
-        setValue('entreprisesVisiteur', entrepriseVisiteur)
-    }, [userLogin, userPassword, userName, boolAdministrateur, entrepriseConseillerPrevention, entrepriseVisiteur]);
+        const init = async () => {
+            const entreprise = await fetchData(`http://${apiUrl}:3100/api/entreprises`);
+            setEntreprises(entreprise.map((item) => item.AddEntreName) || []);
+        };
 
-    console.log("CpEntreprise :", CpEntreprise);
+        init();
+    }, []);
+
+    useEffect(() => {
+        Object.keys(formData).forEach((key) => {
+            setValue(key, formData[key]);
+        });
+    }, [formData]);
+
+    console.log("entreprises :", entreprises);
     /**************************************************************************
      * METHODE ON SUBMIT
      * ************************************************************************/
-    const onSubmit = (data) => {
+    const onSubmit = async (data) => {
+        try {
+            const response = await axios.put(`http://${apiUrl}:3100/api/users`, data);
+            console.log('Réponse du serveur en création :', response.data);
+        } catch (error) {
+            console.error('Erreur de requête:', error.message);
+        }
+    };
 
-        console.log("Formulaire.js -> onSubmit -> Données à enregistrer :", data);
-
-        //mode CREATION
-        axios.put("http://" + apiUrl + ":3100/api/users", data)
-            .then(response => {
-                console.log('Réponse du serveur en création :', response.data);
-            })
-            .catch(error => {
-                console.error('Erreur de requête:', error.message);
-            });
-
+    const handleChange = (key, value) => {
+        setFormData((prevData) => ({ ...prevData, [key]: value }));
     };
 
     return (
@@ -85,11 +80,11 @@ export default function AdminAddUser({ accidentData }) {
 
                 <h3>Créer un nouvelle utilisateur</h3>
 
-                <TextFieldP id='userLogin' label="Adresse email" onChange={setuserLogin} defaultValue={userLogin}></TextFieldP>
+                <TextFieldP id='userLogin' label="Adresse email" onChange={(e) => handleChange('email', e.target.value)} defaultValue={formData.userLogin}></TextFieldP>
 
-                <TextFieldP id='userPassword' label="Mot de passe" onChange={setuserPassword} defaultValue={userPassword}></TextFieldP>
+                <TextFieldP id='userPassword' label="Mot de passe" onChange={(e) => handleChange('password', e.target.value)} defaultValue={formData.userPassword}></TextFieldP>
 
-                <TextFieldP id='userName' label="Nom et Prénom" onChange={setuserName} defaultValue={userName}></TextFieldP>
+                <TextFieldP id='userName' label="Nom et Prénom" onChange={(e) => handleChange('name', e.target.value)} defaultValue={formData.userName}></TextFieldP>
 
 
                 <h3>Donner les accès administration du site:</h3>
@@ -97,9 +92,9 @@ export default function AdminAddUser({ accidentData }) {
                 <Box sx={{ display: 'flex', justifyContent: 'center' }}>
 
                     <ControlLabelAdminP id="boolAdministrateur" label="Administrateur du site" onChange={(boolAdministrateurCoche) => {
-                        setboolAdministrateur(boolAdministrateurCoche);
+                        handleChange('boolAdministrateur', boolAdministrateurCoche);
                         setValue('boolAdministrateur', boolAdministrateurCoche);
-                    }} defaultValue={boolAdministrateur}></ControlLabelAdminP>
+                    }} defaultValue={formData.boolAdministrateur}></ControlLabelAdminP>
 
                 </Box>
 
@@ -108,11 +103,11 @@ export default function AdminAddUser({ accidentData }) {
                 <Autocomplete
                     multiple
                     id="checkboxes-tags-demo"
-                    options={CpEntreprise}
+                    options={entreprises}
                     disableCloseOnSelect
                     sx={{ backgroundColor: '#84a784', width: '50%', boxShadow: 3, margin: '0 auto 1rem' }}
                     getOptionLabel={(option) => option}
-                    onChange={  (event, value) => setentrepriseConseillerPrevention(value.map((item) => item.title))}
+                    onChange={(value) => handleChange('entrepriseConseiller', value.map((item) => item.title))}
                     renderOption={(props, option, { selected }) => (
                         <li {...props}>
                             <Checkbox
@@ -140,8 +135,8 @@ export default function AdminAddUser({ accidentData }) {
                 <Autocomplete
                     multiple
                     id="checkboxes-tags-demo"
-                    options={CpEntreprise}
-                    onChange={setentrepriseVisiteur}
+                    options={entreprises}
+                    onChange={handleChange('entrepriseVisiteur', value.map((item) => item.title))}
                     disableCloseOnSelect
                     sx={{ backgroundColor: '#84a784', width: '50%', boxShadow: 3, margin: '0 auto 1rem' }}
                     getOptionLabel={(option) => option}

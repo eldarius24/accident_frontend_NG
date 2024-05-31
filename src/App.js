@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Login from './Login';
 import Home from './Home';
 import Formulaire from './pageFormulaire/Formulaire';
-import AdminAddUser from './pageAdmin/AdminAddUser';
+import AdminFormUser from './pageAdmin/AdminFormUser';
 import AdminPanelSettingsAction from './pageAdmin/AdminPanelSettingsaction';
 import AdminAddEntreprise from './pageAdmin/AdminAddEntreprise';
 import AddSecteur from './pageAdmin/AdminAddSecteur';
@@ -29,7 +29,7 @@ const App = () => {
           <Route path="/" element={<Login />} />
           <Route path="/accueil" element={<ProtectedRoute><Home /></ProtectedRoute>} />
           <Route path="/formulaire" element={<ProtectedRoute><Formulaire /></ProtectedRoute>} />
-          <Route path="/admin" element={<ProtectedRoute><AdminAddUser /></ProtectedRoute>} />
+          <Route path="/admin" element={<ProtectedRoute><AdminFormUser /></ProtectedRoute>} />
           <Route path="/adminaction" element={<ProtectedRoute><AdminPanelSettingsAction /></ProtectedRoute>} />
           <Route path="/addEntreprise" element={<ProtectedRoute><AdminAddEntreprise /></ProtectedRoute>} />
           <Route path="/addSecteur" element={<ProtectedRoute><AddSecteur /></ProtectedRoute>} />
