@@ -22,15 +22,24 @@ function ResponsiveAppBar({ navigation }) {
     <AppBar position="sticky" sx={{ backgroundColor: '#84a784' }}>
       <Container maxWidth="lg">
         <Toolbar disableGutters>
-        <Button
+          <Button
             component={Link}
-            to={isFormulairePage1 ? '/' :'/adminaction'}
+            to="/login"
             variant="contained"
-            sx={{ backgroundColor: '#84a784',  '&:hover': { backgroundColor: 'green' } }}
-            
+            onClick={() => localStorage.removeItem('token')}
+            sx={{ backgroundColor: '#84a784', '&:hover': { backgroundColor: 'green' } }}
           >
-            <AdminPanelSettingsIcon 
-            
+            logout
+          </Button>
+          <Button
+            component={Link}
+            to={isFormulairePage1 ? '/' : '/adminaction'}
+            variant="contained"
+            sx={{ backgroundColor: '#84a784', '&:hover': { backgroundColor: 'green' } }}
+
+          >
+            <AdminPanelSettingsIcon
+
             />
           </Button>
           <Typography
@@ -71,7 +80,7 @@ function ResponsiveAppBar({ navigation }) {
             }}
           ></Box>
           {/* Condition pour le texte et la destination du bouton */}
-          
+
           <Button
             component={Link}
             to={isFormulairePage ? '/' : '/formulaire'}
@@ -80,7 +89,7 @@ function ResponsiveAppBar({ navigation }) {
             startIcon={isFormulairePage ? <ArrowBackIcon /> : <AddIcon />}
           >
             {isFormulairePage ? 'Retour' : 'Ajout d\'un AT'}
-          </Button> 
+          </Button>
           <Button
             component={Link}
             to={isFormulairePage2 ? '/' : '/planAction'}
@@ -89,7 +98,7 @@ function ResponsiveAppBar({ navigation }) {
             startIcon={isFormulairePage2 ? <ArrowBackIcon /> : <AddIcon />}
           >
             {isFormulairePage2 ? 'Retour' : 'Plan d\'actions'}
-          </Button>              
+          </Button>
           {/* Le reste de votre contenu */}
         </Toolbar>
       </Container>
