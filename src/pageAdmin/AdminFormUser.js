@@ -45,6 +45,7 @@ export default function AdminFormUser({ accidentData }) {
         const init = async () => {
             const entreprise = await fetchData(`http://${apiUrl}:3100/api/entreprises`);
             setEntreprises(entreprise.map((item) => item.AddEntreName) || []);
+            console.log("entreprises :", entreprises);
         };
 
         init();
@@ -56,13 +57,13 @@ export default function AdminFormUser({ accidentData }) {
         });
     }, [formData]);
 
-    console.log("entreprises :", entreprises);
+    
     /**************************************************************************
      * METHODE ON SUBMIT
      * ************************************************************************/
-    const onSubmit = async (data) => {
+    const onSubmit = async () => {
         try {
-            const response = await axios.put(`http://${apiUrl}:3100/api/users`, data);
+            const response = await axios.put(`http://${apiUrl}:3100/api/users`, formData);
             console.log('Réponse du serveur en création :', response.data);
         } catch (error) {
             console.error('Erreur de requête:', error.message);
@@ -80,11 +81,11 @@ export default function AdminFormUser({ accidentData }) {
 
                 <h3>Créer un nouvelle utilisateur</h3>
 
-                <TextFieldP id='userLogin' label="Adresse email" onChange={(e) => handleChange('email', e.target.value)} defaultValue={formData.userLogin}></TextFieldP>
+                <TextFieldP id='userLogin' label="Adresse email" onChange={(value) => handleChange('userLogin', value)} defaultValue={formData.userLogin}></TextFieldP>
 
-                <TextFieldP id='userPassword' label="Mot de passe" onChange={(e) => handleChange('password', e.target.value)} defaultValue={formData.userPassword}></TextFieldP>
+                <TextFieldP id='userPassword' label="Mot de passe" onChange={(value) => handleChange('userPassword', value)} defaultValue={formData.userPassword}></TextFieldP>
 
-                <TextFieldP id='userName' label="Nom et Prénom" onChange={(e) => handleChange('name', e.target.value)} defaultValue={formData.userName}></TextFieldP>
+                <TextFieldP id='userName' label="Nom et Prénom" onChange={(value) => handleChange('userName', value)} defaultValue={formData.userName}></TextFieldP>
 
 
                 <h3>Donner les accès administration du site:</h3>
@@ -136,7 +137,7 @@ export default function AdminFormUser({ accidentData }) {
                     multiple
                     id="checkboxes-tags-demo"
                     options={entreprises}
-                    onChange={handleChange('entrepriseVisiteur', value.map((item) => item.title))}
+                    onChange={(event, value) => {handleChange('entrepriseVisiteur', value.map((item) => item.title))}}
                     disableCloseOnSelect
                     sx={{ backgroundColor: '#84a784', width: '50%', boxShadow: 3, margin: '0 auto 1rem' }}
                     getOptionLabel={(option) => option}
