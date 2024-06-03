@@ -29,8 +29,8 @@ const Login = () => {
 
       const user = await response;
       if (response.status == 200 && user) {
-        localStorage.setItem('token', user);
-        navigate('/accueil')
+        localStorage.setItem('token', JSON.stringify(user));
+        navigate('/')
       } else {
         setIsPasswordValid(false);
         alert('Login failed');
@@ -62,10 +62,11 @@ const Login = () => {
 
 
           <form onSubmit={handleSubmit(onSubmit)}>
-            <TextField {...register('email')} id="outlined-multiline-static" label="Email" sx={{ backgroundColor: '#84a784', width: '50%', boxShadow: 3 }} />
+            <div style={{ display: 'flex', justifyContent: 'center', margin: '0 auto 1rem' }}>
+              <TextField {...register('email')} id="outlined-multiline-static" label="Email" sx={{ backgroundColor: '#84a784', width: '50%', boxShadow: 3 }} />
+            </div>
 
             <div style={{ display: 'flex', justifyContent: 'center', margin: '0 auto 1rem' }}>
-
               <TextField
                 {...register('password')}
                 id="outlined-multiline-password"
