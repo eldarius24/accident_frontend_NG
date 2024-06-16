@@ -64,6 +64,22 @@ export default function FormulaireAccident({ setValue, accidentData, watch }) {
   const [codeNatureLesion, setCodeNatureLesion] = useState(watch('codeNatureLesion') ? watch('codeNatureLesion') : (accidentData && accidentData.codeNatureLesion ? accidentData.codeNatureLesion : null));
   const [codeSiegeLesion, setCodeSiegeLesion] = useState(watch('codeSiegeLesion') ? watch('codeSiegeLesion') : (accidentData && accidentData.codeSiegeLesion ? accidentData.codeSiegeLesion : null));
   const [horaireJourAccident, sethoraireJourAccident] = useState(watch('horaireJourAccident') ? watch('horaireJourAccident') : (accidentData && accidentData.horaireJourAccident ? accidentData.horaireJourAccident : null));
+   
+  const [formData, setFormData] = useState(accidentData);
+
+  useEffect(() => {
+    const data = sessionStorage.getItem('accidentData');
+    if(data) {
+      const parsedData = JSON.parse(data);
+      setFormData(parsedData);
+    }
+  }, []);
+
+  useEffect(() => {
+    console.info("fomulaireAccident => formData : ", formData);
+    sessionStorage.setItem('accidentData', JSON.stringify(formData));
+  }, [formData])
+  
   /**
    * Etape 2 : mettre à jour les données du formulaire à chaque modification d'un des champs
    */
@@ -106,7 +122,7 @@ export default function FormulaireAccident({ setValue, accidentData, watch }) {
           <h2>Infos Accident</h2>
           <h3>Rentrez les informations sur l'accident de travail.</h3>
 
-          <AutoCompleteP id='typeAccident' option={listAccident.typeAccident} label='Type d accident' onChange={setTypeAccident} defaultValue={typeAccident} />
+          <AutoCompleteP id='typeAccident' option={listAccident.typeAccident} label='Type d accident' onChange={setFormData} defaultValue={formData?.typeAccident ?? ''} />
           <TextFieldP id="circonstanceAccident" label="Circonstance de l'accident" onChange={(circonstanceAccidentText) => {
             setCirconstanceAccident(circonstanceAccidentText);
             setValue('circonstanceAccident', circonstanceAccidentText);
