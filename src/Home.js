@@ -56,7 +56,6 @@ function Home() {
     const [data, setData] = useState([]); // Stocker les données de l'API
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
-    const isFileUploadIcon = location.pathname === '/fichierdll';
 
     //au chargerment de la page, on met à jour les données de la liste des accidents
     useEffect(() => {
@@ -346,7 +345,7 @@ function Home() {
                                         <TableCell>{item.prenomTravailleur}</TableCell>
                                         <TableCell>{item.typeAccident}</TableCell>
                                         <TableCell style={{ padding: 0, width: '70px' }}><Button variant="contained" color="primary" onClick={() => handleEdit(item._id)}> <EditIcon /></Button></TableCell>
-                                        <TableCell style={{ padding: 0, width: '70px' }}><Button component={Link} to={isFileUploadIcon ? '/' : '/fichierdll'} variant="contained" color="secondary"> <GetAppIcon /></Button></TableCell>
+                                        <TableCell style={{ padding: 0, width: '70px' }}><Button onClick={() => navigate("/fichierdll", { state: item._id })}variant="contained" color="secondary"> <GetAppIcon /></Button></TableCell>
                                         <TableCell style={{ padding: 0, width: '70px' }}><Button variant="contained" color="success" onClick={() => handleGeneratePDF(item._id)}> <PictureAsPdfIcon /></Button> </TableCell>
                                         <TableCell style={{ padding: 0, width: '70px' }}><Button variant="contained" color="error" onClick={() => { confirmAlert({ customUI: ({ onClose }) => { return (<div className="custom-confirm-dialog"> <h1 className="custom-confirm-title">Supprimer</h1> <p className="custom-confirm-message">Êtes-vous sûr de vouloir supprimer cet élément?</p> <div className="custom-confirm-buttons"> <button className="custom-confirm-button" onClick={() => { handleDelete(item._id); onClose(); }} > Oui </button> <button className="custom-confirm-button custom-confirm-no" onClick={onClose}> Non </button> </div> </div>); } }); }} > <DeleteForeverIcon /> </Button> </TableCell>
                                     </TableRow>

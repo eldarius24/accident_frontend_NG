@@ -1,50 +1,121 @@
-import React, { useCallback } from 'react';
-import { Link } from 'react-router-dom';
-import Button from '@mui/material/Button';
+import axios from 'axios';
+import React, { useCallback, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
+import { saveAs } from 'file-saver';
 
-export default function Formulaire({ location }) {
-    const handleFileUpload = (file) => {
-        console.log("Fichier téléchargé :", file.name);
-    };
+const dropZoneStyle = {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: '200px',
+    border: '2px dashed #84a784',
+    borderRadius: '10px',
+    cursor: 'pointer',
+    margin: '20px 1rem',
+    backgroundColor: '#d2e2d2',
+};
 
-    const handleDrop = useCallback((e) => {
+const labelStyle = {
+    textAlign: 'center',
+    width: '45%',
+    backgroundColor: '#84a784',
+    color: 'black',
+    padding: '10px 20px',
+    cursor: 'pointer',
+    transition: 'background-color 0.3s',
+};
+
+/**
+ * Page de téléchargement de fichier
+ * 
+ * @param {int} accidentId Envoyer via state, id de l'accident pour lequel on veut télécharger un fichier
+ * @returns affiche un formulaire pour télécharger un fichier
+ */
+export default function PageDownloadFile() {
+    const accidentId = useLocation().state;
+
+    useEffect(() => {
+        if (!accidentId) {
+            console.error('Pas d\'accidentId dans le state');
+            return;
+        };
+
+        const downloadFile = async () => {
+            try {
+                const response = await axios.get(`http://localhost:3100/api/getFile/${accidentId}`, {
+                    responseType: 'blob',
+                });
+                //liste des entetes de la reponse
+                const FileName = response.headers.toJSON();
+                // Extraire le nom du fichier depuis l'entete FileName
+                 
+                //const filename = contentDisposition.split('filename=')[1];
+
+                console.log('Nom du fichier :', FileName);
+                const blob = new Blob([response.data], { type: 'application/txt' });
+                console.log('blob', blob);
+                //saveAs(blob, 'text.txt');
+            } catch (error) {
+                console.error('Erreur de requête:', error);
+            }
+        };
+
+        downloadFile();
+    }, [accidentId]);
+
+    /**
+     * 
+     * @param {*} file 
+     * @returns 
+     */
+    const handleFileUpload = async file => {
+
+        if (!accidentId) {
+            console.error('Pas d\'accidentId dans le state');
+            return;
+        };
+
+        if (!file) {
+            console.error('Pas de fichier à envoyer');
+            return;
+        };
+
+        const dataFile = new FormData();
+        dataFile.append('file', file);
+
+        console.log('Fichier à envoyer:', dataFile);
+
+        try {
+            console.log("File ", dataFile.get('file'));
+            const response = await axios.post(`http://localhost:3100/api/uploadFile/${accidentId}`, dataFile, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            });
+            console.log('Réponse du serveur :', response.data);
+            navigate('/');
+        } catch (error) {
+            console.error('Erreur de requête:', error);
+        }
+    }
+
+
+
+    const handleDrop = useCallback(e => {
         e.preventDefault();
         e.stopPropagation();
         const file = e.dataTransfer.files[0];
-        if (file) {
-            handleFileUpload(file);
-        }
+        if (file) handleFileUpload(file);
     }, []);
-
 
     return (
         <form>
-            <Button
-                style={{ margin: '20px', marginTop: '20px'}}
-                sx={{ backgroundColor: '#84a784', '&:hover': { backgroundColor: 'green' } }}
-                component={Link}
-                to={'/accueil'}
-                variant="contained"
-                
-            >
-                Accueil
-            </Button>
             <h3>Vous pouvez ajouter des pièces à joindre au dossier (courriers, e-mails, etc..).</h3>
 
             <div
-                style={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    height: '200px',
-                    border: '2px dashed #84a784',
-                    borderRadius: '10px',
-                    cursor: 'pointer',
-                    margin: '20px 1rem',
-                    backgroundColor: '#d2e2d2',
-                }}
+                style={dropZoneStyle}
                 onDrop={handleDrop}
-                onDragOver={(e) => {
+                onDragOver={e => {
                     e.preventDefault();
                     e.stopPropagation();
                 }}
@@ -55,24 +126,16 @@ export default function Formulaire({ location }) {
                 <input
                     type="file"
                     id="fileInput"
-                    onChange={(e) => handleFileUpload(e.target.files[0])}
+                    onChange={e => handleFileUpload(e.target.files[0])}
                     style={{ display: 'none' }}
                 />
             </div>
             <div style={{ display: 'flex', justifyContent: 'center' }}>
                 <label
                     htmlFor="fileInput"
-                    style={{
-                        textAlign: 'center',
-                        width: '45%',
-                        backgroundColor: '#84a784',
-                        color: 'black',
-                        padding: '10px 20px',
-                        cursor: 'pointer',
-                        transition: 'background-color 0.3s',
-                    }}
-                    onMouseEnter={(e) => (e.target.style.backgroundColor = 'green')}
-                    onMouseLeave={(e) => (e.target.style.backgroundColor = '#84a784')}
+                    style={labelStyle}
+                    onMouseEnter={e => (e.target.style.backgroundColor = 'green')}
+                    onMouseLeave={e => (e.target.style.backgroundColor = '#84a784')}
                 >
                     Télécharger un document
                 </label>
