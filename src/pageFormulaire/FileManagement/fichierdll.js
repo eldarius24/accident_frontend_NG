@@ -1,7 +1,8 @@
 import axios from 'axios';
 import React, { useCallback, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { saveAs } from 'file-saver';
+import listFilesInAccident from './FilesActions';
 
 const dropZoneStyle = {
     display: 'flex',
@@ -33,35 +34,7 @@ const labelStyle = {
  */
 export default function PageDownloadFile() {
     const accidentId = useLocation().state;
-
-    useEffect(() => {
-        if (!accidentId) {
-            console.error('Pas d\'accidentId dans le state');
-            return;
-        };
-
-        const downloadFile = async () => {
-            try {
-                const response = await axios.get(`http://localhost:3100/api/getFile/${accidentId}`, {
-                    responseType: 'blob',
-                });
-                //liste des entetes de la reponse
-                const FileName = response.headers.toJSON();
-                // Extraire le nom du fichier depuis l'entete FileName
-                 
-                //const filename = contentDisposition.split('filename=')[1];
-
-                console.log('Nom du fichier :', FileName);
-                const blob = new Blob([response.data], { type: 'application/txt' });
-                console.log('blob', blob);
-                //saveAs(blob, 'text.txt');
-            } catch (error) {
-                console.error('Erreur de requête:', error);
-            }
-        };
-
-        downloadFile();
-    }, [accidentId]);
+    const navigate = useNavigate();
 
     /**
      * 
@@ -87,7 +60,7 @@ export default function PageDownloadFile() {
 
         try {
             console.log("File ", dataFile.get('file'));
-            const response = await axios.post(`http://localhost:3100/api/uploadFile/${accidentId}`, dataFile, {
+            const response = await axios.post(`http://localhost:3100/api/stockFile/${accidentId}`, dataFile, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }
@@ -109,7 +82,8 @@ export default function PageDownloadFile() {
     }, []);
 
     return (
-        <form>
+        <div>
+            {listFilesInAccident(accidentId)}
             <h3>Vous pouvez ajouter des pièces à joindre au dossier (courriers, e-mails, etc..).</h3>
 
             <div
@@ -140,6 +114,11 @@ export default function PageDownloadFile() {
                     Télécharger un document
                 </label>
             </div>
-        </form>
+        </div>
     );
 }
+
+
+
+
+
