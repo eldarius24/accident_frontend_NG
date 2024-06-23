@@ -19,6 +19,7 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
 
   const onSubmit = async (data) => {
+<<<<<<< HEAD
     const email = data.email;
     const password = data.password;
 
