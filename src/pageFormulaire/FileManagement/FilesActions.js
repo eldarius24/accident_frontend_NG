@@ -126,7 +126,7 @@ export default function listFilesInAccident(accidentId) {
                 {files && files.map(file => (
                     <li key={file.fileId} style={{ listStyleType: 'none', margin: '10px' }}>
                         <Card sx={{ minWidth: 275, maxWidth: 275,minHeight: 275, maxHeight: 275 }}>
-                            <CardContent>
+                            <CardContent sx={{ maxWidth: 200, maxHeight: 190 }}>
                                 {imageUrls[file.fileId] ? (
                                     <img src={imageUrls[file.fileId]} alt={file.fileName} style={{ maxWidth: '100%' }} />
                                 ) : (
