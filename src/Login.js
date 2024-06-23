@@ -19,9 +19,9 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
 
   const onSubmit = async (data) => {
-<<<<<<< HEAD
     const email = data.email;
     const password = data.password;
+
 
     try {
       const response = await axios.post('http://localhost:3100/api/login', { email, password }, {

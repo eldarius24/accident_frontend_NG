@@ -66,7 +66,7 @@ export default function PageDownloadFile() {
                 }
             });
             console.log('Réponse du serveur :', response.data);
-            navigate('/');
+            //navigate('/');
         } catch (error) {
             console.error('Erreur de requête:', error);
         }
