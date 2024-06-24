@@ -34,32 +34,19 @@ const labelStyle = {
  */
 export default function PageDownloadFile() {
     const accidentId = useLocation().state;
-    const navigate = useNavigate();
 
-    /**
+    /** Fonction pour envoyer un fichier vers le serveur 
      * 
-     * @param {*} file 
-     * @returns 
+     * @param {*} file Fichier à envoyer
      */
     const handleFileUpload = async file => {
 
-        if (!accidentId) {
-            console.error('Pas d\'accidentId dans le state');
-            return;
-        };
-
-        if (!file) {
-            console.error('Pas de fichier à envoyer');
-            return;
-        };
-
-        const dataFile = new FormData();
-        dataFile.append('file', file);
-
-        console.log('Fichier à envoyer:', dataFile);
+        if (!accidentId) return console.error('Pas d\'accidentId dans le state');
+        if (!file) return console.error('Pas de fichier à envoyer');
 
         try {
-            console.log("File ", dataFile.get('file'));
+            const dataFile = new FormData();
+            dataFile.append('file', file);
             const response = await axios.post(`http://localhost:3100/api/stockFile/${accidentId}`, dataFile, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
@@ -68,7 +55,7 @@ export default function PageDownloadFile() {
             console.log('Réponse du serveur :', response.data);
             window.location.reload();
         } catch (error) {
-            console.error('Erreur de requête:', error);
+            console.error('Erreur lors de l\'envoie d\'un fichier :', error);
         }
     }
 

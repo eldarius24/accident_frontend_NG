@@ -9,29 +9,31 @@ import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import GetAppIcon from '@mui/icons-material/GetApp';
 import { confirmAlert } from 'react-confirm-alert';
 import { saveAs } from 'file-saver';
+import deleteFile from "./deleteFile";
 
 export default function listFilesInAccident(accidentId) {
     const [files, setFiles] = useState([]);
     const [imageUrls, setImageUrls] = useState({});
 
+    /** Suppresion d'un fichier de la base de données et de la liste des fichiers de l'accident
+     * 
+     * @param {*} fileId id du fichier à supprimer
+     */
     async function handleDeleteFile(fileId) {
         try {
-            //supprime le fichier de la base de données
-            const response = await axios.delete(`http://localhost:3100/api/file/${fileId}`);
-            console.log('Fichier supprimé:', response);
-
-            //supprime la référence du fichier dans l'accident
-            const accident = await axios.get(`http://localhost:3100/api/accidents/${accidentId}`);
-            const files = accident.data.files.filter(file => file.fileId !== fileId);
-            console.log('Fichiers restants:', files);
-            const resultSupress = await axios.put(`http://localhost:3100/api/accidents/${accidentId}`, { files: files });
-            console.log('Fichier retiré de l\'accident:', resultSupress);
-            setFiles(files);
+            await deleteFile({ fileId, accidentId });
+            const updatedFiles = files.filter(file => file.id !== fileId);
+            setFiles(updatedFiles);
         } catch (error) {
             console.error('Erreur de requête:', error);
         }
     }
 
+    /** popup de confirmation de suppression
+     * 
+     * @param {*} fileId id du fichier à supprimer
+     * @returns 
+     */
     function popUpDelete(fileId) {
         console.log('Suppression du fichier:', fileId);
         return (
@@ -54,7 +56,7 @@ export default function listFilesInAccident(accidentId) {
     /**
      * récupération des fichiers liés à l'accident à l'ouverture de la page
      */
-    function listFilesInAccident(accidentId) {
+    async function listFilesInAccident(accidentId) {
         if (!accidentId) return console.error('Pas d\'accidentId indiqué');
 
         //liste les fichiers liés à l'accident
@@ -63,7 +65,7 @@ export default function listFilesInAccident(accidentId) {
                 const accident = await axios.get(`http://localhost:3100/api/accidents/${accidentId}`);
                 if (!accident) throw new Error('Pas d\'accident trouvé');
                 const fetchedFiles = accident.data.files;
-
+                /*
                 const urls = await Promise.all(fetchedFiles.map(async file => {
                     if (isImage(file.fileName)) {
                         const response = await axios.get(`http://localhost:3100/api/getFile/${file.fileId}`, {
@@ -75,7 +77,6 @@ export default function listFilesInAccident(accidentId) {
                     
                     }
                     return { fileId: file.fileId, url: null };
-                    
                 }));
 
                 const urlMap = urls.reduce((acc, curr) => {
@@ -84,52 +85,57 @@ export default function listFilesInAccident(accidentId) {
                 }, {});
 
                 setImageUrls(urlMap);
-                
+                */
                 return fetchedFiles;
             } catch (error) {
                 return console.error('Erreur de requête:', error);
             }
         }
-
-        listFiles().then(files => setFiles(files));
+        setFiles(await listFiles())
     }
-    useEffect(() => {
-        listFilesInAccident(accidentId);
-      }, [accidentId]);
 
-      async function getFile(fileId) {
-        const response = await fetch(`http://localhost:3100/api/getFile/${fileId}`);
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
+    useEffect(() => {
+        async function fetchData() {
+            await listFilesInAccident(accidentId);
         }
-        const blob = await response.blob();
-        return blob;
-      }
+        fetchData();
+    }, [accidentId]);
+
+    /** Récupération du fichier
+     * 
+     * @param {*} fileId id du fichier à récupérer
+     * @returns 
+     */
+    async function getFile(fileId) {
+        if (!fileId) throw new Error('Pas de fileId indiqué');
+
+        try {
+            const response = await axios.get(`http://localhost:3100/api/getFile/${fileId}`, {
+                responseType: 'blob',
+            });
+
+            if (response.status !== 200) throw new Error(`erreur dans la récupération de fichier : ${response.status}`);
+
+            return response.data;
+        } catch (error) {
+            throw new Error('Erreur lors de la récupération du fichier:', error);
+        }
+    }
 
     /** telechargement du fichier
      * 
-     * @param {*} param0 
+     * @param {*} fileId id du fichier à télécharger 
+     * @param {*} fileName nom du fichier à télécharger
      * @returns 
      */
     const downloadFile = async ({ fileId, fileName }) => {
         if (!fileId) return console.error('Pas de fichierId indiqué');
         if (!fileName) return console.error('Pas de nom de fichier indiqué');
 
-
         try {
-            console.log('Téléchargement du fichier:', fileId);
-            console.log('Nom du fichier:', fileName);
-            /*const response = await axios.get(`http://localhost:3100/api/getFile/${fileId}`, {
-                responseType: 'blob',
-            });*/
             getFile(fileId).then(blob => {
                 saveAs(blob, fileName);
-            });/*
-            console.log('Réponse du serveur :', response);
-
-            const blob = new Blob([response.data], { type: 'application/octet-stream' });
-            console.log('Blob:', blob);
-            saveAs(blob, fileName);*/
+            });
         } catch (error) {
             console.error('Erreur de requête:', error);
         }
@@ -142,15 +148,11 @@ export default function listFilesInAccident(accidentId) {
             <ul style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between' }}>
                 {files && files.map(file => (
                     <li key={file.fileId} style={{ listStyleType: 'none', margin: '10px' }}>
-                        <Card sx={{ minWidth: 275, maxWidth: 275,minHeight: 275, maxHeight: 275 }}>
+                        <Card sx={{ minWidth: 275, maxWidth: 275, minHeight: 275, maxHeight: 275 }}>
                             <CardContent sx={{ maxWidth: 200, maxHeight: 190 }}>
-                                {imageUrls[file.fileId] ? (
-                                    <img src={imageUrls[file.fileId]} alt={file.fileName} style={{ maxWidth: '100%' }} />
-                                ) : (
-                                    <Typography sx={{ fontSize: 14 }} color="text.primary" gutterBottom>
-                                        {file.fileName}
-                                    </Typography>
-                                )}
+                                <Typography sx={{ fontSize: 14 }} color="text.primary" gutterBottom>
+                                    {file.fileName}
+                                </Typography>
                             </CardContent>
                             <CardActions>
                                 <Button onClick={() => downloadFile({ fileId: file.fileId, fileName: file.fileName })} variant="contained" color="primary"> <GetAppIcon /></Button>
