@@ -1,22 +1,49 @@
-// toolbar.js (ResponsiveAppBar)
-import * as React from 'react';
+import React, { useMemo } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
-import Container from '@mui/material/Container';
-import Button from '@mui/material/Button';
+import { AppBar, Toolbar, Typography, Container, Button } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import AddIcon from '@mui/icons-material/Add';
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 
-function ResponsiveAppBar({ navigation }) {
+const buttonStyle = {
+  backgroundColor: '#84a784',
+  '&:hover': { backgroundColor: 'green' }
+};
+
+const textStyle = {
+  mr: -50,
+  display: { xs: 'flex', md: 'flex', alignItems: 'center', justifyContent: 'center' },
+  flexGrow: 1,
+  fontFamily: 'monospace',
+  fontWeight: 700,
+  letterSpacing: '.3rem',
+  color: 'inherit',
+  '@media (min-width: 850px)': {
+    fontSize: '2rem',
+  },
+  '@media (max-width: 750px)': {
+    fontSize: '1.5rem',
+    letterSpacing: '.1rem',
+    mr: -20,
+  },
+  '@media (max-width: 600px)': {
+    fontSize: '0.7rem',
+    letterSpacing: '.04rem',
+    mr: -20,
+  },
+};
+
+/** Composant de la barre de navigation
+ * 
+ * @returns ResponsiveAppBar component
+ */
+function ResponsiveAppBar() {
   const location = useLocation();
 
-  const isFormulairePage = location.pathname === '/formulaire';
-  const isFormulairePage1 = location.pathname === '/adminaction';
-  const isFormulairePage2 = location.pathname === '/planAction';
+  const { isFormulaireAccident, isPageAdmin } = useMemo(() => ({
+    isFormulaireAccident: location.pathname === '/formulaire',
+    isPageAdmin: location.pathname === '/adminaction'
+  }), [location.pathname]);
 
   return (
     <AppBar position="sticky" sx={{ backgroundColor: '#84a784' }}>
@@ -27,86 +54,30 @@ function ResponsiveAppBar({ navigation }) {
             to="/login"
             variant="contained"
             onClick={() => localStorage.removeItem('token')}
-            sx={{ backgroundColor: '#84a784', '&:hover': { backgroundColor: 'green' } }}
+            sx={buttonStyle}
           >
             logout
           </Button>
           <Button
             component={Link}
-            to={isFormulairePage1 ? '/' : '/adminaction'}
+            to={isPageAdmin ? '/' : '/adminaction'}
             variant="contained"
-            sx={{ backgroundColor: '#84a784', '&:hover': { backgroundColor: 'green' } }}
-
+            sx={buttonStyle}
           >
-            <AdminPanelSettingsIcon
-
-            />
+            <AdminPanelSettingsIcon />
           </Button>
-          <Typography
-            variant="h5"
-            noWrap
-            sx={{
-              mr: -50,
-              display: { xs: 'flex', md: 'flex', alignItems: 'center', justifyContent: 'center' },
-              flexGrow: 1,
-              fontFamily: 'monospace',
-              fontWeight: 700,
-              letterSpacing: '.3rem',
-              color: 'inherit',
-              '@media (min-width: 850px)': {
-                fontSize: '2rem',
-              },
-              '@media (max-width: 750px)': {
-                fontSize: '1.5rem',
-                letterSpacing: '.1rem',
-                mr: -20,
-              },
-              '@media (max-width: 600px)': {
-                fontSize: '0.7rem',
-                letterSpacing: '.04rem',
-                mr: -20,
-              },
-            }}
-          >
+          <Typography variant="h5" noWrap sx={textStyle}>
             T.I.G.R.E
           </Typography>
-
-          {/* Utilisation de la propriété navigation */}
-          {navigation}
-          <Box
-            sx={{
-              display: { xs: 'flex', md: 'flex', alignItems: 'center', justifyContent: 'center' },
-              flexGrow: 1,
-            }}
-          ></Box>
-          {/* Condition pour le texte et la destination du bouton */}
           <Button
             component={Link}
-            to="/"
+            to={isFormulaireAccident ? '/' : '/formulaire'}
             variant="contained"
-            sx={{ backgroundColor: '#84a784', '&:hover': { backgroundColor: 'green' } }}
-          >
-            Liste AT
-          </Button>
-          <Button
-            component={Link}
-            to="/formulaire"
-            variant="contained"
-            sx={{ backgroundColor: '#84a784', '&:hover': { backgroundColor: 'green' } }}
-            startIcon={isFormulairePage ? <ArrowBackIcon /> : <AddIcon />}
+            sx={buttonStyle}
+            startIcon={isFormulaireAccident ? <ArrowBackIcon /> : <AddIcon />}
           >
             Ajout d'un AT
           </Button>
-          <Button
-            component={Link}
-            to="/planAction"
-            variant="contained"
-            sx={{ backgroundColor: '#84a784', '&:hover': { backgroundColor: 'green' } }}
-            
-          >
-            Plan d'actions
-          </Button>
-          {/* Le reste de votre contenu */}
         </Toolbar>
       </Container>
     </AppBar>
