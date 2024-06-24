@@ -80,24 +80,31 @@ function ResponsiveAppBar({ navigation }) {
             }}
           ></Box>
           {/* Condition pour le texte et la destination du bouton */}
-
           <Button
             component={Link}
-            to={isFormulairePage ? '/' : '/formulaire'}
+            to="/"
+            variant="contained"
+            sx={{ backgroundColor: '#84a784', '&:hover': { backgroundColor: 'green' } }}
+          >
+            Liste AT
+          </Button>
+          <Button
+            component={Link}
+            to="/formulaire"
             variant="contained"
             sx={{ backgroundColor: '#84a784', '&:hover': { backgroundColor: 'green' } }}
             startIcon={isFormulairePage ? <ArrowBackIcon /> : <AddIcon />}
           >
-            {isFormulairePage ? 'Retour' : 'Ajout d\'un AT'}
+            Ajout d'un AT
           </Button>
           <Button
             component={Link}
-            to={isFormulairePage2 ? '/' : '/planAction'}
+            to="/planAction"
             variant="contained"
             sx={{ backgroundColor: '#84a784', '&:hover': { backgroundColor: 'green' } }}
-            startIcon={isFormulairePage2 ? <ArrowBackIcon /> : <AddIcon />}
+            
           >
-            {isFormulairePage2 ? 'Retour' : 'Plan d\'actions'}
+            Plan d'actions
           </Button>
           {/* Le reste de votre contenu */}
         </Toolbar>
