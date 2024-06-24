@@ -55,7 +55,7 @@ export default function listFilesInAccident(accidentId) {
     /**
      * récupération des fichiers liés à l'accident à l'ouverture de la page
      */
-    useEffect(() => {
+    function listFilesInAccident(accidentId) {
         if (!accidentId) return console.error('Pas d\'accidentId indiqué');
 
         //liste les fichiers liés à l'accident
@@ -69,24 +69,43 @@ export default function listFilesInAccident(accidentId) {
             }
         }
         listFiles().then(files => setFiles(files));
-    }, [files]);
+    }
+    useEffect(() => {
+        listFilesInAccident(accidentId);
+      }, [accidentId]);
 
+      async function getFile(fileId) {
+        const response = await fetch(`http://localhost:3100/api/getFile/${fileId}`);
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        const blob = await response.blob();
+        return blob;
+      }
+
+    /** telechargement du fichier
+     * 
+     * @param {*} param0 
+     * @returns 
+     */
     const downloadFile = async ({ fileId, fileName }) => {
         if (!fileId) return console.error('Pas de fichierId indiqué');
         if (!fileName) return console.error('Pas de nom de fichier indiqué');
 
-        
         try {
             console.log('Téléchargement du fichier:', fileId);
             console.log('Nom du fichier:', fileName);
-            const response = await axios.get(`http://localhost:3100/api/getFile/${fileId}`, {
+            /*const response = await axios.get(`http://localhost:3100/api/getFile/${fileId}`, {
                 responseType: 'blob',
-            });
+            });*/
+            getFile(fileId).then(blob => {
+                saveAs(blob, fileName);
+            });/*
             console.log('Réponse du serveur :', response);
 
             const blob = new Blob([response.data], { type: 'application/octet-stream' });
             console.log('Blob:', blob);
-            saveAs(blob, fileName);
+            saveAs(blob, fileName);*/
         } catch (error) {
             console.error('Erreur de requête:', error);
         }
