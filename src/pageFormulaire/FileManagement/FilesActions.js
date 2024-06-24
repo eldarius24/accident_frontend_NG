@@ -13,7 +13,13 @@ import deleteFile from "./deleteFile";
 
 export default function listFilesInAccident(accidentId) {
     const [files, setFiles] = useState([]);
-    const [imageUrls, setImageUrls] = useState({});
+
+    useEffect(() => {
+        async function fetchData() {
+            await listFilesInAccident(accidentId);
+        }
+        fetchData();
+    }, [accidentId]);
 
     /** Suppresion d'un fichier de la base de données et de la liste des fichiers de l'accident
      * 
@@ -25,14 +31,13 @@ export default function listFilesInAccident(accidentId) {
             const updatedFiles = files.filter(file => file.id !== fileId);
             setFiles(updatedFiles);
         } catch (error) {
-            console.error('Erreur de requête:', error);
+            throw new Error('Erreur de requête:', error);
         }
     }
 
     /** popup de confirmation de suppression
      * 
      * @param {*} fileId id du fichier à supprimer
-     * @returns 
      */
     function popUpDelete(fileId) {
         console.log('Suppression du fichier:', fileId);
@@ -53,58 +58,31 @@ export default function listFilesInAccident(accidentId) {
         )
     }
 
-    /**
-     * récupération des fichiers liés à l'accident à l'ouverture de la page
+    /** récupération des fichiers liés à l'accident à l'ouverture de la page
+     * 
+     * @param {*} accidentId id de l'accident
+     * @returns retourne la liste des fichiers liés à l'accident
      */
     async function listFilesInAccident(accidentId) {
-        if (!accidentId) return console.error('Pas d\'accidentId indiqué');
+        if (!accidentId) throw new Error('Pas d\'accidentId indiqué');
 
         //liste les fichiers liés à l'accident
         const listFiles = async () => {
             try {
                 const accident = await axios.get(`http://localhost:3100/api/accidents/${accidentId}`);
                 if (!accident) throw new Error('Pas d\'accident trouvé');
-                const fetchedFiles = accident.data.files;
-                /*
-                const urls = await Promise.all(fetchedFiles.map(async file => {
-                    if (isImage(file.fileName)) {
-                        const response = await axios.get(`http://localhost:3100/api/getFile/${file.fileId}`, {
-                            responseType: 'blob',
-                        });
-                        const url = URL.createObjectURL(new Blob([response.data], { type: 'image/jpeg' }));
-                        
-                        return { fileId: file.fileId, url };
-                    
-                    }
-                    return { fileId: file.fileId, url: null };
-                }));
-
-                const urlMap = urls.reduce((acc, curr) => {
-                    acc[curr.fileId] = curr.url;
-                    return acc;
-                }, {});
-
-                setImageUrls(urlMap);
-                */
-                return fetchedFiles;
+                return accident.data.files;
             } catch (error) {
-                return console.error('Erreur de requête:', error);
+                throw new Error('Erreur de requête:', error);
             }
         }
         setFiles(await listFiles())
     }
 
-    useEffect(() => {
-        async function fetchData() {
-            await listFilesInAccident(accidentId);
-        }
-        fetchData();
-    }, [accidentId]);
-
     /** Récupération du fichier
      * 
      * @param {*} fileId id du fichier à récupérer
-     * @returns 
+     * @returns  retourne le fichier
      */
     async function getFile(fileId) {
         if (!fileId) throw new Error('Pas de fileId indiqué');
@@ -113,7 +91,6 @@ export default function listFilesInAccident(accidentId) {
             const response = await axios.get(`http://localhost:3100/api/getFile/${fileId}`, {
                 responseType: 'blob',
             });
-
             if (response.status !== 200) throw new Error(`erreur dans la récupération de fichier : ${response.status}`);
 
             return response.data;
@@ -126,20 +103,17 @@ export default function listFilesInAccident(accidentId) {
      * 
      * @param {*} fileId id du fichier à télécharger 
      * @param {*} fileName nom du fichier à télécharger
-     * @returns 
      */
     const downloadFile = async ({ fileId, fileName }) => {
-        if (!fileId) return console.error('Pas de fichierId indiqué');
-        if (!fileName) return console.error('Pas de nom de fichier indiqué');
+        if (!fileId) throw new Error('Pas de fichierId indiqué');
+        if (!fileName) throw new Error('Pas de nom de fichier indiqué');
 
         try {
-            getFile(fileId).then(blob => {
-                saveAs(blob, fileName);
-            });
+            const blob = await getFile(fileId);
+            saveAs(blob, fileName);
         } catch (error) {
-            console.error('Erreur de requête:', error);
+            throw new Error('Erreur de requête:', error);
         }
-
     };
 
     return (
