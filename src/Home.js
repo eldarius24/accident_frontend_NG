@@ -309,33 +309,31 @@ function Home() {
                 </Grid>
             </div>
 
-            <TableContainer>
+
+            <TableContainer style={{ maxHeight: '600px', overflowY: 'auto' }}>
                 <div className="frameStyle-style">
                     <Table>
                         <TableHead>
-                            <React.Fragment>
-                                <TableRow style={{ backgroundColor: '#84a784' }} key={"CellTowerSharp"}>
-                                    <TableCell style={{ fontWeight: 'bold' }}>N° Groupe</TableCell>
-                                    <TableCell style={{ fontWeight: 'bold' }}>N° Entreprise</TableCell>
-                                    <TableCell style={{ fontWeight: 'bold' }}>Date accident</TableCell>
-                                    <TableCell style={{ fontWeight: 'bold' }}>Entreprise</TableCell>
-                                    <TableCell style={{ fontWeight: 'bold' }}>Secteur</TableCell>
-                                    <TableCell style={{ fontWeight: 'bold' }}>Nom du travailleur</TableCell>
-                                    <TableCell style={{ fontWeight: 'bold' }}>Prénom du travailleur</TableCell>
-                                    <TableCell style={{ fontWeight: 'bold' }}>Type accident</TableCell>
-                                    <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>Editer</TableCell>
-                                    <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>Fichier</TableCell>
-                                    <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>PDF</TableCell>
-                                    <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>Supprimer</TableCell>
-                                </TableRow>
-                                <TableRow className="table-row-separatormenu"></TableRow>
-                            </React.Fragment>
+                            <TableRow style={{ backgroundColor: '#84a784' }} key={"CellTowerSharp"}>
+                                <TableCell style={{ fontWeight: 'bold' }}>N° Groupe</TableCell>
+                                <TableCell style={{ fontWeight: 'bold' }}>N° Entreprise</TableCell>
+                                <TableCell style={{ fontWeight: 'bold' }}>Date accident</TableCell>
+                                <TableCell style={{ fontWeight: 'bold' }}>Entreprise</TableCell>
+                                <TableCell style={{ fontWeight: 'bold' }}>Secteur</TableCell>
+                                <TableCell style={{ fontWeight: 'bold' }}>Nom du travailleur</TableCell>
+                                <TableCell style={{ fontWeight: 'bold' }}>Prénom du travailleur</TableCell>
+                                <TableCell style={{ fontWeight: 'bold' }}>Type accident</TableCell>
+                                <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>Editer</TableCell>
+                                <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>Fichier</TableCell>
+                                <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>PDF</TableCell>
+                                <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>Supprimer</TableCell>
+                            </TableRow>
+                            <TableRow className="table-row-separatormenu"></TableRow>
                         </TableHead>
                         <TableBody>
                             {filteredData.map((item, index) => (
                                 <React.Fragment key={item._id}>
-                                    <TableRow key={item._id} style={{ backgroundColor: rowColors[index % rowColors.length] }} // Utilisez le style alternatif pour chaque deuxième ligne
-                                    >
+                                    <TableRow key={item._id} style={{ backgroundColor: rowColors[index % rowColors.length] }}>
                                         <TableCell>{item.numeroGroupe}</TableCell>
                                         <TableCell>{item.numeroEntreprise}</TableCell>
                                         <TableCell>{item.DateHeureAccident}</TableCell>
@@ -344,14 +342,42 @@ function Home() {
                                         <TableCell>{item.nomTravailleur}</TableCell>
                                         <TableCell>{item.prenomTravailleur}</TableCell>
                                         <TableCell>{item.typeAccident}</TableCell>
-                                        <TableCell style={{ padding: 0, width: '70px' }}><Button variant="contained" color="primary" onClick={() => handleEdit(item._id)}> <EditIcon /></Button></TableCell>
-                                        <TableCell style={{ padding: 0, width: '70px' }}><Button onClick={() => navigate("/fichierdll", { state: item._id })}variant="contained" color="secondary"> <GetAppIcon /></Button></TableCell>
-                                        <TableCell style={{ padding: 0, width: '70px' }}><Button variant="contained" color="success" onClick={() => handleGeneratePDF(item._id)}> <PictureAsPdfIcon /></Button> </TableCell>
-                                        <TableCell style={{ padding: 0, width: '70px' }}><Button variant="contained" color="error" onClick={() => { confirmAlert({ customUI: ({ onClose }) => { return (<div className="custom-confirm-dialog"> <h1 className="custom-confirm-title">Supprimer</h1> <p className="custom-confirm-message">Êtes-vous sûr de vouloir supprimer cet élément?</p> <div className="custom-confirm-buttons"> <button className="custom-confirm-button" onClick={() => { handleDelete(item._id); onClose(); }} > Oui </button> <button className="custom-confirm-button custom-confirm-no" onClick={onClose}> Non </button> </div> </div>); } }); }} > <DeleteForeverIcon /> </Button> </TableCell>
+                                        <TableCell style={{ padding: 0, width: '70px' }}>
+                                            <Button variant="contained" color="primary" onClick={() => handleEdit(item._id)}>
+                                                <EditIcon />
+                                            </Button>
+                                        </TableCell>
+                                        <TableCell style={{ padding: 0, width: '70px' }}>
+                                            <Button variant="contained" color="secondary" onClick={() => navigate("/fichierdll", { state: item._id })}>
+                                                <GetAppIcon />
+                                            </Button>
+                                        </TableCell>
+                                        <TableCell style={{ padding: 0, width: '70px' }}>
+                                            <Button variant="contained" color="success" onClick={() => handleGeneratePDF(item._id)}>
+                                                <PictureAsPdfIcon />
+                                            </Button>
+                                        </TableCell>
+                                        <TableCell style={{ padding: 0, width: '70px' }}>
+                                            <Button variant="contained" color="error" onClick={() => {
+                                                confirmAlert({
+                                                    customUI: ({ onClose }) => (
+                                                        <div className="custom-confirm-dialog">
+                                                            <h1 className="custom-confirm-title">Supprimer</h1>
+                                                            <p className="custom-confirm-message">Êtes-vous sûr de vouloir supprimer cet élément?</p>
+                                                            <div className="custom-confirm-buttons">
+                                                                <button className="custom-confirm-button" onClick={() => { handleDelete(item._id); onClose(); }}>Oui</button>
+                                                                <button className="custom-confirm-button custom-confirm-no" onClick={onClose}>Non</button>
+                                                            </div>
+                                                        </div>
+                                                    )
+                                                });
+                                            }}>
+                                                <DeleteForeverIcon />
+                                            </Button>
+                                        </TableCell>
                                     </TableRow>
                                     {/* Ligne de séparation */}
-                                    <TableRow className="table-row-separator">
-                                    </TableRow>
+                                    <TableRow className="table-row-separator"></TableRow>
                                 </React.Fragment>
                             ))}
                         </TableBody>
