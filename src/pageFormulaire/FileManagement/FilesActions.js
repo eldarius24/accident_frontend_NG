@@ -13,6 +13,7 @@ import deleteFile from "./deleteFile";
 
 export default function listFilesInAccident(accidentId) {
     const [files, setFiles] = useState([]);
+    const [previews, setPreviews] = useState({});
 
     useEffect(() => {
         async function fetchData() {
@@ -70,6 +71,12 @@ export default function listFilesInAccident(accidentId) {
         const listFiles = async () => {
             try {
                 const accident = await axios.get(`http://localhost:3100/api/accidents/${accidentId}`);
+                const previews = await Promise.all(files.map(file => getPreview(file.fileId)));
+                const previewMap = files.reduce((acc, file, index) => {
+                    acc[file.fileId] = previews[index];
+                    return acc;
+                }, {});
+                setPreviews(previewMap);
                 if (!accident) throw new Error('Pas d\'accident trouvé');
                 return accident.data.files;
             } catch (error) {
@@ -77,6 +84,8 @@ export default function listFilesInAccident(accidentId) {
             }
         }
         setFiles(await listFiles())
+
+
     }
 
     /** Récupération du fichier
@@ -98,6 +107,16 @@ export default function listFilesInAccident(accidentId) {
             throw new Error('Erreur lors de la récupération du fichier:', error);
         }
     }
+
+    const getPreview = async (fileId) => {
+        try {
+            const blob = await getFile(fileId);
+            return URL.createObjectURL(blob);
+        } catch (error) {
+            console.error('Erreur lors de la récupération de la prévisualisation:', error);
+            return null;
+        }
+    };
 
     /** telechargement du fichier
      * 
@@ -124,9 +143,13 @@ export default function listFilesInAccident(accidentId) {
                     <li key={file.fileId} style={{ listStyleType: 'none', margin: '10px' }}>
                         <Card sx={{ minWidth: 275, maxWidth: 275, minHeight: 275, maxHeight: 275 }}>
                             <CardContent sx={{ maxWidth: 200, maxHeight: 190 }}>
+                            {previews[file.fileId] ? (
+                                    <img src={previews[file.fileId]} alt={file.fileName} style={{ width: '100%', height: 'auto' }} />
+                                ) : (
                                 <Typography sx={{ fontSize: 14 }} color="text.primary" gutterBottom>
                                     {file.fileName}
                                 </Typography>
+                                )}
                             </CardContent>
                             <CardActions>
                                 <Button onClick={() => downloadFile({ fileId: file.fileId, fileName: file.fileName })} variant="contained" color="primary"> <GetAppIcon /></Button>
