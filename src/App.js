@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import Login from './Login';
-import Home from './Home';
+import Login from './login/Login';
+import Home from './Home/Home';
 import Formulaire from './pageFormulaire/Formulaire';
 import AdminFormUser from './pageAdmin/AdminFormUser';
 import AdminPanelSettingsAction from './pageAdmin/AdminPanelSettingsaction';
@@ -38,7 +38,6 @@ const App = () => {
           <Route path="/fichierdll" element={<ProtectedRoute><Fichierdll /></ProtectedRoute>} />
           <Route path="/planAction" element={<ProtectedRoute><PlanAction /></ProtectedRoute>} />
           <Route path="/fichierdllaction" element={<ProtectedRoute><Fichierdllaction /></ProtectedRoute>} />
-
           <Route path="/admin" element={<ProtectedRouteAdmin><AdminFormUser /></ProtectedRouteAdmin>} />
           <Route path="/adminaction" element={<ProtectedRouteAdmin><AdminPanelSettingsAction /></ProtectedRouteAdmin>} />
           <Route path="/addEntreprise" element={<ProtectedRouteAdmin><AdminAddEntreprise /></ProtectedRouteAdmin>} />

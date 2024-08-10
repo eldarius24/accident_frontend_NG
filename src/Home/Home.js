@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useCallback, useEffect, useState, useTransition } from 'react';
 import {
     Table,
     TableBody,
@@ -24,47 +23,36 @@ import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import EditIcon from '@mui/icons-material/Edit';
 import InputAdornment from '@mui/material/InputAdornment';
 import SearchIcon from '@mui/icons-material/Search';
-import config from './config.json';
+import config from '../config.json';
 import { useNavigate } from 'react-router-dom';
 import GetAppIcon from '@mui/icons-material/GetApp';
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
-import editPDF from './Model/pdfGenerator.js';
+import editPDF from '../Model/pdfGenerator.js';
 import { confirmAlert } from 'react-confirm-alert';
 
 import 'react-confirm-alert/src/react-confirm-alert.css';
 /* IMPORT PERSO */
-import './pageFormulaire/formulaire.css';
-import { handleExportData, handleExportDataAss } from './Model/excelGenerator.js';
-import dateConverter from './Model/dateConverter.js';
-import CountNumberAccident from './Model/CountNumberAccident.js';
+import '../pageFormulaire/formulaire.css';
+import { handleExportData, handleExportDataAss } from '../Model/excelGenerator.js';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
+import getAccidents from './_actions/get-accidents.js';
 
-
+/**
+ * Premiere page de l'application, contient la liste des accidents
+ * 
+ * @returns Home component
+ */
 function Home() {
 
     const navigate = useNavigate();
     const apiUrl = config.apiUrl;
-    /**
-     * Années récupérées de l'API pour le filtre
-     */
-    const [yearsFromData, setYearsFromData] = useState([]);
-    /**
-     * Liste des années sélectionnées pour le filtre
-     */
-    const [yearsChecked, setYearsChecked] = useState([]);
+
+    const [yearsFromData, setYearsFromData] = useState([]); // Années récupérées de l'API pour le filtre
+    const [yearsChecked, setYearsChecked] = useState([]); // State pour les années sélectionnées, utilisé pour le filtre
     const [selectAllYears, setSelectAllYears] = useState(false); // State pour la case à cocher "Sélectionner toutes les années"
-    const [data, setData] = useState([]); // Stocker les données de l'API
-    const [loading, setLoading] = useState(true);
+    const [accidents, setAccidents] = useState([]); // Stocker les données de l'API
+    const [accidentsIsPending, startGetAccidents] = useTransition();
     const [searchTerm, setSearchTerm] = useState('');
-
-    //au chargerment de la page, on met à jour les données de la liste des accidents
-    useEffect(() => {
-        refreshListAccidents();
-        // Cocher l'année en cours par défaut
-        const currentYear = new Date().getFullYear();
-        setYearsChecked([...yearsChecked, currentYear]);
-    }, []);
-
 
     const handleDelete = (accidentIdToDelete) => {
         axios.delete("http://" + apiUrl + ":3100/api/accidents/" + accidentIdToDelete)
@@ -73,9 +61,9 @@ function Home() {
                 if (response.status === 204 || response.status === 200) {
                     console.log('Accident supprimé avec succès');
                     // Mettre à jour les données après suppression
-                    refreshListAccidents();
-                    const updatedData = data.filter(item => item._id !== accidentIdToDelete);
-                    setData(updatedData);
+                    //refreshListAccidents();
+                    const updatedData = accidents.filter(item => item._id !== accidentIdToDelete);
+                    setAccidents(updatedData);
                 }
                 else {
                     console.log('Erreur lors de la suppression de l\'accident, code d erreur : ' + response.status + ' ' + response.statusText);
@@ -88,7 +76,7 @@ function Home() {
 
     const handleGeneratePDF = async (accidentIdToGenerate) => {
         try {
-            const accidents = data.find(item => item._id == accidentIdToGenerate);
+            const accidents = accidents.find(item => item._id == accidentIdToGenerate);
             editPDF(accidents);
         } catch (error) {
             console.log(error);
@@ -105,75 +93,35 @@ function Home() {
         }
     };
 
-
-
-    function refreshListAccidents() {
-        axios.get(`http://${apiUrl}:3100/api/accidents`)
-            .then(response => {
-                let accidents = response.data;
-
-                accidents = CountNumberAccident(accidents);
-
-                console.log("Home.js => refresh list accident =>", accidents);
-
-                if (Array.isArray(accidents)) {
-                    accidents.forEach(item => {
-                        const dateProperties = [
-                            'DateHeureAccident',
-                            'DateEnvoieDeclarationAccident',
-                            'DateJourIncapDebut',
-                            'DateJourIncapFin',
-                            'dateNaissance',
-                            'dateDebutArret',
-                            'dateFinArret',
-                            'dateEntrEntreprise',
-                            'dateSortie',
-                            'dateNotifEmployeur',
-                            'dateProcesVerbalOuiRedigeQuand',
-                            'dateSoinsMedicauxDate',
-                            'dateSoinsMedicauxMedecin',
-                            'dateSoinsMedicauxHopital',
-                            'dateRepriseEffective',
-                            'dateChangementFonction',
-                            'dateDecede',
-                            'dateIncapaciteTemporaire',
-                            'dateTravailAddapte'
-                        ];
-
-                        dateProperties.forEach(property => {
-                            item[property] = dateConverter(item[property], dateProperties.includes('DateHeureAccident'));
-                        });
-                    });
-
-                    setData(accidents);
-                } else {
-                    console.error("La réponse de l'API n'est pas un tableau.");
-                }
+    const refreshListAccidents = useCallback(() => {
+        try {
+            startGetAccidents(async () => {
+                const accidents = await getAccidents()
+                
+                setAccidents(accidents);
 
                 //mettre à jour les années pour le filtre
                 setYearsFromData([...new Set(accidents.map(accident => new Date(accident.DateHeureAccident).getFullYear()))]);
-
-                // Cocher toutes les cases par défaut
-                //setYearsChecked([...new Set(accidents.map(accident => new Date(accident.DateHeureAccident).getFullYear()))]);
-            })
-            .catch(error => {
-                console.log("Home.js => refresh list accident error =>", error);
-            })
-            .finally(() => {
-                setLoading(false);
             });
-    }
+        } catch (error) {
+            console.error("Home.js => refresh list accident error =>", error);
+        }
+    }, [accidents, yearsFromData]);
+
+    //au chargerment de la page, on met à jour les données de la liste des accidents
+    useEffect(() => {
+        refreshListAccidents();
+        // Cocher l'année en cours par défaut
+        const currentYear = new Date().getFullYear();
+        setYearsChecked([...yearsChecked, currentYear]);
+    }, []);
 
     /**
      * Fonction qui permet de filtrer les données de la table en fonction du contenu de la barre de recherche
      */
-    let filteredData = data.filter((item) => {
+    let filteredData = accidents.filter((item) => {
         const years = yearsChecked.map(Number);
         const date = new Date(item.DateHeureAccident).getFullYear();
-        //console.log("===========================================================");
-        //console.log("Home.js => filteredData => item =>", item);
-        //console.log("Home.js => filteredData => years =>", years);
-        //console.log("Home.js => filteredData => date =>", date);
         const filterProperties = [
             'DateHeureAccident',
             'entrepriseName',
@@ -211,12 +159,11 @@ function Home() {
         }
     }
 
-    if (loading) {
-        return <LinearProgress color="success" />;
-    }
-
     const rowColors = ['#bed1be', '#d2e2d2']; // Tableau de couleurs pour les lignes
 
+    if (accidentsIsPending) {
+        return <LinearProgress color="success" />;
+    }
 
     return (
         <div>
@@ -345,7 +292,7 @@ function Home() {
                                         <TableCell>{item.prenomTravailleur}</TableCell>
                                         <TableCell>{item.typeAccident}</TableCell>
                                         <TableCell style={{ padding: 0, width: '70px' }}><Button variant="contained" color="primary" onClick={() => handleEdit(item._id)}> <EditIcon /></Button></TableCell>
-                                        <TableCell style={{ padding: 0, width: '70px' }}><Button onClick={() => navigate("/fichierdll", { state: item._id })}variant="contained" color="secondary"> <GetAppIcon /></Button></TableCell>
+                                        <TableCell style={{ padding: 0, width: '70px' }}><Button onClick={() => navigate("/fichierdll", { state: item._id })} variant="contained" color="secondary"> <GetAppIcon /></Button></TableCell>
                                         <TableCell style={{ padding: 0, width: '70px' }}><Button variant="contained" color="success" onClick={() => handleGeneratePDF(item._id)}> <PictureAsPdfIcon /></Button> </TableCell>
                                         <TableCell style={{ padding: 0, width: '70px' }}><Button variant="contained" color="error" onClick={() => { confirmAlert({ customUI: ({ onClose }) => { return (<div className="custom-confirm-dialog"> <h1 className="custom-confirm-title">Supprimer</h1> <p className="custom-confirm-message">Êtes-vous sûr de vouloir supprimer cet élément?</p> <div className="custom-confirm-buttons"> <button className="custom-confirm-button" onClick={() => { handleDelete(item._id); onClose(); }} > Oui </button> <button className="custom-confirm-button custom-confirm-no" onClick={onClose}> Non </button> </div> </div>); } }); }} > <DeleteForeverIcon /> </Button> </TableCell>
                                     </TableRow>
