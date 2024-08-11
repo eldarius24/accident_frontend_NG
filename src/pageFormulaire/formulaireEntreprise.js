@@ -1,4 +1,4 @@
-import AutoCompleteP from '../composants/autoCompleteP';
+import AutoCompleteP from '../_composants/autoCompleteP';
 import listEntreprises from '../liste/listEntreprise.json';
 import React, { useState, useEffect } from 'react';
 

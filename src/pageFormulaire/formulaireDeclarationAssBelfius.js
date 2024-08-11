@@ -7,11 +7,11 @@ import 'dayjs/locale/fr';
 dayjs.locale('fr');
 /* IMPORT PERSO */
 import listeDeclarationAss from '../liste/listeDeclarationAssBelfius.json';
-import AutoCompleteP from '../composants/autoCompleteP';
-import TextFieldP from '../composants/textFieldP';
-import DatePickerP from '../composants/datePickerP';
-import DateHeurePickerP from '../composants/dateHeurePickerP';
-import TextFieldMaskP from '../composants/textFieldMaskP';
+import AutoCompleteP from '../_composants/autoCompleteP';
+import TextFieldP from '../_composants/textFieldP';
+import DatePickerP from '../_composants/datePickerP';
+import DateHeurePickerP from '../_composants/dateHeurePickerP';
+import TextFieldMaskP from '../_composants/textFieldMaskP';
 export default function FormulaireDeclarationASSBelfius({ setValue, accidentData, watch }) {
 
     // Mise en forme des cadres texte

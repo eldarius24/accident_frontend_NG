@@ -1,9 +1,9 @@
 import axios from 'axios';
 import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-import TextFieldP from '../composants/textFieldP';
+import TextFieldP from '../_composants/textFieldP';
 import '../pageFormulaire/formulaire.css';
-import ControlLabelAdminP from '../composants/controlLabelAdminP';
+import ControlLabelAdminP from '../_composants/controlLabelAdminP';
 import { Box } from '@mui/material';
 import Button from '@mui/material/Button';
 import config from '../config.json';
