@@ -1,77 +1,95 @@
-import axios from 'axios';
 import React, { useState, useEffect } from 'react';
-import { useForm } from 'react-hook-form';
-import TextFieldP from '../_composants/textFieldP';
-import '../pageFormulaire/formulaire.css';
-import ControlLabelAdminP from '../_composants/controlLabelAdminP';
+import {useForm } from 'react-hook-form';
+import TextFieldP from '../../../_composants/textFieldP';
+import ControlLabelAdminP from '../../../_composants/controlLabelAdminP';
 import { Box } from '@mui/material';
 import Button from '@mui/material/Button';
-import config from '../config.json';
 import Checkbox from '@mui/material/Checkbox';
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
+import getUser from './_actions/get-user';
+import getEntreprises from './_actions/get-entreprises';
+import putUser from './_actions/put-user';
 
-export default function AdminFormUser({ accidentData }) {
-    const apiUrl = config.apiUrl;
+export default function AddUser() {
+    const params = new URLSearchParams(window.location.search);
+    const userId = params.get('userId');
     const { setValue, watch, handleSubmit } = useForm();
 
     const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
     const checkedIcon = <CheckBoxIcon fontSize="small" />;
 
-    const [formData, setFormData] = useState({
-        userLogin: watch('userLogin') || accidentData?.userLogin || null,
-        userPassword: watch('userPassword') || accidentData?.userPassword || null,
-        userName: watch('userName') || accidentData?.userName || null,
-        boolAdministrateur: watch('boolAdministrateur') || accidentData?.boolAdministrateur || false,
-        entrepriseConseillerPrevention: watch('entrepriseConseillerPrevention') || accidentData?.boolConseiller || false,
-        entrepriseVisiteur: watch('entrepriseVisiteur') || accidentData?.boolVisiteur || false,
+    const getUserData = async () => {
+        try {
+            if (!userId)
+                return;
+
+            const user = await getUser(userId);
+
+            if (!user)
+                throw new Error('Aucun utilisateur trouvé');
+
+            setUser(user);
+        } catch (error) {
+            console.error('Erreur lors de la récupération de l\'utilisateur:', error.message);
+        }
+    }
+
+    useEffect(() => {
+        getUserData();
+    }, [userId]);
+
+    const [user, setUser] = useState({
+        userLogin: watch('userLogin') || "",
+        userPassword: watch('userPassword') || "",
+        userName: watch('userName') || "",
+        boolAdministrateur: watch('boolAdministrateur') || false,
+        entreprisesConseillerPrevention: watch('entreprisesConseillerPrevention') || [],
+        entreprisesVisiteur: watch('entreprisesVisiteur') || [],
     });
 
     //listes des entreprises
     const [entreprises, setEntreprises] = useState([]);
 
-    const fetchData = async (url) => {
+    const getEntreprisesData = async () => {
         try {
-            const response = await axios.get(url);
-            return response.data;
+            const entreprisesData = await getEntreprises();
+
+            if (!entreprisesData)
+                throw new Error('Aucune entreprise trouvée');
+
+            setEntreprises(entreprisesData.map((item) => item.AddEntreName) || []);
         } catch (error) {
-            console.error('Erreur de requête:', error.message);
+            console.error('Erreur de la récupération des entreprises:', error.message);
         }
     };
 
     useEffect(() => {
-        const init = async () => {
-            const entreprise = await fetchData(`http://${apiUrl}:3100/api/entreprises`);
-            setEntreprises(entreprise.map((item) => item.AddEntreName) || []);
-            console.log("entreprises :", entreprises);
-        };
-
-        init();
+        getEntreprisesData();
     }, []);
 
-    useEffect(() => {
-        Object.keys(formData).forEach((key) => {
-            setValue(key, formData[key]);
-        });
-    }, [formData]);
 
-    
     /**************************************************************************
      * METHODE ON SUBMIT
      * ************************************************************************/
     const onSubmit = async () => {
         try {
-            const response = await axios.put(`http://${apiUrl}:3100/api/users`, formData);
-            console.log('Réponse du serveur en création :', response.data);
+            const result = await putUser(userId, user);
+
+            if (!result)
+                return console.error('Erreur lors de la création/modification de l\'utilisateur');
+
+            console.log('Utilisateur créé/modifié:', result);
+
         } catch (error) {
             console.error('Erreur de requête:', error.message);
         }
     };
 
     const handleChange = (key, value) => {
-        setFormData((prevData) => ({ ...prevData, [key]: value }));
+        setUser((prevData) => ({ ...prevData, [key]: value }));
     };
 
     return (
@@ -81,11 +99,11 @@ export default function AdminFormUser({ accidentData }) {
 
                 <h3>Créer un nouvelle utilisateur</h3>
 
-                <TextFieldP id='userLogin' label="Adresse email" onChange={(value) => handleChange('userLogin', value)} defaultValue={formData.userLogin}></TextFieldP>
+                <TextFieldP id='userLogin' label="Adresse email" onChange={(value) => handleChange('userLogin', value)} defaultValue={user.userLogin}></TextFieldP>
 
-                <TextFieldP id='userPassword' label="Mot de passe" onChange={(value) => handleChange('userPassword', value)} defaultValue={formData.userPassword}></TextFieldP>
+                <TextFieldP id='userPassword' label="Mot de passe" onChange={(value) => handleChange('userPassword', value)} defaultValue={user.userPassword}></TextFieldP>
 
-                <TextFieldP id='userName' label="Nom et Prénom" onChange={(value) => handleChange('userName', value)} defaultValue={formData.userName}></TextFieldP>
+                <TextFieldP id='userName' label="Nom et Prénom" onChange={(value) => handleChange('userName', value)} defaultValue={user.userName}></TextFieldP>
 
 
                 <h3>Donner les accès administration du site:</h3>
@@ -95,7 +113,7 @@ export default function AdminFormUser({ accidentData }) {
                     <ControlLabelAdminP id="boolAdministrateur" label="Administrateur du site" onChange={(boolAdministrateurCoche) => {
                         handleChange('boolAdministrateur', boolAdministrateurCoche);
                         setValue('boolAdministrateur', boolAdministrateurCoche);
-                    }} defaultValue={formData.boolAdministrateur}></ControlLabelAdminP>
+                    }} defaultValue={user.boolAdministrateur}></ControlLabelAdminP>
 
                 </Box>
 
@@ -108,7 +126,8 @@ export default function AdminFormUser({ accidentData }) {
                     disableCloseOnSelect
                     sx={{ backgroundColor: '#84a784', width: '50%', boxShadow: 3, margin: '0 auto 1rem' }}
                     getOptionLabel={(option) => option}
-                    onChange={(value) => handleChange('entrepriseConseiller', value.map((item) => item.title))}
+                    onChange={(_, value) => handleChange('entreprisesConseillerPrevention', value)}
+                    value={user.entreprisesConseillerPrevention}
                     renderOption={(props, option, { selected }) => (
                         <li {...props}>
                             <Checkbox
@@ -137,7 +156,8 @@ export default function AdminFormUser({ accidentData }) {
                     multiple
                     id="checkboxes-tags-demo"
                     options={entreprises}
-                    onChange={(event, value) => {handleChange('entrepriseVisiteur', value.map((item) => item.title))}}
+                    onChange={(_, value) => {handleChange('entreprisesVisiteur', value) }}
+                    value={user.entreprisesVisiteur}
                     disableCloseOnSelect
                     sx={{ backgroundColor: '#84a784', width: '50%', boxShadow: 3, margin: '0 auto 1rem' }}
                     getOptionLabel={(option) => option}

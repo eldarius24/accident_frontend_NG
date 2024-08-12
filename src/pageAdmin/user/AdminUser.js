@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import React, { useState, useEffect, useCallback, useTransition } from 'react';
 import {
     Table,
     TableBody,
@@ -13,49 +12,88 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import LinearProgress from '@mui/material/LinearProgress';
 import { confirmAlert } from 'react-confirm-alert';
-import config from '../config.json';
 import 'react-confirm-alert/src/react-confirm-alert.css';
+import getUsers from './_actions/get-users';
+import deleteUser from './_actions/delete-user';
+import { Link } from 'react-router-dom';
 
-export default function Adminusern() {
-    const apiUrl = config.apiUrl;
+export default function Adminuser() {
     const [users, setUsers] = useState([]);
-    const [loading, setLoading] = useState(true);
+    const [usersIsPending, startGetUsers] = useTransition();
 
+    /**
+     * Supression d'un utilisateur
+     * 
+     * @param {*} userIdToDelete id de l'utilisateur à supprimer 
+     */
     const handleDelete = (userIdToDelete) => {
-        axios.delete(`http://${apiUrl}:3100/api/users/${userIdToDelete}`)
-            .then(response => {
-                // Vérifier le code de statut de la réponse
-                if (response.status === 204 || response.status === 200) {
-                    console.log('Utilisateur supprimé avec succès');
-                    // Mettre à jour les données après suppression
-                    setUsers(prevUsers => prevUsers.filter(user => user._id !== userIdToDelete));
-                } else {
-                    console.log('Erreur lors de la suppression de l\'utilisateur, code d erreur : ' + response.status + ' ' + response.statusText);
+        startGetUsers(() => {
+            try {
+                deleteUser(userIdToDelete);
+
+                setUsers(users.filter(user => user._id !== userIdToDelete));
+            } catch (error) {
+                console.error('Erreur lors de la suppression de l\'utilisateur:', error.message);
+            }
+        });
+    };
+
+    /**
+     * Récupérer tous les utilisateurs
+     * 
+     * @returns {Promise<void>}
+     */
+    const getAllUsers = useCallback(() => {
+        startGetUsers(async () => {
+            try {
+                const users = await getUsers();
+
+                if (!users)
+                    throw new Error('Aucun utilisateur trouvé');
+
+                setUsers(users);
+            } catch (error) {
+                console.error('Erreur lors de la récupération des utilisateurs:', error.message);
+            }
+        });
+    }, []);
+
+    useEffect(() => {
+        getAllUsers();
+    }, [setUsers]);
+
+    /**
+     * PopUp de confirmation de suppression
+     */
+    const popUpDelete = () => {
+        confirmAlert(
+            {
+                customUI: ({ onClose }) => {
+                    return (
+                        <div className="custom-confirm-dialog">
+                            <h1 className="custom-confirm-title">Supprimer</h1>
+                            <p className="custom-confirm-message">Êtes-vous sûr de vouloir supprimer cet User?</p>
+                            <div className="custom-confirm-buttons">
+                                <button className="custom-confirm-button" onClick={() => {
+                                    handleDelete(user._id);
+                                    onClose();
+                                }} >
+                                    Oui
+                                </button>
+                                <button className="custom-confirm-button custom-confirm-no" onClick={onClose}>
+                                    Non
+                                </button>
+                            </div>
+                        </div>);
                 }
-            })
-            .catch(error => {
-                console.log(error);
             });
     };
 
-    useEffect(() => {
-        axios.get(`http://${apiUrl}:3100/api/users`)
-            .then(response => {
-                let users = response.data;
-                setUsers(users);
-            })
-            .catch(error => {
-                console.error('Error fetching data:', error);
-            })
-            .finally(() => {
-                setLoading(false);
-            });
-    }, []);
-
-    if (loading) {
+    if (usersIsPending) {
         return <LinearProgress color="success" />;
     }
 
+    console.log('users:', users);
     return (
         <form>
             <div className="frameStyle-style">
@@ -80,12 +118,12 @@ export default function Adminusern() {
                                         <TableCell>{user.userPassword}</TableCell>
                                         <TableCell>{user.userName}</TableCell>
                                         <TableCell style={{ padding: 0, width: '70px' }}>
-                                            <Button variant="contained" color="primary">
+                                            <Button variant="contained" color="primary" component={Link} to={`/addUser?userId=${user._id}`}>
                                                 <EditIcon />
                                             </Button>
                                         </TableCell>
                                         <TableCell style={{ padding: 0, width: '70px' }}>
-                                            <Button variant="contained" color="error" onClick={() => { confirmAlert({ customUI: ({ onClose }) => { return (<div className="custom-confirm-dialog"> <h1 className="custom-confirm-title">Supprimer</h1> <p className="custom-confirm-message">Êtes-vous sûr de vouloir supprimer cet User?</p> <div className="custom-confirm-buttons"> <button className="custom-confirm-button" onClick={() => { handleDelete(user._id); onClose(); }} > Oui </button> <button className="custom-confirm-button custom-confirm-no" onClick={onClose}> Non </button> </div> </div>); } }); }}>
+                                            <Button variant="contained" color="error" onClick={() => popUpDelete()}>
                                                 <DeleteForeverIcon />
                                             </Button>
                                         </TableCell>

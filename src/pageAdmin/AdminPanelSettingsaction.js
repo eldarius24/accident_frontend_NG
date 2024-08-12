@@ -25,7 +25,7 @@ export default function AdminPanelSettingsaction() {
             <Box sx={{ display: 'flex', justifyContent: 'center', marginLeft: '120px', marginRight: '120px' }}>
                 <Button type="submit"
                     component={Link}
-                    to={'/admin'}
+                    to={'/addUser'}
                     sx={defaultStyle} variant="contained"> Créer un nouvel utilisateur</Button>
                 <Button type="submit"
                     component={Link}

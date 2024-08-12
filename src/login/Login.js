@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { TextField } from '@mui/material';
-import { set, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';
@@ -29,82 +29,75 @@ const Login = () => {
       });
 
       const user = await response;
-      if (response.status == 200 && user) {
-        localStorage.setItem('token', JSON.stringify(user));
-        navigate('/')
-      } else {
+
+      if (!user || response.status !== 200) {
         setIsPasswordValid(false);
         alert('Login failed');
+        return;
       }
+      localStorage.setItem('token', JSON.stringify(user));
+      navigate('/')
+
     } catch (error) {
-      console.error('An error occurred', error);
+      console.error('Erreur lors de la connexion.', error);
     }
   };
 
   return (
-    <div>
-      <div>
-        <div>
-          <h1 id="h7">T.I.G.R.E</h1>
-          <h4>Traitement Informatisé de Gestions des Risque d'Entreprise</h4>
-          <div style={{ display: 'flex', justifyContent: 'center', margin: '0 auto 1rem' }}>
-            <Grid container spacing={0} style={{ flexBasis: '60%', maxWidth: '60%' }} justifyContent="center">
-              <Grid item xs={6}>
-                <div className="image-container1">
-                </div>
-              </Grid>
-              <Grid item xs={6}>
-                <div className="image-container2">
-                </div>
-              </Grid>
+    <div className='max-h-screen'>
+        <h2 >T.I.G.R.E</h2>
+        <h4>Traitement Informatisé de Gestions des Risque d'Entreprise</h4>
+        <div className="flex justify-center max-h-96">
+          <Grid className='max-w-lg' container>
+            <Grid item xs={6}>
+              <div className="image-container1">
+              </div>
             </Grid>
-          </div>
-
-
-
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <div style={{ display: 'flex', justifyContent: 'center', margin: '0 auto 1rem' }}>
-              <TextField {...register('email')} id="outlined-multiline-static" label="Email" sx={{ backgroundColor: '#84a784', width: '50%', boxShadow: 3 }} />
-            </div>
-
-            <div style={{ display: 'flex', justifyContent: 'center', margin: '0 auto 1rem' }}>
-              <TextField
-                {...register('password')}
-                id="outlined-multiline-password"
-                label="Mot de passe"
-                sx={{ backgroundColor: '#84a784', width: '50%', boxShadow: 3 }}
-                type={showPassword ? 'text' : "password"}
-                error={!isPasswordValid}
-                helperText={!isPasswordValid && 'Mot de passe incorrect'}
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <IconButton
-                        aria-label="toggle password visibility"
-                        onClick={() => setShowPassword(!showPassword)}
-                      >
-                        {showPassword ? <Visibility /> : <VisibilityOff />}
-                      </IconButton>
-                    </InputAdornment>
-                  ),
-                }}
-              />
-            </div>
-
-            <Button
-              type="submit"
-              sx={{ backgroundColor: '#84a784', '&:hover': { backgroundColor: 'green' }, width: '50%', boxShadow: 3 }}
-              style={{ display: 'flex', justifyContent: 'center', margin: '0 auto 1rem' }}
-            >
-              Se connecter
-            </Button>
-          </form>
-
-
-
-          <h6>Pour avoir accès, veuillez le demander au support : bgillet.lecortil@cortigroupe.be </h6>
+            <Grid item xs={6}>
+              <div className="image-container2">
+              </div>
+            </Grid>
+          </Grid>
         </div>
-      </div>
+
+
+
+        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col justify-center items-center min-h-20 space-y-4">
+          <TextField {...register('email')} id="outlined-multiline-static" label="Email" className="bg-[#84a784] w-1/2 shadow-md" />
+
+          <TextField
+            {...register('password')}
+            id="outlined-multiline-password"
+            label="Mot de passe"
+            className="bg-[#84a784] w-1/2 shadow-md"
+            type={showPassword ? 'text' : "password"}
+            error={!isPasswordValid}
+            helperText={!isPasswordValid && 'Mot de passe incorrect'}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton
+                    aria-label="toggle password visibility"
+                    onClick={() => setShowPassword(!showPassword)}
+                  >
+                    {showPassword ? <Visibility /> : <VisibilityOff />}
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
+          />
+
+          <Button
+            type="submit"
+            className="bg-[#84a784] hover:bg-green-950 w-1/2 shadow-md"
+          >
+            Se connecter
+          </Button>
+        </form>
+
+
+
+        <h6>Pour avoir accès, veuillez le demander au support : bgillet.lecortil@cortigroupe.be </h6>
       <div className="image-cortigroupe"></div>
       <h5> Développé par Remy et Benoit pour Le Cortigroupe. Support: bgillet.lecortil@cortigroupe.be</h5>
     </div>
