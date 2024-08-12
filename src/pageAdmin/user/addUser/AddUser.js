@@ -24,7 +24,7 @@ export default function AddUser() {
     const getUserData = async () => {
         try {
             if (!userId)
-                throw new Error('Aucun identifiant utilisateur trouvé');
+                return;
 
             const user = await getUser(userId);
 
