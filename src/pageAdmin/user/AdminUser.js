@@ -92,8 +92,7 @@ export default function Adminuser() {
     if (usersIsPending) {
         return <LinearProgress color="success" />;
     }
-
-    console.log('users:', users);
+    
     return (
         <form>
             <div className="frameStyle-style">

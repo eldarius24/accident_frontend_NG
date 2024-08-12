@@ -11,7 +11,12 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import axios from 'axios';
 
 
-
+/**
+ * Page de connexion à l'application T.I.G.R.E
+ * Stocke les données de connexion dans le local storage
+ * 
+ * @returns page de connexion
+ */
 const Login = () => {
   const navigate = useNavigate();
   const { register, handleSubmit } = useForm();
