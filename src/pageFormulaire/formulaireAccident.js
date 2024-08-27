@@ -64,12 +64,12 @@ export default function FormulaireAccident({ setValue, accidentData, watch }) {
   const [codeNatureLesion, setCodeNatureLesion] = useState(watch('codeNatureLesion') ? watch('codeNatureLesion') : (accidentData && accidentData.codeNatureLesion ? accidentData.codeNatureLesion : null));
   const [codeSiegeLesion, setCodeSiegeLesion] = useState(watch('codeSiegeLesion') ? watch('codeSiegeLesion') : (accidentData && accidentData.codeSiegeLesion ? accidentData.codeSiegeLesion : null));
   const [horaireJourAccident, sethoraireJourAccident] = useState(watch('horaireJourAccident') ? watch('horaireJourAccident') : (accidentData && accidentData.horaireJourAccident ? accidentData.horaireJourAccident : null));
-   
+
   const [formData, setFormData] = useState(accidentData);
 
   useEffect(() => {
     const data = sessionStorage.getItem('accidentData');
-    if(data) {
+    if (data) {
       const parsedData = JSON.parse(data);
       setFormData(parsedData);
     }
@@ -79,7 +79,7 @@ export default function FormulaireAccident({ setValue, accidentData, watch }) {
     console.info("fomulaireAccident => formData : ", formData);
     sessionStorage.setItem('accidentData', JSON.stringify(formData));
   }, [formData])
-  
+
   /**
    * Etape 2 : mettre à jour les données du formulaire à chaque modification d'un des champs
    */
@@ -122,7 +122,13 @@ export default function FormulaireAccident({ setValue, accidentData, watch }) {
           <h2>Infos Accident</h2>
           <h3>Rentrez les informations sur l'accident de travail.</h3>
 
-          <AutoCompleteP id='typeAccident' option={listAccident.typeAccident} label='Type d accident' onChange={setFormData} defaultValue={formData?.typeAccident ?? ''} />
+          <AutoCompleteP
+            id='typeAccident'
+            option={listAccident.typeAccident} // Assurez-vous que listAccident.typeAccident est correctement défini
+            label='Type d accident'
+            onChange={(value) => setTypeAccident(value)} // Assurez-vous que setFormData gère correctement les changements
+            defaultValue={watch('typeAccident') ?? (formData?.typeAccident ?? '')}
+          />
           <TextFieldP id="circonstanceAccident" label="Circonstance de l'accident" onChange={(circonstanceAccidentText) => {
             setCirconstanceAccident(circonstanceAccidentText);
             setValue('circonstanceAccident', circonstanceAccidentText);
@@ -167,7 +173,7 @@ export default function FormulaireAccident({ setValue, accidentData, watch }) {
               <AutoCompleteP id='codeAgentMateriel' option={listAccident.CodeAgentMateriel} label='Code Agent matériel' onChange={setCodeAgentMateriel} defaultValue={codeAgentMateriel} />
             </Grid>
             <Grid item xs={0.00001} style={{ margin: '-24.5%' }}>
-            <Link to="/agentmateriel" style={{ textDecoration: 'none', color: 'black' }} target="_blank" rel="noopener noreferrer">
+              <Link to="/agentmateriel" style={{ textDecoration: 'none', color: 'black' }} target="_blank" rel="noopener noreferrer">
                 <InfoIcon style={{ color: 'black' }} />
               </Link>
             </Grid>
@@ -178,9 +184,9 @@ export default function FormulaireAccident({ setValue, accidentData, watch }) {
               <AutoCompleteP id='codeNatureLesion' option={listAccident.CodeNatureLésion} label='Code Nature de la lésion' onChange={setCodeNatureLesion} defaultValue={codeNatureLesion} />
             </Grid>
             <Grid item xs={0.00001} style={{ margin: '-24.5%' }}>
-            <Link to="/naturelesion" style={{ textDecoration: 'none', color: 'black' }} target="_blank" rel="noopener noreferrer">
+              <Link to="/naturelesion" style={{ textDecoration: 'none', color: 'black' }} target="_blank" rel="noopener noreferrer">
                 <InfoIcon style={{ color: 'black' }} />
-                </Link>
+              </Link>
             </Grid>
           </Grid>
 
@@ -189,9 +195,9 @@ export default function FormulaireAccident({ setValue, accidentData, watch }) {
               <AutoCompleteP id='codeSiegeLesion' option={listAccident.CodeSiegeLésion} label='Code siège lésion' onChange={setCodeSiegeLesion} defaultValue={codeSiegeLesion} />
             </Grid>
             <Grid item xs={0.00001} style={{ margin: '-24.5%' }} >
-            <Link to="/siegelesion" style={{ textDecoration: 'none', color: 'black' }} target="_blank" rel="noopener noreferrer">
+              <Link to="/siegelesion" style={{ textDecoration: 'none', color: 'black' }} target="_blank" rel="noopener noreferrer">
                 <InfoIcon style={{ color: 'black' }} />
-                </Link>
+              </Link>
             </Grid>
           </Grid>
 
