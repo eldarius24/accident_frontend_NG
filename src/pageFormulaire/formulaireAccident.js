@@ -8,12 +8,12 @@ import 'dayjs/locale/fr';
 dayjs.locale('fr');
 /* IMPORT PERSO */
 import listAccident from '../liste/listAccident.json';
-import ControlLabelP from '../composants/controlLabelP';
-import TextFieldP from '../composants/textFieldP';
-import AutoCompleteP from '../composants/autoCompleteP';
-import DatePickerP from '../composants/datePickerP';
-import DateHeurePickerP from '../composants/dateHeurePickerP';
-import TextFieldMaskP from '../composants/textFieldMaskP';
+import ControlLabelP from '../_composants/controlLabelP';
+import TextFieldP from '../_composants/textFieldP';
+import AutoCompleteP from '../_composants/autoCompleteP';
+import DatePickerP from '../_composants/datePickerP';
+import DateHeurePickerP from '../_composants/dateHeurePickerP';
+import TextFieldMaskP from '../_composants/textFieldMaskP';
 import { Link } from 'react-router-dom';
 
 

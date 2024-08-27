@@ -3,11 +3,11 @@ import { useState, useEffect } from 'react';
 /* IMPORT MUI */
 import { FormGroup } from '@mui/material';
 /* IMPORT PERSO */
-import DatePickerP from '../composants/datePickerP';
+import DatePickerP from '../_composants/datePickerP';
 import listAssureur from '../liste/listAssureur.json';
-import AutoCompleteP from '../composants/autoCompleteP';
-import ControlLabelP from '../composants/controlLabelP';
-import TextFieldP from '../composants/textFieldP';
+import AutoCompleteP from '../_composants/autoCompleteP';
+import ControlLabelP from '../_composants/controlLabelP';
+import TextFieldP from '../_composants/textFieldP';
 
 
 
