@@ -3,10 +3,10 @@ import * as React from 'react';
 /* IMPORT MUI */
 import { useState, useEffect } from 'react';
 /* IMPORT PERSO */
-import TextFieldP from '../composants/textFieldP';
-import TextFieldMaskP from '../composants/textFieldMaskP';
-import DatePickerP from '../composants/datePickerP';
-import AutoCompleteP from '../composants/autoCompleteP';
+import TextFieldP from '../_composants/textFieldP';
+import TextFieldMaskP from '../_composants/textFieldMaskP';
+import DatePickerP from '../_composants/datePickerP';
+import AutoCompleteP from '../_composants/autoCompleteP';
 import listeDeclarationAssBelfius from '../liste/listeDeclarationAssBelfius.json';
 export default function FormulaireSalarie({ setValue, accidentData, watch }) {
 

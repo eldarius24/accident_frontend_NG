@@ -2,7 +2,7 @@ import axios from 'axios';
 import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useLocation } from 'react-router-dom';
-import TextFieldP from '../composants/textFieldP';
+import TextFieldP from '../_composants/textFieldP';
 import '../pageFormulaire/formulaire.css';
 import Button from '@mui/material/Button';
 import config from '../config.json';
