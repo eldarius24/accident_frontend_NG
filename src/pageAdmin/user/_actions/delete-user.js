@@ -1,6 +1,12 @@
 import axios from 'axios';
 import config from '../../../config.json';
 
+/**
+ * Fonction qui permet de supprimer un utilisateur
+ * 
+ * @param {*} userIdToDelete id de l'utilisateur à supprimer
+ * @returns 
+ */
 const deleteUser = async (userIdToDelete) => {
     const apiUrl = config.apiUrl;
     

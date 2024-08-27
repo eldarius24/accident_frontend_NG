@@ -1,3 +1,10 @@
+/**
+ * Convertit une date en format YYYY-MM-DD ou YYYY-MM-DD HH:MM:SS
+ * 
+ * @param {*} date date à convertir
+ * @param {*} isHour la date contient-elle l'heure
+ * @returns date convertie
+ */
 const dateConverter = (date, isHour = false) => {
     if (!date) 
         return "";
