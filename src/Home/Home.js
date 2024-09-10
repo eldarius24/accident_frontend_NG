@@ -73,8 +73,8 @@ function Home() {
                 console.log(error);
             });
     };
-
-    const handleGeneratePDF = async (accidentIdToGenerate) => {
+//erreur
+   /* const handleGeneratePDF = async (accidentIdToGenerate) => {
         try {
             const accidents = accidents.find(item => item._id == accidentIdToGenerate);
             editPDF(accidents);
@@ -82,6 +82,20 @@ function Home() {
             console.log(error);
         }
     };
+*/
+//correction
+    const handleGeneratePDF = async (accidentIdToGenerate) => {
+        try {
+          const accident = accidents.find(item => item._id === accidentIdToGenerate);
+          if (accident) {
+            await editPDF(accident);
+          } else {
+            console.log("Accident non trouvé");
+          }
+        } catch (error) {
+          console.log(error);
+        }
+      };
 
     const handleEdit = async (accidentIdToModify) => {
         try {
