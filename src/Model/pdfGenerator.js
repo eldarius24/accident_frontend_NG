@@ -28,6 +28,18 @@ function EditPdfCheckBox(form, checBkoxName, data) {
     if (data) checkBox.check();
 }
 
+/**
+ * Methode qui permet de récupérer le jour de la semaine
+ * 
+ * @param {*} dateString 
+ * @returns 
+ */
+const getDayOfWeek = (dateString) => {
+    const date = new Date(dateString);
+    const daysOfWeek = ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'];
+    return daysOfWeek[date.getDay()];
+};
+
 
 
 export default async function editPDF(data) {
@@ -523,6 +535,7 @@ export default async function editPDF(data) {
         //jour de l'accident
         //date de l'accident
         if (data.DateHeureAccident !== undefined && data.DateHeureAccident !== null) {
+            EditPdfTextField(form, 'p2_1', (getDayOfWeek(data.DateHeureAccident)));
             EditPdfTextField(form, 'p2_4', (data.DateHeureAccident.substring(0, 4)));
             EditPdfTextField(form, 'p2_3', (data.DateHeureAccident.substring(5, 7)));
             EditPdfTextField(form, 'p2_2', (data.DateHeureAccident.substring(8, 10)));
