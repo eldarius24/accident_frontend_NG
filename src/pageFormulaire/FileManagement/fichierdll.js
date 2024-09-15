@@ -72,7 +72,7 @@ export default function PageDownloadFile() {
                 return (
                     <div className="custom-confirm-dialog">
                         <h1 className="custom-confirm-title">Renommer le fichier</h1>
-                        <p className="custom-confirm-message">Entrez un nouveau nom pour le fichier:</p>
+                        <p className="custom-confirm-message">Si vous le désirez, entrez un nouveau nom pour le fichier:</p>
                         <input 
                             type="text"
                             defaultValue={fileName}
