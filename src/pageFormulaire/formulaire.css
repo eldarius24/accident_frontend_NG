@@ -211,6 +211,12 @@ h6 {
   margin-left: 20px;
   margin-right: 20px;
 }
+.custom-confirm-input {
+  /* Couleur du message */
+  text-align: center;
+  margin-left: 20px;
+  margin-right: 20px;
+}
 
 .custom-confirm-no {
   margin-left: 10px;
@@ -285,3 +291,4 @@ h6 {
   background-color: yellow;
 
 }
+

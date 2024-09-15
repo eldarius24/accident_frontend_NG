@@ -37,6 +37,7 @@ export default function listFilesInAccident(accidentId) {
             await deleteFile({ fileId, accidentId });
             const updatedFiles = files.filter(file => file.id !== fileId);
             setFiles(updatedFiles);
+            window.location.reload();
         } catch (error) {
             throw new Error('Erreur de requête:', error);
         }
