@@ -72,7 +72,7 @@ export default function AdminPanelSettings({ accidentData }) {
             .catch(error => {
                 console.error('Erreur de requête:', error.message);
             });
-            
+
         // Naviguer vers la page d'accueil
         navigate('/');
     };
@@ -102,13 +102,13 @@ export default function AdminPanelSettings({ accidentData }) {
                 <TextFieldP id='AddEntrScadresse' label="Adresse du secrétariat sociale" onChange={setAddEntrScadresse} defaultValue={AddEntrScadresse}></TextFieldP>
                 <TextFieldP id='AddEntrSccpost' label="Code postal du secrétariat sociale" onChange={setAddEntrSccpost} defaultValue={AddEntrSccpost}></TextFieldP>
                 <TextFieldP id='AddEntrSclocalite' label="Localité du secrétariat sociale" onChange={setAddEntrSclocalite} defaultValue={AddEntrSclocalite}></TextFieldP>
-                
+
                 <div style={{ display: 'flex', justifyContent: 'center' }}>
                     <Button
                         type="submit"
                         sx={{
-                            backgroundColor: '#0098f9',
-                            '&:hover': { backgroundColor: 'green' },
+                            backgroundColor: '#ee752d',
+                            '&:hover': { backgroundColor: '#95ad22' },
                             padding: '10px 20px',
                             width: '50%',
                             marginTop: '1cm',
@@ -129,8 +129,12 @@ export default function AdminPanelSettings({ accidentData }) {
                     </Button>
                 </div>
 
+                <div style={{ marginTop: '30px' }}></div>
 
             </div>
+            <div className="image-cortigroupe"></div>
+            <h5> Développé par Remy et Benoit pour Le Cortigroupe. Support: bgillet.lecortil@cortigroupe.be</h5>
+
 
         </form>
     );

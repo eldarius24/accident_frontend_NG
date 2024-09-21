@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import TextFieldP from '../../../_composants/textFieldP';
 import ControlLabelAdminP from '../../../_composants/controlLabelAdminP';
 import { Box } from '@mui/material';
@@ -124,7 +124,7 @@ export default function AddUser() {
                     id="checkboxes-tags-demo"
                     options={entreprises}
                     disableCloseOnSelect
-                    sx={{ backgroundColor: '#0098f9', width: '50%', boxShadow: 3, margin: '0 auto 1rem' }}
+                    sx={{ backgroundColor: '#00479871', width: '50%', boxShadow: 3, margin: '0 auto 1rem' }}
                     getOptionLabel={(option) => option}
                     onChange={(_, value) => handleChange('entreprisesConseillerPrevention', value)}
                     value={user.entreprisesConseillerPrevention}
@@ -145,7 +145,7 @@ export default function AddUser() {
                             {...params}
                             label="Sélectionnez l'entreprise"
                             placeholder="entreprise"
-                            sx={{ backgroundColor: '#0098f9', color: '#95519b', boxShadow: 3 }}
+                            sx={{ backgroundColor: '#00479871', color: '#00479871', boxShadow: 3 }}
                         />
                     )}
                 />
@@ -156,10 +156,10 @@ export default function AddUser() {
                     multiple
                     id="checkboxes-tags-demo"
                     options={entreprises}
-                    onChange={(_, value) => {handleChange('entreprisesVisiteur', value) }}
+                    onChange={(_, value) => { handleChange('entreprisesVisiteur', value) }}
                     value={user.entreprisesVisiteur}
                     disableCloseOnSelect
-                    sx={{ backgroundColor: '#0098f9', width: '50%', boxShadow: 3, margin: '0 auto 1rem' }}
+                    sx={{ backgroundColor: '#00479871', width: '50%', boxShadow: 3, margin: '0 auto 1rem' }}
                     getOptionLabel={(option) => option}
                     renderOption={(props, option, { selected }) => (
                         <li {...props}>
@@ -178,7 +178,7 @@ export default function AddUser() {
                             {...params}
                             label="Sélectionnez l'entreprise"
                             placeholder="entreprise"
-                            sx={{ backgroundColor: '#0098f9', color: '#257525', boxShadow: 3 }}
+                            sx={{ backgroundColor: '#00479871', color: '#00479871', boxShadow: 3 }}
                         />
                     )}
                 />
@@ -209,9 +209,13 @@ export default function AddUser() {
                     </Button>
                 </div>
 
+                <div style={{ marginTop: '30px' }}></div>
 
             </div>
+            <div className="image-cortigroupe"></div>
+            <h5> Développé par Remy et Benoit pour Le Cortigroupe. Support: bgillet.lecortil@cortigroupe.be</h5>
 
         </form>
+
     );
 }

@@ -29,7 +29,7 @@ export default function DateHeurePickerP({id, label, defaultValue, onChange}) {
                 <DateTimePicker
                     id={id}
                     label={label}
-                    sx={{ backgroundColor: '#0098f9', width: '50%', boxShadow: 3, margin: '0 auto 1rem' }}
+                    sx={{ backgroundColor: '#00479871', width: '50%', boxShadow: 3, margin: '0 auto 1rem' }}
                     defaultValue={defaultValue ? dayjs(defaultValue) : null}
                     onChange={handleChange}
                 />

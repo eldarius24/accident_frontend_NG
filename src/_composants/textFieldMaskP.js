@@ -50,7 +50,7 @@ export default function TextFieldMaskP({ id, label, onChange, defaultValue, mask
                         mask: mask
                     }
                 }}
-                sx={{ backgroundColor: '#0098f9', width: '50%', boxShadow: 3 }}
+                sx={{ backgroundColor: '#00479871', width: '50%', boxShadow: 3 }}
             />
         </div>
     );

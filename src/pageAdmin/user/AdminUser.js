@@ -92,7 +92,7 @@ export default function Adminuser() {
     if (usersIsPending) {
         return <LinearProgress color="success" />;
     }
-    
+
     return (
         <form>
             <div className="frameStyle-style">
@@ -132,7 +132,13 @@ export default function Adminuser() {
                         </Table>
                     </div>
                 </TableContainer>
+
             </div>
+
+            <div className="image-cortigroupe"></div>
+            <h5> Développé par Remy et Benoit pour Le Cortigroupe. Support: bgillet.lecortil@cortigroupe.be</h5>
+
         </form>
+
     );
 }

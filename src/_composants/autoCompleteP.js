@@ -1,4 +1,5 @@
-import { Autocomplete, TextField } from '@mui/material';
+import { Autocomplete, TextField, Paper } from '@mui/material';
+import { styled } from '@mui/material/styles';
 
 /**
  * objet qui affiche un autocomplete (champ de texte avec suggestions)
@@ -9,7 +10,7 @@ import { Autocomplete, TextField } from '@mui/material';
  * @param {*} label nom de l'autocomplete
  * @param {} onChange fonction qui se déclenche à chaque changement de valeur (setValue({ id }, value))
  * @param {string} defaultValue /!\ obligatoire /!\ valeur par défaut à afficher dans l'autocomplete
- * @returns 
+ * @returns
  */
 export default function AutoCompleteP({
     id,
@@ -17,16 +18,14 @@ export default function AutoCompleteP({
     label,
     onChange,
     defaultValue,
-    sx = { backgroundColor: '#0098f9', width: '50%', boxShadow: 3, margin: '0 auto 1rem' }
-    
+    sx = { backgroundColor: '#00479871', width: '50%', boxShadow: 3, margin: '0 auto 1rem' }
 }) {
-
     const handleChange = (_, value) => {
         console.log('Autocomplet change to "', value, '"');
         if (onChange) {
             onChange(value);
         }
-    }
+    };
 
     return (
         <div className={id}>
@@ -39,8 +38,11 @@ export default function AutoCompleteP({
                 onChange={handleChange}
                 renderOption={(props, option) => <li {...props}>{option}</li>}
                 renderInput={(params) => <TextField {...params} label={label} />}
-                fullWidth={true}               
+                fullWidth={true}
+                PaperComponent={(props) => (
+                    <Paper {...props} sx={{ backgroundColor: '#0098f9' }} />
+                )}
             />
         </div>
     );
-};
+}

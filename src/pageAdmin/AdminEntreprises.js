@@ -144,6 +144,9 @@ export default function Adminusern() {
                     </div>
                 </TableContainer>
             </div>
+            <div className="image-cortigroupe"></div>
+            <h5> Développé par Remy et Benoit pour Le Cortigroupe. Support: bgillet.lecortil@cortigroupe.be</h5>
+
         </form>
     );
 }

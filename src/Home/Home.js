@@ -212,7 +212,7 @@ function Home() {
                                 },
                             }}
                         >
-                            <MenuItem key="All" value="All">
+                            <MenuItem key="All" value="All" style={{ backgroundColor: '#ee742d59' }}>
                                 <Checkbox
                                     checked={selectAllYears}
                                     onChange={handleSelectAllYears}
@@ -221,7 +221,7 @@ function Home() {
                                 <ListItemText primary="All" />
                             </MenuItem>
                             {yearsFromData.filter(Boolean).map((year) => (
-                                <MenuItem key={year} value={year}>
+                                <MenuItem key={year} value={year} style={{ backgroundColor: '#ee742d59' }}>
                                     <Checkbox
                                         checked={yearsChecked.indexOf(year) > -1}
                                         style={{ color: '#257525' }} />
