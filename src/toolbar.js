@@ -14,7 +14,7 @@ const textStyle = {
   fontFamily: 'monospace',
   fontWeight: 700,
   letterSpacing: '.3rem',
-  color: 'inherit',
+  color: '#95519b',
   textAlign: 'center',
   flexGrow: 1,
   '@media (min-width: 850px)': {
@@ -43,7 +43,7 @@ function ResponsiveAppBar() {
   }), [location.pathname]);
 
   return (
-    <AppBar position="sticky" sx={{ backgroundColor: '#f9ba2b' }}>
+    <AppBar position="sticky" sx={{ backgroundColor: '#f9ba2b90' }}>
       <Container maxWidth="lg">
         <Toolbar disableGutters>
           <Button

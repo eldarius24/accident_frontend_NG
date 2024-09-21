@@ -73,29 +73,29 @@ function Home() {
                 console.log(error);
             });
     };
-//erreur
-   /* const handleGeneratePDF = async (accidentIdToGenerate) => {
+    //erreur
+    /* const handleGeneratePDF = async (accidentIdToGenerate) => {
+         try {
+             const accidents = accidents.find(item => item._id == accidentIdToGenerate);
+             editPDF(accidents);
+         } catch (error) {
+             console.log(error);
+         }
+     };
+ */
+    //correction
+    const handleGeneratePDF = async (accidentIdToGenerate) => {
         try {
-            const accidents = accidents.find(item => item._id == accidentIdToGenerate);
-            editPDF(accidents);
+            const accident = accidents.find(item => item._id === accidentIdToGenerate);
+            if (accident) {
+                await editPDF(accident);
+            } else {
+                console.log("Accident non trouvé");
+            }
         } catch (error) {
             console.log(error);
         }
     };
-*/
-//correction
-    const handleGeneratePDF = async (accidentIdToGenerate) => {
-        try {
-          const accident = accidents.find(item => item._id === accidentIdToGenerate);
-          if (accident) {
-            await editPDF(accident);
-          } else {
-            console.log("Accident non trouvé");
-          }
-        } catch (error) {
-          console.log(error);
-        }
-      };
 
     const handleEdit = async (accidentIdToModify) => {
         try {
@@ -111,7 +111,7 @@ function Home() {
         try {
             startGetAccidents(async () => {
                 const accidents = await getAccidents()
-                
+
                 setAccidents(accidents);
 
                 //mettre à jour les années pour le filtre
@@ -173,7 +173,7 @@ function Home() {
         }
     }
 
-    const rowColors = ['#e62a5665', '#95519b62']; // Tableau de couleurs pour les lignes
+    const rowColors = ['#e62a5625', '#95519b25']; // Tableau de couleurs pour les lignes
 
     if (accidentsIsPending) {
         return <LinearProgress color="success" />;
@@ -184,7 +184,7 @@ function Home() {
             <div style={{ display: 'flex', justifyContent: 'center', margin: '20px 0rem' }}>
                 <Grid item xs={6} style={{ marginRight: '20px' }}>
                     <Button
-                        sx={{ color: 'black', padding: '15px 60px', backgroundColor: '#ee752d', '&:hover': { backgroundColor: '#95ad22' }, boxShadow: 3, textTransform: 'none' }}
+                        sx={{ color: 'black', padding: '15px 60px', backgroundColor: '#ee752d60', '&:hover': { backgroundColor: '#95ad22' }, boxShadow: 3, textTransform: 'none' }}
                         variant="contained"
                         color="secondary"
                         onClick={refreshListAccidents}
@@ -193,7 +193,7 @@ function Home() {
                         Actualiser
                     </Button>
                 </Grid>
-                <Grid item xs={6} style={{ marginRight: '20px', backgroundColor: '#ee752d' }}>
+                <Grid item xs={6} style={{ marginRight: '20px', backgroundColor: '#ee752d60' }}>
                     <FormControl sx={{ boxShadow: 3, minWidth: 120 }}>
                         <InputLabel id="sort-label">Année</InputLabel>
 
@@ -207,7 +207,7 @@ function Home() {
                             MenuProps={{
                                 PaperProps: {
                                     style: {
-                                        backgroundColor: '#bed1be', // Couleur de fond du menu
+                                        //backgroundColor: '#fff3ec', // Couleur de fond du menu
                                     },
                                 },
                             }}
@@ -236,7 +236,7 @@ function Home() {
                         value={searchTerm}
                         onChange={(event) => setSearchTerm(event.target.value)}
                         variant="outlined"
-                        sx={{ boxShadow: 3, backgroundColor: '#ee752d' }}
+                        sx={{ boxShadow: 3, backgroundColor: '#ee752d60' }}
                         InputProps={{
                             startAdornment: (
                                 <InputAdornment position="start">
@@ -248,7 +248,7 @@ function Home() {
                 </Grid>
                 <Grid item xs={6} style={{ marginRight: '20px' }}>
                     <Button
-                        sx={{ color: 'black', padding: '15px 60px', backgroundColor: '#ee752d', '&:hover': { backgroundColor: '#95ad22' }, boxShadow: 3, textTransform: 'none' }}
+                        sx={{ color: 'black', padding: '15px 60px', backgroundColor: '#ee752d60', '&:hover': { backgroundColor: '#95ad22' }, boxShadow: 3, textTransform: 'none' }}
                         variant="contained"
                         color="primary"
                         onClick={() => handleExportData(filteredData)}
@@ -259,7 +259,7 @@ function Home() {
                 </Grid>
                 <Grid item xs={6} style={{ marginRight: '20px' }}>
                     <Button
-                        sx={{ color: 'black', padding: '15px 60px', backgroundColor: '#ee752d', '&:hover': { backgroundColor: '#95ad22' }, boxShadow: 3, textTransform: 'none' }}
+                        sx={{ color: 'black', padding: '15px 60px', backgroundColor: '#ee752d60', '&:hover': { backgroundColor: '#95ad22' }, boxShadow: 3, textTransform: 'none' }}
                         variant="contained"
                         color="primary"
                         onClick={() => handleExportDataAss(filteredData)}
@@ -275,7 +275,7 @@ function Home() {
                 <div className="frameStyle-style">
                     <Table>
                         <TableHead>
-                            <TableRow style={{ backgroundColor: '#0098f9' }} key={"CellTowerSharp"}>
+                            <TableRow style={{ backgroundColor: '#0098f950' }} key={"CellTowerSharp"}>
                                 <TableCell style={{ fontWeight: 'bold' }}>N° Groupe</TableCell>
                                 <TableCell style={{ fontWeight: 'bold' }}>N° Entreprise</TableCell>
                                 <TableCell style={{ fontWeight: 'bold' }}>Date accident</TableCell>

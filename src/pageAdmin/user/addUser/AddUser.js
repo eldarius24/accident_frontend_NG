@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import TextFieldP from '../../../_composants/textFieldP';
 import ControlLabelAdminP from '../../../_composants/controlLabelAdminP';
-import { Box } from '@mui/material';
+import { Box,Paper } from '@mui/material';
 import Button from '@mui/material/Button';
 import Checkbox from '@mui/material/Checkbox';
 import TextField from '@mui/material/TextField';
@@ -92,6 +92,10 @@ export default function AddUser() {
         setUser((prevData) => ({ ...prevData, [key]: value }));
     };
 
+    const PaperComponent = (props) => (
+        <Paper {...props} sx={{ backgroundColor: '#bed7f6' }} />
+      );
+
     return (
         <form className="background-image" onSubmit={handleSubmit(onSubmit)}>
             <div className="frameStyle-style">
@@ -118,76 +122,78 @@ export default function AddUser() {
                 </Box>
 
                 <h3>Donner les accès conseiller en prévention:</h3>
-
+               
                 <Autocomplete
-                    multiple
-                    id="checkboxes-tags-demo"
-                    options={entreprises}
-                    disableCloseOnSelect
-                    sx={{ backgroundColor: '#00479871', width: '50%', boxShadow: 3, margin: '0 auto 1rem' }}
-                    getOptionLabel={(option) => option}
-                    onChange={(_, value) => handleChange('entreprisesConseillerPrevention', value)}
-                    value={user.entreprisesConseillerPrevention}
-                    renderOption={(props, option, { selected }) => (
-                        <li {...props}>
-                            <Checkbox
-                                icon={icon}
-                                checkedIcon={checkedIcon}
-                                style={{ marginRight: 8, color: 'green' }}
-                                checked={selected}
-                            />
-                            {option}
-                        </li>
-                    )}
-                    style={{ width: 500 }}
-                    renderInput={(params) => (
-                        <TextField
-                            {...params}
-                            label="Sélectionnez l'entreprise"
-                            placeholder="entreprise"
-                            sx={{ backgroundColor: '#00479871', color: '#00479871', boxShadow: 3 }}
+                multiple
+                id="checkboxes-tags-demo-prevention"
+                options={entreprises}
+                disableCloseOnSelect
+                sx={{ width: '50%', boxShadow: 3, margin: '0 auto 1rem' }}
+                getOptionLabel={(option) => option}
+                onChange={(_, value) => handleChange('entreprisesConseillerPrevention', value)}
+                value={user.entreprisesConseillerPrevention}
+                renderOption={(props, option, { selected }) => (
+                    <li {...props}>
+                        <Checkbox
+                            icon={icon}
+                            checkedIcon={checkedIcon}
+                            style={{ marginRight: 8, color: 'green' }}
+                            checked={selected}
                         />
-                    )}
-                />
+                        {option}
+                    </li>
+                )}
+                style={{ width: 500 }}
+                renderInput={(params) => (
+                    <TextField
+                        {...params}
+                        label="Sélectionnez l'entreprise"
+                        placeholder="entreprise"
+                        sx={{ backgroundColor: '#00479871', boxShadow: 3 }}
+                    />
+                )}
+                PaperComponent={PaperComponent}
+            />
 
                 <h3>Donner les accès Visiteur:</h3>
 
                 <Autocomplete
-                    multiple
-                    id="checkboxes-tags-demo"
-                    options={entreprises}
-                    onChange={(_, value) => { handleChange('entreprisesVisiteur', value) }}
-                    value={user.entreprisesVisiteur}
-                    disableCloseOnSelect
-                    sx={{ backgroundColor: '#00479871', width: '50%', boxShadow: 3, margin: '0 auto 1rem' }}
-                    getOptionLabel={(option) => option}
-                    renderOption={(props, option, { selected }) => (
-                        <li {...props}>
-                            <Checkbox
-                                icon={icon}
-                                checkedIcon={checkedIcon}
-                                style={{ marginRight: 8, color: 'green' }}
-                                checked={selected}
-                            />
-                            {option}
-                        </li>
-                    )}
-                    style={{ width: 500 }}
-                    renderInput={(params) => (
-                        <TextField
-                            {...params}
-                            label="Sélectionnez l'entreprise"
-                            placeholder="entreprise"
-                            sx={{ backgroundColor: '#00479871', color: '#00479871', boxShadow: 3 }}
+                multiple
+                id="checkboxes-tags-demo-visiteur"
+                options={entreprises}
+                onChange={(_, value) => { handleChange('entreprisesVisiteur', value) }}
+                value={user.entreprisesVisiteur}
+                disableCloseOnSelect
+                sx={{ width: '50%', boxShadow: 3, margin: '0 auto 1rem' }}
+                getOptionLabel={(option) => option}
+                renderOption={(props, option, { selected }) => (
+                    <li {...props}>
+                        <Checkbox
+                            icon={icon}
+                            checkedIcon={checkedIcon}
+                            style={{ marginRight: 8, color: 'green' }}
+                            checked={selected}
                         />
-                    )}
-                />
+                        {option}
+                    </li>
+                )}
+                style={{ width: 500 }}
+                renderInput={(params) => (
+                    <TextField
+                        {...params}
+                        label="Sélectionnez l'entreprise"
+                        placeholder="entreprise"
+                        sx={{ backgroundColor: '#00479871', boxShadow: 3 }}
+                    />
+                )}
+                PaperComponent={PaperComponent}
+            />
 
                 <div style={{ display: 'flex', justifyContent: 'center' }}>
                     <Button
                         type="submit"
                         sx={{
-                            backgroundColor: '#ee752d',
+                            backgroundColor: '#ee742d59',
                             '&:hover': { backgroundColor: '#95ad22' },
                             padding: '10px 20px',
                             width: '50%',

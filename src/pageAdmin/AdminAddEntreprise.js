@@ -107,7 +107,7 @@ export default function AdminPanelSettings({ accidentData }) {
                     <Button
                         type="submit"
                         sx={{
-                            backgroundColor: '#ee752d',
+                            backgroundColor: '#ee742d59',
                             '&:hover': { backgroundColor: '#95ad22' },
                             padding: '10px 20px',
                             width: '50%',
