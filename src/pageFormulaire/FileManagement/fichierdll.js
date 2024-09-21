@@ -10,17 +10,17 @@ const dropZoneStyle = {
     justifyContent: 'center',
     alignItems: 'center',
     height: '200px',
-    border: '2px dashed #84a784',
+    border: '2px dashed #00b1b2',
     borderRadius: '10px',
     cursor: 'pointer',
     margin: '20px 1rem',
-    backgroundColor: '#d2e2d2',
+    backgroundColor: '#00b2b246',
 };
 
 const labelStyle = {
     textAlign: 'center',
     width: '45%',
-    backgroundColor: '#84a784',
+    backgroundColor: '#00b1b2',
     color: 'black',
     padding: '10px 20px',
     cursor: 'pointer',
@@ -125,7 +125,7 @@ export default function PageDownloadFile() {
                 }}
             >
                 <span style={{ textAlign: 'center', width: '45%', color: 'black' }}>
-                    Glisser-déposer un fichier ici ou
+                    Pour ajouter un fichier, Glisser-déposer le ici
                 </span>
                 <input
                     type="file"
@@ -138,12 +138,14 @@ export default function PageDownloadFile() {
                 <label
                     htmlFor="fileInput"
                     style={labelStyle}
-                    onMouseEnter={e => (e.target.style.backgroundColor = 'green')}
-                    onMouseLeave={e => (e.target.style.backgroundColor = '#84a784')}
+                    onMouseEnter={e => (e.target.style.backgroundColor = '#95ad22')}
+                    onMouseLeave={e => (e.target.style.backgroundColor = '#00b1b2')}
                 >
-                    Télécharger un document
+                    Ajouter un fichier a l'accident
                 </label>
             </div>
+            <div className="image-cortigroupe"></div>
+            <h5> Développé par Remy et Benoit pour Le Cortigroupe. Support: bgillet.lecortil@cortigroupe.be</h5>
         </div>
     );
 }

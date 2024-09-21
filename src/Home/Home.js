@@ -173,7 +173,7 @@ function Home() {
         }
     }
 
-    const rowColors = ['#e62a55', '#95519b']; // Tableau de couleurs pour les lignes
+    const rowColors = ['#e62a5665', '#95519b62']; // Tableau de couleurs pour les lignes
 
     if (accidentsIsPending) {
         return <LinearProgress color="success" />;

@@ -267,7 +267,7 @@ h6 {
   border-radius: 10px;
   cursor: pointer;
   margin: 20px 1rem;
-  background-color: #95ad22;
+  background-color: #ffffff;
 }
 
 .frameStyle-style1 {
@@ -277,7 +277,7 @@ h6 {
   border-radius: 10px;
   cursor: pointer;
   margin: 20px 1rem;
-  background-color: #e62a55;
+  background-color: #e62a5663;
 }
 
 .line-separated h6 {

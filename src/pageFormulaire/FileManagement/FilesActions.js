@@ -159,7 +159,7 @@ export default function listFilesInAccident(accidentId) {
             <ul style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between' }}>
                 {Array.isArray(files) && files.map(file => (
                     <li key={file.fileId} style={{ listStyleType: 'none', margin: '10px' }}>
-                        <Card sx={{ minWidth: 275, maxWidth: 275, minHeight: 275, maxHeight: 275 }}>
+                        <Card sx={{backgroundColor: '#fab82b56', minWidth: 275, maxWidth: 275, minHeight: 275, maxHeight: 275, border: '2px solid #000000' }}>
                             <CardContent sx={{ maxWidth: 200, maxHeight: 190 }}>
                             <Typography sx={{ fontSize: 12, color: 'text.secondary', marginTop: '10px' }}>
                                     {file.fileName}

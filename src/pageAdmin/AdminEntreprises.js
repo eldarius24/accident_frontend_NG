@@ -103,7 +103,7 @@ export default function Adminusern() {
                             </TableHead>
                             <TableBody>
                                 {users.map((entreprise, index) => (
-                                    <TableRow key={entreprise._id} style={{ backgroundColor: index % 2 === 0 ? '#e62a55' : '#95519b', borderBottom: '2px solid #000000' }}>
+                                    <TableRow key={entreprise._id} style={{ backgroundColor: index % 2 === 0 ? '#e62a5665' : '#95519b62', borderBottom: '2px solid #000000' }}>
                                         <TableCell>{entreprise.AddEntreName}</TableCell>
                                         <TableCell>{entreprise.AddEntrRue}</TableCell>
                                         <TableCell>{entreprise.AddEntrCodpost}</TableCell>

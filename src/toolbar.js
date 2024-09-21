@@ -11,25 +11,22 @@ const buttonStyle = {
 };
 
 const textStyle = {
-  mr: -50,
-  display: { xs: 'flex', md: 'flex', alignItems: 'center', justifyContent: 'center' },
-  flexGrow: 1,
   fontFamily: 'monospace',
   fontWeight: 700,
   letterSpacing: '.3rem',
   color: 'inherit',
+  textAlign: 'center',
+  flexGrow: 1,
   '@media (min-width: 850px)': {
     fontSize: '2rem',
   },
   '@media (max-width: 750px)': {
     fontSize: '1.5rem',
     letterSpacing: '.1rem',
-    mr: -20,
   },
   '@media (max-width: 600px)': {
     fontSize: '0.7rem',
     letterSpacing: '.04rem',
-    mr: -20,
   },
 };
 
