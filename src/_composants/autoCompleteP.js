@@ -40,7 +40,7 @@ export default function AutoCompleteP({
                 renderInput={(params) => <TextField {...params} label={label} />}
                 fullWidth={true}
                 PaperComponent={(props) => (
-                    <Paper {...props} sx={{ backgroundColor: '#0098f9' }} />
+                    <Paper {...props} sx={{ backgroundColor: '#bed7f6' }} />
                 )}
             />
         </div>
