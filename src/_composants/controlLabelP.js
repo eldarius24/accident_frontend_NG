@@ -8,7 +8,7 @@ import { FormControlLabel, Checkbox } from '@mui/material';
  * @param {*} defaultValue valeur par défaut
  * @returns
  */
-export default function controlLabelP({ id, label, onChange, defaultValue, sx={ backgroundColor: '#84a784', width: '50%', boxShadow: 3, margin: '0 auto 1rem' } }) {
+export default function controlLabelP({ id, label, onChange, defaultValue, sx={ backgroundColor: '#0098f9', width: '50%', boxShadow: 3, margin: '0 auto 1rem' } }) {
 
     const handleChange = (_, value) => {
         console.log('checkBox change to "', value, '"');

@@ -124,7 +124,7 @@ export default function AddUser() {
                     id="checkboxes-tags-demo"
                     options={entreprises}
                     disableCloseOnSelect
-                    sx={{ backgroundColor: '#84a784', width: '50%', boxShadow: 3, margin: '0 auto 1rem' }}
+                    sx={{ backgroundColor: '#0098f9', width: '50%', boxShadow: 3, margin: '0 auto 1rem' }}
                     getOptionLabel={(option) => option}
                     onChange={(_, value) => handleChange('entreprisesConseillerPrevention', value)}
                     value={user.entreprisesConseillerPrevention}
@@ -133,7 +133,7 @@ export default function AddUser() {
                             <Checkbox
                                 icon={icon}
                                 checkedIcon={checkedIcon}
-                                style={{ marginRight: 8, color: '#257525' }}
+                                style={{ marginRight: 8, color: 'green' }}
                                 checked={selected}
                             />
                             {option}
@@ -145,7 +145,7 @@ export default function AddUser() {
                             {...params}
                             label="Sélectionnez l'entreprise"
                             placeholder="entreprise"
-                            sx={{ backgroundColor: '#84a784', color: '#257525', boxShadow: 3 }}
+                            sx={{ backgroundColor: '#0098f9', color: '#95519b', boxShadow: 3 }}
                         />
                     )}
                 />
@@ -159,14 +159,14 @@ export default function AddUser() {
                     onChange={(_, value) => {handleChange('entreprisesVisiteur', value) }}
                     value={user.entreprisesVisiteur}
                     disableCloseOnSelect
-                    sx={{ backgroundColor: '#84a784', width: '50%', boxShadow: 3, margin: '0 auto 1rem' }}
+                    sx={{ backgroundColor: '#0098f9', width: '50%', boxShadow: 3, margin: '0 auto 1rem' }}
                     getOptionLabel={(option) => option}
                     renderOption={(props, option, { selected }) => (
                         <li {...props}>
                             <Checkbox
                                 icon={icon}
                                 checkedIcon={checkedIcon}
-                                style={{ marginRight: 8, color: '#257525' }}
+                                style={{ marginRight: 8, color: 'green' }}
                                 checked={selected}
                             />
                             {option}
@@ -178,7 +178,7 @@ export default function AddUser() {
                             {...params}
                             label="Sélectionnez l'entreprise"
                             placeholder="entreprise"
-                            sx={{ backgroundColor: '#84a784', color: '#257525', boxShadow: 3 }}
+                            sx={{ backgroundColor: '#0098f9', color: '#257525', boxShadow: 3 }}
                         />
                     )}
                 />
@@ -187,8 +187,8 @@ export default function AddUser() {
                     <Button
                         type="submit"
                         sx={{
-                            backgroundColor: '#84a784',
-                            '&:hover': { backgroundColor: 'green' },
+                            backgroundColor: '#ee752d',
+                            '&:hover': { backgroundColor: '#95ad22' },
                             padding: '10px 20px',
                             width: '50%',
                             marginTop: '1cm',

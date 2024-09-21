@@ -203,7 +203,7 @@ export default function FormulaireAccident({ setValue, accidentData, watch }) {
 
 
 
-          <div className="frameStyle-style">
+          <div className="frameStyle-style1">
             <h5>De quels moyens de protection la victime était-elle équipée lors de l'accident ?</h5>
           </div>
           <div>

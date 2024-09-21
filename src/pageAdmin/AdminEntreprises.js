@@ -77,7 +77,7 @@ export default function Adminusern() {
                     <div className="frameStyle-style">
                         <Table>
                             <TableHead>
-                                <TableRow style={{ backgroundColor: '#84a784' }}>
+                                <TableRow style={{ backgroundColor: '#0098f9' }}>
                                     <TableCell style={{ fontWeight: 'bold' }}>Nom</TableCell>
                                     <TableCell style={{ fontWeight: 'bold' }}>Rue et n°</TableCell>
                                     <TableCell style={{ fontWeight: 'bold' }}>Code postal</TableCell>
@@ -103,7 +103,7 @@ export default function Adminusern() {
                             </TableHead>
                             <TableBody>
                                 {users.map((entreprise, index) => (
-                                    <TableRow key={entreprise._id} style={{ backgroundColor: index % 2 === 0 ? '#bed1be' : '#d2e2d2', borderBottom: '2px solid #84a784' }}>
+                                    <TableRow key={entreprise._id} style={{ backgroundColor: index % 2 === 0 ? '#e62a55' : '#95519b', borderBottom: '2px solid #000000' }}>
                                         <TableCell>{entreprise.AddEntreName}</TableCell>
                                         <TableCell>{entreprise.AddEntrRue}</TableCell>
                                         <TableCell>{entreprise.AddEntrCodpost}</TableCell>

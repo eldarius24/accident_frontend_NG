@@ -246,20 +246,20 @@ export default function FormulaireDeclarationASSBelfius({ setValue, accidentData
                 )}
 
                 <TextFieldMaskP id="NumdeChantier" label="Numéro du chantier" onChange={setNumdeChantier} defaultValue={NumdeChantier} mask="00000-00000-00000-00000" />
-                <div className="frameStyle-style">
+                <div className="frameStyle-style1">
                     <h5> Dans quel environnement ou dans quel type de lieu la victime se trouvait-elle lorsque l’accident s’est produit ? (p.ex. , aire de maintenance, chantier de
                         construction d’un tunnel, lieu d’élevage de bétail, bureau, école, magasin, hôpital, parking, salle de sports, toit d’un hôtel, maison privée, égout, jardin,
                         autoroute, navire à quai, sous l’eau, etc.). </h5>
                 </div>
                 <TextFieldP id="environementLieux" label="Expliquez" onChange={setenvironementLieux} defaultValue={environementLieux} />
-                <div className="frameStyle-style">
+                <div className="frameStyle-style1">
                     <h5> Précisez l’activité général (le type de travail) qu’effectuait la victime ou la tâche (au sens large) qu’elle accomplissait lorsque l’accident s’est produit.
                         (p.ex., transformation de produits, stockage, terrassement, construction ou démolition d’un bâtiment, tâches de type agricole on forestier, tâches avec
                         des animaux, soins, assistance d’une personne ou de plusieurs, formation, travil de bureau, achat, vente, activité artistique, etc. ou les tâches auxiliaires
                         de ces différents travaux comme l’installation, le désassemblage, la maintenance, la réparation, le nettoyage, etc.)  </h5>
                 </div>
                 <TextFieldP id="activiteGenerale" label="Expliquez" onChange={setactiviteGenerale} defaultValue={activiteGenerale} />
-                <div className="frameStyle-style">
+                <div className="frameStyle-style1">
                     <h5> Précisez l’activité spécifique de la victime lorsque l’accident s’est produit : (p.ex. , remplissage de la machine, utilisation d’ outillage à main, conduite d’un
                         moyen de transport, saisie, levage, roulage, portage d’un objet, fermeture d’une boite, montée d’une échelle, marche, prise de position assise, etc.) ET les
                         objets impliqués (p.ex. , outillage, machine, équipement, matériaux, objets, instruments, substances, etc.)</h5>
@@ -272,7 +272,7 @@ export default function FormulaireDeclarationASSBelfius({ setValue, accidentData
                     <TextFieldP id="ListeProfHabituelleNon" label="Si non, quelle activité exerçait-elle" onChange={setListeProfHabituelleNon} defaultValue={ListeProfHabituelleNon} />
                 )}
 
-                <div className="frameStyle-style">
+                <div className="frameStyle-style1">
                     <h5> Quels événements déviant par rapport au processus normal du travail ont provoqué l’accident ? (p.ex. , problème électrique, explosion, feu, déborde-
                         ment, renversement, écoulement, émission de gaz, rupture, chute ou effondrement d’objet, démarrage ou fonctionnement anormal d’une machine, perte
                         de contrôle d’un moyen de transport ou d’un objet, glissade ou chute de personne, action inopportune, faux mouvement, surprise, frayeur, violence,
@@ -304,7 +304,7 @@ export default function FormulaireDeclarationASSBelfius({ setValue, accidentData
                     <AutoCompleteP id="TemoinDirecte" option={listeDeclarationAss.TemoinDirecte} label="Est-ce un témoin directe (D) ou indirecte (I)" onChange={setTemoinDirecte} defaultValue={TemoinDirecte} />]
                 )}
 
-                <div className="frameStyle-style">
+                <div className="frameStyle-style1">
                     <h5> Comment la victime a-t-elle été blessée (lésion physique au psychique) ? Précisez chaque fois par ordre d’importance tous les différents contacts qui ont
                         provoqué la (les) blessure(s) (p. ex. , contact avec un courant électrique, avec une source de chaleur ou des substances dangereuses, noyade, ensevelis-
                         sement, enveloppement par quelque chose (gaz, liquide, solide), écrasement contre un objet ou heurt par un objet, collision, contact avec un objet coupant
@@ -363,7 +363,7 @@ export default function FormulaireDeclarationASSBelfius({ setValue, accidentData
 
 
                 <DatePickerP id="dateRepriseEffective" label="Date de reprise effective du travail habituel/au poste d’origine" onChange={setdateRepriseEffective} defaultValue={dateRepriseEffective} />
-                <div className="frameStyle-style">
+                <div className="frameStyle-style1">
                     <h5>  S'il n'y a pas encore eu de reprise complète du travail habituel/au poste d’origine durée probable de l'incapacité temporaire
                         totale ou partielle de travail </h5>
                 </div>
@@ -420,7 +420,7 @@ export default function FormulaireDeclarationASSBelfius({ setValue, accidentData
                     <div>
                         <AutoCompleteP id="ListeMontantRemuneration" option={listeDeclarationAss.ListeMontantRemuneration} label="Unité de temps" onChange={setListeMontantRemuneration} defaultValue={ListeMontantRemuneration} />
                         <TextFieldP id="MontantRemunerationVariable" label="En cas de rémunération variable, cycle correspondant à l’unité de temps déclarée" onChange={setMontantRemunerationVariable} defaultValue={MontantRemunerationVariable} />
-                        <div className="frameStyle-style">
+                        <div className="frameStyle-style1">
                             <h5>total des rémunérations et des avantages assujettis à l’ONSS, sans heures supplémentaires, pécule de vacances complémentaire et prime de find’année
                                 (le montant déclaré doit correspondre à l’unité de temps ou à l’unité de temps et au cycle)</h5>
                         </div>

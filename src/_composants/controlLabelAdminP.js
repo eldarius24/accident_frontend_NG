@@ -24,7 +24,7 @@ export default function controlLabelAdminP({ id, label, onChange, defaultValue }
                 checked={defaultValue}
                 onChange={handleChange}
             />}
-            sx={{ backgroundColor: '#84a784', width: '50%', boxShadow: 3, margin: '10px' }}
+            sx={{ backgroundColor: '#0098f9', width: '50%', boxShadow: 3, margin: '10px' }}
             label={label}
         />
     )

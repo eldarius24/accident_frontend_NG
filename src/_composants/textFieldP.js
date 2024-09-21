@@ -24,7 +24,7 @@ export default function textFieldP({ id, label, onChange, defaultValue }) {
                 onChange={handleChange}
                 label={label}
                 defaultValue={defaultValue ? defaultValue : ""}
-                sx={{ backgroundColor: '#84a784', width: '50%', boxShadow: 3 }}
+                sx={{ backgroundColor: '#0098f9', width: '50%', boxShadow: 3 }}
                 multiline
             />
         </div >

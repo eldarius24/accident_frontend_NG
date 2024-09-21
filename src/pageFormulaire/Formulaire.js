@@ -142,8 +142,8 @@ export default function Formulaire() {
                             setActiveStep(prevStep => prevStep - 1);
                         }}
                         sx={{
-                            backgroundColor: '#84a784',
-                            '&:hover': { backgroundColor: 'green' },
+                            backgroundColor: '#ee752d',
+                            '&:hover': { backgroundColor: '#95ad22' },
                             padding: '10px 20px',
                             marginRight: '1rem',
                         }}
@@ -159,8 +159,8 @@ export default function Formulaire() {
                             setActiveStep((prevStep) => prevStep + 1)
                         }}
                         sx={{
-                            backgroundColor: '#84a784',
-                            '&:hover': { backgroundColor: 'green' },
+                            backgroundColor: '#ee752d',
+                            '&:hover': { backgroundColor: '#95ad22' },
                             padding: '10px 20px',
                         }}
                         startIcon={<ArrowForwardIcon />}
@@ -179,8 +179,8 @@ export default function Formulaire() {
                             setActiveStep(prevStep => prevStep - 1);
                         }}
                         sx={{
-                            backgroundColor: '#84a784',
-                            '&:hover': { backgroundColor: 'green' },
+                            backgroundColor: '#ee752d',
+                            '&:hover': { backgroundColor: '#95ad22' },
                             padding: '10px 20px',
                             marginRight: '1rem',
                         }}
@@ -196,8 +196,8 @@ export default function Formulaire() {
                             setActiveStep((prevStep) => prevStep + 1)
                         }}
                         sx={{
-                            backgroundColor: '#84a784',
-                            '&:hover': { backgroundColor: 'green' },
+                            backgroundColor: '#ee752d',
+                            '&:hover': { backgroundColor: '#95ad22' },
                             padding: '10px 20px',
                         }}
                         startIcon={<ArrowForwardIcon />}
@@ -211,7 +211,7 @@ export default function Formulaire() {
             <h3>Pour savoir s'il s'agit d'un accident grave, rendez-vous sur le site Fedris via le lien ci-dessous</h3>
 
             <div style={{ display: 'flex', justifyContent: 'center' }}>
-                <Button target="_blank" rel="noopener noreferrer" sx={{ color: 'black', backgroundColor: '#84a784', '&:hover': { backgroundColor: 'green' }, padding: '10px 20px', width: '50%', marginTop: '1cm', height: '300%', fontSize: '300%' }} href="https://www.socialsecurity.be/app001/drselearning/aoat/aoat000/jsp/index_fatdecision.jsp">Fedris</Button>
+                <Button target="_blank" rel="noopener noreferrer" sx={{ color: 'black', backgroundColor: '#ee752d', '&:hover': { backgroundColor: '#95ad22' }, padding: '10px 20px', width: '50%', marginTop: '1cm', height: '300%', fontSize: '300%' }} href="https://www.socialsecurity.be/app001/drselearning/aoat/aoat000/jsp/index_fatdecision.jsp">Fedris</Button>
             </div>
 
             <h4>Vous n'êtes pas obligé de remplir toutes les données pour les enregistrer.</h4>
@@ -221,8 +221,8 @@ export default function Formulaire() {
                 <Button
                     type="submit"
                     sx={{
-                        backgroundColor: '#84a784',
-                        '&:hover': { backgroundColor: 'green' },
+                        backgroundColor: '#ee752d',
+                        '&:hover': { backgroundColor: '#95ad22' },
                         padding: '10px 20px',
                         width: '50%',
                         marginTop: '1cm',

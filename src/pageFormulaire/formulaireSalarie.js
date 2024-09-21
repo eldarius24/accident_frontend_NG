@@ -184,7 +184,7 @@ export default function FormulaireSalarie({ setValue, accidentData, watch }) {
           <TextFieldP id="VicInterimaireOuiAdresse" label="Adresse" onChange={setVicInterimaireOuiAdresse} defaultValue={VicInterimaireOuiAdresse} />]
         )}
 
-        <div className="frameStyle-style">
+        <div className="frameStyle-style1">
           <h5> Informations sur la Mutuelle de la victime</h5>
         </div>
         <TextFieldP id="CodeMutuelle" label="Code mutuelle" onChange={setCodeMutuelle} defaultValue={CodeMutuelle} />

@@ -102,7 +102,7 @@ export default function Adminuser() {
                     <div className="frameStyle-style">
                         <Table>
                             <TableHead>
-                                <TableRow style={{ backgroundColor: '#84a784' }}>
+                                <TableRow style={{ backgroundColor: '#0098f9' }}>
                                     <TableCell style={{ fontWeight: 'bold' }}>Login</TableCell>
                                     <TableCell style={{ fontWeight: 'bold' }}>Password</TableCell>
                                     <TableCell style={{ fontWeight: 'bold' }}>Name</TableCell>
@@ -112,7 +112,7 @@ export default function Adminuser() {
                             </TableHead>
                             <TableBody>
                                 {users.map((user, index) => (
-                                    <TableRow key={user._id} style={{ backgroundColor: index % 2 === 0 ? '#bed1be' : '#d2e2d2', borderBottom: '2px solid #84a784' }}>
+                                    <TableRow key={user._id} style={{ backgroundColor: index % 2 === 0 ? '#e62a55' : '#95519b', borderBottom: '2px solid #000000' }}>
                                         <TableCell>{user.userLogin}</TableCell>
                                         <TableCell>{user.userPassword}</TableCell>
                                         <TableCell>{user.userName}</TableCell>

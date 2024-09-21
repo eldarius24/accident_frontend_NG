@@ -17,7 +17,7 @@ export default function AutoCompleteP({
     label,
     onChange,
     defaultValue,
-    sx = { backgroundColor: '#84a784', width: '50%', boxShadow: 3, margin: '0 auto 1rem' }
+    sx = { backgroundColor: '#0098f9', width: '50%', boxShadow: 3, margin: '0 auto 1rem' }
     
 }) {
 

@@ -68,13 +68,13 @@ const Login = () => {
 
 
         <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col justify-center items-center min-h-20 space-y-4">
-          <TextField {...register('email')} id="outlined-multiline-static" label="Email" className="bg-[#84a784] w-1/2 shadow-md" />
+          <TextField {...register('email')} id="outlined-multiline-static" label="Email" className="bg-[#0098f9] w-1/2 shadow-md" />
 
           <TextField
             {...register('password')}
             id="outlined-multiline-password"
             label="Mot de passe"
-            className="bg-[#84a784] w-1/2 shadow-md"
+            className="bg-[#0098f9] w-1/2 shadow-md"
             type={showPassword ? 'text' : "password"}
             error={!isPasswordValid}
             helperText={!isPasswordValid && 'Mot de passe incorrect'}
@@ -94,7 +94,7 @@ const Login = () => {
 
           <Button
             type="submit"
-            className="bg-[#84a784] hover:bg-green-950 w-1/2 shadow-md"
+            className="bg-[#0098f9] hover:bg-green-950 w-1/2 shadow-md"
           >
             Se connecter
           </Button>

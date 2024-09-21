@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 export default function AdminPanelSettingsaction() {
 
     const defaultStyle = {
-        margin: '10px', backgroundColor: '#84a784', '&:hover': { backgroundColor: 'green' },
+        margin: '10px', backgroundColor: '#0098f9', '&:hover': { backgroundColor: 'green' },
         fontSize: '1rem', // Taille de police de base
         // Utilisation de Media Queries pour ajuster la taille de police
         '@media (min-width: 750px)': {

@@ -6,8 +6,8 @@ import AddIcon from '@mui/icons-material/Add';
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 
 const buttonStyle = {
-  backgroundColor: '#84a784',
-  '&:hover': { backgroundColor: 'green' }
+  backgroundColor: '#01aeac',
+  '&:hover': { backgroundColor: '#95519b' }
 };
 
 const textStyle = {
@@ -46,7 +46,7 @@ function ResponsiveAppBar() {
   }), [location.pathname]);
 
   return (
-    <AppBar position="sticky" sx={{ backgroundColor: '#84a784' }}>
+    <AppBar position="sticky" sx={{ backgroundColor: '#f9ba2b' }}>
       <Container maxWidth="lg">
         <Toolbar disableGutters>
           <Button
