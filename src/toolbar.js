@@ -4,6 +4,7 @@ import { AppBar, Toolbar, Typography, Container, Button } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import AddIcon from '@mui/icons-material/Add';
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
+import BarChartIcon from '@mui/icons-material/BarChart';
 
 const buttonStyle = {
   backgroundColor: '#01aeac',
@@ -30,16 +31,12 @@ const textStyle = {
   },
 };
 
-/** Composant de la barre de navigation
- * 
- * @returns ResponsiveAppBar component
- */
 function ResponsiveAppBar() {
   const location = useLocation();
-
-  const { isFormulaireAccident, isPageAdmin } = useMemo(() => ({
+  const { isFormulaireAccident, isPageAdmin, isPageStats } = useMemo(() => ({
     isFormulaireAccident: location.pathname === '/formulaire',
-    isPageAdmin: location.pathname === '/adminaction'
+    isPageAdmin: location.pathname === '/adminaction',
+    isPageStats: location.pathname === '/statistiques'
   }), [location.pathname]);
 
   return (
@@ -74,6 +71,15 @@ function ResponsiveAppBar() {
             startIcon={isFormulaireAccident ? <ArrowBackIcon /> : <AddIcon />}
           >
             Ajout d'un AT
+          </Button>
+          <Button
+            component={Link}
+            to={isPageStats ? '/' : '/statistiques'}
+            variant="contained"
+            sx={buttonStyle}
+            startIcon={<BarChartIcon />}
+          >
+            Statistiques
           </Button>
         </Toolbar>
       </Container>

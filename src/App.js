@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Login from './login/Login';
 import Home from './Home/Home';
 import Formulaire from './pageFormulaire/Formulaire';
+import Statistiques from './pageFormulaire/statistiques';
 import AdminPanelSettingsAction from './pageAdmin/AdminPanelSettingsaction';
 import AdminAddEntreprise from './pageAdmin/AdminAddEntreprise';
 import AddSecteur from './pageAdmin/AdminAddSecteur';
@@ -19,7 +20,6 @@ import ProtectedRoute from './Model/protectedRoute';
 import ProtectedRouteAdmin from './Model/protectedRouteAdmin';
 import Adminuser from './pageAdmin/user/AdminUser';
 import AddUser from './pageAdmin/user/addUser/AddUser';
-
 
 const App = () => {
   return (
@@ -43,6 +43,7 @@ const App = () => {
           <Route path="/addEntreprise" element={<ProtectedRouteAdmin><AdminAddEntreprise /></ProtectedRouteAdmin>} />
           <Route path="/addSecteur" element={<ProtectedRouteAdmin><AddSecteur /></ProtectedRouteAdmin>} />
           <Route path="/adminEntreprises" element={<ProtectedRouteAdmin><AdminEntreprises /></ProtectedRouteAdmin>} />
+          <Route path="/statistiques" element={<ProtectedRouteAdmin><Statistiques /></ProtectedRouteAdmin>} />
         </Routes>
       </div>
     </Router>
