@@ -10,7 +10,7 @@ import {
   Legend,
   ResponsiveContainer,
   LineChart,
-  Line, // Ajout pour le LineChart
+  Line,
 } from 'recharts';
 
 const Statistiques = () => {
@@ -20,7 +20,8 @@ const Statistiques = () => {
     accidentsByType: {},
     accidentsByMonth: {},
     accidentsBySecteur: {},
-    accidentsByYear: {}, // Nouveau champ pour les années
+    accidentsByYear: {},
+    accidentsBySex: {}, // Accidents par sexe
     averageAgeOfWorkers: 0,
   });
 
@@ -44,7 +45,8 @@ const Statistiques = () => {
       const accidentsByType = {};
       const accidentsByMonth = {};
       const accidentsBySecteur = {};
-      const accidentsByYear = {}; // Initialiser la variable pour les années
+      const accidentsByYear = {};
+      const accidentsBySex = { Masculin: 0, Féminin: 0 }; // Mise à jour pour les valeurs "Masculin" et "Féminin"
       let totalAge = 0;
 
       data.forEach((accident) => {
@@ -64,6 +66,13 @@ const Statistiques = () => {
         const year = new Date(accident.DateHeureAccident).getFullYear();
         accidentsByYear[year] = (accidentsByYear[year] || 0) + 1;
 
+        // Comptage par sexe
+        if (accident.sexe === 'Masculin') {
+          accidentsBySex.Masculin += 1;
+        } else if (accident.sexe === 'Féminin') {
+          accidentsBySex.Féminin += 1;
+        }
+
         // Calcul de l'âge moyen
         if (accident.dateNaissance) {
           const age = new Date().getFullYear() - new Date(accident.dateNaissance).getFullYear();
@@ -78,7 +87,8 @@ const Statistiques = () => {
         accidentsByType,
         accidentsByMonth,
         accidentsBySecteur,
-        accidentsByYear, // Enregistrer les données des années
+        accidentsByYear,
+        accidentsBySex, // Enregistrer les données par sexe
         averageAgeOfWorkers,
       });
     }
@@ -104,12 +114,17 @@ const Statistiques = () => {
     id: `secteur-${index}`,
   }));
 
-  // Créer les données pour les accidents par année
   const accidentYearData = Object.entries(stats.accidentsByYear).map(([year, count], index) => ({
     year: year.toString(),
     count,
     id: `year-${index}`,
   }));
+
+  // Créer les données pour les accidents par sexe
+  const accidentSexData = [
+    { sexe: 'Masculin', count: stats.accidentsBySex.Masculin },
+    { sexe: 'Féminin', count: stats.accidentsBySex.Féminin },
+  ];
 
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
@@ -165,7 +180,6 @@ const Statistiques = () => {
         </ResponsiveContainer>
       </div>
 
-      {/* Nouvelle section pour afficher les accidents par année sous forme de courbe */}
       <div className="col-span-full">
         <h2>Accidents par an</h2>
         <ResponsiveContainer width="100%" height={300}>
@@ -177,6 +191,21 @@ const Statistiques = () => {
             <Legend />
             <Line type="monotone" dataKey="count" stroke="#8884d8" activeDot={{ r: 8 }} />
           </LineChart>
+        </ResponsiveContainer>
+      </div>
+
+      {/* Nouvelle section pour afficher les accidents par sexe */}
+      <div className="col-span-full">
+        <h2>Accidents par sexe</h2>
+        <ResponsiveContainer width="100%" height={300}>
+          <BarChart data={accidentSexData}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="sexe" />
+            <YAxis />
+            <Tooltip />
+            <Legend />
+            <Bar dataKey="count" fill="#8884d8" />
+          </BarChart>
         </ResponsiveContainer>
       </div>
     </div>
