@@ -36,7 +36,7 @@ body {
 
 .image-cortigroupe {
   flex: 1;
-  height: 200px;
+  height: 250px;
   background-image: url('../../public/logo animé.gif');
   background-position: center center;
   background-repeat: no-repeat;

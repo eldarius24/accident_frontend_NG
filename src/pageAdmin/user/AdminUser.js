@@ -136,7 +136,7 @@ export default function Adminuser() {
             </div>
 
             <div className="image-cortigroupe"></div>
-            <h5> Développé par Remy et Benoit pour Le Cortigroupe. Support: bgillet.lecortil@cortigroupe.be</h5>
+            <h5 style={{ marginBottom: '40px' }}> Développé par Remy et Benoit pour Le Cortigroupe. Support: bgillet.lecortil@cortigroupe.be</h5>
 
         </form>
 

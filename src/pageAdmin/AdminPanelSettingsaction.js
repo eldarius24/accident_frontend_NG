@@ -19,36 +19,41 @@ export default function AdminPanelSettingsaction() {
 
 
     return (
-        <div className="frameStyle-style">
-            <h3>Administration des droits</h3>
+        <div>
+            <div className="frameStyle-style">
+                <h3>Administration des droits</h3>
 
-            <Box sx={{ display: 'flex', justifyContent: 'center', marginLeft: '120px', marginRight: '120px' }}>
-                <Button type="submit"
-                    component={Link}
-                    to={'/addUser'}
-                    sx={defaultStyle} variant="contained"> Créer un nouvel utilisateur</Button>
-                <Button type="submit"
-                    component={Link}
-                    to={'/adminUser'}
-                    sx={defaultStyle} variant="contained">Consulter les utilisateurs</Button>
-            </Box>
+                <Box sx={{ display: 'flex', justifyContent: 'center', marginLeft: '120px', marginRight: '120px' }}>
+                    <Button type="submit"
+                        component={Link}
+                        to={'/addUser'}
+                        sx={defaultStyle} variant="contained"> Créer un nouvel utilisateur</Button>
+                    <Button type="submit"
+                        component={Link}
+                        to={'/adminUser'}
+                        sx={defaultStyle} variant="contained">Consulter les utilisateurs</Button>
+                </Box>
 
-            <h3>Administration des entreprises</h3>
+                <h3>Administration des entreprises</h3>
 
-            <Box sx={{ display: 'flex', justifyContent: 'center', marginLeft: '120px', marginRight: '120px' }}>
-                <Button type="submit"
-                    component={Link}
-                    to={'/addEntreprise'}
-                    sx={defaultStyle} variant="contained"> Créer une nouvelle entreprise</Button>
-                <Button type="submit"
-                    component={Link}
-                    to={'/adminEntreprises'}
-                    sx={defaultStyle} variant="contained">Consulter les entreprises</Button>
+                <Box sx={{ display: 'flex', justifyContent: 'center', marginLeft: '120px', marginRight: '120px' }}>
+                    <Button type="submit"
+                        component={Link}
+                        to={'/addEntreprise'}
+                        sx={defaultStyle} variant="contained"> Créer une nouvelle entreprise</Button>
+                    <Button type="submit"
+                        component={Link}
+                        to={'/adminEntreprises'}
+                        sx={defaultStyle} variant="contained">Consulter les entreprises</Button>
 
-            </Box>
+                </Box>
+            </div>
+            <div className="image-cortigroupe"></div>
+            <h5 style={{ marginBottom: '40px' }}> Développé par Remy et Benoit pour Le Cortigroupe. Support: bgillet.lecortil@cortigroupe.be</h5>
+
         </div>
 
-        
-        
+
+
     );
 }
