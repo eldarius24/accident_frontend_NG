@@ -24,26 +24,22 @@ const Statistiques = () => {
     accidentsByDayOfWeek: {},
     accidentsByDayOfWeekByCompany: {},
   });
-  const [visibleGraphs, setVisibleGraphs] = useState({
-    accidentsBySex: true,
-    accidentsByMonth: true,
-    accidentsByYear: true,
-    accidentsByYearAndCompany: true,
-    accidentsByMonthAndCompany: true,
-    accidentsBySector: true,
-    accidentsByCompanyAndSector: true,
-    accidentsByDayOfWeekAndCompany: true,
+
+
+  const [graphs, setGraphs] = useState({
+    accidentsBySex: { visible: true, label: "Accidents par sexe" },
+    accidentsByMonth: { visible: true, label: "Accidents par mois" },
+    accidentsByYear: { visible: true, label: "Accidents par an" },
+    accidentsByYearAndCompany: { visible: true, label: "Accidents par an et par entreprise" },
+    accidentsByMonthAndCompany: { visible: true, label: "Accidents par mois et par entreprise" },
+    accidentsBySector: { visible: true, label: "Accidents par secteur" },
+    accidentsByCompanyAndSector: { visible: true, label: "Accidents par entreprise et secteur" },
+    accidentsByDayOfWeekAndCompany: { visible: true, label: "Accidents par jour et par entreprise" },
   });
-  const graphLabels = {
-    accidentsBySex: "Accidents par sexe",
-    accidentsByMonth: "Accidents par mois",
-    accidentsByYear: "Accidents par an",
-    accidentsByYearAndCompany: "Accidents par an et par entreprise",
-    accidentsByMonthAndCompany: "Accidents par mois et par entreprise",
-    accidentsBySector: "Accidents par secteur",
-    accidentsByCompanyAndSector: "Accidents par entreprise et secteur",
-    accidentsByDayOfWeekAndCompany: "Accidents par jour et par entreprise",
-  };
+
+
+
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -115,7 +111,13 @@ const Statistiques = () => {
   }, [data]);
 
   const toggleGraphVisibility = useCallback((graphName) => {
-    setVisibleGraphs(prev => ({ ...prev, [graphName]: !prev[graphName] }));
+    setGraphs(prev => ({
+      ...prev,
+      [graphName]: {
+        ...prev[graphName],
+        visible: !prev[graphName].visible,
+      },
+    }));
   }, []);
 
   const memoizedChartData = useMemo(() => ({
@@ -158,24 +160,24 @@ const Statistiques = () => {
         <p className="text-3xl font-bold text-center">{stats.totalAccidents}</p>
       </div>
 
-      <div className="mb-4">
+      <div className="mb-4 ml-10">
         <h3 className="text-lg font-semibold mb-2">Afficher/Masquer les graphiques :</h3>
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
-          {Object.entries(visibleGraphs).map(([graphName, isVisible]) => (
+          {Object.entries(graphs).map(([graphName, { visible, label }]) => (
             <label key={graphName} className="inline-flex items-center">
               <input
                 type="checkbox"
-                checked={isVisible}
+                checked={visible}
                 onChange={() => toggleGraphVisibility(graphName)}
                 className="form-checkbox h-5 w-5 text-blue-600"
               />
-              <span className="ml-2">{graphLabels[graphName]}</span>
+              <span className="ml-2">{label}</span>
             </label>
           ))}
         </div>
       </div>
 
-      {visibleGraphs.accidentsBySex && renderChart('pie', memoizedChartData.accidentsBySexData, {
+      {graphs.accidentsBySex.visible && renderChart('pie', memoizedChartData.accidentsBySexData, {
         component: PieChart,
         title: "Accidents par sexe",
         className: "col-span-full",
@@ -201,7 +203,7 @@ const Statistiques = () => {
         )
       })}
 
-      {visibleGraphs.accidentsByMonth && renderChart('bar', memoizedChartData.accidentMonthData, {
+      {graphs.accidentsByMonth.visible && renderChart('bar', memoizedChartData.accidentMonthData, {
         component: BarChart,
         title: "Nombre total d'accidents par mois",
         className: "col-span-full",
@@ -217,7 +219,7 @@ const Statistiques = () => {
         )
       })}
 
-      {visibleGraphs.accidentsByYear && renderChart('bar', memoizedChartData.accidentYearData, {
+      {graphs.accidentsByYear.visible && renderChart('bar', memoizedChartData.accidentYearData, {
         component: BarChart,
         title: "Nombre total d'accidents par an",
         className: "col-span-full",
@@ -233,7 +235,7 @@ const Statistiques = () => {
         )
       })}
 
-      {visibleGraphs.accidentsByYearAndCompany && renderChart('line', memoizedChartData.accidentYearByCompanyData, {
+      {graphs.accidentsByYearAndCompany.visible && renderChart('line', memoizedChartData.accidentYearByCompanyData, {
         component: LineChart,
         title: "Accidents par an et par entreprise",
         className: "col-span-full",
@@ -257,7 +259,7 @@ const Statistiques = () => {
         )
       })}
 
-      {visibleGraphs.accidentsByMonthAndCompany && renderChart('line', memoizedChartData.accidentMonthByCompanyData, {
+      {graphs.accidentsByMonthAndCompany.visible && renderChart('line', memoizedChartData.accidentMonthByCompanyData, {
         component: LineChart,
         title: "Accidents par mois et par entreprise",
         className: "col-span-full",
@@ -281,7 +283,7 @@ const Statistiques = () => {
         )
       })}
 
-      {visibleGraphs.accidentsBySector && renderChart('pie', memoizedChartData.accidentSectorData, {
+      {graphs.accidentsBySector.visible && renderChart('pie', memoizedChartData.accidentSectorData, {
         component: PieChart,
         title: "Accidents par secteur",
         className: "col-span-full",
@@ -307,7 +309,7 @@ const Statistiques = () => {
         )
       })}
 
-      {visibleGraphs.accidentsByCompanyAndSector && (
+      {graphs.accidentsByCompanyAndSector.visible && (
         <div className="text-center">
           <h2>Accidents par entreprise par secteur</h2>
           <div className="col-span-full flex flex-wrap overflow-x-auto">
@@ -343,7 +345,7 @@ const Statistiques = () => {
         </div>
       )}
 
-      {visibleGraphs.accidentsByDayOfWeekAndCompany && (
+      {graphs.accidentsByDayOfWeekAndCompany.visible && (
         <div className="text-center">
           <h2>Accidents par jour de la semaine par entreprise</h2>
           <div className="flex flex-wrap justify-center">
