@@ -35,18 +35,18 @@ const Statistiques = () => {
 
 
   const [graphs, setGraphs] = useState({
-    accidentsBySex: { visible: true, label: "Accidents par sexe" },
+    accidentsBySex: { visible: true, label: "TOTAL Accidents par sexe" },
     accidentsByDayOfWeek: { visible: true, label: "TOTAL Accidents par jour de la semaine" }, // Nouvelle entrée
     accidentsByMonth: { visible: true, label: "TOTAL Accidents par mois" },
     accidentsByYear: { visible: true, label: "TOTAL Accidents par an" },
+    accidentsByTypeTravailleur: { visible: true, label: "TOTAL Accidents par type de travailleur" },
+    accidentsByAge: { visible: true, label: "TOTAL Accidents par age" },
+    accidentsBySector: { visible: true, label: "TOTAL Accidents par secteur" },
     accidentsByYearAndCompany: { visible: true, label: "Accidents par an et par entreprise" },
     accidentsByMonthAndCompany: { visible: true, label: "Accidents par mois et par entreprise" },
-    accidentsBySector: { visible: true, label: "Accidents par secteur" },
     accidentsByCompanyAndSector: { visible: true, label: "Accidents par entreprise et secteur" },
     accidentsByDayOfWeekAndCompany: { visible: true, label: "Accidents par jour et par entreprise" },
-    accidentsByAge: { visible: true, label: "Accidents par age" },
     accidentsByAgeByCompany: { visible: true, label: "Accidents par age et par entreprise" },
-    accidentsByTypeTravailleur: { visible: true, label: "Accidents par type de travailleur" },
     accidentsByTypeTravailleurByCompany: { visible: true, label: "Accidents par type de travailleur et par entreprise" },
   });
 
@@ -264,44 +264,44 @@ const Statistiques = () => {
   return (
     <div className="col-span-full" style={{ margin: '20px' }}>
 
-<Grid item xs={6} style={{ backgroundColor: '#ee752d60' }}>
-  <FormControl sx={{ boxShadow: 3, minWidth: 50, width: '100%' }}>
-    <InputLabel id="years-label">Année</InputLabel>
-    <Select
-      labelId="years-label"
-      id="years-select"
-      multiple
-      value={selectedYears}
-      onChange={handleChangeYearsFilter}
-      renderValue={(selected) => selected.join(', ')}
-      MenuProps={{
-        PaperProps: {
-          style: {
-            maxHeight: 300,
-            overflow: 'auto'
-          },
-        },
-      }}
-    >
-      <MenuItem key="All" value="All" style={{ backgroundColor: '#ee742d59' }}>
-        <Checkbox
-          checked={selectedYears.length === allYears.length}
-          style={{ color: 'red' }}
-        />
-        <ListItemText primary="All" />
-      </MenuItem>
-      {allYears.filter(Boolean).sort((a, b) => a - b).map((year) => ( // Trier ici
-        <MenuItem key={year} value={year} style={{ backgroundColor: '#ee742d59' }}>
-          <Checkbox
-            checked={selectedYears.includes(year)}
-            style={{ color: '#257525' }}
-          />
-          <ListItemText primary={year} />
-        </MenuItem>
-      ))}
-    </Select>
-  </FormControl>
-</Grid>
+      <Grid item xs={6} style={{ backgroundColor: '#ee752d60' }}>
+        <FormControl sx={{ boxShadow: 3, minWidth: 50, width: '100%' }}>
+          <InputLabel id="years-label">Année</InputLabel>
+          <Select
+            labelId="years-label"
+            id="years-select"
+            multiple
+            value={selectedYears}
+            onChange={handleChangeYearsFilter}
+            renderValue={(selected) => selected.join(', ')}
+            MenuProps={{
+              PaperProps: {
+                style: {
+                  maxHeight: 300,
+                  overflow: 'auto'
+                },
+              },
+            }}
+          >
+            <MenuItem key="All" value="All" style={{ backgroundColor: '#ee742d59' }}>
+              <Checkbox
+                checked={selectedYears.length === allYears.length}
+                style={{ color: 'red' }}
+              />
+              <ListItemText primary="All" />
+            </MenuItem>
+            {allYears.filter(Boolean).sort((a, b) => a - b).map((year) => ( // Trier ici
+              <MenuItem key={year} value={year} style={{ backgroundColor: '#ee742d59' }}>
+                <Checkbox
+                  checked={selectedYears.includes(year)}
+                  style={{ color: '#257525' }}
+                />
+                <ListItemText primary={year} />
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+      </Grid>
       <Grid item xs={6} style={{ marginTop: 20, backgroundColor: '#ee752d60' }}>
         <FormControl sx={{ boxShadow: 3, minWidth: 50, width: '100%' }}>
           <InputLabel id="graphs-label">Graphiques</InputLabel>
@@ -450,6 +450,32 @@ const Statistiques = () => {
         )
       })}
 
+      {graphs.accidentsBySector.visible && renderChart('pie', memoizedChartData.accidentSectorData, {
+        component: PieChart,
+        title: "Accidents par secteur",
+        className: "col-span-full",
+        children: (
+          <>
+            <Pie
+              data={memoizedChartData.accidentSectorData}
+              cx="50%"
+              cy="50%"
+              labelLine={false}
+              outerRadius={80}
+              fill="#8884d8"
+              dataKey="value"
+              label={({ name, value }) => `${name}: ${value}`}
+            >
+              {memoizedChartData.accidentSectorData.map((entry, index) => (
+                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+              ))}
+            </Pie>
+            <Tooltip />
+            <Legend />
+          </>
+        )
+      })}
+
       {graphs.accidentsByYearAndCompany.visible && renderChart('line', memoizedChartData.accidentYearByCompanyData, {
         component: LineChart,
         title: "Accidents par an et par entreprise",
@@ -494,32 +520,6 @@ const Statistiques = () => {
                 activeDot={{ r: 8 }}
               />
             ))}
-          </>
-        )
-      })}
-
-      {graphs.accidentsBySector.visible && renderChart('pie', memoizedChartData.accidentSectorData, {
-        component: PieChart,
-        title: "Accidents par secteur",
-        className: "col-span-full",
-        children: (
-          <>
-            <Pie
-              data={memoizedChartData.accidentSectorData}
-              cx="50%"
-              cy="50%"
-              labelLine={false}
-              outerRadius={80}
-              fill="#8884d8"
-              dataKey="value"
-              label={({ name, value }) => `${name}: ${value}`}
-            >
-              {memoizedChartData.accidentSectorData.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-              ))}
-            </Pie>
-            <Tooltip />
-            <Legend />
           </>
         )
       })}
