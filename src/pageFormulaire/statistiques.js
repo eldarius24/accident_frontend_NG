@@ -1,10 +1,13 @@
-
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import axios from 'axios';
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
   LineChart, Line, PieChart, Pie, Cell
 } from 'recharts';
+import {
+  FormControl, InputLabel, Select, MenuItem, Checkbox, ListItemText,
+  Grid
+} from '@mui/material';
 
 const COLORS = ['#0088FE', '#FF8042', '#00C49F', '#FFBB28', '#FF8042', '#0088FE', '#00C49F'];
 const MONTHS = ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Juin', 'Juil', 'Aoû', 'Sep', 'Oct', 'Nov', 'Déc'];
@@ -48,7 +51,7 @@ const Statistiques = () => {
   });
 
 
-  const [selectedYears, setSelectedYears] = useState({});
+  const [selectedYears, setSelectedYears] = useState([]);
   const [allYears, setAllYears] = useState([]);
 
 
@@ -59,16 +62,9 @@ const Statistiques = () => {
         const response = await axios.get(`http://${apiUrl}:3100/api/accidents`);
         setData(response.data);
 
-        // Extraire toutes les années uniques des données
         const years = [...new Set(response.data.map(accident => new Date(accident.DateHeureAccident).getFullYear()))];
         setAllYears(years);
-
-        // Initialiser toutes les années comme sélectionnées
-        const initialSelectedYears = years.reduce((acc, year) => {
-          acc[year] = true;
-          return acc;
-        }, {});
-        setSelectedYears(initialSelectedYears);
+        setSelectedYears(years);
       } catch (error) {
         console.error('Erreur lors de la récupération des données:', error.message);
       }
@@ -78,11 +74,10 @@ const Statistiques = () => {
   }, []);
 
   useEffect(() => {
-
     if (data.length > 0) {
       const filteredData = data.filter(accident => {
         const accidentYear = new Date(accident.DateHeureAccident).getFullYear();
-        return selectedYears[accidentYear];
+        return selectedYears.includes(accidentYear);
       });
 
       const newStats = {
@@ -102,6 +97,7 @@ const Statistiques = () => {
         accidentsByTypeTravailleur: {},
         accidentsByTypeTravailleurByCompany: {},
       };
+
 
       const calculateAge = (birthDate, accidentDate) => {
         let age = accidentDate.getFullYear() - birthDate.getFullYear();
@@ -182,47 +178,32 @@ const Statistiques = () => {
   }, [data, selectedYears]);
 
   const [allChecked, setAllChecked] = useState(true);
-
-  const toggleYear = (year) => {
-    setSelectedYears(prev => ({
-      ...prev,
-      [year]: !prev[year]
-    }));
+  const handleChangeYearsFilter = (event) => {
+    const value = event.target.value;
+    if (value.includes('All')) {
+      setSelectedYears(value.length === allYears.length + 1 ? [] : allYears);
+    } else {
+      setSelectedYears(value);
+    }
   };
 
-  const toggleAllYears = () => {
-    const allSelected = Object.values(selectedYears).every(Boolean);
-    const newSelectedYears = allYears.reduce((acc, year) => {
-      acc[year] = !allSelected;
-      return acc;
-    }, {});
-    setSelectedYears(newSelectedYears);
+  const handleChangeGraphsFilter = (event) => {
+    const value = event.target.value;
+    if (value.includes('All')) {
+      const allGraphsSelected = value.length === Object.keys(graphs).length + 1;
+      setGraphs(prev =>
+        Object.fromEntries(
+          Object.entries(prev).map(([key, graphData]) => [key, { ...graphData, visible: !allGraphsSelected }])
+        )
+      );
+    } else {
+      setGraphs(prev =>
+        Object.fromEntries(
+          Object.entries(prev).map(([key, graphData]) => [key, { ...graphData, visible: value.includes(key) }])
+        )
+      );
+    }
   };
-  const toggleAllGraphs = useCallback(() => {
-    const newVisibility = !allChecked;
-    setAllChecked(newVisibility);
-    setGraphs(prev =>
-      Object.fromEntries(
-        Object.entries(prev).map(([key, value]) => [key, { ...value, visible: newVisibility }])
-      )
-    );
-  }, [allChecked]);
-
-
-  const toggleGraphVisibility = useCallback((graphName) => {
-    setGraphs(prev => {
-      const newGraphs = {
-        ...prev,
-        [graphName]: {
-          ...prev[graphName],
-          visible: !prev[graphName].visible,
-        },
-      };
-      const allVisible = Object.values(newGraphs).every(graph => graph.visible);
-      setAllChecked(allVisible);
-      return newGraphs;
-    });
-  }, []);
 
   const memoizedChartData = useMemo(() => ({
     accidentsBySexData: Object.entries(stats.accidentsBySex).map(([sexe, NombreAT]) => ({ name: sexe, value: NombreAT })),
@@ -278,64 +259,89 @@ const Statistiques = () => {
   };
 
   return (
-    <div className="col-span-full">
+    <div className="col-span-full" style={{margin: '20px'}}>
+
+<Grid item xs={6} style={{backgroundColor: '#ee752d60'}}>
+          <FormControl sx={{ boxShadow: 3, minWidth: 50, width: '100%'}}>
+            <InputLabel id="years-label">Année</InputLabel>
+            <Select
+              labelId="years-label"
+              id="years-select"
+              multiple
+              value={selectedYears}
+              onChange={handleChangeYearsFilter}
+              renderValue={(selected) => selected.join(', ')}
+              MenuProps={{
+                PaperProps: {
+                  style: {
+                    maxHeight: 300,
+                    overflow: 'auto'
+                  },
+                },
+              }}
+            >
+              <MenuItem key="All" value="All" style={{ backgroundColor: '#ee742d59' }}>
+                <Checkbox
+                  checked={selectedYears.length === allYears.length}
+                  style={{ color: 'red' }}
+                />
+                <ListItemText primary="All" />
+              </MenuItem>
+              {allYears.filter(Boolean).map((year) => (
+                <MenuItem key={year} value={year} style={{ backgroundColor: '#ee742d59' }}>
+                  <Checkbox
+                    checked={selectedYears.includes(year)}
+                    style={{ color: '#257525' }}
+                  />
+                  <ListItemText primary={year} />
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Grid>
+        <Grid item xs={6} style={{ marginTop: 20, backgroundColor: '#ee752d60'}}>
+          <FormControl sx={{ boxShadow: 3, minWidth: 50, width: '100%'}}>
+            <InputLabel id="graphs-label">Graphiques</InputLabel>
+            <Select
+              labelId="graphs-label"
+              id="graphs-select"
+              multiple
+              value={Object.entries(graphs).filter(([_, { visible }]) => visible).map(([key]) => key)}
+              onChange={handleChangeGraphsFilter}
+              renderValue={(selected) => selected.map(key => graphs[key].label).join(', ')}
+              MenuProps={{
+                PaperProps: {
+                  style: {
+                    maxHeight: 300,
+                    overflow: 'auto'
+                  },
+                },
+              }}
+            >
+              <MenuItem key="All" value="All" style={{ backgroundColor: '#ee742d59' }}>
+                <Checkbox
+                  checked={Object.values(graphs).every(({ visible }) => visible)}
+                  style={{ color: 'red' }}
+                />
+                <ListItemText primary="All" />
+              </MenuItem>
+              {Object.entries(graphs).map(([key, { label, visible }]) => (
+                <MenuItem key={key} value={key} style={{ backgroundColor: '#ee742d59' }}>
+                  <Checkbox
+                    checked={visible}
+                    style={{ color: '#257525' }}
+                  />
+                  <ListItemText primary={label} />
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Grid>
+
       <div className="flex flex-col items-center justify-center h-full mb-8">
         <h2 className="text-center">Total des accidents</h2>
         <p className="text-3xl font-bold text-center">{stats.totalAccidents}</p>
-      </div>
-
-      <div className="mb-4 ml-10">
-        <h3 className="text-lg font-semibold mb-2">Afficher/Masquer les graphiques :</h3>
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
-          <label className="flex justify-center items-center col-span-full mb-2">
-            <input
-              type="checkbox"
-              checked={allChecked}
-              onChange={toggleAllGraphs}
-              className="form-checkbox h-10 w-10" // Styles pour la checkbox orange
-            />
-            <span className="ml-2 font-semibold text-orange-600">Tout cocher/décocher</span>
-          </label>
-          {Object.entries(graphs).map(([graphName, { visible, label }]) => (
-            <label key={graphName} className=" items-center">
-              <input
-                type="checkbox"
-                checked={visible}
-                onChange={() => toggleGraphVisibility(graphName)}
-                className="form-checkbox h-5 w-5 text-blue-600"
-              />
-              <span className="ml-2">{label}</span>
-            </label>
-          ))}
-        </div>
-      </div>
-
-      <div className="mb-4 ml-10">
-        <h3 className="text-lg font-semibold mb-2">Sélectionner les années :</h3>
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
-          <label className="flex justify-center items-center col-span-full mb-2">
-            <input
-              type="checkbox"
-              checked={Object.values(selectedYears).every(Boolean)}
-              onChange={toggleAllYears}
-              className="form-checkbox h-10 w-10"
-            />
-            <span className="ml-2 font-semibold text-orange-600">Toutes les années</span>
-          </label>
-          {allYears.map(year => (
-            <label key={year} className="flex items-center">
-              <input
-                type="checkbox"
-                checked={selectedYears[year]}
-                onChange={() => toggleYear(year)}
-                className="form-checkbox h-5 w-5 text-blue-600"
-              />
-              <span className="ml-2">{year}</span>
-            </label>
-          ))}
-        </div>
-      </div>
-
+      </div>      
 
       {graphs.accidentsBySex.visible && renderChart('pie', memoizedChartData.accidentsBySexData, {
         component: PieChart,
