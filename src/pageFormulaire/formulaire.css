@@ -45,6 +45,17 @@ body {
 
 }
 
+.image-tigre {
+  flex: 1;
+  height: 500px;
+  background-image: url('../../public/TIGRE.gif');
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: contain;
+
+
+}
+
 .image-container1:hover {
   animation: vibration 0.1s infinite;
 }

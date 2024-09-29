@@ -50,8 +50,7 @@ const Login = () => {
 
   return (
     <div className='max-h-screen'>
-        <h2 >T.I.G.R.E</h2>
-        <h4>Traitement Informatisé de Gestions des Risque d'Entreprise</h4>
+        <div className="image-tigre"></div>
         <div className="flex justify-center max-h-96">
           <Grid className='max-w-lg' container>
             <Grid item xs={6}>
