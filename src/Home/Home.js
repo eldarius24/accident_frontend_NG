@@ -129,30 +129,53 @@ function Home() {
         const currentYear = new Date().getFullYear();
         setYearsChecked([...yearsChecked, currentYear]);
     }, []);
+    
 
     /**
      * Fonction qui permet de filtrer les données de la table en fonction du contenu de la barre de recherche
      */
-    let filteredData = accidents.filter((item) => {
+    const filteredData = () => {
+        if (!accidents) {
+            console.error("Home.js => filteredData => accidents is not defined");
+            return [];
+        }
+    
+        if (!yearsChecked) {
+            console.error("Home.js => filteredData => yearsChecked is not defined");
+            return [];
+        }
+    
         const years = yearsChecked.map(Number);
-        const date = new Date(item.DateHeureAccident).getFullYear();
-        const filterProperties = [
-            'DateHeureAccident',
-            'entrepriseName',
-            'secteur',
-            'nomTravailleur',
-            'prenomTravailleur',
-            'typeAccident'
-        ];
-        return filterProperties.some((property) => {
-            //console.log("Home.js => filteredData => property =>", property);
-            const value = item[property];
-            //console.log("Home.js => filteredData => value =>", value);
-            const result = (value && typeof value === 'string' && value.toLowerCase().includes(searchTerm.toLowerCase())) && years.includes(date);
-            //console.log("Home.js => filteredData => result =>", result);
-            return result
+    
+        return accidents.filter((item) => {
+            if (!item.DateHeureAccident) {
+                console.error("Home.js => filteredData => item.DateHeureAccident is not defined");
+                return false;
+            }
+    
+            // Récupérer l'année de l'accident
+            const date = new Date(item.DateHeureAccident).getFullYear();
+    
+            const filterProperties = [
+                'DateHeureAccident',
+                'entrepriseName',
+                'secteur',
+                'nomTravailleur',
+                'prenomTravailleur',
+                'typeAccident'
+            ];
+    
+            // Vérifier si l'année de l'accident est dans les années cochées
+            if (!years.includes(date)) {
+                return false;
+            }
+    
+            // Vérifier si l'un des champs contient la valeur recherchée
+            return filterProperties.some((property) => {
+                return item[property] && item[property].toString().toLowerCase().includes(searchTerm.toLowerCase());
+            });
         });
-    });
+    };
 
     // Function that filters the data based on the selected year
     const handleChangeYearsFilter = (event) => {
@@ -178,6 +201,8 @@ function Home() {
     if (accidentsIsPending) {
         return <LinearProgress color="success" />;
     }
+
+    const data = filteredData();
 
     return (
         <div>
@@ -292,7 +317,7 @@ function Home() {
                             <TableRow className="table-row-separatormenu"></TableRow>
                         </TableHead>
                         <TableBody>
-                            {filteredData.map((item, index) => (
+                            {data.map((item, index) => (
                                 <React.Fragment key={item._id}>
                                     <TableRow key={item._id} style={{ backgroundColor: rowColors[index % rowColors.length] }}>
                                         <TableCell>{item.numeroGroupe}</TableCell>

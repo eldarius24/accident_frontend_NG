@@ -67,11 +67,9 @@ export default function Formulaire() {
      * METHODE ON SUBMIT
      * ************************************************************************/
     const onSubmit = (data) => {
-
-        console.log("Formulaire.js -> onSubmit -> Données à enregistrer :", data);
-        console.log("Formulaire.js -> onSubmit -> Données à editer accidentData :", accidentData);
-
         if (accidentData) {
+
+            console.log("Formulaire.js -> onSubmit -> Données à editer accidentData :", accidentData);
 
             //mode EDITION
             axios.put("http://" + apiUrl + ":3100/api/accidents/" + accidentData._id, data)
@@ -82,6 +80,8 @@ export default function Formulaire() {
                     console.error('Erreur de requête:', error.message);
                 });
         } else {
+            console.log("Formulaire.js -> onSubmit -> Données à enregistrer :", data);
+            
             //mode CREATION
             axios.put("http://" + apiUrl + ":3100/api/accidents", data)
                 .then(response => {
