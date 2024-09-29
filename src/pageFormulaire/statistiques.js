@@ -48,7 +48,8 @@ const Statistiques = () => {
   });
 
 
-
+  const [selectedYears, setSelectedYears] = useState({});
+  const [allYears, setAllYears] = useState([]);
 
 
   useEffect(() => {
@@ -57,6 +58,17 @@ const Statistiques = () => {
         const apiUrl = process.env.REACT_APP_API_URL || 'localhost';
         const response = await axios.get(`http://${apiUrl}:3100/api/accidents`);
         setData(response.data);
+
+        // Extraire toutes les années uniques des données
+        const years = [...new Set(response.data.map(accident => new Date(accident.DateHeureAccident).getFullYear()))];
+        setAllYears(years);
+
+        // Initialiser toutes les années comme sélectionnées
+        const initialSelectedYears = years.reduce((acc, year) => {
+          acc[year] = true;
+          return acc;
+        }, {});
+        setSelectedYears(initialSelectedYears);
       } catch (error) {
         console.error('Erreur lors de la récupération des données:', error.message);
       }
@@ -66,9 +78,15 @@ const Statistiques = () => {
   }, []);
 
   useEffect(() => {
+
     if (data.length > 0) {
+      const filteredData = data.filter(accident => {
+        const accidentYear = new Date(accident.DateHeureAccident).getFullYear();
+        return selectedYears[accidentYear];
+      });
+
       const newStats = {
-        totalAccidents: data.length,
+        totalAccidents: filteredData.length,
         accidentsByType: {},
         accidentsByMonth: {},
         accidentsByYear: {},
@@ -94,11 +112,14 @@ const Statistiques = () => {
         return age;
       };
 
+
+
+
       // Comptage des accidents par type de travailleur
 
 
 
-      data.forEach((accident) => {
+      filteredData.forEach((accident) => {
         const { DateHeureAccident, entrepriseName, sexe, secteur, dateNaissance } = accident;
         const typeAccident = accident.typeAccident || 'Non spécifié';
         const date = new Date(DateHeureAccident);
@@ -158,10 +179,25 @@ const Statistiques = () => {
 
       setStats(newStats);
     }
-  }, [data]);
+  }, [data, selectedYears]);
 
   const [allChecked, setAllChecked] = useState(true);
 
+  const toggleYear = (year) => {
+    setSelectedYears(prev => ({
+      ...prev,
+      [year]: !prev[year]
+    }));
+  };
+
+  const toggleAllYears = () => {
+    const allSelected = Object.values(selectedYears).every(Boolean);
+    const newSelectedYears = allYears.reduce((acc, year) => {
+      acc[year] = !allSelected;
+      return acc;
+    }, {});
+    setSelectedYears(newSelectedYears);
+  };
   const toggleAllGraphs = useCallback(() => {
     const newVisibility = !allChecked;
     setAllChecked(newVisibility);
@@ -251,15 +287,15 @@ const Statistiques = () => {
       <div className="mb-4 ml-10">
         <h3 className="text-lg font-semibold mb-2">Afficher/Masquer les graphiques :</h3>
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
-<label className="flex justify-center items-center col-span-full mb-2">
-  <input
-    type="checkbox"
-    checked={allChecked}
-    onChange={toggleAllGraphs}
-    className="form-checkbox h-10 w-10 " // Styles pour la checkbox orange
-  />
-  <span className="ml-2 font-semibold text-orange-600">Tout cocher/décocher</span>
-</label>
+          <label className="flex justify-center items-center col-span-full mb-2">
+            <input
+              type="checkbox"
+              checked={allChecked}
+              onChange={toggleAllGraphs}
+              className="form-checkbox h-10 w-10" // Styles pour la checkbox orange
+            />
+            <span className="ml-2 font-semibold text-orange-600">Tout cocher/décocher</span>
+          </label>
           {Object.entries(graphs).map(([graphName, { visible, label }]) => (
             <label key={graphName} className=" items-center">
               <input
@@ -273,6 +309,33 @@ const Statistiques = () => {
           ))}
         </div>
       </div>
+
+      <div className="mb-4 ml-10">
+        <h3 className="text-lg font-semibold mb-2">Sélectionner les années :</h3>
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
+          <label className="flex justify-center items-center col-span-full mb-2">
+            <input
+              type="checkbox"
+              checked={Object.values(selectedYears).every(Boolean)}
+              onChange={toggleAllYears}
+              className="form-checkbox h-10 w-10"
+            />
+            <span className="ml-2 font-semibold text-orange-600">Toutes les années</span>
+          </label>
+          {allYears.map(year => (
+            <label key={year} className="flex items-center">
+              <input
+                type="checkbox"
+                checked={selectedYears[year]}
+                onChange={() => toggleYear(year)}
+                className="form-checkbox h-5 w-5 text-blue-600"
+              />
+              <span className="ml-2">{year}</span>
+            </label>
+          ))}
+        </div>
+      </div>
+
 
       {graphs.accidentsBySex.visible && renderChart('pie', memoizedChartData.accidentsBySexData, {
         component: PieChart,
