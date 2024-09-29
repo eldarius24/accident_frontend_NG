@@ -64,7 +64,10 @@ const Statistiques = () => {
 
         const years = [...new Set(response.data.map(accident => new Date(accident.DateHeureAccident).getFullYear()))];
         setAllYears(years);
-        setSelectedYears(years);
+
+        // Sélectionner l'année en cours par défaut
+        const currentYear = new Date().getFullYear();
+        setSelectedYears(years.includes(currentYear) ? [currentYear] : [years[years.length - 1]]);
       } catch (error) {
         console.error('Erreur lors de la récupération des données:', error.message);
       }
@@ -259,89 +262,89 @@ const Statistiques = () => {
   };
 
   return (
-    <div className="col-span-full" style={{margin: '20px'}}>
+    <div className="col-span-full" style={{ margin: '20px' }}>
 
-<Grid item xs={6} style={{backgroundColor: '#ee752d60'}}>
-          <FormControl sx={{ boxShadow: 3, minWidth: 50, width: '100%'}}>
-            <InputLabel id="years-label">Année</InputLabel>
-            <Select
-              labelId="years-label"
-              id="years-select"
-              multiple
-              value={selectedYears}
-              onChange={handleChangeYearsFilter}
-              renderValue={(selected) => selected.join(', ')}
-              MenuProps={{
-                PaperProps: {
-                  style: {
-                    maxHeight: 300,
-                    overflow: 'auto'
-                  },
+<Grid item xs={6} style={{ backgroundColor: '#ee752d60' }}>
+  <FormControl sx={{ boxShadow: 3, minWidth: 50, width: '100%' }}>
+    <InputLabel id="years-label">Année</InputLabel>
+    <Select
+      labelId="years-label"
+      id="years-select"
+      multiple
+      value={selectedYears}
+      onChange={handleChangeYearsFilter}
+      renderValue={(selected) => selected.join(', ')}
+      MenuProps={{
+        PaperProps: {
+          style: {
+            maxHeight: 300,
+            overflow: 'auto'
+          },
+        },
+      }}
+    >
+      <MenuItem key="All" value="All" style={{ backgroundColor: '#ee742d59' }}>
+        <Checkbox
+          checked={selectedYears.length === allYears.length}
+          style={{ color: 'red' }}
+        />
+        <ListItemText primary="All" />
+      </MenuItem>
+      {allYears.filter(Boolean).sort((a, b) => a - b).map((year) => ( // Trier ici
+        <MenuItem key={year} value={year} style={{ backgroundColor: '#ee742d59' }}>
+          <Checkbox
+            checked={selectedYears.includes(year)}
+            style={{ color: '#257525' }}
+          />
+          <ListItemText primary={year} />
+        </MenuItem>
+      ))}
+    </Select>
+  </FormControl>
+</Grid>
+      <Grid item xs={6} style={{ marginTop: 20, backgroundColor: '#ee752d60' }}>
+        <FormControl sx={{ boxShadow: 3, minWidth: 50, width: '100%' }}>
+          <InputLabel id="graphs-label">Graphiques</InputLabel>
+          <Select
+            labelId="graphs-label"
+            id="graphs-select"
+            multiple
+            value={Object.entries(graphs).filter(([_, { visible }]) => visible).map(([key]) => key)}
+            onChange={handleChangeGraphsFilter}
+            renderValue={(selected) => selected.map(key => graphs[key].label).join(', ')}
+            MenuProps={{
+              PaperProps: {
+                style: {
+                  maxHeight: 300,
+                  overflow: 'auto'
                 },
-              }}
-            >
-              <MenuItem key="All" value="All" style={{ backgroundColor: '#ee742d59' }}>
+              },
+            }}
+          >
+            <MenuItem key="All" value="All" style={{ backgroundColor: '#ee742d59' }}>
+              <Checkbox
+                checked={Object.values(graphs).every(({ visible }) => visible)}
+                style={{ color: 'red' }}
+              />
+              <ListItemText primary="All" />
+            </MenuItem>
+            {Object.entries(graphs).map(([key, { label, visible }]) => (
+              <MenuItem key={key} value={key} style={{ backgroundColor: '#ee742d59' }}>
                 <Checkbox
-                  checked={selectedYears.length === allYears.length}
-                  style={{ color: 'red' }}
+                  checked={visible}
+                  style={{ color: '#257525' }}
                 />
-                <ListItemText primary="All" />
+                <ListItemText primary={label} />
               </MenuItem>
-              {allYears.filter(Boolean).map((year) => (
-                <MenuItem key={year} value={year} style={{ backgroundColor: '#ee742d59' }}>
-                  <Checkbox
-                    checked={selectedYears.includes(year)}
-                    style={{ color: '#257525' }}
-                  />
-                  <ListItemText primary={year} />
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        </Grid>
-        <Grid item xs={6} style={{ marginTop: 20, backgroundColor: '#ee752d60'}}>
-          <FormControl sx={{ boxShadow: 3, minWidth: 50, width: '100%'}}>
-            <InputLabel id="graphs-label">Graphiques</InputLabel>
-            <Select
-              labelId="graphs-label"
-              id="graphs-select"
-              multiple
-              value={Object.entries(graphs).filter(([_, { visible }]) => visible).map(([key]) => key)}
-              onChange={handleChangeGraphsFilter}
-              renderValue={(selected) => selected.map(key => graphs[key].label).join(', ')}
-              MenuProps={{
-                PaperProps: {
-                  style: {
-                    maxHeight: 300,
-                    overflow: 'auto'
-                  },
-                },
-              }}
-            >
-              <MenuItem key="All" value="All" style={{ backgroundColor: '#ee742d59' }}>
-                <Checkbox
-                  checked={Object.values(graphs).every(({ visible }) => visible)}
-                  style={{ color: 'red' }}
-                />
-                <ListItemText primary="All" />
-              </MenuItem>
-              {Object.entries(graphs).map(([key, { label, visible }]) => (
-                <MenuItem key={key} value={key} style={{ backgroundColor: '#ee742d59' }}>
-                  <Checkbox
-                    checked={visible}
-                    style={{ color: '#257525' }}
-                  />
-                  <ListItemText primary={label} />
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        </Grid>
+            ))}
+          </Select>
+        </FormControl>
+      </Grid>
 
       <div className="flex flex-col items-center justify-center h-full mb-8">
         <h2 className="text-center">Total des accidents</h2>
         <p className="text-3xl font-bold text-center">{stats.totalAccidents}</p>
-      </div>      
+      </div>
 
       {graphs.accidentsBySex.visible && renderChart('pie', memoizedChartData.accidentsBySexData, {
         component: PieChart,
