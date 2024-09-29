@@ -49,7 +49,8 @@ const Login = () => {
   };
 
   return (
-    <div className='max-h-screen'>
+    <div>
+      <div className='max-h-screen'>
         <div className="image-tigre"></div>
         <div className="flex justify-center max-h-96">
           <Grid className='max-w-lg' container>
@@ -99,9 +100,8 @@ const Login = () => {
           </Button>
         </form>
 
-
-
         <h6>Pour avoir accès, veuillez le demander au support : bgillet.lecortil@cortigroupe.be </h6>
+      </div>
       <div className="image-cortigroupe"></div>
       <h5 style={{ marginBottom: '40px' }}> Développé par Remy et Benoit pour Le Cortigroupe. Support: bgillet.lecortil@cortigroupe.be</h5>
     </div>
