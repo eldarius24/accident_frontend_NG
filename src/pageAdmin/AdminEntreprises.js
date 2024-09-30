@@ -21,9 +21,14 @@ import { useNavigate } from 'react-router-dom';
 
 export default function Adminusern() {
     const navigate = useNavigate();
-    const [users, setUsers] = useState([]);
+    const [entreprises, setEntreprises] = useState([]);
+    const [secteurs, setSecteurs] = useState([]);
     const [loading, setLoading] = useState(true);
     const apiUrl = config.apiUrl;
+
+    const secteursInEntreprise = (idEntreprise) => {
+        return secteurs.filter((secteur) => secteur.EntrepriseId === idEntreprise);
+    };
 
     const handleAddSecteur = (entreprise) => {
         console.log("AdminEntreprises -> handleAddSecteur -> entreprise", entreprise);
@@ -41,7 +46,7 @@ export default function Adminusern() {
                 if (response.status === 204 || response.status === 200) {
                     console.log('Entreprise supprimée avec succès');
                     // Mettre à jour les données après suppression
-                    setUsers(prevUsers => prevUsers.filter(entreprise => entreprise._id !== entrepriseIdToDelete));
+                    setEntreprises(prevUsers => prevUsers.filter(entreprise => entreprise._id !== entrepriseIdToDelete));
                 } else {
                     console.log('Erreur lors de la suppression de l\'utilisateur, code d erreur : ' + response.status + ' ' + response.statusText);
                 }
@@ -54,8 +59,27 @@ export default function Adminusern() {
     useEffect(() => {
         axios.get(`http://${apiUrl}:3100/api/entreprises`)
             .then(response => {
-                let users = response.data;
-                setUsers(users);
+                let entreprises = response.data;
+                let listSecteurs = "";
+                entreprises.map ((entreprise) => {
+                    secteursInEntreprise(entreprise._id).map((secteur) => {
+                       listSecteurs = listSecteurs + " " + secteur.NomSecteur + " , "
+                })})
+                console.log(listSecteurs);
+                console.log(entreprises);
+                setEntreprises(entreprises);
+            })
+            .catch(error => {
+                console.error('Error fetching data:', error);
+            })
+            .finally(() => {
+                setLoading(false);
+            });
+        //demande a l'apide m'envoyer la liste des secteurs
+        axios.get(`http://${apiUrl}:3100/api/secteurs`)
+            .then(response => {
+                let secteurs = response.data;
+                setSecteurs(secteurs);
             })
             .catch(error => {
                 console.error('Error fetching data:', error);
@@ -86,6 +110,7 @@ export default function Adminusern() {
                                     <TableCell style={{ fontWeight: 'bold' }}>Mail</TableCell>
                                     <TableCell style={{ fontWeight: 'bold' }}>N° entreprise</TableCell>
                                     <TableCell style={{ fontWeight: 'bold' }}>N° Police</TableCell>
+                                    <TableCell style={{ fontWeight: 'bold' }}>Secteur</TableCell>
                                     {/*<TableCell style={{ fontWeight: 'bold' }}>ONSS</TableCell>
                                     <TableCell style={{ fontWeight: 'bold' }}>N° d'unité de l'établissement</TableCell>
                                     <TableCell style={{ fontWeight: 'bold' }}>Iban</TableCell>
@@ -102,7 +127,7 @@ export default function Adminusern() {
                                 </TableRow>
                             </TableHead>
                             <TableBody>
-                                {users.map((entreprise, index) => (
+                                {entreprises.map((entreprise, index) => (
                                     <TableRow key={entreprise._id} style={{ backgroundColor: index % 2 === 0 ? '#e62a5625' : '#95519b25', borderBottom: '2px solid #000000' }}>
                                         <TableCell>{entreprise.AddEntreName}</TableCell>
                                         <TableCell>{entreprise.AddEntrRue}</TableCell>
@@ -112,6 +137,7 @@ export default function Adminusern() {
                                         <TableCell>{entreprise.AddEntrEmail}</TableCell>
                                         <TableCell>{entreprise.AddEntrNumentr}</TableCell>
                                         <TableCell>{entreprise.AddEntrePolice}</TableCell>
+                                        <TableCell>{entreprise.listSecteurs}</TableCell>
                                         {/*<TableCell>{entreprise.AddEntrOnss}</TableCell>
                                         <TableCell>{entreprise.AddEntrEnite}</TableCell>
                                         <TableCell>{entreprise.AddEntrIban}</TableCell>
