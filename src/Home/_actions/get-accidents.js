@@ -20,7 +20,7 @@ const getAccidents = async () => {
 
     if (accidents === undefined || accidents.length === 0 || !Array.isArray(accidents)) {
         console.error("La réponse de l'API est vide.");
-        return new Error("La réponse de l'API est vide.");
+        return [];
     }
 
     // Convertir les dates en objets Date
