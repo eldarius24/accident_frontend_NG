@@ -134,6 +134,7 @@ function Home() {
     /**
      * Fonction qui permet de filtrer les données de la table en fonction du contenu de la barre de recherche
      */
+    
     const filteredData = () => {
         if (!accidents) {
             console.error("Home.js => filteredData => accidents is not defined");
@@ -287,6 +288,7 @@ function Home() {
                         sx={{ color: 'black', padding: '15px 60px', backgroundColor: '#ee752d60', '&:hover': { backgroundColor: '#95ad22' }, boxShadow: 3, textTransform: 'none' }}
                         variant="contained"
                         color="primary"
+                        
                         onClick={() => handleExportDataAss(filteredData)}
                         startIcon={<FileUploadIcon />}
                     >

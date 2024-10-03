@@ -28,7 +28,12 @@ function generateExcelFile(workbook) {
      * @returns {void}
      * @param {void} filteredData Données filtrées à exporter
      */
-export function handleExportData(filteredData) {
+export function handleExportData(data) {
+    const dataToExport = Array.isArray(data) ? filteredData : [];
+    console.log("Données à exporter : ", dataToExport);
+    if (dataToExport.length === 0) {
+        console.warn("Aucune donnée à exporter.");
+    }
     const workbook = new ExcelJS.Workbook();
     const worksheet = workbook.addWorksheet('Accidents');
 
@@ -67,8 +72,8 @@ export function handleExportData(filteredData) {
         //'Heures pernues',
         //'Nombre de jours accident/maladie',
     ]);
-
-    filteredData.forEach(item => {
+    if (dataToExport.length > 0 && typeof dataToExport[0] === 'object') {
+    dataToExport.forEach(item => {
         worksheet.addRow([
             item.entrepriseName,
             item.secteur,
@@ -105,7 +110,9 @@ export function handleExportData(filteredData) {
             //,
         ]);
     });
-
+} else {
+    console.warn("Les données ne sont pas correctement formatées pour l'exportation.");
+}
     generateExcelFile(workbook);
 };
 
@@ -114,7 +121,12 @@ export function handleExportData(filteredData) {
  * @returns {void} null
  * @param {void} filteredData Données filtrées à exporter
  */
-export function handleExportDataAss(filteredData) {
+export function handleExportDataAss(data) {
+    const dataToExport = Array.isArray(data) ? filteredData : [];
+    console.log("Données à exporter : ", dataToExport);
+    if (dataToExport.length === 0) {
+        console.warn("Aucune donnée à exporter.");
+    }
     const workbook = new ExcelJS.Workbook();
     const worksheet = workbook.addWorksheet('Accidents');
 
@@ -289,7 +301,8 @@ export function handleExportDataAss(filteredData) {
     ]);
 
     // Ajouter les données filtrées
-    filteredData.forEach(item => {
+    if (dataToExport.length > 0 && typeof dataToExport[0] === 'object') {
+    dataToExport.forEach(item => {
         worksheet.addRow([
             //infos entreprise
             item.entrepriseName,
@@ -458,8 +471,10 @@ export function handleExportDataAss(filteredData) {
             item.heureTravaillePerdu,
             item.salaireTravaillePerdu,
             item.activiteGenerale,
-
         ]);
     });
+} else {
+    console.warn("Les données ne sont pas correctement formatées pour l'exportation.");
+}
     generateExcelFile(workbook);
 };
