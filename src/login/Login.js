@@ -98,12 +98,12 @@ const Login = () => {
           >
             Se connecter
           </Button>
-        </form>
+          <h6>Pour avoir accès, veuillez le demander au support : bgillet.lecortil@cortigroupe.be </h6>
 
-        <h6>Pour avoir accès, veuillez le demander au support : bgillet.lecortil@cortigroupe.be </h6>
-      </div>
+        </form>      
       <div className="image-cortigroupe"></div>
       <h5 style={{ marginBottom: '40px' }}> Développé par Remy et Benoit pour Le Cortigroupe. Support: bgillet.lecortil@cortigroupe.be</h5>
+      </div>
     </div>
   );
 };
