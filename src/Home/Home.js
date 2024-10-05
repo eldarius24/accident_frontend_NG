@@ -306,8 +306,8 @@ function Home() {
             </div>
 
 
-            <TableContainer style={{ maxHeight: '600px', overflowY: 'auto' }}>
-                <div className="frameStyle-style">
+            <TableContainer className="frameStyle-style" style={{ maxHeight: '600px', overflowY: 'auto' }}>
+                <div >
                     <Table>
                         <TableHead>
                             <TableRow style={{ backgroundColor: '#0098f950' }} key={"CellTowerSharp"}>
