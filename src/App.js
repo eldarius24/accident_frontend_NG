@@ -29,15 +29,15 @@ const App = () => {
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/" element={<ProtectedRoute><Home /></ProtectedRoute>} />
-          <Route path="/formulaire" element={<ProtectedRoute><Formulaire /></ProtectedRoute>} />
+          <Route path="/formulaire" element={<ProtectedRouteAdmin><Formulaire /></ProtectedRouteAdmin>} />
           <Route path="/adminUser" element={<ProtectedRouteAdmin><Adminuser /></ProtectedRouteAdmin>} />
-          <Route path="/deviation" element={<ProtectedRoute><Deviation /></ProtectedRoute>} />
-          <Route path="/agentmateriel" element={<ProtectedRoute><Agentmateriel /></ProtectedRoute>} />
-          <Route path="/naturelesion" element={<ProtectedRoute><Naturelesion /></ProtectedRoute>} />
-          <Route path="/siegelesion" element={<ProtectedRoute><Siegelesion /></ProtectedRoute>} />
-          <Route path="/fichierdll" element={<ProtectedRoute><Fichierdll /></ProtectedRoute>} />
-          <Route path="/planAction" element={<ProtectedRoute><PlanAction /></ProtectedRoute>} />
-          <Route path="/fichierdllaction" element={<ProtectedRoute><Fichierdllaction /></ProtectedRoute>} />
+          <Route path="/deviation" element={<ProtectedRouteAdmin><Deviation /></ProtectedRouteAdmin>} />
+          <Route path="/agentmateriel" element={<ProtectedRouteAdmin><Agentmateriel /></ProtectedRouteAdmin>} />
+          <Route path="/naturelesion" element={<ProtectedRouteAdmin><Naturelesion /></ProtectedRouteAdmin>} />
+          <Route path="/siegelesion" element={<ProtectedRouteAdmin><Siegelesion /></ProtectedRouteAdmin>} />
+          <Route path="/fichierdll" element={<ProtectedRouteAdmin><Fichierdll /></ProtectedRouteAdmin>} />
+          <Route path="/planAction" element={<ProtectedRouteAdmin><PlanAction /></ProtectedRouteAdmin>} />
+          <Route path="/fichierdllaction" element={<ProtectedRouteAdmin><Fichierdllaction /></ProtectedRouteAdmin>} />
           <Route path="/addUser" element={<ProtectedRouteAdmin><AddUser /></ProtectedRouteAdmin>} />
           <Route path="/adminaction" element={<ProtectedRouteAdmin><AdminPanelSettingsAction /></ProtectedRouteAdmin>} />
           <Route path="/addEntreprise" element={<ProtectedRouteAdmin><AdminAddEntreprise /></ProtectedRouteAdmin>} />

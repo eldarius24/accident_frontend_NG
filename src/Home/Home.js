@@ -29,32 +29,33 @@ import GetAppIcon from '@mui/icons-material/GetApp';
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 import editPDF from '../Model/pdfGenerator.js';
 import { confirmAlert } from 'react-confirm-alert';
-
 import 'react-confirm-alert/src/react-confirm-alert.css';
-/* IMPORT PERSO */
 import '../pageFormulaire/formulaire.css';
 import { handleExportData, handleExportDataAss } from '../Model/excelGenerator.js';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
 import getAccidents from './_actions/get-accidents.js';
 
-/**
- * Premiere page de l'application, contient la liste des accidents
- * 
- * @returns Home component
- */
 function Home() {
-
     const navigate = useNavigate();
     const apiUrl = config.apiUrl;
 
-    const [yearsFromData, setYearsFromData] = useState([]); // Années récupérées de l'API pour le filtre
-    const [yearsChecked, setYearsChecked] = useState([]); // State pour les années sélectionnées, utilisé pour le filtre
-    const [selectAllYears, setSelectAllYears] = useState(false); // State pour la case à cocher "Sélectionner toutes les années"
-    const [accidents, setAccidents] = useState([]); // Stocker les données de l'API
+    const [yearsFromData, setYearsFromData] = useState([]);
+    const [yearsChecked, setYearsChecked] = useState([]);
+    const [selectAllYears, setSelectAllYears] = useState(false);
+    const [accidents, setAccidents] = useState([]);
     const [accidentsIsPending, startGetAccidents] = useTransition();
     const [searchTerm, setSearchTerm] = useState('');
+    const [isAdmin, setIsAdmin] = useState(false);
+
+
+    useEffect(() => {
+        const token = JSON.parse(localStorage.getItem('token'));
+        setIsAdmin(token?.data?.boolAdministrateur || false);
+    }, []);
+
 
     const handleDelete = (accidentIdToDelete) => {
+        if (!isAdmin) return;
         axios.delete("http://" + apiUrl + ":3100/api/accidents/" + accidentIdToDelete)
             .then(response => {
                 // Vérifier le code de statut de la réponse
@@ -73,6 +74,7 @@ function Home() {
                 console.log(error);
             });
     };
+
     //erreur
     /* const handleGeneratePDF = async (accidentIdToGenerate) => {
          try {
@@ -85,6 +87,7 @@ function Home() {
  */
     //correction
     const handleGeneratePDF = async (accidentIdToGenerate) => {
+        if (!isAdmin) return;
         try {
             const accident = accidents.find(item => item._id === accidentIdToGenerate);
             if (accident) {
@@ -98,6 +101,7 @@ function Home() {
     };
 
     const handleEdit = async (accidentIdToModify) => {
+        if (!isAdmin) return;
         try {
             const response = await axios.get(`http://${apiUrl}:3100/api/accidents/${accidentIdToModify}`);
             const accidents = response.data;
@@ -273,6 +277,7 @@ function Home() {
                     />
                 </Grid>
                 <Grid item xs={6} style={{ marginRight: '20px' }}>
+                {isAdmin && (
                     <Button
                         sx={{ color: 'black', padding: '15px 60px', backgroundColor: '#ee752d60', '&:hover': { backgroundColor: '#95ad22' }, boxShadow: 3, textTransform: 'none' }}
                         variant="contained"
@@ -282,8 +287,10 @@ function Home() {
                     >
                         Accident
                     </Button>
+                )}
                 </Grid>
                 <Grid item xs={6} style={{ marginRight: '20px' }}>
+                {isAdmin && (
                     <Button
                         sx={{ color: 'black', padding: '15px 60px', backgroundColor: '#ee752d60', '&:hover': { backgroundColor: '#95ad22' }, boxShadow: 3, textTransform: 'none' }}
                         variant="contained"
@@ -294,6 +301,7 @@ function Home() {
                     >
                         Assurance
                     </Button>
+                )}
                 </Grid>
             </div>
 
@@ -331,40 +339,47 @@ function Home() {
                                         <TableCell>{item.prenomTravailleur}</TableCell>
                                         <TableCell>{item.typeAccident}</TableCell>
                                         <TableCell style={{ padding: 0, width: '70px' }}>
-                                            <Button variant="contained" color="primary" onClick={() => handleEdit(item._id)}>
-                                                <EditIcon />
-                                            </Button>
+                                        {isAdmin && (
+                                                <Button variant="contained" color="primary" onClick={() => handleEdit(item._id)}>
+                                                    <EditIcon />
+                                                </Button>
+                                            )}
                                         </TableCell>
                                         <TableCell style={{ padding: 0, width: '70px' }}>
-                                            <Button variant="contained" color="secondary" onClick={() => navigate("/fichierdll", { state: item._id })}>
-                                                <GetAppIcon />
-                                            </Button>
+                                            {isAdmin && (
+                                                <Button variant="contained" color="secondary" onClick={() => navigate("/fichierdll", { state: item._id })}>
+                                                    <GetAppIcon />
+                                                </Button>
+                                            )}
                                         </TableCell>
                                         <TableCell style={{ padding: 0, width: '70px' }}>
-                                            <Button variant="contained" color="success" onClick={() => handleGeneratePDF(item._id)}>
-                                                <PictureAsPdfIcon />
-                                            </Button>
+                                            {isAdmin && (
+                                                <Button variant="contained" color="success" onClick={() => handleGeneratePDF(item._id)}>
+                                                    <PictureAsPdfIcon />
+                                                </Button>
+                                            )}
                                         </TableCell>
                                         <TableCell style={{ padding: 0, width: '70px' }}>
-                                            <Button variant="contained" color="error" onClick={() => {
-                                                confirmAlert({
-                                                    customUI: ({ onClose }) => (
-                                                        <div className="custom-confirm-dialog">
-                                                            <h1 className="custom-confirm-title">Supprimer</h1>
-                                                            <p className="custom-confirm-message">Êtes-vous sûr de vouloir supprimer cet élément?</p>
-                                                            <div className="custom-confirm-buttons">
-                                                                <button className="custom-confirm-button" onClick={() => { handleDelete(item._id); onClose(); }}>Oui</button>
-                                                                <button className="custom-confirm-button custom-confirm-no" onClick={onClose}>Non</button>
+                                            {isAdmin && (
+                                                <Button variant="contained" color="error" onClick={() => {
+                                                    confirmAlert({
+                                                        customUI: ({ onClose }) => (
+                                                            <div className="custom-confirm-dialog">
+                                                                <h1 className="custom-confirm-title">Supprimer</h1>
+                                                                <p className="custom-confirm-message">Êtes-vous sûr de vouloir supprimer cet élément?</p>
+                                                                <div className="custom-confirm-buttons">
+                                                                    <button className="custom-confirm-button" onClick={() => { handleDelete(item._id); onClose(); }}>Oui</button>
+                                                                    <button className="custom-confirm-button custom-confirm-no" onClick={onClose}>Non</button>
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                    )
-                                                });
-                                            }}>
-                                                <DeleteForeverIcon />
-                                            </Button>
+                                                        )
+                                                    });
+                                                }}>
+                                                    <DeleteForeverIcon />
+                                                </Button>
+                                            )}
                                         </TableCell>
                                     </TableRow>
-                                    {/* Ligne de séparation */}
                                     <TableRow className="table-row-separator"></TableRow>
                                 </React.Fragment>
                             ))}

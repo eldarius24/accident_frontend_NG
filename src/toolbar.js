@@ -1,10 +1,29 @@
-import React, { useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { AppBar, Toolbar, Typography, Container, Button } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import AddIcon from '@mui/icons-material/Add';
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 import BarChartIcon from '@mui/icons-material/BarChart';
+
+
+function ResponsiveAppBar() {
+  const [isAdmin, setIsAdmin] = useState(false);
+  const location = useLocation();
+
+  useEffect(() => {
+    const token = JSON.parse(localStorage.getItem('token'));
+    setIsAdmin(token?.data?.boolAdministrateur || false);
+  }, [location.pathname]);
+
+  const { isFormulaireAccident, isPageAdmin, isPageStats, isLoginPage } = useMemo(() => ({
+    isFormulaireAccident: location.pathname === '/formulaire',
+    isPageAdmin: location.pathname === '/adminaction',
+    isPageStats: location.pathname === '/statistiques',
+    isLoginPage: location.pathname === '/login',
+  }), [location.pathname]);
+
+  
 
 const buttonStyle = {
   backgroundColor: '#01aeac',
@@ -31,13 +50,9 @@ const textStyle = {
   },
 };
 
-function ResponsiveAppBar() {
-  const location = useLocation();
-  const { isFormulaireAccident, isPageAdmin, isPageStats } = useMemo(() => ({
-    isFormulaireAccident: location.pathname === '/formulaire',
-    isPageAdmin: location.pathname === '/adminaction',
-    isPageStats: location.pathname === '/statistiques'
-  }), [location.pathname]);
+if (isLoginPage) {
+  return null;
+}
 
   return (
     <AppBar position="sticky" sx={{ backgroundColor: '#f9ba2b90' }}>
@@ -52,6 +67,8 @@ function ResponsiveAppBar() {
           >
             logout
           </Button>
+          {isAdmin && (
+            <>
           <Button
             component={Link}
             to={isPageAdmin ? '/' : '/adminaction'}
@@ -60,9 +77,11 @@ function ResponsiveAppBar() {
           >
             <AdminPanelSettingsIcon />
           </Button>
+          
           <Typography variant="h5" noWrap sx={textStyle}>
             T.I.G.R.E
           </Typography>
+          
           <Button
             component={Link}
             to={isFormulaireAccident ? '/' : '/formulaire'}
@@ -72,6 +91,8 @@ function ResponsiveAppBar() {
           >
             Ajout d'un AT
           </Button>
+          
+          
           <Button
             component={Link}
             to={isPageStats ? '/' : '/statistiques'}
@@ -81,6 +102,8 @@ function ResponsiveAppBar() {
           >
             Statistiques
           </Button>
+          </>
+          )}
         </Toolbar>
       </Container>
     </AppBar>

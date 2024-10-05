@@ -122,7 +122,7 @@ export function handleExportData(data) {
  * @param {void} filteredData Données filtrées à exporter
  */
 export function handleExportDataAss(data) {
-    const dataToExport = Array.isArray(filteredData) ? filteredData : [];
+    const dataToExport = Array.isArray(data) ? filteredData : [];
     console.log("Données à exporter : ", dataToExport);
     if (dataToExport.length === 0) {
         console.warn("Aucune donnée à exporter.");
