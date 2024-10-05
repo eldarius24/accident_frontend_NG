@@ -133,34 +133,34 @@ function Home() {
         const currentYear = new Date().getFullYear();
         setYearsChecked([...yearsChecked, currentYear]);
     }, []);
-    
+
 
     /**
      * Fonction qui permet de filtrer les données de la table en fonction du contenu de la barre de recherche
      */
-    
+
     const filteredData = () => {
         if (!accidents) {
             console.error("Home.js => filteredData => accidents is not defined");
             return [];
         }
-    
+
         if (!yearsChecked) {
             console.error("Home.js => filteredData => yearsChecked is not defined");
             return [];
         }
-    
+
         const years = yearsChecked.map(Number);
-    
+
         return accidents.filter((item) => {
             if (!item.DateHeureAccident) {
                 console.error("Home.js => filteredData => item.DateHeureAccident is not defined");
                 return false;
             }
-    
+
             // Récupérer l'année de l'accident
             const date = new Date(item.DateHeureAccident).getFullYear();
-    
+
             const filterProperties = [
                 'DateHeureAccident',
                 'entrepriseName',
@@ -169,12 +169,12 @@ function Home() {
                 'prenomTravailleur',
                 'typeAccident'
             ];
-    
+
             // Vérifier si l'année de l'accident est dans les années cochées
             if (!years.includes(date)) {
                 return false;
             }
-    
+
             // Vérifier si l'un des champs contient la valeur recherchée
             return filterProperties.some((property) => {
                 return item[property] && item[property].toString().toLowerCase().includes(searchTerm.toLowerCase());
@@ -277,31 +277,31 @@ function Home() {
                     />
                 </Grid>
                 <Grid item xs={6} style={{ marginRight: '20px' }}>
-                {isAdmin && (
-                    <Button
-                        sx={{ color: 'black', padding: '15px 60px', backgroundColor: '#ee752d60', '&:hover': { backgroundColor: '#95ad22' }, boxShadow: 3, textTransform: 'none' }}
-                        variant="contained"
-                        color="primary"
-                        onClick={() => handleExportData(filteredData)}
-                        startIcon={<FileUploadIcon />}
-                    >
-                        Accident
-                    </Button>
-                )}
+                    {isAdmin && (
+                        <Button
+                            sx={{ color: 'black', padding: '15px 60px', backgroundColor: '#ee752d60', '&:hover': { backgroundColor: '#95ad22' }, boxShadow: 3, textTransform: 'none' }}
+                            variant="contained"
+                            color="primary"
+                            onClick={() => handleExportData(filteredData)}
+                            startIcon={<FileUploadIcon />}
+                        >
+                            Accident
+                        </Button>
+                    )}
                 </Grid>
                 <Grid item xs={6} style={{ marginRight: '20px' }}>
-                {isAdmin && (
-                    <Button
-                        sx={{ color: 'black', padding: '15px 60px', backgroundColor: '#ee752d60', '&:hover': { backgroundColor: '#95ad22' }, boxShadow: 3, textTransform: 'none' }}
-                        variant="contained"
-                        color="primary"
-                        
-                        onClick={() => handleExportDataAss(filteredData)}
-                        startIcon={<FileUploadIcon />}
-                    >
-                        Assurance
-                    </Button>
-                )}
+                    {isAdmin && (
+                        <Button
+                            sx={{ color: 'black', padding: '15px 60px', backgroundColor: '#ee752d60', '&:hover': { backgroundColor: '#95ad22' }, boxShadow: 3, textTransform: 'none' }}
+                            variant="contained"
+                            color="primary"
+
+                            onClick={() => handleExportDataAss(filteredData)}
+                            startIcon={<FileUploadIcon />}
+                        >
+                            Assurance
+                        </Button>
+                    )}
                 </Grid>
             </div>
 
@@ -319,10 +319,10 @@ function Home() {
                                 <TableCell style={{ fontWeight: 'bold' }}>Nom du travailleur</TableCell>
                                 <TableCell style={{ fontWeight: 'bold' }}>Prénom du travailleur</TableCell>
                                 <TableCell style={{ fontWeight: 'bold' }}>Type accident</TableCell>
-                                <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>Editer</TableCell>
-                                <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>Fichier</TableCell>
-                                <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>PDF</TableCell>
-                                <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>Supprimer</TableCell>
+                                <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>{isAdmin && 'Editer'}</TableCell>
+                                <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>{isAdmin && 'Fichier'}</TableCell>
+                                <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>{isAdmin && 'PDF'}</TableCell>
+                                <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>{isAdmin && 'Supprimer'}</TableCell>
                             </TableRow>
                             <TableRow className="table-row-separatormenu"></TableRow>
                         </TableHead>
@@ -339,7 +339,7 @@ function Home() {
                                         <TableCell>{item.prenomTravailleur}</TableCell>
                                         <TableCell>{item.typeAccident}</TableCell>
                                         <TableCell style={{ padding: 0, width: '70px' }}>
-                                        {isAdmin && (
+                                            {isAdmin && (
                                                 <Button variant="contained" color="primary" onClick={() => handleEdit(item._id)}>
                                                     <EditIcon />
                                                 </Button>
