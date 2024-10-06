@@ -29,7 +29,7 @@ function generateExcelFile(workbook) {
      * @param {void} filteredData Données filtrées à exporter
      */
 export function handleExportData(data) {
-    const dataToExport = Array.isArray(data) ? filteredData : [];
+    const dataToExport = Array.isArray(data) ? data : [];
     console.log("Données à exporter : ", dataToExport);
     if (dataToExport.length === 0) {
         console.warn("Aucune donnée à exporter.");
@@ -122,7 +122,7 @@ export function handleExportData(data) {
  * @param {void} filteredData Données filtrées à exporter
  */
 export function handleExportDataAss(data) {
-    const dataToExport = Array.isArray(data) ? filteredData : [];
+    const dataToExport = Array.isArray(data) ? data : []; // Utilisez 'data' au lieu de 'filteredData'
     console.log("Données à exporter : ", dataToExport);
     if (dataToExport.length === 0) {
         console.warn("Aucune donnée à exporter.");
@@ -478,3 +478,6 @@ export function handleExportDataAss(data) {
 }
     generateExcelFile(workbook);
 };
+
+   
+    

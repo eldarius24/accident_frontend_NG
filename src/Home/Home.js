@@ -31,7 +31,7 @@ import editPDF from '../Model/pdfGenerator.js';
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import '../pageFormulaire/formulaire.css';
-import { handleExportData, handleExportDataAss } from '../Model/excelGenerator.js';
+import { handleExportData, handleExportDataAss} from '../Model/excelGenerator.js';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
 import getAccidents from './_actions/get-accidents.js';
 import { useUserConnected } from '../Hook/userConnected.js';
@@ -47,160 +47,99 @@ function Home() {
     const [accidentsIsPending, startGetAccidents] = useTransition();
     const [searchTerm, setSearchTerm] = useState('');
 
-    const { isAuthenticated, isAdmin, isAdminOuConseiller, userInfo, isConseiller } = useUserConnected();
+    const { isAdmin, isAdminOuConseiller, userInfo, isConseiller } = useUserConnected();
 
     const isConseillerPrevention = (entrepriseName) => {
-        if (userInfo && userInfo.entreprisesConseillerPrevention) {
-            return userInfo.entreprisesConseillerPrevention.includes(entrepriseName);
-        }
-        return false;
+        return userInfo?.entreprisesConseillerPrevention?.includes(entrepriseName) || false;
     };
 
     const handleDelete = (accidentIdToDelete) => {
-        axios.delete("http://" + apiUrl + ":3100/api/accidents/" + accidentIdToDelete)
+        axios.delete(`http://${apiUrl}:3100/api/accidents/${accidentIdToDelete}`)
             .then(response => {
-                // Vérifier le code de statut de la réponse
-                if (response.status === 204 || response.status === 200) {
+                if ([200, 204].includes(response.status)) {
                     console.log('Accident supprimé avec succès');
-                    // Mettre à jour les données après suppression
-                    //refreshListAccidents();
-                    const updatedData = accidents.filter(item => item._id !== accidentIdToDelete);
-                    setAccidents(updatedData);
-                }
-                else {
-                    console.log('Erreur lors de la suppression de l\'accident, code d erreur : ' + response.status + ' ' + response.statusText);
+                    setAccidents(prevAccidents => prevAccidents.filter(item => item._id !== accidentIdToDelete));
+                } else {
+                    console.log(`Erreur lors de la suppression de l'accident, code d'erreur : ${response.status} ${response.statusText}`);
                 }
             })
-            .catch(error => {
-                console.log(error);
-            });
+            .catch(console.error);
     };
 
-    //erreur
-    /* const handleGeneratePDF = async (accidentIdToGenerate) => {
-         try {
-             const accidents = accidents.find(item => item._id == accidentIdToGenerate);
-             editPDF(accidents);
-         } catch (error) {
-             console.log(error);
-         }
-     };
- */
-    //correction
     const handleGeneratePDF = async (accidentIdToGenerate) => {
-        try {
-            const accident = accidents.find(item => item._id === accidentIdToGenerate);
-            if (accident) {
+        const accident = accidents.find(item => item._id === accidentIdToGenerate);
+        if (accident) {
+            try {
                 await editPDF(accident);
-            } else {
-                console.log("Accident non trouvé");
+            } catch (error) {
+                console.log(error);
             }
-        } catch (error) {
-            console.log(error);
+        } else {
+            console.log("Accident non trouvé");
         }
     };
 
     const handleEdit = async (accidentIdToModify) => {
         try {
-            const response = await axios.get(`http://${apiUrl}:3100/api/accidents/${accidentIdToModify}`);
-            const accidents = response.data;
-            navigate("/formulaire", { state: accidents });
+            const { data } = await axios.get(`http://${apiUrl}:3100/api/accidents/${accidentIdToModify}`);
+            navigate("/formulaire", { state: data });
         } catch (error) {
             console.log(error);
         }
     };
 
     const refreshListAccidents = useCallback(() => {
-        try {
-            startGetAccidents(async () => {
-                const accidents = await getAccidents()
+        startGetAccidents(async () => {
+            try {
+                const fetchedAccidents = await getAccidents();
+                setAccidents(fetchedAccidents);
+                setYearsFromData([...new Set(fetchedAccidents.map(accident => new Date(accident.DateHeureAccident).getFullYear()))]);
+            } catch (error) {
+                console.error("Erreur lors de la récupération des accidents:", error);
+            }
+        });
+    }, [startGetAccidents]);
 
-                setAccidents(accidents);
-
-                //mettre à jour les années pour le filtre
-                setYearsFromData([...new Set(accidents.map(accident => new Date(accident.DateHeureAccident).getFullYear()))]);
-            });
-        } catch (error) {
-            console.error("Home.js => refresh list accident error =>", error);
-        }
-    }, [accidents, yearsFromData]);
-
-    //au chargerment de la page, on met à jour les données de la liste des accidents
     useEffect(() => {
         refreshListAccidents();
-        // Cocher l'année en cours par défaut
         const currentYear = new Date().getFullYear();
-        setYearsChecked([...yearsChecked, currentYear]);
-    }, []);
-
-
-    /**
-     * Fonction qui permet de filtrer les données de la table en fonction du contenu de la barre de recherche
-     */
+        setYearsChecked(prevYears => [...prevYears, currentYear]);
+    }, [refreshListAccidents]);
 
     const filteredData = () => {
-        if (!accidents) {
-            console.error("Home.js => filteredData => accidents is not defined");
-            return [];
-        }
-
-        if (!yearsChecked) {
-            console.error("Home.js => filteredData => yearsChecked is not defined");
+        if (!accidents || !yearsChecked) {
+            console.error("Accidents ou années vérifiées non définis");
             return [];
         }
 
         const years = yearsChecked.map(Number);
-
-        return accidents.filter((item) => {
+        return accidents.filter(item => {
             if (!item.DateHeureAccident) {
-                console.error("Home.js => filteredData => item.DateHeureAccident is not defined");
+                console.error("DateHeureAccident non définie");
                 return false;
             }
 
-            // Récupérer l'année de l'accident
             const date = new Date(item.DateHeureAccident).getFullYear();
+            const filterProperties = ['DateHeureAccident', 'entrepriseName', 'secteur', 'nomTravailleur', 'prenomTravailleur', 'typeAccident'];
 
-            const filterProperties = [
-                'DateHeureAccident',
-                'entrepriseName',
-                'secteur',
-                'nomTravailleur',
-                'prenomTravailleur',
-                'typeAccident'
-            ];
-
-            // Vérifier si l'année de l'accident est dans les années cochées
-            if (!years.includes(date)) {
-                return false;
-            }
-
-            // Vérifier si l'un des champs contient la valeur recherchée
-            return filterProperties.some((property) => {
-                return item[property] && item[property].toString().toLowerCase().includes(searchTerm.toLowerCase());
-            });
+            return years.includes(date) && filterProperties.some(property => 
+                item[property]?.toString().toLowerCase().includes(searchTerm.toLowerCase())
+            );
         });
     };
 
-    // Function that filters the data based on the selected year
     const handleChangeYearsFilter = (event) => {
-        const {
-            target: { value },
-        } = event;
+        const value = event.target.value;
         setYearsChecked(typeof value === 'string' ? value.split(',') : value);
-    }
+    };
 
-    // Function to handle the select all years checkbox
     const handleSelectAllYears = (event) => {
-        const { checked } = event.target;
+        const checked = event.target.checked;
         setSelectAllYears(checked);
-        if (checked) {
-            setYearsChecked(yearsFromData);
-        } else {
-            setYearsChecked([]);
-        }
-    }
+        setYearsChecked(checked ? yearsFromData : []);
+    };
 
-    const rowColors = ['#e62a5625', '#95519b25']; // Tableau de couleurs pour les lignes
+    const rowColors = ['#e62a5625', '#95519b25'];
 
     if (accidentsIsPending) {
         return <LinearProgress color="success" />;
@@ -225,21 +164,13 @@ function Home() {
                 <Grid item xs={6} style={{ marginRight: '20px', backgroundColor: '#ee752d60' }}>
                     <FormControl sx={{ boxShadow: 3, minWidth: 120 }}>
                         <InputLabel id="sort-label">Année</InputLabel>
-
                         <Select
                             labelId="sort-label"
                             id="sort-select"
                             multiple
                             value={selectAllYears ? yearsFromData : yearsChecked}
                             onChange={handleChangeYearsFilter}
-                            renderValue={(selected) => selected.join(', ')} // Affichage des valeurs sélectionnées
-                            MenuProps={{
-                                PaperProps: {
-                                    style: {
-                                        //backgroundColor: '#fff3ec', // Couleur de fond du menu
-                                    },
-                                },
-                            }}
+                            renderValue={selected => selected.join(', ')}
                         >
                             <MenuItem key="All" value="All" style={{ backgroundColor: '#ee742d59' }}>
                                 <Checkbox
@@ -249,11 +180,12 @@ function Home() {
                                 />
                                 <ListItemText primary="All" />
                             </MenuItem>
-                            {yearsFromData.filter(Boolean).map((year) => (
+                            {yearsFromData.filter(Boolean).map(year => (
                                 <MenuItem key={year} value={year} style={{ backgroundColor: '#ee742d59' }}>
                                     <Checkbox
-                                        checked={yearsChecked.indexOf(year) > -1}
-                                        style={{ color: '#257525' }} />
+                                        checked={yearsChecked.includes(year)}
+                                        style={{ color: '#257525' }} 
+                                    />
                                     <ListItemText primary={year} />
                                 </MenuItem>
                             ))}
@@ -263,7 +195,7 @@ function Home() {
                 <Grid item xs={6} style={{ marginRight: '20px' }}>
                     <TextField
                         value={searchTerm}
-                        onChange={(event) => setSearchTerm(event.target.value)}
+                        onChange={event => setSearchTerm(event.target.value)}
                         variant="outlined"
                         sx={{ boxShadow: 3, backgroundColor: '#ee752d60' }}
                         InputProps={{
@@ -275,91 +207,73 @@ function Home() {
                         }}
                     />
                 </Grid>
-                <Grid item xs={6} style={{ marginRight: '20px' }}>
-                    {isAdminOuConseiller && (
-                        <Button
-                            sx={{ color: 'black', padding: '15px 60px', backgroundColor: '#ee752d60', '&:hover': { backgroundColor: '#95ad22' }, boxShadow: 3, textTransform: 'none' }}
-                            variant="contained"
-                            color="primary"
-                            onClick={() => handleExportData(filteredData)}
-                            startIcon={<FileUploadIcon />}
-                        >
-                            Accident
-                        </Button>
-                    )}
-                </Grid>
-                <Grid item xs={6} style={{ marginRight: '20px' }}>
-                    {isAdminOuConseiller && (
-                        <Button
-                            sx={{ color: 'black', padding: '15px 60px', backgroundColor: '#ee752d60', '&:hover': { backgroundColor: '#95ad22' }, boxShadow: 3, textTransform: 'none' }}
-                            variant="contained"
-                            color="primary"
-
-                            onClick={() => handleExportDataAss(filteredData)}
-                            startIcon={<FileUploadIcon />}
-                        >
-                            Assurance
-                        </Button>
-                    )}
-                </Grid>
+                {isAdminOuConseiller && (
+                    <>
+                        <Grid item xs={6} style={{ marginRight: '20px' }}>
+                            <Button
+                                sx={{ color: 'black', padding: '15px 60px', backgroundColor: '#ee752d60', '&:hover': { backgroundColor: '#95ad22' }, boxShadow: 3, textTransform: 'none' }}
+                                variant="contained"
+                                color="primary"
+                                onClick={() => handleExportData(filteredData())}
+                            >
+                                Accident
+                            </Button>
+                        </Grid>
+                        <Grid item xs={6} style={{ marginRight: '20px' }}>
+                            <Button
+                                sx={{ color: 'black', padding: '15px 60px', backgroundColor: '#ee752d60', '&:hover': { backgroundColor: '#95ad22' }, boxShadow: 3, textTransform: 'none' }}
+                                variant="contained"
+                                color="primary"
+                                onClick={() => handleExportDataAss(filteredData())}
+                                startIcon={<FileUploadIcon />}
+                            >
+                                Assurance
+                            </Button>
+                        </Grid>
+                    </>
+                )}
             </div>
 
-
             <TableContainer className="frameStyle-style" style={{ maxHeight: '600px', overflowY: 'auto' }}>
-                <div >
-                    <Table>
-                        <TableHead>
-                            <TableRow style={{ backgroundColor: '#0098f950' }} key={"CellTowerSharp"}>
-                                <TableCell style={{ fontWeight: 'bold' }}>N° Groupe</TableCell>
-                                <TableCell style={{ fontWeight: 'bold' }}>N° Entreprise</TableCell>
-                                <TableCell style={{ fontWeight: 'bold' }}>Date accident</TableCell>
-                                <TableCell style={{ fontWeight: 'bold' }}>Entreprise</TableCell>
-                                <TableCell style={{ fontWeight: 'bold' }}>Secteur</TableCell>
-                                <TableCell style={{ fontWeight: 'bold' }}>Nom du travailleur</TableCell>
-                                <TableCell style={{ fontWeight: 'bold' }}>Prénom du travailleur</TableCell>
-                                <TableCell style={{ fontWeight: 'bold' }}>Type accident</TableCell>
-                                <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>{isAdminOuConseiller && 'Editer'}</TableCell>
-                                <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>{isAdminOuConseiller && 'Fichier'}</TableCell>
-                                <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>{isAdminOuConseiller && 'PDF'}</TableCell>
-                                <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>{isAdminOuConseiller && 'Supprimer'}</TableCell>
-                            </TableRow>
-                            <TableRow className="table-row-separatormenu"></TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {data.map((item, index) => (
-                                <React.Fragment key={item._id}>
-                                    <TableRow key={item._id} style={{ backgroundColor: rowColors[index % rowColors.length] }}>
-                                        <TableCell>{item.numeroGroupe}</TableCell>
-                                        <TableCell>{item.numeroEntreprise}</TableCell>
-                                        <TableCell>{item.DateHeureAccident}</TableCell>
-                                        <TableCell>{item.entrepriseName}</TableCell>
-                                        <TableCell>{item.secteur}</TableCell>
-                                        <TableCell>{item.nomTravailleur}</TableCell>
-                                        <TableCell>{item.prenomTravailleur}</TableCell>
-                                        <TableCell>{item.typeAccident}</TableCell>
-                                        <TableCell style={{ padding: 0, width: '70px' }}>
-                                            {(isAdmin || isConseiller && isConseillerPrevention(item.entrepriseName)) && (
+                <Table>
+                    <TableHead>
+                        <TableRow style={{ backgroundColor: '#0098f950' }}>
+                            {['N° Groupe', 'N° Entreprise', 'Date accident', 'Entreprise', 'Secteur', 'Nom du travailleur', 'Prénom du travailleur', 'Type accident', 'Editer', 'Fichier', 'PDF', 'Supprimer'].map((header, index) => (
+                                <TableCell key={index} style={{ fontWeight: 'bold', padding: 0, width: index < 8 ? 'auto' : '70px' }}>{isAdminOuConseiller || index < 8 ? header : null}</TableCell>
+                            ))}
+                        </TableRow>
+                        <TableRow className="table-row-separatormenu"></TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {data.map((item, index) => (
+                            <React.Fragment key={item._id}>
+                                <TableRow style={{ backgroundColor: rowColors[index % rowColors.length] }}>
+                                    <TableCell>{item.numeroGroupe}</TableCell>
+                                    <TableCell>{item.numeroEntreprise}</TableCell>
+                                    <TableCell>{item.DateHeureAccident}</TableCell>
+                                    <TableCell>{item.entrepriseName}</TableCell>
+                                    <TableCell>{item.secteur}</TableCell>
+                                    <TableCell>{item.nomTravailleur}</TableCell>
+                                    <TableCell>{item.prenomTravailleur}</TableCell>
+                                    <TableCell>{item.typeAccident}</TableCell>
+                                    {isAdmin || (isConseiller && isConseillerPrevention(item.entrepriseName)) ? (
+                                        <>
+                                            <TableCell style={{ padding: 0 }}>
                                                 <Button variant="contained" color="primary" onClick={() => handleEdit(item._id)}>
                                                     <EditIcon />
                                                 </Button>
-                                            )}
-                                        </TableCell>
-                                        <TableCell style={{ padding: 0, width: '70px' }}>
-                                            {(isAdmin || isConseiller && isConseillerPrevention(item.entrepriseName)) && (
+                                            </TableCell>
+                                            <TableCell style={{ padding: 0 }}>
                                                 <Button variant="contained" color="secondary" onClick={() => navigate("/fichierdll", { state: item._id })}>
                                                     <GetAppIcon />
                                                 </Button>
-                                            )}
-                                        </TableCell>
-                                        <TableCell style={{ padding: 0, width: '70px' }}>
-                                            {(isAdmin || isConseiller && isConseillerPrevention(item.entrepriseName)) && (
+                                            </TableCell>
+                                            <TableCell style={{ padding: 0 }}>
                                                 <Button variant="contained" color="success" onClick={() => handleGeneratePDF(item._id)}>
                                                     <PictureAsPdfIcon />
                                                 </Button>
-                                            )}
-                                        </TableCell>
-                                        <TableCell style={{ padding: 0, width: '70px' }}>
-                                            {(isAdmin || isConseiller && isConseillerPrevention(item.entrepriseName)) && (
+                                            </TableCell>
+                                            <TableCell style={{ padding: 0 }}>
                                                 <Button variant="contained" color="error" onClick={() => {
                                                     confirmAlert({
                                                         customUI: ({ onClose }) => (
@@ -376,23 +290,19 @@ function Home() {
                                                 }}>
                                                     <DeleteForeverIcon />
                                                 </Button>
-                                            )}
-                                        </TableCell>
-                                    </TableRow>
-                                    <TableRow className="table-row-separator"></TableRow>
-                                </React.Fragment>
-                            ))}
-                        </TableBody>
-                    </Table>
-                </div>
+                                            </TableCell>
+                                        </>
+                                    ) : null}
+                                </TableRow>
+                                <TableRow className="table-row-separator"></TableRow>
+                            </React.Fragment>
+                        ))}
+                    </TableBody>
+                </Table>
             </TableContainer>
-            <div>
-            </div>
             <div className="image-cortigroupe"></div>
             <h5 style={{ marginBottom: '40px' }}> Développé par Remy et Benoit pour Le Cortigroupe. Support: bgillet.lecortil@cortigroupe.be</h5>
         </div>
-
-
     );
 }
 
