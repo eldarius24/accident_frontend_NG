@@ -65,7 +65,7 @@ export default function Adminuser() {
     /**
      * PopUp de confirmation de suppression
      */
-    const popUpDelete = (userId) => {
+    const popUpDelete = (user) => {
         confirmAlert(
             {
                 customUI: ({ onClose }) => {
