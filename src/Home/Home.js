@@ -47,11 +47,11 @@ function Home() {
     const [accidentsIsPending, startGetAccidents] = useTransition();
     const [searchTerm, setSearchTerm] = useState('');
 
-    const { isAuthenticated, isAdmin, isAdminOuConseiller, userInfo } = useUserConnected();
+    const { isAuthenticated, isAdmin, isAdminOuConseiller, userInfo, isConseiller } = useUserConnected();
+
 
 
     const handleDelete = (accidentIdToDelete) => {
-        if (!isAdmin) return;
         axios.delete("http://" + apiUrl + ":3100/api/accidents/" + accidentIdToDelete)
             .then(response => {
                 // Vérifier le code de statut de la réponse
@@ -83,7 +83,6 @@ function Home() {
  */
     //correction
     const handleGeneratePDF = async (accidentIdToGenerate) => {
-        if (!isAdmin) return;
         try {
             const accident = accidents.find(item => item._id === accidentIdToGenerate);
             if (accident) {
@@ -97,7 +96,6 @@ function Home() {
     };
 
     const handleEdit = async (accidentIdToModify) => {
-        if (!isAdmin) return;
         try {
             const response = await axios.get(`http://${apiUrl}:3100/api/accidents/${accidentIdToModify}`);
             const accidents = response.data;
@@ -273,7 +271,7 @@ function Home() {
                     />
                 </Grid>
                 <Grid item xs={6} style={{ marginRight: '20px' }}>
-                    {isAdmin && (
+                    {isAdminOuConseiller && (
                         <Button
                             sx={{ color: 'black', padding: '15px 60px', backgroundColor: '#ee752d60', '&:hover': { backgroundColor: '#95ad22' }, boxShadow: 3, textTransform: 'none' }}
                             variant="contained"
@@ -286,7 +284,7 @@ function Home() {
                     )}
                 </Grid>
                 <Grid item xs={6} style={{ marginRight: '20px' }}>
-                    {isAdmin && (
+                    {isAdminOuConseiller && (
                         <Button
                             sx={{ color: 'black', padding: '15px 60px', backgroundColor: '#ee752d60', '&:hover': { backgroundColor: '#95ad22' }, boxShadow: 3, textTransform: 'none' }}
                             variant="contained"
@@ -315,10 +313,10 @@ function Home() {
                                 <TableCell style={{ fontWeight: 'bold' }}>Nom du travailleur</TableCell>
                                 <TableCell style={{ fontWeight: 'bold' }}>Prénom du travailleur</TableCell>
                                 <TableCell style={{ fontWeight: 'bold' }}>Type accident</TableCell>
-                                <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>{isAdmin && 'Editer'}</TableCell>
-                                <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>{isAdmin && 'Fichier'}</TableCell>
-                                <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>{isAdmin && 'PDF'}</TableCell>
-                                <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>{isAdmin && 'Supprimer'}</TableCell>
+                                <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>{isAdminOuConseiller && 'Editer'}</TableCell>
+                                <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>{isAdminOuConseiller && 'Fichier'}</TableCell>
+                                <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>{isAdminOuConseiller && 'PDF'}</TableCell>
+                                <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>{isAdminOuConseiller && 'Supprimer'}</TableCell>
                             </TableRow>
                             <TableRow className="table-row-separatormenu"></TableRow>
                         </TableHead>
@@ -335,28 +333,28 @@ function Home() {
                                         <TableCell>{item.prenomTravailleur}</TableCell>
                                         <TableCell>{item.typeAccident}</TableCell>
                                         <TableCell style={{ padding: 0, width: '70px' }}>
-                                            {isAdmin && (
+                                            {isAdminOuConseiller && (
                                                 <Button variant="contained" color="primary" onClick={() => handleEdit(item._id)}>
                                                     <EditIcon />
                                                 </Button>
-                                            )}
+                                            )};
                                         </TableCell>
                                         <TableCell style={{ padding: 0, width: '70px' }}>
-                                            {isAdmin && (
+                                            {isAdminOuConseiller && (
                                                 <Button variant="contained" color="secondary" onClick={() => navigate("/fichierdll", { state: item._id })}>
                                                     <GetAppIcon />
                                                 </Button>
-                                            )}
+                                            )};
                                         </TableCell>
                                         <TableCell style={{ padding: 0, width: '70px' }}>
-                                            {isAdmin && (
+                                            {isAdminOuConseiller && (
                                                 <Button variant="contained" color="success" onClick={() => handleGeneratePDF(item._id)}>
                                                     <PictureAsPdfIcon />
                                                 </Button>
-                                            )}
+                                            )};
                                         </TableCell>
                                         <TableCell style={{ padding: 0, width: '70px' }}>
-                                            {isAdmin && (
+                                            {isAdminOuConseiller && (
                                                 <Button variant="contained" color="error" onClick={() => {
                                                     confirmAlert({
                                                         customUI: ({ onClose }) => (

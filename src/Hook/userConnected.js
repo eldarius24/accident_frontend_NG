@@ -8,7 +8,7 @@ export const useUserConnected = () => {
     const userInfo = token.data;
 
     const isAdmin = userInfo.boolAdministrateur;
-    const isConseiller = userInfo.entreprisesConseillerPrevention.lenght > 0 ? true : false;
+    const isConseiller = userInfo.entreprisesConseillerPrevention.length > 0 ? true : false;
     
     const isAdminOuConseiller = isAdmin || isConseiller;
 

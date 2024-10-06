@@ -65,7 +65,7 @@ export default function Adminuser() {
     /**
      * PopUp de confirmation de suppression
      */
-    const popUpDelete = () => {
+    const popUpDelete = (userId) => {
         confirmAlert(
             {
                 customUI: ({ onClose }) => {
@@ -75,7 +75,7 @@ export default function Adminuser() {
                             <p className="custom-confirm-message">Êtes-vous sûr de vouloir supprimer cet User?</p>
                             <div className="custom-confirm-buttons">
                                 <button className="custom-confirm-button" onClick={() => {
-                                    handleDelete(user._id);
+                                    handleDelete(userId);
                                     onClose();
                                 }} >
                                     Oui
@@ -122,7 +122,7 @@ export default function Adminuser() {
                                             </Button>
                                         </TableCell>
                                         <TableCell style={{ padding: 0, width: '70px' }}>
-                                            <Button variant="contained" color="error" onClick={() => popUpDelete()}>
+                                            <Button variant="contained" color="error" onClick={() => popUpDelete(user._id)}>
                                                 <DeleteForeverIcon />
                                             </Button>
                                         </TableCell>

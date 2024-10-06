@@ -1,25 +1,18 @@
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useUserConnected } from '../Hook/userConnected';
 
 const ProtectedRouteAdmin = ({ children }) => {
   const navigate = useNavigate();
-  
-  const {isAuthenticated, isAdmin} = useUserConnected();
+  const { isAdmin } = useUserConnected();
 
   useEffect(() => {
-    if (!isAuthenticated) {
-      navigate('/login');
-    } else if (!isAdmin) {
-      navigate('/');
+    if (!isAdmin) {
+      navigate('/login'); // Redirige vers la page de connexion si l'utilisateur n'est pas admin
     }
-  }, [isAuthenticated, isAdmin, navigate]);
+  }, [isAdmin, navigate]);
 
-  if (!isAuthenticated || !isAdmin) {
-    return null;
-  }
-
-  return children;
+  return isAdmin ? children : null; // Retourne les enfants si l'utilisateur est admin
 };
 
 export default ProtectedRouteAdmin;
