@@ -28,6 +28,7 @@ const App = () => {
       <div>
         <ResponsiveAppBar />
         <Routes>
+          {/* Routes accessibles uniquement par usernormal */}
           <Route path="/login" element={<Login />} />
           <Route path="/" element={<ProtectedRoute><Home /></ProtectedRoute>} />
           

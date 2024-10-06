@@ -49,7 +49,12 @@ function Home() {
 
     const { isAuthenticated, isAdmin, isAdminOuConseiller, userInfo, isConseiller } = useUserConnected();
 
-
+    const isConseillerPrevention = (entrepriseName) => {
+        if (userInfo && userInfo.entreprisesConseillerPrevention) {
+            return userInfo.entreprisesConseillerPrevention.includes(entrepriseName);
+        }
+        return false;
+    };
 
     const handleDelete = (accidentIdToDelete) => {
         axios.delete("http://" + apiUrl + ":3100/api/accidents/" + accidentIdToDelete)
@@ -333,28 +338,28 @@ function Home() {
                                         <TableCell>{item.prenomTravailleur}</TableCell>
                                         <TableCell>{item.typeAccident}</TableCell>
                                         <TableCell style={{ padding: 0, width: '70px' }}>
-                                            {isAdminOuConseiller && (
+                                            {(isAdmin || isConseiller && isConseillerPrevention(item.entrepriseName)) && (
                                                 <Button variant="contained" color="primary" onClick={() => handleEdit(item._id)}>
                                                     <EditIcon />
                                                 </Button>
-                                            )};
+                                            )}
                                         </TableCell>
                                         <TableCell style={{ padding: 0, width: '70px' }}>
-                                            {isAdminOuConseiller && (
+                                            {(isAdmin || isConseiller && isConseillerPrevention(item.entrepriseName)) && (
                                                 <Button variant="contained" color="secondary" onClick={() => navigate("/fichierdll", { state: item._id })}>
                                                     <GetAppIcon />
                                                 </Button>
-                                            )};
+                                            )}
                                         </TableCell>
                                         <TableCell style={{ padding: 0, width: '70px' }}>
-                                            {isAdminOuConseiller && (
+                                            {(isAdmin || isConseiller && isConseillerPrevention(item.entrepriseName)) && (
                                                 <Button variant="contained" color="success" onClick={() => handleGeneratePDF(item._id)}>
                                                     <PictureAsPdfIcon />
                                                 </Button>
-                                            )};
+                                            )}
                                         </TableCell>
                                         <TableCell style={{ padding: 0, width: '70px' }}>
-                                            {isAdminOuConseiller && (
+                                            {(isAdmin || isConseiller && isConseillerPrevention(item.entrepriseName)) && (
                                                 <Button variant="contained" color="error" onClick={() => {
                                                     confirmAlert({
                                                         customUI: ({ onClose }) => (
