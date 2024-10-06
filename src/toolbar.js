@@ -5,16 +5,12 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import AddIcon from '@mui/icons-material/Add';
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 import BarChartIcon from '@mui/icons-material/BarChart';
+import { useUserConnected } from './Hook/userConnected';
 
 
 function ResponsiveAppBar() {
-  const [isAdmin, setIsAdmin] = useState(false);
   const location = useLocation();
-
-  useEffect(() => {
-    const token = JSON.parse(localStorage.getItem('token'));
-    setIsAdmin(token?.data?.boolAdministrateur || false);
-  }, [location.pathname]);
+  const {isAdmin} = useUserConnected();
 
   const { isFormulaireAccident, isPageAdmin, isPageStats, isLoginPage } = useMemo(() => ({
     isFormulaireAccident: location.pathname === '/formulaire',

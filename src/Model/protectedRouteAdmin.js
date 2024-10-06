@@ -1,11 +1,11 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useUserConnected } from '../Hook/userConnected';
 
 const ProtectedRouteAdmin = ({ children }) => {
   const navigate = useNavigate();
-  const token = JSON.parse(localStorage.getItem('token'));
-  const isAuthenticated = !!token; // Vérifie si le token est présent
-  const isAdmin = token?.data?.boolAdministrateur;
+  
+  const {isAuthenticated, isAdmin} = useUserConnected();
 
   useEffect(() => {
     if (!isAuthenticated) {

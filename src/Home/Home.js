@@ -34,6 +34,7 @@ import '../pageFormulaire/formulaire.css';
 import { handleExportData, handleExportDataAss } from '../Model/excelGenerator.js';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
 import getAccidents from './_actions/get-accidents.js';
+import { useUserConnected } from '../Hook/userConnected.js';
 
 function Home() {
     const navigate = useNavigate();
@@ -45,13 +46,8 @@ function Home() {
     const [accidents, setAccidents] = useState([]);
     const [accidentsIsPending, startGetAccidents] = useTransition();
     const [searchTerm, setSearchTerm] = useState('');
-    const [isAdmin, setIsAdmin] = useState(false);
 
-
-    useEffect(() => {
-        const token = JSON.parse(localStorage.getItem('token'));
-        setIsAdmin(token?.data?.boolAdministrateur || false);
-    }, []);
+    const { isAdmin, userInfo } = useUserConnected();
 
 
     const handleDelete = (accidentIdToDelete) => {
