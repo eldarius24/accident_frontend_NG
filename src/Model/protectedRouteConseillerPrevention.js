@@ -1,22 +1,20 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { isLogged, isAdmin, isConseillerPrevention } from './userInfo';
+import { useUserConnected } from '../Hook/userConnected';
 
 const ProtectedRouteConseillerPrevention = ({ children }) => {
   const navigate = useNavigate();
-  const isAuthenticated = isLogged();
-  const userIsAdmin = isAdmin();
-  const userIsConseillerPrevention = isConseillerPrevention();
+  const { isAuthenticated, isAdminOuConseiller } = useUserConnected();
 
   useEffect(() => {
     if (!isAuthenticated) {
       navigate('/login');
-    } else if (!userIsAdmin && !userIsConseillerPrevention) {
+    } else if (isAdminOuConseiller) {
       navigate('/');
     }
-  }, [isAuthenticated, userIsAdmin, userIsConseillerPrevention, navigate]);
+  }, [isAuthenticated, isAdminOuConseiller, navigate]);
 
-  if (!isAuthenticated || (!userIsAdmin && !userIsConseillerPrevention)) {
+  if (!isAuthenticated || (isAdminOuConseiller)) {
     return null;
   }
 

@@ -2,10 +2,9 @@
 export const useUserConnected = () => {
     const token = JSON.parse(localStorage.getItem('token'));
 
-    let isAuthenticated = false;
-    if (token && token.data)
-        isAuthenticated = true;   
-
+    if (!token || !token.data)
+        return { isAuthenticated : false };
+        
     const userInfo = token.data;
 
     const isAdmin = userInfo.boolAdministrateur;
@@ -13,5 +12,5 @@ export const useUserConnected = () => {
     
     const isAdminOuConseiller = isAdmin || isConseiller;
 
-    return { isAuthenticated, isAdmin, isConseiller, isAdminOuConseiller, userInfo };
+    return { isAuthenticated : true, isAdmin, isConseiller, isAdminOuConseiller, userInfo };
 };
