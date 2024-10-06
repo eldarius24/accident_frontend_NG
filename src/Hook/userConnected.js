@@ -10,7 +10,8 @@ export const useUserConnected = () => {
 
     const isAdmin = userInfo.boolAdministrateur;
     const isConseiller = userInfo.entreprisesConseillerPrevention.lenght > 0 ? true : false;
-    const isVisiteur = isAdmin && isConseiller;
+    
+    const isAdminOuConseiller = isAdmin || isConseiller;
 
-    return { isAuthenticated, isAdmin, isConseiller, isVisiteur, userInfo };
+    return { isAuthenticated, isAdmin, isConseiller, isAdminOuConseiller, userInfo };
 };

@@ -47,7 +47,7 @@ function Home() {
     const [accidentsIsPending, startGetAccidents] = useTransition();
     const [searchTerm, setSearchTerm] = useState('');
 
-    const { isAdmin, userInfo } = useUserConnected();
+    const { isAuthenticated, isAdmin, isAdminOuConseiller, userInfo } = useUserConnected();
 
 
     const handleDelete = (accidentIdToDelete) => {
