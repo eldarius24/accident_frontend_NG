@@ -24,10 +24,10 @@ export default function AddSecteur() {
     const entreprise = location.state.entreprise;
     const [secteurs, setSecteurs] = useState([]);
     const [loading, setLoading] = useState(true);
-    const { setValue, watch, handleSubmit } = useForm();
+    const {register, setValue, handleSubmit } = useForm();
     const apiUrl = config.apiUrl;
     const [secteurName, setSecteurName] = useState('');
-    
+
 
     useEffect(() => {
         setValue('secteurName', secteurName);
@@ -43,7 +43,7 @@ export default function AddSecteur() {
             setSecteurs(filteredSecteurs);
         } catch (error) {
             console.error('Error fetching secteurs:', error);
-            
+
         } finally {
             setLoading(false);
         }
@@ -60,11 +60,13 @@ export default function AddSecteur() {
             const response = await axios.put(`http://${apiUrl}:3100/api/secteurs`, data);
             console.log('Secteur added:', response.data);
             await fetchSecteurs();
+            setSecteurName(''); // Reset the secteurName state
+            reset(); // Reset the form fields
             setSecteurName('');
-            
+
         } catch (error) {
             console.error('Error adding secteur:', error);
-            
+
         }
     };
 
@@ -73,11 +75,11 @@ export default function AddSecteur() {
             console.log('Deleting secteur:', secteurId);
             const response = await axios.delete(`http://${apiUrl}:3100/api/secteurs/${secteurId}`);
             console.log('Delete response:', response);
-            
+
             if (response.status === 200 || response.status === 204) {
                 console.log('Secteur deleted successfully');
                 await fetchSecteurs();
-                
+
             } else {
                 console.error('Unexpected response status:', response.status);
                 throw new Error('Unexpected response status');
@@ -88,11 +90,11 @@ export default function AddSecteur() {
                 console.error('Error response:', error.response.data);
                 console.error('Error status:', error.response.status);
             }
-            
+
         }
     };
 
-    
+
     if (loading) {
         return <LinearProgress color="success" />;
     }
@@ -102,7 +104,13 @@ export default function AddSecteur() {
             <div className="frameStyle-style">
                 <h2>Créer un nouveau secteur pour {entreprise.AddEntreName}</h2>
 
-                <TextFieldP id='secteurName' label="Nom du secteur" onChange={setSecteurName} value={secteurName} />
+                <TextFieldP
+                    id='secteurName'
+                    label="Nom du secteur"
+                    {...register('secteurName')}
+                    value={secteurName}
+                    onChange={(e) => setSecteurName(event.target.value)}
+                />
 
                 <div style={{ display: 'flex', justifyContent: 'center' }}>
                     <Button
@@ -146,9 +154,9 @@ export default function AddSecteur() {
                                             <Button variant="contained" color="primary">
                                                 <EditIcon />
                                             </Button>
-                                            <Button 
-                                                variant="contained" 
-                                                color="error" 
+                                            <Button
+                                                variant="contained"
+                                                color="error"
                                                 onClick={() => {
                                                     confirmAlert({
                                                         customUI: ({ onClose }) => {
@@ -157,8 +165,8 @@ export default function AddSecteur() {
                                                                     <h1 className="custom-confirm-title">Supprimer</h1>
                                                                     <p className="custom-confirm-message">Êtes-vous sûr de vouloir supprimer ce secteur ?</p>
                                                                     <div className="custom-confirm-buttons">
-                                                                        <button 
-                                                                            className="custom-confirm-button" 
+                                                                        <button
+                                                                            className="custom-confirm-button"
                                                                             onClick={() => {
                                                                                 handleDelete(secteur._id);
                                                                                 onClose();
@@ -186,9 +194,9 @@ export default function AddSecteur() {
                     </TableContainer>
                 </div>
             </div>
-            
-                
-            
+
+
+
         </form>
     );
 }
