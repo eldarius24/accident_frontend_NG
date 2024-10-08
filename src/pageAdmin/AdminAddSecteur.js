@@ -1,69 +1,109 @@
-import axios from 'axios';
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import { useForm } from 'react-hook-form';
 import { useLocation } from 'react-router-dom';
 import TextFieldP from '../_composants/textFieldP';
 import '../pageFormulaire/formulaire.css';
-import Button from '@mui/material/Button';
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TableRow,
+    Button,
+    LinearProgress,
+} from '@mui/material';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import { confirmAlert } from 'react-confirm-alert';
 import config from '../config.json';
 
-/**
- * 
- * @param {[string]} entreprise informations de l'entreprise
- * @param {[string]} secteurData Secteur à éditer
- * @returns 
- */
-export default function AddSecteur({secteurData }) {
-    let location = useLocation();
-    let entreprise = location.state.entreprise;
-
-    const apiUrl = config.apiUrl;
+export default function AddSecteur() {
+    const location = useLocation();
+    const entreprise = location.state.entreprise;
+    const [secteurs, setSecteurs] = useState([]);
+    const [loading, setLoading] = useState(true);
     const { setValue, watch, handleSubmit } = useForm();
-
-
-    const [secteurName, setSecteurName] = useState(watch('secteurName') ? watch('secteurName') : (secteurData && secteurData.secteurName ? secteurData.secteurName : null));
+    const apiUrl = config.apiUrl;
+    const [secteurName, setSecteurName] = useState('');
+    
 
     useEffect(() => {
-        setValue('secteurName', secteurName)
-    }, [secteurName]);
+        setValue('secteurName', secteurName);
+    }, [secteurName, setValue]);
 
-
-
-    /**************************************************************************
-     * METHODE ON SUBMIT
-     * ************************************************************************/
-    const onSubmit = async (data) => {
+    const fetchSecteurs = async () => {
         try {
-            const baseUrl = `http://${apiUrl}:3100/api`;
-            data.entrepriseId = entreprise._id;
-    
-            console.log("Formulaire.js -> onSubmit -> Données à enregistrer :", data);
-    
-            // Création du secteur
-            const responseSecteur = await axios.put(`${baseUrl}/secteurs`, data);
-            entreprise.SecteursId.push(responseSecteur.data._id);
-            console.log('Réponse du serveur en création :', responseSecteur.data);
-    
-            console.log("Entreprise à modifier :", entreprise);
-    
-            // Ajout du secteur à l'entreprise
-            const responseEntreprise = await axios.put(`${baseUrl}/entreprises/${entreprise._id}`, entreprise);
-            console.log('Réponse du serveur en ajout de secteur à l\'entreprise :', responseEntreprise.data);
-    
+            console.log('Fetching secteurs...');
+            const response = await axios.get(`http://${apiUrl}:3100/api/secteurs`);
+            console.log('Fetched secteurs:', response.data);
+            const filteredSecteurs = response.data.filter(secteur => secteur.entrepriseId === entreprise._id);
+            console.log('Filtered secteurs:', filteredSecteurs);
+            setSecteurs(filteredSecteurs);
         } catch (error) {
-            console.error('Erreur de requête:', error.message);
+            console.error('Error fetching secteurs:', error);
+            
+        } finally {
+            setLoading(false);
         }
     };
+
+    useEffect(() => {
+        fetchSecteurs();
+    }, [apiUrl, entreprise._id]);
+
+    const onSubmit = async (data) => {
+        try {
+            data.entrepriseId = entreprise._id;
+            console.log('Adding secteur:', data);
+            const response = await axios.put(`http://${apiUrl}:3100/api/secteurs`, data);
+            console.log('Secteur added:', response.data);
+            await fetchSecteurs();
+            setSecteurName('');
+            
+        } catch (error) {
+            console.error('Error adding secteur:', error);
+            
+        }
+    };
+
+    const handleDelete = async (secteurId) => {
+        try {
+            console.log('Deleting secteur:', secteurId);
+            const response = await axios.delete(`http://${apiUrl}:3100/api/secteurs/${secteurId}`);
+            console.log('Delete response:', response);
+            
+            if (response.status === 200 || response.status === 204) {
+                console.log('Secteur deleted successfully');
+                await fetchSecteurs();
+                
+            } else {
+                console.error('Unexpected response status:', response.status);
+                throw new Error('Unexpected response status');
+            }
+        } catch (error) {
+            console.error('Error deleting secteur:', error);
+            if (error.response) {
+                console.error('Error response:', error.response.data);
+                console.error('Error status:', error.response.status);
+            }
+            
+        }
+    };
+
+    
+    if (loading) {
+        return <LinearProgress color="success" />;
+    }
 
     return (
         <form className="background-image" onSubmit={handleSubmit(onSubmit)}>
             <div className="frameStyle-style">
-                <h2>Créer un nouveau secteur</h2>
-                
+                <h2>Créer un nouveau secteur pour {entreprise.AddEntreName}</h2>
 
+                <TextFieldP id='secteurName' label="Nom du secteur" onChange={setSecteurName} value={secteurName} />
 
-                <TextFieldP id='secteurName' label="Nom du secteur" onChange={setSecteurName} defaultValue={secteurName}></TextFieldP>
-                
                 <div style={{ display: 'flex', justifyContent: 'center' }}>
                     <Button
                         type="submit"
@@ -74,14 +114,12 @@ export default function AddSecteur({secteurData }) {
                             width: '50%',
                             marginTop: '1cm',
                             height: '300%',
-                            fontSize: '2rem', // Taille de police de base
-
-                            // Utilisation de Media Queries pour ajuster la taille de police
+                            fontSize: '2rem',
                             '@media (min-width: 750px)': {
-                                fontSize: '3rem', // Taille de police plus grande pour les écrans plus larges
+                                fontSize: '3rem',
                             },
                             '@media (max-width: 550px)': {
-                                fontSize: '1.5rem', // Taille de police plus petite pour les écrans plus étroits
+                                fontSize: '1.5rem',
                             },
                         }}
                         variant="contained"
@@ -90,9 +128,67 @@ export default function AddSecteur({secteurData }) {
                     </Button>
                 </div>
 
-
+                <div>
+                    <h2>Secteurs de l'entreprise</h2>
+                    <TableContainer>
+                        <Table>
+                            <TableHead>
+                                <TableRow style={{ backgroundColor: '#0098f950' }}>
+                                    <TableCell style={{ fontWeight: 'bold' }}>Nom du secteur</TableCell>
+                                    <TableCell style={{ fontWeight: 'bold' }}>Actions</TableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {secteurs.map((secteur) => (
+                                    <TableRow key={secteur._id}>
+                                        <TableCell>{secteur.secteurName}</TableCell>
+                                        <TableCell>
+                                            <Button variant="contained" color="primary">
+                                                <EditIcon />
+                                            </Button>
+                                            <Button 
+                                                variant="contained" 
+                                                color="error" 
+                                                onClick={() => {
+                                                    confirmAlert({
+                                                        customUI: ({ onClose }) => {
+                                                            return (
+                                                                <div className="custom-confirm-dialog">
+                                                                    <h1 className="custom-confirm-title">Supprimer</h1>
+                                                                    <p className="custom-confirm-message">Êtes-vous sûr de vouloir supprimer ce secteur ?</p>
+                                                                    <div className="custom-confirm-buttons">
+                                                                        <button 
+                                                                            className="custom-confirm-button" 
+                                                                            onClick={() => {
+                                                                                handleDelete(secteur._id);
+                                                                                onClose();
+                                                                            }}
+                                                                        >
+                                                                            Oui
+                                                                        </button>
+                                                                        <button className="custom-confirm-button custom-confirm-no" onClick={onClose}>
+                                                                            Non
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+                                                            );
+                                                        }
+                                                    });
+                                                }}
+                                            >
+                                                <DeleteForeverIcon />
+                                            </Button>
+                                        </TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
+                </div>
             </div>
-
+            
+                
+            
         </form>
     );
 }
