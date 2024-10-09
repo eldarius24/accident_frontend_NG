@@ -6,7 +6,7 @@ import AddIcon from '@mui/icons-material/Add';
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 import BarChartIcon from '@mui/icons-material/BarChart';
 import { useUserConnected } from './Hook/userConnected';
-
+import HomeIcon from '@mui/icons-material/Home';
 
 function ResponsiveAppBar() {
   const location = useLocation();
@@ -22,7 +22,8 @@ function ResponsiveAppBar() {
 
   const buttonStyle = {
     backgroundColor: '#01aeac',
-    '&:hover': { backgroundColor: '#95519b' }
+    '&:hover': { backgroundColor: '#95519b' },
+    mr: 1,
   };
 
   const textStyle = {
@@ -58,7 +59,7 @@ function ResponsiveAppBar() {
             to="/login"
             variant="contained"
             onClick={() => localStorage.removeItem('token')}
-            sx={buttonStyle}
+            sx={buttonStyle }
           >
             logout
           </Button>
@@ -77,6 +78,14 @@ function ResponsiveAppBar() {
             T.I.G.R.E
           </Typography>
 
+          <Button
+                component={Link}
+                to={isFormulaireAccident ? '/' : '/'}
+                variant="contained"
+                sx={buttonStyle}
+                >
+                <HomeIcon />
+              </Button>
 
           {isAdminOuConseiller && (
             <>
