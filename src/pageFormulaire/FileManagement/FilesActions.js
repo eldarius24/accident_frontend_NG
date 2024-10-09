@@ -11,21 +11,46 @@ import { confirmAlert } from 'react-confirm-alert';
 import { saveAs } from 'file-saver';
 import deleteFile from "./deleteFile";
 import * as pdfjsLib from 'pdfjs-dist/webpack';
+import CustomSnackbar from '../../_composants/CustomSnackbar';
 
 export default function listFilesInAccident(accidentId) {
     const [files, setFiles] = useState([]);
     const [previews, setPreviews] = useState({});
+    const [snackbar, setSnackbar] = useState({
+        open: false,
+        message: '',
+        severity: 'info',
+    });
+
+
+    const showSnackbar = (message, severity = 'info') => {
+        setSnackbar({ open: true, message, severity });
+    };
+
+    // Function to close Snackbar
+    const handleCloseSnackbar = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setSnackbar({ ...snackbar, open: false });
+    };
 
     useEffect(() => {
         async function fetchData() {
-            const files = await listFilesInAccident(accidentId);
-            setFiles(files);
-            const previews = await Promise.all(files.map(file => getPreview(file.fileId, file.fileName)));
-            const previewMap = files.reduce((acc, file, index) => {
-                acc[file.fileId] = previews[index];
-                return acc;
-            }, {});
-            setPreviews(previewMap);
+            try {
+                const files = await listFilesInAccident(accidentId);
+                setFiles(files);
+                const previews = await Promise.all(files.map(file => getPreview(file.fileId, file.fileName)));
+                const previewMap = files.reduce((acc, file, index) => {
+                    acc[file.fileId] = previews[index];
+                    return acc;
+                }, {});
+                setPreviews(previewMap);
+                showSnackbar('Fichiers chargés avec succès', 'success');
+            } catch (error) {
+                console.error("Erreur lors du chargement des fichiers:", error);
+                showSnackbar('Erreur lors du chargement des fichiers', 'error');
+            }
         }
         if (accidentId) {
             fetchData();
@@ -37,9 +62,12 @@ export default function listFilesInAccident(accidentId) {
             await deleteFile({ fileId, accidentId });
             const updatedFiles = files.filter(file => file.id !== fileId);
             setFiles(updatedFiles);
-            window.location.reload();
+            showSnackbar('Fichier en cours de suppression', 'success');
+            setTimeout(() => showSnackbar('Fichier supprimé avec succès', 'success'), 1000);
+            setTimeout(() => window.location.reload(), 2000);
         } catch (error) {
-            throw new Error('Erreur de requête:', error);
+            console.error('Erreur lors de la suppression du fichier:', error);
+            showSnackbar('Erreur lors de la suppression du fichier', 'error');
         }
     }
 
@@ -148,8 +176,10 @@ export default function listFilesInAccident(accidentId) {
         try {
             const blob = await getFile(fileId);
             saveAs(blob, fileName);
+            showSnackbar('Téléchargement réussi', 'success');
         } catch (error) {
-            throw new Error('Erreur de téléchargement:', error);
+            console.error('Erreur de téléchargement:', error);
+            showSnackbar('Erreur lors du téléchargement du fichier', 'error');
         }
     };
 
@@ -193,6 +223,12 @@ export default function listFilesInAccident(accidentId) {
                     </li>
                 ))}
             </ul>
+            <CustomSnackbar
+                open={snackbar.open}
+                handleClose={handleCloseSnackbar}
+                message={snackbar.message}
+                severity={snackbar.severity}
+            />
         </div>
     );
 }

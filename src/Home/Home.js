@@ -31,23 +31,42 @@ import editPDF from '../Model/pdfGenerator.js';
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import '../pageFormulaire/formulaire.css';
-import { handleExportData, handleExportDataAss} from '../Model/excelGenerator.js';
+import { handleExportData, handleExportDataAss } from '../Model/excelGenerator.js';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
 import getAccidents from './_actions/get-accidents.js';
 import { useUserConnected } from '../Hook/userConnected.js';
+import CustomSnackbar from '../_composants/CustomSnackbar';
 
 function Home() {
     const navigate = useNavigate();
     const apiUrl = config.apiUrl;
-
     const [yearsFromData, setYearsFromData] = useState([]);
     const [yearsChecked, setYearsChecked] = useState([]);
     const [selectAllYears, setSelectAllYears] = useState(false);
     const [accidents, setAccidents] = useState([]);
     const [accidentsIsPending, startGetAccidents] = useTransition();
     const [searchTerm, setSearchTerm] = useState('');
-
     const { isAdmin, isAdminOuConseiller, userInfo, isConseiller } = useUserConnected();
+
+    const [snackbar, setSnackbar] = useState({
+        open: false,
+        message: '',
+        severity: 'info',
+    });
+
+    // Function to show Snackbar
+    const showSnackbar = (message, severity = 'info') => {
+        setSnackbar({ open: true, message, severity });
+    };
+
+    // Function to close Snackbar
+    const handleCloseSnackbar = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setSnackbar({ ...snackbar, open: false });
+    };
+
 
     const isConseillerPrevention = (entrepriseName) => {
         return userInfo?.entreprisesConseillerPrevention?.includes(entrepriseName) || false;
@@ -57,13 +76,16 @@ function Home() {
         axios.delete(`http://${apiUrl}:3100/api/accidents/${accidentIdToDelete}`)
             .then(response => {
                 if ([200, 204].includes(response.status)) {
-                    console.log('Accident supprimé avec succès');
                     setAccidents(prevAccidents => prevAccidents.filter(item => item._id !== accidentIdToDelete));
+                    showSnackbar('Accident supprimé avec succès', 'success');
                 } else {
-                    console.log(`Erreur lors de la suppression de l'accident, code d'erreur : ${response.status} ${response.statusText}`);
+                    showSnackbar(`Erreur lors de la suppression de l'accident: ${response.status} ${response.statusText}`, 'error');
                 }
             })
-            .catch(console.error);
+            .catch(error => {
+                console.error(error);
+                showSnackbar('Erreur lors de la suppression de l accident', 'error');
+            });
     };
 
     const handleGeneratePDF = async (accidentIdToGenerate) => {
@@ -71,11 +93,13 @@ function Home() {
         if (accident) {
             try {
                 await editPDF(accident);
+                showSnackbar('PDF généré avec succès', 'success');
             } catch (error) {
-                console.log(error);
+                console.error(error);
+                showSnackbar('Erreur lors de la génération du PDF', 'error');
             }
         } else {
-            console.log("Accident non trouvé");
+            showSnackbar('Accident non trouvé', 'error');
         }
     };
 
@@ -83,8 +107,10 @@ function Home() {
         try {
             const { data } = await axios.get(`http://${apiUrl}:3100/api/accidents/${accidentIdToModify}`);
             navigate("/formulaire", { state: data });
+            showSnackbar('Modification de l accident initiée', 'info');
         } catch (error) {
-            console.log(error);
+            console.error(error);
+            showSnackbar('Erreur lors de la récupération des données de l accident', 'error');
         }
     };
 
@@ -94,8 +120,10 @@ function Home() {
                 const fetchedAccidents = await getAccidents();
                 setAccidents(fetchedAccidents);
                 setYearsFromData([...new Set(fetchedAccidents.map(accident => new Date(accident.DateHeureAccident).getFullYear()))]);
+                showSnackbar('Liste des accidents actualisée', 'success');
             } catch (error) {
                 console.error("Erreur lors de la récupération des accidents:", error);
+                showSnackbar('Erreur lors de l actualisation de la liste des accidents', 'error');
             }
         });
     }, [startGetAccidents]);
@@ -122,7 +150,7 @@ function Home() {
             const date = new Date(item.DateHeureAccident).getFullYear();
             const filterProperties = ['DateHeureAccident', 'entrepriseName', 'secteur', 'nomTravailleur', 'prenomTravailleur', 'typeAccident'];
 
-            return years.includes(date) && filterProperties.some(property => 
+            return years.includes(date) && filterProperties.some(property =>
                 item[property]?.toString().toLowerCase().includes(searchTerm.toLowerCase())
             );
         });
@@ -184,7 +212,7 @@ function Home() {
                                 <MenuItem key={year} value={year} style={{ backgroundColor: '#ee742d59' }}>
                                     <Checkbox
                                         checked={yearsChecked.includes(year)}
-                                        style={{ color: '#257525' }} 
+                                        style={{ color: '#257525' }}
                                     />
                                     <ListItemText primary={year} />
                                 </MenuItem>
@@ -300,6 +328,17 @@ function Home() {
                     </TableBody>
                 </Table>
             </TableContainer>
+            <div>
+                {/* ... (existing JSX) */}
+
+                {/* Add Snackbar component */}
+                <CustomSnackbar
+                    open={snackbar.open}
+                    handleClose={handleCloseSnackbar}
+                    message={snackbar.message}
+                    severity={snackbar.severity}
+                />
+            </div>
             <div className="image-cortigroupe"></div>
             <h5 style={{ marginBottom: '40px' }}> Développé par Remy et Benoit pour Le Cortigroupe. Support: bgillet.lecortil@cortigroupe.be</h5>
         </div>

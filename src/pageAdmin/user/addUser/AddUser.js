@@ -12,14 +12,33 @@ import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import getUser from './_actions/get-user';
 import getEntreprises from './_actions/get-entreprises';
 import putUser from './_actions/put-user';
+import { useNavigate } from 'react-router-dom';
+import CustomSnackbar from '../../../_composants/CustomSnackbar';
+
 
 export default function AddUser() {
+    const navigate = useNavigate();
     const params = new URLSearchParams(window.location.search);
     const userId = params.get('userId');
     const { setValue, watch, handleSubmit } = useForm();
-
     const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
     const checkedIcon = <CheckBoxIcon fontSize="small" />;
+    const [snackbar, setSnackbar] = useState({
+        open: false,
+        message: '',
+        severity: 'info',
+    });
+
+    const showSnackbar = (message, severity = 'info') => {
+        setSnackbar({ open: true, message, severity });
+    };
+
+    const handleCloseSnackbar = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setSnackbar({ ...snackbar, open: false });
+    };
 
     const getUserData = async () => {
         try {
@@ -78,14 +97,17 @@ export default function AddUser() {
         try {
             
             const result = await putUser(userId, user);
-
+            setTimeout(() => navigate('/adminUser'), 2000);
             if (!result)
                 return console.error('Erreur lors de la création/modification de l\'utilisateur');
 
             console.log('Utilisateur créé/modifié:', result);
-
+            showSnackbar('Utilisateur en cours de création', 'success');
+            setTimeout (() => showSnackbar('Utilisateur créée avec succès', 'success'),1000);
+            
         } catch (error) {
             console.error('Erreur de requête:', error.message);
+            showSnackbar('Erreur lors de la création de l\'utilisateur', 'error');
         }
     };
 
@@ -217,7 +239,12 @@ export default function AddUser() {
                 </div>
 
                 <div style={{ marginTop: '30px' }}></div>
-
+            <CustomSnackbar
+                open={snackbar.open}
+                handleClose={handleCloseSnackbar}
+                message={snackbar.message}
+                severity={snackbar.severity}
+            />
             </div>
             <div className="image-cortigroupe"></div>
             <h5 style={{ marginBottom: '40px' }}> Développé par Remy et Benoit pour Le Cortigroupe. Support: bgillet.lecortil@cortigroupe.be</h5>

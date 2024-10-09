@@ -16,7 +16,7 @@ import FormulaireAccident from './formulaireAccident';
 import FormulaireSalarie from './formulaireSalarie';
 import FormulaireDeclarationASSBelfius from './formulaireDeclarationAssBelfius';
 import config from '../config.json';
-
+import CustomSnackbar from '../_composants/CustomSnackbar';
 
 const forms = [
     { id: 0, component: FormulaireEntreprise },
@@ -37,6 +37,22 @@ export default function Formulaire() {
         handleSubmit,
         watch
     } = useForm();
+    const [snackbar, setSnackbar] = useState({
+        open: false,
+        message: '',
+        severity: 'info',
+    });
+
+    const showSnackbar = (message, severity = 'info') => {
+        setSnackbar({ open: true, message, severity });
+    };
+
+    const handleCloseSnackbar = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setSnackbar({ ...snackbar, open: false });
+    };
 
     //au chargement de la page on retourn vers le haut de la page
     React.useEffect(() => {
@@ -75,13 +91,18 @@ export default function Formulaire() {
             axios.put("http://" + apiUrl + ":3100/api/accidents/" + accidentData._id, data)
                 .then(response => {
                     console.log('Réponse du serveur en modification :', response.data);
+
+
                 })
                 .catch(error => {
                     console.error('Erreur de requête:', error.message);
+                    showSnackbar('Erreur lors de la création de l\'accident', 'error');
+
                 });
         } else {
             console.log("Formulaire.js -> onSubmit -> Données à enregistrer :", data);
-            
+
+
             //mode CREATION
             axios.put("http://" + apiUrl + ":3100/api/accidents", data)
                 .then(response => {
@@ -89,12 +110,14 @@ export default function Formulaire() {
                 })
                 .catch(error => {
                     console.error('Erreur de requête:', error.message);
+                    showSnackbar('Erreur lors de la création de l\'accident', 'error');
                 });
         }
-
-
+        showSnackbar('Accident en cours de création', 'success');
+        setTimeout(() => showSnackbar('Accident créée avec succès', 'success'), 1000);
+        setTimeout(() => navigate('/'), 2000);
         // Naviguer vers la page d'accueil
-        navigate('/');
+        //navigate('/');
     };
 
     //enregistrement des donnée quand suivent ou précédent
@@ -242,6 +265,12 @@ export default function Formulaire() {
                     Enregistrer les données
                 </Button>
             </div>
+            <CustomSnackbar
+                open={snackbar.open}
+                handleClose={handleCloseSnackbar}
+                message={snackbar.message}
+                severity={snackbar.severity}
+            />
             <h3>Une fois les données enregistrées, vous pouvez les retrouver et les re-éditer dans la base de données.</h3>
             <div className="image-cortigroupe"></div>
             <h5 style={{ marginBottom: '40px' }}> Développé par Remy et Benoit pour Le Cortigroupe. Support: bgillet.lecortil@cortigroupe.be</h5>

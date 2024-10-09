@@ -18,16 +18,32 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import { confirmAlert } from 'react-confirm-alert';
 import config from '../config.json';
+import CustomSnackbar from '../_composants/CustomSnackbar';
 
 export default function AddSecteur() {
     const location = useLocation();
     const entreprise = location.state.entreprise;
     const [secteurs, setSecteurs] = useState([]);
     const [loading, setLoading] = useState(true);
-    const {register, setValue, handleSubmit } = useForm();
+    const { register, setValue, handleSubmit } = useForm();
     const apiUrl = config.apiUrl;
     const [secteurName, setSecteurName] = useState('');
+    const [snackbar, setSnackbar] = useState({
+        open: false,
+        message: '',
+        severity: 'info',
+    });
 
+    const showSnackbar = (message, severity = 'info') => {
+        setSnackbar({ open: true, message, severity });
+    };
+
+    const handleCloseSnackbar = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setSnackbar({ ...snackbar, open: false });
+    };
 
     useEffect(() => {
         setValue('secteurName', secteurName);
@@ -41,9 +57,10 @@ export default function AddSecteur() {
             const filteredSecteurs = response.data.filter(secteur => secteur.entrepriseId === entreprise._id);
             console.log('Filtered secteurs:', filteredSecteurs);
             setSecteurs(filteredSecteurs);
+            showSnackbar('Secteurs chargés avec succès', 'success');
         } catch (error) {
             console.error('Error fetching secteurs:', error);
-
+            showSnackbar('Erreur lors du chargement des secteurs', 'error');
         } finally {
             setLoading(false);
         }
@@ -60,13 +77,12 @@ export default function AddSecteur() {
             const response = await axios.put(`http://${apiUrl}:3100/api/secteurs`, data);
             console.log('Secteur added:', response.data);
             await fetchSecteurs();
-            setSecteurName(''); // Reset the secteurName state
-            reset(); // Reset the form fields
             setSecteurName('');
-
+            
+            showSnackbar('Secteur ajouté avec succès', 'success');
         } catch (error) {
             console.error('Error adding secteur:', error);
-
+            showSnackbar('Erreur lors de l\'ajout du secteur', 'error');
         }
     };
 
@@ -79,7 +95,7 @@ export default function AddSecteur() {
             if (response.status === 200 || response.status === 204) {
                 console.log('Secteur deleted successfully');
                 await fetchSecteurs();
-
+                showSnackbar('Secteur supprimé avec succès', 'success');
             } else {
                 console.error('Unexpected response status:', response.status);
                 throw new Error('Unexpected response status');
@@ -90,14 +106,14 @@ export default function AddSecteur() {
                 console.error('Error response:', error.response.data);
                 console.error('Error status:', error.response.status);
             }
-
+            showSnackbar('Erreur lors de la suppression du secteur', 'error');
         }
     };
-
 
     if (loading) {
         return <LinearProgress color="success" />;
     }
+
 
     return (
         <form className="background-image" onSubmit={handleSubmit(onSubmit)}>
@@ -194,9 +210,12 @@ export default function AddSecteur() {
                     </TableContainer>
                 </div>
             </div>
-
-
-
+            <CustomSnackbar
+                open={snackbar.open}
+                handleClose={handleCloseSnackbar}
+                message={snackbar.message}
+                severity={snackbar.severity}
+            />
         </form>
     );
 }

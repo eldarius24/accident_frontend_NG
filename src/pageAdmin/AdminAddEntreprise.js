@@ -6,13 +6,28 @@ import '../pageFormulaire/formulaire.css';
 import Button from '@mui/material/Button';
 import config from '../config.json';
 import { useNavigate } from 'react-router-dom';
+import CustomSnackbar from '../_composants/CustomSnackbar';
 
 export default function AdminPanelSettings({ accidentData }) {
     const navigate = useNavigate();
-
     const apiUrl = config.apiUrl;
     const { setValue, watch, handleSubmit } = useForm();
+    const [snackbar, setSnackbar] = useState({
+        open: false,
+        message: '',
+        severity: 'info',
+    });
 
+    const showSnackbar = (message, severity = 'info') => {
+        setSnackbar({ open: true, message, severity });
+    };
+
+    const handleCloseSnackbar = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setSnackbar({ ...snackbar, open: false });
+    };
 
     const [AddEntreName, setAddEntreName] = useState(watch('AddEntreName') ? watch('AddEntreName') : (accidentData && accidentData.AddEntreName ? accidentData.AddEntreName : null));
     const [AddEntrePolice, setAddEntrePolice] = useState(watch('AddEntrePolice') ? watch('AddEntrePolice') : (accidentData && accidentData.AddEntrePolice ? accidentData.AddEntrePolice : null));
@@ -61,20 +76,24 @@ export default function AdminPanelSettings({ accidentData }) {
      * METHODE ON SUBMIT
      * ************************************************************************/
     const onSubmit = (data) => {
-
         console.log("Formulaire.js -> onSubmit -> Données à enregistrer :", data);
 
-        //mode CREATION
-        axios.put("http://" + apiUrl + ":3100/api/entreprises", data)
+        axios.put(`http://${apiUrl}:3100/api/entreprises`, data)
             .then(response => {
                 console.log('Réponse du serveur en création :', response.data);
+                showSnackbar('Entreprise en cours de création', 'success');
+                setTimeout (() => showSnackbar('Entreprise créée avec succès', 'success'),1000);
+                // Modifier cette ligne pour naviguer vers /adminEntreprises après 2 secondes
+                setTimeout(() => navigate('/adminEntreprises'), 2000);
             })
             .catch(error => {
                 console.error('Erreur de requête:', error.message);
+                showSnackbar('Erreur lors de la création de l\'entreprise', 'error');
             });
+    
 
         // Naviguer vers la page d'accueil
-        navigate('/');
+        //navigate('/');
     };
 
     return (
@@ -82,8 +101,6 @@ export default function AdminPanelSettings({ accidentData }) {
             <div className="frameStyle-style">
                 <h2>Créer une nouvelle entreprise</h2>
                 <h3>Toutes les données doivent êtres obligatoirement remplie</h3>
-
-
                 <TextFieldP id='AddEntreName' label="Nom de la nouvelle entreprise" onChange={setAddEntreName} defaultValue={AddEntreName}></TextFieldP>
                 <TextFieldP id='AddEntrRue' label="Rue et numéro" onChange={setAddEntrRue} defaultValue={AddEntrRue}></TextFieldP>
                 <TextFieldP id='AddEntrCodpost' label="Code postal" onChange={setAddEntrCodpost} defaultValue={AddEntrCodpost}></TextFieldP>
@@ -134,7 +151,12 @@ export default function AdminPanelSettings({ accidentData }) {
             </div>
             <div className="image-cortigroupe"></div>
             <h5 style={{ marginBottom: '40px' }}> Développé par Remy et Benoit pour Le Cortigroupe. Support: bgillet.lecortil@cortigroupe.be</h5>
-
+            <CustomSnackbar
+                open={snackbar.open}
+                handleClose={handleCloseSnackbar}
+                message={snackbar.message}
+                severity={snackbar.severity}
+            />
 
         </form>
     );

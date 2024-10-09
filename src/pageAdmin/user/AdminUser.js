@@ -16,11 +16,27 @@ import 'react-confirm-alert/src/react-confirm-alert.css';
 import getUsers from './_actions/get-users';
 import deleteUser from './_actions/delete-user';
 import { Link } from 'react-router-dom';
+import CustomSnackbar from '../../_composants/CustomSnackbar';
 
 export default function Adminuser() {
     const [users, setUsers] = useState([]);
     const [usersIsPending, startGetUsers] = useTransition();
+    const [snackbar, setSnackbar] = useState({
+        open: false,
+        message: '',
+        severity: 'info',
+    });
 
+    const showSnackbar = (message, severity = 'info') => {
+        setSnackbar({ open: true, message, severity });
+    };
+
+    const handleCloseSnackbar = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setSnackbar({ ...snackbar, open: false });
+    };
     /**
      * Supression d'un utilisateur
      * 
@@ -30,10 +46,11 @@ export default function Adminuser() {
         startGetUsers(() => {
             try {
                 deleteUser(userIdToDelete);
-
                 setUsers(users.filter(user => user._id !== userIdToDelete));
+                showSnackbar('Utilisateur supprimée avec succès', 'success');
             } catch (error) {
                 console.error('Erreur lors de la suppression de l\'utilisateur:', error.message);
+                showSnackbar('Erreur lors de la suppression de l\'utilisateur:', 'error');
             }
         });
     };
@@ -47,13 +64,15 @@ export default function Adminuser() {
         startGetUsers(async () => {
             try {
                 const users = await getUsers();
-
+                showSnackbar('Utilisateurs chargés avec succès', 'success');
                 if (!users)
                     throw new Error('Aucun utilisateur trouvé');
+                showSnackbar('Utilisateur Chargé avec succès', 'success');
 
                 setUsers(users);
             } catch (error) {
                 console.error('Erreur lors de la récupération des utilisateurs:', error.message);
+                showSnackbar('Erreur lors de la récupération des utilisateurs:', 'error');
             }
         });
     }, []);
@@ -65,7 +84,7 @@ export default function Adminuser() {
     /**
      * PopUp de confirmation de suppression
      */
-    const popUpDelete = (user) => {
+    const popUpDelete = (userId) => {
         confirmAlert(
             {
                 customUI: ({ onClose }) => {
@@ -134,6 +153,12 @@ export default function Adminuser() {
                 </TableContainer>
 
             </div>
+            <CustomSnackbar
+                open={snackbar.open}
+                handleClose={handleCloseSnackbar}
+                message={snackbar.message}
+                severity={snackbar.severity}
+            />
 
             <div className="image-cortigroupe"></div>
             <h5 style={{ marginBottom: '40px' }}> Développé par Remy et Benoit pour Le Cortigroupe. Support: bgillet.lecortil@cortigroupe.be</h5>

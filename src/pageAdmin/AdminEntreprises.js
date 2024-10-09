@@ -17,6 +17,7 @@ import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import config from '../config.json';
 import { useNavigate } from 'react-router-dom';
+import CustomSnackbar from '../_composants/CustomSnackbar';
 
 export default function Adminusern() {
     const navigate = useNavigate();
@@ -24,6 +25,22 @@ export default function Adminusern() {
     const [secteurs, setSecteurs] = useState([]);
     const [loading, setLoading] = useState(true);
     const apiUrl = config.apiUrl;
+    const [snackbar, setSnackbar] = useState({
+        open: false,
+        message: '',
+        severity: 'info',
+    });
+
+    const showSnackbar = (message, severity = 'info') => {
+        setSnackbar({ open: true, message, severity });
+    };
+
+    const handleCloseSnackbar = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setSnackbar({ ...snackbar, open: false });
+    };
 
     const getSecteursByEntreprise = (entrepriseId) => {
         return secteurs.filter(secteur => secteur.entrepriseId === entrepriseId)
@@ -43,14 +60,18 @@ export default function Adminusern() {
         axios.delete(`http://${apiUrl}:3100/api/entreprises/${entrepriseIdToDelete}`)
             .then(response => {
                 if (response.status === 204 || response.status === 200) {
+                    showSnackbar('Entreprise supprimée avec succès', 'success');
                     console.log('Entreprise supprimée avec succès');
                     setEntreprises(prevEntreprises => prevEntreprises.filter(entreprise => entreprise._id !== entrepriseIdToDelete));
                 } else {
                     console.error('Erreur lors de la suppression de l\'entreprise, code d\'erreur :', response.status, response.statusText);
+
                 }
+                
             })
             .catch(error => {
                 console.error('Erreur lors de la suppression de l\'entreprise:', error);
+                showSnackbar('Erreur lors de la suppression de l\'entreprise:', 'error');
             });
     };
 
@@ -163,6 +184,12 @@ export default function Adminusern() {
                         </Table>
                     </div>
                 </TableContainer>
+                <CustomSnackbar
+                open={snackbar.open}
+                handleClose={handleCloseSnackbar}
+                message={snackbar.message}
+                severity={snackbar.severity}
+            />
             </div>
             <div className="image-cortigroupe"></div>
             <h5 style={{ marginBottom: '40px' }}>Développé par Remy et Benoit pour Le Cortigroupe. Support: bgillet.lecortil@cortigroupe.be</h5>
