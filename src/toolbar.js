@@ -59,56 +59,63 @@ function ResponsiveAppBar() {
             to="/login"
             variant="contained"
             onClick={() => localStorage.removeItem('token')}
-            sx={buttonStyle }
+            sx={buttonStyle}
           >
             logout
           </Button>
           {isAdmin && (
+            <>
+            {location.pathname !== '/adminaction' && (
             <Button
               component={Link}
-              to={isPageAdmin ? '/' : '/adminaction'}
+              to={'/adminaction'}
               variant="contained"
               sx={buttonStyle}
             >
               <AdminPanelSettingsIcon />
             </Button>
+            )}
+            </>
           )}
 
           <Typography variant="h5" noWrap sx={textStyle}>
             T.I.G.R.E
           </Typography>
 
-          <Button
-                component={Link}
-                to={isFormulaireAccident ? '/' : '/'}
-                variant="contained"
-                sx={buttonStyle}
-                >
-                <HomeIcon />
-              </Button>
-
+          {location.pathname !== '/' && (
+            <Button
+              component={Link}
+              to={isFormulaireAccident ? '/' : '/'}
+              variant="contained"
+              sx={buttonStyle}
+            >
+              <HomeIcon />
+            </Button>
+          )}
           {isAdminOuConseiller && (
             <>
-              <Button
-                component={Link}
-                to={isFormulaireAccident ? '/' : '/formulaire'}
-                variant="contained"
-                sx={buttonStyle}
-                startIcon={isFormulaireAccident ? <ArrowBackIcon /> : <AddIcon />}
-              >
-                Ajout d'un AT
-              </Button>
-
-
-              <Button
-                component={Link}
-                to={isPageStats ? '/' : '/statistiques'}
-                variant="contained"
-                sx={buttonStyle}
-                startIcon={<BarChartIcon />}
-              >
-                Statistiques
-              </Button>
+              {location.pathname !== '/formulaire' && (
+                <Button
+                  component={Link}
+                  to={'/formulaire'}
+                  variant="contained"
+                  sx={buttonStyle}
+                  startIcon={isFormulaireAccident ? <ArrowBackIcon /> : <AddIcon />}
+                >
+                  Ajout d'un AT
+                </Button>
+              )}
+              {location.pathname !== '/statistiques' && (
+                <Button
+                  component={Link}
+                  to={isPageStats ? '/' : '/statistiques'}
+                  variant="contained"
+                  sx={buttonStyle}
+                  startIcon={<BarChartIcon />}
+                >
+                  Statistiques
+                </Button>
+              )}
             </>
           )}
         </Toolbar>
