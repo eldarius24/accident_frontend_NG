@@ -65,16 +65,16 @@ function ResponsiveAppBar() {
           </Button>
           {isAdmin && (
             <>
-            {location.pathname !== '/adminaction' && (
-            <Button
-              component={Link}
-              to={'/adminaction'}
-              variant="contained"
-              sx={buttonStyle}
-            >
-              <AdminPanelSettingsIcon />
-            </Button>
-            )}
+              {location.pathname !== '/adminaction' && (
+                <Button
+                  component={Link}
+                  to={'/adminaction'}
+                  variant="contained"
+                  sx={buttonStyle}
+                >
+                  <AdminPanelSettingsIcon />
+                </Button>
+              )}
             </>
           )}
 
@@ -100,11 +100,12 @@ function ResponsiveAppBar() {
                   to={'/formulaire'}
                   variant="contained"
                   sx={buttonStyle}
-                  startIcon={isFormulaireAccident ? <ArrowBackIcon /> : <AddIcon />}
                 >
-                  Ajout d'un AT
+                  <AddIcon />
+                  Accident
                 </Button>
               )}
+              
               {location.pathname !== '/statistiques' && (
                 <Button
                   component={Link}
