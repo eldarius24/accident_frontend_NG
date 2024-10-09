@@ -284,43 +284,52 @@ function Home() {
                                     <TableCell>{item.nomTravailleur}</TableCell>
                                     <TableCell>{item.prenomTravailleur}</TableCell>
                                     <TableCell>{item.typeAccident}</TableCell>
-                                    {isAdmin || (isConseiller && isConseillerPrevention(item.entrepriseName)) ? (
-                                        <>
-                                            <TableCell style={{ padding: 0 }}>
+
+                                    <>
+                                        <TableCell style={{ padding: 0 }}>
+                                            {(isAdmin || (isConseiller && isConseillerPrevention(item.entrepriseName))) ? (
                                                 <Button variant="contained" color="primary" onClick={() => handleEdit(item._id)}>
-                                                    <EditIcon />
+                                                    <EditIcon /> {/* L'icône est placée à l'intérieur du bouton */}
                                                 </Button>
-                                            </TableCell>
-                                            <TableCell style={{ padding: 0 }}>
-                                                <Button variant="contained" color="secondary" onClick={() => navigate("/fichierdll", { state: item._id })}>
-                                                    <GetAppIcon />
-                                                </Button>
-                                            </TableCell>
-                                            <TableCell style={{ padding: 0 }}>
-                                                <Button variant="contained" color="success" onClick={() => handleGeneratePDF(item._id)}>
-                                                    <PictureAsPdfIcon />
-                                                </Button>
-                                            </TableCell>
-                                            <TableCell style={{ padding: 0 }}>
-                                                <Button variant="contained" color="error" onClick={() => {
-                                                    confirmAlert({
-                                                        customUI: ({ onClose }) => (
-                                                            <div className="custom-confirm-dialog">
-                                                                <h1 className="custom-confirm-title">Supprimer</h1>
-                                                                <p className="custom-confirm-message">Êtes-vous sûr de vouloir supprimer cet élément?</p>
-                                                                <div className="custom-confirm-buttons">
-                                                                    <button className="custom-confirm-button" onClick={() => { handleDelete(item._id); onClose(); }}>Oui</button>
-                                                                    <button className="custom-confirm-button custom-confirm-no" onClick={onClose}>Non</button>
-                                                                </div>
+                                            ) : null}
+                                        </TableCell>
+
+                                        <TableCell style={{ padding: 0 }}>
+                                        {(isAdmin || (isConseiller && isConseillerPrevention(item.entrepriseName))) ? (
+                                            <Button variant="contained" color="secondary" onClick={() => navigate("/fichierdll", { state: item._id })}>
+                                                <GetAppIcon />
+                                            </Button>
+                                            ) : null}
+                                        </TableCell>
+                                        <TableCell style={{ padding: 0 }}>
+                                            {(isAdmin || (isConseiller && isConseillerPrevention(item.entrepriseName))) ? (
+                                            <Button variant="contained" color="success" onClick={() => handleGeneratePDF(item._id)}>
+                                                <PictureAsPdfIcon />
+                                            </Button>
+                                            ) : null}
+                                        </TableCell>
+                                        <TableCell style={{ padding: 0 }}>
+                                        {(isAdmin || (isConseiller && isConseillerPrevention(item.entrepriseName))) ? (
+                                            <Button variant="contained" color="error" onClick={() => {
+                                                confirmAlert({
+                                                    customUI: ({ onClose }) => (
+                                                        <div className="custom-confirm-dialog">
+                                                            <h1 className="custom-confirm-title">Supprimer</h1>
+                                                            <p className="custom-confirm-message">Êtes-vous sûr de vouloir supprimer cet élément?</p>
+                                                            <div className="custom-confirm-buttons">
+                                                                <button className="custom-confirm-button" onClick={() => { handleDelete(item._id); onClose(); }}>Oui</button>
+                                                                <button className="custom-confirm-button custom-confirm-no" onClick={onClose}>Non</button>
                                                             </div>
-                                                        )
-                                                    });
-                                                }}>
-                                                    <DeleteForeverIcon />
-                                                </Button>
-                                            </TableCell>
-                                        </>
-                                    ) : null}
+                                                        </div>
+                                                    )
+                                                });
+                                            }}>
+                                                <DeleteForeverIcon />
+                                            </Button>
+                                        ) : null}
+                                        </TableCell>
+                                    </>
+
                                 </TableRow>
                                 <TableRow className="table-row-separator"></TableRow>
                             </React.Fragment>
