@@ -5,7 +5,7 @@ const CustomSnackbar = ({ open, handleClose, message, severity }) => {
   return (
     <Snackbar
       anchorOrigin={{
-        vertical: 'bottom',
+        vertical: 'top',
         horizontal: 'left',
       }}
       open={open}
@@ -21,7 +21,9 @@ const CustomSnackbar = ({ open, handleClose, message, severity }) => {
           padding: '10px',      // Ajouter du padding pour rendre l'alert plus grande
           backgroundColor: severity === 'success' ? '#eeffee' : '#ffe8e8',  // Couleur de fond différente selon la gravité
           color: severity === 'success' ? '#257525' : '#ff0000',  // Couleur du texte différente selon la gravité
-          outline: severity === 'success' ? '5px solid green' : '5px solid red',  // Bordure extérieure différente selon la gravité
+          outline: severity === 'success' ? '3px solid green' : '5px solid red',  // Bordure extérieure différente selon la gravité
+          position: 'relative', 
+          top: '50px',
         }}
       >
         {message}
