@@ -5,8 +5,7 @@ import {
   LineChart, Line, PieChart, Pie, Cell
 } from 'recharts';
 import {
-  FormControl, InputLabel, Select, MenuItem, Checkbox, ListItemText,
-  Grid
+  FormControl, InputLabel, Select, MenuItem, Checkbox, ListItemText, Grid
 } from '@mui/material';
 
 const COLORS = ['#0088FE', '#FF8042', '#00C49F', '#FFBB28', '#FF8042', '#0088FE', '#00C49F'];
@@ -53,7 +52,8 @@ const Statistiques = () => {
 
   const [selectedYears, setSelectedYears] = useState([]);
   const [allYears, setAllYears] = useState([]);
-
+  const [workerTypes, setWorkerTypes] = useState([]);
+  const [selectedWorkerTypes, setSelectedWorkerTypes] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -68,6 +68,10 @@ const Statistiques = () => {
         // Sélectionner l'année en cours par défaut
         const currentYear = new Date().getFullYear();
         setSelectedYears(years.includes(currentYear) ? [currentYear] : [years[years.length - 1]]);
+
+        const types = [...new Set(response.data.map(accident => accident.typeTravailleur))];
+        setWorkerTypes(types);
+        setSelectedWorkerTypes(types); // Sélectionner tous les types par défaut
       } catch (error) {
         console.error('Erreur lors de la récupération des données:', error.message);
       }
@@ -80,7 +84,7 @@ const Statistiques = () => {
     if (data.length > 0) {
       const filteredData = data.filter(accident => {
         const accidentYear = new Date(accident.DateHeureAccident).getFullYear();
-        return selectedYears.includes(accidentYear);
+        return selectedYears.includes(accidentYear) && selectedWorkerTypes.includes(accident.typeTravailleur);
       });
 
       const newStats = {
@@ -178,7 +182,7 @@ const Statistiques = () => {
 
       setStats(newStats);
     }
-  }, [data, selectedYears]);
+  }, [data, selectedYears, selectedWorkerTypes]);
 
   const [allChecked, setAllChecked] = useState(true);
   const handleChangeYearsFilter = (event) => {
@@ -205,6 +209,15 @@ const Statistiques = () => {
           Object.entries(prev).map(([key, graphData]) => [key, { ...graphData, visible: value.includes(key) }])
         )
       );
+    }
+  };
+
+  const handleChangeWorkerTypesFilter = (event) => {
+    const value = event.target.value;
+    if (value.includes('all')) {
+      setSelectedWorkerTypes(selectedWorkerTypes.length === workerTypes.length ? [] : workerTypes);
+    } else {
+      setSelectedWorkerTypes(value);
     }
   };
 
@@ -260,6 +273,8 @@ const Statistiques = () => {
       </div>
     );
   };
+
+  const isAllSelected = selectedWorkerTypes.length === workerTypes.length;
 
   return (
     <div className="col-span-full" style={{ margin: '20px' }}>
@@ -340,7 +355,38 @@ const Statistiques = () => {
           </Select>
         </FormControl>
       </Grid>
-
+      <Grid item xs={6} style={{ marginTop: 20, backgroundColor: '#ee752d60' }}>
+        <FormControl sx={{ boxShadow: 3, minWidth: 50, width: '100%' }}>
+          <InputLabel id="worker-types-label">Type de travailleur</InputLabel>
+          <Select
+            labelId="worker-types-label"
+            id="worker-types-select"
+            multiple
+            value={selectedWorkerTypes}
+            onChange={handleChangeWorkerTypesFilter}
+            renderValue={(selected) => selected.join(', ')}
+            MenuProps={{
+              PaperProps: {
+                style: {
+                  maxHeight: 300,
+                  overflow: 'auto'
+                },
+              },
+            }}
+          >
+            <MenuItem value="all" style={{ backgroundColor: '#ee742d59' }}>
+              <Checkbox checked={isAllSelected} style={{ color: 'red' }} />
+              <ListItemText primary="Sélectionner tout" />
+            </MenuItem>
+            {workerTypes.map((type) => (
+              <MenuItem key={type} value={type} style={{ backgroundColor: '#ee742d59' }}>
+                <Checkbox checked={selectedWorkerTypes.includes(type)} style={{ color: '#257525' }} />
+                <ListItemText primary={type} />
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+      </Grid>
       <div className="flex flex-col items-center justify-center h-full mb-8">
         <h2 className="text-center">Total des accidents</h2>
         <p className="text-3xl font-bold text-center">{stats.totalAccidents}</p>
