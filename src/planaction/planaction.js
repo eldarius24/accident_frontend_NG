@@ -1,9 +1,9 @@
 import axios from 'axios';
 import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-import { useLocation } from 'react-router-dom'; // Importez useLocation
-import TextFieldP from '../_composants/textFieldP';
+import { useLocation } from 'react-router-dom';
 import AutoCompleteP from '../_composants/autoCompleteP';
+import AutoCompleteQ from '../_composants/autoCompleteQ';
 import '../pageFormulaire/formulaire.css';
 import config from '../config.json';
 import { Link } from 'react-router-dom';
@@ -17,8 +17,8 @@ import {
     Button,
     Checkbox,
     Grid,
-    TextField,
 } from '@mui/material';
+import TextFieldP from '../_composants/textFieldP';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import LinearProgress from '@mui/material/LinearProgress';
@@ -37,22 +37,36 @@ export default function PlanAction({ accidentData }) {
     const [users, setAddactions] = useState([]);
     const [loading, setLoading] = useState(true);
     const { setValue, watch, handleSubmit } = useForm();
-    const location = useLocation(); // Utilisez useLocation
+    const location = useLocation();
     const isFileUploadIcon = location.pathname === '/fichierdllaction';
     const [searchTerm, setSearchTerm] = useState('');
 
+    // New state for enterprises and sectors
+    const [enterprises, setEnterprises] = useState([]);
+    const [allSectors, setAllSectors] = useState([]);
+    const [availableSectors, setAvailableSectors] = useState([]);
+
     useEffect(() => {
-        axios.get(`http://${apiUrl}:3100/api/planaction`)
-            .then(response => {
-                let users = response.data;
-                setAddactions(users);
-            })
-            .catch(error => {
+        const fetchData = async () => {
+            try {
+                const [actionsResponse, enterprisesResponse, sectorsResponse] = await Promise.all([
+                    axios.get(`http://${apiUrl}:3100/api/planaction`),
+                    axios.get(`http://${apiUrl}:3100/api/entreprises`),
+                    axios.get(`http://${apiUrl}:3100/api/secteurs`)
+                ]);
+
+                setAddactions(actionsResponse.data);
+                setEnterprises(enterprisesResponse.data.map(e => ({ id: e._id, name: e.AddEntreName })));
+                setAllSectors(sectorsResponse.data);
+                setAvailableSectors(sectorsResponse.data.map(s => s.secteurName));
+            } catch (error) {
                 console.error('Error fetching data:', error);
-            })
-            .finally(() => {
+            } finally {
                 setLoading(false);
-            });
+            }
+        };
+
+        fetchData();
     }, []);
 
     const filteredUsers = users.filter(addaction => {
@@ -114,15 +128,14 @@ export default function PlanAction({ accidentData }) {
             });
     }
 
-    const [AddAction, setAddAction] = useState(watch('AddAction') ? watch('AddAction') : (accidentData && accidentData.AddAction ? accidentData.AddAction : null));
-    const [AddActionDate, setAddActionDate] = useState(watch('AddActionDate') ? watch('AddActionDate') : (accidentData && accidentData.AddActionDate ? accidentData.AddActionDate : null));
-    const [AddActionQui, setAddActionQui] = useState(watch('AddActionQui') ? watch('AddActionQui') : (accidentData && accidentData.AddActionQui ? accidentData.AddActionQui : null));
-    const [AddActionSecteur, setAddActionSecteur] = useState(watch('AddActionSecteur') ? watch('AddActionSecteur') : (accidentData && accidentData.AddActionSecteur ? accidentData.AddActionSecteur : null));
-    const [AddActionEntreprise, setAddActionEntreprise] = useState(watch('AddActionEntreprise') ? watch('AddActionEntreprise') : (accidentData && accidentData.AddActionEntreprise ? accidentData.AddActionEntreprise : null));
-    const [AddboolStatus, setAddboolStatus] = useState(watch('AddboolStatus') ? watch('AddboolStatus') : (accidentData && accidentData.AddboolStatus ? accidentData.AddboolStatus : false));
-    const [AddActionanne, setAddActionanne] = useState(watch('AddActionanne') ? watch('AddActionanne') : (accidentData && accidentData.AddActionanne ? accidentData.AddActionanne : null));
-    const [AddActoinmoi, setAddActoinmoi] = useState(watch('AddActoinmoi') ? watch('AddActoinmoi') : (accidentData && accidentData.AddActoinmoi ? accidentData.AddActoinmoi : null));
-
+    const [AddAction, setAddAction] = useState(watch('AddAction') || (accidentData && accidentData.AddAction) || '');
+    const [AddActionDate, setAddActionDate] = useState(watch('AddActionDate') || (accidentData && accidentData.AddActionDate) || null);
+    const [AddActionQui, setAddActionQui] = useState(watch('AddActionQui') || (accidentData && accidentData.AddActionQui) || '');
+    const [AddActionSecteur, setAddActionSecteur] = useState(watch('AddActionSecteur') || (accidentData && accidentData.AddActionSecteur) || '');
+    const [AddActionEntreprise, setAddActionEntreprise] = useState(watch('AddActionEntreprise') || (accidentData && accidentData.AddActionEntreprise) || '');
+    const [AddboolStatus, setAddboolStatus] = useState(watch('AddboolStatus') || (accidentData && accidentData.AddboolStatus) || false);
+    const [AddActionanne, setAddActionanne] = useState(watch('AddActionanne') || (accidentData && accidentData.AddActionanne) || '');
+    const [AddActoinmoi, setAddActoinmoi] = useState(watch('AddActoinmoi') || (accidentData && accidentData.AddActoinmoi) || '');
 
     useEffect(() => {
         setValue('AddAction', AddAction);
@@ -135,11 +148,32 @@ export default function PlanAction({ accidentData }) {
         setValue('AddActoinmoi', AddActoinmoi);
     }, [AddAction, AddActionDate, AddActionQui, AddActionSecteur, AddActionEntreprise, AddboolStatus, AddActionanne, AddActoinmoi, setValue]);
 
+    const handleEnterpriseSelect = (entrepriseSelect) => {
+        setAddActionEntreprise(entrepriseSelect);
+        setValue('AddActionEntreprise', entrepriseSelect);
+
+        // Filter sectors based on selected enterprise
+        const selectedEnterprise = enterprises.find(e => e.name === entrepriseSelect);
+        if (selectedEnterprise) {
+            const linkedSectors = allSectors
+                .filter(s => s.entrepriseId === selectedEnterprise.id)
+                .map(s => s.secteurName);
+            setAvailableSectors(linkedSectors);
+            // Reset sector selection
+            setAddActionSecteur('');
+            setValue('AddActionSecteur', '');
+        } else {
+            // If no enterprise is selected, show all sectors
+            setAvailableSectors(allSectors.map(s => s.secteurName));
+        }
+    };
+
+
     if (loading) {
         return <LinearProgress color="success" />;
     }
 
-    const rowColors = ['#bed1be', '#d2e2d2']; // Tableau de couleurs pour les lignes
+    const rowColors = ['#e62a5625', '#95519b25']; // Tableau de couleurs pour les lignes
 
     return (
         <form className="background-image" onSubmit={handleSubmit(onSubmit)}>
@@ -147,7 +181,7 @@ export default function PlanAction({ accidentData }) {
                 <h2>Plan d'actions</h2>
                 <Grid item xs={6} style={{ marginRight: '20px' }}>
                     <Button
-                        sx={{ marginLeft: '20px', marginRight: '20px', color: 'black', padding: '15px 60px', backgroundColor: '#84a784', '&:hover': { backgroundColor: 'green' }, boxShadow: 3, textTransform: 'none' }}
+                        sx={{ marginLeft: '20px', marginRight: '20px', color: 'black', padding: '15px 60px', backgroundColor: '#ee742d59', '&:hover': { backgroundColor: '#95ad22' }, boxShadow: 3, textTransform: 'none' }}
                         variant="contained"
                         color="secondary"
                         onClick={refreshListAccidents}
@@ -155,11 +189,11 @@ export default function PlanAction({ accidentData }) {
                     >
                         Actualiser
                     </Button>
-                    <TextField
+                    <TextFieldP
                         variant="outlined"
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
-                        sx={{ boxShadow: 3, backgroundColor: '#84a784' }}
+                        sx={{ boxShadow: 3, backgroundColor: '#ee742d59' }}
                         InputProps={{
                             startAdornment: (
                                 <InputAdornment position="start">
@@ -264,9 +298,25 @@ export default function PlanAction({ accidentData }) {
                 <AutoCompleteP id='AddActoinmoi' option={listeaddaction.AddActoinmoi} label='Réalisation en' onChange={(AddActoinmoiSelect) => {
                     setAddActoinmoi(AddActoinmoiSelect);
                     setValue('AddActoinmoi', AddActoinmoiSelect);
-                }} defaultValue={AddActoinmoi}> </AutoCompleteP>
-                <TextFieldP id='AddActionEntreprise' label="Entreprise" onChange={setAddActionEntreprise} defaultValue={AddActionEntreprise}></TextFieldP>
-                <TextFieldP id='AddActionSecteur' label="Ajouter le secteur" onChange={setAddActionSecteur} defaultValue={AddActionSecteur}></TextFieldP>
+                }} defaultValue={AddActoinmoi} />
+                <AutoCompleteQ
+                    id='AddActionEntreprise'
+                    option={enterprises.map(e => e.name)}
+                    label="Entreprise"
+                    onChange={handleEnterpriseSelect}
+                    value={AddActionEntreprise}
+                />
+                <AutoCompleteQ
+                    id='AddActionSecteur'
+                    option={availableSectors}
+                    label="Secteur"
+                    onChange={(secteurSelect) => {
+                        setAddActionSecteur(secteurSelect);
+                        setValue('AddActionSecteur', secteurSelect);
+                    }}
+                    value={AddActionSecteur}
+                    disabled={!AddActionEntreprise} // Disable if no enterprise is selected
+                />
                 <TextFieldP id='AddAction' label="Ajouter une action" onChange={setAddAction} defaultValue={AddAction}></TextFieldP>
                 <DatePickerP id='AddActionDate' label="Ajouter une date" onChange={setAddActionDate} defaultValue={AddActionDate}></DatePickerP>
                 <TextFieldP id='AddActionQui' label="Ajouter qui" onChange={setAddActionQui} defaultValue={AddActionQui}></TextFieldP>

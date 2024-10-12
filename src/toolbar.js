@@ -128,6 +128,25 @@ function ResponsiveAppBar() {
               )}
             </>
           )}
+          {/*
+          {isAdminOuConseiller && (
+            <>
+              {location.pathname !== '/planAction' && (
+                <Tooltip title="Cliquez ici pour accéder aux plans d'actions" arrow>
+                  <Button
+                    component={Link}
+                    to={'/planAction'}
+                    variant="contained"
+                    sx={buttonStyle}
+                    startIcon={<BarChartIcon />}
+                  >
+                    Plans d'actions
+                  </Button>
+                </Tooltip>
+              )}
+            </>
+          )}
+          */}
         </Toolbar>
       </Container>
     </AppBar >
