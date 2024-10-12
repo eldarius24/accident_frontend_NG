@@ -3,6 +3,8 @@ import axios from 'axios';
 import AutoCompleteQ from '../_composants/autoCompleteQ';
 import config from '../config.json';
 import listEntreprises from '../liste/listEntreprise.json';
+import { useUserConnected } from '../Hook/userConnected';
+
 export default function FormulaireEntreprise({ setValue, accidentData, watch }) {
   const [entreprises, setEntreprises] = useState([]);
   const [entreprise, setEntreprise] = useState(watch('entrepriseName') || (accidentData && accidentData.entrepriseName) || '');
@@ -10,8 +12,8 @@ export default function FormulaireEntreprise({ setValue, accidentData, watch }) 
   const [secteur, setSecteur] = useState(watch('secteur') || (accidentData && accidentData.secteur) || '');
   const [typeTravailleur, setTypeTravailleur] = useState(watch('typeTravailleur') || (accidentData && accidentData.typeTravailleur) || '');
   const [loading, setLoading] = useState(true);
-
   const apiUrl = config.apiUrl;
+  const { isAdmin, isAdminOuConseiller, userInfo, isConseiller  } = useUserConnected();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -20,25 +22,29 @@ export default function FormulaireEntreprise({ setValue, accidentData, watch }) 
           axios.get(`http://${apiUrl}:3100/api/entreprises`),
           axios.get(`http://${apiUrl}:3100/api/secteurs`)
         ]);
-
-        const entreprisesData = entreprisesResponse.data.map(e => ({
+        let entreprisesData = entreprisesResponse.data.map(e => ({
           label: e.AddEntreName,
           id: e._id
         }));
-        setEntreprises(entreprisesData);
 
+        // Filter entreprises based on user role
+        if (!isAdmin) {
+          entreprisesData = entreprisesData.filter(e => 
+            userInfo.entreprisesConseillerPrevention?.includes(e.label)
+          );
+        }
+
+        setEntreprises(entreprisesData);
         const secteursData = secteursResponse.data;
         setSecteurs(secteursData);
-
         setLoading(false);
       } catch (error) {
         console.error('Error fetching data:', error);
         setLoading(false);
       }
     };
-
     fetchData();
-  }, [apiUrl]);
+  }, [apiUrl, isAdmin, isConseiller]);
 
   useEffect(() => {
     setValue('entrepriseName', entreprise);

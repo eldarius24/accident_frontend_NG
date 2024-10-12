@@ -3,8 +3,8 @@ import { styled } from '@mui/material/styles';
 
 /**
  * objet qui affiche un autocomplete (champ de texte avec suggestions)
- * si onchange est défini, alors il s'agit d'un autocomplete ou vous devez entre le code dans onchange
- * sinon, il s'agit d'un autocomplete ou vous devez juste entrer un id
+ * si onchange est défini, alors il s'agit d'un autocomplete où vous devez entrer le code dans onchange
+ * sinon, il s'agit d'un autocomplete où vous devez juste entrer un id
  * @param {*} id identifiant unique
  * @param {*} option liste des suggestions
  * @param {*} label nom de l'autocomplete
@@ -36,7 +36,11 @@ export default function AutoCompleteP({
                 value={defaultValue}
                 sx={sx}
                 onChange={handleChange}
-                renderOption={(props, option) => <li {...props}>{option}</li>}
+                renderOption={(props, option, { key }) => (
+                    <li key={key} {...props}>
+                        {option}
+                    </li>
+                )}
                 renderInput={(params) => <TextField {...params} label={label} />}
                 fullWidth={true}
                 PaperComponent={(props) => (

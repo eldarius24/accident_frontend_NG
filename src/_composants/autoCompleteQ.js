@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Autocomplete, TextField, Paper } from '@mui/material';
-import { styled } from '@mui/material/styles';
 
 export default function AutoCompleteQ({
     id,
@@ -38,7 +37,10 @@ export default function AutoCompleteQ({
                     transition: 'background-color 0.3s ease',
                 }}
                 onChange={handleChange}
-                renderOption={(props, option) => <li {...props}>{option}</li>}
+                renderOption={(props, option) => {
+                    const { key, ...otherProps } = props;
+                    return <li key={key} {...otherProps}>{option}</li>;
+                }}
                 renderInput={(params) => (
                     <TextField
                         {...params}

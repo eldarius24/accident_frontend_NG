@@ -53,19 +53,19 @@ const Login = () => {
       <div className='max-h-screen'>
         <div className="image-tigre"></div>
         <div className="flex justify-center max-h-96">
-          <Grid className='max-w-lg' container>
-            <Grid item xs={6}>
-              <div className="image-container1">
-              </div>
+          <Tooltip title="Attention aux chocs et aux vibrations !!!" arrow>
+            <Grid className='max-w-lg' container>
+              <Grid item xs={6}>
+                <div className="image-container1">
+                </div>
+              </Grid>
+              <Grid item xs={6}>
+                <div className="image-container2">
+                </div>
+              </Grid>
             </Grid>
-            <Grid item xs={6}>
-              <div className="image-container2">
-              </div>
-            </Grid>
-          </Grid>
+          </Tooltip>
         </div>
-
-
 
         <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col justify-center items-center min-h-20 space-y-4">
           <TextField {...register('email')} id="outlined-multiline-static" label="Email" className="bg-[#00479871] w-1/2 shadow-md" />
@@ -91,22 +91,23 @@ const Login = () => {
               ),
             }}
           />
-
-          <Button
-            type="submit"
-            className="bg-[#00479871] hover:bg-green-950 w-1/2 shadow-md"
-          >
-            Se connecter
-          </Button>
+          <Tooltip title="Rentrer votre Email et votre mot de passe pour vous connecter. Si vous n'en avez pas faite la demande au support via l'adresse suivante : bgillet.lecortil@cortigroupe.be" arrow>
+            <Button
+              type="submit"
+              className="bg-[#00479871] hover:bg-green-950 w-1/2 shadow-md"
+            >
+              Se connecter
+            </Button>
+          </Tooltip>
           <h6>Pour avoir accès, veuillez le demander au support : bgillet.lecortil@cortigroupe.be </h6>
 
         </form>
-        
+
       </div>
       <div className="image-cortigroupe"></div>
-        <Tooltip title="Si vous rencontrez un souci avec le site, envoyer un mail à l'adresse suivante : bgillet.lecortil@cortigroupe.be et expliquer le soucis rencontré" arrow>
-          <h5 style={{ marginBottom: '40px' }}> Développé par Remy et Benoit pour Le Cortigroupe. Support: bgillet.lecortil@cortigroupe.be</h5>
-        </Tooltip>
+      <Tooltip title="Si vous rencontrez un souci avec le site, envoyer un mail à l'adresse suivante : bgillet.lecortil@cortigroupe.be et expliquer le soucis rencontré" arrow>
+        <h5 style={{ marginBottom: '40px' }}> Développé par Remy et Benoit pour Le Cortigroupe. Support: bgillet.lecortil@cortigroupe.be</h5>
+      </Tooltip>
     </div>
   );
 };

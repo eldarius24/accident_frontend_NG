@@ -311,7 +311,7 @@ function Home() {
 
                                         <TableCell style={{ padding: 0 }}>
                                             {(isAdmin || (isConseiller && isConseillerPrevention(item.entrepriseName))) ? (
-                                                <Tooltip title="Cliquez ici pour ajouter des fichier a l'accident" arrow>
+                                                <Tooltip title="Cliquez ici pour ajouter des fichiers a l'accident" arrow>
                                                     <Button variant="contained" color="secondary" onClick={() => navigate("/fichierdll", { state: item._id })}>
                                                         <GetAppIcon />
                                                     </Button>
