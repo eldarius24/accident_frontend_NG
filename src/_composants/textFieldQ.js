@@ -1,3 +1,4 @@
+import React, { useState, useEffect } from 'react';
 import { TextField } from '@mui/material';
 
 export default function textFieldQ({ 
@@ -8,24 +9,38 @@ export default function textFieldQ({
     defaultValue,
     required = false
 }) {
+    const [inputValue, setInputValue] = useState(value || defaultValue || "");
+    const [backgroundColor, setBackgroundColor] = useState('#e62a5663');
+
+    useEffect(() => {
+        setBackgroundColor(inputValue ? '#95ad2271' : '#e62a5663');
+    }, [inputValue]);
+
     const handleChange = (event) => {
+        const newValue = event.target.value;
+        setInputValue(newValue);
         if (onChange) {
-            onChange(event.target.value);
+            onChange(newValue);
         }
-    }
+    };
+
     return (
         <div style={{ display: 'flex', justifyContent: 'center', margin: '0 auto 1rem' }}>
             <TextField
                 id={id}
                 label={label}
-                value={value !== undefined ? value : undefined}
-                defaultValue={defaultValue}
+                value={inputValue}
                 onChange={handleChange}
-                sx={{ backgroundColor: '#e62a5663', width: '50%', boxShadow: 3 }}
+                sx={{ 
+                    backgroundColor, 
+                    width: '50%', 
+                    boxShadow: 3, 
+                    transition: 'background-color 0.3s ease' 
+                }}
                 multiline
                 required={required}
-                error={required && !value && !defaultValue}
-                helperText={required && !value && !defaultValue ? "Ce champ est obligatoire" : ""}
+                error={required && !inputValue}
+                helperText={required && !inputValue ? "Ce champ est obligatoire" : ""}
             />
         </div>
     );

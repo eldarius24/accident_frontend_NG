@@ -1,3 +1,4 @@
+import React, { useState, useEffect } from 'react';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
@@ -15,10 +16,18 @@ dayjs.locale('fr');
  * @param {boolean} required - Indique si le champ est obligatoire
  * @returns {JSX.Element}
  */
-export default function datePickerP({ id, label, defaultValue, onChange, required = false }) {
-    const handleChange = (event) => {
-        if (onChange && event) {
-            const date = dayjs(event).format('YYYY-MM-DD');
+export default function datePickerQ({ id, label, defaultValue, onChange, required = false }) {
+    const [value, setValue] = useState(defaultValue ? dayjs(defaultValue) : null);
+    const [backgroundColor, setBackgroundColor] = useState('#e62a5663');
+
+    useEffect(() => {
+        setBackgroundColor(value ? '#95ad2271' : '#e62a5663');
+    }, [value]);
+
+    const handleChange = (newValue) => {
+        setValue(newValue);
+        if (onChange && newValue) {
+            const date = newValue.format('YYYY-MM-DD');
             onChange(date);
         }
     };
@@ -29,19 +38,20 @@ export default function datePickerP({ id, label, defaultValue, onChange, require
                 <DatePicker
                     id={id}
                     label={label}
+                    value={value}
+                    onChange={handleChange}
                     sx={{ 
-                        backgroundColor: '#e62a5663', 
+                        backgroundColor: backgroundColor, 
                         width: '50%', 
                         boxShadow: 3, 
-                        margin: '0 auto 1rem'
+                        margin: '0 auto 1rem',
+                        transition: 'background-color 0.3s ease',
                     }}
-                    defaultValue={defaultValue ? dayjs(defaultValue) : null}
-                    onChange={handleChange}
                     slotProps={{
                         textField: {
                             required: required,
-                            error: required && !defaultValue,
-                            helperText: required && !defaultValue ? "Ce champ est obligatoire" : "",
+                            error: required && !value,
+                            helperText: required && !value ? "Ce champ est obligatoire" : "",
                         },
                     }}
                 />

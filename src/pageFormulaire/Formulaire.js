@@ -26,6 +26,7 @@ const forms = [
     { id: 4, component: FormulaireDeclarationASSBelfius },
 ];
 
+//champ a remplire obligatoirement
 const mandatoryFields = [
     'entrepriseName',
     'secteur',
