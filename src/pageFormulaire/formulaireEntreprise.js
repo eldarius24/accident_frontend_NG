@@ -84,6 +84,7 @@ export default function FormulaireEntreprise({ setValue, accidentData, watch }) 
               label='Entreprise'
               onChange={handleEntrepriseSelect}
               defaultValue={entreprise}
+              required={true}
             />
             <AutoCompleteQ
               id='secteur'
@@ -91,6 +92,7 @@ export default function FormulaireEntreprise({ setValue, accidentData, watch }) 
               label='Secteur'
               onChange={setSecteur}
               defaultValue={secteur}
+              required={true}
             />
             <AutoCompleteQ
               id='typeTravailleur'
@@ -98,6 +100,7 @@ export default function FormulaireEntreprise({ setValue, accidentData, watch }) 
               label="Type de travailleur"
               onChange={setTypeTravailleur}
               defaultValue={typeTravailleur}
+              required={true}
             />
           </div>
         </div>

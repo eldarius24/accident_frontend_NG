@@ -129,6 +129,7 @@ export default function FormulaireAccident({ setValue, accidentData, watch }) {
             id='typeAccident'
             option={listAccident.typeAccident} // Assurez-vous que listAccident.typeAccident est correctement défini
             label='Type d accident'
+            required={true}
             onChange={(value) => setTypeAccident(value)} // Assurez-vous que setFormData gère correctement les changements
             defaultValue={watch('typeAccident') ?? (formData?.typeAccident ?? '')}
           />
@@ -137,7 +138,7 @@ export default function FormulaireAccident({ setValue, accidentData, watch }) {
             setValue('circonstanceAccident', circonstanceAccidentText);
           }} defaultValue={circonstanceAccident}></TextFieldP>
 
-          <DateHeurePickerQ id="DateHeureAccident" label="Date et heure de l'accident" onChange={(DateHeureAccidentChoose) => {
+          <DateHeurePickerQ id="DateHeureAccident" label="Date et heure de l'accident" required={true} onChange={(DateHeureAccidentChoose) => {
             setDateHeureAccident(DateHeureAccidentChoose);
             setValue('DateHeureAccident', DateHeureAccidentChoose);
           }} defaultValue={DateHeureAccident}></DateHeurePickerQ>
@@ -269,7 +270,7 @@ export default function FormulaireAccident({ setValue, accidentData, watch }) {
               }} defaultValue={boolAutre}></ControlLabelP>
             </FormGroup>
           </div>
-          <TextFieldQ id="blessures" label="Blessures" onChange={(blessuresText) => {
+          <TextFieldQ id="blessures" label="Blessures" required={true} onChange={(blessuresText) => {
             setBlessures(blessuresText);
             setValue('blessures', blessuresText);
           }} defaultValue={blessures}></TextFieldQ>

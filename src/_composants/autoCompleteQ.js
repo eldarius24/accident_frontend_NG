@@ -1,23 +1,13 @@
 import { Autocomplete, TextField, Paper } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
-/**
- * objet qui affiche un autocomplete (champ de texte avec suggestions)
- * si onchange est défini, alors il s'agit d'un autocomplete ou vous devez entre le code dans onchange
- * sinon, il s'agit d'un autocomplete ou vous devez juste entrer un id
- * @param {*} id identifiant unique
- * @param {*} option liste des suggestions
- * @param {*} label nom de l'autocomplete
- * @param {} onChange fonction qui se déclenche à chaque changement de valeur (setValue({ id }, value))
- * @param {string} defaultValue /!\ obligatoire /!\ valeur par défaut à afficher dans l'autocomplete
- * @returns
- */
-export default function AutoCompleteP({
+export default function AutoCompleteQ({
     id,
     option,
     label,
     onChange,
     defaultValue,
+    required = false,
     sx = { backgroundColor: '#e62a5663', width: '50%', boxShadow: 3, margin: '0 auto 1rem' }
 }) {
     const handleChange = (_, value) => {
@@ -26,7 +16,6 @@ export default function AutoCompleteP({
             onChange(value);
         }
     };
-
     return (
         <div className={id}>
             <Autocomplete
@@ -37,7 +26,15 @@ export default function AutoCompleteP({
                 sx={sx}
                 onChange={handleChange}
                 renderOption={(props, option) => <li {...props}>{option}</li>}
-                renderInput={(params) => <TextField {...params} label={label} />}
+                renderInput={(params) => (
+                    <TextField 
+                        {...params} 
+                        label={label} 
+                        required={required}
+                        error={required && !defaultValue}
+                        helperText={required && !defaultValue ? "Ce champ est obligatoire" : ""}
+                    />
+                )}
                 fullWidth={true}
                 PaperComponent={(props) => (
                     <Paper {...props} sx={{ backgroundColor: '#bed7f6' }} />

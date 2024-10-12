@@ -26,6 +26,20 @@ const forms = [
     { id: 4, component: FormulaireDeclarationASSBelfius },
 ];
 
+const mandatoryFields = [
+    'entrepriseName',
+    'secteur',
+    'typeTravailleur',
+    'nomTravailleur',
+    'prenomTravailleur',
+    'dateNaissance',
+    'sexe',
+    'typeAccident',
+    'DateHeureAccident',
+    'blessures'
+];
+
+
 export default function Formulaire() {
     const accidentData = useLocation().state;
     const apiUrl = config.apiUrl;
@@ -83,34 +97,32 @@ export default function Formulaire() {
      * METHODE ON SUBMIT
      * ************************************************************************/
     const onSubmit = (data) => {
+        const missingFields = mandatoryFields.filter(field => !data[field]);
+        
+        if (missingFields.length > 0) {
+            const missingFieldNames = missingFields.map(field => field.replace('_', ' ')).join(', ');
+            showSnackbar(`Veuillez remplir les champs obligatoires suivants : ${missingFieldNames}`, 'error');
+            return;
+        }
+
         if (accidentData) {
-
-            console.log("Formulaire.js -> onSubmit -> Données à editer accidentData :", accidentData);
-
-            //mode EDITION
-            axios.put("http://" + apiUrl + ":3100/api/accidents/" + accidentData._id, data)
+            axios.put(`http://${apiUrl}:3100/api/accidents/${accidentData._id}`, data)
                 .then(response => {
                     console.log('Réponse du serveur en modification :', response.data);
                     showSnackbar('Accident en cours d\'édition', 'success');
-                    setTimeout(() => showSnackbar('Accident éditer avec succès', 'success'), 1000);
+                    setTimeout(() => showSnackbar('Accident édité avec succès', 'success'), 1000);
                     setTimeout(() => navigate('/'), 2000);
-
                 })
                 .catch(error => {
                     console.error('Erreur de requête:', error.message);
-                    showSnackbar('Erreur lors de la création de l\'accident', 'error');
-
+                    showSnackbar('Erreur lors de la modification de l\'accident', 'error');
                 });
         } else {
-            console.log("Formulaire.js -> onSubmit -> Données à enregistrer :", data);
-
-
-            //mode CREATION
-            axios.put("http://" + apiUrl + ":3100/api/accidents", data)
+            axios.put(`http://${apiUrl}:3100/api/accidents`, data)
                 .then(response => {
                     console.log('Réponse du serveur en création :', response.data);
                     showSnackbar('Accident en cours de création', 'success');
-                    setTimeout(() => showSnackbar('Accident créée avec succès', 'success'), 1000);
+                    setTimeout(() => showSnackbar('Accident créé avec succès', 'success'), 1000);
                     setTimeout(() => navigate('/'), 2000);
                 })
                 .catch(error => {
@@ -118,10 +130,6 @@ export default function Formulaire() {
                     showSnackbar('Erreur lors de la création de l\'accident', 'error');
                 });
         }
-
-
-        // Naviguer vers la page d'accueil
-        //navigate('/');
     };
 
     //enregistrement des donnée quand suivent ou précédent
