@@ -5,7 +5,7 @@ import {
   LineChart, Line, PieChart, Pie, Cell
 } from 'recharts';
 import {
-  FormControl, InputLabel, Select, MenuItem, Checkbox, ListItemText, Grid
+  FormControl, InputLabel, Select, MenuItem, Checkbox, ListItemText, Grid, Box
 } from '@mui/material';
 
 const COLORS = ['#0088FE', '#FF8042', '#00C49F', '#FFBB28', '#FF8042', '#0088FE', '#00C49F'];
@@ -54,6 +54,8 @@ const Statistiques = () => {
   const [allYears, setAllYears] = useState([]);
   const [workerTypes, setWorkerTypes] = useState([]);
   const [selectedWorkerTypes, setSelectedWorkerTypes] = useState([]);
+  const [sectors, setSectors] = useState([]);
+  const [selectedSectors, setSelectedSectors] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -64,14 +66,16 @@ const Statistiques = () => {
 
         const years = [...new Set(response.data.map(accident => new Date(accident.DateHeureAccident).getFullYear()))];
         setAllYears(years);
-
-        // Sélectionner l'année en cours par défaut
         const currentYear = new Date().getFullYear();
         setSelectedYears(years.includes(currentYear) ? [currentYear] : [years[years.length - 1]]);
 
         const types = [...new Set(response.data.map(accident => accident.typeTravailleur))];
         setWorkerTypes(types);
-        setSelectedWorkerTypes(types); // Sélectionner tous les types par défaut
+        setSelectedWorkerTypes(types);
+
+        const extractedSectors = [...new Set(response.data.map(accident => accident.secteur))];
+        setSectors(extractedSectors);
+        setSelectedSectors(extractedSectors);
       } catch (error) {
         console.error('Erreur lors de la récupération des données:', error.message);
       }
@@ -84,7 +88,9 @@ const Statistiques = () => {
     if (data.length > 0) {
       const filteredData = data.filter(accident => {
         const accidentYear = new Date(accident.DateHeureAccident).getFullYear();
-        return selectedYears.includes(accidentYear) && selectedWorkerTypes.includes(accident.typeTravailleur);
+        return selectedYears.includes(accidentYear) &&
+          selectedWorkerTypes.includes(accident.typeTravailleur) &&
+          selectedSectors.includes(accident.secteur);
       });
 
       const newStats = {
@@ -182,7 +188,7 @@ const Statistiques = () => {
 
       setStats(newStats);
     }
-  }, [data, selectedYears, selectedWorkerTypes]);
+  }, [data, selectedYears, selectedWorkerTypes, selectedSectors]);
 
   const [allChecked, setAllChecked] = useState(true);
   const handleChangeYearsFilter = (event) => {
@@ -218,6 +224,15 @@ const Statistiques = () => {
       setSelectedWorkerTypes(selectedWorkerTypes.length === workerTypes.length ? [] : workerTypes);
     } else {
       setSelectedWorkerTypes(value);
+    }
+  };
+
+  const handleChangeSectorsFilter = (event) => {
+    const value = event.target.value;
+    if (value.includes('all')) {
+      setSelectedSectors(selectedSectors.length === sectors.length ? [] : sectors);
+    } else {
+      setSelectedSectors(value);
     }
   };
 
@@ -275,103 +290,76 @@ const Statistiques = () => {
   };
 
   const isAllSelected = selectedWorkerTypes.length === workerTypes.length;
-
+  const isAllSectorsSelected = selectedSectors.length === sectors.length;
   return (
     <div className="col-span-full" style={{ margin: '20px' }}>
-
-      <Grid item xs={6} style={{ backgroundColor: '#ee752d60' }}>
-        <FormControl sx={{ boxShadow: 3, minWidth: 50, width: '100%' }}>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px' }}>
+        <FormControl sx={{ width: '30%', minWidth: '200px' }}>
           <InputLabel id="years-label">Année</InputLabel>
           <Select
+            sx={{ backgroundColor: '#ee742d59' }}
             labelId="years-label"
             id="years-select"
             multiple
             value={selectedYears}
             onChange={handleChangeYearsFilter}
-            renderValue={(selected) => selected.join(', ')}
+            renderValue={(selected) => `${selected.length} année(s)`}
             MenuProps={{
-              PaperProps: {
-                style: {
-                  maxHeight: 300,
-                  overflow: 'auto'
-                },
-              },
+              PaperProps: { style: { maxHeight: 300, overflow: 'auto' } },
             }}
           >
             <MenuItem key="All" value="All" style={{ backgroundColor: '#ee742d59' }}>
-              <Checkbox
-                checked={selectedYears.length === allYears.length}
-                style={{ color: 'red' }}
-              />
+              <Checkbox checked={selectedYears.length === allYears.length} style={{ color: 'red' }} />
               <ListItemText primary="All" />
             </MenuItem>
-            {allYears.filter(Boolean).sort((a, b) => a - b).map((year) => ( // Trier ici
+            {allYears.filter(Boolean).sort((a, b) => a - b).map((year) => (
               <MenuItem key={year} value={year} style={{ backgroundColor: '#ee742d59' }}>
-                <Checkbox
-                  checked={selectedYears.includes(year)}
-                  style={{ color: '#257525' }}
-                />
+                <Checkbox checked={selectedYears.includes(year)} style={{ color: '#257525' }} />
                 <ListItemText primary={year} />
               </MenuItem>
             ))}
           </Select>
         </FormControl>
-      </Grid>
-      <Grid item xs={6} style={{ marginTop: 20, backgroundColor: '#ee752d60' }}>
-        <FormControl sx={{ boxShadow: 3, minWidth: 50, width: '100%' }}>
+
+        <FormControl sx={{ width: '30%', minWidth: '200px' }}>
           <InputLabel id="graphs-label">Graphiques</InputLabel>
           <Select
+            sx={{ backgroundColor: '#ee742d59' }}
             labelId="graphs-label"
             id="graphs-select"
             multiple
             value={Object.entries(graphs).filter(([_, { visible }]) => visible).map(([key]) => key)}
             onChange={handleChangeGraphsFilter}
-            renderValue={(selected) => selected.map(key => graphs[key].label).join(', ')}
+            renderValue={(selected) => `${selected.length} graphique(s)`}
             MenuProps={{
-              PaperProps: {
-                style: {
-                  maxHeight: 300,
-                  overflow: 'auto'
-                },
-              },
+              PaperProps: { style: { maxHeight: 300, overflow: 'auto' } },
             }}
           >
             <MenuItem key="All" value="All" style={{ backgroundColor: '#ee742d59' }}>
-              <Checkbox
-                checked={Object.values(graphs).every(({ visible }) => visible)}
-                style={{ color: 'red' }}
-              />
+              <Checkbox checked={Object.values(graphs).every(({ visible }) => visible)} style={{ color: 'red' }} />
               <ListItemText primary="All" />
             </MenuItem>
             {Object.entries(graphs).map(([key, { label, visible }]) => (
               <MenuItem key={key} value={key} style={{ backgroundColor: '#ee742d59' }}>
-                <Checkbox
-                  checked={visible}
-                  style={{ color: '#257525' }}
-                />
+                <Checkbox checked={visible} style={{ color: '#257525' }} />
                 <ListItemText primary={label} />
               </MenuItem>
             ))}
           </Select>
         </FormControl>
-      </Grid>
-      <Grid item xs={6} style={{ marginTop: 20, backgroundColor: '#ee752d60' }}>
-        <FormControl sx={{ boxShadow: 3, minWidth: 50, width: '100%' }}>
+
+        <FormControl sx={{ width: '30%', minWidth: '200px' }}>
           <InputLabel id="worker-types-label">Type de travailleur</InputLabel>
           <Select
+            sx={{ backgroundColor: '#ee742d59' }}
             labelId="worker-types-label"
             id="worker-types-select"
             multiple
             value={selectedWorkerTypes}
             onChange={handleChangeWorkerTypesFilter}
-            renderValue={(selected) => selected.join(', ')}
+            renderValue={(selected) => `${selected.length} type(s)`}
             MenuProps={{
-              PaperProps: {
-                style: {
-                  maxHeight: 300,
-                  overflow: 'auto'
-                },
-              },
+              PaperProps: { style: { maxHeight: 300, overflow: 'auto' } },
             }}
           >
             <MenuItem value="all" style={{ backgroundColor: '#ee742d59' }}>
@@ -386,7 +374,35 @@ const Statistiques = () => {
             ))}
           </Select>
         </FormControl>
-      </Grid>
+
+        <FormControl sx={{ width: 'calc(25% - 15px)', minWidth: '200px' }}>
+          <InputLabel id="sectors-label">Secteurs</InputLabel>
+          <Select
+          sx={{ backgroundColor: '#ee742d59' }}
+            labelId="sectors-label"
+            id="sectors-select"
+            multiple
+            value={selectedSectors}
+            onChange={handleChangeSectorsFilter}
+            renderValue={(selected) => `${selected.length} secteur(s)`}
+            MenuProps={{
+              PaperProps: { style: { maxHeight: 300, overflow: 'auto' } },
+            }}
+          >
+            <MenuItem value="all" style={{ backgroundColor: '#ee742d59' }}>
+              <Checkbox checked={isAllSectorsSelected} style={{ color: 'red' }} />
+              <ListItemText primary="Sélectionner tout" />
+            </MenuItem>
+            {sectors.map((sector) => (
+              <MenuItem key={sector} value={sector} style={{ backgroundColor: '#ee742d59' }}>
+                <Checkbox checked={selectedSectors.includes(sector)} style={{ color: '#257525' }} />
+                <ListItemText primary={sector} />
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+
+      </Box>
       <div className="flex flex-col items-center justify-center h-full mb-8">
         <h2 className="text-center">Total des accidents</h2>
         <p className="text-3xl font-bold text-center">{stats.totalAccidents}</p>

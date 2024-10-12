@@ -10,9 +10,12 @@ dayjs.locale('fr');
 import listAccident from '../liste/listAccident.json';
 import ControlLabelP from '../_composants/controlLabelP';
 import TextFieldP from '../_composants/textFieldP';
+import TextFieldQ from '../_composants/textFieldQ';
 import AutoCompleteP from '../_composants/autoCompleteP';
+import AutoCompleteQ from '../_composants/autoCompleteQ';
 import DatePickerP from '../_composants/datePickerP';
 import DateHeurePickerP from '../_composants/dateHeurePickerP';
+import DateHeurePickerQ from '../_composants/dateHeurePickerQ';
 import TextFieldMaskP from '../_composants/textFieldMaskP';
 import { Link } from 'react-router-dom';
 
@@ -122,7 +125,7 @@ export default function FormulaireAccident({ setValue, accidentData, watch }) {
           <h2>Infos Accident</h2>
           <h3>Rentrez les informations sur l'accident de travail.</h3>
 
-          <AutoCompleteP
+          <AutoCompleteQ
             id='typeAccident'
             option={listAccident.typeAccident} // Assurez-vous que listAccident.typeAccident est correctement défini
             label='Type d accident'
@@ -134,10 +137,10 @@ export default function FormulaireAccident({ setValue, accidentData, watch }) {
             setValue('circonstanceAccident', circonstanceAccidentText);
           }} defaultValue={circonstanceAccident}></TextFieldP>
 
-          <DateHeurePickerP id="DateHeureAccident" label="Date et heure de l'accident" onChange={(DateHeureAccidentChoose) => {
+          <DateHeurePickerQ id="DateHeureAccident" label="Date et heure de l'accident" onChange={(DateHeureAccidentChoose) => {
             setDateHeureAccident(DateHeureAccidentChoose);
             setValue('DateHeureAccident', DateHeureAccidentChoose);
-          }} defaultValue={DateHeureAccident}></DateHeurePickerP>
+          }} defaultValue={DateHeureAccident}></DateHeurePickerQ>
 
 
           <TextFieldMaskP id='horaireJourAccident' label='Horaire de la victime le jour de l accident' onChange={sethoraireJourAccident} defaultValue={horaireJourAccident} mask="de 00h00 à 00h00 et de 00h00 à 00h00" />
@@ -266,10 +269,10 @@ export default function FormulaireAccident({ setValue, accidentData, watch }) {
               }} defaultValue={boolAutre}></ControlLabelP>
             </FormGroup>
           </div>
-          <TextFieldP id="blessures" label="Blessures" onChange={(blessuresText) => {
+          <TextFieldQ id="blessures" label="Blessures" onChange={(blessuresText) => {
             setBlessures(blessuresText);
             setValue('blessures', blessuresText);
-          }} defaultValue={blessures}></TextFieldP>
+          }} defaultValue={blessures}></TextFieldQ>
         </div>
       </div>
     </div>

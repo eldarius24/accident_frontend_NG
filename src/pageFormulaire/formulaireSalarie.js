@@ -4,9 +4,11 @@ import * as React from 'react';
 import { useState, useEffect } from 'react';
 /* IMPORT PERSO */
 import TextFieldP from '../_composants/textFieldP';
+import TextFieldQ from '../_composants/textFieldQ';
 import TextFieldMaskP from '../_composants/textFieldMaskP';
 import DatePickerP from '../_composants/datePickerP';
 import AutoCompleteP from '../_composants/autoCompleteP';
+import AutoCompleteQ from '../_composants/autoCompleteQ';
 import listeDeclarationAssBelfius from '../liste/listeDeclarationAssBelfius.json';
 export default function FormulaireSalarie({ setValue, accidentData, watch }) {
 
@@ -132,15 +134,15 @@ export default function FormulaireSalarie({ setValue, accidentData, watch }) {
         <h2>Infos du travailleur</h2>
         <h3>Rentrez les informations sur la victime de l'accident de travail.</h3>
 
-        <TextFieldP id='nomTravailleur' label='Nom du travailleur' onChange={setNomTravailleur} defaultValue={nomTravailleur} />
-        <TextFieldP id='prenomTravailleur' label='Prénom du travailleur' onChange={setPrenomTravailleur} defaultValue={prenomTravailleur} />
-        <DatePickerP id='dateNaissance' label='Date de naissance' onChange={setDateNaissance} defaultValue={dateNaissance} />
+        <TextFieldQ id='nomTravailleur' label='Nom du travailleur' onChange={setNomTravailleur} defaultValue={nomTravailleur} />
+        <TextFieldQ id='prenomTravailleur' label='Prénom du travailleur' onChange={setPrenomTravailleur} defaultValue={prenomTravailleur} />
+        <TextFieldQ id='dateNaissance' label='Date de naissance' onChange={setDateNaissance} defaultValue={dateNaissance} />
         <TextFieldP id='lieuxnaissance' label='Lieu de naissance' onChange={setLieuxnaissance} defaultValue={lieuxnaissance} />
         <TextFieldMaskP id='niss' label='NISS du travailleur' onChange={setNiss} defaultValue={niss} mask="000000-000-00"/>
         <TextFieldMaskP id="numCompteBancaire" label="Numéro de compte bancaire" onChange={setnumCompteBancaire} defaultValue={numCompteBancaire} mask="AA00-0000-0000-0000-0000-0000-0000-0000-00" />
         <TextFieldMaskP id="etabliFinancier" label="Etablissement Financier BIC" onChange={setetabliFinancier} defaultValue={etabliFinancier} mask="####-##-#####" />
         <TextFieldP id="numDimona" label="Numéro de la Dimona" onChange={setnumDimona} defaultValue={numDimona} />
-        <AutoCompleteP id='sexe' label='Sexe' onChange={setsexe} option={listeDeclarationAssBelfius.ListeSexe} defaultValue={sexe} />
+        <AutoCompleteQ id='sexe' label='Sexe' onChange={setsexe} option={listeDeclarationAssBelfius.ListeSexe} defaultValue={sexe} />
         <AutoCompleteP id='nationalité' label='Nationalité' onChange={setnationalité} option={listeDeclarationAssBelfius.ListeNationalite} defaultValue={nationalité} />
         <AutoCompleteP id='etatCivil' label='Etat civil' onChange={setetatCivil} option={listeDeclarationAssBelfius.ListeEtatCivil} defaultValue={etatCivil} />
         <TextFieldP id='adresseRue' label='Adresse du travailleur' onChange={setadresseRue} defaultValue={adresseRue} />

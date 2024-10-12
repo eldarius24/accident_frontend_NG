@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import AutoCompleteP from '../_composants/autoCompleteP';
+import AutoCompleteQ from '../_composants/autoCompleteQ';
 import config from '../config.json';
 import listEntreprises from '../liste/listEntreprise.json';
 export default function FormulaireEntreprise({ setValue, accidentData, watch }) {
@@ -78,21 +78,21 @@ export default function FormulaireEntreprise({ setValue, accidentData, watch }) 
             <h3>Choisissez l'entreprise et le secteur dans lequel le travailleur appartient.</h3>
           </div>
           <div className="autocomplete">
-            <AutoCompleteP
+            <AutoCompleteQ
               id='entreprise'
               option={entreprises.map(e => e.label)}
               label='Entreprise'
               onChange={handleEntrepriseSelect}
               defaultValue={entreprise}
             />
-            <AutoCompleteP
+            <AutoCompleteQ
               id='secteur'
               option={getLinkedSecteurs()}
               label='Secteur'
               onChange={setSecteur}
               defaultValue={secteur}
             />
-            <AutoCompleteP
+            <AutoCompleteQ
               id='typeTravailleur'
               option={listEntreprises.typeTravailleur}
               label="Type de travailleur"
