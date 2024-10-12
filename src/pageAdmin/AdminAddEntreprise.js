@@ -3,10 +3,11 @@ import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import TextFieldP from '../_composants/textFieldP';
 import '../pageFormulaire/formulaire.css';
-import Button from '@mui/material/Button';
+import {Button, Tooltip} from '@mui/material/';
 import config from '../config.json';
 import { useNavigate } from 'react-router-dom';
 import CustomSnackbar from '../_composants/CustomSnackbar';
+
 
 export default function AdminPanelSettings({ accidentData }) {
     const navigate = useNavigate();
@@ -82,7 +83,7 @@ export default function AdminPanelSettings({ accidentData }) {
             .then(response => {
                 console.log('Réponse du serveur en création :', response.data);
                 showSnackbar('Entreprise en cours de création', 'success');
-                setTimeout (() => showSnackbar('Entreprise créée avec succès', 'success'),1000);
+                setTimeout(() => showSnackbar('Entreprise créée avec succès', 'success'), 1000);
                 // Modifier cette ligne pour naviguer vers /adminEntreprises après 2 secondes
                 setTimeout(() => navigate('/adminEntreprises'), 2000);
             })
@@ -90,7 +91,7 @@ export default function AdminPanelSettings({ accidentData }) {
                 console.error('Erreur de requête:', error.message);
                 showSnackbar('Erreur lors de la création de l\'entreprise', 'error');
             });
-    
+
 
         // Naviguer vers la page d'accueil
         //navigate('/');
@@ -121,29 +122,31 @@ export default function AdminPanelSettings({ accidentData }) {
                 <TextFieldP id='AddEntrSclocalite' label="Localité du secrétariat sociale" onChange={setAddEntrSclocalite} defaultValue={AddEntrSclocalite}></TextFieldP>
 
                 <div style={{ display: 'flex', justifyContent: 'center' }}>
-                    <Button
-                        type="submit"
-                        sx={{
-                            backgroundColor: '#ee742d59',
-                            '&:hover': { backgroundColor: '#95ad22' },
-                            padding: '10px 20px',
-                            width: '50%',
-                            marginTop: '1cm',
-                            height: '300%',
-                            fontSize: '2rem', // Taille de police de base
+                    <Tooltip title="Cliquez ici pour crée et enregistrer l'entreprise" arrow>
+                        <Button
+                            type="submit"
+                            sx={{
+                                backgroundColor: '#ee742d59',
+                                '&:hover': { backgroundColor: '#95ad22' },
+                                padding: '10px 20px',
+                                width: '50%',
+                                marginTop: '1cm',
+                                height: '300%',
+                                fontSize: '2rem', // Taille de police de base
 
-                            // Utilisation de Media Queries pour ajuster la taille de police
-                            '@media (min-width: 750px)': {
-                                fontSize: '3rem', // Taille de police plus grande pour les écrans plus larges
-                            },
-                            '@media (max-width: 550px)': {
-                                fontSize: '1.5rem', // Taille de police plus petite pour les écrans plus étroits
-                            },
-                        }}
-                        variant="contained"
-                    >
-                        Créer l'Entreprise
-                    </Button>
+                                // Utilisation de Media Queries pour ajuster la taille de police
+                                '@media (min-width: 750px)': {
+                                    fontSize: '3rem', // Taille de police plus grande pour les écrans plus larges
+                                },
+                                '@media (max-width: 550px)': {
+                                    fontSize: '1.5rem', // Taille de police plus petite pour les écrans plus étroits
+                                },
+                            }}
+                            variant="contained"
+                        >
+                            Créer l'Entreprise
+                        </Button>
+                    </Tooltip>
                 </div>
 
                 <div style={{ marginTop: '30px' }}></div>
