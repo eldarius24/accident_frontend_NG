@@ -99,7 +99,7 @@ export default function Formulaire() {
      * ************************************************************************/
     const onSubmit = (data) => {
         const missingFields = mandatoryFields.filter(field => !data[field]);
-        
+
         if (missingFields.length > 0) {
             const missingFieldNames = missingFields.map(field => field.replace('_', ' ')).join(', ');
             showSnackbar(`Veuillez remplir les champs obligatoires suivants : ${missingFieldNames}`, 'error');
@@ -249,13 +249,7 @@ export default function Formulaire() {
             <div style={{ display: 'flex', justifyContent: 'center' }}>
                 <Button target="_blank" rel="noopener noreferrer" sx={{ color: 'black', backgroundColor: '#ee752d60', '&:hover': { backgroundColor: '#95ad22' }, padding: '10px 20px', width: '50%', marginTop: '1cm', height: '300%', fontSize: '300%' }} href="https://www.socialsecurity.be/app001/drselearning/aoat/aoat000/jsp/index_fatdecision.jsp">Fedris</Button>
             </div>
-
-            <div style={{ display: 'flex', justifyContent: 'center' }}>
-                <h4>Vous n'êtes pas obligé de remplir toutes les données pour les enregistrer.</h4>
-            </div>
-            <div style={{ display: 'flex', justifyContent: 'center' }}>
-                <h8>Vous devez OBLIGATOIREMENT remplire les champs de cette couleur pour pouvoir enregistrer.</h8>
-            </div>
+            <h4>Vous devez OBLIGATOIREMENT remplire les champs de cette couleur pour pouvoir enregistrer.</h4>
             {/************* Bouton enregistrer **************************/}
             <div style={{ display: 'flex', justifyContent: 'center' }}>
                 <Button

@@ -136,13 +136,6 @@ h2 {
 
 }
 
-#h7 {
-  color: #257525;
-  font-size: 5em;
-  text-align: center;
-  text-decoration: underline;
-}
-
 h3 {
   color: #000000;
   font-size: 1.5em;
@@ -150,18 +143,11 @@ h3 {
 
 }
 
-h3a {
-  color: #000000;
-  font-size: 1.5em;
-  text-align: center;
-
-}
-
-
 h4 {
-  color: #95ad22;
+  color: #e62a5663;
   font-size: 1.5em;
   text-align: center;
+  font-weight: bold;
 }
 
 h5 {
@@ -176,12 +162,7 @@ h6 {
   text-align: center;
 }
 
-h8 {
-  color: #e62a5663;
-  font-size: 1.5em;
-  text-align: right;
-  font-weight: bold;
-}
+
 
 /* Utiliser des médias queries pour ajuster la taille de police de <h1> */
 @media (max-width: 1200px) {

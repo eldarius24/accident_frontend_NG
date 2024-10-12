@@ -78,7 +78,6 @@ export default function AddSecteur() {
             console.log('Secteur added:', response.data);
             await fetchSecteurs();
             setSecteurName('');
-            
             showSnackbar('Secteur ajouté avec succès', 'success');
         } catch (error) {
             console.error('Error adding secteur:', error);
@@ -114,7 +113,6 @@ export default function AddSecteur() {
         return <LinearProgress color="success" />;
     }
 
-
     return (
         <form className="background-image" onSubmit={handleSubmit(onSubmit)}>
             <div className="frameStyle-style">
@@ -123,9 +121,14 @@ export default function AddSecteur() {
                 <TextFieldP
                     id='secteurName'
                     label="Nom du secteur"
-                    {...register('secteurName')}
-                    value={secteurName}
-                    onChange={(e) => setSecteurName(event.target.value)}
+                    {...register('secteurName')} // Assurez-vous que ceci est défini
+                    value={secteurName} // Vérifiez que secteurName est bien défini
+                    onChange={(e) => {
+                        // Assurez-vous que 'e' est un événement valide
+                        console.log('Input change event:', e); // Log pour débogage
+                        const value = e; // e contient la valeur ici, pas l'événement
+                        setSecteurName(value); // Mettez à jour secteurName
+                    }}
                 />
 
                 <div style={{ display: 'flex', justifyContent: 'center' }}>
