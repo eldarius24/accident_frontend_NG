@@ -344,8 +344,8 @@ const Statistiques = () => {
               <Checkbox checked={isAllSelected} style={{ color: 'red' }} />
               <ListItemText primary="Sélectionner tout" />
             </MenuItem>
-            {workerTypes.map((type) => (
-              <MenuItem key={type} value={type} style={{ backgroundColor: '#ee742d59' }}>
+            {workerTypes.map((type, index) => (
+              <MenuItem key={index} value={type} style={{ backgroundColor: '#ee742d59' }}>
                 <Checkbox checked={selectedWorkerTypes.includes(type)} style={{ color: '#257525' }} />
                 <ListItemText primary={type} />
               </MenuItem>
