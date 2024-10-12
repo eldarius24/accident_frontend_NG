@@ -176,7 +176,12 @@ h6 {
   text-align: center;
 }
 
-
+h8 {
+  color: #e62a5663;
+  font-size: 1.5em;
+  text-align: right;
+  font-weight: bold;
+}
 
 /* Utiliser des médias queries pour ajuster la taille de police de <h1> */
 @media (max-width: 1200px) {

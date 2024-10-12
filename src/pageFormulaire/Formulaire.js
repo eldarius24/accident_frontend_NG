@@ -91,7 +91,9 @@ export default function Formulaire() {
             axios.put("http://" + apiUrl + ":3100/api/accidents/" + accidentData._id, data)
                 .then(response => {
                     console.log('Réponse du serveur en modification :', response.data);
-
+                    showSnackbar('Accident en cours d\'édition', 'success');
+                    setTimeout(() => showSnackbar('Accident éditer avec succès', 'success'), 1000);
+                    setTimeout(() => navigate('/'), 2000);
 
                 })
                 .catch(error => {
@@ -107,15 +109,17 @@ export default function Formulaire() {
             axios.put("http://" + apiUrl + ":3100/api/accidents", data)
                 .then(response => {
                     console.log('Réponse du serveur en création :', response.data);
+                    showSnackbar('Accident en cours de création', 'success');
+                    setTimeout(() => showSnackbar('Accident créée avec succès', 'success'), 1000);
+                    setTimeout(() => navigate('/'), 2000);
                 })
                 .catch(error => {
                     console.error('Erreur de requête:', error.message);
                     showSnackbar('Erreur lors de la création de l\'accident', 'error');
                 });
         }
-        showSnackbar('Accident en cours de création', 'success');
-        setTimeout(() => showSnackbar('Accident créée avec succès', 'success'), 1000);
-        setTimeout(() => navigate('/'), 2000);
+
+
         // Naviguer vers la page d'accueil
         //navigate('/');
     };
@@ -237,8 +241,12 @@ export default function Formulaire() {
                 <Button target="_blank" rel="noopener noreferrer" sx={{ color: 'black', backgroundColor: '#ee752d60', '&:hover': { backgroundColor: '#95ad22' }, padding: '10px 20px', width: '50%', marginTop: '1cm', height: '300%', fontSize: '300%' }} href="https://www.socialsecurity.be/app001/drselearning/aoat/aoat000/jsp/index_fatdecision.jsp">Fedris</Button>
             </div>
 
-            <h4>Vous n'êtes pas obligé de remplir toutes les données pour les enregistrer.</h4>
-
+            <div style={{ display: 'flex', justifyContent: 'center' }}>
+                <h4>Vous n'êtes pas obligé de remplir toutes les données pour les enregistrer.</h4>
+            </div>
+            <div style={{ display: 'flex', justifyContent: 'center' }}>
+                <h8>Vous devez OBLIGATOIREMENT remplire les champs de cette couleur pour pouvoir enregistrer.</h8>
+            </div>
             {/************* Bouton enregistrer **************************/}
             <div style={{ display: 'flex', justifyContent: 'center' }}>
                 <Button

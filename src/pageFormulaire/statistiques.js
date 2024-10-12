@@ -32,7 +32,6 @@ const Statistiques = () => {
     accidentsByTypeTravailleurByCompany: {},
   });
 
-
   const [graphs, setGraphs] = useState({
     accidentsBySex: { visible: true, label: "TOTAL Accidents par sexe" },
     accidentsByDayOfWeek: { visible: true, label: "TOTAL Accidents par jour de la semaine" }, // Nouvelle entrée
@@ -49,7 +48,6 @@ const Statistiques = () => {
     accidentsByTypeTravailleurByCompany: { visible: true, label: "Accidents par type de travailleur et par entreprise" },
   });
 
-
   const [selectedYears, setSelectedYears] = useState([]);
   const [allYears, setAllYears] = useState([]);
   const [workerTypes, setWorkerTypes] = useState([]);
@@ -63,16 +61,13 @@ const Statistiques = () => {
         const apiUrl = process.env.REACT_APP_API_URL || 'localhost';
         const response = await axios.get(`http://${apiUrl}:3100/api/accidents`);
         setData(response.data);
-
         const years = [...new Set(response.data.map(accident => new Date(accident.DateHeureAccident).getFullYear()))];
         setAllYears(years);
         const currentYear = new Date().getFullYear();
         setSelectedYears(years.includes(currentYear) ? [currentYear] : [years[years.length - 1]]);
-
         const types = [...new Set(response.data.map(accident => accident.typeTravailleur))];
         setWorkerTypes(types);
         setSelectedWorkerTypes(types);
-
         const extractedSectors = [...new Set(response.data.map(accident => accident.secteur))];
         setSectors(extractedSectors);
         setSelectedSectors(extractedSectors);
@@ -111,7 +106,6 @@ const Statistiques = () => {
         accidentsByTypeTravailleurByCompany: {},
       };
 
-
       const calculateAge = (birthDate, accidentDate) => {
         let age = accidentDate.getFullYear() - birthDate.getFullYear();
         const monthDiff = accidentDate.getMonth() - birthDate.getMonth();
@@ -121,13 +115,7 @@ const Statistiques = () => {
         return age;
       };
 
-
-
-
       // Comptage des accidents par type de travailleur
-
-
-
       filteredData.forEach((accident) => {
         const { DateHeureAccident, entrepriseName, sexe, secteur, dateNaissance } = accident;
         const typeAccident = accident.typeAccident || 'Non spécifié';
@@ -143,19 +131,15 @@ const Statistiques = () => {
           const accidentDate = new Date(DateHeureAccident);
           const age = calculateAge(birthDate, accidentDate);
           newStats.accidentsByAge[age] = (newStats.accidentsByAge[age] || 0) + 1;
-
-
           if (!newStats.accidentsByAgeByCompany[companyName]) {
             newStats.accidentsByAgeByCompany[companyName] = {};
           }
           newStats.accidentsByAgeByCompany[companyName][age] = (newStats.accidentsByAgeByCompany[companyName][age] || 0) + 1;
-
           if (!newStats.accidentsByTypeTravailleurByCompany[companyName]) {
             newStats.accidentsByTypeTravailleurByCompany[companyName] = {};
           }
           newStats.accidentsByTypeTravailleurByCompany[companyName][typeTravailleur] =
             (newStats.accidentsByTypeTravailleurByCompany[companyName][typeTravailleur] || 0) + 1;
-
         }
 
         // Increment counters
@@ -168,10 +152,8 @@ const Statistiques = () => {
         // Company specific stats
         newStats.accidentsByYearByCompany[companyName] = newStats.accidentsByYearByCompany[companyName] || {};
         newStats.accidentsByYearByCompany[companyName][year] = (newStats.accidentsByYearByCompany[companyName][year] || 0) + 1;
-
         newStats.accidentsByMonthByCompany[companyName] = newStats.accidentsByMonthByCompany[companyName] || {};
         newStats.accidentsByMonthByCompany[companyName][month] = (newStats.accidentsByMonthByCompany[companyName][month] || 0) + 1;
-
         newStats.accidentsByDayOfWeekByCompany[companyName] = newStats.accidentsByDayOfWeekByCompany[companyName] || { 0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0 };
         newStats.accidentsByDayOfWeekByCompany[companyName][dayOfWeek] = (newStats.accidentsByDayOfWeekByCompany[companyName][dayOfWeek] || 0) + 1;
 
@@ -181,7 +163,6 @@ const Statistiques = () => {
 
         const sector = secteur || 'Non spécifié';
         newStats.accidentsBySector[sector] = (newStats.accidentsBySector[sector] || 0) + 1;
-
         newStats.accidentsByCompany[companyName] = newStats.accidentsByCompany[companyName] || {};
         newStats.accidentsByCompany[companyName][sector] = (newStats.accidentsByCompany[companyName][sector] || 0) + 1;
       });
@@ -257,18 +238,15 @@ const Statistiques = () => {
       day,
       NombreAT: stats.accidentsByDayOfWeek[index],
     })),
-
     accidentsByAgeByCompanyData: Object.entries(stats.accidentsByAgeByCompany).map(([company, ageData]) => ({
       company,
       data: Object.entries(ageData)
         .map(([age, NombreAT]) => ({ age: parseInt(age), NombreAT }))
         .sort((a, b) => a.age - b.age)
     })),
-
     accidentsByTypeTravailleurData: Object.entries(stats.accidentsByTypeTravailleur).map(([type, NombreAT]) => ({
       type, NombreAT
     })),
-
     accidentsByAgeData: Object.entries(stats.accidentsByAge)
       .map(([age, NombreAT]) => ({ age: parseInt(age), NombreAT }))
       .sort((a, b) => a.age - b.age)
@@ -378,7 +356,7 @@ const Statistiques = () => {
         <FormControl sx={{ width: 'calc(25% - 15px)', minWidth: '200px' }}>
           <InputLabel id="sectors-label">Secteurs</InputLabel>
           <Select
-          sx={{ backgroundColor: '#ee742d59' }}
+            sx={{ backgroundColor: '#ee742d59' }}
             labelId="sectors-label"
             id="sectors-select"
             multiple

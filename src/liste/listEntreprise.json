@@ -95,10 +95,19 @@
         }
     ],
     "typeTravailleur": [
-        "Employer",
+        "Employé",
+        "Ouvrier",
         "Article 60",
         "Stagiaire",
         "Intérimaire",
-        "Bénévole"
+        "Bénévole",
+        "Cadre",
+        "Freelance / Indépendant",
+        "Apprenti",
+        "Contractuel",
+        "Fonctionnaire",
+        "Consultant",
+        "Étudiant jobiste",
+        "Dirigeant d'entreprise"
     ]
 }
