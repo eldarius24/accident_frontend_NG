@@ -98,12 +98,12 @@ export default function PageDownloadFile() {
                                 </button>
                             </Tooltip>
                             <Tooltip title="Cliquez sur ANNULER pour annuler l'envoi du fichier" arrow>
-                            <button
-                                className="custom-confirm-button custom-confirm-no"
-                                onClick={onClose}
-                            >
-                                Annuler
-                            </button>
+                                <button
+                                    className="custom-confirm-button custom-confirm-no"
+                                    onClick={onClose}
+                                >
+                                    Annuler
+                                </button>
                             </Tooltip>
                         </div>
                     </div>
@@ -128,7 +128,21 @@ export default function PageDownloadFile() {
         <div>
             {listFilesInAccident(accidentId)}
             <h3>Vous pouvez ajouter des pièces à joindre au dossier (courriers, e-mails, etc..).</h3>
-            <Tooltip title="Faites glisser un fichier ici pour ajouter un fichier lié à l’accident" arrow>
+            <Tooltip
+                title="Faites glisser un fichier ici pour ajouter un fichier lié à l’accident"
+                arrow
+                placement="top"
+                PopperProps={{
+                    modifiers: [
+                        {
+                            name: 'offset',
+                            options: {
+                                offset: [0, -100], // Ajustez cet offset pour centrer verticalement
+                            },
+                        },
+                    ],
+                }}
+            >
                 <div
                     style={dropZoneStyle}
                     onDrop={handleDrop}
