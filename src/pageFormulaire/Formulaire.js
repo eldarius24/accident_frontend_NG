@@ -5,7 +5,6 @@ import { useCallback, useState, useEffect } from 'react';
 import { useForm } from "react-hook-form";
 import { useNavigate, useLocation } from 'react-router-dom';
 /* IMPORT MUI */
-import Button from '@mui/material/Button';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 /* IMPORT PERSO */
@@ -17,6 +16,7 @@ import FormulaireSalarie from './formulaireSalarie';
 import FormulaireDeclarationASSBelfius from './formulaireDeclarationAssBelfius';
 import config from '../config.json';
 import CustomSnackbar from '../_composants/CustomSnackbar';
+import { Tooltip, Button } from '@mui/material';
 
 const forms = [
     { id: 0, component: FormulaireEntreprise },
@@ -172,74 +172,82 @@ export default function Formulaire() {
             {/* Boutons de navigation pour passer à l'étape suivante ou revenir à l'étape précédente */}
             <div style={{ display: 'flex', justifyContent: 'center', marginTop: '1.5rem' }}>
                 {activeStep > 0 && (
-                    <Button
-                        onClick={() => {
-                            //handleSubmit(onSubmit1)();
-                            setActiveStep(prevStep => prevStep - 1);
-                        }}
-                        sx={{
-                            backgroundColor: '#ee752d60',
-                            '&:hover': { backgroundColor: '#95ad22' },
-                            padding: '10px 20px',
-                            marginRight: '1rem',
-                        }}
-                        startIcon={<ArrowBackIcon />}
-                    >
-                        Précédent
-                    </Button>
+                    <Tooltip title="Cliquez ici pour revenir au formulaire précédent" arrow>
+                        <Button
+                            onClick={() => {
+                                //handleSubmit(onSubmit1)();
+                                setActiveStep(prevStep => prevStep - 1);
+                            }}
+                            sx={{
+                                backgroundColor: '#ee752d60',
+                                '&:hover': { backgroundColor: '#95ad22' },
+                                padding: '10px 20px',
+                                marginRight: '1rem',
+                            }}
+                            startIcon={<ArrowBackIcon />}
+                        >
+                            Précédent
+                        </Button>
+                    </Tooltip>
                 )}
                 {activeStep < forms.length - 1 && (
-                    <Button
-                        onClick={() => {
-                            //handleSubmit(onSubmit1)();
-                            setActiveStep((prevStep) => prevStep + 1)
-                        }}
-                        sx={{
-                            backgroundColor: '#ee752d60',
-                            '&:hover': { backgroundColor: '#95ad22' },
-                            padding: '10px 20px',
-                        }}
-                        startIcon={<ArrowForwardIcon />}
-                    >
-                        Suivant
-                    </Button>
+                    <Tooltip title="Cliquez ici pour passer au formulaire suivent" arrow>
+                        <Button
+                            onClick={() => {
+                                //handleSubmit(onSubmit1)();
+                                setActiveStep((prevStep) => prevStep + 1)
+                            }}
+                            sx={{
+                                backgroundColor: '#ee752d60',
+                                '&:hover': { backgroundColor: '#95ad22' },
+                                padding: '10px 20px',
+                            }}
+                            startIcon={<ArrowForwardIcon />}
+                        >
+                            Suivant
+                        </Button>
+                    </Tooltip>
                 )}
             </div>
             {React.createElement(forms[activeStep].component, { setValue, accidentData, watch })}
 
             <div style={{ display: 'flex', justifyContent: 'center', marginTop: '1.5rem' }}>
                 {activeStep > 0 && (
-                    <Button
-                        onClick={() => {
-                            //handleSubmit(onSubmit1)();
-                            setActiveStep(prevStep => prevStep - 1);
-                        }}
-                        sx={{
-                            backgroundColor: '#ee752d60',
-                            '&:hover': { backgroundColor: '#95ad22' },
-                            padding: '10px 20px',
-                            marginRight: '1rem',
-                        }}
-                        startIcon={<ArrowBackIcon />}
-                    >
-                        Précédent
-                    </Button>
+                    <Tooltip title="Cliquez ici pour revenir au formulaire précédent" arrow>
+                        <Button
+                            onClick={() => {
+                                //handleSubmit(onSubmit1)();
+                                setActiveStep(prevStep => prevStep - 1);
+                            }}
+                            sx={{
+                                backgroundColor: '#ee752d60',
+                                '&:hover': { backgroundColor: '#95ad22' },
+                                padding: '10px 20px',
+                                marginRight: '1rem',
+                            }}
+                            startIcon={<ArrowBackIcon />}
+                        >
+                            Précédent
+                        </Button>
+                    </Tooltip>
                 )}
                 {activeStep < forms.length - 1 && (
-                    <Button
-                        onClick={() => {
-                            //handleSubmit(onSubmit1)();
-                            setActiveStep((prevStep) => prevStep + 1)
-                        }}
-                        sx={{
-                            backgroundColor: '#ee752d60',
-                            '&:hover': { backgroundColor: '#95ad22' },
-                            padding: '10px 20px',
-                        }}
-                        startIcon={<ArrowForwardIcon />}
-                    >
-                        Suivant
-                    </Button>
+                    <Tooltip title="Cliquez ici pour passer au formulaire suivent" arrow>
+                        <Button
+                            onClick={() => {
+                                //handleSubmit(onSubmit1)();
+                                setActiveStep((prevStep) => prevStep + 1)
+                            }}
+                            sx={{
+                                backgroundColor: '#ee752d60',
+                                '&:hover': { backgroundColor: '#95ad22' },
+                                padding: '10px 20px',
+                            }}
+                            startIcon={<ArrowForwardIcon />}
+                        >
+                            Suivant
+                        </Button>
+                    </Tooltip>
                 )}
             </div>
 
@@ -247,34 +255,40 @@ export default function Formulaire() {
             <h3>Pour savoir s'il s'agit d'un accident grave, rendez-vous sur le site Fedris via le lien ci-dessous</h3>
 
             <div style={{ display: 'flex', justifyContent: 'center' }}>
-                <Button target="_blank" rel="noopener noreferrer" sx={{ color: 'black', backgroundColor: '#ee752d60', '&:hover': { backgroundColor: '#95ad22' }, padding: '10px 20px', width: '50%', marginTop: '1cm', height: '300%', fontSize: '300%' }} href="https://www.socialsecurity.be/app001/drselearning/aoat/aoat000/jsp/index_fatdecision.jsp">Fedris</Button>
+                <Tooltip title="Cliquez ici pour acceder au site FEDRIS afin de voir si votre accident est grave" arrow>
+                    <Button target="_blank" rel="noopener noreferrer" sx={{ color: 'black', backgroundColor: '#ee752d60', '&:hover': { backgroundColor: '#95ad22' }, padding: '10px 20px', width: '50%', marginTop: '1cm', height: '300%', fontSize: '300%' }} href="https://www.socialsecurity.be/app001/drselearning/aoat/aoat000/jsp/index_fatdecision.jsp">
+                        Fedris
+                    </Button>
+                </Tooltip>
             </div>
             <h4>Vous devez OBLIGATOIREMENT remplire les champs de cette couleur pour pouvoir enregistrer.</h4>
             {/************* Bouton enregistrer **************************/}
             <div style={{ display: 'flex', justifyContent: 'center' }}>
-                <Button
-                    type="submit"
-                    sx={{
-                        backgroundColor: '#ee752d60',
-                        '&:hover': { backgroundColor: '#95ad22' },
-                        padding: '10px 20px',
-                        width: '50%',
-                        marginTop: '1cm',
-                        height: '300%',
-                        fontSize: '2rem', // Taille de police de base
+                <Tooltip title="Cliquez ici pour enregistrer les données (certaine champs doivent être obligatoirement remplis)" arrow>
+                    <Button
+                        type="submit"
+                        sx={{
+                            backgroundColor: '#ee752d60',
+                            '&:hover': { backgroundColor: '#95ad22' },
+                            padding: '10px 20px',
+                            width: '50%',
+                            marginTop: '1cm',
+                            height: '300%',
+                            fontSize: '2rem', // Taille de police de base
 
-                        // Utilisation de Media Queries pour ajuster la taille de police
-                        '@media (min-width: 750px)': {
-                            fontSize: '3rem', // Taille de police plus grande pour les écrans plus larges
-                        },
-                        '@media (max-width: 550px)': {
-                            fontSize: '1.5rem', // Taille de police plus petite pour les écrans plus étroits
-                        },
-                    }}
-                    variant="contained"
-                >
-                    Enregistrer les données
-                </Button>
+                            // Utilisation de Media Queries pour ajuster la taille de police
+                            '@media (min-width: 750px)': {
+                                fontSize: '3rem', // Taille de police plus grande pour les écrans plus larges
+                            },
+                            '@media (max-width: 550px)': {
+                                fontSize: '1.5rem', // Taille de police plus petite pour les écrans plus étroits
+                            },
+                        }}
+                        variant="contained"
+                    >
+                        Enregistrer les données
+                    </Button>
+                </Tooltip>
             </div>
             <CustomSnackbar
                 open={snackbar.open}

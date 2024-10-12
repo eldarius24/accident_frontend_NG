@@ -7,6 +7,7 @@ import {
     TableHead,
     TableRow,
     Button,
+    Tooltip
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
@@ -93,15 +94,19 @@ export default function Adminuser() {
                             <h1 className="custom-confirm-title">Supprimer</h1>
                             <p className="custom-confirm-message">Êtes-vous sûr de vouloir supprimer cet User?</p>
                             <div className="custom-confirm-buttons">
-                                <button className="custom-confirm-button" onClick={() => {
-                                    handleDelete(userId);
-                                    onClose();
-                                }} >
-                                    Oui
-                                </button>
-                                <button className="custom-confirm-button custom-confirm-no" onClick={onClose}>
-                                    Non
-                                </button>
+                                <Tooltip title="Cliquez sur OUI pour supprimer" arrow>
+                                    <button className="custom-confirm-button" onClick={() => {
+                                        handleDelete(userId);
+                                        onClose();
+                                    }} >
+                                        Oui
+                                    </button>
+                                </Tooltip>
+                                <Tooltip title="Cliquez sur NON pour annuler la suppression" arrow>
+                                    <button className="custom-confirm-button custom-confirm-no" onClick={onClose}>
+                                        Non
+                                    </button>
+                                </Tooltip>
                             </div>
                         </div>);
                 }
@@ -136,14 +141,18 @@ export default function Adminuser() {
                                         <TableCell>{user.userPassword}</TableCell>
                                         <TableCell>{user.userName}</TableCell>
                                         <TableCell style={{ padding: 0, width: '70px' }}>
-                                            <Button variant="contained" color="primary" component={Link} to={`/addUser?userId=${user._id}`}>
-                                                <EditIcon />
-                                            </Button>
+                                            <Tooltip title="Cliquez ici pour éditer cette utilisateur" arrow>
+                                                <Button variant="contained" color="primary" component={Link} to={`/addUser?userId=${user._id}`}>
+                                                    <EditIcon />
+                                                </Button>
+                                            </Tooltip>
                                         </TableCell>
                                         <TableCell style={{ padding: 0, width: '70px' }}>
-                                            <Button variant="contained" color="error" onClick={() => popUpDelete(user._id)}>
-                                                <DeleteForeverIcon />
-                                            </Button>
+                                            <Tooltip title="Cliquez ici pour supprimer cette utilisateur" arrow>
+                                                <Button variant="contained" color="error" onClick={() => popUpDelete(user._id)}>
+                                                    <DeleteForeverIcon />
+                                                </Button>
+                                            </Tooltip>
                                         </TableCell>
                                     </TableRow>
                                 ))}

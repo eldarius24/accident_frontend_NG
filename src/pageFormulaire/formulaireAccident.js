@@ -1,7 +1,7 @@
 /*IMPORT REACT */
 import { useState, useEffect } from 'react';
 /* IMPORT MUI */
-import { FormGroup, Grid } from '@mui/material';
+import { FormGroup, Grid, Tooltip } from '@mui/material';
 import InfoIcon from '@mui/icons-material/Info';
 import dayjs from 'dayjs';
 import 'dayjs/locale/fr';
@@ -167,7 +167,9 @@ export default function FormulaireAccident({ setValue, accidentData, watch }) {
             </Grid>
             <Grid item xs={0.00001} style={{ margin: '-24.5%' }}>
               <Link to="/deviation" style={{ textDecoration: 'none', color: 'black' }} target="_blank" rel="noopener noreferrer">
+              <Tooltip title="Cliquez ici pour visualiser les Codes Déviations" arrow>
                 <InfoIcon style={{ color: 'black' }} />
+              </Tooltip>
               </Link>
             </Grid>
           </Grid>
@@ -178,7 +180,9 @@ export default function FormulaireAccident({ setValue, accidentData, watch }) {
             </Grid>
             <Grid item xs={0.00001} style={{ margin: '-24.5%' }}>
               <Link to="/agentmateriel" style={{ textDecoration: 'none', color: 'black' }} target="_blank" rel="noopener noreferrer">
+              <Tooltip title="Cliquez ici pour visualiser les Agents Matériel" arrow>
                 <InfoIcon style={{ color: 'black' }} />
+                </Tooltip>
               </Link>
             </Grid>
           </Grid>
@@ -189,7 +193,9 @@ export default function FormulaireAccident({ setValue, accidentData, watch }) {
             </Grid>
             <Grid item xs={0.00001} style={{ margin: '-24.5%' }}>
               <Link to="/naturelesion" style={{ textDecoration: 'none', color: 'black' }} target="_blank" rel="noopener noreferrer">
+              <Tooltip title="Cliquez ici pour visualiser les Natures de la lésion" arrow>
                 <InfoIcon style={{ color: 'black' }} />
+              </Tooltip>
               </Link>
             </Grid>
           </Grid>
@@ -200,7 +206,9 @@ export default function FormulaireAccident({ setValue, accidentData, watch }) {
             </Grid>
             <Grid item xs={0.00001} style={{ margin: '-24.5%' }} >
               <Link to="/siegelesion" style={{ textDecoration: 'none', color: 'black' }} target="_blank" rel="noopener noreferrer">
+              <Tooltip title="Cliquez ici pour visualiser les Sieges de la lésion" arrow>
                 <InfoIcon style={{ color: 'black' }} />
+              </Tooltip>
               </Link>
             </Grid>
           </Grid>

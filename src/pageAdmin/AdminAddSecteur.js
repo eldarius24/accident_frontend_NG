@@ -13,6 +13,7 @@ import {
     TableRow,
     Button,
     LinearProgress,
+    Tooltip
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
@@ -132,6 +133,7 @@ export default function AddSecteur() {
                 />
 
                 <div style={{ display: 'flex', justifyContent: 'center' }}>
+                <Tooltip title="Cliquez ici pour enregistrer le secteur dans l'entreprise" arrow>
                     <Button
                         type="submit"
                         sx={{
@@ -151,8 +153,9 @@ export default function AddSecteur() {
                         }}
                         variant="contained"
                     >
-                        Ajouter le secteur
+                        Enregistrer le secteur
                     </Button>
+                </Tooltip>
                 </div>
 
                 <div>
@@ -170,41 +173,49 @@ export default function AddSecteur() {
                                     <TableRow key={secteur._id}>
                                         <TableCell>{secteur.secteurName}</TableCell>
                                         <TableCell>
-                                            <Button variant="contained" color="primary">
-                                                <EditIcon />
-                                            </Button>
-                                            <Button
-                                                variant="contained"
-                                                color="error"
-                                                onClick={() => {
-                                                    confirmAlert({
-                                                        customUI: ({ onClose }) => {
-                                                            return (
-                                                                <div className="custom-confirm-dialog">
-                                                                    <h1 className="custom-confirm-title">Supprimer</h1>
-                                                                    <p className="custom-confirm-message">Êtes-vous sûr de vouloir supprimer ce secteur ?</p>
-                                                                    <div className="custom-confirm-buttons">
-                                                                        <button
-                                                                            className="custom-confirm-button"
-                                                                            onClick={() => {
-                                                                                handleDelete(secteur._id);
-                                                                                onClose();
-                                                                            }}
-                                                                        >
-                                                                            Oui
-                                                                        </button>
-                                                                        <button className="custom-confirm-button custom-confirm-no" onClick={onClose}>
-                                                                            Non
-                                                                        </button>
+                                            <Tooltip title="Cliquez ici pour éditer ce secteur" arrow>
+                                                <Button variant="contained" color="primary">
+                                                    <EditIcon />
+                                                </Button>
+                                            </Tooltip>
+                                            <Tooltip title="Cliquez ici pour supprimer cette entreprise" arrow>
+                                                <Button
+                                                    variant="contained"
+                                                    color="error"
+                                                    onClick={() => {
+                                                        confirmAlert({
+                                                            customUI: ({ onClose }) => {
+                                                                return (
+                                                                    <div className="custom-confirm-dialog">
+                                                                        <h1 className="custom-confirm-title">Supprimer</h1>
+                                                                        <p className="custom-confirm-message">Êtes-vous sûr de vouloir supprimer ce secteur ?</p>
+                                                                        <div className="custom-confirm-buttons">
+                                                                        <Tooltip title="Cliquez sur OUI pour supprimer" arrow>
+                                                                            <button
+                                                                                className="custom-confirm-button"
+                                                                                onClick={() => {
+                                                                                    handleDelete(secteur._id);
+                                                                                    onClose();
+                                                                                }}
+                                                                            >
+                                                                                Oui
+                                                                            </button>
+                                                                        </Tooltip>
+                                                                        <Tooltip title="Cliquez sur NON pour annuler la suppression" arrow>
+                                                                            <button className="custom-confirm-button custom-confirm-no" onClick={onClose}>
+                                                                                Non
+                                                                            </button>
+                                                                        </Tooltip>
+                                                                        </div>
                                                                     </div>
-                                                                </div>
-                                                            );
-                                                        }
-                                                    });
-                                                }}
-                                            >
-                                                <DeleteForeverIcon />
-                                            </Button>
+                                                                );
+                                                            }
+                                                        });
+                                                    }}
+                                                >
+                                                    <DeleteForeverIcon />
+                                                </Button>
+                                            </Tooltip>
                                         </TableCell>
                                     </TableRow>
                                 ))}

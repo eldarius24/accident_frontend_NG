@@ -1,6 +1,6 @@
 import React, { } from 'react';
 import '../pageFormulaire/formulaire.css';
-import { Box } from '@mui/material';
+import { Box, Tooltip } from '@mui/material';
 import Button from '@mui/material/Button';
 import { Link } from 'react-router-dom';
 export default function AdminPanelSettingsaction() {
@@ -24,27 +24,39 @@ export default function AdminPanelSettingsaction() {
                 <h3>Administration des droits</h3>
 
                 <Box sx={{ display: 'flex', justifyContent: 'center', marginLeft: '120px', marginRight: '120px' }}>
-                    <Button type="submit"
-                        component={Link}
-                        to={'/addUser'}
-                        sx={defaultStyle} variant="contained"> Créer un nouvel utilisateur</Button>
-                    <Button type="submit"
-                        component={Link}
-                        to={'/adminUser'}
-                        sx={defaultStyle} variant="contained">Consulter les utilisateurs</Button>
+                    <Tooltip title="Cliquez ici Créer un nouvel utilisateur" arrow>
+                        <Button type="submit"
+                            component={Link}
+                            to={'/addUser'}
+                            sx={defaultStyle} variant="contained"> Créer un nouvel utilisateur
+                        </Button>
+                    </Tooltip>
+                    <Tooltip title="Cliquez ici afficher, éditér ou supprimer un utilisateur" arrow>
+                        <Button type="submit"
+                            component={Link}
+                            to={'/adminUser'}
+                            sx={defaultStyle} variant="contained">Consulter les utilisateurs
+                        </Button>
+                    </Tooltip>
                 </Box>
 
                 <h3>Administration des entreprises</h3>
 
                 <Box sx={{ display: 'flex', justifyContent: 'center', marginLeft: '120px', marginRight: '120px' }}>
-                    <Button type="submit"
-                        component={Link}
-                        to={'/addEntreprise'}
-                        sx={defaultStyle} variant="contained"> Créer une nouvelle entreprise</Button>
-                    <Button type="submit"
-                        component={Link}
-                        to={'/adminEntreprises'}
-                        sx={defaultStyle} variant="contained">Consulter les entreprises</Button>
+                    <Tooltip title="Cliquez ici Créer une nouvelle entreprise" arrow>
+                        <Button type="submit"
+                            component={Link}
+                            to={'/addEntreprise'}
+                            sx={defaultStyle} variant="contained"> Créer une nouvelle entreprise
+                        </Button>
+                    </Tooltip>
+                    <Tooltip title="Cliquez ici afficher, éditez ou supprimer une entreprise ou créer un secteur d'activé" arrow>
+                        <Button type="submit"
+                            component={Link}
+                            to={'/adminEntreprises'}
+                            sx={defaultStyle} variant="contained">Consulter les entreprises
+                        </Button>
+                    </Tooltip>
 
                 </Box>
             </div>

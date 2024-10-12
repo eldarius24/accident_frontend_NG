@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import axios from 'axios';
 import {
-  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
+  BarChart, Bar, XAxis, YAxis, CartesianGrid, Legend, ResponsiveContainer,
   LineChart, Line, PieChart, Pie, Cell
 } from 'recharts';
 import {
-  FormControl, InputLabel, Select, MenuItem, Checkbox, ListItemText, Grid, Box
+  FormControl, InputLabel, Select, MenuItem, Checkbox, ListItemText, Grid, Box, Tooltip
 } from '@mui/material';
 
 const COLORS = ['#0088FE', '#FF8042', '#00C49F', '#FFBB28', '#FF8042', '#0088FE', '#00C49F'];
@@ -272,113 +272,119 @@ const Statistiques = () => {
   return (
     <div className="col-span-full" style={{ margin: '20px' }}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px' }}>
-        <FormControl sx={{ width: '30%', minWidth: '200px' }}>
-          <InputLabel id="years-label">Année</InputLabel>
-          <Select
-            sx={{ backgroundColor: '#ee742d59' }}
-            labelId="years-label"
-            id="years-select"
-            multiple
-            value={selectedYears}
-            onChange={handleChangeYearsFilter}
-            renderValue={(selected) => `${selected.length} année(s)`}
-            MenuProps={{
-              PaperProps: { style: { maxHeight: 300, overflow: 'auto' } },
-            }}
-          >
-            <MenuItem key="All" value="All" style={{ backgroundColor: '#ee742d59' }}>
-              <Checkbox checked={selectedYears.length === allYears.length} style={{ color: 'red' }} />
-              <ListItemText primary="All" />
-            </MenuItem>
-            {allYears.filter(Boolean).sort((a, b) => a - b).map((year) => (
-              <MenuItem key={year} value={year} style={{ backgroundColor: '#ee742d59' }}>
-                <Checkbox checked={selectedYears.includes(year)} style={{ color: '#257525' }} />
-                <ListItemText primary={year} />
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
+        <Tooltip title="Cliquez ici pour filtrer les années prisent en compte pour les statistiques" arrow>
+          <FormControl sx={{ width: '30%', minWidth: '200px' }}>
+            <InputLabel id="years-label">Année</InputLabel>
 
-        <FormControl sx={{ width: '30%', minWidth: '200px' }}>
-          <InputLabel id="graphs-label">Graphiques</InputLabel>
-          <Select
-            sx={{ backgroundColor: '#ee742d59' }}
-            labelId="graphs-label"
-            id="graphs-select"
-            multiple
-            value={Object.entries(graphs).filter(([_, { visible }]) => visible).map(([key]) => key)}
-            onChange={handleChangeGraphsFilter}
-            renderValue={(selected) => `${selected.length} graphique(s)`}
-            MenuProps={{
-              PaperProps: { style: { maxHeight: 300, overflow: 'auto' } },
-            }}
-          >
-            <MenuItem key="All" value="All" style={{ backgroundColor: '#ee742d59' }}>
-              <Checkbox checked={Object.values(graphs).every(({ visible }) => visible)} style={{ color: 'red' }} />
-              <ListItemText primary="All" />
-            </MenuItem>
-            {Object.entries(graphs).map(([key, { label, visible }]) => (
-              <MenuItem key={key} value={key} style={{ backgroundColor: '#ee742d59' }}>
-                <Checkbox checked={visible} style={{ color: '#257525' }} />
-                <ListItemText primary={label} />
+            <Select
+              sx={{ backgroundColor: '#ee742d59' }}
+              labelId="years-label"
+              id="years-select"
+              multiple
+              value={selectedYears}
+              onChange={handleChangeYearsFilter}
+              renderValue={(selected) => `${selected.length} année(s)`}
+              MenuProps={{
+                PaperProps: { style: { maxHeight: 300, overflow: 'auto' } },
+              }}
+            >
+              <MenuItem key="All" value="All" style={{ backgroundColor: '#ee742d59' }}>
+                <Checkbox checked={selectedYears.length === allYears.length} style={{ color: 'red' }} />
+                <ListItemText primary="All" />
               </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-
-        <FormControl sx={{ width: '30%', minWidth: '200px' }}>
-          <InputLabel id="worker-types-label">Type de travailleur</InputLabel>
-          <Select
-            sx={{ backgroundColor: '#ee742d59' }}
-            labelId="worker-types-label"
-            id="worker-types-select"
-            multiple
-            value={selectedWorkerTypes}
-            onChange={handleChangeWorkerTypesFilter}
-            renderValue={(selected) => `${selected.length} type(s)`}
-            MenuProps={{
-              PaperProps: { style: { maxHeight: 300, overflow: 'auto' } },
-            }}
-          >
-            <MenuItem value="all" style={{ backgroundColor: '#ee742d59' }}>
-              <Checkbox checked={isAllSelected} style={{ color: 'red' }} />
-              <ListItemText primary="Sélectionner tout" />
-            </MenuItem>
-            {workerTypes.map((type, index) => (
-              <MenuItem key={index} value={type} style={{ backgroundColor: '#ee742d59' }}>
-                <Checkbox checked={selectedWorkerTypes.includes(type)} style={{ color: '#257525' }} />
-                <ListItemText primary={type} />
+              {allYears.filter(Boolean).sort((a, b) => a - b).map((year) => (
+                <MenuItem key={year} value={year} style={{ backgroundColor: '#ee742d59' }}>
+                  <Checkbox checked={selectedYears.includes(year)} style={{ color: '#257525' }} />
+                  <ListItemText primary={year} />
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Tooltip>
+        <Tooltip title="Cliquez ici pour filtrer l'affichage des graphiques" arrow>
+          <FormControl sx={{ width: '30%', minWidth: '200px' }}>
+            <InputLabel id="graphs-label">Graphiques</InputLabel>
+            <Select
+              sx={{ backgroundColor: '#ee742d59' }}
+              labelId="graphs-label"
+              id="graphs-select"
+              multiple
+              value={Object.entries(graphs).filter(([_, { visible }]) => visible).map(([key]) => key)}
+              onChange={handleChangeGraphsFilter}
+              renderValue={(selected) => `${selected.length} graphique(s)`}
+              MenuProps={{
+                PaperProps: { style: { maxHeight: 300, overflow: 'auto' } },
+              }}
+            >
+              <MenuItem key="All" value="All" style={{ backgroundColor: '#ee742d59' }}>
+                <Checkbox checked={Object.values(graphs).every(({ visible }) => visible)} style={{ color: 'red' }} />
+                <ListItemText primary="All" />
               </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-
-        <FormControl sx={{ width: 'calc(25% - 15px)', minWidth: '200px' }}>
-          <InputLabel id="sectors-label">Secteurs</InputLabel>
-          <Select
-            sx={{ backgroundColor: '#ee742d59' }}
-            labelId="sectors-label"
-            id="sectors-select"
-            multiple
-            value={selectedSectors}
-            onChange={handleChangeSectorsFilter}
-            renderValue={(selected) => `${selected.length} secteur(s)`}
-            MenuProps={{
-              PaperProps: { style: { maxHeight: 300, overflow: 'auto' } },
-            }}
-          >
-            <MenuItem value="all" style={{ backgroundColor: '#ee742d59' }}>
-              <Checkbox checked={isAllSectorsSelected} style={{ color: 'red' }} />
-              <ListItemText primary="Sélectionner tout" />
-            </MenuItem>
-            {sectors.map((sector) => (
-              <MenuItem key={sector} value={sector} style={{ backgroundColor: '#ee742d59' }}>
-                <Checkbox checked={selectedSectors.includes(sector)} style={{ color: '#257525' }} />
-                <ListItemText primary={sector} />
+              {Object.entries(graphs).map(([key, { label, visible }]) => (
+                <MenuItem key={key} value={key} style={{ backgroundColor: '#ee742d59' }}>
+                  <Checkbox checked={visible} style={{ color: '#257525' }} />
+                  <ListItemText primary={label} />
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Tooltip>
+        <Tooltip title="Cliquez ici pour filtrer les types de travailleurs pris en compte pour les statistiques" arrow>
+          <FormControl sx={{ width: '30%', minWidth: '200px' }}>
+            <InputLabel id="worker-types-label">Type de travailleur</InputLabel>
+            <Select
+              sx={{ backgroundColor: '#ee742d59' }}
+              labelId="worker-types-label"
+              id="worker-types-select"
+              multiple
+              value={selectedWorkerTypes}
+              onChange={handleChangeWorkerTypesFilter}
+              renderValue={(selected) => `${selected.length} type(s)`}
+              MenuProps={{
+                PaperProps: { style: { maxHeight: 300, overflow: 'auto' } },
+              }}
+            >
+              <MenuItem value="all" style={{ backgroundColor: '#ee742d59' }}>
+                <Checkbox checked={isAllSelected} style={{ color: 'red' }} />
+                <ListItemText primary="Sélectionner tout" />
               </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
+              {workerTypes.map((type, index) => (
+                <MenuItem key={index} value={type} style={{ backgroundColor: '#ee742d59' }}>
+                  <Checkbox checked={selectedWorkerTypes.includes(type)} style={{ color: '#257525' }} />
+                  <ListItemText primary={type} />
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Tooltip>
+        <Tooltip title="Cliquez ici pour filtrer les secteurs pris en compte pour les statistiques" arrow>
+          <FormControl sx={{ width: 'calc(25% - 15px)', minWidth: '200px' }}>
+            <InputLabel id="sectors-label">Secteurs</InputLabel>
+            <Select
+              sx={{ backgroundColor: '#ee742d59' }}
+              labelId="sectors-label"
+              id="sectors-select"
+              multiple
+              value={selectedSectors}
+              onChange={handleChangeSectorsFilter}
+              renderValue={(selected) => `${selected.length} secteur(s)`}
+              MenuProps={{
+                PaperProps: { style: { maxHeight: 300, overflow: 'auto' } },
+              }}
+            >
+              <MenuItem value="all" style={{ backgroundColor: '#ee742d59' }}>
+                <Checkbox checked={isAllSectorsSelected} style={{ color: 'red' }} />
+                <ListItemText primary="Sélectionner tout" />
+              </MenuItem>
+              {sectors.map((sector) => (
+                <MenuItem key={sector} value={sector} style={{ backgroundColor: '#ee742d59' }}>
+                  <Checkbox checked={selectedSectors.includes(sector)} style={{ color: '#257525' }} />
+                  <ListItemText primary={sector} />
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Tooltip>
 
       </Box>
       <div className="flex flex-col items-center justify-center h-full mb-8">

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import TextFieldP from '../../../_composants/textFieldP';
 import ControlLabelAdminP from '../../../_composants/controlLabelAdminP';
-import { Box, Paper } from '@mui/material';
+import { Box, Paper, Tooltip } from '@mui/material';
 import Button from '@mui/material/Button';
 import Checkbox from '@mui/material/Checkbox';
 import TextField from '@mui/material/TextField';
@@ -95,7 +95,7 @@ export default function AddUser() {
      * ************************************************************************/
     const onSubmit = async () => {
         try {
-            
+
             const result = await putUser(userId, user);
             setTimeout(() => navigate('/adminUser'), 2000);
             if (!result)
@@ -103,8 +103,8 @@ export default function AddUser() {
 
             console.log('Utilisateur créé/modifié:', result);
             showSnackbar('Utilisateur en cours de création', 'success');
-            setTimeout (() => showSnackbar('Utilisateur créée avec succès', 'success'),1000);
-            
+            setTimeout(() => showSnackbar('Utilisateur créée avec succès', 'success'), 1000);
+
         } catch (error) {
             console.error('Erreur de requête:', error.message);
             showSnackbar('Erreur lors de la création de l\'utilisateur', 'error');
@@ -134,49 +134,51 @@ export default function AddUser() {
 
 
                 <h3>Donner les accès administration du site:</h3>
+                <Tooltip title="Cocher cette case si l'utilisateur est administrateur du site. Il aura acces a tous les menus pour toutes les entreprises" arrow>
+                    <Box sx={{ display: 'flex', justifyContent: 'center' }}>
 
-                <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+                        <ControlLabelAdminP id="boolAdministrateur" label="Administrateur du site" onChange={(boolAdministrateurCoche) => {
+                            handleChange('boolAdministrateur', boolAdministrateurCoche);
+                            setValue('boolAdministrateur', boolAdministrateurCoche);
+                        }} defaultValue={user.boolAdministrateur}></ControlLabelAdminP>
 
-                    <ControlLabelAdminP id="boolAdministrateur" label="Administrateur du site" onChange={(boolAdministrateurCoche) => {
-                        handleChange('boolAdministrateur', boolAdministrateurCoche);
-                        setValue('boolAdministrateur', boolAdministrateurCoche);
-                    }} defaultValue={user.boolAdministrateur}></ControlLabelAdminP>
-
-                </Box>
+                    </Box>
+                </Tooltip>
 
                 <h3>Donner les accès conseiller en prévention:</h3>
-
-                <Autocomplete
-                    multiple
-                    id="checkboxes-tags-demo-prevention"
-                    options={entreprises}
-                    disableCloseOnSelect
-                    sx={{ width: '50%', boxShadow: 3, margin: '0 auto 1rem' }}
-                    getOptionLabel={(option) => option}
-                    onChange={(_, value) => handleChange('entreprisesConseillerPrevention', value)}
-                    value={user.entreprisesConseillerPrevention}
-                    renderOption={(props, option, { selected }) => (
-                        <li {...props}>
-                            <Checkbox
-                                icon={icon}
-                                checkedIcon={checkedIcon}
-                                style={{ marginRight: 8, color: 'green' }}
-                                checked={selected}
+                <Tooltip title="Si le nouvelle utilisateur est conseiller en prévention, sélèctioner son entrepriseafin qu'il ne puisse puisse pas gérer d'autres entreprise" arrow>
+                    <Autocomplete
+                        multiple
+                        id="checkboxes-tags-demo-prevention"
+                        options={entreprises}
+                        disableCloseOnSelect
+                        sx={{ width: '50%', boxShadow: 3, margin: '0 auto 1rem' }}
+                        getOptionLabel={(option) => option}
+                        onChange={(_, value) => handleChange('entreprisesConseillerPrevention', value)}
+                        value={user.entreprisesConseillerPrevention}
+                        renderOption={(props, option, { selected }) => (
+                            <li {...props}>
+                                <Checkbox
+                                    icon={icon}
+                                    checkedIcon={checkedIcon}
+                                    style={{ marginRight: 8, color: 'green' }}
+                                    checked={selected}
+                                />
+                                {option}
+                            </li>
+                        )}
+                        style={{ width: 500 }}
+                        renderInput={(params) => (
+                            <TextField
+                                {...params}
+                                label="Sélectionnez l'entreprise"
+                                placeholder="entreprise"
+                                sx={{ backgroundColor: '#00479871', boxShadow: 3 }}
                             />
-                            {option}
-                        </li>
-                    )}
-                    style={{ width: 500 }}
-                    renderInput={(params) => (
-                        <TextField
-                            {...params}
-                            label="Sélectionnez l'entreprise"
-                            placeholder="entreprise"
-                            sx={{ backgroundColor: '#00479871', boxShadow: 3 }}
-                        />
-                    )}
-                    PaperComponent={PaperComponent}
-                />
+                        )}
+                        PaperComponent={PaperComponent}
+                    />
+                </Tooltip>
 
                 <h3>Donner les accès Visiteur:</h3>
 
@@ -213,38 +215,40 @@ export default function AddUser() {
                 />
 
                 <div style={{ display: 'flex', justifyContent: 'center' }}>
-                    <Button
-                        type="submit"
-                        sx={{
-                            backgroundColor: '#ee742d59',
-                            '&:hover': { backgroundColor: '#95ad22' },
-                            padding: '10px 20px',
-                            width: '50%',
-                            marginTop: '1cm',
-                            height: '300%',
-                            fontSize: '2rem', // Taille de police de base
+                    <Tooltip title="Cliquez ici pour enregistrer et créer le nouvelle utilisateur" arrow>
+                        <Button
+                            type="submit"
+                            sx={{
+                                backgroundColor: '#ee742d59',
+                                '&:hover': { backgroundColor: '#95ad22' },
+                                padding: '10px 20px',
+                                width: '50%',
+                                marginTop: '1cm',
+                                height: '300%',
+                                fontSize: '2rem', // Taille de police de base
 
-                            // Utilisation de Media Queries pour ajuster la taille de police
-                            '@media (min-width: 750px)': {
-                                fontSize: '3rem', // Taille de police plus grande pour les écrans plus larges
-                            },
-                            '@media (max-width: 550px)': {
-                                fontSize: '1.5rem', // Taille de police plus petite pour les écrans plus étroits
-                            },
-                        }}
-                        variant="contained"
-                    >
-                        Enregistrer les données
-                    </Button>
+                                // Utilisation de Media Queries pour ajuster la taille de police
+                                '@media (min-width: 750px)': {
+                                    fontSize: '3rem', // Taille de police plus grande pour les écrans plus larges
+                                },
+                                '@media (max-width: 550px)': {
+                                    fontSize: '1.5rem', // Taille de police plus petite pour les écrans plus étroits
+                                },
+                            }}
+                            variant="contained"
+                        >
+                            Enregistrer l'utilisateur
+                        </Button>
+                    </Tooltip>
                 </div>
 
                 <div style={{ marginTop: '30px' }}></div>
-            <CustomSnackbar
-                open={snackbar.open}
-                handleClose={handleCloseSnackbar}
-                message={snackbar.message}
-                severity={snackbar.severity}
-            />
+                <CustomSnackbar
+                    open={snackbar.open}
+                    handleClose={handleCloseSnackbar}
+                    message={snackbar.message}
+                    severity={snackbar.severity}
+                />
             </div>
             <div className="image-cortigroupe"></div>
             <h5 style={{ marginBottom: '40px' }}> Développé par Remy et Benoit pour Le Cortigroupe. Support: bgillet.lecortil@cortigroupe.be</h5>
