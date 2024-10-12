@@ -193,7 +193,7 @@ function Home() {
                     </Tooltip>
                 </Grid>
                 <Grid item xs={6} style={{ marginRight: '20px', backgroundColor: '#ee752d60' }}>
-                    <Tooltip title="Cliquez ici pour filtrer les accidents par années" arrow>
+                    <Tooltip title="Cliquez ici pour filtrer les accidents par années" arrow placement="top">
                         <FormControl sx={{ boxShadow: 3, minWidth: 120 }}>
                             <InputLabel id="sort-label">Année</InputLabel>
                             <Select

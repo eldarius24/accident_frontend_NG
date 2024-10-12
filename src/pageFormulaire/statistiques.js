@@ -272,7 +272,7 @@ const Statistiques = () => {
   return (
     <div className="col-span-full" style={{ margin: '20px' }}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px' }}>
-        <Tooltip title="Cliquez ici pour filtrer les années prisent en compte pour les statistiques" arrow>
+        <Tooltip title="Cliquez ici pour filtrer les années prisent en compte pour les statistiques" arrow placement="top">
           <FormControl sx={{ width: '30%', minWidth: '200px' }}>
             <InputLabel id="years-label">Année</InputLabel>
 
@@ -301,7 +301,7 @@ const Statistiques = () => {
             </Select>
           </FormControl>
         </Tooltip>
-        <Tooltip title="Cliquez ici pour filtrer l'affichage des graphiques" arrow>
+        <Tooltip title="Cliquez ici pour filtrer l'affichage des graphiques" arrow placement="top">
           <FormControl sx={{ width: '30%', minWidth: '200px' }}>
             <InputLabel id="graphs-label">Graphiques</InputLabel>
             <Select
@@ -329,7 +329,7 @@ const Statistiques = () => {
             </Select>
           </FormControl>
         </Tooltip>
-        <Tooltip title="Cliquez ici pour filtrer les types de travailleurs pris en compte pour les statistiques" arrow>
+        <Tooltip title="Cliquez ici pour filtrer les types de travailleurs pris en compte pour les statistiques" arrow placement="top">
           <FormControl sx={{ width: '30%', minWidth: '200px' }}>
             <InputLabel id="worker-types-label">Type de travailleur</InputLabel>
             <Select
@@ -357,7 +357,7 @@ const Statistiques = () => {
             </Select>
           </FormControl>
         </Tooltip>
-        <Tooltip title="Cliquez ici pour filtrer les secteurs pris en compte pour les statistiques" arrow>
+        <Tooltip title="Cliquez ici pour filtrer les secteurs pris en compte pour les statistiques" arrow placement="top">
           <FormControl sx={{ width: 'calc(25% - 15px)', minWidth: '200px' }}>
             <InputLabel id="sectors-label">Secteurs</InputLabel>
             <Select
