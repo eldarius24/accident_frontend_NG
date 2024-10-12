@@ -4,6 +4,7 @@ import { useLocation } from 'react-router-dom';
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css'; // Importez les styles pour la boîte de dialogue
 import listFilesInAccident from './FilesActions';
+import { Tooltip } from '@mui/material';
 
 const dropZoneStyle = {
     display: 'flex',
@@ -70,28 +71,40 @@ export default function PageDownloadFile() {
                 let fileName = file.name;
 
                 return (
-                    <div className="custom-confirm-dialog">
+                    <div className="custom-confirm-dialog" style={{ textAlign: 'center' }}>
                         <h1 className="custom-confirm-title">Renommer le fichier</h1>
                         <p className="custom-confirm-message">Si vous le désirez, entrez un nouveau nom pour le fichier:</p>
-                        <input 
+                        <input
                             type="text"
                             defaultValue={fileName}
                             onChange={(e) => { fileName = e.target.value; }}
                             className="custom-confirm-input"
+                            style={{
+                                border: '2px solid #0098f9', // Encadre l'input avec une bordure bleue
+                                padding: '10px',
+                                borderRadius: '5px',
+                                fontSize: '16px',
+                                width: '60%', // Prend toute la largeur du conteneur
+                                backgroundColor: '#f0f8ff', // Donne un fond léger et contrastant
+                            }}
                         />
                         <div className="custom-confirm-buttons">
-                            <button
-                                className="custom-confirm-button"
-                                onClick={() => { handleFileUpload(file, fileName); onClose(); }}
-                            >
-                                Envoyer
-                            </button>
+                            <Tooltip title="Cliquez sur ENVOYER apres avoir changer le nom si besoin" arrow>
+                                <button
+                                    className="custom-confirm-button"
+                                    onClick={() => { handleFileUpload(file, fileName); onClose(); }}
+                                >
+                                    Envoyer
+                                </button>
+                            </Tooltip>
+                            <Tooltip title="Cliquez sur ANNULER pour annuler l'envoi du fichier" arrow>
                             <button
                                 className="custom-confirm-button custom-confirm-no"
                                 onClick={onClose}
                             >
                                 Annuler
                             </button>
+                            </Tooltip>
                         </div>
                     </div>
                 );
@@ -115,37 +128,45 @@ export default function PageDownloadFile() {
         <div>
             {listFilesInAccident(accidentId)}
             <h3>Vous pouvez ajouter des pièces à joindre au dossier (courriers, e-mails, etc..).</h3>
-
-            <div
-                style={dropZoneStyle}
-                onDrop={handleDrop}
-                onDragOver={e => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                }}
-            >
-                <span style={{ textAlign: 'center', width: '45%', color: 'black' }}>
-                    Pour ajouter un fichier, Glisser-déposer le ici
-                </span>
-                <input
-                    type="file"
-                    id="fileInput"
-                    onChange={handleFileInputChange}
-                    style={{ display: 'none' }}
-                />
-            </div>
-            <div style={{ display: 'flex', justifyContent: 'center' }}>
-                <label
-                    htmlFor="fileInput"
-                    style={labelStyle}
-                    onMouseEnter={e => (e.target.style.backgroundColor = '#95ad22')}
-                    onMouseLeave={e => (e.target.style.backgroundColor = '#00b1b2')}
+            <Tooltip title="Faites glisser un fichier ici pour ajouter un fichier lié à l’accident" arrow>
+                <div
+                    style={dropZoneStyle}
+                    onDrop={handleDrop}
+                    onDragOver={e => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                    }}
                 >
-                    Ajouter un fichier a l'accident
-                </label>
+
+                    <span style={{ textAlign: 'center', width: '45%', color: 'black' }}>
+                        Pour ajouter un fichier, Glisser-déposer le ici
+                    </span>
+
+                    <input
+                        type="file"
+                        id="fileInput"
+                        onChange={handleFileInputChange}
+                        style={{ display: 'none' }}
+                    />
+
+                </div>
+            </Tooltip>
+            <div style={{ display: 'flex', justifyContent: 'center' }}>
+                <Tooltip title="Cliquez ici pour importer des fichiers lié a l’accident" arrow>
+                    <label
+                        htmlFor="fileInput"
+                        style={labelStyle}
+                        onMouseEnter={e => (e.target.style.backgroundColor = '#95ad22')}
+                        onMouseLeave={e => (e.target.style.backgroundColor = '#00b1b2')}
+                    >
+                        Ajouter un fichier a l'accident
+                    </label>
+                </Tooltip>
             </div>
             <div className="image-cortigroupe"></div>
-            <h5 style={{ marginBottom: '40px' }}> Développé par Remy et Benoit pour Le Cortigroupe. Support: bgillet.lecortil@cortigroupe.be</h5>
+            <Tooltip title="Si vous rencontrez un souci avec le site, envoyer un mail à l'adresse suivante : bgillet.lecortil@cortigroupe.be et expliquer le soucis rencontré" arrow>
+                <h5 style={{ marginBottom: '40px' }}> Développé par Remy et Benoit pour Le Cortigroupe. Support: bgillet.lecortil@cortigroupe.be</h5>
+            </Tooltip>
         </div>
     );
 }

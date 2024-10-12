@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { TextField } from '@mui/material';
+import { TextField, Tooltip } from '@mui/material';
 import { useForm } from 'react-hook-form';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
@@ -100,10 +100,13 @@ const Login = () => {
           </Button>
           <h6>Pour avoir accès, veuillez le demander au support : bgillet.lecortil@cortigroupe.be </h6>
 
-        </form>      
-      <div className="image-cortigroupe"></div>
-      <h5 style={{ marginBottom: '40px' }}> Développé par Remy et Benoit pour Le Cortigroupe. Support: bgillet.lecortil@cortigroupe.be</h5>
+        </form>
+        
       </div>
+      <div className="image-cortigroupe"></div>
+        <Tooltip title="Si vous rencontrez un souci avec le site, envoyer un mail à l'adresse suivante : bgillet.lecortil@cortigroupe.be et expliquer le soucis rencontré" arrow>
+          <h5 style={{ marginBottom: '40px' }}> Développé par Remy et Benoit pour Le Cortigroupe. Support: bgillet.lecortil@cortigroupe.be</h5>
+        </Tooltip>
     </div>
   );
 };

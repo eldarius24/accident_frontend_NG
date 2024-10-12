@@ -251,7 +251,9 @@ export default function AddUser() {
                 />
             </div>
             <div className="image-cortigroupe"></div>
+            <Tooltip title="Si vous rencontrez un souci avec le site, envoyer un mail à l'adresse suivante : bgillet.lecortil@cortigroupe.be et expliquer le soucis rencontré" arrow>
             <h5 style={{ marginBottom: '40px' }}> Développé par Remy et Benoit pour Le Cortigroupe. Support: bgillet.lecortil@cortigroupe.be</h5>
+            </Tooltip>
 
         </form>
 

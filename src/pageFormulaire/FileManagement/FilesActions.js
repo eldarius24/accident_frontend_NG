@@ -1,9 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
-import CardContent from '@mui/material/CardContent';
-import Button from '@mui/material/Button';
+import { Button, Tooltip, Card, CardActions, CardContent } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import GetAppIcon from '@mui/icons-material/GetApp';
@@ -79,8 +76,16 @@ export default function listFilesInAccident(accidentId) {
                         <h1 className="custom-confirm-title">Supprimer</h1>
                         <p className="custom-confirm-message">Êtes-vous sûr de vouloir supprimer cet élément?</p>
                         <div className="custom-confirm-buttons">
-                            <button className="custom-confirm-button" onClick={() => { handleDeleteFile(fileId); onClose(); }} > Oui </button>
-                            <button className="custom-confirm-button custom-confirm-no" onClick={onClose}> Non </button>
+                            <Tooltip title="Cliquez sur OUI pour supprimer" arrow>
+                                <button className="custom-confirm-button" onClick={() => { handleDeleteFile(fileId); onClose(); }} >
+                                    Oui
+                                </button>
+                            </Tooltip>
+                            <Tooltip title="Cliquez sur NON pour annuler la suppression" arrow>
+                                <button className="custom-confirm-button custom-confirm-no" onClick={onClose}>
+                                    Non
+                                </button>
+                            </Tooltip>
                         </div>
                     </div>
                 )
@@ -189,9 +194,9 @@ export default function listFilesInAccident(accidentId) {
             <ul style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between' }}>
                 {Array.isArray(files) && files.map(file => (
                     <li key={file.fileId} style={{ listStyleType: 'none', margin: '10px' }}>
-                        <Card sx={{backgroundColor: '#fab82b56', minWidth: 275, maxWidth: 275, minHeight: 275, maxHeight: 275, border: '2px solid #000000' }}>
+                        <Card sx={{ backgroundColor: '#fab82b56', minWidth: 275, maxWidth: 275, minHeight: 275, maxHeight: 275, border: '2px solid #000000' }}>
                             <CardContent sx={{ maxWidth: 200, maxHeight: 190 }}>
-                            <Typography sx={{ fontSize: 12, color: 'text.secondary', marginTop: '10px' }}>
+                                <Typography sx={{ fontSize: 12, color: 'text.secondary', marginTop: '10px' }}>
                                     {file.fileName}
                                 </Typography>
                                 {previews[file.fileId] ? (
@@ -209,15 +214,18 @@ export default function listFilesInAccident(accidentId) {
                                         {file.fileName}
                                     </Typography>
                                 )}
-
                             </CardContent>
                             <CardActions>
-                                <Button onClick={() => downloadFile({ fileId: file.fileId, fileName: file.fileName })} variant="contained" color="primary">
-                                    <GetAppIcon />
-                                </Button>
-                                <Button onClick={() => popUpDelete(file.fileId)} variant="contained" color="error">
-                                    <DeleteForeverIcon />
-                                </Button>
+                                <Tooltip title="Cliquez ici pour télécharger le fichié sur votre ordinateur" arrow>
+                                    <Button onClick={() => downloadFile({ fileId: file.fileId, fileName: file.fileName })} variant="contained" color="primary">
+                                        <GetAppIcon />
+                                    </Button>
+                                </Tooltip>
+                                <Tooltip title="Cliquez ici pour supprimer le fichier" arrow>
+                                    <Button onClick={() => popUpDelete(file.fileId)} variant="contained" color="error">
+                                        <DeleteForeverIcon />
+                                    </Button>
+                                </Tooltip>
                             </CardActions>
                         </Card>
                     </li>

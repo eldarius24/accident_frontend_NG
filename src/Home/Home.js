@@ -246,7 +246,7 @@ function Home() {
                 {isAdminOuConseiller && (
                     <>
                         <Grid item xs={6} style={{ marginRight: '20px' }}>
-                            <Tooltip title="Cliquez ici pour exporter les données Accident en excel" arrow>
+                            <Tooltip title="Cliquez ici pour exporter les données Accident en fonction des filtres sélèctionnes en excel" arrow>
                                 <Button
                                     sx={{ color: 'black', padding: '15px 60px', backgroundColor: '#ee752d60', '&:hover': { backgroundColor: '#95ad22' }, boxShadow: 3, textTransform: 'none' }}
                                     variant="contained"
@@ -259,7 +259,7 @@ function Home() {
                             </Tooltip>
                         </Grid>
                         <Grid item xs={6} style={{ marginRight: '20px' }}>
-                            <Tooltip title="Cliquez ici pour exporter les données Assurance en excel" arrow>
+                            <Tooltip title="Cliquez ici pour exporter les données Assurance en fonction des filtres sélèctionnes en excel" arrow>
                                 <Button
                                     sx={{ color: 'black', padding: '15px 60px', backgroundColor: '#ee752d60', '&:hover': { backgroundColor: '#95ad22' }, boxShadow: 3, textTransform: 'none' }}
                                     variant="contained"
@@ -301,7 +301,7 @@ function Home() {
                                     <>
                                         <TableCell style={{ padding: 0 }}>
                                             {(isAdmin || (isConseiller && isConseillerPrevention(item.entrepriseName))) ? (
-                                                <Tooltip title="Cliquez ici pour éditer les données de l/'accident" arrow>
+                                                <Tooltip title="Cliquez ici pour éditer les données de l'accident" arrow>
                                                     <Button variant="contained" color="primary" onClick={() => handleEdit(item._id)}>
                                                         <EditIcon /> {/* L'icône est placée à l'intérieur du bouton */}
                                                     </Button>
@@ -311,7 +311,7 @@ function Home() {
 
                                         <TableCell style={{ padding: 0 }}>
                                             {(isAdmin || (isConseiller && isConseillerPrevention(item.entrepriseName))) ? (
-                                                <Tooltip title="Cliquez ici pour ajouter des fichier al/'accident" arrow>
+                                                <Tooltip title="Cliquez ici pour ajouter des fichier a l'accident" arrow>
                                                     <Button variant="contained" color="secondary" onClick={() => navigate("/fichierdll", { state: item._id })}>
                                                         <GetAppIcon />
                                                     </Button>
@@ -329,7 +329,7 @@ function Home() {
                                         </TableCell>
                                         <TableCell style={{ padding: 0 }}>
                                             {(isAdmin || (isConseiller && isConseillerPrevention(item.entrepriseName))) ? (
-                                                <Tooltip title="Cliquez ici pour supprimer l/'accident" arrow>
+                                                <Tooltip title="Cliquez ici pour supprimer l'accident" arrow>
                                                     <Button variant="contained" color="error" onClick={() => {
                                                         confirmAlert({
                                                             customUI: ({ onClose }) => (
@@ -378,7 +378,9 @@ function Home() {
                 />
             </div>
             <div className="image-cortigroupe"></div>
-            <h5 style={{ marginBottom: '40px' }}> Développé par Remy et Benoit pour Le Cortigroupe. Support: bgillet.lecortil@cortigroupe.be</h5>
+            <Tooltip title="Si vous rencontrez un souci avec le site, envoyer un mail à l'adresse suivante : bgillet.lecortil@cortigroupe.be et expliquer le soucis rencontré" arrow>
+                <h5 style={{ marginBottom: '40px' }}> Développé par Remy et Benoit pour Le Cortigroupe. Support: bgillet.lecortil@cortigroupe.be</h5>
+            </Tooltip>
         </div>
     );
 }
