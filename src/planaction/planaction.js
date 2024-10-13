@@ -248,7 +248,6 @@ export default function PlanAction({ accidentData }) {
         }
     };
 
-
     const handleExport = () => {
         let dataToExport = users;
 
@@ -267,33 +266,37 @@ export default function PlanAction({ accidentData }) {
             <h2>Plan d'actions</h2>
             <div style={{ display: 'flex', justifyContent: 'center', margin: '20px 0rem' }}>
                 <Grid item xs={6} style={{ marginRight: '20px' }}>
-                    <Button
-                        sx={{ marginLeft: '20px', marginRight: '20px', color: 'black', padding: '15px 60px', backgroundColor: '#ee742d59', '&:hover': { backgroundColor: '#95ad22' }, boxShadow: 3, textTransform: 'none' }}
-                        variant="contained"
-                        color="secondary"
-                        onClick={refreshListAccidents}
-                        startIcon={<RefreshIcon />}
-                    >
-                        Actualiser
-                    </Button>
+                    <Tooltip title="Cliquez ici pour actualiser le tableau des actions" arrow>
+                        <Button
+                            sx={{ marginLeft: '20px', marginRight: '20px', color: 'black', padding: '15px 60px', backgroundColor: '#ee742d59', '&:hover': { backgroundColor: '#95ad22' }, boxShadow: 3, textTransform: 'none' }}
+                            variant="contained"
+                            color="secondary"
+                            onClick={refreshListAccidents}
+                            startIcon={<RefreshIcon />}
+                        >
+                            Actualiser
+                        </Button>
+                    </Tooltip>
                 </Grid>
                 <Grid item xs={6} style={{ marginRight: '20px' }}>
-                    <TextField
-                        variant="outlined"
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                        sx={{ boxShadow: 3, backgroundColor: '#ee742d59' }}
-                        InputProps={{
-                            startAdornment: (
-                                <InputAdornment position="start">
-                                    <SearchIcon />
-                                </InputAdornment>
-                            ),
-                        }}
-                    />
+                    <Tooltip title="Filtrer les actions par mots clés" arrow>
+                        <TextField
+                            variant="outlined"
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                            sx={{ boxShadow: 3, backgroundColor: '#ee742d59' }}
+                            InputProps={{
+                                startAdornment: (
+                                    <InputAdornment position="start">
+                                        <SearchIcon />
+                                    </InputAdornment>
+                                ),
+                            }}
+                        />
+                    </Tooltip>
                 </Grid>
                 <Grid item xs={6} style={{ marginRight: '20px' }}>
-                    <Tooltip title="Cliquez ici pour exporter les données Assurance en fonction des filtres sélèctionnes en excel" arrow>
+                    <Tooltip title="Cliquez ici pour exporter les données du plan d'action, en excel, en fonction des filtres sélèctionnés " arrow>
                         <Button
                             sx={{ marginLeft: '20px', marginRight: '20px', color: 'black', padding: '15px 60px', backgroundColor: '#ee742d59', '&:hover': { backgroundColor: '#95ad22' }, boxShadow: 3, textTransform: 'none' }}
                             variant="contained"
@@ -334,6 +337,7 @@ export default function PlanAction({ accidentData }) {
                                     <TableRow className="table-row-separatormenu" key={addaction._id} style={{ backgroundColor: rowColors[index % rowColors.length] }}>
 
                                         <TableCell>
+                                        <Tooltip title="Sélectionnez quand l'action est réalisée" arrow>
                                             <Checkbox
                                                 sx={{ '& .MuiSvgIcon-root': { fontSize: 25 } }}
                                                 color="success"
@@ -353,6 +357,7 @@ export default function PlanAction({ accidentData }) {
                                                         });
                                                 }}
                                             />
+                                        </Tooltip>
                                         </TableCell>
                                         <TableCell>{addaction.AddActionanne}</TableCell>
                                         <TableCell>{addaction.AddActoinmoi}</TableCell>
@@ -362,32 +367,46 @@ export default function PlanAction({ accidentData }) {
                                         <TableCell>{addaction.AddActionDate}</TableCell>
                                         <TableCell>{addaction.AddActionQui}</TableCell>
                                         <TableCell style={{ padding: 0, width: '70px' }}>
-                                            <Button variant="contained" color="primary">
-                                                <EditIcon />
-                                            </Button>
+                                            <Tooltip title="Cliquez ici pour éditer les données de l'action" arrow>
+                                                <Button variant="contained" color="primary">
+                                                    <EditIcon />
+                                                </Button>
+                                            </Tooltip>
                                         </TableCell>
                                         <TableCell style={{ padding: 0, width: '70px' }}>
-                                            <Button component={Link} to={isFileUploadIcon ? '/' : '/fichierdllaction'} variant="contained" color="secondary">
-                                                <GetAppIcon />
-                                            </Button>
+                                            <Tooltip title="Cliquez ici pour ajouter des fichiers a l'action" arrow>
+                                                <Button component={Link} to={isFileUploadIcon ? '/' : '/fichierdllaction'} variant="contained" color="secondary">
+                                                    <GetAppIcon />
+                                                </Button>
+                                            </Tooltip>
                                         </TableCell>
                                         <TableCell style={{ padding: 0, width: '70px' }}>
-                                            <Button variant="contained" color="error" onClick={() => {
-                                                confirmAlert({
-                                                    customUI: ({ onClose }) => (
-                                                        <div className="custom-confirm-dialog">
-                                                            <h1 className="custom-confirm-title">Supprimer</h1>
-                                                            <p className="custom-confirm-message">Êtes-vous sûr de vouloir supprimer cet action?</p>
-                                                            <div className="custom-confirm-buttons">
-                                                                <button className="custom-confirm-button" onClick={() => { handleDelete(addaction._id); onClose(); }}>Oui</button>
-                                                                <button className="custom-confirm-button custom-confirm-no" onClick={onClose}>Non</button>
+                                            <Tooltip title="Cliquez ici pour supprimer l'action" arrow>
+                                                <Button variant="contained" color="error" onClick={() => {
+                                                    confirmAlert({
+                                                        customUI: ({ onClose }) => (
+                                                            <div className="custom-confirm-dialog">
+                                                                <h1 className="custom-confirm-title">Supprimer</h1>
+                                                                <p className="custom-confirm-message">Êtes-vous sûr de vouloir supprimer cet action?</p>
+                                                                <div className="custom-confirm-buttons">
+                                                                    <Tooltip title="Cliquez sur OUI pour supprimer" arrow>
+                                                                        <button className="custom-confirm-button" onClick={() => { handleDelete(addaction._id); onClose(); }}>
+                                                                            Oui
+                                                                        </button>
+                                                                    </Tooltip>
+                                                                    <Tooltip title="Cliquez sur NON pour annuler la suppression" arrow>
+                                                                        <button className="custom-confirm-button custom-confirm-no" onClick={onClose}>
+                                                                            Non
+                                                                        </button>
+                                                                    </Tooltip>
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                    )
-                                                });
-                                            }}>
-                                                <DeleteForeverIcon />
-                                            </Button>
+                                                        )
+                                                    });
+                                                }}>
+                                                    <DeleteForeverIcon />
+                                                </Button>
+                                            </Tooltip>
                                         </TableCell>
 
                                     </TableRow>
@@ -426,6 +445,7 @@ export default function PlanAction({ accidentData }) {
 
 
             <div style={{ display: 'flex', justifyContent: 'center' }}>
+            <Tooltip title="Cliquez ici pour crée l'action (certaine champs doivent être obligatoirement remplis)" arrow>
                 <Button
                     type="submit"
                     sx={{
@@ -447,6 +467,7 @@ export default function PlanAction({ accidentData }) {
                 >
                     Créer l'action
                 </Button>
+            </Tooltip>
                 <CustomSnackbar
                     open={snackbar.open}
                     handleClose={handleCloseSnackbar}

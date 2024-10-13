@@ -253,7 +253,7 @@ function Home() {
                     </Tooltip>
                 </Grid>
                 <Grid item xs={6} style={{ marginRight: '20px' }}>
-                    <Tooltip title="Filtrer les accidents par mot clé" arrow>
+                    <Tooltip title="Filtrer les accidents par mots clés" arrow>
                         <TextField
                             value={searchTerm}
                             onChange={event => setSearchTerm(event.target.value)}
