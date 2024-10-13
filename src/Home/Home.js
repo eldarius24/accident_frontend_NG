@@ -48,7 +48,7 @@ function Home() {
     const [accidentsIsPending, startGetAccidents] = useTransition();
     const [searchTerm, setSearchTerm] = useState('');
     const { isAdmin, isAdminOuConseiller, userInfo, isConseiller } = useUserConnected();
-
+    const [users, setAddactions] = useState([]);
     const [snackbar, setSnackbar] = useState({
         open: false,
         message: '',
@@ -176,6 +176,32 @@ function Home() {
 
     const data = filteredData();
 
+    const handleExportDataAccident = () => {
+        let dataToExport = filteredData(); // Utilise la fonction filteredData() existante
+    
+        if (!isAdmin) {
+            dataToExport = dataToExport.filter(accident =>
+                userInfo.entreprisesConseillerPrevention?.includes(accident.entrepriseName)
+            );
+        }
+    
+        console.log("Données d'accidents à exporter:", dataToExport);
+        handleExportData(dataToExport);
+    };
+    
+    const handleExportDataAssurance = () => {
+        let dataToExport = filteredData(); // Utilise la fonction filteredData() existante
+    
+        if (!isAdmin) {
+            dataToExport = dataToExport.filter(accident =>
+                userInfo.entreprisesConseillerPrevention?.includes(accident.entrepriseName)
+            );
+        }
+    
+        console.log("Données d'assurance à exporter:", dataToExport);
+        handleExportDataAss(dataToExport);
+    };
+
     return (
         <div>
             <div style={{ display: 'flex', justifyContent: 'center', margin: '20px 0rem' }}>
@@ -251,7 +277,7 @@ function Home() {
                                     sx={{ color: 'black', padding: '15px 60px', backgroundColor: '#ee752d60', '&:hover': { backgroundColor: '#95ad22' }, boxShadow: 3, textTransform: 'none' }}
                                     variant="contained"
                                     color="primary"
-                                    onClick={() => handleExportData(filteredData())}
+                                    onClick={() => handleExportDataAccident()}
                                     startIcon={<FileUploadIcon />}
                                 >
                                     Accident
@@ -264,7 +290,7 @@ function Home() {
                                     sx={{ color: 'black', padding: '15px 60px', backgroundColor: '#ee752d60', '&:hover': { backgroundColor: '#95ad22' }, boxShadow: 3, textTransform: 'none' }}
                                     variant="contained"
                                     color="primary"
-                                    onClick={() => handleExportDataAss(filteredData())}
+                                    onClick={() => handleExportDataAssurance()}
                                     startIcon={<FileUploadIcon />}
                                 >
                                     Assurance

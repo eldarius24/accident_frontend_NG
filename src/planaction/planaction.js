@@ -34,6 +34,11 @@ import InputAdornment from '@mui/material/InputAdornment';
 import listeaddaction from '../liste/listeaddaction.json';
 import { useUserConnected } from '../Hook/userConnected';
 import CustomSnackbar from '../_composants/CustomSnackbar';
+import FileUploadIcon from '@mui/icons-material/FileUpload';
+import { handleExportDataAction } from '../Model/excelGenerator.js';
+import { data } from 'autoprefixer';
+
+
 
 const apiUrl = config.apiUrl;
 
@@ -243,34 +248,64 @@ export default function PlanAction({ accidentData }) {
         }
     };
 
+
+    const handleExport = () => {
+        let dataToExport = users;
+
+        if (!isAdmin) {
+            dataToExport = users.filter(action =>
+                userInfo.entreprisesConseillerPrevention?.includes(action.AddActionEntreprise)
+            );
+        }
+
+        console.log("Données à exporter:", dataToExport);
+        handleExportDataAction(dataToExport);
+    };
     return (
         <form className="background-image" onSubmit={handleSubmit(onSubmit)}>
 
             <h2>Plan d'actions</h2>
-            <Grid item xs={6} style={{ marginRight: '20px' }}>
-                <Button
-                    sx={{ marginLeft: '20px', marginRight: '20px', color: 'black', padding: '15px 60px', backgroundColor: '#ee742d59', '&:hover': { backgroundColor: '#95ad22' }, boxShadow: 3, textTransform: 'none' }}
-                    variant="contained"
-                    color="secondary"
-                    onClick={refreshListAccidents}
-                    startIcon={<RefreshIcon />}
-                >
-                    Actualiser
-                </Button>
-                <TextField
-                    variant="outlined"
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    sx={{ boxShadow: 3, backgroundColor: '#ee742d59' }}
-                    InputProps={{
-                        startAdornment: (
-                            <InputAdornment position="start">
-                                <SearchIcon />
-                            </InputAdornment>
-                        ),
-                    }}
-                />
-            </Grid>
+            <div style={{ display: 'flex', justifyContent: 'center', margin: '20px 0rem' }}>
+                <Grid item xs={6} style={{ marginRight: '20px' }}>
+                    <Button
+                        sx={{ marginLeft: '20px', marginRight: '20px', color: 'black', padding: '15px 60px', backgroundColor: '#ee742d59', '&:hover': { backgroundColor: '#95ad22' }, boxShadow: 3, textTransform: 'none' }}
+                        variant="contained"
+                        color="secondary"
+                        onClick={refreshListAccidents}
+                        startIcon={<RefreshIcon />}
+                    >
+                        Actualiser
+                    </Button>
+                </Grid>
+                <Grid item xs={6} style={{ marginRight: '20px' }}>
+                    <TextField
+                        variant="outlined"
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        sx={{ boxShadow: 3, backgroundColor: '#ee742d59' }}
+                        InputProps={{
+                            startAdornment: (
+                                <InputAdornment position="start">
+                                    <SearchIcon />
+                                </InputAdornment>
+                            ),
+                        }}
+                    />
+                </Grid>
+                <Grid item xs={6} style={{ marginRight: '20px' }}>
+                    <Tooltip title="Cliquez ici pour exporter les données Assurance en fonction des filtres sélèctionnes en excel" arrow>
+                        <Button
+                            sx={{ marginLeft: '20px', marginRight: '20px', color: 'black', padding: '15px 60px', backgroundColor: '#ee742d59', '&:hover': { backgroundColor: '#95ad22' }, boxShadow: 3, textTransform: 'none' }}
+                            variant="contained"
+                            color="primary"
+                            onClick={() => handleExport()}
+                            startIcon={<FileUploadIcon />}
+                        >
+                            Action
+                        </Button>
+                    </Tooltip>
+                </Grid>
+            </div>
             <TableContainer>
                 <div className="frameStyle-style">
                     <Table>
@@ -423,7 +458,7 @@ export default function PlanAction({ accidentData }) {
             <Tooltip title="Si vous rencontrez un souci avec le site, envoyer un mail à l'adresse suivante : bgillet.lecortil@cortigroupe.be et expliquer le soucis rencontré" arrow>
                 <h5 style={{ marginBottom: '40px' }}> Développé par Remy et Benoit pour Le Cortigroupe. Support: bgillet.lecortil@cortigroupe.be</h5>
             </Tooltip>
-        </form>
+        </form >
 
 
     );
