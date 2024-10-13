@@ -1,6 +1,5 @@
 import React, { useCallback } from 'react';
-import { Link } from 'react-router-dom';
-import Button from '@mui/material/Button';
+
 /**
  * Renders a form for uploading files with drag and drop functionality and a button for file selection.
  *
@@ -29,16 +28,6 @@ export default function Formulaire({ location }) {
 
     return (
         <form>
-            <Button
-                style={{ margin: '20px', marginTop: '20px' }}
-                sx={{ backgroundColor: '#84a784', '&:hover': { backgroundColor: 'green' } }}
-                component={Link}
-                to={'/planAction'}
-                variant="contained"
-
-            >
-                Plan d'actions
-            </Button>
             <h3>Vous pouvez ajouter des pièces à joindre l'action (courriers, e-mails, etc..).</h3>
 
             <div

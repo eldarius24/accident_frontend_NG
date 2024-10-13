@@ -31,6 +31,7 @@ export default function AutoCompleteQ({
                 id={id}
                 options={option}
                 value={value}
+                isOptionEqualToValue={(option, value) => option === value} // comparaison directe pour les chaînes
                 sx={{
                     ...sx,
                     backgroundColor,
@@ -55,6 +56,7 @@ export default function AutoCompleteQ({
                     <Paper {...props} sx={{ backgroundColor: '#bed7f6' }} />
                 )}
             />
+
         </div>
     );
 }

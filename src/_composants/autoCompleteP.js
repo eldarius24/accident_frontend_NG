@@ -34,13 +34,13 @@ export default function AutoCompleteP({
                 id={id}
                 options={option}
                 value={defaultValue}
+                isOptionEqualToValue={(option, value) => option.id === value.id} // Comparer selon l'ID
                 sx={sx}
                 onChange={handleChange}
-                renderOption={(props, option, { key }) => (
-                    <li key={key} {...props}>
-                        {option}
-                    </li>
-                )}
+                renderOption={(props, option) => {
+                    const { key, ...otherProps } = props;
+                    return <li key={key} {...otherProps}>{option}</li>;
+                }}
                 renderInput={(params) => <TextField {...params} label={label} />}
                 fullWidth={true}
                 PaperComponent={(props) => (

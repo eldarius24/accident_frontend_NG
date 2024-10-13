@@ -128,7 +128,7 @@ function ResponsiveAppBar() {
               )}
             </>
           )}
-          {/*
+        
           {isAdminOuConseiller && (
             <>
               {location.pathname !== '/planAction' && (
@@ -146,7 +146,7 @@ function ResponsiveAppBar() {
               )}
             </>
           )}
-          */}
+          
         </Toolbar>
       </Container>
     </AppBar >
