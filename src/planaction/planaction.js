@@ -39,7 +39,7 @@ const apiUrl = config.apiUrl;
 export default function PlanAction({ accidentData }) {
     const [users, setAddactions] = useState([]);
     const [loading, setLoading] = useState(true);
-    const { setValue, watch, handleSubmit} = useForm();
+    const { setValue, watch, handleSubmit } = useForm();
     const location = useLocation();
     const isFileUploadIcon = location.pathname === '/fichierdllaction';
     const [searchTerm, setSearchTerm] = useState('');
@@ -93,8 +93,13 @@ export default function PlanAction({ accidentData }) {
                 if (!isAdmin) {
                     entreprisesData = entreprisesData.filter(e =>
                         userInfo.entreprisesConseillerPrevention?.includes(e.label)
+
                     );
                 }
+
+                const isConseillerPrevention = (entrepriseName) => {
+                    return userInfo?.entreprisesConseillerPrevention?.includes(entrepriseName) || false;
+                };
 
                 setEntreprises(entreprisesData);
                 const secteursData = sectorsResponse.data;
@@ -213,7 +218,7 @@ export default function PlanAction({ accidentData }) {
 
     const onSubmit = (data) => {
         console.log("Formulaire.js -> onSubmit -> Données à enregistrer :", data);
-    
+
         axios.put(`http://${apiUrl}:3100/api/planaction`, data)
             .then(response => {
                 console.log('Réponse du serveur en création :', response.data);
@@ -226,7 +231,16 @@ export default function PlanAction({ accidentData }) {
                 showSnackbar('Erreur lors de la création de l\'action', 'error');
             });
     };
-    
+
+    const userEnterprise = userInfo?.entreprisesConseillerPrevention || [];
+
+    const canViewAction = (action) => {
+        if (isAdmin) {
+            return true; // Admin can view all actions
+        } else {
+            return userEnterprise.includes(action.AddActionEntreprise); // Regular user can view actions of their enterprise
+        }
+    };
 
     return (
         <form className="background-image" onSubmit={handleSubmit(onSubmit)}>
@@ -279,64 +293,69 @@ export default function PlanAction({ accidentData }) {
                         </TableHead>
                         <TableBody>
                             {filteredUsers.map((addaction, index) => (
-                                <TableRow className="table-row-separatormenu" key={addaction._id} style={{ backgroundColor: rowColors[index % rowColors.length] }}>
-                                    <TableCell>
-                                        <Checkbox
-                                            sx={{ '& .MuiSvgIcon-root': { fontSize: 25 } }}
-                                            color="success"
-                                            checked={addaction.AddboolStatus}
-                                            onChange={() => {
-                                                const newStatus = !addaction.AddboolStatus;
-                                                axios.put(`http://${apiUrl}:3100/api/planaction/${addaction._id}`, {
-                                                    AddboolStatus: newStatus
-                                                })
-                                                    .then(response => {
-                                                        console.log('Statut mis à jour avec succès:', response.data);
-                                                        refreshListAccidents();
+                                canViewAction(addaction) && (
+
+                                    <TableRow className="table-row-separatormenu" key={addaction._id} style={{ backgroundColor: rowColors[index % rowColors.length] }}>
+
+                                        <TableCell>
+                                            <Checkbox
+                                                sx={{ '& .MuiSvgIcon-root': { fontSize: 25 } }}
+                                                color="success"
+                                                checked={addaction.AddboolStatus}
+                                                onChange={() => {
+                                                    const newStatus = !addaction.AddboolStatus;
+                                                    axios.put(`http://${apiUrl}:3100/api/planaction/${addaction._id}`, {
+                                                        AddboolStatus: newStatus
                                                     })
-                                                    .catch(error => {
-                                                        console.error('Erreur lors de la mise à jour du statut:', error.message);
-                                                        showSnackbar('Erreur lors de la mise à jour du statut', 'error');
-                                                    });
-                                            }}
-                                        />
-                                    </TableCell>
-                                    <TableCell>{addaction.AddActionanne}</TableCell>
-                                    <TableCell>{addaction.AddActoinmoi}</TableCell>
-                                    <TableCell>{addaction.AddActionEntreprise}</TableCell>
-                                    <TableCell>{addaction.AddActionSecteur}</TableCell>
-                                    <TableCell>{addaction.AddAction}</TableCell>
-                                    <TableCell>{addaction.AddActionDate}</TableCell>
-                                    <TableCell>{addaction.AddActionQui}</TableCell>
-                                    <TableCell style={{ padding: 0, width: '70px' }}>
-                                        <Button variant="contained" color="primary">
-                                            <EditIcon />
-                                        </Button>
-                                    </TableCell>
-                                    <TableCell style={{ padding: 0, width: '70px' }}>
-                                        <Button component={Link} to={isFileUploadIcon ? '/' : '/fichierdllaction'} variant="contained" color="secondary">
-                                            <GetAppIcon />
-                                        </Button>
-                                    </TableCell>
-                                    <TableCell style={{ padding: 0, width: '70px' }}>
-                                        <Button variant="contained" color="error" onClick={() => {
-                                            confirmAlert({
-                                                customUI: ({ onClose }) => (
-                                                    <div className="custom-confirm-dialog">
-                                                        <h1 className="custom-confirm-title">Supprimer</h1>
-                                                        <p className="custom-confirm-message">Êtes-vous sûr de vouloir supprimer cet action?</p>
-                                                        <div className="custom-confirm-buttons">
-                                                            <button className="custom-confirm-button" onClick={() => { handleDelete(addaction._id); onClose(); }}>Oui</button>
-                                                            <button className="custom-confirm-button custom-confirm-no" onClick={onClose}>Non</button>
+                                                        .then(response => {
+                                                            console.log('Statut mis à jour avec succès:', response.data);
+                                                            refreshListAccidents();
+                                                        })
+                                                        .catch(error => {
+                                                            console.error('Erreur lors de la mise à jour du statut:', error.message);
+                                                            showSnackbar('Erreur lors de la mise à jour du statut', 'error');
+                                                        });
+                                                }}
+                                            />
+                                        </TableCell>
+                                        <TableCell>{addaction.AddActionanne}</TableCell>
+                                        <TableCell>{addaction.AddActoinmoi}</TableCell>
+                                        <TableCell>{addaction.AddActionEntreprise}</TableCell>
+                                        <TableCell>{addaction.AddActionSecteur}</TableCell>
+                                        <TableCell>{addaction.AddAction}</TableCell>
+                                        <TableCell>{addaction.AddActionDate}</TableCell>
+                                        <TableCell>{addaction.AddActionQui}</TableCell>
+                                        <TableCell style={{ padding: 0, width: '70px' }}>
+                                            <Button variant="contained" color="primary">
+                                                <EditIcon />
+                                            </Button>
+                                        </TableCell>
+                                        <TableCell style={{ padding: 0, width: '70px' }}>
+                                            <Button component={Link} to={isFileUploadIcon ? '/' : '/fichierdllaction'} variant="contained" color="secondary">
+                                                <GetAppIcon />
+                                            </Button>
+                                        </TableCell>
+                                        <TableCell style={{ padding: 0, width: '70px' }}>
+                                            <Button variant="contained" color="error" onClick={() => {
+                                                confirmAlert({
+                                                    customUI: ({ onClose }) => (
+                                                        <div className="custom-confirm-dialog">
+                                                            <h1 className="custom-confirm-title">Supprimer</h1>
+                                                            <p className="custom-confirm-message">Êtes-vous sûr de vouloir supprimer cet action?</p>
+                                                            <div className="custom-confirm-buttons">
+                                                                <button className="custom-confirm-button" onClick={() => { handleDelete(addaction._id); onClose(); }}>Oui</button>
+                                                                <button className="custom-confirm-button custom-confirm-no" onClick={onClose}>Non</button>
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                )
-                                            });
-                                        }}>
-                                            <DeleteForeverIcon />
-                                        </Button>
-                                    </TableCell>
-                                </TableRow>
+                                                    )
+                                                });
+                                            }}>
+                                                <DeleteForeverIcon />
+                                            </Button>
+                                        </TableCell>
+
+                                    </TableRow>
+                                )
                             ))}
                         </TableBody>
                     </Table>
