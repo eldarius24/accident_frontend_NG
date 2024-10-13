@@ -6,6 +6,7 @@ import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 import BarChartIcon from '@mui/icons-material/BarChart';
 import { useUserConnected } from './Hook/userConnected';
 import HomeIcon from '@mui/icons-material/Home';
+import PendingActionsIcon from '@mui/icons-material/PendingActions';
 
 function ResponsiveAppBar() {
   const location = useLocation();
@@ -138,7 +139,7 @@ function ResponsiveAppBar() {
                     to={'/planAction'}
                     variant="contained"
                     sx={buttonStyle}
-                    startIcon={<BarChartIcon />}
+                    startIcon={<PendingActionsIcon />}
                   >
                     Plans d'actions
                   </Button>
