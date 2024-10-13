@@ -21,11 +21,12 @@ import {
     Tooltip
 } from '@mui/material';
 import TextFieldP from '../_composants/textFieldP';
+import TextFieldQ from '../_composants/textFieldQ';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
-import DatePickerP from '../_composants/datePickerP';
+import DatePickerQ from '../_composants/datePickerQ';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import GetAppIcon from '@mui/icons-material/GetApp';
 import SearchIcon from '@mui/icons-material/Search';
@@ -384,8 +385,8 @@ export default function PlanAction({ accidentData }) {
                 disabled={!AddActionEntreprise}
                 required={true}  // Désactivez si aucune entreprise n'est sélectionnée
             />
-            <TextFieldP id='AddAction' label="Quel action a jouter" onChange={setAddAction} defaultValue={AddAction}></TextFieldP>
-            <DatePickerP id='AddActionDate' label="Date de l'ajout de l'action" onChange={setAddActionDate} defaultValue={AddActionDate}></DatePickerP>
+            <TextFieldQ id='AddAction' label="Quel action a jouter" onChange={setAddAction} defaultValue={AddAction} required={true}></TextFieldQ>
+            <DatePickerQ id='AddActionDate' label="Date de l'ajout de l'action" onChange={setAddActionDate} defaultValue={AddActionDate} required={true}></DatePickerQ>
             <TextFieldP id='AddActionQui' label="qui doit s'occuper de l'action" onChange={setAddActionQui} defaultValue={AddActionQui}></TextFieldP>
 
 
