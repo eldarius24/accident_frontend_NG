@@ -10,12 +10,8 @@ dayjs.locale('fr');
 import listAccident from '../liste/listAccident.json';
 import ControlLabelP from '../_composants/controlLabelP';
 import TextFieldP from '../_composants/textFieldP';
-import TextFieldQ from '../_composants/textFieldQ';
 import AutoCompleteP from '../_composants/autoCompleteP';
-import AutoCompleteQ from '../_composants/autoCompleteQ';
 import DatePickerP from '../_composants/datePickerP';
-import DateHeurePickerP from '../_composants/dateHeurePickerP';
-import DateHeurePickerQ from '../_composants/dateHeurePickerQ';
 import TextFieldMaskP from '../_composants/textFieldMaskP';
 import { Link } from 'react-router-dom';
 
@@ -41,13 +37,11 @@ export default function FormulaireAccident({ setValue, accidentData, watch }) {
    * Etape 1 : stocker les données dans des variables locales et les initialiser avec les données de l'accident si elles existent
    * 
    */
-  const [typeAccident, setTypeAccident] = useState(watch('typeAccident') ? watch('typeAccident') : (accidentData && accidentData.typeAccident ? accidentData.typeAccident : null));
+  
   const [circonstanceAccident, setCirconstanceAccident] = useState(watch('circonstanceAccident') ? watch('circonstanceAccident') : (accidentData && accidentData.circonstanceAccident ? accidentData.circonstanceAccident : ""));
-  const [DateHeureAccident, setDateHeureAccident] = useState(watch('DateHeureAccident') ? watch('DateHeureAccident') : (accidentData && accidentData.DateHeureAccident ? accidentData.DateHeureAccident : null));
   const [DateJourIncapDebut, setDateJourIncapDebut] = useState(watch('DateJourIncapDebut') ? watch('DateJourIncapDebut') : (accidentData && accidentData.DateJourIncapDebut ? accidentData.DateJourIncapDebut : null));
   const [DateJourIncapFin, setDateJourIncapFin] = useState(watch('DateJourIncapFin') ? watch('DateJourIncapFin') : (accidentData && accidentData.DateJourIncapFin ? accidentData.DateJourIncapFin : null));
   const [indemnisationAccident, setIndemnisationAccident] = useState(watch('indemnisationAccident') ? watch('indemnisationAccident') : (accidentData && accidentData.indemnisationAccident ? accidentData.indemnisationAccident : ""));
-  const [blessures, setBlessures] = useState(watch('blessures') ? watch('blessures') : (accidentData && accidentData.blessures ? accidentData.blessures : ""));
   const [boolAucun, setBoolAucun] = useState(watch('boolAucun') ? watch('boolAucun') : (accidentData && accidentData.boolAucun ? accidentData.boolAucun : false));
   const [boolChausure, setBoolChausure] = useState(watch('boolChausure') ? watch('boolChausure') : (accidentData && accidentData.boolChausure ? accidentData.boolChausure : false));
   const [boolLunette, setBoolLunette] = useState(watch('boolLunette') ? watch('boolLunette') : (accidentData && accidentData.boolLunette ? accidentData.boolLunette : false));
@@ -87,13 +81,11 @@ export default function FormulaireAccident({ setValue, accidentData, watch }) {
    * Etape 2 : mettre à jour les données du formulaire à chaque modification d'un des champs
    */
   useEffect(() => {
-    setValue('typeAccident', typeAccident)
+    
     setValue('circonstanceAccident', circonstanceAccident)
-    setValue('DateHeureAccident', DateHeureAccident)
     setValue('DateJourIncapDebut', DateJourIncapDebut)
     setValue('DateJourIncapFin', DateJourIncapFin)
     setValue('indemnisationAccident', indemnisationAccident)
-    setValue('blessures', blessures)
     setValue('boolAucun', boolAucun)
     setValue('boolChausure', boolChausure)
     setValue('boolLunette', boolLunette)
@@ -113,7 +105,7 @@ export default function FormulaireAccident({ setValue, accidentData, watch }) {
     setValue('codeNatureLesion', codeNatureLesion)
     setValue('codeSiegeLesion', codeSiegeLesion)
     setValue('horaireJourAccident', horaireJourAccident)
-  }, [horaireJourAccident, typeAccident, circonstanceAccident, DateHeureAccident, DateJourIncapDebut, DateJourIncapFin, indemnisationAccident, blessures, boolAucun, boolChausure, boolLunette, boolGant, boolCasque, boolAuditive, boolMasque, boolEcran, boolTenue, boolFiltre, boolVeste, boolMaire, boolChute, boolAutre, codeDeviation, codeAgentMateriel, codeNatureLesion, codeSiegeLesion, setValue]);
+  }, [horaireJourAccident, circonstanceAccident, DateJourIncapDebut, DateJourIncapFin, indemnisationAccident, boolAucun, boolChausure, boolLunette, boolGant, boolCasque, boolAuditive, boolMasque, boolEcran, boolTenue, boolFiltre, boolVeste, boolMaire, boolChute, boolAutre, codeDeviation, codeAgentMateriel, codeNatureLesion, codeSiegeLesion, setValue]);
 
   /**
    * Etape 3 : retourner le formulaire (IHMs)
@@ -125,24 +117,13 @@ export default function FormulaireAccident({ setValue, accidentData, watch }) {
           <h2>Infos Accident</h2>
           <h3>Rentrez les informations sur l'accident de travail.</h3>
 
-          <AutoCompleteQ
-            id='typeAccident'
-            option={listAccident.typeAccident} // Assurez-vous que listAccident.typeAccident est correctement défini
-            label='Type d accident'
-            required={true}
-            onChange={(value) => setTypeAccident(value)} // Assurez-vous que setFormData gère correctement les changements
-            defaultValue={watch('typeAccident') ?? (formData?.typeAccident ?? '')}
-          />
+          
           <TextFieldP id="circonstanceAccident" label="Circonstance de l'accident" onChange={(circonstanceAccidentText) => {
             setCirconstanceAccident(circonstanceAccidentText);
             setValue('circonstanceAccident', circonstanceAccidentText);
           }} defaultValue={circonstanceAccident}></TextFieldP>
 
-          <DateHeurePickerQ id="DateHeureAccident" label="Date et heure de l'accident" required={true} onChange={(DateHeureAccidentChoose) => {
-            setDateHeureAccident(DateHeureAccidentChoose);
-            setValue('DateHeureAccident', DateHeureAccidentChoose);
-          }} defaultValue={DateHeureAccident}></DateHeurePickerQ>
-
+          
 
           <TextFieldMaskP id='horaireJourAccident' label='Horaire de la victime le jour de l accident' onChange={sethoraireJourAccident} defaultValue={horaireJourAccident} mask="de 00h00 à 00h00 et de 00h00 à 00h00" />
 
@@ -278,10 +259,7 @@ export default function FormulaireAccident({ setValue, accidentData, watch }) {
               }} defaultValue={boolAutre}></ControlLabelP>
             </FormGroup>
           </div>
-          <TextFieldQ id="blessures" label="Blessures" required={true} onChange={(blessuresText) => {
-            setBlessures(blessuresText);
-            setValue('blessures', blessuresText);
-          }} defaultValue={blessures}></TextFieldQ>
+          
         </div>
       </div>
     </div>

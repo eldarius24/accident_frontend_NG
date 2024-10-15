@@ -558,7 +558,6 @@ export function handleExportDataAction(data) {
                 //infos entreprise
                 item.AddActionanne,
                 item.AddActoinmoi,
-                item.entrepriseName,
                 item.AddActionEntreprise,
                 item.AddActionSecteur,
                 item.AddAction,

@@ -7,15 +7,22 @@ import BarChartIcon from '@mui/icons-material/BarChart';
 import { useUserConnected } from './Hook/userConnected';
 import HomeIcon from '@mui/icons-material/Home';
 import PendingActionsIcon from '@mui/icons-material/PendingActions';
-
+import ViewListIcon from '@mui/icons-material/ViewList';
 function ResponsiveAppBar() {
   const location = useLocation();
   const { isAuthenticated, isAdmin, isAdminOuConseiller, userInfo, isConseiller } = useUserConnected();
-  const { isFormulaireAccident, isPageAdmin, isPageStats, isLoginPage } = useMemo(() => ({
+  const { isAddSecteur, isadminEntreprises, isaddEntrprise, isadminUser, isaddUser, isFormulaireAction, isFormulaireAccident, isPageAdmin, isPageStats, isLoginPage, isplanAction } = useMemo(() => ({
     isFormulaireAccident: location.pathname === '/formulaire',
     isPageAdmin: location.pathname === '/adminaction',
     isPageStats: location.pathname === '/statistiques',
     isLoginPage: location.pathname === '/login',
+    isplanAction: location.pathname === '/planAction',
+    isFormulaireAction: location.pathname === '/formulaireAction',
+    isaddUser: location.pathname === '/addUser',
+    isadminUser: location.pathname === '/adminUser',
+    isaddEntrprise: location.pathname === '/addEntreprise',
+    isadminEntreprises: location.pathname === '/adminEntreprises',
+    isAddSecteur: location.pathname === '/addSecteur',
   }), [location.pathname]);
 
 
@@ -67,7 +74,8 @@ function ResponsiveAppBar() {
           </Tooltip>
           {isAdmin && (
             <>
-              {location.pathname !== '/adminaction' && (
+              {!['/addSecteur', '/adminaction'].includes(location.pathname) && (
+
                 <Tooltip title="Cliquez ici accèder à l'espace d'administration" arrow>
                   <Button
                     component={Link}
@@ -86,11 +94,11 @@ function ResponsiveAppBar() {
               T.I.G.R.E
             </Typography>
           </Tooltip>
-          {location.pathname !== '/' && (
+          {!['/', '/addUser', '/adminUser', '/addEntreprise', '/adminEntreprises',].includes(location.pathname) && (
             <Tooltip title="Cliquez ici pour revenir a l'accueil" arrow>
               <Button
                 component={Link}
-                to={isFormulaireAccident ? '/' : '/'}
+                to={'/'}
                 variant="contained"
                 sx={buttonStyle}
               >
@@ -100,7 +108,7 @@ function ResponsiveAppBar() {
           )}
           {isAdminOuConseiller && (
             <>
-              {location.pathname !== '/formulaire' && (
+              {!['/addSecteur', '/addUser', '/adminUser', '/addEntreprise', '/adminEntreprises', '/adminaction', '/formulaireAction', '/planAction', '/formulaire', '/statistiques'].includes(location.pathname) && (
                 <Tooltip title="Cliquez ici pour ajouté un nouvelle accident" arrow>
                   <Button
                     component={Link}
@@ -114,11 +122,11 @@ function ResponsiveAppBar() {
                 </Tooltip>
               )}
 
-              {location.pathname !== '/statistiques' && (
+              {!['/addSecteur', '/addUser', '/adminUser', '/addEntreprise', '/adminEntreprises', '/adminaction', '/formulaireAction', '/planAction', '/formulaire', '/statistiques'].includes(location.pathname) && (
                 <Tooltip title="Cliquez ici pour accéder aux statistiques" arrow>
                   <Button
                     component={Link}
-                    to={isPageStats ? '/' : '/statistiques'}
+                    to={'/statistiques'}
                     variant="contained"
                     sx={buttonStyle}
                     startIcon={<BarChartIcon />}
@@ -129,10 +137,9 @@ function ResponsiveAppBar() {
               )}
             </>
           )}
-        
           {isAdminOuConseiller && (
             <>
-              {location.pathname !== '/planAction' && (
+              {!['/addSecteur', '/addUser', '/adminUser', '/addEntreprise', '/adminEntreprises', '/adminaction', '/planAction', '/formulaire', '/statistiques'].includes(location.pathname) && (
                 <Tooltip title="Cliquez ici pour accéder aux plans d'actions" arrow>
                   <Button
                     component={Link}
@@ -147,7 +154,91 @@ function ResponsiveAppBar() {
               )}
             </>
           )}
-          
+          {isAdminOuConseiller && (
+            <>
+              {!['/addSecteur', '/addUser', '/adminUser', '/addEntreprise', '/adminEntreprises', '/adminaction', '/', '/formulaireAction', '/formulaire', '/statistiques'].includes(location.pathname) && (
+                <Tooltip title="Cliquez ici pour ajouter une nouvelle action" arrow>
+                  <Button
+                    component={Link}
+                    to={'/formulaireAction'}
+                    variant="contained"
+                    sx={buttonStyle}
+                    startIcon={<AddIcon />}
+                  >
+                    Nouvelle action
+                  </Button>
+                </Tooltip>
+              )}
+            </>
+          )}
+          {isAdminOuConseiller && (
+            <>
+              {!['/addSecteur', '/addEntreprise', '/addUser', '/adminEntreprises', '/planAction', '/', '/formulaireAction', '/formulaire', '/statistiques'].includes(location.pathname) && (
+                <Tooltip title="Cliquez ici pour ajouter une nouvelle action" arrow>
+                  <Button
+                    component={Link}
+                    to={'/addUser'}
+                    variant="contained"
+                    sx={buttonStyle}
+                    startIcon={<AddIcon />}
+                  >
+                    Utilisateur
+                  </Button>
+                </Tooltip>
+              )}
+            </>
+          )}
+          {isAdminOuConseiller && (
+            <>
+              {!['/addSecteur', '/adminUser', '/addEntreprise', '/adminEntreprises', '/planAction', '/', '/formulaireAction', '/formulaire', '/statistiques'].includes(location.pathname) && (
+                <Tooltip title="Cliquez ici pour ajouter une nouvelle action" arrow>
+                  <Button
+                    component={Link}
+                    to={'/adminUser'}
+                    variant="contained"
+                    sx={buttonStyle}
+                    startIcon={<ViewListIcon />}
+                  >
+                    utilisateurs
+                  </Button>
+                </Tooltip>
+              )}
+            </>
+          )}
+          {isAdminOuConseiller && (
+            <>
+              {!['/addUser', '/adminUser', '/addEntreprise', '/planAction', '/', '/formulaireAction', '/formulaire', '/statistiques'].includes(location.pathname) && (
+                <Tooltip title="Cliquez ici pour ajouter une nouvelle action" arrow>
+                  <Button
+                    component={Link}
+                    to={'/addEntreprise'}
+                    variant="contained"
+                    sx={buttonStyle}
+                    startIcon={<AddIcon />}
+                  >
+                    Entreprise
+                  </Button>
+                </Tooltip>
+              )}
+            </>
+          )}
+          {isAdminOuConseiller && (
+            <>
+              {!['/addUser', '/adminUser', '/adminEntreprises', '/planAction', '/', '/formulaireAction', '/formulaire', '/statistiques'].includes(location.pathname) && (
+                <Tooltip title="Cliquez ici pour ajouter une nouvelle action" arrow>
+                  <Button
+                    component={Link}
+                    to={'/adminEntreprises'}
+                    variant="contained"
+                    sx={buttonStyle}
+                    startIcon={<ViewListIcon />}
+                  >
+                    Entreprises
+                  </Button>
+                </Tooltip>
+              )}
+            </>
+          )}
         </Toolbar>
       </Container>
     </AppBar >

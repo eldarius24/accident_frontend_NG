@@ -4,13 +4,11 @@ import * as React from 'react';
 import { useState, useEffect } from 'react';
 /* IMPORT PERSO */
 import TextFieldP from '../_composants/textFieldP';
-import TextFieldQ from '../_composants/textFieldQ';
 import TextFieldMaskP from '../_composants/textFieldMaskP';
 import DatePickerP from '../_composants/datePickerP';
-import DatePickerQ from '../_composants/datePickerQ';
 import AutoCompleteP from '../_composants/autoCompleteP';
-import AutoCompleteQ from '../_composants/autoCompleteQ';
 import listeDeclarationAssBelfius from '../liste/listeDeclarationAssBelfius.json';
+
 export default function FormulaireSalarie({ setValue, accidentData, watch }) {
 
   // Mise en forme des cadres texte
@@ -31,16 +29,13 @@ export default function FormulaireSalarie({ setValue, accidentData, watch }) {
    * Etape 1 : stocker les données dans des variables locales et les initialiser avec les données de l'accident si elles existent
    * 
    */
-  const [nomTravailleur, setNomTravailleur] = useState(watch('nomTravailleur') ? watch('nomTravailleur') : (accidentData && accidentData.nomTravailleur ? accidentData.nomTravailleur : null));
-  const [prenomTravailleur, setPrenomTravailleur] = useState(watch('prenomTravailleur') ? watch('prenomTravailleur') : (accidentData && accidentData.prenomTravailleur ? accidentData.prenomTravailleur : null));
-  const [dateNaissance, setDateNaissance] = useState(watch('dateNaissance') ? watch('dateNaissance') : (accidentData && accidentData.dateNaissance ? accidentData.dateNaissance : null));
+  
   const [lieuxnaissance, setLieuxnaissance] = useState(watch('lieuxnaissance') ? watch('lieuxnaissance') : (accidentData && accidentData.lieuxnaissance ? accidentData.lieuxnaissance : null));
   const [niss, setNiss] = useState(watch('niss') ? watch('niss') : (accidentData && accidentData.niss ? accidentData.niss : null));
   const [nbHeuresSemaine, setNbHeuresSemaine] = useState(watch('nbHeuresSemaine') ? watch('nbHeuresSemaine') : (accidentData && accidentData.nbHeuresSemaine ? accidentData.nbHeuresSemaine : null));
   const [dateDebutArret, setDateDebutArret] = useState(watch('dateDebutArret') ? watch('dateDebutArret') : (accidentData && accidentData.dateDebutArret ? accidentData.dateDebutArret : null));
   const [dateFinArret, setDateFinArret] = useState(watch('dateFinArret') ? watch('dateFinArret') : (accidentData && accidentData.dateFinArret ? accidentData.dateFinArret : null));
   const [dateEntrEntreprise, setDateEntrEntreprise] = useState(watch('dateEntrEntreprise') ? watch('dateEntrEntreprise') : (accidentData && accidentData.dateEntrEntreprise ? accidentData.dateEntrEntreprise : null));
-  const [sexe, setsexe] = useState(watch('sexe') ? watch('sexe') : (accidentData && accidentData.sexe ? accidentData.sexe : null));
   const [nationalité, setnationalité] = useState(watch('nationalité') ? watch('nationalité') : (accidentData && accidentData.nationalité ? accidentData.nationalité : null));
   const [etatCivil, setetatCivil] = useState(watch('etatCivil') ? watch('etatCivil') : (accidentData && accidentData.etatCivil ? accidentData.etatCivil : null));
   const [adresseRue, setadresseRue] = useState(watch('adresseRue') ? watch('adresseRue') : (accidentData && accidentData.adresseRue ? accidentData.adresseRue : null));
@@ -80,16 +75,12 @@ export default function FormulaireSalarie({ setValue, accidentData, watch }) {
    * Etape 2 : mettre à jour les données du formulaire à chaque modification d'un des champs
    */
   useEffect(() => {
-    setValue('nomTravailleur', nomTravailleur)
-    setValue('prenomTravailleur', prenomTravailleur)
-    setValue('dateNaissance', dateNaissance)
     setValue('lieuxnaissance', lieuxnaissance)
     setValue('niss', niss)
     setValue('nbHeuresSemaine', nbHeuresSemaine)
     setValue('dateDebutArret', dateDebutArret)
     setValue('dateFinArret', dateFinArret)
     setValue('dateEntrEntreprise', dateEntrEntreprise)
-    setValue('sexe', sexe)
     setValue('nationalité', nationalité)
     setValue('etatCivil', etatCivil)
     setValue('adresseRue', adresseRue)
@@ -124,7 +115,7 @@ export default function FormulaireSalarie({ setValue, accidentData, watch }) {
     setValue('VicInterimaireOuiAdresse', VicInterimaireOuiAdresse)
     setValue('parentEmployeur', parentEmployeur)
   }
-    , [parentEmployeur, ListeDurContra, dateSortie, profesEntreprise, citp, ListeDureeDsEntreprise, ListeVicInterimaire, VicInterimaireOui, VicInterimaireOuiNom, VicInterimaireOuiAdresse, numDimona, CodeMutuelle, nomMutuelle, adresseRueMutuelle, adresseCodepostalMutuelle, adresseCommuneMutuelle, numAffiliation, numCompteBancaire, etabliFinancier, nomTravailleur, prenomTravailleur, dateNaissance, lieuxnaissance, niss, nbHeuresSemaine, dateDebutArret, dateFinArret, dateEntrEntreprise, sexe, nationalité, etatCivil, adresseRue, adresseCodepostal, adresseCommune, adressePays, adresseMail, telephone, adresseRuecorrespondance, adresseCodecorrespondance, adresseCommunecorrespondance, ListeadressePaysCorrespondance, telephoneCorrespondance, ListeLangueCorr, setValue]);
+    , [parentEmployeur, ListeDurContra, dateSortie, profesEntreprise, citp, ListeDureeDsEntreprise, ListeVicInterimaire, VicInterimaireOui, VicInterimaireOuiNom, VicInterimaireOuiAdresse, numDimona, CodeMutuelle, nomMutuelle, adresseRueMutuelle, adresseCodepostalMutuelle, adresseCommuneMutuelle, numAffiliation, numCompteBancaire, etabliFinancier, lieuxnaissance, niss, nbHeuresSemaine, dateDebutArret, dateFinArret, dateEntrEntreprise, nationalité, etatCivil, adresseRue, adresseCodepostal, adresseCommune, adressePays, adresseMail, telephone, adresseRuecorrespondance, adresseCodecorrespondance, adresseCommunecorrespondance, ListeadressePaysCorrespondance, telephoneCorrespondance, ListeLangueCorr, setValue]);
 
   /**
    * Etape 3 : retourner le formulaire (IHMs)
@@ -134,16 +125,11 @@ export default function FormulaireSalarie({ setValue, accidentData, watch }) {
       <div>
         <h2>Infos du travailleur</h2>
         <h3>Rentrez les informations sur la victime de l'accident de travail.</h3>
-
-        <TextFieldQ id='nomTravailleur' label='Nom du travailleur' onChange={setNomTravailleur} defaultValue={nomTravailleur} required={true} />
-        <TextFieldQ id='prenomTravailleur' label='Prénom du travailleur' onChange={setPrenomTravailleur} defaultValue={prenomTravailleur} required={true} />
-        <DatePickerQ id='dateNaissance' label='Date de naissance' onChange={setDateNaissance} defaultValue={dateNaissance} required={true} />
         <TextFieldP id='lieuxnaissance' label='Lieu de naissance' onChange={setLieuxnaissance} defaultValue={lieuxnaissance} />
         <TextFieldMaskP id='niss' label='NISS du travailleur' onChange={setNiss} defaultValue={niss} mask="000000-000-00"/>
         <TextFieldMaskP id="numCompteBancaire" label="Numéro de compte bancaire" onChange={setnumCompteBancaire} defaultValue={numCompteBancaire} mask="AA00-0000-0000-0000-0000-0000-0000-0000-00" />
         <TextFieldMaskP id="etabliFinancier" label="Etablissement Financier BIC" onChange={setetabliFinancier} defaultValue={etabliFinancier} mask="####-##-#####" />
         <TextFieldP id="numDimona" label="Numéro de la Dimona" onChange={setnumDimona} defaultValue={numDimona} />
-        <AutoCompleteQ id='sexe' label='Sexe' onChange={setsexe} option={listeDeclarationAssBelfius.ListeSexe} defaultValue={sexe} required={true}/>
         <AutoCompleteP id='nationalité' label='Nationalité' onChange={setnationalité} option={listeDeclarationAssBelfius.ListeNationalite} defaultValue={nationalité} />
         <AutoCompleteP id='etatCivil' label='Etat civil' onChange={setetatCivil} option={listeDeclarationAssBelfius.ListeEtatCivil} defaultValue={etatCivil} />
         <TextFieldP id='adresseRue' label='Adresse du travailleur' onChange={setadresseRue} defaultValue={adresseRue} />

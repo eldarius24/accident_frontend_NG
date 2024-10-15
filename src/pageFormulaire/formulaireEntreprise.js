@@ -4,6 +4,11 @@ import AutoCompleteQ from '../_composants/autoCompleteQ';
 import config from '../config.json';
 import listEntreprises from '../liste/listEntreprise.json';
 import { useUserConnected } from '../Hook/userConnected';
+import TextFieldQ from '../_composants/textFieldQ';
+import DatePickerQ from '../_composants/datePickerQ';
+import listeDeclarationAssBelfius from '../liste/listeDeclarationAssBelfius.json';
+import DateHeurePickerQ from '../_composants/dateHeurePickerQ';
+import listAccident from '../liste/listAccident.json';
 
 export default function FormulaireEntreprise({ setValue, accidentData, watch }) {
   const [entreprises, setEntreprises] = useState([]);
@@ -13,7 +18,29 @@ export default function FormulaireEntreprise({ setValue, accidentData, watch }) 
   const [typeTravailleur, setTypeTravailleur] = useState(watch('typeTravailleur') || (accidentData && accidentData.typeTravailleur) || '');
   const [loading, setLoading] = useState(true);
   const apiUrl = config.apiUrl;
-  const { isAdmin, isAdminOuConseiller, userInfo, isConseiller  } = useUserConnected();
+  const { isAdmin, isAdminOuConseiller, userInfo, isConseiller } = useUserConnected();
+  const [nomTravailleur, setNomTravailleur] = useState(watch('nomTravailleur') ? watch('nomTravailleur') : (accidentData && accidentData.nomTravailleur ? accidentData.nomTravailleur : null));
+  const [prenomTravailleur, setPrenomTravailleur] = useState(watch('prenomTravailleur') ? watch('prenomTravailleur') : (accidentData && accidentData.prenomTravailleur ? accidentData.prenomTravailleur : null));
+  const [dateNaissance, setDateNaissance] = useState(watch('dateNaissance') ? watch('dateNaissance') : (accidentData && accidentData.dateNaissance ? accidentData.dateNaissance : null));
+  const [sexe, setsexe] = useState(watch('sexe') ? watch('sexe') : (accidentData && accidentData.sexe ? accidentData.sexe : null));
+  const [typeAccident, setTypeAccident] = useState(watch('typeAccident') ? watch('typeAccident') : (accidentData && accidentData.typeAccident ? accidentData.typeAccident : null));
+  const [DateHeureAccident, setDateHeureAccident] = useState(watch('DateHeureAccident') ? watch('DateHeureAccident') : (accidentData && accidentData.DateHeureAccident ? accidentData.DateHeureAccident : null));
+  const [blessures, setBlessures] = useState(watch('blessures') ? watch('blessures') : (accidentData && accidentData.blessures ? accidentData.blessures : ""));
+
+  const [formData, setFormData] = useState(accidentData);
+
+  useEffect(() => {
+    const data = sessionStorage.getItem('accidentData');
+    if (data) {
+      const parsedData = JSON.parse(data);
+      setFormData(parsedData);
+    }
+  }, []);
+
+  useEffect(() => {
+    console.info("fomulaireEntreprise => formData : ", formData);
+    sessionStorage.setItem('accidentData', JSON.stringify(formData));
+  }, [formData])
 
   useEffect(() => {
     const fetchData = async () => {
@@ -29,7 +56,7 @@ export default function FormulaireEntreprise({ setValue, accidentData, watch }) 
 
         // Filter entreprises based on user role
         if (!isAdmin) {
-          entreprisesData = entreprisesData.filter(e => 
+          entreprisesData = entreprisesData.filter(e =>
             userInfo.entreprisesConseillerPrevention?.includes(e.label)
           );
         }
@@ -50,7 +77,14 @@ export default function FormulaireEntreprise({ setValue, accidentData, watch }) 
     setValue('entrepriseName', entreprise);
     setValue('secteur', secteur);
     setValue('typeTravailleur', typeTravailleur);
-  }, [entreprise, secteur, typeTravailleur, setValue]);
+    setValue('nomTravailleur', nomTravailleur)
+    setValue('prenomTravailleur', prenomTravailleur)
+    setValue('dateNaissance', dateNaissance)
+    setValue('sexe', sexe)
+    setValue('typeAccident', typeAccident)
+    setValue('DateHeureAccident', DateHeureAccident)
+    setValue('blessures', blessures)
+  }, [blessures, DateHeureAccident, typeAccident, sexe, entreprise, secteur, typeTravailleur, nomTravailleur, prenomTravailleur, dateNaissance, setValue]);
 
   const handleEntrepriseSelect = (entrepriseSelect) => {
     const selectedEntreprise = entreprises.find(e => e.label === entrepriseSelect);
@@ -79,9 +113,8 @@ export default function FormulaireEntreprise({ setValue, accidentData, watch }) 
       <div>
         <div>
           <div>
-            <h1 className="sub-header">Formulaire Accident du travail</h1>
-            <h2>Infos Entreprise</h2>
-            <h3>Choisissez l'entreprise et le secteur dans lequel le travailleur appartient.</h3>
+            <h2>Formulaire Pris en compte pour les statistiques</h2>
+           
           </div>
           <div className="autocomplete">
             <AutoCompleteQ
@@ -108,6 +141,29 @@ export default function FormulaireEntreprise({ setValue, accidentData, watch }) 
               defaultValue={typeTravailleur}
               required={true}
             />
+            <TextFieldQ id='nomTravailleur' label='Nom du travailleur' onChange={setNomTravailleur} defaultValue={nomTravailleur} required={true} />
+            <TextFieldQ id='prenomTravailleur' label='Prénom du travailleur' onChange={setPrenomTravailleur} defaultValue={prenomTravailleur} required={true} />
+            <DatePickerQ id='dateNaissance' label='Date de naissance' onChange={setDateNaissance} defaultValue={dateNaissance} required={true} />
+            <AutoCompleteQ id='sexe' label='Sexe' onChange={setsexe} option={listeDeclarationAssBelfius.ListeSexe} defaultValue={sexe} required={true} />
+            <AutoCompleteQ
+              id='typeAccident'
+              option={listAccident.typeAccident} // Assurez-vous que listAccident.typeAccident est correctement défini
+              label='Type d accident'
+              required={true}
+              onChange={(value) => setTypeAccident(value)} // Assurez-vous que setFormData gère correctement les changements
+              defaultValue={watch('typeAccident') ?? (formData?.typeAccident ?? '')}
+            />
+            <DateHeurePickerQ id="DateHeureAccident" label="Date et heure de l'accident" required={true} onChange={(DateHeureAccidentChoose) => {
+              setDateHeureAccident(DateHeureAccidentChoose);
+              setValue('DateHeureAccident', DateHeureAccidentChoose);
+            }} defaultValue={DateHeureAccident}></DateHeurePickerQ>
+            <TextFieldQ id="blessures" label="Blessures" required={true} onChange={(blessuresText) => {
+              setBlessures(blessuresText);
+              setValue('blessures', blessuresText);
+            }} defaultValue={blessures}></TextFieldQ>
+
+
+
           </div>
         </div>
       </div>

@@ -133,29 +133,29 @@ export default function AddSecteur() {
                 />
 
                 <div style={{ display: 'flex', justifyContent: 'center' }}>
-                <Tooltip title="Cliquez ici pour enregistrer le secteur dans l'entreprise" arrow>
-                    <Button
-                        type="submit"
-                        sx={{
-                            backgroundColor: '#0098f9',
-                            '&:hover': { backgroundColor: 'green' },
-                            padding: '10px 20px',
-                            width: '50%',
-                            marginTop: '1cm',
-                            height: '300%',
-                            fontSize: '2rem',
-                            '@media (min-width: 750px)': {
-                                fontSize: '3rem',
-                            },
-                            '@media (max-width: 550px)': {
-                                fontSize: '1.5rem',
-                            },
-                        }}
-                        variant="contained"
-                    >
-                        Enregistrer le secteur
-                    </Button>
-                </Tooltip>
+                    <Tooltip title="Cliquez ici pour enregistrer le secteur dans l'entreprise" arrow>
+                        <Button
+                            type="submit"
+                            sx={{
+                                backgroundColor: '#0098f9',
+                                '&:hover': { backgroundColor: 'green' },
+                                padding: '10px 20px',
+                                width: '50%',
+                                marginTop: '1cm',
+                                height: '300%',
+                                fontSize: '2rem',
+                                '@media (min-width: 750px)': {
+                                    fontSize: '3rem',
+                                },
+                                '@media (max-width: 550px)': {
+                                    fontSize: '1.5rem',
+                                },
+                            }}
+                            variant="contained"
+                        >
+                            Enregistrer le secteur
+                        </Button>
+                    </Tooltip>
                 </div>
 
                 <div>
@@ -190,22 +190,22 @@ export default function AddSecteur() {
                                                                         <h1 className="custom-confirm-title">Supprimer</h1>
                                                                         <p className="custom-confirm-message">Êtes-vous sûr de vouloir supprimer ce secteur ?</p>
                                                                         <div className="custom-confirm-buttons">
-                                                                        <Tooltip title="Cliquez sur OUI pour supprimer" arrow>
-                                                                            <button
-                                                                                className="custom-confirm-button"
-                                                                                onClick={() => {
-                                                                                    handleDelete(secteur._id);
-                                                                                    onClose();
-                                                                                }}
-                                                                            >
-                                                                                Oui
-                                                                            </button>
-                                                                        </Tooltip>
-                                                                        <Tooltip title="Cliquez sur NON pour annuler la suppression" arrow>
-                                                                            <button className="custom-confirm-button custom-confirm-no" onClick={onClose}>
-                                                                                Non
-                                                                            </button>
-                                                                        </Tooltip>
+                                                                            <Tooltip title="Cliquez sur OUI pour supprimer" arrow>
+                                                                                <button
+                                                                                    className="custom-confirm-button"
+                                                                                    onClick={() => {
+                                                                                        handleDelete(secteur._id);
+                                                                                        onClose();
+                                                                                    }}
+                                                                                >
+                                                                                    Oui
+                                                                                </button>
+                                                                            </Tooltip>
+                                                                            <Tooltip title="Cliquez sur NON pour annuler la suppression" arrow>
+                                                                                <button className="custom-confirm-button custom-confirm-no" onClick={onClose}>
+                                                                                    Non
+                                                                                </button>
+                                                                            </Tooltip>
                                                                         </div>
                                                                     </div>
                                                                 );
