@@ -61,6 +61,7 @@ export default function PlanAction({ accidentData }) {
     const [AddActionSecteur, setAddActionSecteur] = useState(watch('AddActionSecteur') || (accidentData && accidentData.AddActionSecteur) || null);
     const [AddActionEntreprise, setAddActionEntreprise] = useState(watch('AddActionEntreprise') || (accidentData && accidentData.AddActionEntreprise) || null);
     const [AddboolStatus, setAddboolStatus] = useState(watch('AddboolStatus') || (accidentData && accidentData.AddboolStatus) || false);
+    const [AddActionDange, setAddActionDange] = useState(watch('AddActionDange') || (accidentData && accidentData.AddActionDange) || '');
     const [AddActionanne, setAddActionanne] = useState(watch('AddActionanne') || (accidentData && accidentData.AddActionanne) || '');
     const [AddActoinmoi, setAddActoinmoi] = useState(watch('AddActoinmoi') || (accidentData && accidentData.AddActoinmoi) || '');
 
@@ -129,9 +130,10 @@ export default function PlanAction({ accidentData }) {
         setValue('AddActionSecteur', AddActionSecteur);
         setValue('AddActionEntreprise', AddActionEntreprise);
         setValue('AddboolStatus', AddboolStatus);
+        setValue('AddActionDange', AddActionDange);
         setValue('AddActionanne', AddActionanne);
         setValue('AddActoinmoi', AddActoinmoi);
-    }, [AddAction, AddActionDate, AddActionQui, AddActionSecteur, AddActionEntreprise, AddboolStatus, AddActionanne, AddActoinmoi, setValue]);
+    }, [AddActionDange, AddAction, AddActionDate, AddActionQui, AddActionSecteur, AddActionEntreprise, AddboolStatus, AddActionanne, AddActoinmoi, setValue]);
 
 
     const filteredUsers = users.filter(addaction => {
@@ -140,10 +142,12 @@ export default function PlanAction({ accidentData }) {
         }
         return (
             (addaction.AddActionEntreprise && addaction.AddActionEntreprise.toLowerCase().includes(searchTerm.toLowerCase())) ||
+            (addaction.AddActionDate && addaction.AddActionDate.toLowerCase().includes(searchTerm.toLowerCase())) ||
             (addaction.AddActionSecteur && addaction.AddActionSecteur.toLowerCase().includes(searchTerm.toLowerCase())) ||
             (addaction.AddAction && addaction.AddAction.toLowerCase().includes(searchTerm.toLowerCase())) ||
             (addaction.AddActionQui && addaction.AddActionQui.toLowerCase().includes(searchTerm.toLowerCase())) ||
             (addaction.AddActoinmoi && addaction.AddActoinmoi.toLowerCase().includes(searchTerm.toLowerCase())) ||
+            (addaction.AddActionDange && addaction.AddActionDange.toLowerCase().includes(searchTerm.toLowerCase())) ||
             (addaction.AddActionanne && addaction.AddActionanne.toLowerCase().includes(searchTerm.toLowerCase()))
         );
     });
@@ -321,6 +325,7 @@ export default function PlanAction({ accidentData }) {
                                     <TableCell style={{ fontWeight: 'bold' }}>Entreprise</TableCell>
                                     <TableCell style={{ fontWeight: 'bold' }}>Secteur</TableCell>
                                     <TableCell style={{ fontWeight: 'bold' }}>Action</TableCell>
+                                    <TableCell style={{ fontWeight: 'bold' }}>Catégorie du risque</TableCell>
                                     <TableCell style={{ fontWeight: 'bold' }}>Crée quand</TableCell>
                                     <TableCell style={{ fontWeight: 'bold' }}>Par qui</TableCell>
                                     <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>Edit</TableCell>
@@ -364,6 +369,7 @@ export default function PlanAction({ accidentData }) {
                                         <TableCell>{addaction.AddActionEntreprise}</TableCell>
                                         <TableCell>{addaction.AddActionSecteur}</TableCell>
                                         <TableCell>{addaction.AddAction}</TableCell>
+                                        <TableCell>{addaction.AddActionDange}</TableCell>
                                         <TableCell>{addaction.AddActionDate}</TableCell>
                                         <TableCell>{addaction.AddActionQui}</TableCell>
                                         <TableCell style={{ padding: 0, width: '70px' }}>
@@ -442,7 +448,7 @@ export default function PlanAction({ accidentData }) {
             <TextFieldQ id='AddAction' label="Quel action a jouter" onChange={setAddAction} defaultValue={AddAction} required={true}></TextFieldQ>
             <DatePickerQ id='AddActionDate' label="Date de l'ajout de l'action" onChange={setAddActionDate} defaultValue={AddActionDate} required={true}></DatePickerQ>
             <TextFieldP id='AddActionQui' label="qui doit s'occuper de l'action" onChange={setAddActionQui} defaultValue={AddActionQui}></TextFieldP>
-
+            <TextFieldP id='AddActionDange' label="Catégorie du risque" onChange={setAddActionDange} defaultValue={AddActionDange}></TextFieldP>
 
             <div style={{ display: 'flex', justifyContent: 'center' }}>
             <Tooltip title="Cliquez ici pour crée l'action (certaine champs doivent être obligatoirement remplis)" arrow>
