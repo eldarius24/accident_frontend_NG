@@ -8,9 +8,21 @@ import { useUserConnected } from './Hook/userConnected';
 import HomeIcon from '@mui/icons-material/Home';
 import PendingActionsIcon from '@mui/icons-material/PendingActions';
 import ViewListIcon from '@mui/icons-material/ViewList';
+import LogoutIcon from '@mui/icons-material/Logout';
+
 function ResponsiveAppBar() {
   const location = useLocation();
   const { isAuthenticated, isAdmin, isAdminOuConseiller, userInfo, isConseiller } = useUserConnected();
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
+  useEffect(() => {
+    const handleResize = () => setWindowWidth(window.innerWidth);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const showText = windowWidth > 900;
+
   const { isAddSecteur, isadminEntreprises, isaddEntrprise, isadminUser, isaddUser, isFormulaireAction, isFormulaireAccident, isPageAdmin, isPageStats, isLoginPage, isplanAction } = useMemo(() => ({
     isFormulaireAccident: location.pathname === '/formulaire',
     isPageAdmin: location.pathname === '/adminaction',
@@ -25,12 +37,13 @@ function ResponsiveAppBar() {
     isAddSecteur: location.pathname === '/addSecteur',
   }), [location.pathname]);
 
-
-
   const buttonStyle = {
     backgroundColor: '#01aeac',
     '&:hover': { backgroundColor: '#95519b' },
     mr: 1,
+    whiteSpace: 'nowrap',
+    minWidth: showText ? 'auto' : '40px',
+    padding: showText ? 'auto' : '6px',
   };
 
   const textStyle = {
@@ -40,208 +53,77 @@ function ResponsiveAppBar() {
     color: '#95519b',
     textAlign: 'center',
     flexGrow: 1,
-    '@media (min-width: 850px)': {
-      fontSize: '2rem',
-    },
-    '@media (max-width: 750px)': {
-      fontSize: '1.5rem',
-      letterSpacing: '.1rem',
-    },
-    '@media (max-width: 600px)': {
-      fontSize: '0.7rem',
-      letterSpacing: '.04rem',
-    },
+    fontSize: windowWidth > 950 ? '2rem' : windowWidth > 850 ? '1.5rem' : '0.7rem',
+    letterSpacing: windowWidth > 950 ? '.3rem' : windowWidth > 850 ? '.1rem' : '.04rem',
   };
 
   if (isLoginPage) {
     return null;
   }
 
+  const renderButton = (to, tooltip, icon, text) => (
+    <Tooltip title={tooltip} arrow>
+      <Button
+        component={Link}
+        to={to}
+        variant="contained"
+        sx={buttonStyle}
+        startIcon={icon}
+      >
+        {showText && text}
+      </Button>
+    </Tooltip>
+  );
+
   return (
     <AppBar position="sticky" sx={{ backgroundColor: '#f9ba2b90' }}>
       <Container maxWidth="lg">
         <Toolbar disableGutters>
-          <Tooltip title="Cliquez ici pour vous déconnecter" arrow>
-            <Button
-              component={Link}
-              to="/login"
-              variant="contained"
-              onClick={() => localStorage.removeItem('token')}
-              sx={buttonStyle}
-            >
-              logout
-            </Button>
-          </Tooltip>
-          {isAdmin && (
-            <>
-              {!['/addSecteur', '/adminaction'].includes(location.pathname) && (
+          {renderButton("/login", "Cliquez ici pour vous déconnecter", <LogoutIcon />, "logout")}
+          
+          {isAdmin && ['/', '/addSecteur', '/adminaction','/adminUser',"/adminEntreprises","/addEntreprise","/addUser"].includes(location.pathname) && 
+            renderButton("/adminaction", "Cliquez ici accèder à l'espace d'administration", <AdminPanelSettingsIcon />, "Admin")}
+          
 
-                <Tooltip title="Cliquez ici accèder à l'espace d'administration" arrow>
-                  <Button
-                    component={Link}
-                    to={'/adminaction'}
-                    variant="contained"
-                    sx={buttonStyle}
-                  >
-                    <AdminPanelSettingsIcon />
-                  </Button>
-                </Tooltip>
-              )}
-            </>
-          )}
-          <Tooltip title="Traitement Informatisé de Getions des Risques d'Entreprise" arrow>
-            <Typography variant="h5" noWrap sx={textStyle}>
-              T.I.G.R.E
-            </Typography>
-          </Tooltip>
-          {!['/', '/addUser', '/adminUser', '/addEntreprise', '/adminEntreprises',].includes(location.pathname) && (
-            <Tooltip title="Cliquez ici pour revenir a l'accueil" arrow>
-              <Button
-                component={Link}
-                to={'/'}
-                variant="contained"
-                sx={buttonStyle}
-              >
-                <HomeIcon />
-              </Button>
-            </Tooltip>
-          )}
+          
+          <Typography variant="h5" noWrap sx={textStyle}>
+            T.I.G.R.E
+          </Typography>
+          
+          {!['/'].includes(location.pathname) && 
+            renderButton("/", "Cliquez ici pour revenir a l'accueil", <HomeIcon />, "Home")}
+          
           {isAdminOuConseiller && (
             <>
-              {!['/addSecteur', '/addUser', '/adminUser', '/addEntreprise', '/adminEntreprises', '/adminaction', '/formulaireAction', '/planAction', '/formulaire', '/statistiques'].includes(location.pathname) && (
-                <Tooltip title="Cliquez ici pour ajouté un nouvelle accident" arrow>
-                  <Button
-                    component={Link}
-                    to={'/formulaire'}
-                    variant="contained"
-                    sx={buttonStyle}
-                  >
-                    <AddIcon />
-                    Accident
-                  </Button>
-                </Tooltip>
-              )}
-
-              {!['/addSecteur', '/addUser', '/adminUser', '/addEntreprise', '/adminEntreprises', '/adminaction', '/formulaireAction', '/planAction', '/formulaire', '/statistiques'].includes(location.pathname) && (
-                <Tooltip title="Cliquez ici pour accéder aux statistiques" arrow>
-                  <Button
-                    component={Link}
-                    to={'/statistiques'}
-                    variant="contained"
-                    sx={buttonStyle}
-                    startIcon={<BarChartIcon />}
-                  >
-                    Statistiques
-                  </Button>
-                </Tooltip>
-              )}
-            </>
-          )}
-          {isAdminOuConseiller && (
-            <>
-              {!['/addSecteur', '/addUser', '/adminUser', '/addEntreprise', '/adminEntreprises', '/adminaction', '/planAction', '/formulaire', '/statistiques'].includes(location.pathname) && (
-                <Tooltip title="Cliquez ici pour accéder aux plans d'actions" arrow>
-                  <Button
-                    component={Link}
-                    to={'/planAction'}
-                    variant="contained"
-                    sx={buttonStyle}
-                    startIcon={<PendingActionsIcon />}
-                  >
-                    Plans d'actions
-                  </Button>
-                </Tooltip>
-              )}
-            </>
-          )}
-          {isAdminOuConseiller && (
-            <>
-              {!['/addSecteur', '/addUser', '/adminUser', '/addEntreprise', '/adminEntreprises', '/adminaction', '/', '/formulaireAction', '/formulaire', '/statistiques'].includes(location.pathname) && (
-                <Tooltip title="Cliquez ici pour ajouter une nouvelle action" arrow>
-                  <Button
-                    component={Link}
-                    to={'/formulaireAction'}
-                    variant="contained"
-                    sx={buttonStyle}
-                    startIcon={<AddIcon />}
-                  >
-                    Nouvelle action
-                  </Button>
-                </Tooltip>
-              )}
-            </>
-          )}
-          {isAdminOuConseiller && (
-            <>
-              {!['/addSecteur', '/addEntreprise', '/addUser', '/adminEntreprises', '/planAction', '/', '/formulaireAction', '/formulaire', '/statistiques'].includes(location.pathname) && (
-                <Tooltip title="Cliquez ici pour ajouter une nouvelle action" arrow>
-                  <Button
-                    component={Link}
-                    to={'/addUser'}
-                    variant="contained"
-                    sx={buttonStyle}
-                    startIcon={<AddIcon />}
-                  >
-                    Utilisateur
-                  </Button>
-                </Tooltip>
-              )}
-            </>
-          )}
-          {isAdminOuConseiller && (
-            <>
-              {!['/addSecteur', '/adminUser', '/addEntreprise', '/adminEntreprises', '/planAction', '/', '/formulaireAction', '/formulaire', '/statistiques'].includes(location.pathname) && (
-                <Tooltip title="Cliquez ici pour ajouter une nouvelle action" arrow>
-                  <Button
-                    component={Link}
-                    to={'/adminUser'}
-                    variant="contained"
-                    sx={buttonStyle}
-                    startIcon={<ViewListIcon />}
-                  >
-                    utilisateurs
-                  </Button>
-                </Tooltip>
-              )}
-            </>
-          )}
-          {isAdminOuConseiller && (
-            <>
-              {!['/addUser', '/adminUser', '/addEntreprise', '/planAction', '/', '/formulaireAction', '/formulaire', '/statistiques'].includes(location.pathname) && (
-                <Tooltip title="Cliquez ici pour ajouter une nouvelle action" arrow>
-                  <Button
-                    component={Link}
-                    to={'/addEntreprise'}
-                    variant="contained"
-                    sx={buttonStyle}
-                    startIcon={<AddIcon />}
-                  >
-                    Entreprise
-                  </Button>
-                </Tooltip>
-              )}
-            </>
-          )}
-          {isAdminOuConseiller && (
-            <>
-              {!['/addUser', '/adminUser', '/adminEntreprises', '/planAction', '/', '/formulaireAction', '/formulaire', '/statistiques'].includes(location.pathname) && (
-                <Tooltip title="Cliquez ici pour ajouter une nouvelle action" arrow>
-                  <Button
-                    component={Link}
-                    to={'/adminEntreprises'}
-                    variant="contained"
-                    sx={buttonStyle}
-                    startIcon={<ViewListIcon />}
-                  >
-                    Entreprises
-                  </Button>
-                </Tooltip>
-              )}
+            
+              {!['/addSecteur', '/addUser', '/adminUser', '/addEntreprise', '/adminEntreprises', '/adminaction', '/formulaireAction', '/planAction', '/formulaire', '/statistiques'].includes(location.pathname) && 
+                renderButton("/formulaire", "Cliquez ici pour ajouté un nouvelle accident", <AddIcon />, "Accident")}
+              
+              {!['/addSecteur', '/addUser', '/adminUser', '/addEntreprise', '/adminEntreprises', '/adminaction', '/formulaireAction', '/planAction', '/formulaire', '/statistiques'].includes(location.pathname) && 
+                renderButton("/statistiques", "Cliquez ici pour accéder aux statistiques", <BarChartIcon />, "Statistiques")}
+              
+              {!['/addSecteur', '/addUser', '/adminUser', '/addEntreprise', '/adminEntreprises', '/adminaction', '/planAction', '/formulaire', '/statistiques'].includes(location.pathname) && 
+                renderButton("/planAction", "Cliquez ici pour accéder aux plans d'actions", <PendingActionsIcon />, "Plans d'actions")}
+              
+              {!['/addSecteur', '/addUser', '/adminUser', '/addEntreprise', '/adminEntreprises', '/adminaction', '/', '/formulaireAction', '/formulaire', '/statistiques'].includes(location.pathname) && 
+                renderButton("/formulaireAction", "Cliquez ici pour ajouter une nouvelle action", <AddIcon />, "Nouvelle action")}
+              
+              {!['/addSecteur', '/addEntreprise', '/addUser', '/adminEntreprises', '/planAction', '/', '/formulaireAction', '/formulaire', '/statistiques'].includes(location.pathname) && 
+                renderButton("/addUser", "Cliquez ici pour ajouter un nouvel utilisateur", <AddIcon />, "Utilisateur")}
+              
+              {!['/addSecteur', '/adminUser', '/addEntreprise', '/adminEntreprises', '/planAction', '/', '/formulaireAction', '/formulaire', '/statistiques'].includes(location.pathname) && 
+                renderButton("/adminUser", "Cliquez ici pour gérer les utilisateurs", <ViewListIcon />, "utilisateurs")}
+              
+              {!['/addUser', '/adminUser', '/addEntreprise', '/planAction', '/', '/formulaireAction', '/formulaire', '/statistiques'].includes(location.pathname) && 
+                renderButton("/addEntreprise", "Cliquez ici pour ajouter une nouvelle entreprise", <AddIcon />, "Entreprise")}
+              
+              {!['/addUser', '/adminUser', '/adminEntreprises', '/planAction', '/', '/formulaireAction', '/formulaire', '/statistiques'].includes(location.pathname) && 
+                renderButton("/adminEntreprises", "Cliquez ici pour gérer les entreprises", <ViewListIcon />, "Entreprises")}
             </>
           )}
         </Toolbar>
       </Container>
-    </AppBar >
+    </AppBar>
   );
 }
 
