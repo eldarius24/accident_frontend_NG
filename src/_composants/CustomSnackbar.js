@@ -5,7 +5,7 @@ const CustomSnackbar = ({ open, handleClose, message, severity }) => {
   return (
     <Snackbar
       anchorOrigin={{
-        vertical: 'top', // Reste en bas pour le positionnement
+        vertical: 'button', // Reste en bas pour le positionnement
         horizontal: 'left',
       }}
       open={open}
@@ -23,7 +23,7 @@ const CustomSnackbar = ({ open, handleClose, message, severity }) => {
           color: severity === 'success' ? '#257525' : '#ff0000', // Couleur du texte différente selon la gravité
           outline: severity === 'success' ? '3px solid green' : '5px solid red', // Bordure extérieure différente selon la gravité
           position: 'relative', 
-          top: '60px', // Décaler la Snackbar de 40px vers le haut
+          top: '-60px', // Décaler la Snackbar de 40px vers le haut
         }}
       >
         {message}
