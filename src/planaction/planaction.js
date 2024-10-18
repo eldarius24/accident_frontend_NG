@@ -16,7 +16,10 @@ import {
     Grid,
     LinearProgress,
     TextField,
-    Tooltip
+    Tooltip,
+    Card,
+    CardContent,
+    Typography
 } from '@mui/material';
 
 import EditIcon from '@mui/icons-material/Edit';
@@ -35,6 +38,140 @@ import AddIcon from '@mui/icons-material/Add';
 
 
 const apiUrl = config.apiUrl;
+
+
+const EnterpriseStats = ({ actions }) => {
+    const getEnterpriseStats = () => {
+        const stats = {};
+        actions.forEach(action => {
+            const enterprise = action.AddActionEntreprise;
+            if (!stats[enterprise]) {
+                stats[enterprise] = {
+                    total: 0,
+                    completed: 0
+                };
+            }
+            stats[enterprise].total += 1;
+            if (action.AddboolStatus) {
+                stats[enterprise].completed += 1;
+            }
+        });
+        return stats;
+    };
+
+
+    const stats = getEnterpriseStats();
+
+
+    const getCardStyle = (completed, total) => {
+        const completionRate = (completed / total) * 100;
+        
+        // Fonction pour déterminer la couleur en fonction du taux de complétion
+        const getColorByCompletion = (rate) => {
+            if (rate === 100) return '#90EE90'; // Vert clair pour 100%
+            if (rate >= 75) return '#B7E4B7'; // Vert pâle pour >= 75%
+            if (rate >= 50) return '#FFE4B5'; // Orange pâle pour >= 50%
+            if (rate >= 25) return '#FFB6B6'; // Rouge pâle pour >= 25%
+            return '#FFCCCB'; // Rouge très pâle pour < 25%
+        };
+    
+        return {
+            backgroundColor: getColorByCompletion(completionRate),
+            boxShadow: 3,
+            transition: 'all 0.3s ease-in-out',
+            '&:hover': {
+                transform: 'scale(1.02)',
+                transition: 'transform 0.2s ease-in-out'
+            }
+        };
+    };
+
+    const getProgressBarColor = (completed, total) => {
+        const completionRate = (completed / total) * 100;
+        if (completionRate === 100) return '#006400'; // Vert foncé pour 100%
+        if (completionRate > 75) return '#4CAF50'; // Vert normal pour >75%
+        if (completionRate > 50) return '#8BC34A'; // Vert clair pour >50%
+        if (completionRate > 25) return '#FFA726'; // Orange pour >25%
+        return '#FF5722'; // Rouge-orange pour ≤25%
+    };
+
+    return (
+        <div style={{ margin: '20px 0' }}>
+            <Grid container spacing={2}>
+                {Object.entries(stats).map(([enterprise, { total, completed }]) => {
+                    const completionRate = (completed / total) * 100;
+                    return (
+                        <Grid item xs={12} sm={6} md={4} key={enterprise}>
+                            <Card sx={getCardStyle(completed, total)}>
+                                <CardContent>
+                                    <Typography
+                                        variant="h6"
+                                        component="div"
+                                        sx={{
+                                            fontWeight: completionRate === 100 ? 'bold' : 'normal',
+                                            color: completionRate === 100 ? '#006400' : 'inherit'
+                                        }}
+                                    >
+                                        {enterprise}
+                                        {completionRate === 100 &&
+                                            <span style={{ marginLeft: '10px', fontSize: '0.8em' }}>✓</span>
+                                        }
+                                    </Typography>
+                                    <Typography color="text.secondary">
+                                        Actions totales: {total}
+                                    </Typography>
+                                    <Typography
+                                        color="text.secondary"
+                                        sx={{
+                                            color: completionRate === 100 ? '#006400' : 'inherit'
+                                        }}
+                                    >
+                                        Actions terminées: {completed}
+                                    </Typography>
+                                    <Typography color="text.secondary">
+                                        Actions en cours: {total - completed}
+                                    </Typography>
+                                    <div
+                                        style={{
+                                            width: '100%',
+                                            height: '4px',
+                                            backgroundColor: '#e0e0e0',
+                                            marginTop: '8px',
+                                            borderRadius: '2px'
+                                        }}
+                                    >
+                                        <div
+                                            style={{
+                                                width: `${(completed / total) * 100}%`,
+                                                height: '100%',
+                                                backgroundColor: getProgressBarColor(completed, total),
+                                                transition: 'width 0.3s ease-in-out, background-color 0.3s ease-in-out',
+                                                borderRadius: '2px'
+                                            }}
+                                        />
+                                    </div>
+                                    <Typography
+                                        variant="body2"
+                                        sx={{
+                                            mt: 1,
+                                            textAlign: 'right',
+                                            fontWeight: completionRate === 100 ? 'bold' : 'normal',
+                                            color: completionRate === 100 ? '#006400' : 'inherit'
+                                        }}
+                                    >
+                                        {Math.round(completionRate)}% complété
+                                    </Typography>
+                                </CardContent>
+                            </Card>
+                        </Grid>
+                    );
+                })}
+            </Grid>
+        </div>
+    );
+};
+
+
 
 export default function PlanAction({ accidentData }) {
     const [users, setAddactions] = useState([]);
@@ -174,7 +311,14 @@ export default function PlanAction({ accidentData }) {
         return <LinearProgress color="success" />;
     }
 
-    const rowColors = ['#e62a5625', '#95519b25']; // Tableau de couleurs pour les lignes
+    //vouleur des ligne du tableau, change en vert quand checkbox = true
+    const getRowColor = (isChecked, index) => {
+        if (isChecked) {
+            return '#90EE90'; // Vert clair quand la checkbox est cochée
+        }
+        const baseColors = ['#e62a5625', '#95519b25'];
+        return baseColors[index % baseColors.length];
+    };
 
     const onSubmit = (data) => {
         console.log("Formulaire.js -> onSubmit -> Données à enregistrer :", data);
@@ -214,10 +358,16 @@ export default function PlanAction({ accidentData }) {
         console.log("Données à exporter:", dataToExport);
         handleExportDataAction(dataToExport);
     };
+
+    //compte le nombre d'action par entreprise 
+
+
     return (
         <form className="background-image" onSubmit={handleSubmit(onSubmit)}>
 
             <h2>Plan d'actions</h2>
+            <EnterpriseStats actions={filteredUsers.filter(action => canViewAction(action))} />
+
             <div style={{ display: 'flex', justifyContent: 'center', margin: '20px 0rem' }}>
                 <Grid item xs={6} style={{ marginRight: '20px' }}>
                     <Tooltip title="Cliquez ici pour actualiser le tableau des actions" arrow>
@@ -289,7 +439,11 @@ export default function PlanAction({ accidentData }) {
                             {filteredUsers.map((addaction, index) => (
                                 canViewAction(addaction) && (
 
-                                    <TableRow className="table-row-separatormenu" key={addaction._id} style={{ backgroundColor: rowColors[index % rowColors.length] }}>
+                                    <TableRow
+                                        className="table-row-separatormenu"
+                                        key={addaction._id}
+                                        style={{ backgroundColor: getRowColor(addaction.AddboolStatus, index) }}
+                                    >
 
                                         <TableCell>
                                             <Tooltip title="Sélectionnez quand l'action est réalisée" arrow>
