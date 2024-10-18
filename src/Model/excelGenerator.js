@@ -541,14 +541,15 @@ export function handleExportDataAction(data) {
 
     // Ajouter l'en-tête
     worksheet.addRow([
+        'Status',
         'Année ou l\'action est prévue',
         'L\'action doit être réaliser en',
         'Nom de l\'entreprise',
         'Nom du secteur',
         'Action a réaliser',
+        'Catégorie du risque',
         'Date d\'ajout de l\'action',
         'La personne charger de l\'action',
-        'Type de dangé',
     ]);
 
     // Ajouter les données filtrées
@@ -556,14 +557,16 @@ export function handleExportDataAction(data) {
         dataToExport.forEach(item => {
             worksheet.addRow([
                 //infos entreprise
+                item.AddboolStatus,
                 item.AddActionanne,
                 item.AddActoinmoi,
                 item.AddActionEntreprise,
                 item.AddActionSecteur,
                 item.AddAction,
+                item.AddActionDange,
                 item.AddActionDate,
                 item.AddActionQui,
-                item.AddActionDange,
+                
             ]);
         });
     } else {

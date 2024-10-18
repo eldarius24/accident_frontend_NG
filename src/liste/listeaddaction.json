@@ -12,5 +12,14 @@
         "Octobre",
         "Novembre",
         "Décembre"
+    ],
+
+    "AddActionDange": [
+        "Incendie",
+        "Bien-être",
+        "Accident",
+        "Ergonomie",
+        "Psychosocial"
+        
     ]
 }

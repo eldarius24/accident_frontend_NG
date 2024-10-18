@@ -168,8 +168,8 @@ export default function PlanAction({ accidentData }) {
             .then(response => {
                 console.log('Réponse du serveur en création :', response.data);
                 showSnackbar('Action en cours d\'enregistrement', 'success');
-                setTimeout(() => showSnackbar('Action enregistrée avec succès', 'success'), 1000);
-                setTimeout(() => window.location.reload(), 2000); // Actualise la page au lieu de navigate
+                setTimeout(() => showSnackbar('Action enregistrée avec succès', 'success'), 500);
+                setTimeout(() => navigate('/planAction'), 750); // Actualise la page au lieu de navigate
             })
             .catch(error => {
                 console.error('Erreur de requête:', error.message);
@@ -222,7 +222,17 @@ export default function PlanAction({ accidentData }) {
             <TextFieldQ id='AddAction' label="Quel action a jouter" onChange={setAddAction} defaultValue={AddAction} required={true}></TextFieldQ>
             <DatePickerQ id='AddActionDate' label="Date de l'ajout de l'action" onChange={setAddActionDate} defaultValue={AddActionDate} required={true}></DatePickerQ>
             <TextFieldP id='AddActionQui' label="qui doit s'occuper de l'action" onChange={setAddActionQui} defaultValue={AddActionQui}></TextFieldP>
-            <TextFieldP id='AddActionDange' label="Catégorie du risque" onChange={setAddActionDange} defaultValue={AddActionDange}></TextFieldP>
+
+
+            <AutoCompleteQ id='AddActionDange'
+                option={listeaddaction.AddActionDange}
+                label="Type de risque"
+                onChange={(AddActionDangeSelect) => {
+                    setAddActionDange(AddActionDangeSelect);
+                    setValue('AddActionDange', AddActionDangeSelect);
+                }} defaultValue={AddActionDange}
+                required={true}
+            />
 
             <div style={{ display: 'flex', justifyContent: 'center' }}>
                 <Tooltip title="Cliquez ici pour crée l'action (certaine champs doivent être obligatoirement remplis)" arrow>

@@ -373,19 +373,49 @@ export default function PlanAction({ accidentData }) {
     };
 
     const handleExport = () => {
+        // Commencer avec tous les utilisateurs
         let dataToExport = users;
 
+        // Filtre pour les non-admins (entreprises spécifiques)
         if (!isAdmin) {
-            dataToExport = users.filter(action =>
+            dataToExport = dataToExport.filter(action =>
                 userInfo.entreprisesConseillerPrevention?.includes(action.AddActionEntreprise)
             );
+        }
+
+        // Filtre par années si des années sont sélectionnées
+        if (selectedYears && selectedYears.length > 0) {
+            dataToExport = dataToExport.filter(action =>
+                selectedYears.includes(action.AddActionanne)
+            );
+        }
+
+        // Filtre par terme de recherche s'il est défini
+        if (searchTerm) {
+            const searchTermLower = searchTerm.toLowerCase();
+            dataToExport = dataToExport.filter(addaction => {
+                return (
+                    (addaction.AddActionEntreprise?.toLowerCase().includes(searchTermLower)) ||
+                    (addaction.AddActionDate?.toLowerCase().includes(searchTermLower)) ||
+                    (addaction.AddActionSecteur?.toLowerCase().includes(searchTermLower)) ||
+                    (addaction.AddAction?.toLowerCase().includes(searchTermLower)) ||
+                    (addaction.AddActionQui?.toLowerCase().includes(searchTermLower)) ||
+                    (addaction.AddActoinmoi?.toLowerCase().includes(searchTermLower)) ||
+                    (addaction.AddActionDange?.toLowerCase().includes(searchTermLower)) ||
+                    (addaction.AddActionanne?.toLowerCase().includes(searchTermLower))
+                );
+            });
         }
 
         console.log("Données à exporter:", dataToExport);
         handleExportDataAction(dataToExport);
     };
-
     //compte le nombre d'action par entreprise 
+
+    // Ajoutez cette fonction de tri juste avant le return de PlanAction
+    const sortByYear = (a, b) => {
+        return parseInt(a.AddActionanne) - parseInt(b.AddActionanne);
+    };
 
 
     return (
@@ -496,92 +526,94 @@ export default function PlanAction({ accidentData }) {
                             </React.Fragment>
                         </TableHead>
                         <TableBody>
-                            {filteredUsers.map((addaction, index) => (
-                                canViewAction(addaction) && (
+                            {filteredUsers
+                                .sort(sortByYear)
+                                .map((addaction, index) => (
+                                    canViewAction(addaction) && (
 
-                                    <TableRow
-                                        className="table-row-separatormenu"
-                                        key={addaction._id}
-                                        style={{ backgroundColor: getRowColor(addaction.AddboolStatus, index) }}
-                                    >
+                                        <TableRow
+                                            className="table-row-separatormenu"
+                                            key={addaction._id}
+                                            style={{ backgroundColor: getRowColor(addaction.AddboolStatus, index) }}
+                                        >
 
-                                        <TableCell>
-                                            <Tooltip title="Sélectionnez quand l'action est réalisée" arrow>
-                                                <Checkbox
-                                                    sx={{ '& .MuiSvgIcon-root': { fontSize: 25 } }}
-                                                    color="success"
-                                                    checked={addaction.AddboolStatus}
-                                                    onChange={() => {
-                                                        const newStatus = !addaction.AddboolStatus;
-                                                        axios.put(`http://${apiUrl}:3100/api/planaction/${addaction._id}`, {
-                                                            AddboolStatus: newStatus
-                                                        })
-                                                            .then(response => {
-                                                                console.log('Statut mis à jour avec succès:', response.data);
-                                                                refreshListAccidents();
+                                            <TableCell>
+                                                <Tooltip title="Sélectionnez quand l'action est réalisée" arrow>
+                                                    <Checkbox
+                                                        sx={{ '& .MuiSvgIcon-root': { fontSize: 25 } }}
+                                                        color="success"
+                                                        checked={addaction.AddboolStatus}
+                                                        onChange={() => {
+                                                            const newStatus = !addaction.AddboolStatus;
+                                                            axios.put(`http://${apiUrl}:3100/api/planaction/${addaction._id}`, {
+                                                                AddboolStatus: newStatus
                                                             })
-                                                            .catch(error => {
-                                                                console.error('Erreur lors de la mise à jour du statut:', error.message);
-                                                                showSnackbar('Erreur lors de la mise à jour du statut', 'error');
-                                                            });
-                                                    }}
-                                                />
-                                            </Tooltip>
-                                        </TableCell>
-                                        <TableCell>{addaction.AddActionanne}</TableCell>
-                                        <TableCell>{addaction.AddActoinmoi}</TableCell>
-                                        <TableCell>{addaction.AddActionEntreprise}</TableCell>
-                                        <TableCell>{addaction.AddActionSecteur}</TableCell>
-                                        <TableCell>{addaction.AddAction}</TableCell>
-                                        <TableCell>{addaction.AddActionDange}</TableCell>
-                                        <TableCell>{addaction.AddActionDate}</TableCell>
-                                        <TableCell>{addaction.AddActionQui}</TableCell>
-                                        <TableCell style={{ padding: 0, width: '70px' }}>
-                                            <Tooltip title="Cliquez ici pour éditer les données de l'action" arrow>
-                                                <Button variant="contained" color="primary">
-                                                    <EditIcon />
-                                                </Button>
-                                            </Tooltip>
-                                        </TableCell>
-                                        <TableCell style={{ padding: 0, width: '70px' }}>
-                                            <Tooltip title="Cliquez ici pour ajouter des fichiers a l'action" arrow>
-                                                <Button component={Link} to={isFileUploadIcon ? '/' : '/fichierdllaction'} variant="contained" color="secondary">
-                                                    <GetAppIcon />
-                                                </Button>
-                                            </Tooltip>
-                                        </TableCell>
-                                        <TableCell style={{ padding: 0, width: '70px' }}>
-                                            <Tooltip title="Cliquez ici pour supprimer l'action" arrow>
-                                                <Button variant="contained" color="error" onClick={() => {
-                                                    confirmAlert({
-                                                        customUI: ({ onClose }) => (
-                                                            <div className="custom-confirm-dialog">
-                                                                <h1 className="custom-confirm-title">Supprimer</h1>
-                                                                <p className="custom-confirm-message">Êtes-vous sûr de vouloir supprimer cet action?</p>
-                                                                <div className="custom-confirm-buttons">
-                                                                    <Tooltip title="Cliquez sur OUI pour supprimer" arrow>
-                                                                        <button className="custom-confirm-button" onClick={() => { handleDelete(addaction._id); onClose(); }}>
-                                                                            Oui
-                                                                        </button>
-                                                                    </Tooltip>
-                                                                    <Tooltip title="Cliquez sur NON pour annuler la suppression" arrow>
-                                                                        <button className="custom-confirm-button custom-confirm-no" onClick={onClose}>
-                                                                            Non
-                                                                        </button>
-                                                                    </Tooltip>
+                                                                .then(response => {
+                                                                    console.log('Statut mis à jour avec succès:', response.data);
+                                                                    refreshListAccidents();
+                                                                })
+                                                                .catch(error => {
+                                                                    console.error('Erreur lors de la mise à jour du statut:', error.message);
+                                                                    showSnackbar('Erreur lors de la mise à jour du statut', 'error');
+                                                                });
+                                                        }}
+                                                    />
+                                                </Tooltip>
+                                            </TableCell>
+                                            <TableCell>{addaction.AddActionanne}</TableCell>
+                                            <TableCell>{addaction.AddActoinmoi}</TableCell>
+                                            <TableCell>{addaction.AddActionEntreprise}</TableCell>
+                                            <TableCell>{addaction.AddActionSecteur}</TableCell>
+                                            <TableCell>{addaction.AddAction}</TableCell>
+                                            <TableCell>{addaction.AddActionDange}</TableCell>
+                                            <TableCell>{addaction.AddActionDate}</TableCell>
+                                            <TableCell>{addaction.AddActionQui}</TableCell>
+                                            <TableCell style={{ padding: 0, width: '70px' }}>
+                                                <Tooltip title="Cliquez ici pour éditer les données de l'action" arrow>
+                                                    <Button variant="contained" color="primary">
+                                                        <EditIcon />
+                                                    </Button>
+                                                </Tooltip>
+                                            </TableCell>
+                                            <TableCell style={{ padding: 0, width: '70px' }}>
+                                                <Tooltip title="Cliquez ici pour ajouter des fichiers a l'action" arrow>
+                                                    <Button component={Link} to={isFileUploadIcon ? '/' : '/fichierdllaction'} variant="contained" color="secondary">
+                                                        <GetAppIcon />
+                                                    </Button>
+                                                </Tooltip>
+                                            </TableCell>
+                                            <TableCell style={{ padding: 0, width: '70px' }}>
+                                                <Tooltip title="Cliquez ici pour supprimer l'action" arrow>
+                                                    <Button variant="contained" color="error" onClick={() => {
+                                                        confirmAlert({
+                                                            customUI: ({ onClose }) => (
+                                                                <div className="custom-confirm-dialog">
+                                                                    <h1 className="custom-confirm-title">Supprimer</h1>
+                                                                    <p className="custom-confirm-message">Êtes-vous sûr de vouloir supprimer cet action?</p>
+                                                                    <div className="custom-confirm-buttons">
+                                                                        <Tooltip title="Cliquez sur OUI pour supprimer" arrow>
+                                                                            <button className="custom-confirm-button" onClick={() => { handleDelete(addaction._id); onClose(); }}>
+                                                                                Oui
+                                                                            </button>
+                                                                        </Tooltip>
+                                                                        <Tooltip title="Cliquez sur NON pour annuler la suppression" arrow>
+                                                                            <button className="custom-confirm-button custom-confirm-no" onClick={onClose}>
+                                                                                Non
+                                                                            </button>
+                                                                        </Tooltip>
+                                                                    </div>
                                                                 </div>
-                                                            </div>
-                                                        )
-                                                    });
-                                                }}>
-                                                    <DeleteForeverIcon />
-                                                </Button>
-                                            </Tooltip>
-                                        </TableCell>
+                                                            )
+                                                        });
+                                                    }}>
+                                                        <DeleteForeverIcon />
+                                                    </Button>
+                                                </Tooltip>
+                                            </TableCell>
 
-                                    </TableRow>
-                                )
-                            ))}
+                                        </TableRow>
+                                    )
+                                ))}
                         </TableBody>
                     </Table>
                 </div>
