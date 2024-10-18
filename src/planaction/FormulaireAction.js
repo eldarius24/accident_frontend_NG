@@ -41,6 +41,19 @@ export default function PlanAction({ accidentData }) {
     const [AddActionanne, setAddActionanne] = useState(watch('AddActionanne') || (accidentData && accidentData.AddActionanne) || '');
     const [AddActoinmoi, setAddActoinmoi] = useState(watch('AddActoinmoi') || (accidentData && accidentData.AddActoinmoi) || '');
 
+    // Générer les options d'années
+    const generateYearOptions = () => {
+        const currentYear = new Date().getFullYear();
+        const years = [];
+        for (let i = -1; i <= 5; i++) {
+            years.push(String(currentYear + i));
+        }
+        return years;
+    };
+
+    const [yearOptions] = useState(generateYearOptions());
+
+
     const [snackbar, setSnackbar] = useState({
         open: false,
         message: '',
@@ -174,7 +187,17 @@ export default function PlanAction({ accidentData }) {
 
 
             <h3>Ajouter une action</h3>
-            <TextFieldP id='AddActionanne' label="L'action est pour le plan d'actions de l'année" onChange={setAddActionanne} defaultValue={AddActionanne}></TextFieldP>
+            <AutoCompleteQ
+                id='AddActionanne'
+                option={yearOptions}
+                label="L'action est pour le plan d'actions de l'année"
+                onChange={(yearSelect) => {
+                    setAddActionanne(yearSelect);
+                    setValue('AddActionanne', yearSelect);
+                }}
+                Value={AddActionanne}
+                required={true}
+            />
             <AutoCompleteP id='AddActoinmoi' option={listeaddaction.AddActoinmoi} label="L'action doit être réalisée au plus tard pour" onChange={(AddActoinmoiSelect) => {
                 setAddActoinmoi(AddActoinmoiSelect);
                 setValue('AddActoinmoi', AddActoinmoiSelect);

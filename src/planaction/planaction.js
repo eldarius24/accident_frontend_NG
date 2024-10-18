@@ -1,5 +1,5 @@
 import axios from 'axios';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import { useLocation, Link, useNavigate } from 'react-router-dom';
 import '../pageFormulaire/formulaire.css';
@@ -19,9 +19,14 @@ import {
     Tooltip,
     Card,
     CardContent,
-    Typography
+    Typography,
+    FormControl,
+    InputLabel,
+    Select,
+    MenuItem,
+    ListItemText,
+    OutlinedInput
 } from '@mui/material';
-
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import { confirmAlert } from 'react-confirm-alert';
@@ -35,13 +40,12 @@ import CustomSnackbar from '../_composants/CustomSnackbar';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
 import { handleExportDataAction } from '../Model/excelGenerator.js';
 import AddIcon from '@mui/icons-material/Add';
-
-
+import TextFieldP from '../_composants/textFieldP';
 const apiUrl = config.apiUrl;
 
-
-const EnterpriseStats = ({ actions }) => {
-    const getEnterpriseStats = () => {
+// Extraction du composant de statistiques dans un composant mémorisé
+const EnterpriseStats = React.memo(({ actions }) => {
+    const getEnterpriseStats = useMemo(() => {
         const stats = {};
         actions.forEach(action => {
             const enterprise = action.AddActionEntreprise;
@@ -57,24 +61,18 @@ const EnterpriseStats = ({ actions }) => {
             }
         });
         return stats;
-    };
+    }, [actions]);
 
-
-    const stats = getEnterpriseStats();
-
-
-    const getCardStyle = (completed, total) => {
+    const getCardStyle = useCallback((completed, total) => {
         const completionRate = (completed / total) * 100;
-        
-        // Fonction pour déterminer la couleur en fonction du taux de complétion
         const getColorByCompletion = (rate) => {
-            if (rate === 100) return '#90EE90'; // Vert clair pour 100%
-            if (rate >= 75) return '#B7E4B7'; // Vert pâle pour >= 75%
-            if (rate >= 50) return '#FFE4B5'; // Orange pâle pour >= 50%
-            if (rate >= 25) return '#FFB6B6'; // Rouge pâle pour >= 25%
-            return '#FFCCCB'; // Rouge très pâle pour < 25%
+            if (rate === 100) return '#90EE90';
+            if (rate >= 75) return '#B7E4B7';
+            if (rate >= 50) return '#FFE4B5';
+            if (rate >= 25) return '#FFB6B6';
+            return '#FFCCCB';
         };
-    
+
         return {
             backgroundColor: getColorByCompletion(completionRate),
             boxShadow: 3,
@@ -84,25 +82,26 @@ const EnterpriseStats = ({ actions }) => {
                 transition: 'transform 0.2s ease-in-out'
             }
         };
-    };
+    }, []);
 
-    const getProgressBarColor = (completed, total) => {
+    const getProgressBarColor = useCallback((completed, total) => {
         const completionRate = (completed / total) * 100;
-        if (completionRate === 100) return '#006400'; // Vert foncé pour 100%
-        if (completionRate > 75) return '#4CAF50'; // Vert normal pour >75%
-        if (completionRate > 50) return '#8BC34A'; // Vert clair pour >50%
-        if (completionRate > 25) return '#FFA726'; // Orange pour >25%
-        return '#FF5722'; // Rouge-orange pour ≤25%
-    };
+        if (completionRate === 100) return '#006400';
+        if (completionRate > 75) return '#4CAF50';
+        if (completionRate > 50) return '#8BC34A';
+        if (completionRate > 25) return '#FFA726';
+        return '#FF5722';
+    }, []);
 
     return (
         <div style={{ margin: '20px 0' }}>
             <Grid container spacing={2}>
-                {Object.entries(stats).map(([enterprise, { total, completed }]) => {
+                {Object.entries(getEnterpriseStats).map(([enterprise, { total, completed }]) => {
                     const completionRate = (completed / total) * 100;
                     return (
                         <Grid item xs={12} sm={6} md={4} key={enterprise}>
                             <Card sx={getCardStyle(completed, total)}>
+
                                 <CardContent>
                                     <Typography
                                         variant="h6"
@@ -129,7 +128,7 @@ const EnterpriseStats = ({ actions }) => {
                                         Actions terminées: {completed}
                                     </Typography>
                                     <Typography color="text.secondary">
-                                        Actions en cours: {total - completed}
+                                        Actions restantes: {total - completed}
                                     </Typography>
                                     <div
                                         style={{
@@ -169,8 +168,7 @@ const EnterpriseStats = ({ actions }) => {
             </Grid>
         </div>
     );
-};
-
+});
 
 
 export default function PlanAction({ accidentData }) {
@@ -185,81 +183,109 @@ export default function PlanAction({ accidentData }) {
     const [availableSectors, setAvailableSectors] = useState([]);
     const { isAdmin, isAdminOuConseiller, userInfo, isConseiller } = useUserConnected();
     const navigate = useNavigate();
-
-
+    const currentYear = new Date().getFullYear().toString(); // Obtenir l'année courante
+    const [selectedYear, setSelectedYear] = useState(null);
+    const [selectedYears, setSelectedYears] = useState([currentYear]); // Renommer et initialiser avec un tableau
+    const [availableYears, setAvailableYears] = useState([]);
     const [snackbar, setSnackbar] = useState({
         open: false,
         message: '',
         severity: 'info',
     });
 
-    const showSnackbar = (message, severity = 'info') => {
-        setSnackbar({ open: true, message, severity });
-    };
+    // Extraire les années uniques des actions et définir l'année courante par défaut
+    useEffect(() => {
+        const years = [...new Set(users.map(action => action.AddActionanne))].filter(Boolean).sort();
 
-    const handleCloseSnackbar = (event, reason) => {
-        if (reason === 'clickaway') {
-            return;
+        // Si l'année courante n'est pas dans la liste des années disponibles, l'ajouter
+        if (!years.includes(currentYear)) {
+            years.push(currentYear);
         }
-        setSnackbar({ ...snackbar, open: false });
-    };
 
+        setAvailableYears(years.sort());
+
+        // Définir l'année courante comme valeur par défaut si aucune année n'est sélectionnée
+        if (selectedYears.length === 0) {
+            setSelectedYears([currentYear]);
+        }
+    }, [users, currentYear]);
+
+
+
+
+
+    const showSnackbar = useCallback((message, severity = 'info') => {
+        setSnackbar({ open: true, message, severity });
+    }, []);
+
+    const handleCloseSnackbar = useCallback((event, reason) => {
+        if (reason === 'clickaway') return;
+        setSnackbar(prev => ({ ...prev, open: false }));
+    }, []);
+
+    const fetchData = useCallback(async () => {
+        try {
+            const [actionsResponse, enterprisesResponse, sectorsResponse] = await Promise.all([
+                axios.get(`http://${apiUrl}:3100/api/planaction`),
+                axios.get(`http://${apiUrl}:3100/api/entreprises`),
+                axios.get(`http://${apiUrl}:3100/api/secteurs`)
+            ]);
+
+            setAddactions(actionsResponse.data);
+            let entreprisesData = enterprisesResponse.data.map(e => ({
+                label: e.AddEntreName,
+                id: e._id
+            }));
+
+            if (!isAdmin) {
+                entreprisesData = entreprisesData.filter(e =>
+                    userInfo.entreprisesConseillerPrevention?.includes(e.label)
+                );
+            }
+            setEntreprises(entreprisesData);
+            const secteursData = sectorsResponse.data;
+            setAllSectors(secteursData);
+            setAvailableSectors(secteursData.map(s => s.secteurName));
+        } catch (error) {
+            console.error('Error fetching data:', error);
+            showSnackbar('Erreur lors de la récupération des données', 'error');
+        } finally {
+            setLoading(false);
+        }
+    }, [isAdmin, userInfo, showSnackbar]);
 
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const [actionsResponse, enterprisesResponse, sectorsResponse] = await Promise.all([
-                    axios.get(`http://${apiUrl}:3100/api/planaction`),
-                    axios.get(`http://${apiUrl}:3100/api/entreprises`),
-                    axios.get(`http://${apiUrl}:3100/api/secteurs`)
-                ]);
-                setAddactions(actionsResponse.data);
-                let entreprisesData = enterprisesResponse.data.map(e => ({
-                    label: e.AddEntreName,
-                    id: e._id
-                }));
-
-                if (!isAdmin) {
-                    entreprisesData = entreprisesData.filter(e =>
-                        userInfo.entreprisesConseillerPrevention?.includes(e.label)
-
-                    );
-                }
-
-                const isConseillerPrevention = (entrepriseName) => {
-                    return userInfo?.entreprisesConseillerPrevention?.includes(entrepriseName) || false;
-                };
-
-                setEntreprises(entreprisesData);
-                const secteursData = sectorsResponse.data;
-                setAllSectors(secteursData);
-                setAvailableSectors(secteursData.map(s => s.secteurName));
-            } catch (error) {
-                console.error('Error fetching data:', error);
-                showSnackbar('Erreur lors de la récupération des données', 'error');
-            } finally {
-                setLoading(false);
-            }
-        };
-
         fetchData();
-    }, [apiUrl, isAdmin, isConseiller]);
+    }, [fetchData]);
 
-    const filteredUsers = users.filter(addaction => {
-        if (!searchTerm) {
-            return true; // Retourne true pour inclure toutes les entrées si searchTerm est vide
+    const filteredUsers = useMemo(() => {
+        let filtered = users;
+
+        // Filtre par années si des années sont sélectionnées
+        if (selectedYears.length > 0) {
+            filtered = filtered.filter(action => selectedYears.includes(action.AddActionanne));
         }
-        return (
-            (addaction.AddActionEntreprise && addaction.AddActionEntreprise.toLowerCase().includes(searchTerm.toLowerCase())) ||
-            (addaction.AddActionDate && addaction.AddActionDate.toLowerCase().includes(searchTerm.toLowerCase())) ||
-            (addaction.AddActionSecteur && addaction.AddActionSecteur.toLowerCase().includes(searchTerm.toLowerCase())) ||
-            (addaction.AddAction && addaction.AddAction.toLowerCase().includes(searchTerm.toLowerCase())) ||
-            (addaction.AddActionQui && addaction.AddActionQui.toLowerCase().includes(searchTerm.toLowerCase())) ||
-            (addaction.AddActoinmoi && addaction.AddActoinmoi.toLowerCase().includes(searchTerm.toLowerCase())) ||
-            (addaction.AddActionDange && addaction.AddActionDange.toLowerCase().includes(searchTerm.toLowerCase())) ||
-            (addaction.AddActionanne && addaction.AddActionanne.toLowerCase().includes(searchTerm.toLowerCase()))
-        );
-    });
+
+        // Filtre existant par terme de recherche
+        if (searchTerm) {
+            filtered = filtered.filter(addaction => {
+                const searchTermLower = searchTerm.toLowerCase();
+                return (
+                    (addaction.AddActionEntreprise?.toLowerCase().includes(searchTermLower)) ||
+                    (addaction.AddActionDate?.toLowerCase().includes(searchTermLower)) ||
+                    (addaction.AddActionSecteur?.toLowerCase().includes(searchTermLower)) ||
+                    (addaction.AddAction?.toLowerCase().includes(searchTermLower)) ||
+                    (addaction.AddActionQui?.toLowerCase().includes(searchTermLower)) ||
+                    (addaction.AddActoinmoi?.toLowerCase().includes(searchTermLower)) ||
+                    (addaction.AddActionDange?.toLowerCase().includes(searchTermLower)) ||
+                    (addaction.AddActionanne?.toLowerCase().includes(searchTermLower))
+                );
+            });
+        }
+
+        return filtered;
+    }, [users, searchTerm, selectedYears]);
+
 
     const handleDelete = (userIdToDelete) => {
         axios.delete(`http://${apiUrl}:3100/api/planaction/${userIdToDelete}`)
@@ -372,7 +398,7 @@ export default function PlanAction({ accidentData }) {
                 <Grid item xs={6} style={{ marginRight: '20px' }}>
                     <Tooltip title="Cliquez ici pour actualiser le tableau des actions" arrow>
                         <Button
-                            sx={{ marginLeft: '20px', marginRight: '20px', color: 'black', padding: '15px 60px', backgroundColor: '#ee742d59', '&:hover': { backgroundColor: '#95ad22' }, boxShadow: 3, textTransform: 'none' }}
+                            sx={{ marginLeft: '20px', color: 'black', padding: '15px 60px', backgroundColor: '#ee742d59', '&:hover': { backgroundColor: '#95ad22' }, boxShadow: 3, textTransform: 'none' }}
                             variant="contained"
                             color="secondary"
                             onClick={refreshListAccidents}
@@ -380,6 +406,40 @@ export default function PlanAction({ accidentData }) {
                         >
                             Actualiser
                         </Button>
+                    </Tooltip>
+                </Grid>
+                <Grid item xs={6} style={{ marginRight: '20px', backgroundColor: '#ee752d60' }}>
+                    <Tooltip title="Filtrer par année" arrow>
+                        <FormControl
+                            sx={{ boxShadow: 3, minWidth: 120 }}>
+                            <InputLabel id="years-select-label">Filtrer par année(s)</InputLabel>
+                            <Select
+                                labelId="years-select-label"
+                                multiple
+                                value={selectedYears}
+                                onChange={(event) => setSelectedYears(event.target.value)}
+                                input={<OutlinedInput label="Filtrer par année(s)" />}
+                                renderValue={(selected) => selected.join(', ')}
+                                MenuProps={{
+                                    PaperProps: {
+                                        style: {
+                                            maxHeight: 48 * 4.5 + 8,
+                                            width: 250,
+                                        },
+                                    },
+                                }}
+                            >
+                                {availableYears.map((year) => (
+                                    <MenuItem key={year} value={year} style={{ backgroundColor: '#ee742d59' }}>
+                                        <Checkbox
+                                            checked={selectedYears.indexOf(year) > -1}
+                                            style={{ marginRight: 8, color: '#257525' }}
+                                        />
+                                        <ListItemText primary={year} />
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
                     </Tooltip>
                 </Grid>
                 <Grid item xs={6} style={{ marginRight: '20px' }}>
@@ -402,7 +462,7 @@ export default function PlanAction({ accidentData }) {
                 <Grid item xs={6} style={{ marginRight: '20px' }}>
                     <Tooltip title="Cliquez ici pour exporter les données du plan d'action, en excel, en fonction des filtres sélèctionnés " arrow>
                         <Button
-                            sx={{ marginLeft: '20px', marginRight: '20px', color: 'black', padding: '15px 60px', backgroundColor: '#ee742d59', '&:hover': { backgroundColor: '#95ad22' }, boxShadow: 3, textTransform: 'none' }}
+                            sx={{ marginRight: '20px', color: 'black', padding: '15px 60px', backgroundColor: '#ee742d59', '&:hover': { backgroundColor: '#95ad22' }, boxShadow: 3, textTransform: 'none' }}
                             variant="contained"
                             color="primary"
                             onClick={() => handleExport()}
