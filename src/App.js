@@ -15,7 +15,7 @@ import Naturelesion from './pageFormulaire/codeNatureLesion';
 import Siegelesion from './pageFormulaire/codeSiegeLesion';
 import Fichierdll from './pageFormulaire/FileManagement/fichierdll';
 import PlanAction from './planaction/planaction';
-import Fichierdllaction from './pageFormulaire/fichierdllaction';
+import Fichierdllaction from './planaction/fichierdllaction';
 import ProtectedRoute from './Model/protectedRoute';
 import ProtectedRouteAdmin from './Model/protectedRouteAdmin';
 import Adminuser from './pageAdmin/user/AdminUser';
