@@ -17,12 +17,21 @@ export default function AutoCompleteQ({
         setBackgroundColor(value ? '#95ad2271' : '#e62a5663');
     }, [value]);
 
+/*************  ✨ Codeium Command 🌟  *************/
+    /**
+     * Handles the change of the Autocomplete.
+     * Updates the state with the new value, and if the onChange function is provided,
+     * calls onChange with the new value.
+     * @param {object} _ - The event object (not used).
+     * @param {string} newValue - The new value of the Autocomplete.
+     */
     const handleChange = (_, newValue) => {
         setValue(newValue);
         if (onChange) {
             onChange(newValue);
         }
     };
+/******  ef5d534b-3bfe-445f-a725-b814e235ed90  *******/
 
     return (
         <div className={id}>
