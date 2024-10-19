@@ -9,6 +9,8 @@
     "@mui/icons-material": "^5.14.12",
     "@mui/material": "^5.14.12",
     "@mui/x-date-pickers": "^6.8.0",
+    "@radix-ui/react-accordion": "^1.2.1",
+    "@radix-ui/react-scroll-area": "^1.2.0",
     "axios": "^1.5.1",
     "bcryptjs": "^2.4.3",
     "crypto-browserify": "^3.10.0",

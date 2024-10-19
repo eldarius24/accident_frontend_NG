@@ -1,70 +1,137 @@
 import React from 'react';
 import './formulaire.css';
+import {Tooltip} from '@mui/material';
 
-/**
- * Retourne un JSX contenant la liste des déviations
- */
-const deviation = () => {
+const Deviation = () => {
     return (
-        <div>
-            <h6></h6>
-            <div className="line-separated">
-                <h6 className="yellow-background">0 Pas d'information</h6>
-                <h6 className="yellow-background">10 Déviation par problème électrique, explosion, feu - Non précisé</h6>
-                <h6>11 Problème électrique par défaillance dans l'installation - entraînant un contact indirect</h6>
-                <h6>12 Problème électrique - entraînant un contact direct</h6>
-                <h6>13 Explosion</h6>
-                <h6>14 Incendie, embrasement</h6>
-                <h6>19 Autre Déviation connue du groupe 10 mais non listée ci-dessus</h6>
-                <h6 className="yellow-background">20 Déviation par débordement, renversement, fuite, écoulement, vaporisation dégagement - Non précisé</h6>
-                <h6>21 A l'état de solide - débordement, renversement</h6>
-                <h6>22 A l'état de liquide - fuite, suintement, écoulement, éclaboussure, aspersion</h6>
-                <h6>23 A l'état gazeux - vaporisation, formation d'aérosol, formation de gaz</h6>
-                <h6>24 Pulvérulent - génération de fumée, émission de poussières, particules</h6>
-                <h6>29 Autre Déviation connue du groupe 20 mais non listée ci-dessus</h6>
-                <h6 className="yellow-background">30 Rupture, bris, éclatement, glissade, chute, effondrement d'Agent matériel - Non précisé</h6>
-                <h6>31 Rupture de matériel, aux joints, aux connexions</h6>
-                <h6>32 Rupture, éclatement, causant des éclats (bois, verre, métal, pierre, plastique, autres)</h6>
-                <h6>33 Glissade, chute, effondrement d'Agent matériel - supérieur (tombant sur la victime)</h6>
-                <h6>34 Glissade, chute, effondrement d'Agent matériel - inférieur (entraînant la victime)</h6>
-                <h6>35 Glissade, chute, effondrement d'Agent matériel - de plain-pied</h6>
-                <h6>39 Autre Déviation connue du groupe 30 mais non listée ci-dessus</h6>
-                <h6 className="yellow-background">40 Perte, totale ou partielle, de contrôle de machine, moyen de transport - équipement de manutention, outil à main, objet, animal - Non précisé</h6>
-                <h6>41 Perte, totale ou partielle, de contrôle - de machine (y compris le démarrage intempestif) ainsi que de la matière travaillée par la machine</h6>
-                <h6>42 Perte, totale ou partielle, de contrôle de moyen de transport - d'équipement de manutention (motorisé ou non)</h6>
-                <h6>43 Perte, totale ou partielle, de contrôle d'outil à main (motorisé ou non) ainsi que de la matière travaillée par l'outil</h6>
-                <h6>44 Perte, totale ou partielle, de contrôle d'objet (porté, déplacé, manipulé, etc.)</h6>
-                <h6>45 Perte, totale ou partielle, de contrôle d'animal</h6>
-                <h6>49 Autre Déviation connue du groupe 40 mais non listée ci-dessus</h6>
-                <h6 className="yellow-background">50 Glissade ou trébuchement avec chute, chute de personne - Non précisé</h6>
-                <h6>51 Chute de personne - de hauteur</h6>
-                <h6>52 Glissade ou trébuchement avec chute, chute de personne - de plain-pied</h6>
-                <h6>59 Autre Déviation connue du groupe 50 mais non listée ci-dessus</h6>
-                <h6 className="yellow-background">60 Mouvement du corps sans contrainte physique (conduisant généralement à une blessure externe) - Non précisé</h6>
-                <h6>61 En marchant sur un objet coupant</h6>
-                <h6>62 En s'agenouillant, s'asseyant, s'appuyant contre</h6>
-                <h6>63 En étant attrapé, entraîné, par quelque chose ou par son élan</h6>
-                <h6>64 Mouvements non coordonnés, gestes intempestifs, inopportuns</h6>
-                <h6>69 Autre Déviation connue du groupe 60 mais non listée ci-dessus</h6>
-                <h6 className="yellow-background">70 Mouvement du corps sous ou avec contrainte physique (conduisant généralement à une blessure interne) - Non précisé</h6>
-                <h6>71 En soulevant, en portant, en se levant</h6>
-                <h6>72 En poussant, en tractant</h6>
-                <h6>73 En déposant, en se baissant</h6>
-                <h6>74 En torsion, en rotation, en se tournant</h6>
-                <h6>75 En marchant lourdement, faux pas, glissade - sans chute</h6>
-                <h6>79 Autre Déviation connue du groupe 70 mais non listée ci-dessus</h6>
-                <h6 className="yellow-background">80 Surprise, frayeur, violence, agression, menace, présence - Non précisé</h6>
-                <h6>81 Surprise, frayeur</h6>
-                <h6>82 Violence, agression, menace entre membres de l'entreprise soumis à l'autorité de l'employeur</h6>
-                <h6>83 Violence, agression, menace - provenant de personnes externes à l'entreprise envers les victimes dans le cadre de leur fonction (attaque de banque, chauffeurs de bus, etc.)</h6>
-                <h6>84 Agression, bousculade - par animal</h6>
-                <h6>85 Présence de la victime ou d'un tiers créant en soi un danger pour elle/lui-même et le cas échéant pour autrui</h6>
-                <h6>89 Autre Déviation connue du groupe 80 mais non listée ci-dessus</h6>
-                <h6 className="yellow-background">99 Autre Déviation non listée dans cette classificatio</h6>
-            </div>
-            <h6></h6>
-        </div>
-    );
-}
+    <div className="max-w-7xl mx-auto p-6 bg-gray-100">
+      <h1 className="text-3xl font-bold text-center mb-8 text-blue-800">Liste des Codes déviations</h1>
+      <div className="space-y-6">
+        {categories.map((category) => (
+          <div key={category.id} className="bg-white rounded-lg shadow-md overflow-hidden">
+            <h2 className="text-xl font-semibold bg-blue-600 text-white p-4">
+              {category.id} - {category.title}
+            </h2>
+            <ul className="divide-y divide-gray-200">
+              {category.items.map((item) => (
+                <li key={item.id} className="p-4 hover:bg-gray-50">
+                  <span className="font-medium text-blue-700">{item.id}</span> - {item.title}
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+      <div className="image-cortigroupe"></div>
+            <Tooltip title="Si vous rencontrez un souci avec le site, envoyer un mail à l'adresse suivante : bgillet.lecortil@cortigroupe.be et expliquer le soucis rencontré" arrow>
+                <h5 style={{ marginBottom: '40px' }}> Développé par Remy et Benoit pour Le Cortigroupe. Support: bgillet.lecortil@cortigroupe.be</h5>
+            </Tooltip>
+    </div>
+  );
+};
 
-export default deviation;
+
+const categories = [
+    {
+        id: '0',
+        title: "Pas d'information",
+        items: []
+    },
+    {
+        id: '10',
+        title: "Déviation par problème électrique, explosion, feu",
+        items: [
+            { id: '11', title: "Problème électrique par défaillance dans l'installation - entraînant un contact indirect" },
+            { id: '12', title: "Problème électrique - entraînant un contact direct" },
+            { id: '13', title: "Explosion" },
+            { id: '14', title: "Incendie, embrasement" },
+            { id: '19', title: "Autre Déviation connue du groupe 10 mais non listée ci-dessus" }
+        ]
+    },
+    {
+        id: '20',
+        title: "Déviation par débordement, renversement, fuite, écoulement, vaporisation, dégagement",
+        items: [
+            { id: '21', title: "A l'état de solide - débordement, renversement" },
+            { id: '22', title: "A l'état de liquide - fuite, suintement, écoulement, éclaboussure, aspersion" },
+            { id: '23', title: "A l'état gazeux - vaporisation, formation d'aérosol, formation de gaz" },
+            { id: '24', title: "Pulvérulent - génération de fumée, émission de poussières, particules" },
+            { id: '29', title: "Autre Déviation connue du groupe 20 mais non listée ci-dessus" }
+        ]
+    },
+    {
+        id: '30',
+        title: "Rupture, bris, éclatement, glissade, chute, effondrement d'Agent matériel",
+        items: [
+            { id: '31', title: "Rupture de matériel, aux joints, aux connexions" },
+            { id: '32', title: "Rupture, éclatement, causant des éclats (bois, verre, métal, pierre, plastique, autres)" },
+            { id: '33', title: "Glissade, chute, effondrement d'Agent matériel - supérieur (tombant sur la victime)" },
+            { id: '34', title: "Glissade, chute, effondrement d'Agent matériel - inférieur (entraînant la victime)" },
+            { id: '35', title: "Glissade, chute, effondrement d'Agent matériel - de plain-pied" },
+            { id: '39', title: "Autre Déviation connue du groupe 30 mais non listée ci-dessus" }
+        ]
+    },
+    {
+        id: '40',
+        title: "Perte, totale ou partielle, de contrôle de machine, moyen de transport - équipement de manutention, outil à main, objet, animal",
+        items: [
+            { id: '41', title: "Perte, totale ou partielle, de contrôle - de machine (y compris le démarrage intempestif) ainsi que de la matière travaillée par la machine" },
+            { id: '42', title: "Perte, totale ou partielle, de contrôle de moyen de transport - d'équipement de manutention (motorisé ou non)" },
+            { id: '43', title: "Perte, totale ou partielle, de contrôle d'outil à main (motorisé ou non) ainsi que de la matière travaillée par l'outil" },
+            { id: '44', title: "Perte, totale ou partielle, de contrôle d'objet (porté, déplacé, manipulé, etc.)" },
+            { id: '45', title: "Perte, totale ou partielle, de contrôle d'animal" },
+            { id: '49', title: "Autre Déviation connue du groupe 40 mais non listée ci-dessus" }
+        ]
+    },
+    {
+        id: '50',
+        title: "Glissade ou trébuchement avec chute, chute de personne",
+        items: [
+            { id: '51', title: "Chute de personne - de hauteur" },
+            { id: '52', title: "Glissade ou trébuchement avec chute, chute de personne - de plain-pied" },
+            { id: '59', title: "Autre Déviation connue du groupe 50 mais non listée ci-dessus" }
+        ]
+    },
+    {
+        id: '60',
+        title: "Mouvement du corps sans contrainte physique (conduisant généralement à une blessure externe)",
+        items: [
+            { id: '61', title: "En marchant sur un objet coupant" },
+            { id: '62', title: "En s'agenouillant, s'asseyant, s'appuyant contre" },
+            { id: '63', title: "En étant attrapé, entraîné, par quelque chose ou par son élan" },
+            { id: '64', title: "Mouvements non coordonnés, gestes intempestifs, inopportuns" },
+            { id: '69', title: "Autre Déviation connue du groupe 60 mais non listée ci-dessus" }
+        ]
+    },
+    {
+        id: '70',
+        title: "Mouvement du corps sous ou avec contrainte physique (conduisant généralement à une blessure interne)",
+        items: [
+            { id: '71', title: "En soulevant, en portant, en se levant" },
+            { id: '72', title: "En poussant, en tractant" },
+            { id: '73', title: "En déposant, en se baissant" },
+            { id: '74', title: "En torsion, en rotation, en se tournant" },
+            { id: '75', title: "En marchant lourdement, faux pas, glissade - sans chute" },
+            { id: '79', title: "Autre Déviation connue du groupe 70 mais non listée ci-dessus" }
+        ]
+    },
+    {
+        id: '80',
+        title: "Surprise, frayeur, violence, agression, menace, présence",
+        items: [
+            { id: '81', title: "Surprise, frayeur" },
+            { id: '82', title: "Violence, agression, menace entre membres de l'entreprise soumis à l'autorité de l'employeur" },
+            { id: '83', title: "Violence, agression, menace - provenant de personnes externes à l'entreprise envers les victimes dans le cadre de leur fonction (attaque de banque, chauffeurs de bus, etc.)" },
+            { id: '84', title: "Agression, bousculade - par animal" },
+            { id: '85', title: "Présence de la victime ou d'un tiers créant en soi un danger pour elle/lui-même et le cas échéant pour autrui" },
+            { id: '89', title: "Autre Déviation connue du groupe 80 mais non listée ci-dessus" }
+        ]
+    },
+    {
+        id: '99',
+        title: "Autre Déviation non listée dans cette classification",
+        items: []
+    }
+];
+
+export default Deviation;

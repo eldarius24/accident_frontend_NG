@@ -10,6 +10,21 @@ import listeDeclarationAssBelfius from '../liste/listeDeclarationAssBelfius.json
 import DateHeurePickerQ from '../_composants/dateHeurePickerQ';
 import listAccident from '../liste/listAccident.json';
 
+/**
+ * FormulaireEntreprise component.
+ * 
+ * - Manages the state of form fields related to an enterprise involved in an accident.
+ * - Fetches and filters enterprise and sector data based on user role.
+ * - Initializes form fields with existing accident data if available.
+ * - Updates form values in response to user interactions.
+ * 
+ * @param {Object} props The props for the component:
+ * - setValue: Function to update form values.
+ * - accidentData: Existing accident data, if available.
+ * - watch: Function to monitor form field values.
+ * 
+ * @returns {JSX.Element} The enterprise form component.
+ */
 export default function FormulaireEntreprise({ setValue, accidentData, watch }) {
   const [entreprises, setEntreprises] = useState([]);
   const [entreprise, setEntreprise] = useState(watch('entrepriseName') || (accidentData && accidentData.entrepriseName) || '');

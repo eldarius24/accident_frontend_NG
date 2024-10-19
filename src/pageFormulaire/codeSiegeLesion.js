@@ -1,65 +1,119 @@
 import React from 'react';
 import './formulaire.css';
+import {Tooltip} from '@mui/material';
 
-/**
- * siegelesion
- *
- * Un composant React qui affiche la liste des localisations de blessures
- * possibles pour un accident
- *
- * @return {React.ReactElement} Un élément React qui affiche la liste des
- * localisations de blessures
- */
-const siegelesion = () => {
+const SiegeLesion = () => {
     return (
-        <div>
-            <h6></h6>
-            <div className="line-separated">
-                <h6 className="yellow-background">00 Localisation de la blessure non déterminée</h6>
-                <h6 className="yellow-background">10 Tête, sans autre spécification</h6>
-                <h6>11 Tête (caput), cerveau, nerfs crâniens et vaisseaux cérébraux</h6>
-                <h6>12 Zone faciale</h6>
-                <h6>13 Œil / yeux</h6>
-                <h6>14 Oreille(s)</h6>
-                <h6>15 Dentition</h6>
-                <h6>18 Tête, multiples endroits affectés</h6>
-                <h6>19 Autres parties de la tête</h6>
-                <h6 className="yellow-background">20 Cou, y compris colonne vertébrale et vertèbres du cou</h6>
-                <h6>21 Cou, y compris colonne vertébrale et vertèbres du cou</h6>
-                <h6>29 Autres parties du cou</h6>
-                <h6 className="yellow-background">30 Dos, y compris colonne vertébrale et vertèbres du dos</h6>
-                <h6>31 Dos, y compris colonne vertébrale et vertèbres du dos</h6>
-                <h6>39 Autres parties du dos</h6>
-                <h6 className="yellow-background">40 Torse et organes, sans autre spécification</h6>
-                <h6>41 Cage thoracique, côtes y compris omoplates et articulations</h6>
-                <h6>42 Poitrine, y compris organes</h6>
-                <h6>43 Abdomen et pelvis, y compris organes</h6>
-                <h6>48 Torse, multiples endroits affectés</h6>
-                <h6>49 Autres parties du torse</h6>
-                <h6 className="yellow-background">50 Membres supérieurs, sans autre spécification</h6>
-                <h6>51 Épaule et articulations de l'épaule</h6>
-                <h6>52 Bras, y compris coude</h6>
-                <h6>53 Main</h6>
-                <h6>54 Doigt(s)</h6>
-                <h6>55 Poignet</h6>
-                <h6>58 Membres supérieurs, multiples endroits affectés</h6>
-                <h6>59 Autres parties des membres supérieurs</h6>
-                <h6 className="yellow-background">60 Membres inférieurs, sans autre spécification</h6>
-                <h6>61 Hanche et articulation de la hanche</h6>
-                <h6>62 Jambe, y compris genou</h6>
-                <h6>63 Cheville</h6>
-                <h6>64 Pied</h6>
-                <h6>65 Orteil(s)</h6>
-                <h6>68 Membres inférieurs, multiples endroits affectés</h6>
-                <h6>69 Autres parties des membres inférieurs</h6>
-                <h6 className="yellow-background">70 Ensemble du corps et endroits multiples, sans autre spécification</h6>
-                <h6>71 Ensemble du corps (effets systémiques)</h6>
-                <h6>78 Multiples endroits du corps affectés</h6>
-                <h6 className="yellow-background">99 Autres parties du corps blessée</h6>
-            </div>
-            <h6></h6>
-        </div>
-    );
-}
+    <div className="max-w-7xl mx-auto p-6 bg-gray-100">
+      <h1 className="text-3xl font-bold text-center mb-8 text-blue-800">Liste des Localisations de Blessures</h1>
+      <div className="space-y-6">
+        {categories.map((category) => (
+          <div key={category.id} className="bg-white rounded-lg shadow-md overflow-hidden">
+            <h2 className="text-xl font-semibold bg-blue-600 text-white p-4">
+              {category.id} - {category.title}
+            </h2>
+            <ul className="divide-y divide-gray-200">
+              {category.items.map((item) => (
+                <li key={item.id} className="p-4 hover:bg-gray-50">
+                  <span className="font-medium text-blue-700">{item.id}</span> - {item.title}
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+      <div className="image-cortigroupe"></div>
+            <Tooltip title="Si vous rencontrez un souci avec le site, envoyer un mail à l'adresse suivante : bgillet.lecortil@cortigroupe.be et expliquer le soucis rencontré" arrow>
+                <h5 style={{ marginBottom: '40px' }}> Développé par Remy et Benoit pour Le Cortigroupe. Support: bgillet.lecortil@cortigroupe.be</h5>
+            </Tooltip>
+    </div>
+  );
+};
+const categories = [
+    {
+        id: '00',
+        title: "Localisation de la blessure non déterminée",
+        items: []
+    },
+    {
+        id: '10',
+        title: "Tête, sans autre spécification",
+        items: [
+            { id: '11', title: "Tête (caput), cerveau, nerfs crâniens et vaisseaux cérébraux" },
+            { id: '12', title: "Zone faciale" },
+            { id: '13', title: "Œil / yeux" },
+            { id: '14', title: "Oreille(s)" },
+            { id: '15', title: "Dentition" },
+            { id: '18', title: "Tête, multiples endroits affectés" },
+            { id: '19', title: "Autres parties de la tête" }
+        ]
+    },
+    {
+        id: '20',
+        title: "Cou, y compris colonne vertébrale et vertèbres du cou",
+        items: [
+            { id: '21', title: "Cou, y compris colonne vertébrale et vertèbres du cou" },
+            { id: '29', title: "Autres parties du cou" }
+        ]
+    },
+    {
+        id: '30',
+        title: "Dos, y compris colonne vertébrale et vertèbres du dos",
+        items: [
+            { id: '31', title: "Dos, y compris colonne vertébrale et vertèbres du dos" },
+            { id: '39', title: "Autres parties du dos" }
+        ]
+    },
+    {
+        id: '40',
+        title: "Torse et organes, sans autre spécification",
+        items: [
+            { id: '41', title: "Cage thoracique, côtes y compris omoplates et articulations" },
+            { id: '42', title: "Poitrine, y compris organes" },
+            { id: '43', title: "Abdomen et pelvis, y compris organes" },
+            { id: '48', title: "Torse, multiples endroits affectés" },
+            { id: '49', title: "Autres parties du torse" }
+        ]
+    },
+    {
+        id: '50',
+        title: "Membres supérieurs, sans autre spécification",
+        items: [
+            { id: '51', title: "Épaule et articulations de l'épaule" },
+            { id: '52', title: "Bras, y compris coude" },
+            { id: '53', title: "Main" },
+            { id: '54', title: "Doigt(s)" },
+            { id: '55', title: "Poignet" },
+            { id: '58', title: "Membres supérieurs, multiples endroits affectés" },
+            { id: '59', title: "Autres parties des membres supérieurs" }
+        ]
+    },
+    {
+        id: '60',
+        title: "Membres inférieurs, sans autre spécification",
+        items: [
+            { id: '61', title: "Hanche et articulation de la hanche" },
+            { id: '62', title: "Jambe, y compris genou" },
+            { id: '63', title: "Cheville" },
+            { id: '64', title: "Pied" },
+            { id: '65', title: "Orteil(s)" },
+            { id: '68', title: "Membres inférieurs, multiples endroits affectés" },
+            { id: '69', title: "Autres parties des membres inférieurs" }
+        ]
+    },
+    {
+        id: '70',
+        title: "Ensemble du corps et endroits multiples, sans autre spécification",
+        items: [
+            { id: '71', title: "Ensemble du corps (effets systémiques)" },
+            { id: '78', title: "Multiples endroits du corps affectés" }
+        ]
+    },
+    {
+        id: '99',
+        title: "Autres parties du corps blessées",
+        items: []
+    }
+];
 
-export default siegelesion;
+export default SiegeLesion;
