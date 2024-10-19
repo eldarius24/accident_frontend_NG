@@ -11,6 +11,11 @@ import { TextField } from '@mui/material';
  * @returns {JSX.Element}
  */
 const TextFieldP = forwardRef(({ id, label, onChange, value, defaultValue, ...props }, ref) => {
+    /**
+     * Handles the change event of the TextField.
+     * @param {React.ChangeEvent<HTMLInputElement>} event - The change event object.
+     * Logs the new value and triggers the onChange callback if provided.
+     */
     const handleChange = (event) => {
         if (event && event.target) {
             const { value } = event.target;

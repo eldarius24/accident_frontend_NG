@@ -15,6 +15,12 @@ dayjs.locale('fr');
  */
 export default function DateHeurePickerP({id, label, defaultValue, onChange}) {
 
+    /**
+     * Fonction qui se déclenche à chaque changement de date.
+     * Envoie la date au format 'YYYY-MM-DD:HH:mm' via la fonction onChange si elle est définie.
+     * @param {Event} event - L'événement de changement de date.
+     * @param {*} _ - Non utilisé.
+     */
     const handleChange = (event, _) => {
         console.log('DatePicker event "', event, '"');
         if (onChange) {

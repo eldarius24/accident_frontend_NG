@@ -20,6 +20,17 @@ import config from '../config.json';
 import { useNavigate } from 'react-router-dom';
 import CustomSnackbar from '../_composants/CustomSnackbar';
 
+/**
+ * Adminusern est un composant React qui permet de gérer les entreprises
+ * 
+ * Il affiche une table avec les informations de chaque entreprise, 
+ * ainsi que des boutons pour ajouter un secteur, modifier et supprimer.
+ * 
+ * Il utilise les hooks useState et useEffect pour gérer les données 
+ * des entreprises et des secteurs.
+ * 
+ * @returns Un JSX element représentant le composant Adminusern
+ */
 export default function Adminusern() {
     const navigate = useNavigate();
     const [entreprises, setEntreprises] = useState([]);
@@ -32,10 +43,22 @@ export default function Adminusern() {
         severity: 'info',
     });
 
+    /**
+     * Affiche un message dans une snackbar.
+     * @param {string} message - Le message à afficher.
+     * @param {string} [severity='info'] - La gravité du message. Les valeurs possibles sont 'info', 'success', 'warning' et 'error'.
+     */
     const showSnackbar = (message, severity = 'info') => {
         setSnackbar({ open: true, message, severity });
     };
 
+    /**
+     * Ferme la snackbar si l'utilisateur clique sur le bouton "Fermer" ou en dehors de la snackbar.
+     * Si l'utilisateur clique sur la snackbar elle-même (et non sur le bouton "Fermer"), la snackbar ne se ferme pas.
+     * 
+     * @param {object} event - L'événement qui a déclenché la fermeture de la snackbar.
+     * @param {string} reason - La raison pour laquelle la snackbar se ferme. Si elle vaut 'clickaway', cela signifie que l'utilisateur a cliqué en dehors de la snackbar.
+     */
     const handleCloseSnackbar = (event, reason) => {
         if (reason === 'clickaway') {
             return;
@@ -43,12 +66,22 @@ export default function Adminusern() {
         setSnackbar({ ...snackbar, open: false });
     };
 
+    /**
+     * Retourne les noms des secteurs liés à une entreprise dont l'ID est donné en paramètre.
+     * 
+     * @param {string} entrepriseId - L'ID de l'entreprise pour laquelle on veut obtenir les secteurs.
+     * @returns {string} Une chaine de caractères contenant les noms des secteurs liés à l'entreprise, séparés par des virgules.
+     */
     const getSecteursByEntreprise = (entrepriseId) => {
         return secteurs.filter(secteur => secteur.entrepriseId === entrepriseId)
             .map(secteur => secteur.secteurName)
             .join(', ');
     };
 
+    /**
+     * Navigue vers la page d'ajout d'un secteur en passant l'entreprise en paramètre
+     * @param {object} entreprise - L'objet entreprise contenant l'ID et le nom de l'entreprise
+     */
     const handleAddSecteur = (entreprise) => {
         try {
             navigate("/addSecteur", { state: { entreprise } });
@@ -57,6 +90,13 @@ export default function Adminusern() {
         }
     };
 
+    /**
+     * Supprime une entreprise
+     * 
+     * @param {string} entrepriseIdToDelete - L'ID de l'entreprise à supprimer
+     * 
+     * @returns {Promise} La promesse de suppression
+     */
     const handleDelete = (entrepriseIdToDelete) => {
         axios.delete(`http://${apiUrl}:3100/api/entreprises/${entrepriseIdToDelete}`)
             .then(response => {
@@ -77,6 +117,12 @@ export default function Adminusern() {
     };
 
     useEffect(() => {
+        /**
+         * Fetches entreprises and secteurs data from API
+         * - sets entreprises and secteurs in component state
+         * - sets loading to false when done
+         * @async
+         */
         const fetchData = async () => {
             try {
                 const [entreprisesResponse, secteursResponse] = await Promise.all([

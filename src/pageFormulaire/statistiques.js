@@ -12,6 +12,9 @@ const COLORS = ['#0088FE', '#FF8042', '#00C49F', '#FFBB28', '#FF8042', '#0088FE'
 const MONTHS = ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Juin', 'Juil', 'Aoû', 'Sep', 'Oct', 'Nov', 'Déc'];
 const DAYS = ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'];
 
+
+
+
 const Statistiques = () => {
   const [data, setData] = useState([]);
   const [stats, setStats] = useState({
@@ -56,6 +59,12 @@ const Statistiques = () => {
   const [selectedSectors, setSelectedSectors] = useState([]);
 
   useEffect(() => {
+/**
+ * Récupère les données d'accidents depuis l'API
+ * Initialise les filtres et les données du graphique
+ * 
+ * @returns {Promise<void>}
+ */
     const fetchData = async () => {
       try {
         const apiUrl = process.env.REACT_APP_API_URL || 'localhost';
@@ -106,6 +115,12 @@ const Statistiques = () => {
         accidentsByTypeTravailleurByCompany: {},
       };
 
+      /**
+       * Calculates the age of a person given their birth date and accident date
+       * @param {Date} birthDate - The birth date of the person
+       * @param {Date} accidentDate - The date of the accident
+       * @returns {number} The age of the person at the time of the accident
+       */
       const calculateAge = (birthDate, accidentDate) => {
         let age = accidentDate.getFullYear() - birthDate.getFullYear();
         const monthDiff = accidentDate.getMonth() - birthDate.getMonth();
@@ -172,6 +187,13 @@ const Statistiques = () => {
   }, [data, selectedYears, selectedWorkerTypes, selectedSectors]);
 
   const [allChecked, setAllChecked] = useState(true);
+/**
+ * Met à jour les années sélectionnées en fonction de la nouvelle valeur reçue via l'événement de changement.
+ * Si la valeur inclut 'All', met à jour la sélection en fonction de la longueur de allYears.
+ * Sinon, met à jour la sélection en fonction de la valeur reçue.
+ * 
+ * @param {Event} event - L'événement de changement contenant la nouvelle valeur
+ */
   const handleChangeYearsFilter = (event) => {
     const value = event.target.value;
     if (value.includes('All')) {
@@ -181,6 +203,13 @@ const Statistiques = () => {
     }
   };
 
+/**
+ * Updates the visibility of graphs based on the selected values from a filter.
+ * If 'All' is included in the selected values, toggles the visibility of all graphs.
+ * Otherwise, sets the visibility of each graph according to whether it is included in the selected values.
+ * 
+ * @param {Event} event - The change event containing new filter values.
+ */
   const handleChangeGraphsFilter = (event) => {
     const value = event.target.value;
     if (value.includes('All')) {
@@ -199,6 +228,13 @@ const Statistiques = () => {
     }
   };
 
+/**
+ * Met à jour les types de travailleurs sélectionnés en fonction de la nouvelle valeur reçue via l'événement de changement.
+ * Si la valeur inclut 'all', met à jour la sélection en fonction de la longueur de workerTypes.
+ * Sinon, met à jour la sélection en fonction de la valeur reçue.
+ * 
+ * @param {Event} event - L'événement de changement contenant la nouvelle valeur
+ */
   const handleChangeWorkerTypesFilter = (event) => {
     const value = event.target.value;
     if (value.includes('all')) {
@@ -208,6 +244,11 @@ const Statistiques = () => {
     }
   };
 
+/**
+ * Met à jour les secteurs sélectionnés en fonction de la nouvelle valeur reçue via l'événement de changement.
+ * Si la valeur inclut 'all', met à jour la sélection en fonction de la longueur de sectors.
+ * Sinon, met à jour la sélection en fonction de la valeur reçue.
+ */
   const handleChangeSectorsFilter = (event) => {
     const value = event.target.value;
     if (value.includes('all')) {
@@ -253,6 +294,17 @@ const Statistiques = () => {
   }), [stats]);
 
 
+/**
+ * Rend une charte en fonction du type, des données et de la configuration.
+ * 
+ * @param {string} type - Le type de la charte (par exemple, "bar", "line", etc.)
+ * @param {object[]} data - Les données à afficher sur la charte
+ * @param {object} config - La configuration de la charte, qui inclut le composant de charte
+ *                          à utiliser, la classe CSS pour le conteneur, le titre de la charte,
+ *                          et les enfants à afficher dans le composant de charte.
+ * 
+ * @returns {ReactElement} La charte rendue
+ */
   const renderChart = (type, data, config) => {
     const ChartComponent = config.component;
     return (

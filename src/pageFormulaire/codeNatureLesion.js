@@ -1,6 +1,14 @@
 import React from 'react';
 import './formulaire.css';
 
+/**
+ * naturelesion
+ * 
+ * Retourne un tableau de nature des lesions
+ * 
+ * @returns {React.ReactElement} Un tableau de nature des lesions
+ */
+
 const naturelesion = () => {
     return (
         <div>

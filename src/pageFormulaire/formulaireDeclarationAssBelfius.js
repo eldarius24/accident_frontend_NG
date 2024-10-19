@@ -12,11 +12,17 @@ import TextFieldP from '../_composants/textFieldP';
 import DatePickerP from '../_composants/datePickerP';
 import DateHeurePickerP from '../_composants/dateHeurePickerP';
 import TextFieldMaskP from '../_composants/textFieldMaskP';
+
+
+
 export default function FormulaireDeclarationASSBelfius({ setValue, accidentData, watch }) {
 
     // Mise en forme des cadres texte
     const [frameWidth, setFrameWidth] = useState(window.innerWidth * -0.5);
     useEffect(() => {
+/**
+ * Function that handles the resizing of the window
+ */
         const handleResize = () => {
             setFrameWidth(window.innerWidth * -0.5); // Adjust the coefficient as needed
         };

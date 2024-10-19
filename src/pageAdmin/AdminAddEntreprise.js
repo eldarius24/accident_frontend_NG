@@ -9,6 +9,14 @@ import { useNavigate } from 'react-router-dom';
 import CustomSnackbar from '../_composants/CustomSnackbar';
 
 
+/**
+ * AdminPanelSettings est un composant qui permet de créer une nouvelle entreprise
+ * via un formulaire.
+ * Les données sont enregistrées dans la base de données via une requête PUT.
+ * Après enregistrement, l'utilisateur est redirigé vers la page d'accueil.
+ * @param {object} accidentData - Les données de l'accident.
+ * @returns {JSX.Element} - Le composant AdminPanelSettings.
+ */
 export default function AdminPanelSettings({ accidentData }) {
     const navigate = useNavigate();
     const apiUrl = config.apiUrl;
@@ -19,10 +27,22 @@ export default function AdminPanelSettings({ accidentData }) {
         severity: 'info',
     });
 
+/**
+ * Display a snackbar message with the given message and severity.
+ * 
+ * @param {string} message - The message to display in the snackbar.
+ * @param {string} [severity='info'] - The severity of the snackbar. Can be 'info', 'success', 'warning', or 'error'.
+ */
     const showSnackbar = (message, severity = 'info') => {
         setSnackbar({ open: true, message, severity });
     };
 
+/**
+ * Closes the snackbar when the user clicks outside of it.
+ * 
+ * @param {object} event - The event that triggered the function.
+ * @param {string} reason - The reason the function was triggered. If the user clicked outside of the snackbar, this will be 'clickaway'.
+ */
     const handleCloseSnackbar = (event, reason) => {
         if (reason === 'clickaway') {
             return;

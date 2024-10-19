@@ -16,6 +16,10 @@ import { useNavigate } from 'react-router-dom';
 import CustomSnackbar from '../../../_composants/CustomSnackbar';
 
 
+/**
+ * Page pour la création/modification d'un utilisateur
+ * @returns Formulaires pour la création/modification d'un utilisateur
+ */
 export default function AddUser() {
     const navigate = useNavigate();
     const params = new URLSearchParams(window.location.search);
@@ -29,10 +33,22 @@ export default function AddUser() {
         severity: 'info',
     });
 
+    /**
+     * Affiche un message dans une snackbar.
+     * @param {string} message - Le message à afficher.
+     * @param {string} [severity='info'] - La gravité du message. Les valeurs possibles sont 'info', 'success', 'warning' et 'error'.
+     */
     const showSnackbar = (message, severity = 'info') => {
         setSnackbar({ open: true, message, severity });
     };
 
+    /**
+     * Ferme la snackbar si l'utilisateur clique sur le bouton "Fermer" ou en dehors de la snackbar.
+     * Si l'utilisateur clique sur la snackbar elle-même (et non sur le bouton "Fermer"), la snackbar ne se ferme pas.
+     * 
+     * @param {object} event - L'événement qui a déclenché la fermeture de la snackbar.
+     * @param {string} reason - La raison pour laquelle la snackbar se ferme. Si elle vaut 'clickaway', cela signifie que l'utilisateur a cliqué en dehors de la snackbar.
+     */
     const handleCloseSnackbar = (event, reason) => {
         if (reason === 'clickaway') {
             return;
@@ -40,6 +56,11 @@ export default function AddUser() {
         setSnackbar({ ...snackbar, open: false });
     };
 
+    /**
+     * Récupère les données de l'utilisateur en fonction de son ID si celui-ci est fourni.
+     * Si l'utilisateur n'est pas trouvé, il est considéré comme inexistant.
+     * Si l'utilisateur est trouvé, ses données sont stockées dans l'état user.
+     */
     const getUserData = async () => {
         try {
             if (!userId)
@@ -72,6 +93,11 @@ export default function AddUser() {
     //listes des entreprises
     const [entreprises, setEntreprises] = useState([]);
 
+    /**
+     * Récupère les noms des entreprises à partir de l'API.
+     * Si l'appel à l'API échoue, une erreur est logguée dans la console.
+     * Si l'appel à l'API réussit, les noms des entreprises sont stockés dans l'état entreprises.
+     */
     const getEntreprisesData = async () => {
         try {
             const entreprisesData = await getEntreprises();
@@ -111,10 +137,21 @@ export default function AddUser() {
         }
     };
 
+/**
+ * Handles the change of a key-value pair in the user data object.
+ * 
+ * @param {string} key - The key to be updated in the user data object.
+ * @param {any} value - The new value to be assigned to the key in the user data object.
+ */
     const handleChange = (key, value) => {
         setUser((prevData) => ({ ...prevData, [key]: value }));
     };
 
+/**
+ * PaperComponent is a custom component that wraps the MUI Paper component.
+ * It overrides the default background color of the Paper component to #bed7f6.
+ * This component is used as the PaperComponent prop in the Autocomplete component.
+ */ 
     const PaperComponent = (props) => (
         <Paper {...props} sx={{ backgroundColor: '#bed7f6' }} />
     );

@@ -10,6 +10,11 @@ import deleteFile from "./deleteFile";
 import * as pdfjsLib from 'pdfjs-dist/webpack';
 import CustomSnackbar from '../../_composants/CustomSnackbar';
 
+/**
+ * Fonction pour lister les fichiers associés à un accident
+ * @param {number} accidentId Identifiant de l'accident
+ * @returns {Promise<object[]>} La liste des fichiers associés à l'accident
+ */
 export default function listFilesInAccident(accidentId) {
     const [files, setFiles] = useState([]);
     const [previews, setPreviews] = useState({});
@@ -20,6 +25,11 @@ export default function listFilesInAccident(accidentId) {
     });
 
 
+    /**
+     * Affiche un message dans une snackbar.
+     * @param {string} message - Le message à afficher.
+     * @param {string} [severity='info'] - La gravité du message. Les valeurs possibles sont 'info', 'success', 'warning' et 'error'.
+     */
     const showSnackbar = (message, severity = 'info') => {
         setSnackbar({ open: true, message, severity });
     };
@@ -33,6 +43,11 @@ export default function listFilesInAccident(accidentId) {
     };
 
     useEffect(() => {
+        /**
+         * Charge les fichiers associés à l'accident et les aperçus correspondants.
+         * Met à jour les états `files` et `previews` et affiche un message dans une snackbar pour indiquer le résultat de l'opération.
+         * @returns {Promise<void>}
+         */
         async function fetchData() {
             try {
                 const files = await listFilesInAccident(accidentId);
@@ -54,6 +69,13 @@ export default function listFilesInAccident(accidentId) {
         }
     }, [accidentId]);
 
+    /**
+     * Supprime un fichier de la base de données et de la liste des fichiers de l'accident
+     * Lorsque la suppression est terminée, recharge la page pour afficher les modifications
+     * Affiche des messages dans une snackbar pour informer l'utilisateur du résultat de l'opération
+     * @param {string} fileId - L'ID du fichier à supprimer
+     * @returns {Promise<void>}
+     */
     async function handleDeleteFile(fileId) {
         try {
             await deleteFile({ fileId, accidentId });
@@ -68,9 +90,25 @@ export default function listFilesInAccident(accidentId) {
         }
     }
 
+    /**
+     * Affiche une boîte de dialogue de confirmation pour supprimer un fichier
+     * Appelle la fonction handleDeleteFile pour supprimer le fichier si l'utilisateur clique sur "Oui"
+     * Ferme la boîte de dialogue si l'utilisateur clique sur "Non"
+     * @param {string} fileId - L'ID du fichier à supprimer
+     */
     function popUpDelete(fileId) {
         return (
             confirmAlert({
+        /**
+         * Fonction personnalisée pour afficher une boîte de dialogue de confirmation de suppression
+         * 
+         * Cette fonction retourne un JSX élément représentant une boîte de dialogue personnalisée.
+         * La boîte de dialogue affiche un titre, un message de confirmation et des boutons "Oui" et "Non".
+         * Lorsque l'utilisateur clique sur le bouton "Oui", la fonction handleDeleteFile est appelée pour supprimer le fichier.
+         * Lorsque l'utilisateur clique sur le bouton "Non", la boîte de dialogue se ferme.
+         * @param {{ onClose: () => void }} props - Les props de la boîte de dialogue
+         * @returns {JSX.Element} Le JSX élément représentant la boîte de dialogue personnalisée
+         */
                 customUI: ({ onClose }) => (
                     <div className="custom-confirm-dialog">
                         <h1 className="custom-confirm-title">Supprimer</h1>

@@ -67,6 +67,18 @@ export default function PageDownloadFile() {
      */
     const promptForFileName = (file) => {
         confirmAlert({
+        /**
+         * Boîte de dialogue personnalisée pour demander le nom du fichier à uploader
+         * 
+         * @param {{ onClose: () => void }} props - Fonction pour fermer la boîte de dialogue
+         * @returns Un JSX Element qui contient la boîte de dialogue personnalisée
+         * 
+         * La boîte de dialogue contient un champ de saisie pour renommer le fichier
+         * et deux boutons : "Envoyer" et "Annuler".
+         * Lorsque le bouton "Envoyer" est cliqué, la fonction handleFileUpload est appelée
+         * avec le fichier à envoyer et le nom du fichier renommé.
+         * Lorsque le bouton "Annuler" est cliqué, la fonction onClose est appelée pour fermer la boîte de dialogue.
+         */
             customUI: ({ onClose }) => {
                 let fileName = file.name;
 

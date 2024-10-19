@@ -42,6 +42,7 @@ const getDayOfWeek = (dateString) => {
 
 
 
+
 export default async function editPDF(data) {
     try {
         const response = await fetch('./LeCortilDeclarationBELFIUS.pdf');

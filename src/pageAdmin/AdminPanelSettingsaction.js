@@ -3,6 +3,18 @@ import '../pageFormulaire/formulaire.css';
 import { Box, Tooltip } from '@mui/material';
 import Button from '@mui/material/Button';
 import { Link } from 'react-router-dom';
+/**
+ * Component React qui permet d'afficher le panel d'administration des droits
+ * 
+ * Ce component React permet d'afficher le panel d'administration des droits.
+ * Il contient des boutons qui permettent de 
+ * - Créer un nouvel utilisateur
+ * - Consulter les utilisateurs
+ * - Créer une nouvelle entreprise
+ * - Consulter les entreprises
+ * 
+ * @returns Un component React qui affiche le panel d'administration des droits
+ */
 export default function AdminPanelSettingsaction() {
 
     const defaultStyle = {

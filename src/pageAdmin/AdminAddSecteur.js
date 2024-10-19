@@ -21,6 +21,12 @@ import { confirmAlert } from 'react-confirm-alert';
 import config from '../config.json';
 import CustomSnackbar from '../_composants/CustomSnackbar';
 
+/**
+ * AddSecteur
+ * @description Page pour ajouter un secteur à une entreprise.
+ * @param {object} location - L'objet location du router.
+ * @returns {JSX.Element} La page pour ajouter un secteur.
+ */
 export default function AddSecteur() {
     const location = useLocation();
     const entreprise = location.state.entreprise;
@@ -35,10 +41,23 @@ export default function AddSecteur() {
         severity: 'info',
     });
 
+    /**
+     * Affiche un message dans une snackbar.
+     * @param {string} message - Le message à afficher.
+     * @param {string} [severity='info'] - La gravité du message. Les valeurs possibles sont 'info', 'success', 'warning' et 'error'.
+     */
     const showSnackbar = (message, severity = 'info') => {
         setSnackbar({ open: true, message, severity });
     };
 
+/**
+ * Closes the snackbar when the user clicks outside of it.
+ * 
+ * @param {object} event - The event that triggered the function.
+ * @param {string} reason - The reason the function was triggered. If the user
+ *                         clicked outside of the snackbar, this will be
+ *                         'clickaway'.
+ */
     const handleCloseSnackbar = (event, reason) => {
         if (reason === 'clickaway') {
             return;
@@ -50,6 +69,12 @@ export default function AddSecteur() {
         setValue('secteurName', secteurName);
     }, [secteurName, setValue]);
 
+    /**
+     * Fetches secteurs from the API and filters them by entrepriseId.
+     * Updates the component state with the filtered secteurs.
+     * Shows a success snackbar if the operation is successful, an error snackbar otherwise.
+     * Finally, sets loading to false.
+     */
     const fetchSecteurs = async () => {
         try {
             console.log('Fetching secteurs...');
@@ -71,6 +96,18 @@ export default function AddSecteur() {
         fetchSecteurs();
     }, [apiUrl, entreprise._id]);
 
+/**
+ * Submits the form data to add a new secteur to the specified entreprise.
+ * 
+ * - Sets the entrepriseId in the data object.
+ * - Sends a PUT request to the server to add the secteur.
+ * - Fetches the updated list of secteurs upon success.
+ * - Resets the secteurName field.
+ * - Displays a success or error message via a snackbar.
+ * 
+ * @param {object} data - The form data containing secteur details.
+ * @async
+ */
     const onSubmit = async (data) => {
         try {
             data.entrepriseId = entreprise._id;
@@ -86,6 +123,12 @@ export default function AddSecteur() {
         }
     };
 
+/**
+ * Deletes a secteur by sending a DELETE request to the server.
+ * 
+ * @param {string} secteurId - The ID of the secteur to be deleted.
+ * @async
+ */
     const handleDelete = async (secteurId) => {
         try {
             console.log('Deleting secteur:', secteurId);

@@ -23,6 +23,15 @@ const Login = () => {
   const [isPasswordValid, setIsPasswordValid] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
 
+  /**
+   * Fonction qui permet de se connecter à l'application
+   * Envoie une requête POST avec l'email et le mot de passe
+   * Stocke le token de connexion dans le local storage
+   * Redirige vers la page d'accueil
+   * 
+   * @param {object} data - Les données de connexion
+   * @returns {Promise} - La promesse de la requête
+   */
   const onSubmit = async (data) => {
     const email = data.email;
     const password = data.password;

@@ -9,11 +9,23 @@ import DatePickerP from '../_composants/datePickerP';
 import AutoCompleteP from '../_composants/autoCompleteP';
 import listeDeclarationAssBelfius from '../liste/listeDeclarationAssBelfius.json';
 
+/**
+ * Formulaire pour la saisie des informations du salarié victime d'un accident de travail
+ * 
+ * @param {function} setValue - fonction pour mettre à jour les données du formulaire
+ * @param {object} accidentData - données de l'accident de travail
+ * @param {function} watch - fonction pour récupérer les données du formulaire
+ * 
+ * @returns {JSX.Element} - le formulaire (IHMs)
+ */
 export default function FormulaireSalarie({ setValue, accidentData, watch }) {
 
   // Mise en forme des cadres texte
   const [frameWidth, setFrameWidth] = useState(window.innerWidth * -0.5);
   useEffect(() => {
+/**
+ * Handle the resize event by adjusting the frame width based on the window width
+ */
     const handleResize = () => {
       setFrameWidth(window.innerWidth * -0.5); // Adjust the coefficient as needed
     };

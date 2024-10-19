@@ -24,6 +24,13 @@ export default function datePickerQ({ id, label, defaultValue, onChange, require
         setBackgroundColor(value ? '#95ad2271' : '#e62a5663');
     }, [value]);
 
+/**
+ * Handles the change of the date value.
+ * Updates the state with the new date value, and if the onChange function is provided,
+ * formats the new date to 'YYYY-MM-DD' and calls onChange with the formatted date.
+ *
+ * @param {Dayjs} newValue - The new date value.
+ */
     const handleChange = (newValue) => {
         setValue(newValue);
         if (onChange && newValue) {

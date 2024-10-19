@@ -1,6 +1,9 @@
 import React from 'react';
 import './formulaire.css';
 
+/**
+ * This function represents a list of agent materials categorized based on different situations and groups.
+ */
 const agentmateriel = () => {
     return (
         <div>

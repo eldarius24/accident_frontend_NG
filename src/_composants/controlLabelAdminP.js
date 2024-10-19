@@ -10,6 +10,13 @@ import { FormControlLabel, Checkbox } from '@mui/material';
  */
 export default function controlLabelAdminP({ id, label, onChange, defaultValue }) {
 
+/**
+ * Handles the change event for the checkbox.
+ * Logs the new value and triggers the onChange callback if provided.
+ *
+ * @param {object} _ - The event object (not used).
+ * @param {boolean} value - The new value of the checkbox.
+ */
     const handleChange = (_, value) => {
         console.log('checkBox change to "', value, '"');
         if (onChange) {

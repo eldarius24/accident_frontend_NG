@@ -20,6 +20,12 @@ export default function AutoCompleteP({
     defaultValue,
     sx = { backgroundColor: '#00479871', width: '50%', boxShadow: 3, margin: '0 auto 1rem' }
 }) {
+    /**
+     * Fonction qui se déclenche à chaque changement de valeur dans l'autocomplete
+     * @param {Event} _ - L'événement de changement de valeur
+     * @param {Object} value - La valeur sélectionnée
+     * Si onChange est défini, alors la valeur est transmise à cette fonction
+     */
     const handleChange = (_, value) => {
         console.log('Autocomplet change to "', value, '"');
         if (onChange) {

@@ -38,6 +38,12 @@ import getAccidents from './_actions/get-accidents.js';
 import { useUserConnected } from '../Hook/userConnected.js';
 import CustomSnackbar from '../_composants/CustomSnackbar';
 
+/**
+ * Page d'accueil de l'application. Affiche la liste des accidents
+ * 
+ * @returns {JSX.Element} La page d'accueil
+ */
+
 function Home() {
     const navigate = useNavigate();
     const apiUrl = config.apiUrl;
@@ -69,10 +75,22 @@ function Home() {
     };
 
 
+    /**
+     * Check if the user is a conseiller prevention for the given entreprise
+     * @param {string} entrepriseName
+     * @returns {boolean}
+     */
     const isConseillerPrevention = (entrepriseName) => {
         return userInfo?.entreprisesConseillerPrevention?.includes(entrepriseName) || false;
     };
 
+    /**
+     * Supprime un accident de la base de données
+     * 
+     * @param {string} accidentIdToDelete id de l'accident à supprimer
+     * 
+     * @returns {Promise<void>}
+     */
     const handleDelete = (accidentIdToDelete) => {
         axios.delete(`http://${apiUrl}:3100/api/accidents/${accidentIdToDelete}`)
             .then(response => {
@@ -89,6 +107,13 @@ function Home() {
             });
     };
 
+    /**
+     * Génère un PDF à partir des données de l'accident passé en paramètre
+     * 
+     * @param {string} accidentIdToGenerate id de l'accident pour lequel générer le PDF
+     * 
+     * @returns {Promise<void>}
+     */
     const handleGeneratePDF = async (accidentIdToGenerate) => {
         const accident = accidents.find(item => item._id === accidentIdToGenerate);
         if (accident) {
@@ -104,6 +129,13 @@ function Home() {
         }
     };
 
+    /**
+     * Modifie l'accident passé en paramètre en le redirigeant vers le formulaire
+     * 
+     * @param {string} accidentIdToModify id de l'accident à modifier
+     * 
+     * @returns {Promise<void>}
+     */
     const handleEdit = async (accidentIdToModify) => {
         try {
             const { data } = await axios.get(`http://${apiUrl}:3100/api/accidents/${accidentIdToModify}`);
@@ -135,6 +167,11 @@ function Home() {
         setYearsChecked(prevYears => [...prevYears, currentYear]);
     }, [refreshListAccidents]);
 
+    /**
+     * Filtre les accidents en fonction des années vérifiées et du terme de recherche
+     * 
+     * @returns {Array} Les accidents filtrés
+     */
     const filteredData = () => {
         if (!accidents || !yearsChecked) {
             console.error("Accidents ou années vérifiées non définis");
@@ -157,11 +194,25 @@ function Home() {
         });
     };
 
+    /**
+     * Met à jour les années vérifiées en fonction de la nouvelle valeur 
+     * reçue via l'événement de changement de l'élément de type checkbox.
+     * Si la valeur est de type string, elle est divisée en un tableau d'entiers.
+     * @param {Event} event - L'événement de changement de l'élément de type checkbox.
+     */
     const handleChangeYearsFilter = (event) => {
         const value = event.target.value;
         setYearsChecked(typeof value === 'string' ? value.split(',') : value);
     };
 
+    /**
+     * Met à jour les années vérifiées et le flag selectAllYears en fonction
+     * de la nouvelle valeur reçue via l'événement de changement de l'élément
+     * de type checkbox.
+     * Si la valeur est true, yearsFromData est affecté à yearsChecked.
+     * Sinon, un tableau vide est affecté à yearsChecked.
+     * @param {Event} event - L'événement de changement de l'élément de type checkbox.
+     */
     const handleSelectAllYears = (event) => {
         const checked = event.target.checked;
         setSelectAllYears(checked);
@@ -176,6 +227,11 @@ function Home() {
 
     const data = filteredData();
 
+    /**
+     * Fonction pour exporter les données d'accidents filtrées vers Excel
+     * @returns {void} null
+     */
+
     const handleExportDataAccident = () => {
         let dataToExport = filteredData(); // Utilise la fonction filteredData() existante
     
@@ -189,6 +245,12 @@ function Home() {
         handleExportData(dataToExport);
     };
     
+    /**
+     * Fonction pour exporter les données d'assurance filtrées vers Excel.
+     * Si l'utilisateur est un conseiller de prévention, les données sont filtrées
+     * pour ne conserver que celles des entreprises qu'il est autorisé à voir.
+     * @returns {void} null
+     */
     const handleExportDataAssurance = () => {
         let dataToExport = filteredData(); // Utilise la fonction filteredData() existante
     

@@ -43,6 +43,13 @@ export default function FormulaireEntreprise({ setValue, accidentData, watch }) 
   }, [formData])
 
   useEffect(() => {
+  /**
+   * Fetches entreprises and secteurs data from API
+   * - entreprises data is filtered based on user role (only show entreprises that the user is conseiller for)
+   * - sets entreprises and secteurs in component state
+   * - sets loading to false when done
+   * @async
+   */
     const fetchData = async () => {
       try {
         const [entreprisesResponse, secteursResponse] = await Promise.all([
@@ -86,6 +93,15 @@ export default function FormulaireEntreprise({ setValue, accidentData, watch }) 
     setValue('blessures', blessures)
   }, [blessures, DateHeureAccident, typeAccident, sexe, entreprise, secteur, typeTravailleur, nomTravailleur, prenomTravailleur, dateNaissance, setValue]);
 
+/**
+ * Handles the selection of an entreprise in the form.
+ * @param {string} entrepriseSelect - The label of the selected entreprise.
+ * @description
+ * This function is called when the user selects an entreprise in the form.
+ * It updates the state of the component by setting the selected entreprise,
+ * resetting the selected secteur, and updating the list of available secteurs
+ * based on the selected entreprise.
+ */
   const handleEntrepriseSelect = (entrepriseSelect) => {
     const selectedEntreprise = entreprises.find(e => e.label === entrepriseSelect);
     if (selectedEntreprise) {
@@ -94,6 +110,12 @@ export default function FormulaireEntreprise({ setValue, accidentData, watch }) 
     }
   };
 
+/**
+ * Retrieves the list of sector names linked to the currently selected enterprise.
+ *
+ * @returns {Array<string>} An array of sector names associated with the selected enterprise.
+ *                          Returns an empty array if no enterprise is selected or if there are no linked sectors.
+ */
   const getLinkedSecteurs = () => {
     const selectedEntreprise = entreprises.find(e => e.label === entreprise);
     if (selectedEntreprise) {

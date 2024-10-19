@@ -171,6 +171,11 @@ const EnterpriseStats = React.memo(({ actions }) => {
 });
 
 
+/**
+ * Page qui affiche le plan d'action
+ * @param {object} accidentData Données de l'accident
+ * @returns {JSX.Element} La page du plan d'action
+ */
 export default function PlanAction({ accidentData }) {
     const [users, setAddactions] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -287,6 +292,13 @@ export default function PlanAction({ accidentData }) {
     }, [users, searchTerm, selectedYears]);
 
 
+    /**
+     * Supprime une action
+     * 
+     * @param {string} userIdToDelete id de l'action à supprimer
+     * 
+     * @returns {Promise} La promesse de suppression
+     */
     const handleDelete = (userIdToDelete) => {
         axios.delete(`http://${apiUrl}:3100/api/planaction/${userIdToDelete}`)
             .then(response => {
@@ -306,6 +318,10 @@ export default function PlanAction({ accidentData }) {
     };
 
 
+    /**
+     * Rafraichi la liste des actions
+     * @function
+     */
     const refreshListAccidents = () => {
         setLoading(true);
         axios.get(`http://${apiUrl}:3100/api/planaction`)
@@ -346,6 +362,11 @@ export default function PlanAction({ accidentData }) {
         return baseColors[index % baseColors.length];
     };
 
+    /**
+     * Envoie les données du formulaire pour enregistrer une action
+     * @param {Object} data Données du formulaire
+     * @returns {Promise} La promesse de création
+     */
     const onSubmit = (data) => {
         console.log("Formulaire.js -> onSubmit -> Données à enregistrer :", data);
 
@@ -364,6 +385,13 @@ export default function PlanAction({ accidentData }) {
 
     const userEnterprise = userInfo?.entreprisesConseillerPrevention || [];
 
+    /**
+     * Determine if the user can view the given action
+     * @param {Object} action The action to check
+     * @returns {Boolean} True if the user can view the action, false otherwise
+     * @description
+     * The user can view the action if they are an admin or if the action's AddActionEntreprise is in the user's entreprisesConseillerPrevention.
+     */
     const canViewAction = (action) => {
         if (isAdmin) {
             return true; // Admin can view all actions
@@ -372,6 +400,10 @@ export default function PlanAction({ accidentData }) {
         }
     };
 
+    /**
+     * Handle the export functionality by filtering the data based on user permissions, selected years, and search term.
+     * @returns {void}
+     */
     const handleExport = () => {
         // Commencer avec tous les utilisateurs
         let dataToExport = users;

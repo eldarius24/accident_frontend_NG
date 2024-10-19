@@ -7,6 +7,15 @@ import 'dayjs/locale/fr';
 
 dayjs.locale('fr');
 
+/**
+ * DateHeurePicker composant qui affiche un calendrier pour choisir une date et une heure
+ * @param {string} id - Identifiant unique.
+ * @param {string} label - Nom du champ.
+ * @param {string} defaultValue - Valeur par défaut format dayjs 'YYYY-MM-DD:HH:mm'.
+ * @param {function} onChange - Fonction qui se déclenche à chaque changement de valeur (setValue({ id }, value)).
+ * @param {boolean} required - Indique si le champ est obligatoire.
+ * @returns {JSX.Element}
+ */
 export default function DateHeurePickerQ({
     id,
     label,
@@ -21,6 +30,11 @@ export default function DateHeurePickerQ({
         setBackgroundColor(value ? '#95ad2271' : '#e62a5663');
     }, [value]);
 
+    /**
+     * Fonction qui se déclenche à chaque changement de date et d'heure.
+     * Appelle la fonction onChange avec la date et l'heure formatées en 'YYYY-MM-DD:HH:mm'.
+     * @param {Dayjs} newValue - La nouvelle date et heure.
+     */
     const handleChange = (newValue) => {
         setValue(newValue);
         if (onChange && newValue) {

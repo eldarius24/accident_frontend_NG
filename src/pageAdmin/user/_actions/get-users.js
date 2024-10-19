@@ -1,6 +1,12 @@
 import axios from 'axios';
 import config from '../../../config.json';
 
+/**
+ * Récupère la liste des utilisateurs depuis l'API
+ * 
+ * @returns {Promise<Array>} - La liste des utilisateurs
+ * @throws {Error} - Si la requête échoue
+ */
 const getUsers = async () => {
     const apiUrl = config.apiUrl;
 

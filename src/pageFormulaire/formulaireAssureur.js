@@ -11,6 +11,23 @@ import TextFieldP from '../_composants/textFieldP';
 
 
 
+/**
+ * Formulaire Assureur
+ * 
+ * - Stocke les données dans des variables locales et les initialisent avec les données de l'accident si elles existent
+ * - Met à jour les données du formulaire à chaque modification d'un des champs
+ * - Retourne le formulaire (IHMs) :
+ *   - Numéro de police d'assurance
+ *   - Réference du sinistre
+ *   - Date d'envoie de la déclaration d'accident
+ *   - Commentaires et suivi (courier, mail)
+ *   - Gestionnaire du sinistre au sein de l'ASBL
+ *   - Autocomplete AssureurStatus
+ *   - Checkbox Cloturé
+ * 
+ * @param {{ setValue: (string, any) => void; accidentData: any; watch: (string) => any }} props
+ * @returns {JSX.Element}
+ */
 export default function FormulaireAssureur({ setValue, accidentData, watch }) {
 
   /**

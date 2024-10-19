@@ -1,6 +1,12 @@
 import axios from "axios";
 import config from '../../../../config.json';
 
+/**
+ * Récupère un utilisateur depuis l'API
+ * 
+ * @param {string} id - ID de l'utilisateur à récupérer
+ * @returns {object} - L'utilisateur récupéré
+ */
 const getUser = async (id) => {
     const apiUrl = config.apiUrl;
 

@@ -23,6 +23,19 @@ import AddUser from './pageAdmin/user/addUser/AddUser';
 import ProtectedRouteAdminOrConseiller from './Model/protectedRouteConseillerPrevention'; // Importer le nouveau composant
 import FormulaireAction from './planaction/FormulaireAction';
 
+/**
+ * App est le composant principal de l'application. Il contient les routes 
+ * ainsi que la barre de navigation.
+ * 
+ * Les routes sont divis es en 3 parties :
+ * - Les routes accessibles par tous (login, home)
+ * - Les routes accessibles uniquement par les admins (adminUser, adminaction, addEntreprise, addSecteur, adminEntreprises, addUser)
+ * - Les routes accessibles par les admins et les conseillers (formulaireAction, formulaire, deviation, agentmateriel, naturelesion, siegelesion, fichierdll, planAction, fichierdllaction, statistiques)
+ * 
+ * Toutes les routes sont prot ge s par des composants de type ProtectedRoute, 
+ * qui redirigent vers la page de connexion si l'utilisateur n'a pas les droits 
+ * n cessaires.
+ */
 const App = () => {
   return (
     <Router>

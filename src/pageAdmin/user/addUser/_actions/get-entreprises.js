@@ -1,6 +1,13 @@
 import axios from "axios";
 import config from '../../../../config.json';
 
+/**
+ * Récupère les entreprises depuis l'API
+ * 
+ * @async
+ * @returns {Array} - Le tableau des entreprises.
+ * @throws {Error} - Si la réponse de l'API n'est pas ok.
+ */
 const getEntreprises = async () => {
     const apiUrl = config.apiUrl;
 

@@ -21,6 +21,17 @@ import CustomSnackbar from '../_composants/CustomSnackbar';
 
 const apiUrl = config.apiUrl;
 
+/**
+ * PlanAction component manages the form for adding a new action to the action plan.
+ * It initializes form fields with data from `accidentData` if available or uses default values.
+ * Fetches enterprise and sector data to populate options in the form.
+ * Handles the submission of the form, sending data to the server and displaying feedback via a snackbar.
+ * Additionally, manages the dynamic filtering of sectors based on the selected enterprise.
+ *
+ * @param {Object} props - Component properties.
+ * @param {Object} props.accidentData - Data related to the accident, used to prefill form fields.
+ * @returns {JSX.Element} The form for adding a new action.
+ */
 export default function PlanAction({ accidentData }) {
     const [users, setAddactions] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -60,10 +71,22 @@ export default function PlanAction({ accidentData }) {
         severity: 'info',
     });
 
+    /**
+     * Shows a snackbar with the given message and severity.
+     * @param {string} message - The message to display in the snackbar.
+     * @param {string} [severity='info'] - The severity of the snackbar. Can be 'info', 'success', 'warning', or 'error'.
+     */
     const showSnackbar = (message, severity = 'info') => {
         setSnackbar({ open: true, message, severity });
     };
 
+    /**
+     * Closes the snackbar when the user clicks outside of it.
+     * @param {object} event - The event that triggered the function.
+     * @param {string} reason - The reason the function was triggered. If the user
+     *                        clicked outside of the snackbar, this will be
+     *                        'clickaway'.
+     */
     const handleCloseSnackbar = (event, reason) => {
         if (reason === 'clickaway') {
             return;
@@ -73,6 +96,14 @@ export default function PlanAction({ accidentData }) {
 
 
     useEffect(() => {
+    /**
+     * Fetches data from the server and updates the component state accordingly.
+     * The data includes the list of actions, enterprises, and sectors.
+     * If the user is not an admin, the list of enterprises is filtered to only include
+     * those that the user is allowed to access.
+     * If an error occurs while fetching the data, a snackbar is displayed with the error message.
+     * Finally, the loading state is set to false.
+     */
         const fetchData = async () => {
             try {
                 const [actionsResponse, enterprisesResponse, sectorsResponse] = await Promise.all([
@@ -123,6 +154,15 @@ export default function PlanAction({ accidentData }) {
     }, [AddActionDange, AddAction, AddActionDate, AddActionQui, AddActionSecteur, AddActionEntreprise, AddboolStatus, AddActionanne, AddActoinmoi, setValue]);
 
 
+    /**
+     * Handles the selection of an enterprise in the form.
+     * @param {string} entrepriseSelect - The label of the selected enterprise.
+     * @description
+     * This function is called when the user selects an enterprise in the form.
+     * It updates the state of the component by setting the selected enterprise,
+     * resetting the selected sector, and updating the list of available sectors
+     * based on the selected enterprise.
+     */
     const handleEnterpriseSelect = (entrepriseSelect) => {
         const selectedEnterprise = enterprises.find(e => e.label === entrepriseSelect);  // Assurez-vous de comparer avec le label
         if (selectedEnterprise) {
@@ -132,6 +172,13 @@ export default function PlanAction({ accidentData }) {
         }
     };
 
+/**
+ * Retrieves the list of sector names linked to a specified enterprise.
+ * 
+ * @param {string} entrepriseId - The ID of the enterprise for which to retrieve linked sectors.
+ * @returns {Array<string>} An array of sector names associated with the given enterprise ID.
+ *                          Returns an empty array if no enterprise is selected or if there are no linked sectors.
+ */
     const getLinkedSecteurs = (entrepriseId) => {
         if (!entrepriseId) return []; // Retourne un tableau vide si aucune entreprise n'est sélectionnée
         return allSectors
@@ -161,6 +208,11 @@ export default function PlanAction({ accidentData }) {
     }
 
 
+    /**
+     * Envoie les données du formulaire pour enregistrer une action
+     * @param {Object} data Données du formulaire
+     * @returns {Promise} La promesse de création
+     */
     const onSubmit = (data) => {
         console.log("Formulaire.js -> onSubmit -> Données à enregistrer :", data);
 

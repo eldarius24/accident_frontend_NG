@@ -31,6 +31,11 @@ const TextMaskCustom = React.forwardRef(function TextMaskCustom(props, ref) {
  */
 export default function TextFieldMaskP({ id, label, onChange, defaultValue, mask }) {
 
+    /**
+     * Handles the change event of the TextField.
+     * If onChange is provided, calls onChange with the new value of the TextField.
+     * @param {Event} event - The change event.
+     */
     function handleChange(event) {
         if (onChange) {
             onChange(event.target.value);

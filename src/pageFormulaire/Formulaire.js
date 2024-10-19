@@ -41,6 +41,16 @@ const mandatoryFields = [
 ];
 
 
+/**
+ * Formulaire d'accident
+ * 
+ * Ce composant est le formulaire principal, il est utilisé pour l'édition et la création d'un accident.
+ * Il est divisé en plusieurs étapes, chaque étape représentant un formulaire.
+ * Les données sont enregistrées dans la base de données à chaque changement d'étape.
+ * 
+ * @param {Object} accidentData - L'objet accidentData contient les données de l'accident en cours d'édition si l'utilisateur a cliqué sur le bouton "éditer".
+ * @returns {ReactElement} - Le formulaire d'accident est renvoyé sous forme d'un élément React.
+ */
 export default function Formulaire() {
     const accidentData = useLocation().state;
     const apiUrl = config.apiUrl;
@@ -58,10 +68,23 @@ export default function Formulaire() {
         severity: 'info',
     });
 
+    /**
+     * Affiche un message dans une snackbar.
+     * 
+     * @param {string} message - Le message à afficher.
+     * @param {string} [severity='info'] - La gravité du message. Les valeurs possibles sont 'info', 'success', 'warning' et 'error'.
+     */
     const showSnackbar = (message, severity = 'info') => {
         setSnackbar({ open: true, message, severity });
     };
 
+    /**
+     * Ferme la snackbar si l'utilisateur clique sur le bouton "Fermer" ou en dehors de la snackbar.
+     * Si l'utilisateur clique sur la snackbar elle-même (et non sur le bouton "Fermer"), la snackbar ne se ferme pas.
+     * 
+     * @param {object} event - L'événement qui a déclenché la fermeture de la snackbar.
+     * @param {string} reason - La raison pour laquelle la snackbar se ferme. Si elle vaut 'clickaway', cela signifie que l'utilisateur a cliqué en dehors de la snackbar.
+     */
     const handleCloseSnackbar = (event, reason) => {
         if (reason === 'clickaway') {
             return;
@@ -88,6 +111,11 @@ export default function Formulaire() {
         }
     }, []);
 
+/**
+ * Handles the upload of a file, logging the name of the uploaded file.
+ * 
+ * @param {object} file - The file to be uploaded
+ */
     const handleFileUpload = (file) => {
         console.log("Fichier téléchargé :", file.name);
     };

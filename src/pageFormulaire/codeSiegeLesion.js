@@ -1,6 +1,15 @@
 import React from 'react';
 import './formulaire.css';
 
+/**
+ * siegelesion
+ *
+ * Un composant React qui affiche la liste des localisations de blessures
+ * possibles pour un accident
+ *
+ * @return {React.ReactElement} Un élément React qui affiche la liste des
+ * localisations de blessures
+ */
 const siegelesion = () => {
     return (
         <div>

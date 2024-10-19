@@ -1,6 +1,9 @@
 import React from 'react';
 import './formulaire.css';
 
+/**
+ * Retourne un JSX contenant la liste des déviations
+ */
 const deviation = () => {
     return (
         <div>

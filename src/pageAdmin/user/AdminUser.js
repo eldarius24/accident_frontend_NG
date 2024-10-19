@@ -19,6 +19,15 @@ import deleteUser from './_actions/delete-user';
 import { Link } from 'react-router-dom';
 import CustomSnackbar from '../../_composants/CustomSnackbar';
 
+/**
+ * Adminuser est un composant React qui permet de gérer les utilisateurs.
+ * Il affiche une table avec les informations de chaque utilisateur, 
+ * ainsi que des boutons pour modifier et supprimer.
+ * Il utilise les hooks useState, useEffect et useCallback pour gérer les données
+ * des utilisateurs et des secteurs.
+ * 
+ * @returns Un JSX element représentant le composant Adminuser
+ */
 export default function Adminuser() {
     const [users, setUsers] = useState([]);
     const [usersIsPending, startGetUsers] = useTransition();
@@ -28,10 +37,22 @@ export default function Adminuser() {
         severity: 'info',
     });
 
+    /**
+     * Affiche un message dans une snackbar.
+     * @param {string} message - Le message à afficher.
+     * @param {string} [severity='info'] - La gravité du message. Les valeurs possibles sont 'info', 'success', 'warning' et 'error'.
+     */
     const showSnackbar = (message, severity = 'info') => {
         setSnackbar({ open: true, message, severity });
     };
 
+    /**
+     * Ferme la snackbar si l'utilisateur clique sur le bouton "Fermer" ou en dehors de la snackbar.
+     * Si l'utilisateur clique sur la snackbar elle-même (et non sur le bouton "Fermer"), la snackbar ne se ferme pas.
+     * 
+     * @param {object} event - L'événement qui a déclenché la fermeture de la snackbar.
+     * @param {string} reason - La raison pour laquelle la snackbar se ferme. Si elle vaut 'clickaway', cela signifie que l'utilisateur a cliqué en dehors de la snackbar.
+     */
     const handleCloseSnackbar = (event, reason) => {
         if (reason === 'clickaway') {
             return;
@@ -88,6 +109,16 @@ export default function Adminuser() {
     const popUpDelete = (userId) => {
         confirmAlert(
             {
+/**
+ * Fonction personnalisée pour afficher une boîte de dialogue de confirmation de suppression
+ * 
+ * Cette fonction retourne un JSX élément représentant une boîte de dialogue personnalisée.
+ * La boîte de dialogue affiche un titre, un message de confirmation et des boutons "Oui" et "Non".
+ * Lorsque l'utilisateur clique sur le bouton "Oui", la fonction handleDelete est appelée pour supprimer l'utilisateur.
+ * Lorsque l'utilisateur clique sur le bouton "Non", la boîte de dialogue se ferme.
+ * 
+ * @param {object} onClose - La fonction de rappel pour fermer la boîte de dialogue
+ */
                 customUI: ({ onClose }) => {
                     return (
                         <div className="custom-confirm-dialog">

@@ -16,11 +16,24 @@ import TextFieldMaskP from '../_composants/textFieldMaskP';
 import { Link } from 'react-router-dom';
 
 
+/**
+ * Formulaire des informations sur l'accident de travail
+ * 
+ * @param {Object} props Les props du formulaire : 
+ * - setValue : la fonction pour mettre à jour les valeurs du formulaire
+ * - accidentData : les données de l'accident s'il existe
+ * - watch : la fonction pour surveiller les mises à jour des données du formulaire
+ * 
+ * @returns {JSX.Element} Le formulaire
+ */
 export default function FormulaireAccident({ setValue, accidentData, watch }) {
 
   const [frameWidth, setFrameWidth] = useState(window.innerWidth * -0.5);
 
   useEffect(() => {
+/**
+ * Handle the resize event by adjusting the frame width based on the window width
+ */
     const handleResize = () => {
       setFrameWidth(window.innerWidth * -0.5); // Adjust the coefficient as needed
     };

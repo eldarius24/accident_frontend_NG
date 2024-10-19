@@ -117,6 +117,15 @@ export function handleExportData(data) {
 };
 
 
+/**
+ * Génère un fichier Excel pour les données d'assurances et le télécharge.
+ * 
+ * @param {ExcelJS.Workbook} workbook - Le classeur Excel à partir duquel le fichier sera généré.
+ * 
+ * Le fichier est enregistré sous le nom 'Assurances.xlsx' et téléchargé sur l'appareil de l'utilisateur.
+ * Pour les navigateurs Internet Explorer, utilise msSaveOrOpenBlob pour le téléchargement.
+ * Pour les autres navigateurs, utilise un lien de téléchargement temporaire.
+ */
 function generateExcelFileAssurances(workbook) {
     workbook.xlsx.writeBuffer().then(buffer => {
         const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
@@ -504,6 +513,17 @@ export function handleExportDataAss(data) {
 
 
 
+/**
+ * Generates an Excel file for actions and triggers a download in the browser.
+ * 
+ * @param {ExcelJS.Workbook} workbook - The workbook object containing the data to be exported.
+ * 
+ * The function creates an Excel file named 'Actions.xlsx' from the provided workbook. It
+ * handles browser compatibility for downloading the file, including support for Internet
+ * Explorer. The file is generated and downloaded as a Blob with the appropriate MIME type
+ * for Excel files. The URL object is used to create a downloadable link for browsers
+ * other than Internet Explorer.
+ */
 function generateExcelFileActions(workbook) {
     workbook.xlsx.writeBuffer().then(buffer => {
         const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });

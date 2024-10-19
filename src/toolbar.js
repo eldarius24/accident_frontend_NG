@@ -10,6 +10,13 @@ import PendingActionsIcon from '@mui/icons-material/PendingActions';
 import ViewListIcon from '@mui/icons-material/ViewList';
 import LogoutIcon from '@mui/icons-material/Logout';
 
+/**
+ * ResponsiveAppBar est un composant qui affiche une barre de navigation
+ * qui varie en fonction de la taille de l'écran.
+ *
+ * @returns {React.ReactElement} Un élément React qui affiche la barre de
+ * navigation.
+ */
 function ResponsiveAppBar() {
   const location = useLocation();
   const { isAuthenticated, isAdmin, isAdminOuConseiller, userInfo, isConseiller } = useUserConnected();
@@ -61,6 +68,14 @@ function ResponsiveAppBar() {
     return null;
   }
 
+/**
+ * Renders a button with a tooltip, icon, and text.
+ * 
+ * @param {string} to - The destination URL of the button.
+ * @param {string} tooltip - The text shown in the tooltip when hovering over the button.
+ * @param {JSX.Element} icon - The icon component to display on the button.
+ * @param {string} text - The text displayed on the button.
+ */
   const renderButton = (to, tooltip, icon, text) => (
     <Tooltip title={tooltip} arrow>
       <Button

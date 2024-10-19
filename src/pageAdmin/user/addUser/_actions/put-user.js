@@ -2,6 +2,13 @@ import axios from "axios";
 import config from '../../../../config.json';
 const apiUrl = config.apiUrl;
 
+/**
+ * Modifie un utilisateur.
+ * 
+ * @param {string} idUser - L'ID de l'utilisateur à modifier.
+ * @param {object} dataUser - Les données de l'utilisateur à modifier.
+ * @returns {Promise<object | null>} - Les données de l'utilisateur modifiée, ou null si une erreur est survenue.
+ */
 const editUser = async (idUser, dataUser) => {
     console.log('editUser', idUser, dataUser);
     try {
@@ -12,6 +19,12 @@ const editUser = async (idUser, dataUser) => {
     }
 }
 
+/**
+ * Crée un utilisateur.
+ * 
+ * @param {object} dataUser - Les données de l'utilisateur à créer.
+ * @returns {Promise<object | null>} - Les données de l'utilisateur créée, ou null si une erreur est survenue.
+ */
 const addUser = async (dataUser) => {
     console.log('addUser', dataUser);
     try {
@@ -23,6 +36,13 @@ const addUser = async (dataUser) => {
 }
 
 
+/**
+ * Crée ou modifie un utilisateur.
+ * 
+ * @param {string} [idUser] - L'ID de l'utilisateur à modifier.
+ * @param {object} dataUser - Les données de l'utilisateur à créer ou modifier.
+ * @returns {Promise<object | null>} - Les données de l'utilisateur modifiée, ou null si une erreur est survenue.
+ */
 const putUser = async (idUser, dataUser) => {
     console.log('putUser', idUser, dataUser);
     try {
