@@ -11,11 +11,10 @@ import ViewListIcon from '@mui/icons-material/ViewList';
 import LogoutIcon from '@mui/icons-material/Logout';
 
 /**
- * ResponsiveAppBar est un composant qui affiche une barre de navigation
- * qui varie en fonction de la taille de l'écran.
+ * A responsive app bar that displays different buttons based on the user's
+ * privileges and the current page.
  *
- * @returns {React.ReactElement} Un élément React qui affiche la barre de
- * navigation.
+ * @returns {JSX.Element} The responsive app bar.
  */
 function ResponsiveAppBar() {
   const location = useLocation();
@@ -30,7 +29,7 @@ function ResponsiveAppBar() {
 
   const showText = windowWidth > 900;
 
-  const { isAddSecteur, isadminEntreprises, isaddEntrprise, isadminUser, isaddUser, isFormulaireAction, isFormulaireAccident, isPageAdmin, isPageStats, isLoginPage, isplanAction } = useMemo(() => ({
+  const { isAddSecteur, isadminEntreprises, isaddEntrprise, isadminUser, isaddUser, isFormulaireAction, isFormulaireAccident, isPageAdmin, isPageStats, isLoginPage, isplanAction, isHiddenPage } = useMemo(() => ({
     isFormulaireAccident: location.pathname === '/formulaire',
     isPageAdmin: location.pathname === '/adminaction',
     isPageStats: location.pathname === '/statistiques',
@@ -42,12 +41,7 @@ function ResponsiveAppBar() {
     isaddEntrprise: location.pathname === '/addEntreprise',
     isadminEntreprises: location.pathname === '/adminEntreprises',
     isAddSecteur: location.pathname === '/addSecteur',
-    isfichierdll: location.pathname === '/fichierdll',
-    isagentmateriel: location.pathname === '/agentmateriel',
-    isnaturelesion: location.pathname === '/naturelesion',
-    issiegelesion: location.pathname === '/siegelesion',
-    isdeviation: location.pathname === '/deviation',
-    
+    isHiddenPage: ['/deviation', '/agentmateriel', '/naturelesion', '/siegelesion'].includes(location.pathname),
   }), [location.pathname]);
 
   const buttonStyle = {
@@ -70,7 +64,7 @@ function ResponsiveAppBar() {
     letterSpacing: windowWidth > 950 ? '.3rem' : windowWidth > 850 ? '.1rem' : '.04rem',
   };
 
-  if (isLoginPage) {
+  if (isHiddenPage || isLoginPage) {
     return null;
   }
 
@@ -105,8 +99,6 @@ function ResponsiveAppBar() {
           {isAdmin && ['/', '/addSecteur', '/adminaction','/adminUser',"/adminEntreprises","/addEntreprise","/addUser"].includes(location.pathname) && 
             renderButton("/adminaction", "Cliquez ici accèder à l'espace d'administration", <AdminPanelSettingsIcon />, "Admin")}
           
-
-          
           <Typography variant="h5" noWrap sx={textStyle}>
             T.I.G.R.E
           </Typography>
@@ -116,31 +108,29 @@ function ResponsiveAppBar() {
           
           {isAdminOuConseiller && (
             <>
-            
-              {!['/deviation','/agentmateriel','/naturelesion','/siegelesion','/fichierdll','/addSecteur', '/addUser', '/adminUser', '/addEntreprise', '/adminEntreprises', '/adminaction', '/formulaireAction', '/planAction', '/formulaire', '/statistiques'].includes(location.pathname) && 
+              {!['/addSecteur', '/addUser', '/adminUser', '/addEntreprise', '/adminEntreprises', '/adminaction', '/formulaireAction', '/planAction', '/formulaire', '/statistiques'].includes(location.pathname) && 
                 renderButton("/formulaire", "Cliquez ici pour ajouté un nouvelle accident", <AddIcon />, "Accident")}
               
-              {!['/deviation','/agentmateriel','/naturelesion','/siegelesion','/fichierdll','/addSecteur', '/addUser', '/adminUser', '/addEntreprise', '/adminEntreprises', '/adminaction', '/formulaireAction', '/planAction', '/formulaire', '/statistiques'].includes(location.pathname) && 
+              {!['/addSecteur', '/addUser', '/adminUser', '/addEntreprise', '/adminEntreprises', '/adminaction', '/formulaireAction', '/planAction', '/formulaire', '/statistiques'].includes(location.pathname) && 
                 renderButton("/statistiques", "Cliquez ici pour accéder aux statistiques", <BarChartIcon />, "Statistiques")}
               
-              {!['/deviation','/agentmateriel','/naturelesion','/siegelesion','/fichierdll','/addSecteur', '/addUser', '/adminUser', '/addEntreprise', '/adminEntreprises', '/adminaction', '/planAction', '/formulaire', '/statistiques'].includes(location.pathname) && 
+              {!['/addSecteur', '/addUser', '/adminUser', '/addEntreprise', '/adminEntreprises', '/adminaction', '/planAction', '/formulaire', '/statistiques'].includes(location.pathname) && 
                 renderButton("/planAction", "Cliquez ici pour accéder aux plans d'actions", <PendingActionsIcon />, "Plans d'actions")}
               
-              {!['/deviation','/agentmateriel','/naturelesion','/siegelesion','/fichierdll','/addSecteur', '/addUser', '/adminUser', '/addEntreprise', '/adminEntreprises', '/adminaction', '/', '/formulaireAction', '/formulaire', '/statistiques'].includes(location.pathname) && 
+              {!['/addSecteur', '/addUser', '/adminUser', '/addEntreprise', '/adminEntreprises', '/adminaction', '/', '/formulaireAction', '/formulaire', '/statistiques'].includes(location.pathname) && 
                 renderButton("/formulaireAction", "Cliquez ici pour ajouter une nouvelle action", <AddIcon />, "Nouvelle action")}
               
-              {!['/deviation','/agentmateriel','/naturelesion','/siegelesion','/fichierdll','/addSecteur', '/addEntreprise', '/addUser', '/adminEntreprises', '/planAction', '/', '/formulaireAction', '/formulaire', '/statistiques'].includes(location.pathname) && 
+              {!['/addSecteur', '/addEntreprise', '/addUser', '/adminEntreprises', '/planAction', '/', '/formulaireAction', '/formulaire', '/statistiques'].includes(location.pathname) && 
                 renderButton("/addUser", "Cliquez ici pour ajouter un nouvel utilisateur", <AddIcon />, "Utilisateur")}
               
-              {!['/deviation','/agentmateriel','/naturelesion','/siegelesion','/fichierdll','/addSecteur', '/adminUser', '/addEntreprise', '/adminEntreprises', '/planAction', '/', '/formulaireAction', '/formulaire', '/statistiques'].includes(location.pathname) && 
+              {!['/addSecteur', '/adminUser', '/addEntreprise', '/adminEntreprises', '/planAction', '/', '/formulaireAction', '/formulaire', '/statistiques'].includes(location.pathname) && 
                 renderButton("/adminUser", "Cliquez ici pour gérer les utilisateurs", <ViewListIcon />, "utilisateurs")}
               
-              {!['/deviation','/agentmateriel','/naturelesion','/siegelesion','/fichierdll','/addUser', '/adminUser', '/addEntreprise', '/planAction', '/', '/formulaireAction', '/formulaire', '/statistiques'].includes(location.pathname) && 
+              {!['/addUser', '/adminUser', '/addEntreprise', '/planAction', '/', '/formulaireAction', '/formulaire', '/statistiques'].includes(location.pathname) && 
                 renderButton("/addEntreprise", "Cliquez ici pour ajouter une nouvelle entreprise", <AddIcon />, "Entreprise")}
               
-              {!['/deviation','/agentmateriel','/naturelesion','/siegelesion','/fichierdll','/addUser', '/adminUser', '/adminEntreprises', '/planAction', '/', '/formulaireAction', '/formulaire', '/statistiques'].includes(location.pathname) && 
+              {!['/addUser', '/adminUser', '/adminEntreprises', '/planAction', '/', '/formulaireAction', '/formulaire', '/statistiques'].includes(location.pathname) && 
                 renderButton("/adminEntreprises", "Cliquez ici pour gérer les entreprises", <ViewListIcon />, "Entreprises")}
-
             </>
           )}
         </Toolbar>

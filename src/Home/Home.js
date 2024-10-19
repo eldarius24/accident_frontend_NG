@@ -9,7 +9,6 @@ import { useNavigate } from 'react-router-dom';
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import '../pageFormulaire/formulaire.css';
-
 import RefreshIcon from '@mui/icons-material/Refresh';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import EditIcon from '@mui/icons-material/Edit';
@@ -18,7 +17,6 @@ import GetAppIcon from '@mui/icons-material/GetApp';
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
 import InputAdornment from '@mui/material/InputAdornment';
-
 import config from '../config.json';
 import editPDF from '../Model/pdfGenerator.js';
 import { handleExportData, handleExportDataAss } from '../Model/excelGenerator.js';

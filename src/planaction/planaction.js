@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import axios from 'axios';
 import { useForm } from 'react-hook-form';
-import { useLocation, Link } from 'react-router-dom';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
 import {
     Table, TableBody, TableCell, TableContainer, TableHead, TableRow,
     Button, Checkbox, Grid, LinearProgress, TextField, Tooltip,
@@ -46,12 +46,12 @@ const EnterpriseStats = React.memo(({ actions }) => {
 
     const getCardStyle = useCallback((completed, total) => {
         const completionRate = (completed / total) * 100;
-/**
- * Determines the color based on the completion rate.
- * 
- * @param {number} rate - The completion rate to determine the color for.
- * @returns {string} - The color code based on the completion rate.
- */
+        /**
+         * Determines the color based on the completion rate.
+         * 
+         * @param {number} rate - The completion rate to determine the color for.
+         * @returns {string} - The color code based on the completion rate.
+         */
         const getColorByCompletion = (rate) => {
             if (rate === 100) return '#90EE90';
             if (rate >= 75) return '#B7E4B7';
@@ -182,12 +182,16 @@ export default function PlanAction({ accidentData }) {
         message: '',
         severity: 'info',
     });
+    const navigate = useNavigate();
 
- /**
-     * Formatte une date en string au format jj-mm-aaaa
-     * @param {string} dateString - La date à formatter
-     * @returns {string} La date formatée
-     */
+   
+
+
+    /**
+        * Formatte une date en string au format jj-mm-aaaa
+        * @param {string} dateString - La date à formatter
+        * @returns {string} La date formatée
+        */
     const formatDate = (dateString) => {
         if (!dateString) return '';
         const date = new Date(dateString);
@@ -205,6 +209,19 @@ export default function PlanAction({ accidentData }) {
         if (reason === 'clickaway') return;
         setSnackbar(prev => ({ ...prev, open: false }));
     }, []);
+
+
+    const handleEdit = useCallback((actionIdToModify) => {
+        const actionToEdit = users.find(action => action._id === actionIdToModify);
+        if (actionToEdit) {
+            navigate("/formulaireAction", { state: actionToEdit });
+            showSnackbar('Modification de l\'action initiée', 'info');
+        } else {
+            showSnackbar('Erreur : Action non trouvée', 'error');
+        }
+    }, [navigate, users, showSnackbar]);
+
+
 
     const fetchData = useCallback(async () => {
         try {
@@ -259,7 +276,7 @@ export default function PlanAction({ accidentData }) {
         }
         if (searchTerm) {
             const searchTermLower = searchTerm.toLowerCase();
-            filtered = filtered.filter(addaction => 
+            filtered = filtered.filter(addaction =>
                 ['AddActionEntreprise', 'AddActionDate', 'AddActionSecteur', 'AddAction', 'AddActionQui', 'AddActoinmoi', 'AddActionDange', 'AddActionanne']
                     .some(field => addaction[field]?.toLowerCase().includes(searchTermLower))
             );
@@ -282,6 +299,7 @@ export default function PlanAction({ accidentData }) {
                 showSnackbar('Erreur lors de la suppression de l\'action', 'error');
             });
     }, [showSnackbar]);
+
 
     const refreshListAccidents = useCallback(() => {
         setLoading(true);
@@ -340,27 +358,27 @@ export default function PlanAction({ accidentData }) {
     const handleExport = useCallback(async () => {
         try {
             let dataToExport = users;
-            
+
             if (!isAdmin) {
                 dataToExport = dataToExport.filter(action =>
                     userInfo.entreprisesConseillerPrevention?.includes(action.AddActionEntreprise)
                 );
             }
-            
+
             if (selectedYears && selectedYears.length > 0) {
                 dataToExport = dataToExport.filter(action =>
                     selectedYears.includes(action.AddActionanne)
                 );
             }
-            
+
             if (searchTerm) {
                 const searchTermLower = searchTerm.toLowerCase();
-                dataToExport = dataToExport.filter(addaction => 
+                dataToExport = dataToExport.filter(addaction =>
                     ['AddActionEntreprise', 'AddActionDate', 'AddActionSecteur', 'AddAction', 'AddActionQui', 'AddActoinmoi', 'AddActionDange', 'AddActionanne']
                         .some(field => addaction[field]?.toLowerCase().includes(searchTermLower))
                 );
             }
-            
+
             await handleExportDataAction(dataToExport);
             showSnackbar('Exportation des données réussie', 'success');
         } catch (error) {
@@ -376,6 +394,8 @@ export default function PlanAction({ accidentData }) {
     if (loading) {
         return <LinearProgress color="success" />;
     }
+
+    
 
     return (
         <form className="background-image" onSubmit={handleSubmit(onSubmit)}>
@@ -529,7 +549,11 @@ export default function PlanAction({ accidentData }) {
                                             <TableCell>{addaction.AddActionQui}</TableCell>
                                             <TableCell style={{ padding: 0, width: '70px' }}>
                                                 <Tooltip title="Cliquez ici pour éditer les données de l'action" arrow>
-                                                    <Button variant="contained" color="primary">
+                                                    <Button
+                                                        variant="contained"
+                                                        color="primary"
+                                                        onClick={() => handleEdit(addaction._id)}
+                                                    >
                                                         <EditIcon />
                                                     </Button>
                                                 </Tooltip>
