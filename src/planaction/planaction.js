@@ -1,46 +1,27 @@
-import axios from 'axios';
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import axios from 'axios';
 import { useForm } from 'react-hook-form';
-import { useLocation, Link, useNavigate } from 'react-router-dom';
-import '../pageFormulaire/formulaire.css';
-import config from '../config.json';
+import { useLocation, Link } from 'react-router-dom';
 import {
-    Table,
-    TableBody,
-    TableCell,
-    TableContainer,
-    TableHead,
-    TableRow,
-    Button,
-    Checkbox,
-    Grid,
-    LinearProgress,
-    TextField,
-    Tooltip,
-    Card,
-    CardContent,
-    Typography,
-    FormControl,
-    InputLabel,
-    Select,
-    MenuItem,
-    ListItemText,
-    OutlinedInput
+    Table, TableBody, TableCell, TableContainer, TableHead, TableRow,
+    Button, Checkbox, Grid, LinearProgress, TextField, Tooltip,
+    Card, CardContent, Typography, FormControl, InputLabel, Select,
+    MenuItem, ListItemText, OutlinedInput
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
-import { confirmAlert } from 'react-confirm-alert';
-import 'react-confirm-alert/src/react-confirm-alert.css';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import GetAppIcon from '@mui/icons-material/GetApp';
 import SearchIcon from '@mui/icons-material/Search';
 import InputAdornment from '@mui/material/InputAdornment';
-import { useUserConnected } from '../Hook/userConnected';
-import CustomSnackbar from '../_composants/CustomSnackbar';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
+import { confirmAlert } from 'react-confirm-alert';
+import 'react-confirm-alert/src/react-confirm-alert.css';
+import '../pageFormulaire/formulaire.css';
+import config from '../config.json';
+import { useUserConnected } from '../Hook/userConnected';
 import { handleExportDataAction } from '../Model/excelGenerator.js';
-import AddIcon from '@mui/icons-material/Add';
-import TextFieldP from '../_composants/textFieldP';
+
 const apiUrl = config.apiUrl;
 
 // Extraction du composant de statistiques dans un composant mémorisé
@@ -65,6 +46,12 @@ const EnterpriseStats = React.memo(({ actions }) => {
 
     const getCardStyle = useCallback((completed, total) => {
         const completionRate = (completed / total) * 100;
+/**
+ * Determines the color based on the completion rate.
+ * 
+ * @param {number} rate - The completion rate to determine the color for.
+ * @returns {string} - The color code based on the completion rate.
+ */
         const getColorByCompletion = (rate) => {
             if (rate === 100) return '#90EE90';
             if (rate >= 75) return '#B7E4B7';
@@ -179,18 +166,16 @@ const EnterpriseStats = React.memo(({ actions }) => {
 export default function PlanAction({ accidentData }) {
     const [users, setAddactions] = useState([]);
     const [loading, setLoading] = useState(true);
-    const { setValue, watch, handleSubmit } = useForm();
+    const { handleSubmit } = useForm();
     const location = useLocation();
     const isFileUploadIcon = location.pathname === '/fichierdllaction';
     const [searchTerm, setSearchTerm] = useState('');
     const [enterprises, setEntreprises] = useState([]);
     const [allSectors, setAllSectors] = useState([]);
     const [availableSectors, setAvailableSectors] = useState([]);
-    const { isAdmin, isAdminOuConseiller, userInfo, isConseiller } = useUserConnected();
-    const navigate = useNavigate();
-    const currentYear = new Date().getFullYear().toString(); // Obtenir l'année courante
-    const [selectedYear, setSelectedYear] = useState(null);
-    const [selectedYears, setSelectedYears] = useState([currentYear]); // Renommer et initialiser avec un tableau
+    const { isAdmin, userInfo } = useUserConnected();
+    const currentYear = new Date().getFullYear().toString();
+    const [selectedYears, setSelectedYears] = useState([currentYear]);
     const [availableYears, setAvailableYears] = useState([]);
     const [snackbar, setSnackbar] = useState({
         open: false,
@@ -198,26 +183,19 @@ export default function PlanAction({ accidentData }) {
         severity: 'info',
     });
 
-    // Extraire les années uniques des actions et définir l'année courante par défaut
-    useEffect(() => {
-        const years = [...new Set(users.map(action => action.AddActionanne))].filter(Boolean).sort();
-
-        // Si l'année courante n'est pas dans la liste des années disponibles, l'ajouter
-        if (!years.includes(currentYear)) {
-            years.push(currentYear);
-        }
-
-        setAvailableYears(years.sort());
-
-        // Définir l'année courante comme valeur par défaut si aucune année n'est sélectionnée
-        if (selectedYears.length === 0) {
-            setSelectedYears([currentYear]);
-        }
-    }, [users, currentYear]);
-
-
-
-
+ /**
+     * Formatte une date en string au format jj-mm-aaaa
+     * @param {string} dateString - La date à formatter
+     * @returns {string} La date formatée
+     */
+    const formatDate = (dateString) => {
+        if (!dateString) return '';
+        const date = new Date(dateString);
+        const day = date.getDate().toString().padStart(2, '0');
+        const month = (date.getMonth() + 1).toString().padStart(2, '0');
+        const year = date.getFullYear();
+        return `${day}-${month}-${year}`;
+    };
 
     const showSnackbar = useCallback((message, severity = 'info') => {
         setSnackbar({ open: true, message, severity });
@@ -263,66 +241,49 @@ export default function PlanAction({ accidentData }) {
         fetchData();
     }, [fetchData]);
 
+    useEffect(() => {
+        const years = [...new Set(users.map(action => action.AddActionanne))].filter(Boolean).sort();
+        if (!years.includes(currentYear)) {
+            years.push(currentYear);
+        }
+        setAvailableYears(years.sort());
+        if (selectedYears.length === 0) {
+            setSelectedYears([currentYear]);
+        }
+    }, [users, currentYear, selectedYears]);
+
     const filteredUsers = useMemo(() => {
         let filtered = users;
-
-        // Filtre par années si des années sont sélectionnées
         if (selectedYears.length > 0) {
             filtered = filtered.filter(action => selectedYears.includes(action.AddActionanne));
         }
-
-        // Filtre existant par terme de recherche
         if (searchTerm) {
-            filtered = filtered.filter(addaction => {
-                const searchTermLower = searchTerm.toLowerCase();
-                return (
-                    (addaction.AddActionEntreprise?.toLowerCase().includes(searchTermLower)) ||
-                    (addaction.AddActionDate?.toLowerCase().includes(searchTermLower)) ||
-                    (addaction.AddActionSecteur?.toLowerCase().includes(searchTermLower)) ||
-                    (addaction.AddAction?.toLowerCase().includes(searchTermLower)) ||
-                    (addaction.AddActionQui?.toLowerCase().includes(searchTermLower)) ||
-                    (addaction.AddActoinmoi?.toLowerCase().includes(searchTermLower)) ||
-                    (addaction.AddActionDange?.toLowerCase().includes(searchTermLower)) ||
-                    (addaction.AddActionanne?.toLowerCase().includes(searchTermLower))
-                );
-            });
+            const searchTermLower = searchTerm.toLowerCase();
+            filtered = filtered.filter(addaction => 
+                ['AddActionEntreprise', 'AddActionDate', 'AddActionSecteur', 'AddAction', 'AddActionQui', 'AddActoinmoi', 'AddActionDange', 'AddActionanne']
+                    .some(field => addaction[field]?.toLowerCase().includes(searchTermLower))
+            );
         }
-
         return filtered;
     }, [users, searchTerm, selectedYears]);
 
-
-    /**
-     * Supprime une action
-     * 
-     * @param {string} userIdToDelete id de l'action à supprimer
-     * 
-     * @returns {Promise} La promesse de suppression
-     */
-    const handleDelete = (userIdToDelete) => {
+    const handleDelete = useCallback((userIdToDelete) => {
         axios.delete(`http://${apiUrl}:3100/api/planaction/${userIdToDelete}`)
             .then(response => {
                 if (response.status === 204 || response.status === 200) {
-                    console.log('Utilisateur supprimé avec succès');
                     setAddactions(prevAddactions => prevAddactions.filter(addaction => addaction._id !== userIdToDelete));
                     showSnackbar('Action supprimée avec succès', 'success');
                 } else {
-                    console.log('Erreur lors de la suppression de l\'utilisateur, code d erreur : ' + response.status + ' ' + response.statusText);
                     showSnackbar(`Erreur lors de la suppression de l'action: ${response.status} ${response.statusText}`, 'error');
                 }
             })
             .catch(error => {
-                console.log(error);
+                console.error(error);
                 showSnackbar('Erreur lors de la suppression de l\'action', 'error');
             });
-    };
+    }, [showSnackbar]);
 
-
-    /**
-     * Rafraichi la liste des actions
-     * @function
-     */
-    const refreshListAccidents = () => {
+    const refreshListAccidents = useCallback(() => {
         setLoading(true);
         axios.get(`http://${apiUrl}:3100/api/planaction`)
             .then(response => {
@@ -336,119 +297,85 @@ export default function PlanAction({ accidentData }) {
             .finally(() => {
                 setLoading(false);
             });
-    };
+    }, [showSnackbar]);
 
-
-    const getLinkedSecteurs = (entrepriseId) => {
-        if (!entrepriseId) return []; // Retourne un tableau vide si aucune entreprise n'est sélectionnée
+    const getLinkedSecteurs = useCallback((entrepriseId) => {
+        if (!entrepriseId) return [];
         return allSectors
-            .filter(s => s.entrepriseId === entrepriseId)  // Filtrer par l'ID de l'entreprise
-            .map(s => s.secteurName);  // Retourner uniquement les noms des secteurs
-    };
+            .filter(s => s.entrepriseId === entrepriseId)
+            .map(s => s.secteurName);
+    }, [allSectors]);
 
-    // Filtrer les secteurs en fonction de l'entreprise sélectionnée
-
-
-    if (loading) {
-        return <LinearProgress color="success" />;
-    }
-
-    //vouleur des ligne du tableau, change en vert quand checkbox = true
-    const getRowColor = (isChecked, index) => {
+    const getRowColor = useCallback((isChecked, index) => {
         if (isChecked) {
-            return '#90EE90'; // Vert clair quand la checkbox est cochée
+            return '#90EE90';
         }
         const baseColors = ['#e62a5625', '#95519b25'];
         return baseColors[index % baseColors.length];
-    };
+    }, []);
 
-    /**
-     * Envoie les données du formulaire pour enregistrer une action
-     * @param {Object} data Données du formulaire
-     * @returns {Promise} La promesse de création
-     */
-    const onSubmit = (data) => {
-        console.log("Formulaire.js -> onSubmit -> Données à enregistrer :", data);
-
+    const onSubmit = useCallback((data) => {
         axios.put(`http://${apiUrl}:3100/api/planaction`, data)
             .then(response => {
-                console.log('Réponse du serveur en création :', response.data);
                 showSnackbar('Action en cours d\'enregistrement', 'success');
                 setTimeout(() => showSnackbar('Action enregistrée avec succès', 'success'), 1000);
-                setTimeout(() => window.location.reload(), 2000); // Actualise la page au lieu de navigate
+                setTimeout(() => window.location.reload(), 2000);
             })
             .catch(error => {
                 console.error('Erreur de requête:', error.message);
                 showSnackbar('Erreur lors de la création de l\'action', 'error');
             });
-    };
+    }, [showSnackbar]);
 
     const userEnterprise = userInfo?.entreprisesConseillerPrevention || [];
 
-    /**
-     * Determine if the user can view the given action
-     * @param {Object} action The action to check
-     * @returns {Boolean} True if the user can view the action, false otherwise
-     * @description
-     * The user can view the action if they are an admin or if the action's AddActionEntreprise is in the user's entreprisesConseillerPrevention.
-     */
-    const canViewAction = (action) => {
+    const canViewAction = useCallback((action) => {
         if (isAdmin) {
-            return true; // Admin can view all actions
+            return true;
         } else {
-            return userEnterprise.includes(action.AddActionEntreprise); // Regular user can view actions of their enterprise
+            return userEnterprise.includes(action.AddActionEntreprise);
         }
-    };
+    }, [isAdmin, userEnterprise]);
 
-    /**
-     * Handle the export functionality by filtering the data based on user permissions, selected years, and search term.
-     * @returns {void}
-     */
-    const handleExport = () => {
-        // Commencer avec tous les utilisateurs
-        let dataToExport = users;
-
-        // Filtre pour les non-admins (entreprises spécifiques)
-        if (!isAdmin) {
-            dataToExport = dataToExport.filter(action =>
-                userInfo.entreprisesConseillerPrevention?.includes(action.AddActionEntreprise)
-            );
-        }
-
-        // Filtre par années si des années sont sélectionnées
-        if (selectedYears && selectedYears.length > 0) {
-            dataToExport = dataToExport.filter(action =>
-                selectedYears.includes(action.AddActionanne)
-            );
-        }
-
-        // Filtre par terme de recherche s'il est défini
-        if (searchTerm) {
-            const searchTermLower = searchTerm.toLowerCase();
-            dataToExport = dataToExport.filter(addaction => {
-                return (
-                    (addaction.AddActionEntreprise?.toLowerCase().includes(searchTermLower)) ||
-                    (addaction.AddActionDate?.toLowerCase().includes(searchTermLower)) ||
-                    (addaction.AddActionSecteur?.toLowerCase().includes(searchTermLower)) ||
-                    (addaction.AddAction?.toLowerCase().includes(searchTermLower)) ||
-                    (addaction.AddActionQui?.toLowerCase().includes(searchTermLower)) ||
-                    (addaction.AddActoinmoi?.toLowerCase().includes(searchTermLower)) ||
-                    (addaction.AddActionDange?.toLowerCase().includes(searchTermLower)) ||
-                    (addaction.AddActionanne?.toLowerCase().includes(searchTermLower))
+    const handleExport = useCallback(async () => {
+        try {
+            let dataToExport = users;
+            
+            if (!isAdmin) {
+                dataToExport = dataToExport.filter(action =>
+                    userInfo.entreprisesConseillerPrevention?.includes(action.AddActionEntreprise)
                 );
-            });
+            }
+            
+            if (selectedYears && selectedYears.length > 0) {
+                dataToExport = dataToExport.filter(action =>
+                    selectedYears.includes(action.AddActionanne)
+                );
+            }
+            
+            if (searchTerm) {
+                const searchTermLower = searchTerm.toLowerCase();
+                dataToExport = dataToExport.filter(addaction => 
+                    ['AddActionEntreprise', 'AddActionDate', 'AddActionSecteur', 'AddAction', 'AddActionQui', 'AddActoinmoi', 'AddActionDange', 'AddActionanne']
+                        .some(field => addaction[field]?.toLowerCase().includes(searchTermLower))
+                );
+            }
+            
+            await handleExportDataAction(dataToExport);
+            showSnackbar('Exportation des données réussie', 'success');
+        } catch (error) {
+            console.error('Erreur lors de l\'exportation des données:', error);
+            showSnackbar('Erreur lors de l\'exportation des données', 'error');
         }
+    }, [users, isAdmin, userInfo, selectedYears, searchTerm, showSnackbar]);
 
-        console.log("Données à exporter:", dataToExport);
-        handleExportDataAction(dataToExport);
-    };
-    //compte le nombre d'action par entreprise 
-
-    // Ajoutez cette fonction de tri juste avant le return de PlanAction
-    const sortByYear = (a, b) => {
+    const sortByYear = useCallback((a, b) => {
         return parseInt(a.AddActionanne) - parseInt(b.AddActionanne);
-    };
+    }, []);
 
+    if (loading) {
+        return <LinearProgress color="success" />;
+    }
 
     return (
         <form className="background-image" onSubmit={handleSubmit(onSubmit)}>
@@ -598,7 +525,7 @@ export default function PlanAction({ accidentData }) {
                                             <TableCell>{addaction.AddActionSecteur}</TableCell>
                                             <TableCell>{addaction.AddAction}</TableCell>
                                             <TableCell>{addaction.AddActionDange}</TableCell>
-                                            <TableCell>{addaction.AddActionDate}</TableCell>
+                                            <TableCell>{formatDate(addaction.AddActionDate)}</TableCell>
                                             <TableCell>{addaction.AddActionQui}</TableCell>
                                             <TableCell style={{ padding: 0, width: '70px' }}>
                                                 <Tooltip title="Cliquez ici pour éditer les données de l'action" arrow>
@@ -618,6 +545,15 @@ export default function PlanAction({ accidentData }) {
                                                 <Tooltip title="Cliquez ici pour supprimer l'action" arrow>
                                                     <Button variant="contained" color="error" onClick={() => {
                                                         confirmAlert({
+                                                            /**
+                                                             * Boîte de dialogue personnalisée pour demander confirmation de suppression de l'action
+                                                             * @param {{ onClose: () => void }} props - Fonction pour fermer la boîte de dialogue
+                                                             * @returns {JSX.Element} Le JSX Element qui contient la boîte de dialogue personnalisée
+                                                             * La boîte de dialogue contient un titre, un message de confirmation et deux boutons : "Oui" et "Non".
+                                                             * Lorsque le bouton "Oui" est cliqué, la fonction handleDelete est appelée
+                                                             * avec l'id de l'action à supprimer, et la fonction onClose est appelée pour fermer la boîte de dialogue.
+                                                             * Lorsque le bouton "Non" est cliqué, la fonction onClose est appelée pour fermer la boîte de dialogue.
+                                                             */
                                                             customUI: ({ onClose }) => (
                                                                 <div className="custom-confirm-dialog">
                                                                     <h1 className="custom-confirm-title">Supprimer</h1>

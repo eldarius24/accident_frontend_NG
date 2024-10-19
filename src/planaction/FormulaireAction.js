@@ -39,14 +39,14 @@ export default function PlanAction({ accidentData }) {
     const location = useLocation();
     const [enterprises, setEntreprises] = useState([]);
     const [allSectors, setAllSectors] = useState([]);
-    const [availableSectors, setAvailableSectors] = useState([]);
     const { isAdmin, isAdminOuConseiller, userInfo, isConseiller } = useUserConnected();
     const navigate = useNavigate();
     const [AddAction, setAddAction] = useState(watch('AddAction') || (accidentData && accidentData.AddAction) || '');
     const [AddActionDate, setAddActionDate] = useState(watch('AddActionDate') || (accidentData && accidentData.AddActionDate) || null);
     const [AddActionQui, setAddActionQui] = useState(watch('AddActionQui') || (accidentData && accidentData.AddActionQui) || '');
-    const [AddActionSecteur, setAddActionSecteur] = useState(watch('AddActionSecteur') || (accidentData && accidentData.AddActionSecteur) || null);
     const [AddActionEntreprise, setAddActionEntreprise] = useState(watch('AddActionEntreprise') || (accidentData && accidentData.AddActionEntreprise) || null);
+    const [AddActionSecteur, setAddActionSecteur] = useState(watch('AddActionSecteur') || (accidentData && accidentData.AddActionSecteur) || null);
+    const [availableSectors, setAvailableSectors] = useState([]);
     const [AddboolStatus, setAddboolStatus] = useState(watch('AddboolStatus') || (accidentData && accidentData.AddboolStatus) || false);
     const [AddActionDange, setAddActionDange] = useState(watch('AddActionDange') || (accidentData && accidentData.AddActionDange) || '');
     const [AddActionanne, setAddActionanne] = useState(watch('AddActionanne') || (accidentData && accidentData.AddActionanne) || '');
@@ -164,13 +164,20 @@ export default function PlanAction({ accidentData }) {
      * based on the selected enterprise.
      */
     const handleEnterpriseSelect = (entrepriseSelect) => {
-        const selectedEnterprise = enterprises.find(e => e.label === entrepriseSelect);  // Assurez-vous de comparer avec le label
+        const selectedEnterprise = enterprises.find(e => e.label === entrepriseSelect);
         if (selectedEnterprise) {
             setAddActionEntreprise(selectedEnterprise.label);
-            setAddActionSecteur(''); // Réinitialisez la sélection de secteur
-            setAvailableSectors(getLinkedSecteurs(selectedEnterprise.id)); // Mettez à jour les secteurs disponibles en fonction de l'entreprise
+            setAddActionSecteur(''); // Réinitialiser le secteur quand l'entreprise change
+            setValue('AddActionSecteur', '');
+            setAvailableSectors(getLinkedSecteurs(selectedEnterprise.id));
+        } else {
+            setAddActionEntreprise(null);
+            setAddActionSecteur('');
+            setValue('AddActionSecteur', '');
+            setAvailableSectors([]);
         }
     };
+
 
 /**
  * Retrieves the list of sector names linked to a specified enterprise.
@@ -179,12 +186,12 @@ export default function PlanAction({ accidentData }) {
  * @returns {Array<string>} An array of sector names associated with the given enterprise ID.
  *                          Returns an empty array if no enterprise is selected or if there are no linked sectors.
  */
-    const getLinkedSecteurs = (entrepriseId) => {
-        if (!entrepriseId) return []; // Retourne un tableau vide si aucune entreprise n'est sélectionnée
-        return allSectors
-            .filter(s => s.entrepriseId === entrepriseId)  // Filtrer par l'ID de l'entreprise
-            .map(s => s.secteurName);  // Retourner uniquement les noms des secteurs
-    };
+const getLinkedSecteurs = (entrepriseId) => {
+    if (!entrepriseId) return [];
+    return allSectors
+        .filter(s => s.entrepriseId === entrepriseId)
+        .map(s => s.secteurName);
+};
 
     // Filtrer les secteurs en fonction de l'entreprise sélectionnée
     useEffect(() => {
@@ -264,12 +271,17 @@ export default function PlanAction({ accidentData }) {
             />
             <AutoCompleteQ
                 id='AddActionSecteur'
-                option={availableSectors}  // Utilisez la liste des secteurs filtrés
+                option={AddActionEntreprise ? availableSectors : ['No options']}
                 label="L'action vise le secteur"
-                onChange={setAddActionSecteur}
+                onChange={(sector) => {
+                    if (sector !== 'No options') {
+                        setAddActionSecteur(sector);
+                        setValue('AddActionSecteur', sector);
+                    }
+                }}
                 Value={AddActionSecteur}
                 disabled={!AddActionEntreprise}
-                required={true}  // Désactivez si aucune entreprise n'est sélectionnée
+                required={true}
             />
             <TextFieldQ id='AddAction' label="Quel action a jouter" onChange={setAddAction} defaultValue={AddAction} required={true}></TextFieldQ>
             <DatePickerQ id='AddActionDate' label="Date de l'ajout de l'action" onChange={setAddActionDate} defaultValue={AddActionDate} required={true}></DatePickerQ>
@@ -282,7 +294,7 @@ export default function PlanAction({ accidentData }) {
                 onChange={(AddActionDangeSelect) => {
                     setAddActionDange(AddActionDangeSelect);
                     setValue('AddActionDange', AddActionDangeSelect);
-                }} defaultValue={AddActionDange}
+                }} Value={AddActionDange}
                 required={true}
             />
 

@@ -172,8 +172,8 @@ export default function FormulaireEntreprise({ setValue, accidentData, watch }) 
               option={listAccident.typeAccident} // Assurez-vous que listAccident.typeAccident est correctement défini
               label='Type d accident'
               required={true}
-              onChange={(value) => setTypeAccident(value)} // Assurez-vous que setFormData gère correctement les changements
-              defaultValue={watch('typeAccident') ?? (formData?.typeAccident ?? '')}
+              onChange={setTypeAccident} // Assurez-vous que setFormData gère correctement les changements
+              defaultValue={typeAccident}
             />
             <DateHeurePickerQ id="DateHeureAccident" label="Date et heure de l'accident" required={true} onChange={(DateHeureAccidentChoose) => {
               setDateHeureAccident(DateHeureAccidentChoose);
