@@ -1,34 +1,61 @@
 import React from 'react';
 import './formulaire.css';
 import {Tooltip} from '@mui/material';
-
+import { useTheme } from '../pageAdmin/user/ThemeContext';
 const NatureLesion = () => {
-return (
-    <div className="max-w-7xl mx-auto p-6 bg-gray-100">
-      <h1 className="text-3xl font-bold text-center mb-8 text-blue-800">Liste des Natures de Lésions</h1>
-      <div className="space-y-6">
-        {categories.map((category) => (
-          <div key={category.id} className="bg-white rounded-lg shadow-md overflow-hidden">
-            <h2 className="text-xl font-semibold bg-blue-600 text-white p-4">
-              {category.id} - {category.title}
-            </h2>
-            <ul className="divide-y divide-gray-200">
-              {category.items.map((item) => (
-                <li key={item.id} className="p-4 hover:bg-gray-50">
-                  <span className="font-medium text-blue-700">{item.id}</span> - {item.title}
-                </li>
-              ))}
-            </ul>
-          </div>
-        ))}
+    const { darkMode } = useTheme();
+  
+    const darkModeStyles = {
+      backgroundColor: darkMode ? '#1a1a1a' : '#f3f4f6',
+      color: darkMode ? '#ffffff' : '#1f2937',
+    };
+  
+    const cardStyles = {
+      backgroundColor: darkMode ? '#2a2a2a' : '#ffffff',
+      color: darkMode ? '#ffffff' : '#1f2937',
+    };
+  
+    const headerStyles = {
+      backgroundColor: darkMode ? '#4a5568' : '#3b82f6',
+      color: '#ffffff',
+    };
+  
+    const itemStyles = {
+      '&:hover': {
+        backgroundColor: darkMode ? '#3a3a3a' : '#f3f4f6',
+      },
+    };
+  
+    return (
+      <div className="max-w-7xl mx-auto p-6" style={darkModeStyles}>
+        <h1 className="text-3xl font-bold text-center mb-8" style={{ color: darkMode ? '#60a5fa' : '#1e40af' }}>
+          Liste des Agents Matériels
+        </h1>
+        <div className="space-y-6">
+          {categories.map((category) => (
+            <div key={category.id} className="rounded-lg shadow-md overflow-hidden" style={cardStyles}>
+              <h2 className="text-xl font-semibold p-4" style={headerStyles}>
+                {category.id} - {category.title}
+              </h2>
+              <ul className="divide-y divide-gray-200">
+                {category.items.map((item) => (
+                  <li key={item.id} className="p-4" style={itemStyles}>
+                    <span className="font-medium" style={{ color: darkMode ? '#60a5fa' : '#2563eb' }}>{item.id}</span> - {item.title}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+        <div className="image-cortigroupe"></div>
+        <Tooltip title="Si vous rencontrez un souci avec le site, envoyer un mail à l'adresse suivante : bgillet.lecortil@cortigroupe.be et expliquer le soucis rencontré" arrow>
+          <h5 style={{ marginBottom: '40px', color: darkMode ? '#9ca3af' : '#4b5563' }}>
+            Développé par Remy et Benoit pour Le Cortigroupe. Support: bgillet.lecortil@cortigroupe.be
+          </h5>
+        </Tooltip>
       </div>
-      <div className="image-cortigroupe"></div>
-            <Tooltip title="Si vous rencontrez un souci avec le site, envoyer un mail à l'adresse suivante : bgillet.lecortil@cortigroupe.be et expliquer le soucis rencontré" arrow>
-                <h5 style={{ marginBottom: '40px' }}> Développé par Remy et Benoit pour Le Cortigroupe. Support: bgillet.lecortil@cortigroupe.be</h5>
-            </Tooltip>
-    </div>
-  );
-};
+    );
+  };
 const categories = [
     {
         id: '00',

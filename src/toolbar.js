@@ -49,7 +49,7 @@ function ResponsiveAppBar() {
     isaddEntrprise: location.pathname === '/addEntreprise',
     isadminEntreprises: location.pathname === '/adminEntreprises',
     isAddSecteur: location.pathname === '/addSecteur',
-    isHiddenPage: ['/deviation', '/agentmateriel', '/naturelesion', '/siegelesion'].includes(location.pathname),
+    isHiddenPage: [].includes(location.pathname),
   }), [location.pathname]);
 
   const buttonStyle = {
