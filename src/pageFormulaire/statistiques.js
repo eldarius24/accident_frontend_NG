@@ -354,8 +354,8 @@ const Statistiques = () => {
   const isAllSectorsSelected = selectedSectors.length === sectors.length;
   return (
     <div className="col-span-full" style={{ margin: '20px' }}>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px', gap: '10px' }}>
-        <FormControl sx={{ width: '30%', minWidth: '200px' }}>
+      <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: '10px', marginBottom: '20px' }}>
+        <FormControl sx={{ width: 'calc(33.33% - 7px)', minWidth: '200px' }}>
           <InputLabel id="accident-types-label">Type d'accident</InputLabel>
           <Select
             sx={{ backgroundColor: '#ee742d59' }}
@@ -381,7 +381,7 @@ const Statistiques = () => {
             ))}
           </Select>
         </FormControl>
-        <FormControl sx={{ width: '30%', minWidth: '200px' }}>
+        <FormControl sx={{ width: 'calc(33.33% - 7px)', minWidth: '200px' }}>
           <InputLabel id="assureur-status-label">Statut Assureur</InputLabel>
           <Select
             sx={{ backgroundColor: '#ee742d59' }}
@@ -407,8 +407,7 @@ const Statistiques = () => {
             ))}
           </Select>
         </FormControl>
-
-        <FormControl sx={{ width: '30%', minWidth: '200px' }}>
+        <FormControl sx={{ width: 'calc(33.33% - 7px)', minWidth: '200px' }}>
           <InputLabel id="years-label">Année</InputLabel>
           <Select
             sx={{ backgroundColor: '#ee742d59' }}
@@ -434,8 +433,7 @@ const Statistiques = () => {
             ))}
           </Select>
         </FormControl>
-
-        <FormControl sx={{ width: '30%', minWidth: '200px' }}>
+        <FormControl sx={{ width: 'calc(33.33% - 7px)', minWidth: '200px' }}>
           <InputLabel id="graphs-label">Graphiques</InputLabel>
           <Select
             sx={{ backgroundColor: '#ee742d59' }}
@@ -461,8 +459,7 @@ const Statistiques = () => {
             ))}
           </Select>
         </FormControl>
-
-        <FormControl sx={{ width: '30%', minWidth: '200px' }}>
+        <FormControl sx={{ width: 'calc(33.33% - 7px)', minWidth: '200px' }}>
           <InputLabel id="worker-types-label">Type de travailleur</InputLabel>
           <Select
             sx={{ backgroundColor: '#ee742d59' }}
@@ -488,8 +485,7 @@ const Statistiques = () => {
             ))}
           </Select>
         </FormControl>
-
-        <FormControl sx={{ width: 'calc(25% - 15px)', minWidth: '200px' }}>
+        <FormControl sx={{ width: 'calc(33.33% - 7px)', minWidth: '200px' }}>
           <InputLabel id="sectors-label">Secteurs</InputLabel>
           <Select
             sx={{ backgroundColor: '#ee742d59' }}
@@ -515,8 +511,6 @@ const Statistiques = () => {
             ))}
           </Select>
         </FormControl>
-
-
       </Box>
       <div className="flex flex-col items-center justify-center h-full mb-8">
         <h2 className="text-center">Total des accidents</h2>
