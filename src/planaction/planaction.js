@@ -21,7 +21,7 @@ import '../pageFormulaire/formulaire.css';
 import config from '../config.json';
 import { useUserConnected } from '../Hook/userConnected';
 import { handleExportDataAction } from '../Model/excelGenerator.js';
-
+import CustomSnackbar from '../_composants/CustomSnackbar';
 const apiUrl = config.apiUrl;
 
 // Extraction du composant de statistiques dans un composant mémorisé

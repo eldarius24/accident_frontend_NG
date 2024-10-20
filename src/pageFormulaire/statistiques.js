@@ -57,6 +57,9 @@ const Statistiques = () => {
   const [selectedWorkerTypes, setSelectedWorkerTypes] = useState([]);
   const [sectors, setSectors] = useState([]);
   const [selectedSectors, setSelectedSectors] = useState([]);
+  const [assureurStatus, setAssureurStatus] = useState([]);
+  const [selectedAssureurStatus, setSelectedAssureurStatus] = useState([]);
+
 
   useEffect(() => {
 /**
@@ -80,6 +83,9 @@ const Statistiques = () => {
         const extractedSectors = [...new Set(response.data.map(accident => accident.secteur))];
         setSectors(extractedSectors);
         setSelectedSectors(extractedSectors);
+        const uniqueAssureurStatus = [...new Set(response.data.map(accident => accident.AssureurStatus))].filter(Boolean);
+        setAssureurStatus(uniqueAssureurStatus);
+        setSelectedAssureurStatus(uniqueAssureurStatus);
       } catch (error) {
         console.error('Erreur lors de la récupération des données:', error.message);
       }
@@ -94,7 +100,8 @@ const Statistiques = () => {
         const accidentYear = new Date(accident.DateHeureAccident).getFullYear();
         return selectedYears.includes(accidentYear) &&
           selectedWorkerTypes.includes(accident.typeTravailleur) &&
-          selectedSectors.includes(accident.secteur);
+          selectedSectors.includes(accident.secteur) &&
+          selectedAssureurStatus.includes(accident.AssureurStatus);
       });
 
       const newStats = {
@@ -184,7 +191,7 @@ const Statistiques = () => {
 
       setStats(newStats);
     }
-  }, [data, selectedYears, selectedWorkerTypes, selectedSectors]);
+  }, [data, selectedYears, selectedWorkerTypes, selectedSectors, selectedAssureurStatus]);
 
   const [allChecked, setAllChecked] = useState(true);
 /**
@@ -258,6 +265,16 @@ const Statistiques = () => {
     }
   };
 
+  const handleChangeAssureurStatus = (event) => {
+    const value = event.target.value;
+    if (value.includes('all')) {
+      setSelectedAssureurStatus(selectedAssureurStatus.length === assureurStatus.length ? [] : assureurStatus);
+    } else {
+      setSelectedAssureurStatus(value);
+    }
+  };
+
+
   const memoizedChartData = useMemo(() => ({
     accidentsBySexData: Object.entries(stats.accidentsBySex).map(([sexe, NombreAT]) => ({ name: sexe, value: NombreAT })),
     accidentMonthData: Object.entries(stats.accidentsByMonth).map(([month, NombreAT]) => ({ month: MONTHS[parseInt(month)], NombreAT })),
@@ -325,9 +342,35 @@ const Statistiques = () => {
     <div className="col-span-full" style={{ margin: '20px' }}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px', gap: '10px' }}>
         
-          <FormControl sx={{ width: '30%', minWidth: '200px' }}>
-            <InputLabel id="years-label">Année</InputLabel>
+      <FormControl sx={{ width: '30%', minWidth: '200px' }}>
+          <InputLabel id="assureur-status-label">Statut Assureur</InputLabel>
+          <Select
+            sx={{ backgroundColor: '#ee742d59' }}
+            labelId="assureur-status-label"
+            id="assureur-status-select"
+            multiple
+            value={selectedAssureurStatus}
+            onChange={handleChangeAssureurStatus}
+            renderValue={(selected) => `${selected.length} statut(s)`}
+            MenuProps={{
+              PaperProps: { style: { maxHeight: 300, overflow: 'auto' } },
+            }}
+          >
+            <MenuItem value="all" style={{ backgroundColor: '#ee742d59' }}>
+              <Checkbox checked={selectedAssureurStatus.length === assureurStatus.length} style={{ color: 'red' }} />
+              <ListItemText primary="Sélectionner tout" />
+            </MenuItem>
+            {assureurStatus.map((status) => (
+              <MenuItem key={status} value={status} style={{ backgroundColor: '#ee742d59' }}>
+                <Checkbox checked={selectedAssureurStatus.includes(status)} style={{ color: '#257525' }} />
+                <ListItemText primary={status} />
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
 
+        <FormControl sx={{ width: '30%', minWidth: '200px' }}>
+            <InputLabel id="years-label">Année</InputLabel>
             <Select
               sx={{ backgroundColor: '#ee742d59' }}
               labelId="years-label"
