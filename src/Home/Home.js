@@ -217,7 +217,7 @@ function Home() {
                     <Grid item xs={6} md={2}>
                         <Tooltip title="Cliquez ici pour actualiser le tableau des accidents du travails" arrow>
                             <Button
-                                sx={{ color: 'black', padding: '15px', width: '100%', backgroundColor: '#ee752d60', '&:hover': { backgroundColor: '#95ad22' }, boxShadow: 3, textTransform: 'none' }}
+                                sx={{ color: 'black', padding: '15px', width: '100%', backgroundColor: '#ee752d60', transition: 'all 0.3s ease-in-out', '&:hover': { backgroundColor: '#95ad22', transform: 'scale(1.08)', boxShadow: 6 }, boxShadow: 3, textTransform: 'none' }}
                                 variant="contained"
                                 color="secondary"
                                 onClick={refreshListAccidents}
@@ -282,7 +282,7 @@ function Home() {
                             <Grid item xs={6} md={3}>
                                 <Tooltip title="Cliquez ici pour exporter les données Accident en fonction des filtres sélèctionnes en excel" arrow>
                                     <Button
-                                        sx={{ color: 'black', padding: '15px', width: '100%', backgroundColor: '#ee752d60', '&:hover': { backgroundColor: '#95ad22' }, boxShadow: 3, textTransform: 'none' }}
+                                        sx={{ color: 'black', padding: '15px', width: '100%', backgroundColor: '#ee752d60', transition: 'all 0.3s ease-in-out', '&:hover': { backgroundColor: '#95ad22', transform: 'scale(1.08)', boxShadow: 6 }, boxShadow: 3, textTransform: 'none' }}
                                         variant="contained"
                                         color="primary"
                                         onClick={handleExportDataAccident}
@@ -295,7 +295,7 @@ function Home() {
                             <Grid item xs={6} md={3}>
                                 <Tooltip title="Cliquez ici pour exporter les données Assurance en fonction des filtres sélèctionnes en excel" arrow>
                                     <Button
-                                        sx={{ color: 'black', padding: '15px', width: '100%', backgroundColor: '#ee752d60', '&:hover': { backgroundColor: '#95ad22' }, boxShadow: 3, textTransform: 'none' }}
+                                        sx={{ color: 'black', padding: '15px', width: '100%', backgroundColor: '#ee752d60', transition: 'all 0.3s ease-in-out', '&:hover': { backgroundColor: '#95ad22', transform: 'scale(1.08)', boxShadow: 6 }, boxShadow: 3, textTransform: 'none' }}
                                         variant="contained"
                                         color="primary"
                                         onClick={handleExportDataAssurance}
@@ -339,16 +339,28 @@ function Home() {
                                         <TableCell style={{ padding: 0 }}>
                                             {(isAdmin || (isConseiller && isConseillerPrevention(item.entrepriseName))) ? (
                                                 <Tooltip title="Cliquez ici pour éditer les données de l'accident" arrow>
-                                                    <Button variant="contained" color="primary" onClick={() => handleEdit(item._id)}>
+                                                    <Button sx={{
+                                                        transition: 'all 0.3s ease-in-out',
+                                                        '&:hover': {
+                                                            transform: 'scale(1.08)',
+                                                            boxShadow: 6
+                                                        }
+                                                    }} variant="contained" color="primary" onClick={() => handleEdit(item._id)}>
                                                         <EditIcon />
-                                                    </Button>
+                                                    </Button >
                                                 </Tooltip>
                                             ) : null}
                                         </TableCell>
                                         <TableCell style={{ padding: 0 }}>
                                             {(isAdmin || (isConseiller && isConseillerPrevention(item.entrepriseName))) ? (
                                                 <Tooltip title="Cliquez ici pour ajouter des fichiers a l'accident" arrow>
-                                                    <Button variant="contained" color="secondary" onClick={() => navigate("/fichierdll", { state: item._id })}>
+                                                    <Button sx={{
+                                                        transition: 'all 0.3s ease-in-out',
+                                                        '&:hover': {
+                                                            transform: 'scale(1.08)',
+                                                            boxShadow: 6
+                                                        }
+                                                    }} variant="contained" color="secondary" onClick={() => navigate("/fichierdll", { state: item._id })}>
                                                         <GetAppIcon />
                                                     </Button>
                                                 </Tooltip>
@@ -357,44 +369,56 @@ function Home() {
                                         <TableCell style={{ padding: 0 }}>
                                             {(isAdmin || (isConseiller && isConseillerPrevention(item.entrepriseName))) ? (
                                                 <Tooltip title="Cliquez ici pour générer la déclaration d'accident Belfius si vous avez remplis tous les champs du formulaire" arrow>
-                                                    <Button variant="contained" color="success" onClick={() => handleGeneratePDF(item._id)}>
+                                                    <Button sx={{
+                                                        transition: 'all 0.3s ease-in-out',
+                                                        '&:hover': {
+                                                            transform: 'scale(1.08)',
+                                                            boxShadow: 6
+                                                        }
+                                                    }} variant="contained" color="success" onClick={() => handleGeneratePDF(item._id)}>
                                                         <PictureAsPdfIcon />
                                                     </Button>
                                                 </Tooltip>
                                             ) : null}
                                         </TableCell>
                                         <TableCell style={{ padding: 0 }}>
-                                        {(isAdmin || (isConseiller && isConseillerPrevention(item.entrepriseName))) ? (
-                                            <Tooltip title="Cliquez ici pour supprimer l'accident" arrow>
-                                                <Button
-                                                    variant="contained"
-                                                    color="error"
-                                                    onClick={() => {
-                                                        confirmAlert({
-                                                            customUI: ({ onClose }) => (
-                                                                <div className="custom-confirm-dialog">
-                                                                    <h1 className="custom-confirm-title">Supprimer</h1>
-                                                                    <p className="custom-confirm-message">Êtes-vous sûr de vouloir supprimer cet élément?</p>
-                                                                    <div className="custom-confirm-buttons">
-                                                                        <Tooltip title="Cliquez sur OUI pour supprimer" arrow>
-                                                                            <button className="custom-confirm-button" onClick={() => { handleDelete(item._id); onClose(); }}>
-                                                                                Oui
-                                                                            </button>
-                                                                        </Tooltip>
-                                                                        <Tooltip title="Cliquez sur NON pour annuler la suppression" arrow>
-                                                                            <button className="custom-confirm-button custom-confirm-no" onClick={onClose}>
-                                                                                Non
-                                                                            </button>
-                                                                        </Tooltip>
-                                                                    </div>
-                                                                </div>
-                                                            )
-                                                        });
+                                            {(isAdmin || (isConseiller && isConseillerPrevention(item.entrepriseName))) ? (
+                                                <Tooltip title="Cliquez ici pour supprimer l'accident" arrow>
+                                                    <Button sx={{
+                                                        transition: 'all 0.3s ease-in-out',
+                                                        '&:hover': {
+                                                            transform: 'scale(1.08)',
+                                                            boxShadow: 6
+                                                        }
                                                     }}
-                                                >
-                                                    <DeleteForeverIcon />
-                                                </Button>
-                                            </Tooltip>
+                                                        variant="contained"
+                                                        color="error"
+                                                        onClick={() => {
+                                                            confirmAlert({
+                                                                customUI: ({ onClose }) => (
+                                                                    <div className="custom-confirm-dialog">
+                                                                        <h1 className="custom-confirm-title">Supprimer</h1>
+                                                                        <p className="custom-confirm-message">Êtes-vous sûr de vouloir supprimer cet élément?</p>
+                                                                        <div className="custom-confirm-buttons">
+                                                                            <Tooltip title="Cliquez sur OUI pour supprimer" arrow>
+                                                                                <button className="custom-confirm-button" onClick={() => { handleDelete(item._id); onClose(); }}>
+                                                                                    Oui
+                                                                                </button>
+                                                                            </Tooltip>
+                                                                            <Tooltip title="Cliquez sur NON pour annuler la suppression" arrow>
+                                                                                <button className="custom-confirm-button custom-confirm-no" onClick={onClose}>
+                                                                                    Non
+                                                                                </button>
+                                                                            </Tooltip>
+                                                                        </div>
+                                                                    </div>
+                                                                )
+                                                            });
+                                                        }}
+                                                    >
+                                                        <DeleteForeverIcon />
+                                                    </Button>
+                                                </Tooltip>
                                             ) : null}
                                         </TableCell>
                                     </>

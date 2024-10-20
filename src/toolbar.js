@@ -56,12 +56,16 @@ function ResponsiveAppBar() {
   const textStyle = {
     fontFamily: 'monospace',
     fontWeight: 700,
-    letterSpacing: '.3rem',
     color: '#95519b',
     textAlign: 'center',
     flexGrow: 1,
     fontSize: windowWidth > 950 ? '2rem' : windowWidth > 850 ? '1.5rem' : '0.7rem',
     letterSpacing: windowWidth > 950 ? '.3rem' : windowWidth > 850 ? '.1rem' : '.04rem',
+    transition: 'all 0.3s ease-in-out',
+    '&:hover': {
+      transform: 'scale(1.1)',
+      
+    }
   };
 
   if (isHiddenPage || isLoginPage) {
@@ -79,14 +83,22 @@ function ResponsiveAppBar() {
   const renderButton = (to, tooltip, icon, text) => (
     <Tooltip title={tooltip} arrow>
       <Button
-        component={Link}
-        to={to}
-        variant="contained"
-        sx={buttonStyle}
-        startIcon={icon}
-      >
-        {showText && text}
-      </Button>
+  component={Link}
+  to={to}
+  variant="contained"
+  sx={{
+    ...buttonStyle,
+    transition: 'all 0.3s ease-in-out',
+    '&:hover': {
+      backgroundColor: '#95ad22',
+      transform: 'scale(1.08)',
+      boxShadow: 6
+    }
+  }}
+  startIcon={icon}
+>
+  {showText && text}
+</Button>
     </Tooltip>
   );
 

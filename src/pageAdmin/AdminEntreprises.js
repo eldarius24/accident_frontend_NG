@@ -195,14 +195,30 @@ export default function Adminusern() {
                                         <TableCell>{getSecteursByEntreprise(entreprise._id)}</TableCell>
                                         <TableCell style={{ padding: 0, width: '70px' }}>
                                             <Tooltip title="Cliquez ici pour créer un nouveaux secteur pour cette entreprise" arrow>
-                                                <Button type="button" variant="contained" color="secondary" onClick={() => handleAddSecteur(entreprise)}>
+                                                <Button sx={{
+                                                    transition: 'all 0.3s ease-in-out',
+                                                    '&:hover': {
+                                                        transform: 'scale(1.08)',
+                                                        boxShadow: 6
+                                                    }
+                                                }}
+                                                    type="button"
+                                                    variant="contained"
+                                                    color="secondary"
+                                                    onClick={() => handleAddSecteur(entreprise)}>
                                                     <AddRoundedIcon />
                                                 </Button>
                                             </Tooltip>
                                         </TableCell>
                                         <TableCell style={{ padding: 0, width: '70px' }}>
                                             <Tooltip title="Cliquez ici pour éditer cette entreprise" arrow>
-                                                <Button
+                                                <Button sx={{
+                                                    transition: 'all 0.3s ease-in-out',
+                                                    '&:hover': {
+                                                        transform: 'scale(1.08)',
+                                                        boxShadow: 6
+                                                    }
+                                                }}
                                                     variant="contained"
                                                     color="primary"
                                                     onClick={() => handleEdit(entreprise)}
@@ -213,7 +229,13 @@ export default function Adminusern() {
                                         </TableCell>
                                         <TableCell style={{ padding: 0, width: '70px' }}>
                                             <Tooltip title="Cliquez ici pour supprimer cette entreprise" arrow>
-                                                <Button
+                                                <Button sx={{
+                                                    transition: 'all 0.3s ease-in-out',
+                                                    '&:hover': {
+                                                        transform: 'scale(1.08)',
+                                                        boxShadow: 6
+                                                    }
+                                                }}
                                                     variant="contained"
                                                     color="error"
                                                     onClick={() => {

@@ -76,32 +76,85 @@ const Login = () => {
           </Tooltip>
         </div>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col justify-center items-center min-h-20 space-y-4">
-          <TextField {...register('email')} id="outlined-multiline-static" label="Email" className="bg-[#00479871] w-1/2 shadow-md" />
-
+        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col justify-center items-center min-h-20 space-y-4" >
           <TextField
-            {...register('password')}
-            id="outlined-multiline-password"
-            label="Mot de passe"
-            className="bg-[#00479871] w-1/2 shadow-md"
-            type={showPassword ? 'text' : "password"}
-            error={!isPasswordValid}
-            helperText={!isPasswordValid && 'Mot de passe incorrect'}
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton
-                    aria-label="toggle password visibility"
-                    onClick={() => setShowPassword(!showPassword)}
-                  >
-                    {showPassword ? <Visibility /> : <VisibilityOff />}
-                  </IconButton>
-                </InputAdornment>
-              ),
+            {...register('email')}
+            id="outlined-multiline-static"
+            label="Email"
+            className="w-1/2 shadow-md"
+            sx={{
+              '& .MuiOutlinedInput-root': {
+                backgroundColor: '#ee752d60',
+                '& fieldset': {
+                  borderColor: '#ee752d',
+                },
+                '&:hover fieldset': {
+                  borderColor: '#ee752d',
+                },
+                '&.Mui-focused fieldset': {
+                  borderColor: '#ee752d',
+                },
+              },
+              '& .MuiInputBase-input': {
+                '&:-webkit-autofill, &:-webkit-autofill:hover, &:-webkit-autofill:focus': {
+                  '-webkit-box-shadow': '0 0 0 100px #ee752d60 inset',
+                  '-webkit-text-fill-color': 'inherit',
+                },
+              },
             }}
           />
+
+<TextField
+  sx={{
+    '& .MuiOutlinedInput-root': {
+      backgroundColor: '#ee752d60',
+      '& fieldset': {
+        borderColor: '#ee752d',
+      },
+      '&:hover fieldset': {
+        borderColor: '#ee752d',
+      },
+      '&.Mui-focused fieldset': {
+        borderColor: '#ee752d',
+      },
+    },
+    '& .MuiInputBase-input': {
+      '&:-webkit-autofill, &:-webkit-autofill:hover, &:-webkit-autofill:focus': {
+        '-webkit-box-shadow': '0 0 0 100px #ee752d60 inset',
+        '-webkit-text-fill-color': 'inherit',
+      },
+    },
+  }}
+  {...register('password')}
+  id="outlined-multiline-password"
+  label="Mot de passe"
+  className="w-1/2 shadow-md"
+  type={showPassword ? 'text' : "password"}
+  error={!isPasswordValid}
+  helperText={!isPasswordValid && 'Mot de passe incorrect'}
+  InputProps={{
+    endAdornment: (
+      <InputAdornment position="end">
+        <IconButton
+          aria-label="toggle password visibility"
+          onClick={() => setShowPassword(!showPassword)}
+        >
+          {showPassword ? <Visibility /> : <VisibilityOff />}
+        </IconButton>
+      </InputAdornment>
+    ),
+  }}
+/>
           <Tooltip title="Rentrer votre Email et votre mot de passe pour vous connecter. Si vous n'en avez pas faite la demande au support via l'adresse suivante : bgillet.lecortil@cortigroupe.be" arrow>
-            <Button
+            <Button sx={{
+              backgroundColor: '#ee752d60',
+              transition: 'all 0.3s ease-in-out',
+              '&:hover': {
+                backgroundColor: '#95ad22',
+                transform: 'scale(1.08)',
+                boxShadow: 6
+              }
+            }}
               type="submit"
               className="bg-[#00479871] hover:bg-green-950 w-1/2 shadow-md"
             >
@@ -109,12 +162,12 @@ const Login = () => {
             </Button>
           </Tooltip>
           <h6>Pour avoir accès, veuillez le demander au support : bgillet.lecortil@cortigroupe.be </h6>
-          
+
         </form>
         <div className="image-cortigroupe"></div>
-          <Tooltip title="Si vous rencontrez un souci avec le site, envoyer un mail à l'adresse suivante : bgillet.lecortil@cortigroupe.be et expliquer le soucis rencontré" arrow>
-            <h5 style={{ marginBottom: '40px' }}> Développé par Remy et Benoit pour Le Cortigroupe. Support: bgillet.lecortil@cortigroupe.be</h5>
-          </Tooltip>
+        <Tooltip title="Si vous rencontrez un souci avec le site, envoyer un mail à l'adresse suivante : bgillet.lecortil@cortigroupe.be et expliquer le soucis rencontré" arrow>
+          <h5 style={{ marginBottom: '40px' }}> Développé par Remy et Benoit pour Le Cortigroupe. Support: bgillet.lecortil@cortigroupe.be</h5>
+        </Tooltip>
       </div>
 
     </div>

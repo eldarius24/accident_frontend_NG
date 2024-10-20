@@ -107,7 +107,7 @@ export default function Formulaire() {
                         onClick={() => handleStepChange(-1)}
                         sx={{
                             backgroundColor: '#ee752d60',
-                            '&:hover': { backgroundColor: '#95ad22' },
+                            transition: 'all 0.3s ease-in-out', '&:hover': { backgroundColor: '#95ad22', transform: 'scale(1.08)', boxShadow: 6 },
                             padding: '10px 20px',
                             marginRight: '1rem',
                         }}
@@ -123,7 +123,7 @@ export default function Formulaire() {
                         onClick={() => handleStepChange(1)}
                         sx={{
                             backgroundColor: '#ee752d60',
-                            '&:hover': { backgroundColor: '#95ad22' },
+                            transition: 'all 0.3s ease-in-out', '&:hover': { backgroundColor: '#95ad22', transform: 'scale(1.08)', boxShadow: 6 },
                             padding: '10px 20px',
                         }}
                         startIcon={<ArrowForwardIcon />}
@@ -145,19 +145,19 @@ export default function Formulaire() {
 
             <div style={{ display: 'flex', justifyContent: 'center' }}>
                 <Tooltip title="Cliquez ici pour accéder au site FEDRIS afin de voir si votre accident est grave" arrow>
-                    <Button 
-                        target="_blank" 
-                        rel="noopener noreferrer" 
-                        sx={{ 
-                            color: 'black', 
-                            backgroundColor: '#ee752d60', 
-                            '&:hover': { backgroundColor: '#95ad22' }, 
-                            padding: '10px 20px', 
-                            width: '50%', 
-                            marginTop: '1cm', 
-                            height: '300%', 
-                            fontSize: '300%' 
-                        }} 
+                    <Button
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        sx={{
+                            color: 'black',
+                            backgroundColor: '#ee752d60',
+                            transition: 'all 0.3s ease-in-out', '&:hover': { backgroundColor: '#95ad22', transform: 'scale(1.08)', boxShadow: 6 },
+                            padding: '10px 20px',
+                            width: '50%',
+                            marginTop: '1cm',
+                            height: '300%',
+                            fontSize: '300%'
+                        }}
                         href="https://www.socialsecurity.be/app001/drselearning/aoat/aoat000/jsp/index_fatdecision.jsp"
                     >
                         Fedris
@@ -173,7 +173,8 @@ export default function Formulaire() {
                         type="submit"
                         sx={{
                             backgroundColor: '#ee752d60',
-                            '&:hover': { backgroundColor: '#95ad22' },
+                            transition: 'all 0.3s ease-in-out',
+                            '&:hover': { backgroundColor: '#95ad22', transform: 'scale(1.08)', boxShadow: 6 },
                             padding: '10px 20px',
                             width: '50%',
                             marginTop: '1cm',

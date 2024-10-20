@@ -258,7 +258,8 @@ export default function FormulaireAction() {
                         type="submit"
                         sx={{
                             backgroundColor: '#ee752d60',
-                            '&:hover': { backgroundColor: '#95ad22' },
+                            transition: 'all 0.3s ease-in-out',
+                             '&:hover': {backgroundColor: '#95ad22' ,transform: 'scale(1.08)',boxShadow: 6},
                             padding: '10px 20px',
                             width: '50%',
                             marginTop: '1cm',

@@ -137,21 +137,21 @@ export default function AddUser() {
         }
     };
 
-/**
- * Handles the change of a key-value pair in the user data object.
- * 
- * @param {string} key - The key to be updated in the user data object.
- * @param {any} value - The new value to be assigned to the key in the user data object.
- */
+    /**
+     * Handles the change of a key-value pair in the user data object.
+     * 
+     * @param {string} key - The key to be updated in the user data object.
+     * @param {any} value - The new value to be assigned to the key in the user data object.
+     */
     const handleChange = (key, value) => {
         setUser((prevData) => ({ ...prevData, [key]: value }));
     };
 
-/**
- * PaperComponent is a custom component that wraps the MUI Paper component.
- * It overrides the default background color of the Paper component to #bed7f6.
- * This component is used as the PaperComponent prop in the Autocomplete component.
- */ 
+    /**
+     * PaperComponent is a custom component that wraps the MUI Paper component.
+     * It overrides the default background color of the Paper component to #bed7f6.
+     * This component is used as the PaperComponent prop in the Autocomplete component.
+     */
     const PaperComponent = (props) => (
         <Paper {...props} sx={{ backgroundColor: '#bed7f6' }} />
     );
@@ -257,7 +257,8 @@ export default function AddUser() {
                             type="submit"
                             sx={{
                                 backgroundColor: '#ee742d59',
-                                '&:hover': { backgroundColor: '#95ad22' },
+                                transition: 'all 0.3s ease-in-out',
+                                '&:hover': { backgroundColor: '#95ad22', transform: 'scale(1.08)', boxShadow: 6 },
                                 padding: '10px 20px',
                                 width: '50%',
                                 marginTop: '1cm',
@@ -289,7 +290,7 @@ export default function AddUser() {
             </div>
             <div className="image-cortigroupe"></div>
             <Tooltip title="Si vous rencontrez un souci avec le site, envoyer un mail à l'adresse suivante : bgillet.lecortil@cortigroupe.be et expliquer le soucis rencontré" arrow>
-            <h5 style={{ marginBottom: '40px' }}> Développé par Remy et Benoit pour Le Cortigroupe. Support: bgillet.lecortil@cortigroupe.be</h5>
+                <h5 style={{ marginBottom: '40px' }}> Développé par Remy et Benoit pour Le Cortigroupe. Support: bgillet.lecortil@cortigroupe.be</h5>
             </Tooltip>
 
         </form>

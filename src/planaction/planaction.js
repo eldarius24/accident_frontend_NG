@@ -87,7 +87,16 @@ const EnterpriseStats = React.memo(({ actions }) => {
                     const completionRate = (completed / total) * 100;
                     return (
                         <Grid item xs={12} sm={6} md={4} key={enterprise}>
-                            <Card sx={getCardStyle(completed, total)}>
+                            <Card
+                                sx={{
+                                    ...getCardStyle(completed, total),
+                                    '&:hover': {
+                                        boxShadow: 6, // augmente l'ombre au survol
+                                        transform: 'scale(1.02)', // agrandit légèrement la carte
+                                        transition: 'all 0.3s ease-in-out'
+                                    }
+                                }}
+                            >
 
                                 <CardContent>
                                     <Typography
@@ -184,7 +193,7 @@ export default function PlanAction({ accidentData }) {
     });
     const navigate = useNavigate();
 
-   
+
 
 
     /**
@@ -395,7 +404,7 @@ export default function PlanAction({ accidentData }) {
         return <LinearProgress color="success" />;
     }
 
-    
+
 
     return (
         <form className="background-image" onSubmit={handleSubmit(onSubmit)}>
@@ -407,7 +416,7 @@ export default function PlanAction({ accidentData }) {
                 <Grid item xs={6} style={{ marginRight: '20px' }}>
                     <Tooltip title="Cliquez ici pour actualiser le tableau des actions" arrow>
                         <Button
-                            sx={{ marginLeft: '20px', color: 'black', padding: '15px 60px', backgroundColor: '#ee742d59', '&:hover': { backgroundColor: '#95ad22' }, boxShadow: 3, textTransform: 'none' }}
+                            sx={{ marginLeft: '20px', color: 'black', padding: '15px 60px', backgroundColor: '#ee742d59', transition: 'all 0.3s ease-in-out', '&:hover': { backgroundColor: '#95ad22', transform: 'scale(1.08)', boxShadow: 6 }, boxShadow: 3, textTransform: 'none' }}
                             variant="contained"
                             color="secondary"
                             onClick={refreshListAccidents}
@@ -471,7 +480,7 @@ export default function PlanAction({ accidentData }) {
                 <Grid item xs={6} style={{ marginRight: '20px' }}>
                     <Tooltip title="Cliquez ici pour exporter les données du plan d'action, en excel, en fonction des filtres sélèctionnés " arrow>
                         <Button
-                            sx={{ marginRight: '20px', color: 'black', padding: '15px 60px', backgroundColor: '#ee742d59', '&:hover': { backgroundColor: '#95ad22' }, boxShadow: 3, textTransform: 'none' }}
+                            sx={{ marginRight: '20px', color: 'black', padding: '15px 60px', backgroundColor: '#ee742d59', transition: 'all 0.3s ease-in-out', '&:hover': { backgroundColor: '#95ad22', transform: 'scale(1.08)', boxShadow: 6 }, boxShadow: 3, textTransform: 'none' }}
                             variant="contained"
                             color="primary"
                             onClick={() => handleExport()}
@@ -549,7 +558,13 @@ export default function PlanAction({ accidentData }) {
                                             <TableCell>{addaction.AddActionQui}</TableCell>
                                             <TableCell style={{ padding: 0, width: '70px' }}>
                                                 <Tooltip title="Cliquez ici pour éditer les données de l'action" arrow>
-                                                    <Button
+                                                    <Button sx={{
+                                                        transition: 'all 0.3s ease-in-out',
+                                                        '&:hover': {
+                                                            transform: 'scale(1.08)',
+                                                            boxShadow: 6
+                                                        }
+                                                    }}
                                                         variant="contained"
                                                         color="primary"
                                                         onClick={() => handleEdit(addaction._id)}
@@ -560,44 +575,62 @@ export default function PlanAction({ accidentData }) {
                                             </TableCell>
                                             <TableCell style={{ padding: 0, width: '70px' }}>
                                                 <Tooltip title="Cliquez ici pour ajouter des fichiers a l'action" arrow>
-                                                    <Button component={Link} to={isFileUploadIcon ? '/' : '/fichierdllaction'} variant="contained" color="secondary">
+                                                    <Button sx={{
+                                                        transition: 'all 0.3s ease-in-out',
+                                                        '&:hover': {
+                                                            transform: 'scale(1.08)',
+                                                            boxShadow: 6
+                                                        }
+                                                    }}
+                                                        component={Link} to={isFileUploadIcon ? '/' : '/fichierdllaction'}
+                                                        variant="contained"
+                                                        color="secondary">
                                                         <GetAppIcon />
                                                     </Button>
                                                 </Tooltip>
                                             </TableCell>
                                             <TableCell style={{ padding: 0, width: '70px' }}>
                                                 <Tooltip title="Cliquez ici pour supprimer l'action" arrow>
-                                                    <Button variant="contained" color="error" onClick={() => {
-                                                        confirmAlert({
-                                                            /**
-                                                             * Boîte de dialogue personnalisée pour demander confirmation de suppression de l'action
-                                                             * @param {{ onClose: () => void }} props - Fonction pour fermer la boîte de dialogue
-                                                             * @returns {JSX.Element} Le JSX Element qui contient la boîte de dialogue personnalisée
-                                                             * La boîte de dialogue contient un titre, un message de confirmation et deux boutons : "Oui" et "Non".
-                                                             * Lorsque le bouton "Oui" est cliqué, la fonction handleDelete est appelée
-                                                             * avec l'id de l'action à supprimer, et la fonction onClose est appelée pour fermer la boîte de dialogue.
-                                                             * Lorsque le bouton "Non" est cliqué, la fonction onClose est appelée pour fermer la boîte de dialogue.
-                                                             */
-                                                            customUI: ({ onClose }) => (
-                                                                <div className="custom-confirm-dialog">
-                                                                    <h1 className="custom-confirm-title">Supprimer</h1>
-                                                                    <p className="custom-confirm-message">Êtes-vous sûr de vouloir supprimer cet action?</p>
-                                                                    <div className="custom-confirm-buttons">
-                                                                        <Tooltip title="Cliquez sur OUI pour supprimer" arrow>
-                                                                            <button className="custom-confirm-button" onClick={() => { handleDelete(addaction._id); onClose(); }}>
-                                                                                Oui
-                                                                            </button>
-                                                                        </Tooltip>
-                                                                        <Tooltip title="Cliquez sur NON pour annuler la suppression" arrow>
-                                                                            <button className="custom-confirm-button custom-confirm-no" onClick={onClose}>
-                                                                                Non
-                                                                            </button>
-                                                                        </Tooltip>
+                                                    <Button sx={{
+                                                        transition: 'all 0.3s ease-in-out',
+                                                        '&:hover': {
+                                                            transform: 'scale(1.08)',
+                                                            boxShadow: 6
+                                                        }
+                                                    }}
+                                                        variant="contained"
+                                                        color="error"
+                                                        onClick={() => {
+                                                            confirmAlert({
+                                                                /**
+                                                                 * Boîte de dialogue personnalisée pour demander confirmation de suppression de l'action
+                                                                 * @param {{ onClose: () => void }} props - Fonction pour fermer la boîte de dialogue
+                                                                 * @returns {JSX.Element} Le JSX Element qui contient la boîte de dialogue personnalisée
+                                                                 * La boîte de dialogue contient un titre, un message de confirmation et deux boutons : "Oui" et "Non".
+                                                                 * Lorsque le bouton "Oui" est cliqué, la fonction handleDelete est appelée
+                                                                 * avec l'id de l'action à supprimer, et la fonction onClose est appelée pour fermer la boîte de dialogue.
+                                                                 * Lorsque le bouton "Non" est cliqué, la fonction onClose est appelée pour fermer la boîte de dialogue.
+                                                                 */
+                                                                customUI: ({ onClose }) => (
+                                                                    <div className="custom-confirm-dialog">
+                                                                        <h1 className="custom-confirm-title">Supprimer</h1>
+                                                                        <p className="custom-confirm-message">Êtes-vous sûr de vouloir supprimer cet action?</p>
+                                                                        <div className="custom-confirm-buttons">
+                                                                            <Tooltip title="Cliquez sur OUI pour supprimer" arrow>
+                                                                                <button className="custom-confirm-button" onClick={() => { handleDelete(addaction._id); onClose(); }}>
+                                                                                    Oui
+                                                                                </button>
+                                                                            </Tooltip>
+                                                                            <Tooltip title="Cliquez sur NON pour annuler la suppression" arrow>
+                                                                                <button className="custom-confirm-button custom-confirm-no" onClick={onClose}>
+                                                                                    Non
+                                                                                </button>
+                                                                            </Tooltip>
+                                                                        </div>
                                                                     </div>
-                                                                </div>
-                                                            )
-                                                        });
-                                                    }}>
+                                                                )
+                                                            });
+                                                        }}>
                                                         <DeleteForeverIcon />
                                                     </Button>
                                                 </Tooltip>

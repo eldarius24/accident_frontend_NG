@@ -50,14 +50,14 @@ export default function AddSecteur() {
         setSnackbar({ open: true, message, severity });
     };
 
-/**
- * Closes the snackbar when the user clicks outside of it.
- * 
- * @param {object} event - The event that triggered the function.
- * @param {string} reason - The reason the function was triggered. If the user
- *                         clicked outside of the snackbar, this will be
- *                         'clickaway'.
- */
+    /**
+     * Closes the snackbar when the user clicks outside of it.
+     * 
+     * @param {object} event - The event that triggered the function.
+     * @param {string} reason - The reason the function was triggered. If the user
+     *                         clicked outside of the snackbar, this will be
+     *                         'clickaway'.
+     */
     const handleCloseSnackbar = (event, reason) => {
         if (reason === 'clickaway') {
             return;
@@ -96,18 +96,18 @@ export default function AddSecteur() {
         fetchSecteurs();
     }, [apiUrl, entreprise._id]);
 
-/**
- * Submits the form data to add a new secteur to the specified entreprise.
- * 
- * - Sets the entrepriseId in the data object.
- * - Sends a PUT request to the server to add the secteur.
- * - Fetches the updated list of secteurs upon success.
- * - Resets the secteurName field.
- * - Displays a success or error message via a snackbar.
- * 
- * @param {object} data - The form data containing secteur details.
- * @async
- */
+    /**
+     * Submits the form data to add a new secteur to the specified entreprise.
+     * 
+     * - Sets the entrepriseId in the data object.
+     * - Sends a PUT request to the server to add the secteur.
+     * - Fetches the updated list of secteurs upon success.
+     * - Resets the secteurName field.
+     * - Displays a success or error message via a snackbar.
+     * 
+     * @param {object} data - The form data containing secteur details.
+     * @async
+     */
     const onSubmit = async (data) => {
         try {
             data.entrepriseId = entreprise._id;
@@ -123,12 +123,12 @@ export default function AddSecteur() {
         }
     };
 
-/**
- * Deletes a secteur by sending a DELETE request to the server.
- * 
- * @param {string} secteurId - The ID of the secteur to be deleted.
- * @async
- */
+    /**
+     * Deletes a secteur by sending a DELETE request to the server.
+     * 
+     * @param {string} secteurId - The ID of the secteur to be deleted.
+     * @async
+     */
     const handleDelete = async (secteurId) => {
         try {
             console.log('Deleting secteur:', secteurId);
@@ -181,7 +181,8 @@ export default function AddSecteur() {
                             type="submit"
                             sx={{
                                 backgroundColor: '#0098f9',
-                                '&:hover': { backgroundColor: 'green' },
+                                transition: 'all 0.3s ease-in-out',
+                                '&:hover': { backgroundColor: '#95ad22', transform: 'scale(1.08)', boxShadow: 6 },
                                 padding: '10px 20px',
                                 width: '50%',
                                 marginTop: '1cm',
@@ -217,7 +218,13 @@ export default function AddSecteur() {
                                         <TableCell>{secteur.secteurName}</TableCell>
                                         <TableCell>
                                             <Tooltip title="Cliquez ici pour supprimer cette entreprise" arrow>
-                                                <Button
+                                                <Button sx={{
+                                                    transition: 'all 0.3s ease-in-out',
+                                                    '&:hover': {
+                                                        transform: 'scale(1.08)',
+                                                        boxShadow: 6
+                                                    }
+                                                }}
                                                     variant="contained"
                                                     color="error"
                                                     onClick={() => {
