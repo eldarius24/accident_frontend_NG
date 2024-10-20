@@ -32,15 +32,19 @@ export default function FormulaireAction() {
     const navigate = useNavigate();
     const [availableSectors, setAvailableSectors] = useState([]);
 
-    const [AddAction, setAddAction] = useState('');
-    const [AddActionDate, setAddActionDate] = useState(null);
-    const [AddActionQui, setAddActionQui] = useState('');
-    const [AddActionEntreprise, setAddActionEntreprise] = useState(null);
-    const [AddActionSecteur, setAddActionSecteur] = useState(null);
-    const [AddboolStatus, setAddboolStatus] = useState(false);
-    const [AddActionDange, setAddActionDange] = useState('');
-    const [AddActionanne, setAddActionanne] = useState('');
-    const [AddActoinmoi, setAddActoinmoi] = useState('');
+
+
+    const [AddAction, setAddAction] = useState(watch('AddAction') ? watch('AddAction') : (actionData && actionData.AddAction ? actionData.AddAction : null));
+    const [AddActionDate, setAddActionDate] = useState(watch('AddActionDate') ? watch('AddActionDate') : (actionData && actionData.AddActionDate ? actionData.AddActionDate : null));
+    const [AddActionQui, setAddActionQui] = useState(watch('AddActionQui') ? watch('AddActionQui') : (actionData && actionData.AddActionQui ? actionData.AddActionQui : null));
+    const [AddActionEntreprise, setAddActionEntreprise] = useState(watch('AddActionEntreprise') ? watch('AddActionEntreprise') : (actionData && actionData.AddActionEntreprise ? actionData.AddActionEntreprise : null));
+    const [AddActionSecteur, setAddActionSecteur] = useState(watch('AddActionSecteur') ? watch('AddActionSecteur') : (actionData && actionData.AddActionSecteur ? actionData.AddActionSecteur : null));
+    const [AddboolStatus, setAddboolStatus] = useState(watch('AddboolStatus') ? watch('AddboolStatus') : (actionData && actionData.AddboolStatus ? actionData.AddboolStatus : null));
+    const [AddActionDange, setAddActionDange] = useState(watch('AddActionDange') ? watch('AddActionDange') : (actionData && actionData.AddActionDange ? actionData.AddActionDange : null));
+    const [AddActionanne, setAddActionanne] = useState(watch('AddActionanne') ? watch('AddActionanne') : (actionData && actionData.AddActionanne ? actionData.AddActionanne : null));
+    const [AddActoinmoi, setAddActoinmoi] = useState(watch('AddActoinmoi') ? watch('AddActoinmoi') : (actionData && actionData.AddActoinmoi ? actionData.AddActoinmoi : null));
+
+
 
     const [snackbar, setSnackbar] = useState({
         open: false,
@@ -59,7 +63,7 @@ export default function FormulaireAction() {
 
     const generateYearOptions = useCallback(() => {
         const currentYear = new Date().getFullYear();
-        return Array.from({length: 7}, (_, i) => String(currentYear + i - 1));
+        return Array.from({ length: 7 }, (_, i) => String(currentYear + i - 1));
     }, []);
 
     const [yearOptions] = useState(generateYearOptions());
@@ -162,18 +166,32 @@ export default function FormulaireAction() {
             : `http://${apiUrl}:3100/api/planaction`;
         const method = actionData ? 'put' : 'post';
 
-        axios[method](url, data)
+        // Assurez-vous que tous les champs sont inclus dans l'objet data
+        const formData = {
+            ...data,
+            AddActionEntreprise,
+            AddActionSecteur,
+            AddActionDate,
+            AddActionQui,
+            AddAction,
+            AddboolStatus,
+            AddActionDange,
+            AddActionanne,
+            AddActoinmoi
+        };
+
+        axios[method](url, formData)
             .then(response => {
                 console.log(`Réponse du serveur en ${actionData ? 'modification' : 'création'} :`, response.data);
-                showSnackbar(`Action en cours de ${actionData ? 'modification' : 'création'}`, 'success');
-                setTimeout(() => showSnackbar(`Action ${actionData ? 'modifiée' : 'créée'} avec succès`, 'success'), 500);
+                showSnackbar(`Action ${actionData ? 'modifiée' : 'créée'} avec succès`, 'success');
                 setTimeout(() => navigate('/planAction'), 750);
             })
             .catch(error => {
                 console.error('Erreur de requête:', error.message);
                 showSnackbar(`Erreur lors de la ${actionData ? 'modification' : 'création'} de l'action`, 'error');
             });
-    }, [actionData, apiUrl, navigate, showSnackbar]);
+    }, [actionData, apiUrl, navigate, showSnackbar, AddActionEntreprise, AddActionSecteur, AddActionDate, AddActionQui, AddAction, AddboolStatus, AddActionDange, AddActionanne, AddActoinmoi]);
+
 
     if (loading) {
         return <LinearProgress color="success" />;
@@ -222,14 +240,14 @@ export default function FormulaireAction() {
             <TextFieldQ id='AddAction' label="Quelle action ajouter" onChange={setAddAction} defaultValue={AddAction} required={true} />
             <DatePickerQ id='AddActionDate' label="Date de l'ajout de l'action" onChange={setAddActionDate} defaultValue={AddActionDate} required={true} />
             <TextFieldP id='AddActionQui' label="Qui doit s'occuper de l'action" onChange={setAddActionQui} defaultValue={AddActionQui} />
-            <AutoCompleteQ 
+            <AutoCompleteQ
                 id='AddActionDange'
                 option={listeaddaction.AddActionDange}
                 label="Type de risque"
                 onChange={(AddActionDangeSelect) => {
                     setAddActionDange(AddActionDangeSelect);
                     setValue('AddActionDange', AddActionDangeSelect);
-                }} 
+                }}
                 defaultValue={AddActionDange}
                 required={true}
             />
