@@ -3,9 +3,9 @@ import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import TextFieldP from '../_composants/textFieldP';
 import '../pageFormulaire/formulaire.css';
-import {Button, Tooltip} from '@mui/material/';
+import { Button, Tooltip } from '@mui/material/';
 import config from '../config.json';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import CustomSnackbar from '../_composants/CustomSnackbar';
 
 
@@ -20,35 +20,47 @@ import CustomSnackbar from '../_composants/CustomSnackbar';
 export default function AdminPanelSettings({ accidentData }) {
     const navigate = useNavigate();
     const apiUrl = config.apiUrl;
-    const { setValue, watch, handleSubmit } = useForm();
     const [snackbar, setSnackbar] = useState({
         open: false,
         message: '',
         severity: 'info',
     });
+    const location = useLocation();
+    const entrepriseToEdit = location.state?.entreprise;
+    const { watch, register, setValue, handleSubmit } = useForm({
+        defaultValues: entrepriseToEdit || {}
+    });
 
-/**
- * Display a snackbar message with the given message and severity.
- * 
- * @param {string} message - The message to display in the snackbar.
- * @param {string} [severity='info'] - The severity of the snackbar. Can be 'info', 'success', 'warning', or 'error'.
- */
+    /**
+     * Display a snackbar message with the given message and severity.
+     * 
+     * @param {string} message - The message to display in the snackbar.
+     * @param {string} [severity='info'] - The severity of the snackbar. Can be 'info', 'success', 'warning', or 'error'.
+     */
     const showSnackbar = (message, severity = 'info') => {
         setSnackbar({ open: true, message, severity });
     };
 
-/**
- * Closes the snackbar when the user clicks outside of it.
- * 
- * @param {object} event - The event that triggered the function.
- * @param {string} reason - The reason the function was triggered. If the user clicked outside of the snackbar, this will be 'clickaway'.
- */
+    /**
+     * Closes the snackbar when the user clicks outside of it.
+     * 
+     * @param {object} event - The event that triggered the function.
+     * @param {string} reason - The reason the function was triggered. If the user clicked outside of the snackbar, this will be 'clickaway'.
+     */
     const handleCloseSnackbar = (event, reason) => {
         if (reason === 'clickaway') {
             return;
         }
         setSnackbar({ ...snackbar, open: false });
     };
+
+    useEffect(() => {
+        if (entrepriseToEdit) {
+            Object.keys(entrepriseToEdit).forEach(key => {
+                setValue(key, entrepriseToEdit[key]);
+            });
+        }
+    }, [entrepriseToEdit, setValue]);
 
     const [AddEntreName, setAddEntreName] = useState(watch('AddEntreName') ? watch('AddEntreName') : (accidentData && accidentData.AddEntreName ? accidentData.AddEntreName : null));
     const [AddEntrePolice, setAddEntrePolice] = useState(watch('AddEntrePolice') ? watch('AddEntrePolice') : (accidentData && accidentData.AddEntrePolice ? accidentData.AddEntrePolice : null));
@@ -96,21 +108,24 @@ export default function AdminPanelSettings({ accidentData }) {
     /**************************************************************************
      * METHODE ON SUBMIT
      * ************************************************************************/
-    const onSubmit = (data) => {
-        console.log("Formulaire.js -> onSubmit -> Données à enregistrer :", data);
+    const onSubmit = async (data) => {
+        try {
+            const url = entrepriseToEdit
+                ? `http://${apiUrl}:3100/api/entreprises/${entrepriseToEdit._id}`
+                : `http://${apiUrl}:3100/api/entreprises`;
 
-        axios.put(`http://${apiUrl}:3100/api/entreprises`, data)
-            .then(response => {
-                console.log('Réponse du serveur en création :', response.data);
-                showSnackbar('Entreprise en cours de création', 'success');
-                setTimeout(() => showSnackbar('Entreprise créée avec succès', 'success'), 1000);
-                // Modifier cette ligne pour naviguer vers /adminEntreprises après 2 secondes
-                setTimeout(() => navigate('/adminEntreprises'), 2000);
-            })
-            .catch(error => {
-                console.error('Erreur de requête:', error.message);
-                showSnackbar('Erreur lors de la création de l\'entreprise', 'error');
-            });
+            const method = entrepriseToEdit ? 'put' : 'post';
+
+            const response = await axios[method](url, data);
+            console.log(`Réponse du serveur en ${entrepriseToEdit ? 'modification' : 'création'} :`, response.data);
+            showSnackbar(`Entreprise ${entrepriseToEdit ? 'modifiée' : 'créée'} avec succès`, 'success');
+            // Rediriger vers la liste des entreprises après un court délai
+            setTimeout(() => navigate('/adminEntreprises'), 2000);
+        } catch (error) {
+            console.error('Erreur de requête:', error.message);
+            showSnackbar(`Erreur lors de la ${entrepriseToEdit ? 'modification' : 'création'} de l'entreprise`, 'error');
+        }
+
 
 
         // Naviguer vers la page d'accueil
@@ -164,7 +179,7 @@ export default function AdminPanelSettings({ accidentData }) {
                             }}
                             variant="contained"
                         >
-                            Créer l'Entreprise
+                            {entrepriseToEdit ? "Modifier l'entreprise" : "Créer l'entreprise"}
                         </Button>
                     </Tooltip>
                 </div>

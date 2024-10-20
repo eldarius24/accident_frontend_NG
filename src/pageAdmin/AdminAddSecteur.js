@@ -216,11 +216,6 @@ export default function AddSecteur() {
                                     <TableRow key={secteur._id}>
                                         <TableCell>{secteur.secteurName}</TableCell>
                                         <TableCell>
-                                            <Tooltip title="Cliquez ici pour éditer ce secteur" arrow>
-                                                <Button variant="contained" color="primary">
-                                                    <EditIcon />
-                                                </Button>
-                                            </Tooltip>
                                             <Tooltip title="Cliquez ici pour supprimer cette entreprise" arrow>
                                                 <Button
                                                     variant="contained"

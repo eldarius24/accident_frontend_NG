@@ -43,6 +43,18 @@ export default function Adminusern() {
         severity: 'info',
     });
 
+
+
+    const handleEdit = (entreprise) => {
+        try {
+            navigate("/addEntreprise", { state: { entreprise } });
+            showSnackbar('Modification de l\'entreprise initiée', 'info');
+        } catch (error) {
+            console.error("Erreur lors de la navigation vers editEntreprise:", error);
+            showSnackbar('Erreur lors de l\'initialisation de l\'édition', 'error');
+        }
+    };
+
     /**
      * Affiche un message dans une snackbar.
      * @param {string} message - Le message à afficher.
@@ -190,7 +202,11 @@ export default function Adminusern() {
                                         </TableCell>
                                         <TableCell style={{ padding: 0, width: '70px' }}>
                                             <Tooltip title="Cliquez ici pour éditer cette entreprise" arrow>
-                                                <Button variant="contained" color="primary">
+                                                <Button
+                                                    variant="contained"
+                                                    color="primary"
+                                                    onClick={() => handleEdit(entreprise)}
+                                                >
                                                     <EditIcon />
                                                 </Button>
                                             </Tooltip>
@@ -208,21 +224,21 @@ export default function Adminusern() {
                                                                         <h1 className="custom-confirm-title">Supprimer</h1>
                                                                         <p className="custom-confirm-message">Êtes-vous sûr de vouloir supprimer cette entreprise?</p>
                                                                         <div className="custom-confirm-buttons">
-                                                                        <Tooltip title="Cliquez sur OUI pour supprimer" arrow>
-                                                                            <button
-                                                                                className="custom-confirm-button"
-                                                                                onClick={() => {
-                                                                                    handleDelete(entreprise._id);
-                                                                                    onClose();
-                                                                                }}
-                                                                            >
-                                                                                Oui
-                                                                            </button>
+                                                                            <Tooltip title="Cliquez sur OUI pour supprimer" arrow>
+                                                                                <button
+                                                                                    className="custom-confirm-button"
+                                                                                    onClick={() => {
+                                                                                        handleDelete(entreprise._id);
+                                                                                        onClose();
+                                                                                    }}
+                                                                                >
+                                                                                    Oui
+                                                                                </button>
                                                                             </Tooltip>
                                                                             <Tooltip title="Cliquez sur NON pour annuler la suppression" arrow>
-                                                                            <button className="custom-confirm-button custom-confirm-no" onClick={onClose}>
-                                                                                Non
-                                                                            </button>
+                                                                                <button className="custom-confirm-button custom-confirm-no" onClick={onClose}>
+                                                                                    Non
+                                                                                </button>
                                                                             </Tooltip>
                                                                         </div>
                                                                     </div>
@@ -250,7 +266,7 @@ export default function Adminusern() {
             </div>
             <div className="image-cortigroupe"></div>
             <Tooltip title="Si vous rencontrez un souci avec le site, envoyer un mail à l'adresse suivante : bgillet.lecortil@cortigroupe.be et expliquer le soucis rencontré" arrow>
-            <h5 style={{ marginBottom: '40px' }}> Développé par Remy et Benoit pour Le Cortigroupe. Support: bgillet.lecortil@cortigroupe.be</h5>
+                <h5 style={{ marginBottom: '40px' }}> Développé par Remy et Benoit pour Le Cortigroupe. Support: bgillet.lecortil@cortigroupe.be</h5>
             </Tooltip>
         </form>
     );
