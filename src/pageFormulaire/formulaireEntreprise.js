@@ -9,7 +9,7 @@ import DatePickerQ from '../_composants/datePickerQ';
 import listeDeclarationAssBelfius from '../liste/listeDeclarationAssBelfius.json';
 import DateHeurePickerQ from '../_composants/dateHeurePickerQ';
 import listAccident from '../liste/listAccident.json';
-
+import listAssureur from '../liste/listAssureur.json';
 /**
  * FormulaireEntreprise component.
  * 
@@ -34,6 +34,8 @@ export default function FormulaireEntreprise({ setValue, accidentData, watch }) 
   const [loading, setLoading] = useState(true);
   const apiUrl = config.apiUrl;
   const { isAdmin, isAdminOuConseiller, userInfo, isConseiller } = useUserConnected();
+  const [formData, setFormData] = useState(accidentData);
+
   const [nomTravailleur, setNomTravailleur] = useState(watch('nomTravailleur') ? watch('nomTravailleur') : (accidentData && accidentData.nomTravailleur ? accidentData.nomTravailleur : null));
   const [prenomTravailleur, setPrenomTravailleur] = useState(watch('prenomTravailleur') ? watch('prenomTravailleur') : (accidentData && accidentData.prenomTravailleur ? accidentData.prenomTravailleur : null));
   const [dateNaissance, setDateNaissance] = useState(watch('dateNaissance') ? watch('dateNaissance') : (accidentData && accidentData.dateNaissance ? accidentData.dateNaissance : null));
@@ -41,8 +43,8 @@ export default function FormulaireEntreprise({ setValue, accidentData, watch }) 
   const [typeAccident, setTypeAccident] = useState(watch('typeAccident') ? watch('typeAccident') : (accidentData && accidentData.typeAccident ? accidentData.typeAccident : null));
   const [DateHeureAccident, setDateHeureAccident] = useState(watch('DateHeureAccident') ? watch('DateHeureAccident') : (accidentData && accidentData.DateHeureAccident ? accidentData.DateHeureAccident : null));
   const [blessures, setBlessures] = useState(watch('blessures') ? watch('blessures') : (accidentData && accidentData.blessures ? accidentData.blessures : ""));
+  const [assureurStatus, setAssureurStatus] = useState(watch('AssureurStatus') ? watch('AssureurStatus') : (accidentData && accidentData.AssureurStatus ? accidentData.AssureurStatus : null));
 
-  const [formData, setFormData] = useState(accidentData);
 
   useEffect(() => {
     const data = sessionStorage.getItem('accidentData');
@@ -58,13 +60,13 @@ export default function FormulaireEntreprise({ setValue, accidentData, watch }) 
   }, [formData])
 
   useEffect(() => {
-  /**
-   * Fetches entreprises and secteurs data from API
-   * - entreprises data is filtered based on user role (only show entreprises that the user is conseiller for)
-   * - sets entreprises and secteurs in component state
-   * - sets loading to false when done
-   * @async
-   */
+    /**
+     * Fetches entreprises and secteurs data from API
+     * - entreprises data is filtered based on user role (only show entreprises that the user is conseiller for)
+     * - sets entreprises and secteurs in component state
+     * - sets loading to false when done
+     * @async
+     */
     const fetchData = async () => {
       try {
         const [entreprisesResponse, secteursResponse] = await Promise.all([
@@ -106,17 +108,18 @@ export default function FormulaireEntreprise({ setValue, accidentData, watch }) 
     setValue('typeAccident', typeAccident)
     setValue('DateHeureAccident', DateHeureAccident)
     setValue('blessures', blessures)
-  }, [blessures, DateHeureAccident, typeAccident, sexe, entreprise, secteur, typeTravailleur, nomTravailleur, prenomTravailleur, dateNaissance, setValue]);
+    setValue('AssureurStatus', assureurStatus)
+  }, [assureurStatus, blessures, DateHeureAccident, typeAccident, sexe, entreprise, secteur, typeTravailleur, nomTravailleur, prenomTravailleur, dateNaissance, setValue]);
 
-/**
- * Handles the selection of an entreprise in the form.
- * @param {string} entrepriseSelect - The label of the selected entreprise.
- * @description
- * This function is called when the user selects an entreprise in the form.
- * It updates the state of the component by setting the selected entreprise,
- * resetting the selected secteur, and updating the list of available secteurs
- * based on the selected entreprise.
- */
+  /**
+   * Handles the selection of an entreprise in the form.
+   * @param {string} entrepriseSelect - The label of the selected entreprise.
+   * @description
+   * This function is called when the user selects an entreprise in the form.
+   * It updates the state of the component by setting the selected entreprise,
+   * resetting the selected secteur, and updating the list of available secteurs
+   * based on the selected entreprise.
+   */
   const handleEntrepriseSelect = (entrepriseSelect) => {
     const selectedEntreprise = entreprises.find(e => e.label === entrepriseSelect);
     if (selectedEntreprise) {
@@ -125,12 +128,12 @@ export default function FormulaireEntreprise({ setValue, accidentData, watch }) 
     }
   };
 
-/**
- * Retrieves the list of sector names linked to the currently selected enterprise.
- *
- * @returns {Array<string>} An array of sector names associated with the selected enterprise.
- *                          Returns an empty array if no enterprise is selected or if there are no linked sectors.
- */
+  /**
+   * Retrieves the list of sector names linked to the currently selected enterprise.
+   *
+   * @returns {Array<string>} An array of sector names associated with the selected enterprise.
+   *                          Returns an empty array if no enterprise is selected or if there are no linked sectors.
+   */
   const getLinkedSecteurs = () => {
     const selectedEntreprise = entreprises.find(e => e.label === entreprise);
     if (selectedEntreprise) {
@@ -151,9 +154,22 @@ export default function FormulaireEntreprise({ setValue, accidentData, watch }) 
         <div>
           <div>
             <h2>Formulaire Pris en compte pour les statistiques</h2>
-           
+
           </div>
           <div className="autocomplete">
+            {/* *********************************** Autocomplete AssureurStatus **********************************/}
+            <AutoCompleteQ
+              id='AssureurStatus'
+              option={listAssureur.AssureurStatus}
+              label='Status'
+              onChange={(AssureurStatusSelect) => {
+                setAssureurStatus(AssureurStatusSelect);
+                setValue('AssureurStatus', AssureurStatusSelect);
+              }}
+              defaultValue={assureurStatus}
+              required={true}
+            >
+            </AutoCompleteQ>
             <AutoCompleteQ
               id='entreprise'
               option={entreprises.map(e => e.label)}

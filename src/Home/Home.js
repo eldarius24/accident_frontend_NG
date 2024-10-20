@@ -314,7 +314,7 @@ function Home() {
                 <Table>
                     <TableHead>
                         <TableRow style={{ backgroundColor: '#0098f950' }}>
-                            {['N° Groupe', 'N° Entreprise', 'Date accident', 'Entreprise', 'Secteur', 'Nom du travailleur', 'Prénom du travailleur', 'Type accident', 'Editer', 'Fichier', 'PDF', 'Supprimer'].map((header, index) => (
+                            {['N° Groupe', 'N° Entreprise', 'Status', 'Date accident', 'Entreprise', 'Secteur', 'Nom du travailleur', 'Prénom du travailleur', 'Type accident', 'Editer', 'Fichier', 'PDF', 'Supprimer'].map((header, index) => (
                                 <TableCell key={index} style={{ fontWeight: 'bold', padding: 0, width: index < 8 ? 'auto' : '70px' }}>{isAdminOuConseiller || index < 8 ? header : null}</TableCell>
                             ))}
                         </TableRow>
@@ -326,6 +326,7 @@ function Home() {
                                 <TableRow style={{ backgroundColor: rowColors[index % rowColors.length] }}>
                                     <TableCell>{item.numeroGroupe}</TableCell>
                                     <TableCell>{item.numeroEntreprise}</TableCell>
+                                    <TableCell>{item.AssureurStatus}</TableCell>
                                     <TableCell>{formatDate(item.DateHeureAccident)}</TableCell>
                                     <TableCell>{item.entrepriseName}</TableCell>
                                     <TableCell>{item.secteur}</TableCell>
