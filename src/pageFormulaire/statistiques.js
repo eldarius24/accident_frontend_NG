@@ -59,15 +59,16 @@ const Statistiques = () => {
   const [selectedSectors, setSelectedSectors] = useState([]);
   const [assureurStatus, setAssureurStatus] = useState([]);
   const [selectedAssureurStatus, setSelectedAssureurStatus] = useState([]);
-
+  const [accidentTypes, setAccidentTypes] = useState([]);
+  const [selectedAccidentTypes, setSelectedAccidentTypes] = useState([]);
 
   useEffect(() => {
-/**
- * Récupère les données d'accidents depuis l'API
- * Initialise les filtres et les données du graphique
- * 
- * @returns {Promise<void>}
- */
+    /**
+     * Récupère les données d'accidents depuis l'API
+     * Initialise les filtres et les données du graphique
+     * 
+     * @returns {Promise<void>}
+     */
     const fetchData = async () => {
       try {
         const apiUrl = process.env.REACT_APP_API_URL || 'localhost';
@@ -86,6 +87,9 @@ const Statistiques = () => {
         const uniqueAssureurStatus = [...new Set(response.data.map(accident => accident.AssureurStatus))].filter(Boolean);
         setAssureurStatus(uniqueAssureurStatus);
         setSelectedAssureurStatus(uniqueAssureurStatus);
+        const uniquetypes = [...new Set(response.data.map(accident => accident.typeAccident || 'Non spécifié'))];
+        setAccidentTypes(uniquetypes);
+        setSelectedAccidentTypes(uniquetypes);
       } catch (error) {
         console.error('Erreur lors de la récupération des données:', error.message);
       }
@@ -98,10 +102,12 @@ const Statistiques = () => {
     if (data.length > 0) {
       const filteredData = data.filter(accident => {
         const accidentYear = new Date(accident.DateHeureAccident).getFullYear();
+        const accidentType = accident.typeAccident || 'Non spécifié';
         return selectedYears.includes(accidentYear) &&
           selectedWorkerTypes.includes(accident.typeTravailleur) &&
           selectedSectors.includes(accident.secteur) &&
-          selectedAssureurStatus.includes(accident.AssureurStatus);
+          selectedAssureurStatus.includes(accident.AssureurStatus) &&
+          (selectedAccidentTypes.length === accidentTypes.length || selectedAccidentTypes.includes(accidentType));
       });
 
       const newStats = {
@@ -191,16 +197,16 @@ const Statistiques = () => {
 
       setStats(newStats);
     }
-  }, [data, selectedYears, selectedWorkerTypes, selectedSectors, selectedAssureurStatus]);
+  }, [data, selectedYears, selectedWorkerTypes, selectedSectors, selectedAssureurStatus, selectedAccidentTypes]);
 
   const [allChecked, setAllChecked] = useState(true);
-/**
- * Met à jour les années sélectionnées en fonction de la nouvelle valeur reçue via l'événement de changement.
- * Si la valeur inclut 'All', met à jour la sélection en fonction de la longueur de allYears.
- * Sinon, met à jour la sélection en fonction de la valeur reçue.
- * 
- * @param {Event} event - L'événement de changement contenant la nouvelle valeur
- */
+  /**
+   * Met à jour les années sélectionnées en fonction de la nouvelle valeur reçue via l'événement de changement.
+   * Si la valeur inclut 'All', met à jour la sélection en fonction de la longueur de allYears.
+   * Sinon, met à jour la sélection en fonction de la valeur reçue.
+   * 
+   * @param {Event} event - L'événement de changement contenant la nouvelle valeur
+   */
   const handleChangeYearsFilter = (event) => {
     const value = event.target.value;
     if (value.includes('All')) {
@@ -210,13 +216,13 @@ const Statistiques = () => {
     }
   };
 
-/**
- * Updates the visibility of graphs based on the selected values from a filter.
- * If 'All' is included in the selected values, toggles the visibility of all graphs.
- * Otherwise, sets the visibility of each graph according to whether it is included in the selected values.
- * 
- * @param {Event} event - The change event containing new filter values.
- */
+  /**
+   * Updates the visibility of graphs based on the selected values from a filter.
+   * If 'All' is included in the selected values, toggles the visibility of all graphs.
+   * Otherwise, sets the visibility of each graph according to whether it is included in the selected values.
+   * 
+   * @param {Event} event - The change event containing new filter values.
+   */
   const handleChangeGraphsFilter = (event) => {
     const value = event.target.value;
     if (value.includes('All')) {
@@ -235,13 +241,13 @@ const Statistiques = () => {
     }
   };
 
-/**
- * Met à jour les types de travailleurs sélectionnés en fonction de la nouvelle valeur reçue via l'événement de changement.
- * Si la valeur inclut 'all', met à jour la sélection en fonction de la longueur de workerTypes.
- * Sinon, met à jour la sélection en fonction de la valeur reçue.
- * 
- * @param {Event} event - L'événement de changement contenant la nouvelle valeur
- */
+  /**
+   * Met à jour les types de travailleurs sélectionnés en fonction de la nouvelle valeur reçue via l'événement de changement.
+   * Si la valeur inclut 'all', met à jour la sélection en fonction de la longueur de workerTypes.
+   * Sinon, met à jour la sélection en fonction de la valeur reçue.
+   * 
+   * @param {Event} event - L'événement de changement contenant la nouvelle valeur
+   */
   const handleChangeWorkerTypesFilter = (event) => {
     const value = event.target.value;
     if (value.includes('all')) {
@@ -251,11 +257,11 @@ const Statistiques = () => {
     }
   };
 
-/**
- * Met à jour les secteurs sélectionnés en fonction de la nouvelle valeur reçue via l'événement de changement.
- * Si la valeur inclut 'all', met à jour la sélection en fonction de la longueur de sectors.
- * Sinon, met à jour la sélection en fonction de la valeur reçue.
- */
+  /**
+   * Met à jour les secteurs sélectionnés en fonction de la nouvelle valeur reçue via l'événement de changement.
+   * Si la valeur inclut 'all', met à jour la sélection en fonction de la longueur de sectors.
+   * Sinon, met à jour la sélection en fonction de la valeur reçue.
+   */
   const handleChangeSectorsFilter = (event) => {
     const value = event.target.value;
     if (value.includes('all')) {
@@ -274,6 +280,14 @@ const Statistiques = () => {
     }
   };
 
+  const handleChangeAccidentTypesFilter = (event) => {
+    const value = event.target.value;
+    if (value.includes('all')) {
+      setSelectedAccidentTypes(selectedAccidentTypes.length === accidentTypes.length ? [] : accidentTypes);
+    } else {
+      setSelectedAccidentTypes(value);
+    }
+  };
 
   const memoizedChartData = useMemo(() => ({
     accidentsBySexData: Object.entries(stats.accidentsBySex).map(([sexe, NombreAT]) => ({ name: sexe, value: NombreAT })),
@@ -311,17 +325,17 @@ const Statistiques = () => {
   }), [stats]);
 
 
-/**
- * Rend une charte en fonction du type, des données et de la configuration.
- * 
- * @param {string} type - Le type de la charte (par exemple, "bar", "line", etc.)
- * @param {object[]} data - Les données à afficher sur la charte
- * @param {object} config - La configuration de la charte, qui inclut le composant de charte
- *                          à utiliser, la classe CSS pour le conteneur, le titre de la charte,
- *                          et les enfants à afficher dans le composant de charte.
- * 
- * @returns {ReactElement} La charte rendue
- */
+  /**
+   * Rend une charte en fonction du type, des données et de la configuration.
+   * 
+   * @param {string} type - Le type de la charte (par exemple, "bar", "line", etc.)
+   * @param {object[]} data - Les données à afficher sur la charte
+   * @param {object} config - La configuration de la charte, qui inclut le composant de charte
+   *                          à utiliser, la classe CSS pour le conteneur, le titre de la charte,
+   *                          et les enfants à afficher dans le composant de charte.
+   * 
+   * @returns {ReactElement} La charte rendue
+   */
   const renderChart = (type, data, config) => {
     const ChartComponent = config.component;
     return (
@@ -341,8 +355,33 @@ const Statistiques = () => {
   return (
     <div className="col-span-full" style={{ margin: '20px' }}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px', gap: '10px' }}>
-        
-      <FormControl sx={{ width: '30%', minWidth: '200px' }}>
+        <FormControl sx={{ width: '30%', minWidth: '200px' }}>
+          <InputLabel id="accident-types-label">Type d'accident</InputLabel>
+          <Select
+            sx={{ backgroundColor: '#ee742d59' }}
+            labelId="accident-types-label"
+            id="accident-types-select"
+            multiple
+            value={selectedAccidentTypes}
+            onChange={handleChangeAccidentTypesFilter}
+            renderValue={(selected) => `${selected.length} type(s)`}
+            MenuProps={{
+              PaperProps: { style: { maxHeight: 300, overflow: 'auto' } },
+            }}
+          >
+            <MenuItem value="all" style={{ backgroundColor: '#ee742d59' }}>
+              <Checkbox checked={selectedAccidentTypes.length === accidentTypes.length} style={{ color: 'red' }} />
+              <ListItemText primary="Sélectionner tout" />
+            </MenuItem>
+            {accidentTypes.map((type) => (
+              <MenuItem key={type} value={type} style={{ backgroundColor: '#ee742d59' }}>
+                <Checkbox checked={selectedAccidentTypes.includes(type)} style={{ color: '#257525' }} />
+                <ListItemText primary={type} />
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+        <FormControl sx={{ width: '30%', minWidth: '200px' }}>
           <InputLabel id="assureur-status-label">Statut Assureur</InputLabel>
           <Select
             sx={{ backgroundColor: '#ee742d59' }}
@@ -370,113 +409,113 @@ const Statistiques = () => {
         </FormControl>
 
         <FormControl sx={{ width: '30%', minWidth: '200px' }}>
-            <InputLabel id="years-label">Année</InputLabel>
-            <Select
-              sx={{ backgroundColor: '#ee742d59' }}
-              labelId="years-label"
-              id="years-select"
-              multiple
-              value={selectedYears}
-              onChange={handleChangeYearsFilter}
-              renderValue={(selected) => `${selected.length} année(s)`}
-              MenuProps={{
-                PaperProps: { style: { maxHeight: 300, overflow: 'auto' } },
-              }}
-            >
-              <MenuItem key="All" value="All" style={{ backgroundColor: '#ee742d59' }}>
-                <Checkbox checked={selectedYears.length === allYears.length} style={{ color: 'red' }} />
-                <ListItemText primary="All" />
+          <InputLabel id="years-label">Année</InputLabel>
+          <Select
+            sx={{ backgroundColor: '#ee742d59' }}
+            labelId="years-label"
+            id="years-select"
+            multiple
+            value={selectedYears}
+            onChange={handleChangeYearsFilter}
+            renderValue={(selected) => `${selected.length} année(s)`}
+            MenuProps={{
+              PaperProps: { style: { maxHeight: 300, overflow: 'auto' } },
+            }}
+          >
+            <MenuItem key="All" value="All" style={{ backgroundColor: '#ee742d59' }}>
+              <Checkbox checked={selectedYears.length === allYears.length} style={{ color: 'red' }} />
+              <ListItemText primary="All" />
+            </MenuItem>
+            {allYears.filter(Boolean).sort((a, b) => a - b).map((year) => (
+              <MenuItem key={year} value={year} style={{ backgroundColor: '#ee742d59' }}>
+                <Checkbox checked={selectedYears.includes(year)} style={{ color: '#257525' }} />
+                <ListItemText primary={year} />
               </MenuItem>
-              {allYears.filter(Boolean).sort((a, b) => a - b).map((year) => (
-                <MenuItem key={year} value={year} style={{ backgroundColor: '#ee742d59' }}>
-                  <Checkbox checked={selectedYears.includes(year)} style={{ color: '#257525' }} />
-                  <ListItemText primary={year} />
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        
-          <FormControl sx={{ width: '30%', minWidth: '200px' }}>
-            <InputLabel id="graphs-label">Graphiques</InputLabel>
-            <Select
-              sx={{ backgroundColor: '#ee742d59' }}
-              labelId="graphs-label"
-              id="graphs-select"
-              multiple
-              value={Object.entries(graphs).filter(([_, { visible }]) => visible).map(([key]) => key)}
-              onChange={handleChangeGraphsFilter}
-              renderValue={(selected) => `${selected.length} graphique(s)`}
-              MenuProps={{
-                PaperProps: { style: { maxHeight: 300, overflow: 'auto' } },
-              }}
-            >
-              <MenuItem key="All" value="All" style={{ backgroundColor: '#ee742d59' }}>
-                <Checkbox checked={Object.values(graphs).every(({ visible }) => visible)} style={{ color: 'red' }} />
-                <ListItemText primary="All" />
+            ))}
+          </Select>
+        </FormControl>
+
+        <FormControl sx={{ width: '30%', minWidth: '200px' }}>
+          <InputLabel id="graphs-label">Graphiques</InputLabel>
+          <Select
+            sx={{ backgroundColor: '#ee742d59' }}
+            labelId="graphs-label"
+            id="graphs-select"
+            multiple
+            value={Object.entries(graphs).filter(([_, { visible }]) => visible).map(([key]) => key)}
+            onChange={handleChangeGraphsFilter}
+            renderValue={(selected) => `${selected.length} graphique(s)`}
+            MenuProps={{
+              PaperProps: { style: { maxHeight: 300, overflow: 'auto' } },
+            }}
+          >
+            <MenuItem key="All" value="All" style={{ backgroundColor: '#ee742d59' }}>
+              <Checkbox checked={Object.values(graphs).every(({ visible }) => visible)} style={{ color: 'red' }} />
+              <ListItemText primary="All" />
+            </MenuItem>
+            {Object.entries(graphs).map(([key, { label, visible }]) => (
+              <MenuItem key={key} value={key} style={{ backgroundColor: '#ee742d59' }}>
+                <Checkbox checked={visible} style={{ color: '#257525' }} />
+                <ListItemText primary={label} />
               </MenuItem>
-              {Object.entries(graphs).map(([key, { label, visible }]) => (
-                <MenuItem key={key} value={key} style={{ backgroundColor: '#ee742d59' }}>
-                  <Checkbox checked={visible} style={{ color: '#257525' }} />
-                  <ListItemText primary={label} />
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        
-          <FormControl sx={{ width: '30%', minWidth: '200px' }}>
-            <InputLabel id="worker-types-label">Type de travailleur</InputLabel>
-            <Select
-              sx={{ backgroundColor: '#ee742d59' }}
-              labelId="worker-types-label"
-              id="worker-types-select"
-              multiple
-              value={selectedWorkerTypes}
-              onChange={handleChangeWorkerTypesFilter}
-              renderValue={(selected) => `${selected.length} type(s)`}
-              MenuProps={{
-                PaperProps: { style: { maxHeight: 300, overflow: 'auto' } },
-              }}
-            >
-              <MenuItem value="all" style={{ backgroundColor: '#ee742d59' }}>
-                <Checkbox checked={isAllSelected} style={{ color: 'red' }} />
-                <ListItemText primary="Sélectionner tout" />
+            ))}
+          </Select>
+        </FormControl>
+
+        <FormControl sx={{ width: '30%', minWidth: '200px' }}>
+          <InputLabel id="worker-types-label">Type de travailleur</InputLabel>
+          <Select
+            sx={{ backgroundColor: '#ee742d59' }}
+            labelId="worker-types-label"
+            id="worker-types-select"
+            multiple
+            value={selectedWorkerTypes}
+            onChange={handleChangeWorkerTypesFilter}
+            renderValue={(selected) => `${selected.length} type(s)`}
+            MenuProps={{
+              PaperProps: { style: { maxHeight: 300, overflow: 'auto' } },
+            }}
+          >
+            <MenuItem value="all" style={{ backgroundColor: '#ee742d59' }}>
+              <Checkbox checked={isAllSelected} style={{ color: 'red' }} />
+              <ListItemText primary="Sélectionner tout" />
+            </MenuItem>
+            {workerTypes.map((type, index) => (
+              <MenuItem key={index} value={type} style={{ backgroundColor: '#ee742d59' }}>
+                <Checkbox checked={selectedWorkerTypes.includes(type)} style={{ color: '#257525' }} />
+                <ListItemText primary={type} />
               </MenuItem>
-              {workerTypes.map((type, index) => (
-                <MenuItem key={index} value={type} style={{ backgroundColor: '#ee742d59' }}>
-                  <Checkbox checked={selectedWorkerTypes.includes(type)} style={{ color: '#257525' }} />
-                  <ListItemText primary={type} />
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        
-          <FormControl sx={{ width: 'calc(25% - 15px)', minWidth: '200px' }}>
-            <InputLabel id="sectors-label">Secteurs</InputLabel>
-            <Select
-              sx={{ backgroundColor: '#ee742d59' }}
-              labelId="sectors-label"
-              id="sectors-select"
-              multiple
-              value={selectedSectors}
-              onChange={handleChangeSectorsFilter}
-              renderValue={(selected) => `${selected.length} secteur(s)`}
-              MenuProps={{
-                PaperProps: { style: { maxHeight: 300, overflow: 'auto' } },
-              }}
-            >
-              <MenuItem value="all" style={{ backgroundColor: '#ee742d59' }}>
-                <Checkbox checked={isAllSectorsSelected} style={{ color: 'red' }} />
-                <ListItemText primary="Sélectionner tout" />
+            ))}
+          </Select>
+        </FormControl>
+
+        <FormControl sx={{ width: 'calc(25% - 15px)', minWidth: '200px' }}>
+          <InputLabel id="sectors-label">Secteurs</InputLabel>
+          <Select
+            sx={{ backgroundColor: '#ee742d59' }}
+            labelId="sectors-label"
+            id="sectors-select"
+            multiple
+            value={selectedSectors}
+            onChange={handleChangeSectorsFilter}
+            renderValue={(selected) => `${selected.length} secteur(s)`}
+            MenuProps={{
+              PaperProps: { style: { maxHeight: 300, overflow: 'auto' } },
+            }}
+          >
+            <MenuItem value="all" style={{ backgroundColor: '#ee742d59' }}>
+              <Checkbox checked={isAllSectorsSelected} style={{ color: 'red' }} />
+              <ListItemText primary="Sélectionner tout" />
+            </MenuItem>
+            {sectors.map((sector) => (
+              <MenuItem key={sector} value={sector} style={{ backgroundColor: '#ee742d59' }}>
+                <Checkbox checked={selectedSectors.includes(sector)} style={{ color: '#257525' }} />
+                <ListItemText primary={sector} />
               </MenuItem>
-              {sectors.map((sector) => (
-                <MenuItem key={sector} value={sector} style={{ backgroundColor: '#ee742d59' }}>
-                  <Checkbox checked={selectedSectors.includes(sector)} style={{ color: '#257525' }} />
-                  <ListItemText primary={sector} />
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        
+            ))}
+          </Select>
+        </FormControl>
+
 
       </Box>
       <div className="flex flex-col items-center justify-center h-full mb-8">
