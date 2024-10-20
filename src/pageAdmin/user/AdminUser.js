@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useTransition } from 'react';
+import React, { useState, useEffect, useCallback, useTransition,useMemo } from 'react';
 import {
     Table,
     TableBody,
@@ -18,7 +18,7 @@ import getUsers from './_actions/get-users';
 import deleteUser from './_actions/delete-user';
 import { Link } from 'react-router-dom';
 import CustomSnackbar from '../../_composants/CustomSnackbar';
-
+import { useTheme } from '../../pageAdmin/user/ThemeContext';
 /**
  * Adminuser est un composant React qui permet de gérer les utilisateurs.
  * Il affiche une table avec les informations de chaque utilisateur, 
@@ -29,6 +29,7 @@ import CustomSnackbar from '../../_composants/CustomSnackbar';
  * @returns Un JSX element représentant le composant Adminuser
  */
 export default function Adminuser() {
+    const { darkMode, toggleDarkMode } = useTheme();
     const [users, setUsers] = useState([]);
     const [usersIsPending, startGetUsers] = useTransition();
     const [snackbar, setSnackbar] = useState({
@@ -37,6 +38,14 @@ export default function Adminuser() {
         severity: 'info',
     });
 
+
+    const rowColors = useMemo(() =>
+        darkMode
+            ? ['#7a7a7a', '#979797']  // Couleurs pour le thème sombre
+            : ['#e62a5625', '#95519b25'],  // Couleurs pour le thème clair
+        [darkMode]
+    );
+    
     /**
      * Affiche un message dans une snackbar.
      * @param {string} message - Le message à afficher.
@@ -109,16 +118,16 @@ export default function Adminuser() {
     const popUpDelete = (userId) => {
         confirmAlert(
             {
-/**
- * Fonction personnalisée pour afficher une boîte de dialogue de confirmation de suppression
- * 
- * Cette fonction retourne un JSX élément représentant une boîte de dialogue personnalisée.
- * La boîte de dialogue affiche un titre, un message de confirmation et des boutons "Oui" et "Non".
- * Lorsque l'utilisateur clique sur le bouton "Oui", la fonction handleDelete est appelée pour supprimer l'utilisateur.
- * Lorsque l'utilisateur clique sur le bouton "Non", la boîte de dialogue se ferme.
- * 
- * @param {object} onClose - La fonction de rappel pour fermer la boîte de dialogue
- */
+                /**
+                 * Fonction personnalisée pour afficher une boîte de dialogue de confirmation de suppression
+                 * 
+                 * Cette fonction retourne un JSX élément représentant une boîte de dialogue personnalisée.
+                 * La boîte de dialogue affiche un titre, un message de confirmation et des boutons "Oui" et "Non".
+                 * Lorsque l'utilisateur clique sur le bouton "Oui", la fonction handleDelete est appelée pour supprimer l'utilisateur.
+                 * Lorsque l'utilisateur clique sur le bouton "Non", la boîte de dialogue se ferme.
+                 * 
+                 * @param {object} onClose - La fonction de rappel pour fermer la boîte de dialogue
+                 */
                 customUI: ({ onClose }) => {
                     return (
                         <div className="custom-confirm-dialog">
@@ -150,24 +159,35 @@ export default function Adminuser() {
 
     return (
         <form>
-            <div className="frameStyle-style">
+            <div className="frameStyle-style" style={{
+                backgroundColor: darkMode ? '#2a2a2a' : '#ffffff',
+                color: darkMode ? '#ffffff' : '#000000',
+            }}>
                 <h2>Getion des utilisateur</h2>
 
-                <TableContainer>
-                    <div className="frameStyle-style">
+                <TableContainer
+                className="frameStyle-style"
+                style={{
+                    maxHeight: '600px',
+                    overflowY: 'auto',
+                    backgroundColor: darkMode ? '#2a2a2a' : '#ffffff',
+                }}
+            >
+                    
                         <Table>
                             <TableHead>
-                                <TableRow style={{ backgroundColor: '#0098f950' }}>
+                            <TableRow style={{ backgroundColor: darkMode ? '#535353' : '#0098f950' }}>
                                     <TableCell style={{ fontWeight: 'bold' }}>Login</TableCell>
                                     <TableCell style={{ fontWeight: 'bold' }}>Password</TableCell>
                                     <TableCell style={{ fontWeight: 'bold' }}>Name</TableCell>
                                     <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>Edit</TableCell>
                                     <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>Delete</TableCell>
                                 </TableRow>
+                                <TableRow className="table-row-separatormenu"></TableRow>
                             </TableHead>
                             <TableBody>
                                 {users.map((user, index) => (
-                                    <TableRow key={user._id} style={{ backgroundColor: index % 2 === 0 ? '#e62a5625' : '#95519b25', borderBottom: '2px solid #000000' }}>
+                                    <TableRow style={{ backgroundColor: rowColors[index % rowColors.length] }}>
                                         <TableCell>{user.userLogin}</TableCell>
                                         <TableCell>{user.userPassword}</TableCell>
                                         <TableCell>{user.userName}</TableCell>
@@ -189,7 +209,7 @@ export default function Adminuser() {
                                 ))}
                             </TableBody>
                         </Table>
-                    </div>
+                    
                 </TableContainer>
 
             </div>
@@ -202,7 +222,7 @@ export default function Adminuser() {
 
             <div className="image-cortigroupe"></div>
             <Tooltip title="Si vous rencontrez un souci avec le site, envoyer un mail à l'adresse suivante : bgillet.lecortil@cortigroupe.be et expliquer le soucis rencontré" arrow>
-            <h5 style={{ marginBottom: '40px' }}> Développé par Remy et Benoit pour Le Cortigroupe. Support: bgillet.lecortil@cortigroupe.be</h5>
+                <h5 style={{ marginBottom: '40px' }}> Développé par Remy et Benoit pour Le Cortigroupe. Support: bgillet.lecortil@cortigroupe.be</h5>
             </Tooltip>
 
         </form>

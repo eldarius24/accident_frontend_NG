@@ -8,7 +8,7 @@ import TextFieldMaskP from '../_composants/textFieldMaskP';
 import DatePickerP from '../_composants/datePickerP';
 import AutoCompleteP from '../_composants/autoCompleteP';
 import listeDeclarationAssBelfius from '../liste/listeDeclarationAssBelfius.json';
-
+import { useTheme } from '../pageAdmin/user/ThemeContext';
 /**
  * Formulaire pour la saisie des informations du salarié victime d'un accident de travail
  * 
@@ -19,7 +19,7 @@ import listeDeclarationAssBelfius from '../liste/listeDeclarationAssBelfius.json
  * @returns {JSX.Element} - le formulaire (IHMs)
  */
 export default function FormulaireSalarie({ setValue, accidentData, watch }) {
-
+  const { darkMode } = useTheme();
   // Mise en forme des cadres texte
   const [frameWidth, setFrameWidth] = useState(window.innerWidth * -0.5);
   useEffect(() => {
@@ -133,7 +133,10 @@ export default function FormulaireSalarie({ setValue, accidentData, watch }) {
    * Etape 3 : retourner le formulaire (IHMs)
    */
   return (
-    <div className="frameStyle-style">
+    <div className="frameStyle-style" style={{
+      backgroundColor: darkMode ? '#2a2a2a' : '#ffffff',
+      color: darkMode ? '#ffffff' : '#000000',
+    }}>
       <div>
         <h2>Infos du travailleur</h2>
         <h3>Rentrez les informations sur la victime de l'accident de travail.</h3>

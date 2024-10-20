@@ -12,11 +12,11 @@ import TextFieldP from '../_composants/textFieldP';
 import DatePickerP from '../_composants/datePickerP';
 import DateHeurePickerP from '../_composants/dateHeurePickerP';
 import TextFieldMaskP from '../_composants/textFieldMaskP';
-
+import { useTheme } from '../pageAdmin/user/ThemeContext';
 
 
 export default function FormulaireDeclarationASSBelfius({ setValue, accidentData, watch }) {
-
+    const { darkMode } = useTheme();
     // Mise en forme des cadres texte
     const [frameWidth, setFrameWidth] = useState(window.innerWidth * -0.5);
     useEffect(() => {
@@ -224,7 +224,10 @@ export default function FormulaireDeclarationASSBelfius({ setValue, accidentData
    * Etape 3 : retourner le formulaire (IHMs)
    */
     return (
-        <div className="frameStyle-style">
+        <div className="frameStyle-style" style={{
+            backgroundColor: darkMode ? '#2a2a2a' : '#ffffff',
+            color: darkMode ? '#ffffff' : '#000000',
+          }}>
             <div className="infoDeclarationAss">
                 <h2>Infos Déclaration</h2>
                 <h3>Rentrez les informations relative a la déclaration.</h3>

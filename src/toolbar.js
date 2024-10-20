@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { AppBar, Toolbar, Typography, Container, Button, Tooltip } from '@mui/material';
+import {Switch, FormControlLabel, AppBar, Toolbar, Typography, Container, Button, Tooltip } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 import BarChartIcon from '@mui/icons-material/BarChart';
@@ -9,7 +9,7 @@ import HomeIcon from '@mui/icons-material/Home';
 import PendingActionsIcon from '@mui/icons-material/PendingActions';
 import ViewListIcon from '@mui/icons-material/ViewList';
 import LogoutIcon from '@mui/icons-material/Logout';
-
+import { useTheme } from './pageAdmin/user/ThemeContext';
 /**
  * A responsive app bar that displays different buttons based on the user's
  * privileges and the current page.
@@ -20,6 +20,14 @@ function ResponsiveAppBar() {
   const location = useLocation();
   const { isAuthenticated, isAdmin, isAdminOuConseiller, userInfo, isConseiller } = useUserConnected();
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  const { darkMode, toggleDarkMode } = useTheme();
+
+
+  useEffect(() => {
+    document.body.style.backgroundColor = darkMode ? '#6e6e6e' : '#ffffff';
+    document.body.style.color = darkMode ? '#ffffff' : '#6e6e6e';
+  }, [darkMode]);
+
 
   useEffect(() => {
     const handleResize = () => setWindowWidth(window.innerWidth);
@@ -103,9 +111,16 @@ function ResponsiveAppBar() {
   );
 
   return (
-    <AppBar position="sticky" sx={{ backgroundColor: '#f9ba2b90' }}>
+    <AppBar position="sticky" sx={{ backgroundColor: darkMode ? '#535353' : '#f9ba2b90' }}>
       <Container maxWidth="lg">
         <Toolbar disableGutters>
+        <Tooltip title="Changer de thème">
+            <Switch
+              checked={darkMode}
+              onChange={toggleDarkMode}
+              color="default"
+            />
+          </Tooltip>
           {renderButton("/login", "Cliquez ici pour vous déconnecter", <LogoutIcon />, "logout")}
           
           {isAdmin && ['/', '/addSecteur', '/adminaction','/adminUser',"/adminEntreprises","/addEntreprise","/addUser"].includes(location.pathname) && 

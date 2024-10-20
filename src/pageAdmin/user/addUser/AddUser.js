@@ -14,13 +14,14 @@ import getEntreprises from './_actions/get-entreprises';
 import putUser from './_actions/put-user';
 import { useNavigate } from 'react-router-dom';
 import CustomSnackbar from '../../../_composants/CustomSnackbar';
-
+import { useTheme } from '../../../pageAdmin/user/ThemeContext';
 
 /**
  * Page pour la création/modification d'un utilisateur
  * @returns Formulaires pour la création/modification d'un utilisateur
  */
 export default function AddUser() {
+    const { darkMode, toggleDarkMode } = useTheme();
     const navigate = useNavigate();
     const params = new URLSearchParams(window.location.search);
     const userId = params.get('userId');
@@ -158,7 +159,10 @@ export default function AddUser() {
 
     return (
         <form className="background-image" onSubmit={handleSubmit(onSubmit)}>
-            <div className="frameStyle-style">
+            <div className="frameStyle-style" style={{
+                backgroundColor: darkMode ? '#2a2a2a' : '#ffffff',
+                color: darkMode ? '#ffffff' : '#000000',
+            }}>
                 <h2>Administration des droits</h2>
 
                 <h3>Créer un nouvelle utilisateur</h3>

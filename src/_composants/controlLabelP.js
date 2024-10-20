@@ -1,21 +1,16 @@
+import React from 'react';
 import { FormControlLabel, Checkbox } from '@mui/material';
+import { useTheme } from '../pageAdmin/user/ThemeContext'; // Assurez-vous que le chemin d'importation est correct
 
-/**
- * objet qui affiche un checkbox
- * @param {*} id identifiant unique
- * @param {*} label nom du checkbox
- * @param {*} onChange fonction qui se déclenche à chaque changement de valeur (setValue({ id }, value))
- * @param {*} defaultValue valeur par défaut
- * @returns
- */
-export default function controlLabelP({ id, label, onChange, defaultValue, sx={ backgroundColor: '#00479871', width: '50%', boxShadow: 3, margin: '0 auto 1rem' } }) {
+export default function ControlLabelP({ 
+    id, 
+    label, 
+    onChange, 
+    defaultValue, 
+    sx = { width: '50%', boxShadow: 3, margin: '0 auto 1rem' } 
+}) {
+    const { darkMode } = useTheme();
 
-    /**
-     * Handles the change of the checkbox.
-     * @param {object} _ - The event object (not used).
-     * @param {boolean} value - The new value of the checkbox.
-     * @returns {undefined}
-     */
     const handleChange = (_, value) => {
         console.log('checkBox change to "', value, '"');
         if (onChange) {
@@ -23,14 +18,30 @@ export default function controlLabelP({ id, label, onChange, defaultValue, sx={ 
         }
     }
 
+    const darkModeStyles = {
+        backgroundColor: darkMode ? '#333333' : '#00479871',
+        color: darkMode ? '#ffffff' : 'inherit',
+        '& .MuiCheckbox-root': {
+            color: darkMode ? '#ffffff' : 'inherit',
+        },
+        '& .MuiCheckbox-root.Mui-checked': {
+            color: darkMode ? '#95ad22' : '#1976d2',
+        },
+    };
+
     return (
         <FormControlLabel
             id={id}
-            control={<Checkbox
-                checked={defaultValue}
-                onChange={handleChange}
-            />}
-            sx={sx}
+            control={
+                <Checkbox
+                    checked={defaultValue}
+                    onChange={handleChange}
+                />
+            }
+            sx={{
+                ...sx,
+                ...darkModeStyles,
+            }}
             label={label}
         />
     )

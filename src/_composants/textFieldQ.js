@@ -1,42 +1,26 @@
 import React, { useState, useEffect } from 'react';
 import { TextField } from '@mui/material';
+import { useTheme } from '../pageAdmin/user/ThemeContext'; // Assurez-vous que le chemin d'importation est correct
 
-/**
- * Affiche un champ de texte avec un label, un ID et une valeur.
- * Si onchange est défini, alors il s'agit d'un champ de texte qui appelle
- * la fonction onchange à chaque changement de valeur.
- * Si defaultValue est défini, alors c'est la valeur par défaut.
- * Si required est true, alors le champ est obligatoire.
- * @param {string} id - Identifiant unique.
- * @param {string} label - Nom du champ.
- * @param {function} onChange - Fonction qui se déclenche à chaque changement de valeur.
- * @param {string} value - Valeur du champ.
- * @param {string} defaultValue - Valeur par défaut.
- * @param {boolean} required - Si true, alors le champ est obligatoire.
- * @returns {JSX.Element}
- */
-export default function textFieldQ({ 
-    id, 
-    label, 
-    onChange, 
-    value, 
+export default function TextFieldQ({
+    id,
+    label,
+    onChange,
+    value,
     defaultValue,
     required = false
 }) {
+    const { darkMode } = useTheme();
     const [inputValue, setInputValue] = useState(value || defaultValue || "");
-    const [backgroundColor, setBackgroundColor] = useState('#e62a5663');
+    const [backgroundColor, setBackgroundColor] = useState(darkMode ? '#333333' : '#e62a5663');
 
     useEffect(() => {
-        setBackgroundColor(inputValue ? '#95ad2271' : '#e62a5663');
-    }, [inputValue]);
+        setBackgroundColor(inputValue 
+            ? (darkMode ? '#4a4a4a' : '#95ad2271')
+            : (darkMode ? '#333333' : '#e62a5663')
+        );
+    }, [inputValue, darkMode]);
 
-    /**
-     * Handles the change event of the TextField component.
-     * Updates the state with the new value, and if the onChange function is provided,
-     * calls onChange with the new value.
-     * @param {object} event - The event object.
-     * @returns {undefined}
-     */
     const handleChange = (event) => {
         const newValue = event.target.value;
         setInputValue(newValue);
@@ -52,11 +36,23 @@ export default function textFieldQ({
                 label={label}
                 value={inputValue}
                 onChange={handleChange}
-                sx={{ 
-                    backgroundColor, 
-                    width: '50%', 
-                    boxShadow: 3, 
-                    transition: 'background-color 0.3s ease' 
+                sx={{
+                    backgroundColor,
+                    width: '50%',
+                    boxShadow: 3,
+                    transition: 'background-color 0.3s ease',
+                    '& .MuiInputLabel-root': {
+                        color: darkMode ? '#ffffff' : 'inherit',
+                    },
+                    '& .MuiInputBase-input': {
+                        color: darkMode ? '#ffffff' : 'inherit',
+                    },
+                    '& .MuiOutlinedInput-notchedOutline': {
+                        borderColor: darkMode ? '#ffffff' : 'rgba(0, 0, 0, 0.23)',
+                    },
+                    '& .MuiFormHelperText-root': {
+                        color: darkMode ? '#ff6b6b' : 'inherit', // Couleur d'erreur adaptée au mode sombre
+                    },
                 }}
                 multiline
                 required={required}

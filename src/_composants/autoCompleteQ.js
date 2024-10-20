@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Autocomplete, TextField, Paper } from '@mui/material';
+import { useTheme } from '../pageAdmin/user/ThemeContext'; // Assurez-vous que le chemin d'importation est correct
 
 export default function AutoCompleteQ({
     id,
@@ -10,28 +11,23 @@ export default function AutoCompleteQ({
     required = false,
     sx = { width: '50%', boxShadow: 3, margin: '0 auto 1rem' }
 }) {
+    const { darkMode } = useTheme();
     const [value, setValue] = useState(defaultValue || null);
-    const [backgroundColor, setBackgroundColor] = useState('#e62a5663');
+    const [backgroundColor, setBackgroundColor] = useState(darkMode ? '#333333' : '#e62a5663');
 
     useEffect(() => {
-        setBackgroundColor(value ? '#95ad2271' : '#e62a5663');
-    }, [value]);
+        setBackgroundColor(value 
+            ? (darkMode ? '#4a4a4a' : '#95ad2271')
+            : (darkMode ? '#333333' : '#e62a5663')
+        );
+    }, [value, darkMode]);
 
-/*************  ✨ Codeium Command 🌟  *************/
-    /**
-     * Handles the change of the Autocomplete.
-     * Updates the state with the new value, and if the onChange function is provided,
-     * calls onChange with the new value.
-     * @param {object} _ - The event object (not used).
-     * @param {string} newValue - The new value of the Autocomplete.
-     */
     const handleChange = (_, newValue) => {
         setValue(newValue);
         if (onChange) {
             onChange(newValue);
         }
     };
-/******  ef5d534b-3bfe-445f-a725-b814e235ed90  *******/
 
     return (
         <div className={id}>
@@ -40,11 +36,20 @@ export default function AutoCompleteQ({
                 id={id}
                 options={option}
                 value={value}
-                isOptionEqualToValue={(option, value) => option === value} // comparaison directe pour les chaînes
+                isOptionEqualToValue={(option, value) => option === value}
                 sx={{
                     ...sx,
                     backgroundColor,
                     transition: 'background-color 0.3s ease',
+                    '& .MuiInputLabel-root': {
+                        color: darkMode ? '#ffffff' : 'inherit',
+                    },
+                    '& .MuiInputBase-input': {
+                        color: darkMode ? '#ffffff' : 'inherit',
+                    },
+                    '& .MuiOutlinedInput-notchedOutline': {
+                        borderColor: darkMode ? '#ffffff' : 'rgba(0, 0, 0, 0.23)',
+                    },
                 }}
                 onChange={handleChange}
                 renderOption={(props, option) => {
@@ -62,10 +67,12 @@ export default function AutoCompleteQ({
                 )}
                 fullWidth={true}
                 PaperComponent={(props) => (
-                    <Paper {...props} sx={{ backgroundColor: '#bed7f6' }} />
+                    <Paper {...props} sx={{ 
+                        backgroundColor: darkMode ? '#4a4a4a' : '#bed7f6',
+                        color: darkMode ? '#ffffff' : 'inherit',
+                    }} />
                 )}
             />
-
         </div>
     );
 }

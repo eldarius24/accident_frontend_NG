@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import axios from 'axios';
 import {
     Table,
@@ -19,7 +19,7 @@ import 'react-confirm-alert/src/react-confirm-alert.css';
 import config from '../config.json';
 import { useNavigate } from 'react-router-dom';
 import CustomSnackbar from '../_composants/CustomSnackbar';
-
+import { useTheme } from '../pageAdmin/user/ThemeContext';
 /**
  * Adminusern est un composant React qui permet de gérer les entreprises
  * 
@@ -32,6 +32,7 @@ import CustomSnackbar from '../_composants/CustomSnackbar';
  * @returns Un JSX element représentant le composant Adminusern
  */
 export default function Adminusern() {
+    const { darkMode } = useTheme();
     const navigate = useNavigate();
     const [entreprises, setEntreprises] = useState([]);
     const [secteurs, setSecteurs] = useState([]);
@@ -43,7 +44,12 @@ export default function Adminusern() {
         severity: 'info',
     });
 
-
+    const rowColors = useMemo(() =>
+        darkMode
+            ? ['#7a7a7a', '#979797']  // Couleurs pour le thème sombre
+            : ['#e62a5625', '#95519b25'],  // Couleurs pour le thème clair
+        [darkMode]
+    );
 
     const handleEdit = (entreprise) => {
         try {
@@ -160,13 +166,16 @@ export default function Adminusern() {
 
     return (
         <form>
-            <div className="frameStyle-style">
+            <div className="frameStyle-style" style={{
+                backgroundColor: darkMode ? '#2a2a2a' : '#ffffff',
+                color: darkMode ? '#ffffff' : '#000000',
+            }}>
                 <h2>Gestion des entreprises</h2>
                 <TableContainer>
                     <div className="frameStyle-style">
                         <Table>
                             <TableHead>
-                                <TableRow style={{ backgroundColor: '#0098f950' }}>
+                            <TableRow style={{ backgroundColor: darkMode ? '#535353' : '#0098f950' }}>
                                     <TableCell style={{ fontWeight: 'bold' }}>Nom</TableCell>
                                     <TableCell style={{ fontWeight: 'bold' }}>Rue et n°</TableCell>
                                     <TableCell style={{ fontWeight: 'bold' }}>Code postal</TableCell>
@@ -180,10 +189,11 @@ export default function Adminusern() {
                                     <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>Modifier</TableCell>
                                     <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>Supprimer</TableCell>
                                 </TableRow>
+                                <TableRow className="table-row-separatormenu"></TableRow>
                             </TableHead>
                             <TableBody>
                                 {entreprises.map((entreprise, index) => (
-                                    <TableRow key={entreprise._id} style={{ backgroundColor: index % 2 === 0 ? '#e62a5625' : '#95519b25', borderBottom: '2px solid #000000' }}>
+                                    <TableRow key={entreprise._id} style={{ backgroundColor: rowColors[index % rowColors.length] }}>
                                         <TableCell>{entreprise.AddEntreName}</TableCell>
                                         <TableCell>{entreprise.AddEntrRue}</TableCell>
                                         <TableCell>{entreprise.AddEntrCodpost}</TableCell>

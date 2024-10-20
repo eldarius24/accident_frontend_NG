@@ -10,6 +10,7 @@ import listeDeclarationAssBelfius from '../liste/listeDeclarationAssBelfius.json
 import DateHeurePickerQ from '../_composants/dateHeurePickerQ';
 import listAccident from '../liste/listAccident.json';
 import listAssureur from '../liste/listAssureur.json';
+import { useTheme } from '../pageAdmin/user/ThemeContext';
 /**
  * FormulaireEntreprise component.
  * 
@@ -35,6 +36,7 @@ export default function FormulaireEntreprise({ setValue, accidentData, watch }) 
   const apiUrl = config.apiUrl;
   const { isAdmin, isAdminOuConseiller, userInfo, isConseiller } = useUserConnected();
   const [formData, setFormData] = useState(accidentData);
+  const { darkMode } = useTheme();
 
   const [nomTravailleur, setNomTravailleur] = useState(watch('nomTravailleur') ? watch('nomTravailleur') : (accidentData && accidentData.nomTravailleur ? accidentData.nomTravailleur : null));
   const [prenomTravailleur, setPrenomTravailleur] = useState(watch('prenomTravailleur') ? watch('prenomTravailleur') : (accidentData && accidentData.prenomTravailleur ? accidentData.prenomTravailleur : null));
@@ -149,7 +151,10 @@ export default function FormulaireEntreprise({ setValue, accidentData, watch }) 
   }
 
   return (
-    <div className="frameStyle-style">
+    <div className="frameStyle-style" style={{
+      backgroundColor: darkMode ? '#2a2a2a' : '#ffffff',
+      color: darkMode ? '#ffffff' : '#000000',
+    }}>
       <div>
         <div>
           <div>

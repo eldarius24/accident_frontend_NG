@@ -22,7 +22,7 @@ import Adminuser from './pageAdmin/user/AdminUser';
 import AddUser from './pageAdmin/user/addUser/AddUser';
 import ProtectedRouteAdminOrConseiller from './Model/protectedRouteConseillerPrevention'; // Importer le nouveau composant
 import FormulaireAction from './planaction/FormulaireAction';
-
+import { ThemeProvider } from './pageAdmin/user/ThemeContext'; // Importez ThemeProvider
 /**
  * App est le composant principal de l'application. Il contient les routes 
  * ainsi que la barre de navigation.
@@ -38,6 +38,7 @@ import FormulaireAction from './planaction/FormulaireAction';
  */
 const App = () => {
   return (
+    <ThemeProvider>
     <Router>
       <div>
         <ResponsiveAppBar />
@@ -68,6 +69,7 @@ const App = () => {
         </Routes>
       </div>
     </Router>
+    </ThemeProvider>
   );
 };
 

@@ -23,9 +23,13 @@ import { handleExportData, handleExportDataAss } from '../Model/excelGenerator.j
 import getAccidents from './_actions/get-accidents.js';
 import { useUserConnected } from '../Hook/userConnected.js';
 import CustomSnackbar from '../_composants/CustomSnackbar';
+import { useTheme } from '../pageAdmin/user/ThemeContext';
+
+
+
+
 
 const apiUrl = config.apiUrl;
-const rowColors = ['#e62a5625', '#95519b25'];
 
 /**
  * Page principale de l'application, cette page contient une table avec 
@@ -35,6 +39,7 @@ const rowColors = ['#e62a5625', '#95519b25'];
  * @returns {React.ReactElement} 
  */
 function Home() {
+    const { darkMode } = useTheme();
     const navigate = useNavigate();
     const [yearsFromData, setYearsFromData] = useState([]);
     const [yearsChecked, setYearsChecked] = useState([]);
@@ -44,6 +49,14 @@ function Home() {
     const [searchTerm, setSearchTerm] = useState('');
     const { isAdmin, isAdminOuConseiller, userInfo, isConseiller } = useUserConnected();
     const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'info' });
+
+    const rowColors = useMemo(() =>
+        darkMode
+            ? ['#7a7a7a', '#979797']  // Couleurs pour le thème sombre
+            : ['#e62a5625', '#95519b25'],  // Couleurs pour le thème clair
+        [darkMode]
+    );
+
 
     const formatDate = useCallback((dateString) => {
         if (!dateString) return '';
@@ -310,10 +323,17 @@ function Home() {
                 </Grid>
             </div>
 
-            <TableContainer className="frameStyle-style" style={{ maxHeight: '600px', overflowY: 'auto' }}>
+            <TableContainer
+                className="frameStyle-style"
+                style={{
+                    maxHeight: '600px',
+                    overflowY: 'auto',
+                    backgroundColor: darkMode ? '#2a2a2a' : '#ffffff',
+                }}
+            >
                 <Table>
                     <TableHead>
-                        <TableRow style={{ backgroundColor: '#0098f950' }}>
+                        <TableRow style={{ backgroundColor: darkMode ? '#535353' : '#0098f950' }}>
                             {['N° Groupe', 'N° Entreprise', 'Status', 'Date accident', 'Entreprise', 'Secteur', 'Nom du travailleur', 'Prénom du travailleur', 'Type accident', 'Editer', 'Fichier', 'PDF', 'Supprimer'].map((header, index) => (
                                 <TableCell key={index} style={{ fontWeight: 'bold', padding: 0, width: index < 8 ? 'auto' : '70px' }}>{isAdminOuConseiller || index < 8 ? header : null}</TableCell>
                             ))}

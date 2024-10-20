@@ -1,8 +1,9 @@
-import React, { } from 'react';
+import React, { useMemo} from 'react';
 import '../pageFormulaire/formulaire.css';
 import { Box, Tooltip } from '@mui/material';
 import Button from '@mui/material/Button';
 import { Link } from 'react-router-dom';
+import { useTheme } from '../pageAdmin/user/ThemeContext';
 /**
  * Component React qui permet d'afficher le panel d'administration des droits
  * 
@@ -16,7 +17,7 @@ import { Link } from 'react-router-dom';
  * @returns Un component React qui affiche le panel d'administration des droits
  */
 export default function AdminPanelSettingsaction() {
-
+    const { darkMode } = useTheme();
     const defaultStyle = {
         margin: '10px', backgroundColor: '#0098f9', '&:hover': { backgroundColor: '#95ad22' },
         fontSize: '1rem', // Taille de police de base
@@ -29,10 +30,19 @@ export default function AdminPanelSettingsaction() {
         },
     }
 
+    const rowColors = useMemo(() =>
+        darkMode
+            ? ['#7a7a7a', '#979797']  // Couleurs pour le thème sombre
+            : ['#e62a5625', '#95519b25'],  // Couleurs pour le thème clair
+        [darkMode]
+    );
 
     return (
         <div>
-            <div className="frameStyle-style">
+            <div className="frameStyle-style" style={{
+                backgroundColor: darkMode ? '#2a2a2a' : '#ffffff',
+                color: darkMode ? '#ffffff' : '#000000',
+            }}>
                 <h3>Administration des droits</h3>
 
                 <Box sx={{ display: 'flex', justifyContent: 'center', marginLeft: '120px', marginRight: '120px' }}>
@@ -74,7 +84,7 @@ export default function AdminPanelSettingsaction() {
             </div>
             <div className="image-cortigroupe"></div>
             <Tooltip title="Si vous rencontrez un souci avec le site, envoyer un mail à l'adresse suivante : bgillet.lecortil@cortigroupe.be et expliquer le soucis rencontré" arrow>
-            <h5 style={{ marginBottom: '40px' }}> Développé par Remy et Benoit pour Le Cortigroupe. Support: bgillet.lecortil@cortigroupe.be</h5>
+                <h5 style={{ marginBottom: '40px' }}> Développé par Remy et Benoit pour Le Cortigroupe. Support: bgillet.lecortil@cortigroupe.be</h5>
             </Tooltip>
 
         </div>

@@ -1,5 +1,5 @@
 import axios from 'axios';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import TextFieldP from '../_composants/textFieldP';
 import '../pageFormulaire/formulaire.css';
@@ -7,7 +7,7 @@ import { Button, Tooltip } from '@mui/material/';
 import config from '../config.json';
 import { useNavigate, useLocation } from 'react-router-dom';
 import CustomSnackbar from '../_composants/CustomSnackbar';
-
+import { useTheme } from '../pageAdmin/user/ThemeContext';
 
 /**
  * AdminPanelSettings est un composant qui permet de créer une nouvelle entreprise
@@ -18,6 +18,7 @@ import CustomSnackbar from '../_composants/CustomSnackbar';
  * @returns {JSX.Element} - Le composant AdminPanelSettings.
  */
 export default function AdminPanelSettings({ accidentData }) {
+    const { darkMode } = useTheme();
     const navigate = useNavigate();
     const apiUrl = config.apiUrl;
     const [snackbar, setSnackbar] = useState({
@@ -30,6 +31,14 @@ export default function AdminPanelSettings({ accidentData }) {
     const { watch, register, setValue, handleSubmit } = useForm({
         defaultValues: entrepriseToEdit || {}
     });
+
+    const rowColors = useMemo(() =>
+        darkMode
+            ? ['#7a7a7a', '#979797']  // Couleurs pour le thème sombre
+            : ['#e62a5625', '#95519b25'],  // Couleurs pour le thème clair
+        [darkMode]
+    );
+
 
     /**
      * Display a snackbar message with the given message and severity.
@@ -134,7 +143,10 @@ export default function AdminPanelSettings({ accidentData }) {
 
     return (
         <form className="background-image" onSubmit={handleSubmit(onSubmit)}>
-            <div className="frameStyle-style">
+            <div className="frameStyle-style" style={{
+                backgroundColor: darkMode ? '#2a2a2a' : '#ffffff',
+                color: darkMode ? '#ffffff' : '#000000',
+            }}>
                 <h2>Créer une nouvelle entreprise</h2>
                 <h3>Toutes les données doivent êtres obligatoirement remplie</h3>
                 <TextFieldP id='AddEntreName' label="Nom de la nouvelle entreprise" onChange={setAddEntreName} defaultValue={AddEntreName}></TextFieldP>
@@ -163,7 +175,7 @@ export default function AdminPanelSettings({ accidentData }) {
                             sx={{
                                 backgroundColor: '#ee742d59',
                                 transition: 'all 0.3s ease-in-out',
-                                '&:hover': {backgroundColor: '#95ad22' ,transform: 'scale(1.08)',boxShadow: 6},
+                                '&:hover': { backgroundColor: '#95ad22', transform: 'scale(1.08)', boxShadow: 6 },
                                 padding: '10px 20px',
                                 width: '50%',
                                 marginTop: '1cm',

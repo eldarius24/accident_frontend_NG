@@ -14,7 +14,7 @@ import AutoCompleteP from '../_composants/autoCompleteP';
 import DatePickerP from '../_composants/datePickerP';
 import TextFieldMaskP from '../_composants/textFieldMaskP';
 import { Link } from 'react-router-dom';
-
+import { useTheme } from '../pageAdmin/user/ThemeContext';
 
 /**
  * Formulaire des informations sur l'accident de travail
@@ -27,7 +27,7 @@ import { Link } from 'react-router-dom';
  * @returns {JSX.Element} Le formulaire
  */
 export default function FormulaireAccident({ setValue, accidentData, watch }) {
-
+  const { darkMode } = useTheme();
   const [frameWidth, setFrameWidth] = useState(window.innerWidth * -0.5);
 
   useEffect(() => {
@@ -124,7 +124,10 @@ export default function FormulaireAccident({ setValue, accidentData, watch }) {
    * Etape 3 : retourner le formulaire (IHMs)
    */
   return (
-    <div className="frameStyle-style">
+    <div className="frameStyle-style" style={{
+      backgroundColor: darkMode ? '#2a2a2a' : '#ffffff',
+      color: darkMode ? '#ffffff' : '#000000',
+    }}>
       <div>
         <div className="infoAccident">
           <h2>Infos Accident</h2>

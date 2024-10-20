@@ -22,6 +22,7 @@ import config from '../config.json';
 import { useUserConnected } from '../Hook/userConnected';
 import { handleExportDataAction } from '../Model/excelGenerator.js';
 import CustomSnackbar from '../_composants/CustomSnackbar';
+import { useTheme } from '../pageAdmin/user/ThemeContext';
 const apiUrl = config.apiUrl;
 
 // Extraction du composant de statistiques dans un composant mémorisé
@@ -173,6 +174,7 @@ const EnterpriseStats = React.memo(({ actions }) => {
  * @returns {JSX.Element} La page du plan d'action
  */
 export default function PlanAction({ accidentData }) {
+    const { darkMode } = useTheme();
     const [users, setAddactions] = useState([]);
     const [loading, setLoading] = useState(true);
     const { handleSubmit } = useForm();
@@ -193,7 +195,12 @@ export default function PlanAction({ accidentData }) {
     });
     const navigate = useNavigate();
 
-
+    const rowColors = useMemo(() =>
+        darkMode
+            ? ['#7a7a7a', '#979797']  // Couleurs pour le thème sombre
+            : ['#e62a5625', '#95519b25'],  // Couleurs pour le thème clair
+        [darkMode]
+    );
 
 
     /**
@@ -491,12 +498,19 @@ export default function PlanAction({ accidentData }) {
                     </Tooltip>
                 </Grid>
             </div>
-            <TableContainer>
-                <div className="frameStyle-style">
+            <TableContainer
+                className="frameStyle-style"
+                style={{
+                    maxHeight: '600px',
+                    overflowY: 'auto',
+                    backgroundColor: darkMode ? '#2a2a2a' : '#ffffff',
+                }}
+            >
+                
                     <Table>
                         <TableHead>
                             <React.Fragment>
-                                <TableRow style={{ backgroundColor: '#0098f950' }} key={"CellTowerSharp"}>
+                            <TableRow style={{ backgroundColor: darkMode ? '#535353' : '#0098f950' }}>
                                     <TableCell style={{ fontWeight: 'bold' }}>Status</TableCell>
                                     <TableCell style={{ fontWeight: 'bold' }}>Année</TableCell>
                                     <TableCell style={{ fontWeight: 'bold' }}>Mois</TableCell>
@@ -510,8 +524,8 @@ export default function PlanAction({ accidentData }) {
                                     <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>Download</TableCell>
                                     <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>Delete</TableCell>
                                 </TableRow>
-                                <TableRow className="table-row-separatormenu"></TableRow>
                             </React.Fragment>
+                            <TableRow className="table-row-separatormenu"></TableRow>
                         </TableHead>
                         <TableBody>
                             {filteredUsers
@@ -519,11 +533,8 @@ export default function PlanAction({ accidentData }) {
                                 .map((addaction, index) => (
                                     canViewAction(addaction) && (
 
-                                        <TableRow
-                                            className="table-row-separatormenu"
-                                            key={addaction._id}
-                                            style={{ backgroundColor: getRowColor(addaction.AddboolStatus, index) }}
-                                        >
+                                        <TableRow className= "table-row-separatormenu" style={{ backgroundColor: rowColors[index % rowColors.length] }}>
+
 
                                             <TableCell>
                                                 <Tooltip title="Sélectionnez quand l'action est réalisée" arrow>
@@ -641,7 +652,7 @@ export default function PlanAction({ accidentData }) {
                                 ))}
                         </TableBody>
                     </Table>
-                </div>
+                
             </TableContainer>
             <CustomSnackbar
                 open={snackbar.open}

@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { TextField } from '@mui/material';
 import { IMaskInput } from 'react-imask';
-
+import { useTheme } from '../pageAdmin/user/ThemeContext'; // Assurez-vous que le chemin d'importation est correct
 
 const TextMaskCustom = React.forwardRef(function TextMaskCustom(props, ref) {
     const { onChange, value, mask, ...other } = props;
@@ -21,26 +21,27 @@ const TextMaskCustom = React.forwardRef(function TextMaskCustom(props, ref) {
     );
 });
 
-/**
- * objet qui affiche un TextField
- * @param {string} id identifiant unique
- * @param {string} label nom du TextField
- * @param {fonction} onChange fonction qui se déclenche à chaque changement de valeur (setValue({ id }, value))
- * @param {string} defaultValue valeur par défaut
- * @param {string} mask masque de saisie (ex: mask="AA00-0000-0000-0000-0000") où A = lettre et 0 = chiffre et # = lettre ou chiffre
- */
 export default function TextFieldMaskP({ id, label, onChange, defaultValue, mask }) {
+    const { darkMode } = useTheme();
 
-    /**
-     * Handles the change event of the TextField.
-     * If onChange is provided, calls onChange with the new value of the TextField.
-     * @param {Event} event - The change event.
-     */
     function handleChange(event) {
         if (onChange) {
             onChange(event.target.value);
         }
     }
+
+    const darkModeStyles = {
+        backgroundColor: darkMode ? '#333333' : '#00479871',
+        '& .MuiInputLabel-root': {
+            color: darkMode ? '#ffffff' : 'inherit',
+        },
+        '& .MuiInputBase-input': {
+            color: darkMode ? '#ffffff' : 'inherit',
+        },
+        '& .MuiOutlinedInput-notchedOutline': {
+            borderColor: darkMode ? '#ffffff' : 'rgba(0, 0, 0, 0.23)',
+        },
+    };
 
     return (
         <div style={{ display: 'flex', justifyContent: 'center', margin: '0 auto 1rem' }}>
@@ -55,7 +56,11 @@ export default function TextFieldMaskP({ id, label, onChange, defaultValue, mask
                         mask: mask
                     }
                 }}
-                sx={{ backgroundColor: '#00479871', width: '50%', boxShadow: 3 }}
+                sx={{
+                    ...darkModeStyles,
+                    width: '50%',
+                    boxShadow: 3,
+                }}
             />
         </div>
     );

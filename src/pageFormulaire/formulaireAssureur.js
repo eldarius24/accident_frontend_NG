@@ -8,7 +8,7 @@ import listAssureur from '../liste/listAssureur.json';
 import AutoCompleteP from '../_composants/autoCompleteP';
 import ControlLabelP from '../_composants/controlLabelP';
 import TextFieldP from '../_composants/textFieldP';
-
+import { useTheme } from '../pageAdmin/user/ThemeContext';
 
 
 /**
@@ -29,7 +29,7 @@ import TextFieldP from '../_composants/textFieldP';
  * @returns {JSX.Element}
  */
 export default function FormulaireAssureur({ setValue, accidentData, watch }) {
-
+  const { darkMode } = useTheme();
   /**
  * Etape 1 : stocker les données dans des variables locales et les initialiser avec les données de l'accident si elles existent
  * 
@@ -60,7 +60,10 @@ export default function FormulaireAssureur({ setValue, accidentData, watch }) {
    * Etape 3 : retourner le formulaire (IHMs)
    */
   return (
-    <div className= "frameStyle-style">
+    <div className="frameStyle-style" style={{
+      backgroundColor: darkMode ? '#2a2a2a' : '#ffffff',
+      color: darkMode ? '#ffffff' : '#000000',
+    }}>
       <div>
         <div className="infoAssureur">
           <h2>Infos Assureur</h2>

@@ -4,33 +4,22 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs from 'dayjs';
 import 'dayjs/locale/fr';
+import { useTheme } from '../pageAdmin/user/ThemeContext'; // Assurez-vous que le chemin d'importation est correct
 
 dayjs.locale('fr');
 
-/**
- * Date Picker composant qui affiche un calendrier pour choisir une date
- * @param {string} id - identifiant du composant
- * @param {string} label - texte à afficher
- * @param {string} defaultValue - Valeur par défaut format dayjs '2021-10-10'
- * @param {function} onChange - Fonction appelée lors du changement de date
- * @param {boolean} required - Indique si le champ est obligatoire
- * @returns {JSX.Element}
- */
-export default function datePickerQ({ id, label, defaultValue, onChange, required = false }) {
+export default function DatePickerQ({ id, label, defaultValue, onChange, required = false }) {
+    const { darkMode } = useTheme();
     const [value, setValue] = useState(defaultValue ? dayjs(defaultValue) : null);
-    const [backgroundColor, setBackgroundColor] = useState('#e62a5663');
+    const [backgroundColor, setBackgroundColor] = useState(darkMode ? '#333333' : '#e62a5663');
 
     useEffect(() => {
-        setBackgroundColor(value ? '#95ad2271' : '#e62a5663');
-    }, [value]);
+        setBackgroundColor(value 
+            ? (darkMode ? '#4a4a4a' : '#95ad2271')
+            : (darkMode ? '#333333' : '#e62a5663')
+        );
+    }, [value, darkMode]);
 
-/**
- * Handles the change of the date value.
- * Updates the state with the new date value, and if the onChange function is provided,
- * formats the new date to 'YYYY-MM-DD' and calls onChange with the formatted date.
- *
- * @param {Dayjs} newValue - The new date value.
- */
     const handleChange = (newValue) => {
         setValue(newValue);
         if (onChange && newValue) {
@@ -47,18 +36,51 @@ export default function datePickerQ({ id, label, defaultValue, onChange, require
                     label={label}
                     value={value}
                     onChange={handleChange}
-                    sx={{ 
-                        backgroundColor: backgroundColor, 
-                        width: '50%', 
-                        boxShadow: 3, 
+                    sx={{
+                        backgroundColor: backgroundColor,
+                        width: '50%',
+                        boxShadow: 3,
                         margin: '0 auto 1rem',
                         transition: 'background-color 0.3s ease',
+                        '& .MuiInputLabel-root': {
+                            color: darkMode ? '#ffffff' : 'inherit',
+                        },
+                        '& .MuiInputBase-input': {
+                            color: darkMode ? '#ffffff' : 'inherit',
+                        },
+                        '& .MuiOutlinedInput-notchedOutline': {
+                            borderColor: darkMode ? '#ffffff' : 'rgba(0, 0, 0, 0.23)',
+                        },
+                        '& .MuiSvgIcon-root': {
+                            color: darkMode ? '#ffffff' : 'inherit',
+                        },
                     }}
                     slotProps={{
                         textField: {
                             required: required,
                             error: required && !value,
                             helperText: required && !value ? "Ce champ est obligatoire" : "",
+                        },
+                        popper: {
+                            sx: {
+                                '& .MuiPaper-root': {
+                                    backgroundColor: darkMode ? '#333333' : '#ffffff',
+                                    color: darkMode ? '#ffffff' : 'inherit',
+                                },
+                                '& .MuiPickersDay-root': {
+                                    color: darkMode ? '#ffffff' : 'inherit',
+                                    '&:hover': {
+                                        backgroundColor: darkMode ? '#4a4a4a' : '#e6e6e6',
+                                    },
+                                },
+                                '& .Mui-selected': {
+                                    backgroundColor: darkMode ? '#95ad22' : '#1976d2',
+                                    color: '#ffffff',
+                                    '&:hover': {
+                                        backgroundColor: darkMode ? '#7c9118' : '#1565c0',
+                                    },
+                                },
+                            },
                         },
                     }}
                 />
