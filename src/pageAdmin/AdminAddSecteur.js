@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import axios from 'axios';
 import { useForm } from 'react-hook-form';
 import { useLocation } from 'react-router-dom';
@@ -20,6 +20,7 @@ import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import { confirmAlert } from 'react-confirm-alert';
 import config from '../config.json';
 import CustomSnackbar from '../_composants/CustomSnackbar';
+import { useTheme } from '../pageAdmin/user/ThemeContext';
 
 /**
  * AddSecteur
@@ -28,6 +29,7 @@ import CustomSnackbar from '../_composants/CustomSnackbar';
  * @returns {JSX.Element} La page pour ajouter un secteur.
  */
 export default function AddSecteur() {
+    const { darkMode } = useTheme();
     const location = useLocation();
     const entreprise = location.state.entreprise;
     const [secteurs, setSecteurs] = useState([]);
@@ -40,6 +42,13 @@ export default function AddSecteur() {
         message: '',
         severity: 'info',
     });
+
+    const rowColors = useMemo(() =>
+        darkMode
+            ? ['#7a7a7a', '#979797']  // Couleurs pour le thème sombre
+            : ['#e62a5625', '#95519b25'],  // Couleurs pour le thème clair
+        [darkMode]
+    );
 
     /**
      * Affiche un message dans une snackbar.
@@ -159,7 +168,10 @@ export default function AddSecteur() {
 
     return (
         <form className="background-image" onSubmit={handleSubmit(onSubmit)}>
-            <div className="frameStyle-style">
+            <div className="frameStyle-style" style={{
+                backgroundColor: darkMode ? '#2a2a2a' : '#ffffff',
+                color: darkMode ? '#ffffff' : '#000000',
+            }}>
                 <h2>Créer un nouveau secteur pour {entreprise.AddEntreName}</h2>
 
                 <TextFieldP
@@ -180,7 +192,7 @@ export default function AddSecteur() {
                         <Button
                             type="submit"
                             sx={{
-                                backgroundColor: '#0098f9',
+                                backgroundColor: '#ee742d59',
                                 transition: 'all 0.3s ease-in-out',
                                 '&:hover': { backgroundColor: '#95ad22', transform: 'scale(1.08)', boxShadow: 6 },
                                 padding: '10px 20px',
@@ -207,14 +219,14 @@ export default function AddSecteur() {
                     <TableContainer>
                         <Table>
                             <TableHead>
-                                <TableRow style={{ backgroundColor: '#0098f950' }}>
+                                <TableRow style={{ backgroundColor: darkMode ? '#535353' : '#0098f950' }}>
                                     <TableCell style={{ fontWeight: 'bold' }}>Nom du secteur</TableCell>
                                     <TableCell style={{ fontWeight: 'bold' }}>Actions</TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
-                                {secteurs.map((secteur) => (
-                                    <TableRow key={secteur._id}>
+                                {secteurs.map((secteur,index) => (
+                                    <TableRow key={secteur._id} style={{ backgroundColor: rowColors[index % rowColors.length] }}>
                                         <TableCell>{secteur.secteurName}</TableCell>
                                         <TableCell>
                                             <Tooltip title="Cliquez ici pour supprimer cette entreprise" arrow>

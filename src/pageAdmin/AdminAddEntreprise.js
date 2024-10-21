@@ -1,5 +1,5 @@
 import axios from 'axios';
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect} from 'react';
 import { useForm } from 'react-hook-form';
 import TextFieldP from '../_composants/textFieldP';
 import '../pageFormulaire/formulaire.css';
@@ -31,14 +31,6 @@ export default function AdminPanelSettings({ accidentData }) {
     const { watch, register, setValue, handleSubmit } = useForm({
         defaultValues: entrepriseToEdit || {}
     });
-
-    const rowColors = useMemo(() =>
-        darkMode
-            ? ['#7a7a7a', '#979797']  // Couleurs pour le thème sombre
-            : ['#e62a5625', '#95519b25'],  // Couleurs pour le thème clair
-        [darkMode]
-    );
-
 
     /**
      * Display a snackbar message with the given message and severity.
