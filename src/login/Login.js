@@ -9,51 +9,46 @@ import InputAdornment from '@mui/material/InputAdornment';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import axios from 'axios';
+import { useTheme } from '../pageAdmin/user/ThemeContext';
 
-
-/**
- * Page de connexion à l'application T.I.G.R.E
- * Stocke les données de connexion dans le local storage
- * 
- * @returns page de connexion
- */
 const Login = () => {
   const navigate = useNavigate();
   const { register, handleSubmit } = useForm();
   const [isPasswordValid, setIsPasswordValid] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
+  const { setDarkMode } = useTheme();
 
-  /**
-   * Fonction qui permet de se connecter à l'application
-   * Envoie une requête POST avec l'email et le mot de passe
-   * Stocke le token de connexion dans le local storage
-   * Redirige vers la page d'accueil
-   * 
-   * @param {object} data - Les données de connexion
-   * @returns {Promise} - La promesse de la requête
-   */
   const onSubmit = async (data) => {
-    const email = data.email;
-    const password = data.password;
-
-
+    const { email, password } = data;
+  
     try {
       const response = await axios.post('http://localhost:3100/api/login', { email, password }, {
         headers: { 'Content-Type': 'application/json' }
       });
-
-      const user = await response;
-
-      if (!user || response.status !== 200) {
+  
+      const userData = response.data;
+  
+      if (!userData || response.status !== 200) {
         setIsPasswordValid(false);
         alert('Login failed');
         return;
       }
-      localStorage.setItem('token', JSON.stringify(user));
-      navigate('/')
-
+  
+      // Stockez le token avec la structure attendue par useUserConnected
+      const tokenData = {
+        data: userData
+      };
+      localStorage.setItem('token', JSON.stringify(tokenData));
+  
+      // Mettre à jour le thème avec les préférences de l'utilisateur si nécessaire
+      setDarkMode(!!userData.darkMode);
+  
+      // Rediriger vers la page d'accueil
+      navigate('/');
     } catch (error) {
-      console.error('Erreur lors de la connexion.', error);
+      console.error('Erreur lors de la connexion:', error.response ? error.response.data : error.message);
+      setIsPasswordValid(false);
+      alert('Login failed: ' + (error.response ? error.response.data.message : 'Unknown error'));
     }
   };
 

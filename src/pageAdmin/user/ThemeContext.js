@@ -4,12 +4,15 @@ const ThemeContext = createContext();
 
 export const ThemeProvider = ({ children }) => {
   const [darkMode, setDarkMode] = useState(() => {
-    const savedTheme = localStorage.getItem('darkMode');
-    return savedTheme ? JSON.parse(savedTheme) : false;
+    const user = JSON.parse(localStorage.getItem('user'));
+    return user ? user.darkMode : false;
   });
 
   useEffect(() => {
-    localStorage.setItem('darkMode', JSON.stringify(darkMode));
+    const user = JSON.parse(localStorage.getItem('user'));
+    if (user) {
+      localStorage.setItem('user', JSON.stringify({ ...user, darkMode }));
+    }
   }, [darkMode]);
 
   const toggleDarkMode = () => {
@@ -17,7 +20,7 @@ export const ThemeProvider = ({ children }) => {
   };
 
   return (
-    <ThemeContext.Provider value={{ darkMode, toggleDarkMode }}>
+    <ThemeContext.Provider value={{ darkMode, toggleDarkMode, setDarkMode }}>
       {children}
     </ThemeContext.Provider>
   );
