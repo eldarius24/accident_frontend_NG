@@ -12,6 +12,8 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import { useTheme } from './pageAdmin/user/ThemeContext';
 import axios from 'axios';
 import config from './config.json';
+import DarkModeIcon from '@mui/icons-material/DarkMode';
+import LightModeIcon from '@mui/icons-material/LightMode';
 /**
  * A responsive app bar that displays different buttons based on the user's
  * privileges and the current page.
@@ -116,22 +118,22 @@ function ResponsiveAppBar() {
   const handleThemeChange = async () => {
     const newDarkMode = !darkMode;
     toggleDarkMode();
-   
+
     if (userInfo && userInfo._id) {
-        try {
-            const response = await axios.put(`http://${apiUrl}:3100/api/users/${userInfo._id}/updateTheme`, {
-                darkMode: newDarkMode
-            });
-            console.log('Theme updated successfully:', response.data);
-        } catch (error) {
-            console.error('Error updating theme:', error.response ? error.response.data : error.message);
-            // Optionnel : vous pouvez choisir de revenir à l'ancien thème en cas d'erreur
-            // toggleDarkMode();
-        }
+      try {
+        const response = await axios.put(`http://${apiUrl}:3100/api/users/${userInfo._id}/updateTheme`, {
+          darkMode: newDarkMode
+        });
+        console.log('Theme updated successfully:', response.data);
+      } catch (error) {
+        console.error('Error updating theme:', error.response ? error.response.data : error.message);
+        // Optionnel : vous pouvez choisir de revenir à l'ancien thème en cas d'erreur
+        // toggleDarkMode();
+      }
     } else {
-        console.warn('User info or user ID is missing. Theme update skipped.');
+      console.warn('User info or user ID is missing. Theme update skipped.');
     }
-};
+  };
 
 
   return (
@@ -143,6 +145,8 @@ function ResponsiveAppBar() {
               checked={darkMode}
               onChange={handleThemeChange}
               color="default"
+              icon={<LightModeIcon />}
+              checkedIcon={<DarkModeIcon />}
             />
           </Tooltip>
           {renderButton("/login", "Cliquez ici pour vous déconnecter", <LogoutIcon />, "logout")}
