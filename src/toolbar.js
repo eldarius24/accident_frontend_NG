@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import {Switch, FormControlLabel, AppBar, Toolbar, Typography, Container, Button, Tooltip } from '@mui/material';
+import { Switch, FormControlLabel, AppBar, Toolbar, Typography, Container, Button, Tooltip } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 import BarChartIcon from '@mui/icons-material/BarChart';
@@ -10,6 +10,8 @@ import PendingActionsIcon from '@mui/icons-material/PendingActions';
 import ViewListIcon from '@mui/icons-material/ViewList';
 import LogoutIcon from '@mui/icons-material/Logout';
 import { useTheme } from './pageAdmin/user/ThemeContext';
+import axios from 'axios';
+import config from './config.json';
 /**
  * A responsive app bar that displays different buttons based on the user's
  * privileges and the current page.
@@ -21,7 +23,7 @@ function ResponsiveAppBar() {
   const { isAuthenticated, isAdmin, isAdminOuConseiller, userInfo, isConseiller } = useUserConnected();
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const { darkMode, toggleDarkMode } = useTheme();
-
+  const apiUrl = config.apiUrl;
 
   useEffect(() => {
     document.body.style.backgroundColor = darkMode ? '#6e6e6e' : '#ffffff';
@@ -72,7 +74,7 @@ function ResponsiveAppBar() {
     transition: 'all 0.3s ease-in-out',
     '&:hover': {
       transform: 'scale(1.1)',
-      
+
     }
   };
 
@@ -80,83 +82,105 @@ function ResponsiveAppBar() {
     return null;
   }
 
-/**
- * Renders a button with a tooltip, icon, and text.
- * 
- * @param {string} to - The destination URL of the button.
- * @param {string} tooltip - The text shown in the tooltip when hovering over the button.
- * @param {JSX.Element} icon - The icon component to display on the button.
- * @param {string} text - The text displayed on the button.
- */
+  /**
+   * Renders a button with a tooltip, icon, and text.
+   * 
+   * @param {string} to - The destination URL of the button.
+   * @param {string} tooltip - The text shown in the tooltip when hovering over the button.
+   * @param {JSX.Element} icon - The icon component to display on the button.
+   * @param {string} text - The text displayed on the button.
+   */
   const renderButton = (to, tooltip, icon, text) => (
     <Tooltip title={tooltip} arrow>
       <Button
-  component={Link}
-  to={to}
-  variant="contained"
-  sx={{
-    ...buttonStyle,
-    transition: 'all 0.3s ease-in-out',
-    '&:hover': {
-      backgroundColor: '#95ad22',
-      transform: 'scale(1.08)',
-      boxShadow: 6
-    }
-  }}
-  startIcon={icon}
->
-  {showText && text}
-</Button>
+        component={Link}
+        to={to}
+        variant="contained"
+        sx={{
+          ...buttonStyle,
+          transition: 'all 0.3s ease-in-out',
+          '&:hover': {
+            backgroundColor: '#95ad22',
+            transform: 'scale(1.08)',
+            boxShadow: 6
+          }
+        }}
+        startIcon={icon}
+      >
+        {showText && text}
+      </Button>
     </Tooltip>
   );
+
+
+  const handleThemeChange = async () => {
+    const newDarkMode = !darkMode;
+    toggleDarkMode();
+   
+    if (userInfo && userInfo._id) {
+        try {
+            const response = await axios.put(`http://${apiUrl}:3100/api/users/${userInfo._id}/updateTheme`, {
+                darkMode: newDarkMode
+            });
+            console.log('Theme updated successfully:', response.data);
+        } catch (error) {
+            console.error('Error updating theme:', error.response ? error.response.data : error.message);
+            // Optionnel : vous pouvez choisir de revenir à l'ancien thème en cas d'erreur
+            // toggleDarkMode();
+        }
+    } else {
+        console.warn('User info or user ID is missing. Theme update skipped.');
+    }
+};
+
 
   return (
     <AppBar position="sticky" sx={{ backgroundColor: darkMode ? '#535353' : '#f9ba2b90' }}>
       <Container maxWidth="lg">
         <Toolbar disableGutters>
-        <Tooltip title="Changer de thème">
+          <Tooltip title="Changer de thème">
             <Switch
               checked={darkMode}
-              onChange={toggleDarkMode}
+              onChange={handleThemeChange}
               color="default"
             />
           </Tooltip>
           {renderButton("/login", "Cliquez ici pour vous déconnecter", <LogoutIcon />, "logout")}
-          
-          {isAdmin && ['/', '/addSecteur', '/adminaction','/adminUser',"/adminEntreprises","/addEntreprise","/addUser"].includes(location.pathname) && 
+
+          {isAdmin && ['/', '/addSecteur', '/adminaction', '/adminUser', "/adminEntreprises", "/addEntreprise", "/addUser"].includes(location.pathname) &&
             renderButton("/adminaction", "Cliquez ici accèder à l'espace d'administration", <AdminPanelSettingsIcon />, "Admin")}
-          
+
           <Typography variant="h5" noWrap sx={textStyle}>
             T.I.G.R.E
           </Typography>
-          
-          {!['/'].includes(location.pathname) && 
+
+          {!['/'].includes(location.pathname) &&
             renderButton("/", "Cliquez ici pour revenir a l'accueil", <HomeIcon />, "Home")}
-          
+
           {isAdminOuConseiller && (
             <>
-              {!['/fichierdll', '/fichierdllaction', '/addSecteur', '/addUser', '/adminUser', '/addEntreprise', '/adminEntreprises', '/adminaction', '/formulaireAction', '/planAction', '/formulaire', '/statistiques'].includes(location.pathname) && 
+              {!['/fichierdll', '/fichierdllaction', '/addSecteur', '/addUser', '/adminUser', '/addEntreprise', '/adminEntreprises', '/adminaction', '/formulaireAction', '/planAction', '/formulaire', '/statistiques'].includes(location.pathname) &&
                 renderButton("/formulaire", "Cliquez ici pour ajouté un nouvelle accident", <AddIcon />, "Accident")}
-              
-              {!['/fichierdll', '/fichierdllaction','/addSecteur', '/addUser', '/adminUser', '/addEntreprise', '/adminEntreprises', '/adminaction', '/formulaireAction', '/planAction', '/formulaire', '/statistiques'].includes(location.pathname) && 
+
+              {!['/fichierdll', '/fichierdllaction', '/addSecteur', '/addUser', '/adminUser', '/addEntreprise', '/adminEntreprises', '/adminaction', '/formulaireAction', '/planAction', '/formulaire', '/statistiques'].includes(location.pathname) &&
                 renderButton("/statistiques", "Cliquez ici pour accéder aux statistiques", <BarChartIcon />, "Statistiques")}
-              
-              {!['/fichierdll', '/addSecteur', '/addUser', '/adminUser', '/addEntreprise', '/adminEntreprises', '/adminaction', '/planAction', '/formulaire', '/statistiques'].includes(location.pathname) && 
+
+              {!['/fichierdll', '/addSecteur', '/addUser', '/adminUser', '/addEntreprise', '/adminEntreprises', '/adminaction', '/planAction', '/formulaire', '/statistiques'].includes(location.pathname) &&
                 renderButton("/planAction", "Cliquez ici pour accéder aux plans d'actions", <PendingActionsIcon />, "Plans d'actions")}
-              
-              {!['/fichierdll', '/fichierdllaction','/addSecteur', '/addUser', '/adminUser', '/addEntreprise', '/adminEntreprises', '/adminaction', '/', '/formulaireAction', '/formulaire', '/statistiques'].includes(location.pathname) && 
+
+              {!['/fichierdll', '/fichierdllaction', '/addSecteur', '/addUser', '/adminUser', '/addEntreprise', '/adminEntreprises', '/adminaction', '/', '/formulaireAction', '/formulaire', '/statistiques'].includes(location.pathname) &&
                 renderButton("/formulaireAction", "Cliquez ici pour ajouter une nouvelle action", <AddIcon />, "Nouvelle action")}
-              
-              {!['/fichierdll', '/fichierdllaction','/addSecteur', '/addEntreprise', '/addUser', '/adminEntreprises', '/planAction', '/', '/formulaireAction', '/formulaire', '/statistiques'].includes(location.pathname) && 
+
+              {!['/fichierdll', '/fichierdllaction', '/addSecteur', '/addEntreprise', '/addUser', '/adminEntreprises', '/planAction', '/', '/formulaireAction', '/formulaire', '/statistiques'].includes(location.pathname) &&
                 renderButton("/addUser", "Cliquez ici pour ajouter un nouvel utilisateur", <AddIcon />, "Utilisateur")}
-              
-              {!['/fichierdll', '/fichierdllaction','/addSecteur', '/adminUser', '/addEntreprise', '/adminEntreprises', '/planAction', '/', '/formulaireAction', '/formulaire', '/statistiques'].includes(location.pathname) && 
+
+              {!['/fichierdll', '/fichierdllaction', '/addSecteur', '/adminUser', '/addEntreprise', '/adminEntreprises', '/planAction', '/', '/formulaireAction', '/formulaire', '/statistiques'].includes(location.pathname) &&
                 renderButton("/adminUser", "Cliquez ici pour gérer les utilisateurs", <ViewListIcon />, "utilisateurs")}
-              
-              {!['/fichierdll', '/fichierdllaction','/addUser', '/adminUser', '/addEntreprise', '/planAction', '/', '/formulaireAction', '/formulaire', '/statistiques'].includes(location.pathname) && 
+
+              {!['/fichierdll', '/fichierdllaction', '/addUser', '/adminUser', '/addEntreprise', '/planAction', '/', '/formulaireAction', '/formulaire', '/statistiques'].includes(location.pathname) &&
                 renderButton("/addEntreprise", "Cliquez ici pour ajouter une nouvelle entreprise", <AddIcon />, "Entreprise")}
-              
-              {!['/fichierdll', '/fichierdllaction','/addUser', '/adminUser', '/adminEntreprises', '/planAction', '/', '/formulaireAction', '/formulaire', '/statistiques'].includes(location.pathname) && 
+
+              {!['/fichierdll', '/fichierdllaction', '/addUser', '/adminUser', '/adminEntreprises', '/planAction', '/', '/formulaireAction', '/formulaire', '/statistiques'].includes(location.pathname) &&
                 renderButton("/adminEntreprises", "Cliquez ici pour gérer les entreprises", <ViewListIcon />, "Entreprises")}
             </>
           )}
