@@ -6,7 +6,7 @@ import {
     Table, TableBody, TableCell, TableContainer, TableHead, TableRow,
     Button, Checkbox, Grid, LinearProgress, TextField, Tooltip,
     Card, CardContent, Typography, FormControl, InputLabel, Select,
-    MenuItem, ListItemText, OutlinedInput,createTheme 
+    MenuItem, ListItemText, OutlinedInput, createTheme
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
@@ -198,7 +198,7 @@ export default function PlanAction({ accidentData }) {
     const [availableSectors, setAvailableSectors] = useState([]);
     const { isAdmin, userInfo } = useUserConnected();
     const currentYear = new Date().getFullYear().toString();
-    const [selectedYears, setSelectedYears] = useState([currentYear]);
+    const [selectedYears, setSelectedYears] = useState(userInfo?.selectedYears || []);
     const [availableYears, setAvailableYears] = useState([]);
     const [snackbar, setSnackbar] = useState({
         open: false,
@@ -206,6 +206,10 @@ export default function PlanAction({ accidentData }) {
         severity: 'info',
     });
     const navigate = useNavigate();
+
+    const showSnackbar = useCallback((message, severity = 'info') => {
+        setSnackbar({ open: true, message, severity });
+    }, []);
 
     const getRowColor = useCallback((isChecked, index) => {
         if (isChecked) {
@@ -216,7 +220,46 @@ export default function PlanAction({ accidentData }) {
             : (index % 2 === 0 ? '#e62a5625' : '#95519b25');
     }, [darkMode]);
 
+    const updateUserSelectedYears = useCallback(async (newSelectedYears) => {
+        try {
+            console.log('Sending update request with:', {
+                userId: userInfo._id,
+                selectedYears: newSelectedYears
+            });
     
+            const response = await axios.put(
+                `http://${apiUrl}:3100/api/users/${userInfo._id}/updateSelectedYears`, 
+                {
+                    selectedYears: newSelectedYears
+                }
+            );
+            
+            console.log('Update response:', response);
+    
+            if (response.data.success) {
+                const token = JSON.parse(localStorage.getItem('token'));
+                token.data.selectedYears = newSelectedYears;
+                localStorage.setItem('token', JSON.stringify(token));
+                showSnackbar('Années sélectionnées mises à jour avec succès', 'success');
+            }
+        } catch (error) {
+            console.error('Erreur lors de la mise à jour des années sélectionnées:', error);
+            console.error('Détails de l\'erreur:', error.response?.data || error.message);
+            showSnackbar(
+                `Erreur lors de la sauvegarde des années sélectionnées: ${
+                    error.response?.data?.message || error.message
+                }`, 
+                'error'
+            );
+        }
+    }, [userInfo._id, showSnackbar, apiUrl]);
+
+
+    const handleYearsChange = useCallback((event) => {
+        const newSelectedYears = event.target.value;
+        setSelectedYears(newSelectedYears);
+        updateUserSelectedYears(newSelectedYears);
+    }, [updateUserSelectedYears]);
 
     const checkboxStyle = useMemo(
         () => ({
@@ -241,9 +284,7 @@ export default function PlanAction({ accidentData }) {
         return `${day}-${month}-${year}`;
     };
 
-    const showSnackbar = useCallback((message, severity = 'info') => {
-        setSnackbar({ open: true, message, severity });
-    }, []);
+    
 
     const handleCloseSnackbar = useCallback((event, reason) => {
         if (reason === 'clickaway') return;
@@ -300,20 +341,60 @@ export default function PlanAction({ accidentData }) {
 
     useEffect(() => {
         const years = [...new Set(users.map(action => action.AddActionanne))].filter(Boolean).sort();
-        if (!years.includes(currentYear)) {
-            years.push(currentYear);
-        }
+        
         setAvailableYears(years.sort());
-        if (selectedYears.length === 0) {
-            setSelectedYears([currentYear]);
-        }
-    }, [users, currentYear, selectedYears]);
+     
+    }, [users]);
+
+
+
+    useEffect(() => {
+        // Fonction pour obtenir les années disponibles en fonction des droits de l'utilisateur
+        const getAvailableYearsForUser = () => {
+            // Pour l'administrateur, retourner toutes les années
+            if (isAdmin) {
+                return [...new Set(users.map(action => action.AddActionanne))]
+                    .filter(Boolean)
+                    .sort();
+            }
+            
+            // Pour les autres utilisateurs, filtrer par leurs entreprises
+            const userEntreprises = userInfo?.entreprisesConseillerPrevention || [];
+            const filteredActions = users.filter(action => 
+                userEntreprises.includes(action.AddActionEntreprise)
+            );
+            
+            return [...new Set(filteredActions.map(action => action.AddActionanne))]
+                .filter(Boolean)
+                .sort();
+        };
+    
+        const years = getAvailableYearsForUser();
+        setAvailableYears(years);
+    }, [users, isAdmin, userInfo]);
+
+
 
     const filteredUsers = useMemo(() => {
-        let filtered = users;
-        if (selectedYears.length > 0) {
-            filtered = filtered.filter(action => selectedYears.includes(action.AddActionanne));
+        // Si aucune année n'est sélectionnée, retourner un tableau vide
+        if (selectedYears.length === 0) {
+            return [];
         }
+    
+        let filtered = users;
+    
+        // Filtrer d'abord par les entreprises de l'utilisateur si ce n'est pas un admin
+        if (!isAdmin) {
+            const userEntreprises = userInfo?.entreprisesConseillerPrevention || [];
+            filtered = filtered.filter(action => 
+                userEntreprises.includes(action.AddActionEntreprise)
+            );
+        }
+    
+        // Filtrer par années sélectionnées
+        filtered = filtered.filter(action => selectedYears.includes(action.AddActionanne));
+    
+        // Appliquer le filtre de recherche si nécessaire
         if (searchTerm) {
             const searchTermLower = searchTerm.toLowerCase();
             filtered = filtered.filter(addaction =>
@@ -321,8 +402,9 @@ export default function PlanAction({ accidentData }) {
                     .some(field => addaction[field]?.toLowerCase().includes(searchTermLower))
             );
         }
+    
         return filtered;
-    }, [users, searchTerm, selectedYears]);
+    }, [users, searchTerm, selectedYears, isAdmin, userInfo]);
 
     const handleDelete = useCallback((userIdToDelete) => {
         axios.delete(`http://${apiUrl}:3100/api/planaction/${userIdToDelete}`)
@@ -459,7 +541,7 @@ export default function PlanAction({ accidentData }) {
                                 labelId="years-select-label"
                                 multiple
                                 value={selectedYears}
-                                onChange={(event) => setSelectedYears(event.target.value)}
+                                onChange={handleYearsChange}
                                 input={<OutlinedInput label="Filtrer par année(s)" />}
                                 renderValue={(selected) => selected.join(', ')}
                                 MenuProps={{
@@ -557,9 +639,9 @@ export default function PlanAction({ accidentData }) {
                                         <TableCell>
                                             <Tooltip title="Sélectionnez quand l'action est réalisée" arrow>
                                                 <Checkbox
-                                                    sx={{ 
+                                                    sx={{
                                                         ...checkboxStyle,
-                                                        '& .MuiSvgIcon-root': { fontSize: 25 } 
+                                                        '& .MuiSvgIcon-root': { fontSize: 25 }
                                                     }}
                                                     color="success"
                                                     checked={addaction.AddboolStatus}

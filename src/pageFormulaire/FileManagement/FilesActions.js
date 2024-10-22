@@ -1,9 +1,11 @@
+import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { useEffect, useState } from "react";
 import { Button, Tooltip, Card, CardActions, CardContent } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import GetAppIcon from '@mui/icons-material/GetApp';
+import ZoomInIcon from '@mui/icons-material/ZoomIn';
+import ZoomOutIcon from '@mui/icons-material/ZoomOut';
 import { confirmAlert } from 'react-confirm-alert';
 import { saveAs } from 'file-saver';
 import deleteFile from "./deleteFile";
@@ -99,16 +101,16 @@ export default function listFilesInAccident(accidentId) {
     function popUpDelete(fileId) {
         return (
             confirmAlert({
-        /**
-         * Fonction personnalisée pour afficher une boîte de dialogue de confirmation de suppression
-         * 
-         * Cette fonction retourne un JSX élément représentant une boîte de dialogue personnalisée.
-         * La boîte de dialogue affiche un titre, un message de confirmation et des boutons "Oui" et "Non".
-         * Lorsque l'utilisateur clique sur le bouton "Oui", la fonction handleDeleteFile est appelée pour supprimer le fichier.
-         * Lorsque l'utilisateur clique sur le bouton "Non", la boîte de dialogue se ferme.
-         * @param {{ onClose: () => void }} props - Les props de la boîte de dialogue
-         * @returns {JSX.Element} Le JSX élément représentant la boîte de dialogue personnalisée
-         */
+                /**
+                 * Fonction personnalisée pour afficher une boîte de dialogue de confirmation de suppression
+                 * 
+                 * Cette fonction retourne un JSX élément représentant une boîte de dialogue personnalisée.
+                 * La boîte de dialogue affiche un titre, un message de confirmation et des boutons "Oui" et "Non".
+                 * Lorsque l'utilisateur clique sur le bouton "Oui", la fonction handleDeleteFile est appelée pour supprimer le fichier.
+                 * Lorsque l'utilisateur clique sur le bouton "Non", la boîte de dialogue se ferme.
+                 * @param {{ onClose: () => void }} props - Les props de la boîte de dialogue
+                 * @returns {JSX.Element} Le JSX élément représentant la boîte de dialogue personnalisée
+                 */
                 customUI: ({ onClose }) => (
                     <div className="custom-confirm-dialog">
                         <h1 className="custom-confirm-title">Supprimer</h1>
@@ -226,13 +228,30 @@ export default function listFilesInAccident(accidentId) {
         }
     };
 
+
+    const [scaledFileId, setScaledFileId] = useState(null);
+
     return (
         <div>
             <h3>Liste des fichiers associés à l'accident</h3>
             <ul style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between' }}>
                 {Array.isArray(files) && files.map(file => (
                     <li key={file.fileId} style={{ listStyleType: 'none', margin: '10px' }}>
-                        <Card sx={{ backgroundColor: '#fab82b56', minWidth: 275, maxWidth: 275, minHeight: 275, maxHeight: 275, border: '2px solid #000000' }}>
+                        <Card sx={{
+                            position: scaledFileId === file.fileId ? 'fixed' : 'static',
+                            transform: scaledFileId === file.fileId ? 'translate(-50%, -50%) scale(3)' : 'scale(1)',
+                            top: scaledFileId === file.fileId ? '50vh' : 'auto',
+                            left: scaledFileId === file.fileId ? '50vw' : 'auto',
+                            transformOrigin: 'center',
+                            zIndex: scaledFileId === file.fileId ? 999 : 'auto',
+                            transition: 'all 0.3s ease',
+                            backgroundColor: '#fab82b56',
+                            minWidth: 275,
+                            maxWidth: 275,
+                            minHeight: 275,
+                            maxHeight: 275,
+                            border: '2px solid #000000'
+                        }}>
                             <CardContent sx={{ maxWidth: 200, maxHeight: 190 }}>
                                 <Typography sx={{ fontSize: 12, color: 'text.secondary', marginTop: '10px' }}>
                                     {file.fileName}
@@ -255,13 +274,40 @@ export default function listFilesInAccident(accidentId) {
                             </CardContent>
                             <CardActions>
                                 <Tooltip title="Cliquez ici pour télécharger le fichié sur votre ordinateur" arrow>
-                                    <Button onClick={() => downloadFile({ fileId: file.fileId, fileName: file.fileName })} variant="contained" color="primary">
+                                    <Button sx={{
+                                        transition: 'all 0.3s ease-in-out',
+                                        '&:hover': {
+                                            transform: 'scale(1.08)',
+                                            boxShadow: 6
+                                        }
+                                    }} onClick={() => downloadFile({ fileId: file.fileId, fileName: file.fileName })} variant="contained" color="primary">
                                         <GetAppIcon />
                                     </Button>
                                 </Tooltip>
                                 <Tooltip title="Cliquez ici pour supprimer le fichier" arrow>
-                                    <Button onClick={() => popUpDelete(file.fileId)} variant="contained" color="error">
+                                    <Button sx={{
+                                        transition: 'all 0.3s ease-in-out',
+                                        '&:hover': {
+                                            transform: 'scale(1.08)',
+                                            boxShadow: 6
+                                        }
+                                    }} onClick={() => popUpDelete(file.fileId)} variant="contained" color="error">
                                         <DeleteForeverIcon />
+                                    </Button>
+                                </Tooltip>
+                                <Tooltip title={scaledFileId === file.fileId ? "Réduire" : "Agrandir"} arrow>
+                                    <Button sx={{
+                                        transition: 'all 0.3s ease-in-out',
+                                        '&:hover': {
+                                            transform: 'scale(1.08)',
+                                            boxShadow: 6
+                                        }
+                                    }}
+                                        onClick={() => setScaledFileId(scaledFileId === file.fileId ? null : file.fileId)}
+                                        variant="contained"
+                                        color="secondary"
+                                    >
+                                        {scaledFileId === file.fileId ? <ZoomOutIcon /> : <ZoomInIcon />}
                                     </Button>
                                 </Tooltip>
                             </CardActions>

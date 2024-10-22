@@ -41,7 +41,7 @@ function ResponsiveAppBar() {
 
   const showText = windowWidth > 900;
 
-  const { isAddSecteur, isadminEntreprises, isaddEntrprise, isadminUser, isaddUser, isFormulaireAction, isFormulaireAccident, isPageAdmin, isPageStats, isLoginPage, isplanAction, isHiddenPage } = useMemo(() => ({
+  const {issiegelesion, isnaturelesion, isagentmateriel,isdeviation, isAddSecteur, isadminEntreprises, isaddEntrprise, isadminUser, isaddUser, isFormulaireAction, isFormulaireAccident, isPageAdmin, isPageStats, isLoginPage, isplanAction, isHiddenPage } = useMemo(() => ({
     isFormulaireAccident: location.pathname === '/formulaire',
     isPageAdmin: location.pathname === '/adminaction',
     isPageStats: location.pathname === '/statistiques',
@@ -54,6 +54,11 @@ function ResponsiveAppBar() {
     isadminEntreprises: location.pathname === '/adminEntreprises',
     isAddSecteur: location.pathname === '/addSecteur',
     isHiddenPage: [].includes(location.pathname),
+    isdeviation: location.pathname === '/deviation',
+    isagentmateriel: location.pathname === '/agentmateriel',
+    isnaturelesion: location.pathname === '/naturelesion',
+    issiegelesion: location.pathname === '/siegelesion',
+
   }), [location.pathname]);
 
   const buttonStyle = {
@@ -80,7 +85,7 @@ function ResponsiveAppBar() {
     }
   };
 
-  if (isHiddenPage || isLoginPage) {
+  if (isHiddenPage || isLoginPage || isdeviation || isagentmateriel || isnaturelesion || issiegelesion) {
     return null;
   }
 
@@ -116,22 +121,28 @@ function ResponsiveAppBar() {
 
 
   const handleThemeChange = async () => {
-    const newDarkMode = !darkMode;
-    toggleDarkMode();
-
-    if (userInfo && userInfo._id) {
-      try {
-        const response = await axios.put(`http://${apiUrl}:3100/api/users/${userInfo._id}/updateTheme`, {
-          darkMode: newDarkMode
-        });
-        console.log('Theme updated successfully:', response.data);
-      } catch (error) {
-        console.error('Error updating theme:', error.response ? error.response.data : error.message);
-        // Optionnel : vous pouvez choisir de revenir à l'ancien thème en cas d'erreur
-        // toggleDarkMode();
+    try {
+      const tokenString = localStorage.getItem('token');
+      if (tokenString) {
+        const token = JSON.parse(tokenString);
+        if (token && token.data) {
+          // Basculer le thème
+          toggleDarkMode();
+          
+          // Mettre à jour le token dans le localStorage
+          token.data.darkMode = !darkMode;
+          localStorage.setItem('token', JSON.stringify(token));
+          
+          // Mettre à jour le thème sur le serveur si nécessaire
+          if (token.data._id) {
+            await axios.put(`http://${apiUrl}:3100/api/users/${token.data._id}/updateTheme`, {
+              darkMode: !darkMode
+            });
+          }
+        }
       }
-    } else {
-      console.warn('User info or user ID is missing. Theme update skipped.');
+    } catch (error) {
+      console.error('Erreur lors de la mise à jour du thème:', error);
     }
   };
 
