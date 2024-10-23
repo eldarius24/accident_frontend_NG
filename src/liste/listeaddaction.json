@@ -20,7 +20,11 @@
         "Accident",
         "Ergonomie",
         "Psychosocial",
-        "Sécurité"
+        "Sécurité",
+        "Hygiène",
+        "Prévention",
+        "Formation",
+        "Environement"
         
     ]
 }
