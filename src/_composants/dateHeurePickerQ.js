@@ -48,19 +48,28 @@ export default function DateHeurePickerQ({
                         boxShadow: 3,
                         margin: '0 auto 1rem',
                         transition: 'background-color 0.3s ease',
-                        '& .MuiInputLabel-root': {
-                            color: darkMode ? '#ffffff' : 'inherit',
-                        },
-                        '& .MuiInputBase-input': {
-                            color: darkMode ? '#ffffff' : 'inherit',
-                        },
-                        '& .MuiOutlinedInput-notchedOutline': {
-                            borderColor: darkMode ? '#ffffff' : 'rgba(0, 0, 0, 0.23)',
-                        },
-                        '& .MuiFormHelperText-root': {
-                            color: darkMode ? '#ff6b6b' : 'inherit', // Couleur d'erreur adaptée au mode sombre
-                        },
-                    }}
+                    '& .MuiInputLabel-root': {
+                        color: darkMode ? '#ffffff' : 'inherit',
+                    },
+                    '& .MuiInputLabel-root.Mui-focused': {
+                        color: darkMode ? '#ffffff' : 'inherit',
+                    },
+                    '& .MuiInputLabel-root.Mui-error': {
+                        color: darkMode ? '#ff6b6b' : '#d32f2f',
+                    },
+                    '& .MuiInputBase-input': {
+                        color: darkMode ? '#ffffff' : 'inherit',
+                    },
+                    '& .MuiOutlinedInput-notchedOutline': {
+                        borderColor: darkMode ? '#ffffff' : 'rgba(0, 0, 0, 0.23)',
+                    },
+                    '& .MuiFormHelperText-root': {
+                        color: darkMode ? '#ff6b6b' : 'inherit',
+                    },
+                    '& .MuiOutlinedInput-root.Mui-error .MuiOutlinedInput-notchedOutline': {
+                        borderColor: darkMode ? '#ff6b6b' : '#d32f2f',
+                    },
+                }}
                     slotProps={{
                         textField: {
                             required: required,

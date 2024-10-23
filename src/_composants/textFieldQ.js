@@ -44,6 +44,12 @@ export default function TextFieldQ({
                     '& .MuiInputLabel-root': {
                         color: darkMode ? '#ffffff' : 'inherit',
                     },
+                    '& .MuiInputLabel-root.Mui-focused': {
+                        color: darkMode ? '#ffffff' : 'inherit',
+                    },
+                    '& .MuiInputLabel-root.Mui-error': {
+                        color: darkMode ? '#ff6b6b' : '#d32f2f',
+                    },
                     '& .MuiInputBase-input': {
                         color: darkMode ? '#ffffff' : 'inherit',
                     },
@@ -51,7 +57,10 @@ export default function TextFieldQ({
                         borderColor: darkMode ? '#ffffff' : 'rgba(0, 0, 0, 0.23)',
                     },
                     '& .MuiFormHelperText-root': {
-                        color: darkMode ? '#ff6b6b' : 'inherit', // Couleur d'erreur adaptée au mode sombre
+                        color: darkMode ? '#ff6b6b' : 'inherit',
+                    },
+                    '& .MuiOutlinedInput-root.Mui-error .MuiOutlinedInput-notchedOutline': {
+                        borderColor: darkMode ? '#ff6b6b' : '#d32f2f',
                     },
                 }}
                 multiline

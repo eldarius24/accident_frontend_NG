@@ -18,7 +18,6 @@ export default function MultipleAutoComplete({
 }) {
     const { darkMode } = useTheme();
     
-    // S'assurer que defaultValue est toujours un tableau
     const initialValue = Array.isArray(defaultValue) ? defaultValue : 
                         defaultValue ? [defaultValue] : 
                         [];
@@ -27,7 +26,6 @@ export default function MultipleAutoComplete({
     const [backgroundColor, setBackgroundColor] = useState(darkMode ? '#333333' : '#e62a5663');
     const [touched, setTouched] = useState(false);
 
-    // S'assurer que les options sont toujours un tableau
     const safeOptions = Array.isArray(option) ? option : [];
 
     useEffect(() => {
@@ -38,7 +36,6 @@ export default function MultipleAutoComplete({
     }, [value, darkMode]);
 
     useEffect(() => {
-        // Mise à jour sécurisée de la valeur quand defaultValue change
         const newValue = Array.isArray(defaultValue) ? defaultValue :
                         defaultValue ? [defaultValue] :
                         [];
@@ -46,7 +43,6 @@ export default function MultipleAutoComplete({
     }, [defaultValue]);
 
     const handleChange = (_, newValue) => {
-        // S'assurer que newValue est toujours un tableau
         const safeNewValue = Array.isArray(newValue) ? newValue : [];
         setValue(safeNewValue);
         setTouched(true);
@@ -55,8 +51,7 @@ export default function MultipleAutoComplete({
         }
     };
 
-    // Déterminer si le champ est invalide
-    const isInvalid = required && touched && value.length === 0;
+    const isInvalid = required && (touched || value.length === 0) && value.length === 0;
 
     return (
         <Autocomplete
@@ -77,16 +72,28 @@ export default function MultipleAutoComplete({
                 ...sx,
                 backgroundColor,
                 transition: 'background-color 0.3s ease',
-                '& .MuiInputLabel-root': {
-                    color: darkMode ? '#ffffff' : 'inherit',
-                },
-                '& .MuiInputBase-input': {
-                    color: darkMode ? '#ffffff' : 'inherit',
-                },
-                '& .MuiOutlinedInput-notchedOutline': {
-                    borderColor: darkMode ? '#ffffff' : 'rgba(0, 0, 0, 0.23)',
-                },
-            }}
+                    '& .MuiInputLabel-root': {
+                        color: darkMode ? '#ffffff' : 'inherit',
+                    },
+                    '& .MuiInputLabel-root.Mui-focused': {
+                        color: darkMode ? '#ffffff' : 'inherit',
+                    },
+                    '& .MuiInputLabel-root.Mui-error': {
+                        color: darkMode ? '#ff6b6b' : '#d32f2f',
+                    },
+                    '& .MuiInputBase-input': {
+                        color: darkMode ? '#ffffff' : 'inherit',
+                    },
+                    '& .MuiOutlinedInput-notchedOutline': {
+                        borderColor: darkMode ? '#ffffff' : 'rgba(0, 0, 0, 0.23)',
+                    },
+                    '& .MuiFormHelperText-root': {
+                        color: darkMode ? '#ff6b6b' : 'inherit',
+                    },
+                    '& .MuiOutlinedInput-root.Mui-error .MuiOutlinedInput-notchedOutline': {
+                        borderColor: darkMode ? '#ff6b6b' : '#d32f2f',
+                    },
+                }}
             onChange={handleChange}
             onBlur={() => setTouched(true)}
             renderOption={(props, option, { selected }) => {
@@ -112,7 +119,7 @@ export default function MultipleAutoComplete({
                     helperText={isInvalid ? "Ce champ est obligatoire" : ""}
                     inputProps={{
                         ...params.inputProps,
-                        required: false, // Désactive la validation HTML5 native
+                        required: required,
                     }}
                 />
             )}
