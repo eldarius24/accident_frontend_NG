@@ -224,7 +224,7 @@ function Home() {
     }
 
     return (
-        <div>
+        <div style={{ margin: '0 20px' }}>
             <div style={{ display: 'flex', justifyContent: 'center', margin: '20px 0rem' }}>
                 <Grid container spacing={2}>
                     <Grid item xs={6} md={2}>
@@ -328,7 +328,7 @@ function Home() {
                 style={{
                     maxHeight: '600px',
                     overflowY: 'auto',
-                    backgroundColor: darkMode ? '#2a2a2a' : '#ffffff',
+                    backgroundColor: darkMode ? '#6e6e6e' : '#ffffff',
                 }}
             >
                 <Table>

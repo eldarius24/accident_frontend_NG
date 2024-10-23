@@ -136,7 +136,7 @@ export default function Formulaire() {
     ), [activeStep, handleStepChange]);
 
     return (
-        <form className="background-image" onSubmit={handleSubmit(onSubmit)}>
+        <form className="background-image" onSubmit={handleSubmit(onSubmit)} style={{margin: '0 20px'}}>
             {renderNavigationButtons('top')}
             {React.createElement(forms[activeStep].component, { setValue, accidentData, watch })}
             {renderNavigationButtons('bottom')}

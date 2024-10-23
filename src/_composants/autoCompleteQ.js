@@ -50,6 +50,9 @@ export default function AutoCompleteQ({
                     '& .MuiOutlinedInput-notchedOutline': {
                         borderColor: darkMode ? '#ffffff' : 'rgba(0, 0, 0, 0.23)',
                     },
+                    '& .MuiFormHelperText-root': {
+                        color: darkMode ? '#ff6b6b' : 'inherit', // Couleur d'erreur adaptée au mode sombre
+                    },
                 }}
                 onChange={handleChange}
                 renderOption={(props, option) => {
@@ -63,6 +66,10 @@ export default function AutoCompleteQ({
                         required={required}
                         error={required && !value}
                         helperText={required && !value ? "Ce champ est obligatoire" : ""}
+                        inputProps={{
+                            ...params.inputProps,
+                            required: false,
+                        }}
                     />
                 )}
                 fullWidth={true}

@@ -167,10 +167,11 @@ export default function AddSecteur() {
     }
 
     return (
-        <form className="background-image" onSubmit={handleSubmit(onSubmit)}>
-            <div className="frameStyle-style" style={{
-                backgroundColor: darkMode ? '#2a2a2a' : '#ffffff',
+        <form onSubmit={handleSubmit(onSubmit)}>
+            <div style={{
+                backgroundColor: darkMode ? '#6e6e6e' : '#ffffff',
                 color: darkMode ? '#ffffff' : '#000000',
+                margin: '0 20px'
             }}>
                 <h2>Créer un nouveau secteur pour {entreprise.AddEntreName}</h2>
 
@@ -216,17 +217,31 @@ export default function AddSecteur() {
 
                 <div>
                     <h2>Secteurs de l'entreprise</h2>
-                    <TableContainer>
+                    <TableContainer
+                        className="frameStyle-style"
+                        style={{
+                            maxHeight: '600px',
+                            overflowY: 'auto',
+                            backgroundColor: darkMode ? '#6e6e6e' : '#ffffff',
+                        }}
+                    >
                         <Table>
                             <TableHead>
-                                <TableRow style={{ backgroundColor: darkMode ? '#535353' : '#0098f950' }}>
+                                <TableRow className={`table-row-separatormenu ${darkMode ? 'dark-separator' : ''}`}
+                                    style={{
+                                        backgroundColor: darkMode ? '#535353' : '#0098f950',
+                                    }}>
                                     <TableCell style={{ fontWeight: 'bold' }}>Nom du secteur</TableCell>
                                     <TableCell style={{ fontWeight: 'bold' }}>Actions</TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
-                                {secteurs.map((secteur,index) => (
-                                    <TableRow key={secteur._id} style={{ backgroundColor: rowColors[index % rowColors.length] }}>
+                                {secteurs.map((secteur, index) => (
+                                    <TableRow className={`table-row-separatormenu ${darkMode ? 'dark-separator' : ''}`}
+                                        key={secteur._id}
+                                        style={{
+                                            backgroundColor: rowColors[index % rowColors.length],
+                                        }}>
                                         <TableCell>{secteur.secteurName}</TableCell>
                                         <TableCell>
                                             <Tooltip title="Cliquez ici pour supprimer cette entreprise" arrow>

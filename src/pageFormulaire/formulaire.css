@@ -263,9 +263,16 @@ h6 {
   border-bottom: 2px solid #000000;
 }
 
+.dark-separator {
+  border-bottom: 1px solid #ffffff !important;
+}
+
+
 .table-row-separatormenu {
   border-bottom: 2px solid #0000008a;
 }
+
+
 
 .frameStyle-style {
   justify-content: center;

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useTransition,useMemo } from 'react';
+import React, { useState, useEffect, useCallback, useTransition, useMemo } from 'react';
 import {
     Table,
     TableBody,
@@ -45,7 +45,7 @@ export default function Adminuser() {
             : ['#e62a5625', '#95519b25'],  // Couleurs pour le thème clair
         [darkMode]
     );
-    
+
     /**
      * Affiche un message dans une snackbar.
      * @param {string} message - Le message à afficher.
@@ -159,57 +159,63 @@ export default function Adminuser() {
 
     return (
         <form>
-            <div className="frameStyle-style" style={{
-                backgroundColor: darkMode ? '#2a2a2a' : '#ffffff',
+            <div style={{
+                backgroundColor: darkMode ? '#6e6e6e' : '#ffffff',
                 color: darkMode ? '#ffffff' : '#000000',
+                margin: '0 20px'
             }}>
                 <h2>Getion des utilisateur</h2>
 
                 <TableContainer
-                className="frameStyle-style"
-                style={{
-                    maxHeight: '600px',
-                    overflowY: 'auto',
-                    backgroundColor: darkMode ? '#2a2a2a' : '#ffffff',
-                }}
-            >
-                    
-                        <Table>
-                            <TableHead>
-                            <TableRow style={{ backgroundColor: darkMode ? '#535353' : '#0098f950' }}>
-                                    <TableCell style={{ fontWeight: 'bold' }}>Login</TableCell>
-                                    <TableCell style={{ fontWeight: 'bold' }}>Password</TableCell>
-                                    <TableCell style={{ fontWeight: 'bold' }}>Name</TableCell>
-                                    <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>Edit</TableCell>
-                                    <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>Delete</TableCell>
+                    className="frameStyle-style"
+                    style={{
+                        maxHeight: '600px',
+                        overflowY: 'auto',
+                        backgroundColor: darkMode ? '#6e6e6e' : '#ffffff',
+                    }}
+                >
+
+                    <Table>
+                        <TableHead>
+                            <TableRow className={`table-row-separatormenu ${darkMode ? 'dark-separator' : ''}`}
+                                style={{
+                                    backgroundColor: darkMode ? '#535353' : '#0098f950',
+                                }}>
+                                <TableCell style={{ fontWeight: 'bold' }}>Login</TableCell>
+                                <TableCell style={{ fontWeight: 'bold' }}>Password</TableCell>
+                                <TableCell style={{ fontWeight: 'bold' }}>Name</TableCell>
+                                <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>Edit</TableCell>
+                                <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>Delete</TableCell>
+                            </TableRow>
+
+                        </TableHead>
+                        <TableBody>
+                            {users.map((user, index) => (
+                                <TableRow className={`table-row-separatormenu ${darkMode ? 'dark-separator' : ''}`} style={{
+                                    backgroundColor: rowColors[index % rowColors.length],
+                                }}>
+                                    <TableCell>{user.userLogin}</TableCell>
+                                    <TableCell>{user.userPassword}</TableCell>
+                                    <TableCell>{user.userName}</TableCell>
+                                    <TableCell style={{ padding: 0, width: '70px' }}>
+                                        <Tooltip title="Cliquez ici pour éditer cette utilisateur" arrow>
+                                            <Button variant="contained" color="primary" component={Link} to={`/addUser?userId=${user._id}`}>
+                                                <EditIcon />
+                                            </Button>
+                                        </Tooltip>
+                                    </TableCell>
+                                    <TableCell style={{ padding: 0, width: '70px' }}>
+                                        <Tooltip title="Cliquez ici pour supprimer cette utilisateur" arrow>
+                                            <Button variant="contained" color="error" onClick={() => popUpDelete(user._id)}>
+                                                <DeleteForeverIcon />
+                                            </Button>
+                                        </Tooltip>
+                                    </TableCell>
                                 </TableRow>
-                                <TableRow className="table-row-separatormenu"></TableRow>
-                            </TableHead>
-                            <TableBody>
-                                {users.map((user, index) => (
-                                    <TableRow style={{ backgroundColor: rowColors[index % rowColors.length] }}>
-                                        <TableCell>{user.userLogin}</TableCell>
-                                        <TableCell>{user.userPassword}</TableCell>
-                                        <TableCell>{user.userName}</TableCell>
-                                        <TableCell style={{ padding: 0, width: '70px' }}>
-                                            <Tooltip title="Cliquez ici pour éditer cette utilisateur" arrow>
-                                                <Button variant="contained" color="primary" component={Link} to={`/addUser?userId=${user._id}`}>
-                                                    <EditIcon />
-                                                </Button>
-                                            </Tooltip>
-                                        </TableCell>
-                                        <TableCell style={{ padding: 0, width: '70px' }}>
-                                            <Tooltip title="Cliquez ici pour supprimer cette utilisateur" arrow>
-                                                <Button variant="contained" color="error" onClick={() => popUpDelete(user._id)}>
-                                                    <DeleteForeverIcon />
-                                                </Button>
-                                            </Tooltip>
-                                        </TableCell>
-                                    </TableRow>
-                                ))}
-                            </TableBody>
-                        </Table>
-                    
+                            ))}
+                        </TableBody>
+                    </Table>
+
                 </TableContainer>
 
             </div>

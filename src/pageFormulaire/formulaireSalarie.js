@@ -134,7 +134,7 @@ export default function FormulaireSalarie({ setValue, accidentData, watch }) {
    */
   return (
     <div className="frameStyle-style" style={{
-      backgroundColor: darkMode ? '#2a2a2a' : '#ffffff',
+      backgroundColor: darkMode ? '#6e6e6e' : '#ffffff',
       color: darkMode ? '#ffffff' : '#000000',
     }}>
       <div>

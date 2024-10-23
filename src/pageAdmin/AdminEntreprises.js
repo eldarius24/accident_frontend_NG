@@ -166,16 +166,25 @@ export default function Adminusern() {
 
     return (
         <form>
-            <div className="frameStyle-style" style={{
-                backgroundColor: darkMode ? '#2a2a2a' : '#ffffff',
+            <div style={{
+                backgroundColor: darkMode ? '#6e6e6e' : '#ffffff',
                 color: darkMode ? '#ffffff' : '#000000',
+                margin: '0 20px'
             }}>
                 <h2>Gestion des entreprises</h2>
-                <TableContainer>
-                    <div className="frameStyle-style">
+                <TableContainer className="frameStyle-style"
+                    style={{
+                        maxHeight: '600px',
+                        overflowY: 'auto',
+                        backgroundColor: darkMode ? '#6e6e6e' : '#ffffff',
+                    }}>
+                   
                         <Table>
                             <TableHead>
-                            <TableRow style={{ backgroundColor: darkMode ? '#535353' : '#0098f950' }}>
+                                <TableRow className={`table-row-separatormenu ${darkMode ? 'dark-separator' : ''}`}
+                                    style={{
+                                        backgroundColor: darkMode ? '#535353' : '#0098f950',
+                                    }}>
                                     <TableCell style={{ fontWeight: 'bold' }}>Nom</TableCell>
                                     <TableCell style={{ fontWeight: 'bold' }}>Rue et n°</TableCell>
                                     <TableCell style={{ fontWeight: 'bold' }}>Code postal</TableCell>
@@ -189,11 +198,13 @@ export default function Adminusern() {
                                     <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>Modifier</TableCell>
                                     <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>Supprimer</TableCell>
                                 </TableRow>
-                                <TableRow className="table-row-separatormenu"></TableRow>
+
                             </TableHead>
                             <TableBody>
                                 {entreprises.map((entreprise, index) => (
-                                    <TableRow key={entreprise._id} style={{ backgroundColor: rowColors[index % rowColors.length] }}>
+                                    <TableRow className={`table-row-separatormenu ${darkMode ? 'dark-separator' : ''}`} key={entreprise._id} style={{
+                                        backgroundColor: rowColors[index % rowColors.length],
+                                    }}>
                                         <TableCell>{entreprise.AddEntreName}</TableCell>
                                         <TableCell>{entreprise.AddEntrRue}</TableCell>
                                         <TableCell>{entreprise.AddEntrCodpost}</TableCell>
@@ -287,7 +298,7 @@ export default function Adminusern() {
                                 ))}
                             </TableBody>
                         </Table>
-                    </div>
+                    
                 </TableContainer>
                 <CustomSnackbar
                     open={snackbar.open}

@@ -94,7 +94,7 @@ const EnterpriseStats = React.memo(({ actions }) => {
     }, [actions]);
 
     return (
-        <div style={{ margin: '20px 0' }}>
+        <div>
             <Grid container spacing={2}>
                 {Object.entries(getEnterpriseStats).map(([enterprise, { total, completed }]) => {
                     const completionRate = (completed / total) * 100;
@@ -227,30 +227,29 @@ export default function PlanAction({ accidentData }) {
     const updateUserSelectedYears = useCallback(async (newSelectedYears) => {
         try {
             if (!userInfo?._id) return;
-    
+
             const response = await axios.put(
                 `http://${apiUrl}:3100/api/users/${userInfo._id}/updateSelectedYears`,
                 {
                     selectedYears: newSelectedYears
                 }
             );
-    
+
             if (response.data.success) {
                 // Mettre à jour le localStorage
                 const token = JSON.parse(localStorage.getItem('token'));
                 token.data.selectedYears = newSelectedYears;
                 localStorage.setItem('token', JSON.stringify(token));
-                
+
                 // Mettre à jour le state
                 setSelectedYears(newSelectedYears);
-                
+
                 showSnackbar('Années sélectionnées mises à jour avec succès', 'success');
             }
         } catch (error) {
             console.error('Erreur lors de la mise à jour des années sélectionnées:', error);
             showSnackbar(
-                `Erreur lors de la sauvegarde des années sélectionnées: ${
-                    error.response?.data?.message || error.message
+                `Erreur lors de la sauvegarde des années sélectionnées: ${error.response?.data?.message || error.message
                 }`,
                 'error'
             );
@@ -357,32 +356,32 @@ export default function PlanAction({ accidentData }) {
     useEffect(() => {
         // Obtenir les années disponibles en fonction des droits de l'utilisateur
         const getAvailableYearsForUser = () => {
-            let filteredActions = isAdmin 
-                ? users 
-                : users.filter(action => 
+            let filteredActions = isAdmin
+                ? users
+                : users.filter(action =>
                     userInfo?.entreprisesConseillerPrevention?.includes(action.AddActionEntreprise)
                 );
-    
+
             return [...new Set(filteredActions.map(action => action.AddActionanne))]
                 .filter(Boolean)
                 .sort();
         };
-    
+
         const availableYrs = getAvailableYearsForUser();
         setAvailableYears(availableYrs);
-    
+
         // Récupérer les années sauvegardées
         const token = JSON.parse(localStorage.getItem('token'));
         const savedYears = token?.data?.selectedYears || [];
-        
+
         // Filtrer les années sauvegardées pour ne garder que celles qui sont toujours disponibles
         const validYears = savedYears.filter(year => availableYrs.includes(year));
-        
+
         // Mettre à jour le state uniquement si nécessaire
         if (JSON.stringify(validYears) !== JSON.stringify(selectedYears)) {
             setSelectedYears(validYears);
         }
-    
+
     }, [users, isAdmin, userInfo?.entreprisesConseillerPrevention]);
 
 
@@ -525,261 +524,263 @@ export default function PlanAction({ accidentData }) {
 
 
     return (
-        <form className="background-image" onSubmit={handleSubmit(onSubmit)}>
+        <div style={{ margin: '0 20px' }}>
+            <form className="background-image" onSubmit={handleSubmit(onSubmit)}>
 
-            <h2>Plan d'actions</h2>
-            <EnterpriseStats actions={filteredUsers.filter(action => canViewAction(action))} />
+                <h2>Plan d'actions</h2>
+                <EnterpriseStats actions={filteredUsers.filter(action => canViewAction(action))} />
 
-            <div style={{ display: 'flex', justifyContent: 'center', margin: '20px 0rem' }}>
-                <Grid item xs={6} style={{ marginRight: '20px' }}>
-                    <Tooltip title="Cliquez ici pour actualiser le tableau des actions" arrow>
-                        <Button
-                            sx={{ marginLeft: '20px', color: 'black', padding: '15px 60px', backgroundColor: '#ee742d59', transition: 'all 0.3s ease-in-out', '&:hover': { backgroundColor: '#95ad22', transform: 'scale(1.08)', boxShadow: 6 }, boxShadow: 3, textTransform: 'none' }}
-                            variant="contained"
-                            color="secondary"
-                            onClick={refreshListAccidents}
-                            startIcon={<RefreshIcon />}
-                        >
-                            Actualiser
-                        </Button>
-                    </Tooltip>
-                </Grid>
-                <Grid item xs={6} style={{ marginRight: '20px', backgroundColor: '#ee752d60' }}>
-                    <Tooltip title="Filtrer par année" arrow>
-                        <FormControl
-                            sx={{ boxShadow: 3, minWidth: 120 }}>
-                            <InputLabel id="years-select-label">Filtrer par année(s)</InputLabel>
-                            <Select
-                                labelId="years-select-label"
-                                multiple
-                                value={selectedYears}
-                                onChange={handleYearsChange}
-                                input={<OutlinedInput label="Filtrer par année(s)" />}
-                                renderValue={(selected) => selected.join(', ')}
-                                MenuProps={{
-                                    PaperProps: {
-                                        style: {
-                                            maxHeight: 48 * 4.5 + 8,
-                                            width: 250,
-                                        },
-                                    },
-                                }}
+                <div style={{ display: 'flex', justifyContent: 'center', margin: '20px 0rem' }}>
+                    <Grid item xs={6} style={{ marginRight: '20px' }}>
+                        <Tooltip title="Cliquez ici pour actualiser le tableau des actions" arrow>
+                            <Button
+                                sx={{ marginLeft: '20px', color: 'black', padding: '15px 60px', backgroundColor: '#ee742d59', transition: 'all 0.3s ease-in-out', '&:hover': { backgroundColor: '#95ad22', transform: 'scale(1.08)', boxShadow: 6 }, boxShadow: 3, textTransform: 'none' }}
+                                variant="contained"
+                                color="secondary"
+                                onClick={refreshListAccidents}
+                                startIcon={<RefreshIcon />}
                             >
-                                {availableYears.map((year) => (
-                                    <MenuItem key={year} value={year} style={{ backgroundColor: '#ee742d59' }}>
-                                        <Checkbox
-                                            checked={selectedYears.indexOf(year) > -1}
-                                            style={{ marginRight: 8, color: '#257525' }}
-                                        />
-                                        <ListItemText primary={year} />
-                                    </MenuItem>
-                                ))}
-                            </Select>
-                        </FormControl>
-                    </Tooltip>
-                </Grid>
-                <Grid item xs={6} style={{ marginRight: '20px' }}>
-                    <Tooltip title="Filtrer les actions par mots clés" arrow>
-                        <TextField
-                            variant="outlined"
-                            value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
-                            sx={{ boxShadow: 3, backgroundColor: '#ee742d59' }}
-                            InputProps={{
-                                startAdornment: (
-                                    <InputAdornment position="start">
-                                        <SearchIcon />
-                                    </InputAdornment>
-                                ),
-                            }}
-                        />
-                    </Tooltip>
-                </Grid>
-                <Grid item xs={6} style={{ marginRight: '20px' }}>
-                    <Tooltip title="Cliquez ici pour exporter les données du plan d'action, en excel, en fonction des filtres sélèctionnés " arrow>
-                        <Button
-                            sx={{ marginRight: '20px', color: 'black', padding: '15px 60px', backgroundColor: '#ee742d59', transition: 'all 0.3s ease-in-out', '&:hover': { backgroundColor: '#95ad22', transform: 'scale(1.08)', boxShadow: 6 }, boxShadow: 3, textTransform: 'none' }}
-                            variant="contained"
-                            color="primary"
-                            onClick={() => handleExport()}
-                            startIcon={<FileUploadIcon />}
-                        >
-                            Action
-                        </Button>
-                    </Tooltip>
-                </Grid>
-            </div>
-            <TableContainer
-                className="frameStyle-style"
-                style={{
-                    maxHeight: '600px',
-                    overflowY: 'auto',
-                    backgroundColor: darkMode ? '#2a2a2a' : '#ffffff',
-                }}
-            >
+                                Actualiser
+                            </Button>
+                        </Tooltip>
+                    </Grid>
+                    <Grid item xs={6} style={{ marginRight: '20px', backgroundColor: '#ee752d60' }}>
+                        <Tooltip title="Filtrer par année" arrow>
+                            <FormControl
+                                sx={{ boxShadow: 3, minWidth: 120 }}>
+                                <InputLabel id="years-select-label">Filtrer par année(s)</InputLabel>
+                                <Select
+                                    labelId="years-select-label"
+                                    multiple
+                                    value={selectedYears}
+                                    onChange={handleYearsChange}
+                                    input={<OutlinedInput label="Filtrer par année(s)" />}
+                                    renderValue={(selected) => selected.join(', ')}
+                                    MenuProps={{
+                                        PaperProps: {
+                                            style: {
+                                                maxHeight: 48 * 4.5 + 8,
+                                                width: 250,
+                                            },
+                                        },
+                                    }}
+                                >
+                                    {availableYears.map((year) => (
+                                        <MenuItem key={year} value={year} style={{ backgroundColor: '#ee742d59' }}>
+                                            <Checkbox
+                                                checked={selectedYears.indexOf(year) > -1}
+                                                style={{ marginRight: 8, color: '#257525' }}
+                                            />
+                                            <ListItemText primary={year} />
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
+                        </Tooltip>
+                    </Grid>
+                    <Grid item xs={6} style={{ marginRight: '20px' }}>
+                        <Tooltip title="Filtrer les actions par mots clés" arrow>
+                            <TextField
+                                variant="outlined"
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                                sx={{ boxShadow: 3, backgroundColor: '#ee742d59' }}
+                                InputProps={{
+                                    startAdornment: (
+                                        <InputAdornment position="start">
+                                            <SearchIcon />
+                                        </InputAdornment>
+                                    ),
+                                }}
+                            />
+                        </Tooltip>
+                    </Grid>
+                    <Grid item xs={6} style={{ marginRight: '20px' }}>
+                        <Tooltip title="Cliquez ici pour exporter les données du plan d'action, en excel, en fonction des filtres sélèctionnés " arrow>
+                            <Button
+                                sx={{ marginRight: '20px', color: 'black', padding: '15px 60px', backgroundColor: '#ee742d59', transition: 'all 0.3s ease-in-out', '&:hover': { backgroundColor: '#95ad22', transform: 'scale(1.08)', boxShadow: 6 }, boxShadow: 3, textTransform: 'none' }}
+                                variant="contained"
+                                color="primary"
+                                onClick={() => handleExport()}
+                                startIcon={<FileUploadIcon />}
+                            >
+                                Action
+                            </Button>
+                        </Tooltip>
+                    </Grid>
+                </div>
+                <TableContainer
+                    className="frameStyle-style"
+                    style={{
+                        maxHeight: '600px',
+                        overflowY: 'auto',
+                        backgroundColor: darkMode ? '#6e6e6e' : '#ffffff',
+                    }}
+                >
 
-                <Table>
-                    <TableHead>
-                        <React.Fragment>
-                            <TableRow style={{ backgroundColor: darkMode ? '#535353' : '#0098f950' }}>
-                                <TableCell style={{ fontWeight: 'bold' }}>Status</TableCell>
-                                <TableCell style={{ fontWeight: 'bold' }}>Année</TableCell>
-                                <TableCell style={{ fontWeight: 'bold' }}>Mois</TableCell>
-                                <TableCell style={{ fontWeight: 'bold' }}>Entreprise</TableCell>
-                                <TableCell style={{ fontWeight: 'bold' }}>Secteur</TableCell>
-                                <TableCell style={{ fontWeight: 'bold' }}>Action</TableCell>
-                                <TableCell style={{ fontWeight: 'bold' }}>Catégorie du risque</TableCell>
-                                <TableCell style={{ fontWeight: 'bold' }}>Crée quand</TableCell>
-                                <TableCell style={{ fontWeight: 'bold' }}>Par qui</TableCell>
-                                <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>Edit</TableCell>
-                                <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>Download</TableCell>
-                                <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>Delete</TableCell>
-                            </TableRow>
-                        </React.Fragment>
-                        <TableRow className="table-row-separatormenu"></TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {filteredUsers
-                            .sort(sortByYear)
-                            .map((addaction, index) => (
-                                canViewAction(addaction) && (
-                                    <TableRow
-                                        key={addaction._id || `action-${index}`}
-                                        className="table-row-separatormenu"
-                                        style={{ backgroundColor: getRowColor(addaction.AddboolStatus, index) }}
-                                    >
-                                        <TableCell>
-                                            <Tooltip title="Sélectionnez quand l'action est réalisée" arrow>
-                                                <Checkbox
-                                                    sx={{
-                                                        ...checkboxStyle,
-                                                        '& .MuiSvgIcon-root': { fontSize: 25 }
-                                                    }}
-                                                    color="success"
-                                                    checked={addaction.AddboolStatus}
-                                                    onChange={() => {
-                                                        const newStatus = !addaction.AddboolStatus;
-                                                        axios.put(`http://${apiUrl}:3100/api/planaction/${addaction._id}`, {
-                                                            AddboolStatus: newStatus
-                                                        })
-                                                            .then(response => {
-                                                                console.log('Statut mis à jour avec succès:', response.data);
-                                                                refreshListAccidents();
+                    <Table>
+                        <TableHead>
+                            <React.Fragment>
+                                <TableRow style={{ backgroundColor: darkMode ? '#535353' : '#0098f950' }}>
+                                    <TableCell style={{ fontWeight: 'bold' }}>Status</TableCell>
+                                    <TableCell style={{ fontWeight: 'bold' }}>Année</TableCell>
+                                    <TableCell style={{ fontWeight: 'bold' }}>Mois</TableCell>
+                                    <TableCell style={{ fontWeight: 'bold' }}>Entreprise</TableCell>
+                                    <TableCell style={{ fontWeight: 'bold' }}>Secteur</TableCell>
+                                    <TableCell style={{ fontWeight: 'bold' }}>Action</TableCell>
+                                    <TableCell style={{ fontWeight: 'bold' }}>Catégorie du risque</TableCell>
+                                    <TableCell style={{ fontWeight: 'bold' }}>Crée quand</TableCell>
+                                    <TableCell style={{ fontWeight: 'bold' }}>Par qui</TableCell>
+                                    <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>Edit</TableCell>
+                                    <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>Download</TableCell>
+                                    <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>Delete</TableCell>
+                                </TableRow>
+                            </React.Fragment>
+                            <TableRow className="table-row-separatormenu"></TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {filteredUsers
+                                .sort(sortByYear)
+                                .map((addaction, index) => (
+                                    canViewAction(addaction) && (
+                                        <TableRow
+                                            key={addaction._id || `action-${index}`}
+                                            className="table-row-separatormenu"
+                                            style={{ backgroundColor: getRowColor(addaction.AddboolStatus, index) }}
+                                        >
+                                            <TableCell>
+                                                <Tooltip title="Sélectionnez quand l'action est réalisée" arrow>
+                                                    <Checkbox
+                                                        sx={{
+                                                            ...checkboxStyle,
+                                                            '& .MuiSvgIcon-root': { fontSize: 25 }
+                                                        }}
+                                                        color="success"
+                                                        checked={addaction.AddboolStatus}
+                                                        onChange={() => {
+                                                            const newStatus = !addaction.AddboolStatus;
+                                                            axios.put(`http://${apiUrl}:3100/api/planaction/${addaction._id}`, {
+                                                                AddboolStatus: newStatus
                                                             })
-                                                            .catch(error => {
-                                                                console.error('Erreur lors de la mise à jour du statut:', error.message);
-                                                                showSnackbar('Erreur lors de la mise à jour du statut', 'error');
-                                                            });
+                                                                .then(response => {
+                                                                    console.log('Statut mis à jour avec succès:', response.data);
+                                                                    refreshListAccidents();
+                                                                })
+                                                                .catch(error => {
+                                                                    console.error('Erreur lors de la mise à jour du statut:', error.message);
+                                                                    showSnackbar('Erreur lors de la mise à jour du statut', 'error');
+                                                                });
+                                                        }}
+                                                    />
+                                                </Tooltip>
+                                            </TableCell>
+                                            <TableCell>{addaction.AddActionanne}</TableCell>
+                                            <TableCell>{addaction.AddActoinmoi}</TableCell>
+                                            <TableCell>{addaction.AddActionEntreprise}</TableCell>
+                                            <TableCell>{addaction.AddActionSecteur}</TableCell>
+                                            <TableCell>{addaction.AddAction}</TableCell>
+                                            <TableCell>{addaction.AddActionDange}</TableCell>
+                                            <TableCell>{formatDate(addaction.AddActionDate)}</TableCell>
+                                            <TableCell>{addaction.AddActionQui}</TableCell>
+                                            <TableCell style={{ padding: 0, width: '70px' }}>
+                                                <Tooltip title="Cliquez ici pour éditer les données de l'action" arrow>
+                                                    <Button sx={{
+                                                        transition: 'all 0.3s ease-in-out',
+                                                        '&:hover': {
+                                                            transform: 'scale(1.08)',
+                                                            boxShadow: 6
+                                                        }
                                                     }}
-                                                />
-                                            </Tooltip>
-                                        </TableCell>
-                                        <TableCell>{addaction.AddActionanne}</TableCell>
-                                        <TableCell>{addaction.AddActoinmoi}</TableCell>
-                                        <TableCell>{addaction.AddActionEntreprise}</TableCell>
-                                        <TableCell>{addaction.AddActionSecteur}</TableCell>
-                                        <TableCell>{addaction.AddAction}</TableCell>
-                                        <TableCell>{addaction.AddActionDange}</TableCell>
-                                        <TableCell>{formatDate(addaction.AddActionDate)}</TableCell>
-                                        <TableCell>{addaction.AddActionQui}</TableCell>
-                                        <TableCell style={{ padding: 0, width: '70px' }}>
-                                            <Tooltip title="Cliquez ici pour éditer les données de l'action" arrow>
-                                                <Button sx={{
-                                                    transition: 'all 0.3s ease-in-out',
-                                                    '&:hover': {
-                                                        transform: 'scale(1.08)',
-                                                        boxShadow: 6
-                                                    }
-                                                }}
-                                                    variant="contained"
-                                                    color="primary"
-                                                    onClick={() => handleEdit(addaction._id)}
-                                                >
-                                                    <EditIcon />
-                                                </Button>
-                                            </Tooltip>
-                                        </TableCell>
-                                        <TableCell style={{ padding: 0, width: '70px' }}>
-                                            <Tooltip title="Cliquez ici pour ajouter des fichiers a l'action" arrow>
-                                                <Button sx={{
-                                                    transition: 'all 0.3s ease-in-out',
-                                                    '&:hover': {
-                                                        transform: 'scale(1.08)',
-                                                        boxShadow: 6
-                                                    }
-                                                }}
-                                                    component={Link} to={isFileUploadIcon ? '/' : '/fichierdllaction'}
-                                                    variant="contained"
-                                                    color="secondary">
-                                                    <GetAppIcon />
-                                                </Button>
-                                            </Tooltip>
-                                        </TableCell>
-                                        <TableCell style={{ padding: 0, width: '70px' }}>
-                                            <Tooltip title="Cliquez ici pour supprimer l'action" arrow>
-                                                <Button sx={{
-                                                    transition: 'all 0.3s ease-in-out',
-                                                    '&:hover': {
-                                                        transform: 'scale(1.08)',
-                                                        boxShadow: 6
-                                                    }
-                                                }}
-                                                    variant="contained"
-                                                    color="error"
-                                                    onClick={() => {
-                                                        confirmAlert({
-                                                            /**
-                                                             * Boîte de dialogue personnalisée pour demander confirmation de suppression de l'action
-                                                             * @param {{ onClose: () => void }} props - Fonction pour fermer la boîte de dialogue
-                                                             * @returns {JSX.Element} Le JSX Element qui contient la boîte de dialogue personnalisée
-                                                             * La boîte de dialogue contient un titre, un message de confirmation et deux boutons : "Oui" et "Non".
-                                                             * Lorsque le bouton "Oui" est cliqué, la fonction handleDelete est appelée
-                                                             * avec l'id de l'action à supprimer, et la fonction onClose est appelée pour fermer la boîte de dialogue.
-                                                             * Lorsque le bouton "Non" est cliqué, la fonction onClose est appelée pour fermer la boîte de dialogue.
-                                                             */
-                                                            customUI: ({ onClose }) => (
-                                                                <div className="custom-confirm-dialog">
-                                                                    <h1 className="custom-confirm-title">Supprimer</h1>
-                                                                    <p className="custom-confirm-message">Êtes-vous sûr de vouloir supprimer cet action?</p>
-                                                                    <div className="custom-confirm-buttons">
-                                                                        <Tooltip title="Cliquez sur OUI pour supprimer" arrow>
-                                                                            <button className="custom-confirm-button" onClick={() => { handleDelete(addaction._id); onClose(); }}>
-                                                                                Oui
-                                                                            </button>
-                                                                        </Tooltip>
-                                                                        <Tooltip title="Cliquez sur NON pour annuler la suppression" arrow>
-                                                                            <button className="custom-confirm-button custom-confirm-no" onClick={onClose}>
-                                                                                Non
-                                                                            </button>
-                                                                        </Tooltip>
+                                                        variant="contained"
+                                                        color="primary"
+                                                        onClick={() => handleEdit(addaction._id)}
+                                                    >
+                                                        <EditIcon />
+                                                    </Button>
+                                                </Tooltip>
+                                            </TableCell>
+                                            <TableCell style={{ padding: 0, width: '70px' }}>
+                                                <Tooltip title="Cliquez ici pour ajouter des fichiers a l'action" arrow>
+                                                    <Button sx={{
+                                                        transition: 'all 0.3s ease-in-out',
+                                                        '&:hover': {
+                                                            transform: 'scale(1.08)',
+                                                            boxShadow: 6
+                                                        }
+                                                    }}
+                                                        component={Link} to={isFileUploadIcon ? '/' : '/fichierdllaction'}
+                                                        variant="contained"
+                                                        color="secondary">
+                                                        <GetAppIcon />
+                                                    </Button>
+                                                </Tooltip>
+                                            </TableCell>
+                                            <TableCell style={{ padding: 0, width: '70px' }}>
+                                                <Tooltip title="Cliquez ici pour supprimer l'action" arrow>
+                                                    <Button sx={{
+                                                        transition: 'all 0.3s ease-in-out',
+                                                        '&:hover': {
+                                                            transform: 'scale(1.08)',
+                                                            boxShadow: 6
+                                                        }
+                                                    }}
+                                                        variant="contained"
+                                                        color="error"
+                                                        onClick={() => {
+                                                            confirmAlert({
+                                                                /**
+                                                                 * Boîte de dialogue personnalisée pour demander confirmation de suppression de l'action
+                                                                 * @param {{ onClose: () => void }} props - Fonction pour fermer la boîte de dialogue
+                                                                 * @returns {JSX.Element} Le JSX Element qui contient la boîte de dialogue personnalisée
+                                                                 * La boîte de dialogue contient un titre, un message de confirmation et deux boutons : "Oui" et "Non".
+                                                                 * Lorsque le bouton "Oui" est cliqué, la fonction handleDelete est appelée
+                                                                 * avec l'id de l'action à supprimer, et la fonction onClose est appelée pour fermer la boîte de dialogue.
+                                                                 * Lorsque le bouton "Non" est cliqué, la fonction onClose est appelée pour fermer la boîte de dialogue.
+                                                                 */
+                                                                customUI: ({ onClose }) => (
+                                                                    <div className="custom-confirm-dialog">
+                                                                        <h1 className="custom-confirm-title">Supprimer</h1>
+                                                                        <p className="custom-confirm-message">Êtes-vous sûr de vouloir supprimer cet action?</p>
+                                                                        <div className="custom-confirm-buttons">
+                                                                            <Tooltip title="Cliquez sur OUI pour supprimer" arrow>
+                                                                                <button className="custom-confirm-button" onClick={() => { handleDelete(addaction._id); onClose(); }}>
+                                                                                    Oui
+                                                                                </button>
+                                                                            </Tooltip>
+                                                                            <Tooltip title="Cliquez sur NON pour annuler la suppression" arrow>
+                                                                                <button className="custom-confirm-button custom-confirm-no" onClick={onClose}>
+                                                                                    Non
+                                                                                </button>
+                                                                            </Tooltip>
+                                                                        </div>
                                                                     </div>
-                                                                </div>
-                                                            )
-                                                        });
-                                                    }}>
-                                                    <DeleteForeverIcon />
-                                                </Button>
-                                            </Tooltip>
-                                        </TableCell>
+                                                                )
+                                                            });
+                                                        }}>
+                                                        <DeleteForeverIcon />
+                                                    </Button>
+                                                </Tooltip>
+                                            </TableCell>
 
-                                    </TableRow>
-                                )
-                            ))}
-                    </TableBody>
-                </Table>
+                                        </TableRow>
+                                    )
+                                ))}
+                        </TableBody>
+                    </Table>
 
-            </TableContainer>
-            <CustomSnackbar
-                open={snackbar.open}
-                handleClose={handleCloseSnackbar}
-                message={snackbar.message}
-                severity={snackbar.severity}
-            />
-            <div className="image-cortigroupe"></div>
-            <Tooltip title="Si vous rencontrez un souci avec le site, envoyer un mail à l'adresse suivante : bgillet.lecortil@cortigroupe.be et expliquer le soucis rencontré" arrow>
-                <h5 style={{ marginBottom: '40px' }}> Développé par Remy et Benoit pour Le Cortigroupe. Support: bgillet.lecortil@cortigroupe.be</h5>
-            </Tooltip>
-        </form >
+                </TableContainer>
+                <CustomSnackbar
+                    open={snackbar.open}
+                    handleClose={handleCloseSnackbar}
+                    message={snackbar.message}
+                    severity={snackbar.severity}
+                />
+                <div className="image-cortigroupe"></div>
+                <Tooltip title="Si vous rencontrez un souci avec le site, envoyer un mail à l'adresse suivante : bgillet.lecortil@cortigroupe.be et expliquer le soucis rencontré" arrow>
+                    <h5 style={{ marginBottom: '40px' }}> Développé par Remy et Benoit pour Le Cortigroupe. Support: bgillet.lecortil@cortigroupe.be</h5>
+                </Tooltip>
+            </form >
+        </div>
 
 
     );

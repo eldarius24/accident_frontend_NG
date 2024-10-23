@@ -40,8 +40,9 @@ export default function AdminPanelSettingsaction() {
     return (
         <div>
             <div className="frameStyle-style" style={{
-                backgroundColor: darkMode ? '#2a2a2a' : '#ffffff',
+                backgroundColor: darkMode ? '#6e6e6e' : '#ffffff',
                 color: darkMode ? '#ffffff' : '#000000',
+                margin: '0 20px'
             }}>
                 <h3>Administration des droits</h3>
 
