@@ -198,7 +198,11 @@ export default function PlanAction({ accidentData }) {
     const [availableSectors, setAvailableSectors] = useState([]);
     const { isAdmin, userInfo } = useUserConnected();
     const currentYear = new Date().getFullYear().toString();
-    const [selectedYears, setSelectedYears] = useState(userInfo?.selectedYears || []);
+    const [selectedYears, setSelectedYears] = useState(() => {
+        // Récupérer les années depuis le localStorage
+        const token = JSON.parse(localStorage.getItem('token'));
+        return token?.data?.selectedYears || [];
+    });
     const [availableYears, setAvailableYears] = useState([]);
     const [snackbar, setSnackbar] = useState({
         open: false,
@@ -222,42 +226,43 @@ export default function PlanAction({ accidentData }) {
 
     const updateUserSelectedYears = useCallback(async (newSelectedYears) => {
         try {
-            console.log('Sending update request with:', {
-                userId: userInfo._id,
-                selectedYears: newSelectedYears
-            });
+            if (!userInfo?._id) return;
     
             const response = await axios.put(
-                `http://${apiUrl}:3100/api/users/${userInfo._id}/updateSelectedYears`, 
+                `http://${apiUrl}:3100/api/users/${userInfo._id}/updateSelectedYears`,
                 {
                     selectedYears: newSelectedYears
                 }
             );
-            
-            console.log('Update response:', response);
     
             if (response.data.success) {
+                // Mettre à jour le localStorage
                 const token = JSON.parse(localStorage.getItem('token'));
                 token.data.selectedYears = newSelectedYears;
                 localStorage.setItem('token', JSON.stringify(token));
+                
+                // Mettre à jour le state
+                setSelectedYears(newSelectedYears);
+                
                 showSnackbar('Années sélectionnées mises à jour avec succès', 'success');
             }
         } catch (error) {
             console.error('Erreur lors de la mise à jour des années sélectionnées:', error);
-            console.error('Détails de l\'erreur:', error.response?.data || error.message);
             showSnackbar(
                 `Erreur lors de la sauvegarde des années sélectionnées: ${
                     error.response?.data?.message || error.message
-                }`, 
+                }`,
                 'error'
             );
         }
-    }, [userInfo._id, showSnackbar, apiUrl]);
+    }, [userInfo?._id, apiUrl, showSnackbar]);
 
 
     const handleYearsChange = useCallback((event) => {
         const newSelectedYears = event.target.value;
+        // Mettre à jour immédiatement l'état local
         setSelectedYears(newSelectedYears);
+        // Puis mettre à jour le backend et le localStorage
         updateUserSelectedYears(newSelectedYears);
     }, [updateUserSelectedYears]);
 
@@ -284,7 +289,7 @@ export default function PlanAction({ accidentData }) {
         return `${day}-${month}-${year}`;
     };
 
-    
+
 
     const handleCloseSnackbar = useCallback((event, reason) => {
         if (reason === 'clickaway') return;
@@ -341,37 +346,44 @@ export default function PlanAction({ accidentData }) {
 
     useEffect(() => {
         const years = [...new Set(users.map(action => action.AddActionanne))].filter(Boolean).sort();
-        
+
         setAvailableYears(years.sort());
-     
+
     }, [users]);
 
 
 
+    // Modifiez d'abord les useEffects pour la gestion des années disponibles et sélectionnées
     useEffect(() => {
-        // Fonction pour obtenir les années disponibles en fonction des droits de l'utilisateur
+        // Obtenir les années disponibles en fonction des droits de l'utilisateur
         const getAvailableYearsForUser = () => {
-            // Pour l'administrateur, retourner toutes les années
-            if (isAdmin) {
-                return [...new Set(users.map(action => action.AddActionanne))]
-                    .filter(Boolean)
-                    .sort();
-            }
-            
-            // Pour les autres utilisateurs, filtrer par leurs entreprises
-            const userEntreprises = userInfo?.entreprisesConseillerPrevention || [];
-            const filteredActions = users.filter(action => 
-                userEntreprises.includes(action.AddActionEntreprise)
-            );
-            
+            let filteredActions = isAdmin 
+                ? users 
+                : users.filter(action => 
+                    userInfo?.entreprisesConseillerPrevention?.includes(action.AddActionEntreprise)
+                );
+    
             return [...new Set(filteredActions.map(action => action.AddActionanne))]
                 .filter(Boolean)
                 .sort();
         };
     
-        const years = getAvailableYearsForUser();
-        setAvailableYears(years);
-    }, [users, isAdmin, userInfo]);
+        const availableYrs = getAvailableYearsForUser();
+        setAvailableYears(availableYrs);
+    
+        // Récupérer les années sauvegardées
+        const token = JSON.parse(localStorage.getItem('token'));
+        const savedYears = token?.data?.selectedYears || [];
+        
+        // Filtrer les années sauvegardées pour ne garder que celles qui sont toujours disponibles
+        const validYears = savedYears.filter(year => availableYrs.includes(year));
+        
+        // Mettre à jour le state uniquement si nécessaire
+        if (JSON.stringify(validYears) !== JSON.stringify(selectedYears)) {
+            setSelectedYears(validYears);
+        }
+    
+    }, [users, isAdmin, userInfo?.entreprisesConseillerPrevention]);
 
 
 
@@ -380,20 +392,20 @@ export default function PlanAction({ accidentData }) {
         if (selectedYears.length === 0) {
             return [];
         }
-    
+
         let filtered = users;
-    
+
         // Filtrer d'abord par les entreprises de l'utilisateur si ce n'est pas un admin
         if (!isAdmin) {
             const userEntreprises = userInfo?.entreprisesConseillerPrevention || [];
-            filtered = filtered.filter(action => 
+            filtered = filtered.filter(action =>
                 userEntreprises.includes(action.AddActionEntreprise)
             );
         }
-    
+
         // Filtrer par années sélectionnées
         filtered = filtered.filter(action => selectedYears.includes(action.AddActionanne));
-    
+
         // Appliquer le filtre de recherche si nécessaire
         if (searchTerm) {
             const searchTermLower = searchTerm.toLowerCase();
@@ -402,7 +414,7 @@ export default function PlanAction({ accidentData }) {
                     .some(field => addaction[field]?.toLowerCase().includes(searchTermLower))
             );
         }
-    
+
         return filtered;
     }, [users, searchTerm, selectedYears, isAdmin, userInfo]);
 

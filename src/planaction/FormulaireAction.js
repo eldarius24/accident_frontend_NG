@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form';
 import { useLocation, useNavigate } from 'react-router-dom';
 import AutoCompleteP from '../_composants/autoCompleteP';
 import AutoCompleteQ from '../_composants/autoCompleteQ';
+import AutoCompleteCM from '../_composants/autoCompleteCM';
 import '../pageFormulaire/formulaire.css';
 import config from '../config.json';
 import {
@@ -40,10 +41,9 @@ export default function FormulaireAction() {
     const [AddActionEntreprise, setAddActionEntreprise] = useState(watch('AddActionEntreprise') ? watch('AddActionEntreprise') : (actionData && actionData.AddActionEntreprise ? actionData.AddActionEntreprise : null));
     const [AddActionSecteur, setAddActionSecteur] = useState(watch('AddActionSecteur') ? watch('AddActionSecteur') : (actionData && actionData.AddActionSecteur ? actionData.AddActionSecteur : null));
     const [AddboolStatus, setAddboolStatus] = useState(watch('AddboolStatus') ? watch('AddboolStatus') : (actionData && actionData.AddboolStatus ? actionData.AddboolStatus : null));
-    const [AddActionDange, setAddActionDange] = useState(watch('AddActionDange') ? watch('AddActionDange') : (actionData && actionData.AddActionDange ? actionData.AddActionDange : null));
     const [AddActionanne, setAddActionanne] = useState(watch('AddActionanne') ? watch('AddActionanne') : (actionData && actionData.AddActionanne ? actionData.AddActionanne : null));
     const [AddActoinmoi, setAddActoinmoi] = useState(watch('AddActoinmoi') ? watch('AddActoinmoi') : (actionData && actionData.AddActoinmoi ? actionData.AddActoinmoi : null));
-
+    const [AddActionDange, setAddActionDange] = useState(watch('AddActionDange') ? Array.isArray(watch('AddActionDange')) ? watch('AddActionDange') : [watch('AddActionDange')] : (actionData && actionData.AddActionDange ? Array.isArray(actionData.AddActionDange) ? actionData.AddActionDange : [actionData.AddActionDange] : []));
 
 
     const [snackbar, setSnackbar] = useState({
@@ -161,10 +161,9 @@ export default function FormulaireAction() {
     }, [AddActionEntreprise, enterprises, allSectors, setValue, getLinkedSecteurs, AddActionSecteur]);
 
     const onSubmit = useCallback((data) => {
-        const url = actionData
-            ? `http://${apiUrl}:3100/api/planaction/${actionData._id}`
-            : `http://${apiUrl}:3100/api/planaction`;
-        const method = actionData ? 'put' : 'post';
+
+        console.log('Data reçue:', data);
+        console.log('AddActionDange avant formatage:', AddActionDange, typeof AddActionDange);
 
         // Assurez-vous que tous les champs sont inclus dans l'objet data
         const formData = {
@@ -175,21 +174,41 @@ export default function FormulaireAction() {
             AddActionQui,
             AddAction,
             AddboolStatus,
-            AddActionDange,
+            AddActionDange: Array.isArray(AddActionDange) ? AddActionDange : [AddActionDange], // S'assurer que c'est un tableau
             AddActionanne,
             AddActoinmoi
         };
 
+        // Log du formData final
+        console.log('FormData final envoyé au serveur:', formData);
+        console.log('Structure de AddActionDange dans formData:', {
+            value: formData.AddActionDange,
+            type: typeof formData.AddActionDange,
+            isArray: Array.isArray(formData.AddActionDange)
+        });
+
+        const url = actionData
+            ? `http://${apiUrl}:3100/api/planaction/${actionData._id}`
+            : `http://${apiUrl}:3100/api/planaction`;
+        const method = actionData ? 'put' : 'post';
+
+        // Log de la requête
+        console.log('URL:', url);
+        console.log('Méthode:', method);
+
         axios[method](url, formData)
-            .then(response => {
-                console.log(`Réponse du serveur en ${actionData ? 'modification' : 'création'} :`, response.data);
-                showSnackbar(`Action ${actionData ? 'modifiée' : 'créée'} avec succès`, 'success');
-                setTimeout(() => navigate('/planAction'), 750);
-            })
-            .catch(error => {
-                console.error('Erreur de requête:', error.message);
-                showSnackbar(`Erreur lors de la ${actionData ? 'modification' : 'création'} de l'action`, 'error');
-            });
+        .then(response => {
+            console.log(`Réponse du serveur:`, response.data);
+            showSnackbar(`Action ${actionData ? 'modifiée' : 'créée'} avec succès`, 'success');
+            setTimeout(() => navigate('/planAction'), 750);
+        })
+        .catch(error => {
+            console.error('Erreur complète:', error);
+            console.error('Erreur détaillée:', error.response?.data);
+            console.error('Status de l\'erreur:', error.response?.status);
+            console.error('Headers de l\'erreur:', error.response?.headers);
+            showSnackbar(`Erreur lors de la ${actionData ? 'modification' : 'création'} de l'action`, 'error');
+        });
     }, [actionData, apiUrl, navigate, showSnackbar, AddActionEntreprise, AddActionSecteur, AddActionDate, AddActionQui, AddAction, AddboolStatus, AddActionDange, AddActionanne, AddActoinmoi]);
 
 
@@ -240,7 +259,7 @@ export default function FormulaireAction() {
             <TextFieldQ id='AddAction' label="Quelle action ajouter" onChange={setAddAction} defaultValue={AddAction} required={true} />
             <DatePickerQ id='AddActionDate' label="Date de l'ajout de l'action" onChange={setAddActionDate} defaultValue={AddActionDate} required={true} />
             <TextFieldP id='AddActionQui' label="Qui doit s'occuper de l'action" onChange={setAddActionQui} defaultValue={AddActionQui} />
-            <AutoCompleteQ
+            <AutoCompleteCM
                 id='AddActionDange'
                 option={listeaddaction.AddActionDange}
                 label="Type de risque"
@@ -259,7 +278,7 @@ export default function FormulaireAction() {
                         sx={{
                             backgroundColor: '#ee752d60',
                             transition: 'all 0.3s ease-in-out',
-                             '&:hover': {backgroundColor: '#95ad22' ,transform: 'scale(1.08)',boxShadow: 6},
+                            '&:hover': { backgroundColor: '#95ad22', transform: 'scale(1.08)', boxShadow: 6 },
                             padding: '10px 20px',
                             width: '50%',
                             marginTop: '1cm',
