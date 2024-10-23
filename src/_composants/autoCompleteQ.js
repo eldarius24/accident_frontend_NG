@@ -16,7 +16,7 @@ export default function AutoCompleteQ({
     const [backgroundColor, setBackgroundColor] = useState(darkMode ? '#333333' : '#e62a5663');
 
     useEffect(() => {
-        setBackgroundColor(value 
+        setBackgroundColor(value
             ? (darkMode ? '#4a4a4a' : '#95ad2271')
             : (darkMode ? '#333333' : '#e62a5663')
         );
@@ -83,7 +83,7 @@ export default function AutoCompleteQ({
                 )}
                 fullWidth={true}
                 PaperComponent={(props) => (
-                    <Paper {...props} sx={{ 
+                    <Paper {...props} sx={{
                         backgroundColor: darkMode ? '#4a4a4a' : '#bed7f6',
                         color: darkMode ? '#ffffff' : 'inherit',
                     }} />

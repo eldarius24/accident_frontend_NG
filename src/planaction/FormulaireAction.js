@@ -161,11 +161,15 @@ export default function FormulaireAction() {
     }, [AddActionEntreprise, enterprises, allSectors, setValue, getLinkedSecteurs, AddActionSecteur]);
 
     const onSubmit = useCallback((data) => {
+        // Vérifier que AddActionDange n'est pas vide
+        if (!AddActionDange || AddActionDange.length === 0) {
+            showSnackbar('Le type de risque est obligatoire', 'error');
+            return; // Arrête la soumission du formulaire
+        }
 
         console.log('Data reçue:', data);
         console.log('AddActionDange avant formatage:', AddActionDange, typeof AddActionDange);
 
-        // Assurez-vous que tous les champs sont inclus dans l'objet data
         const formData = {
             ...data,
             AddActionEntreprise,
@@ -174,41 +178,31 @@ export default function FormulaireAction() {
             AddActionQui,
             AddAction,
             AddboolStatus,
-            AddActionDange: Array.isArray(AddActionDange) ? AddActionDange : [AddActionDange], // S'assurer que c'est un tableau
+            AddActionDange: Array.isArray(AddActionDange) ? AddActionDange : [AddActionDange],
             AddActionanne,
             AddActoinmoi
         };
 
-        // Log du formData final
         console.log('FormData final envoyé au serveur:', formData);
-        console.log('Structure de AddActionDange dans formData:', {
-            value: formData.AddActionDange,
-            type: typeof formData.AddActionDange,
-            isArray: Array.isArray(formData.AddActionDange)
-        });
 
         const url = actionData
             ? `http://${apiUrl}:3100/api/planaction/${actionData._id}`
             : `http://${apiUrl}:3100/api/planaction`;
         const method = actionData ? 'put' : 'post';
 
-        // Log de la requête
-        console.log('URL:', url);
-        console.log('Méthode:', method);
-
         axios[method](url, formData)
-        .then(response => {
-            console.log(`Réponse du serveur:`, response.data);
-            showSnackbar(`Action ${actionData ? 'modifiée' : 'créée'} avec succès`, 'success');
-            setTimeout(() => navigate('/planAction'), 750);
-        })
-        .catch(error => {
-            console.error('Erreur complète:', error);
-            console.error('Erreur détaillée:', error.response?.data);
-            console.error('Status de l\'erreur:', error.response?.status);
-            console.error('Headers de l\'erreur:', error.response?.headers);
-            showSnackbar(`Erreur lors de la ${actionData ? 'modification' : 'création'} de l'action`, 'error');
-        });
+            .then(response => {
+                console.log(`Réponse du serveur:`, response.data);
+                showSnackbar(`Action ${actionData ? 'modifiée' : 'créée'} avec succès`, 'success');
+                setTimeout(() => navigate('/planAction'), 750);
+            })
+            .catch(error => {
+                console.error('Erreur complète:', error);
+                console.error('Erreur détaillée:', error.response?.data);
+                console.error('Status de l\'erreur:', error.response?.status);
+                console.error('Headers de l\'erreur:', error.response?.headers);
+                showSnackbar(`Erreur lors de la ${actionData ? 'modification' : 'création'} de l'action`, 'error');
+            });
     }, [actionData, apiUrl, navigate, showSnackbar, AddActionEntreprise, AddActionSecteur, AddActionDate, AddActionQui, AddAction, AddboolStatus, AddActionDange, AddActionanne, AddActoinmoi]);
 
 
@@ -264,6 +258,9 @@ export default function FormulaireAction() {
                 option={listeaddaction.AddActionDange}
                 label="Type de risque"
                 onChange={(AddActionDangeSelect) => {
+                    if (!Array.isArray(AddActionDangeSelect) || AddActionDangeSelect.length === 0) {
+                        showSnackbar('Au moins un type de risque doit être sélectionné', 'warning');
+                    }
                     setAddActionDange(AddActionDangeSelect);
                     setValue('AddActionDange', AddActionDangeSelect);
                 }}
