@@ -11,6 +11,12 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import axios from 'axios';
 import { useTheme } from '../pageAdmin/user/ThemeContext';
 
+/**
+ * Formulaire de login
+ * @returns Un formulaire de login
+ * @example
+ * <Login />
+ */
 const Login = () => {
   const navigate = useNavigate();
   const { register, handleSubmit } = useForm();
@@ -18,6 +24,15 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const { setDarkMode } = useTheme();
 
+  /**
+   * Fonction de connexion
+   * @param {Object} data - Email et mot de passe
+   * @property {string} data.email - Email
+   * @property {string} data.password - Mot de passe
+   * @returns {Promise<void>}
+   * @example
+   * <Login />
+   */
   const onSubmit = async (data) => {
     const { email, password } = data;
   

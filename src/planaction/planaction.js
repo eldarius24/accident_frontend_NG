@@ -36,6 +36,12 @@ const EnterpriseStats = React.memo(({ actions }) => {
 
     const getCardStyle = useCallback((completed, total) => {
         const completionRate = (completed / total) * 100;
+    /**
+     * Renvoie une couleur en fonction de la progression d'une t che (0-100%).
+     * En mode sombre, les couleurs sont plus sombres.
+     * @param {number} rate - Pourcentage de progression (0-100)
+     * @returns {string} La couleur correspondante
+     */
         const getColorByCompletion = (rate) => {
             if (darkMode) {
                 // Couleurs plus sombres pour le mode sombre
@@ -532,6 +538,12 @@ export default function PlanAction({ accidentData }) {
     }
 
     //format d'affichage AddActionDange
+    /**
+     * Formatte une chaîne de catégories de dangers pour en faire une chaîne lisible.
+     * Exemple : "DangerChuteDeHauteur" devient "Danger chute de hauteur"
+     * @param {string|undefined} dangers - La chaîne de catégories de dangers à formatter
+     * @returns {string} - La chaîne formatée
+     */
     const formatDangerCategories = (dangers) => {
         try {
             if (!dangers) return '';

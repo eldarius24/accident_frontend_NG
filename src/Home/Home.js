@@ -57,7 +57,6 @@ function Home() {
         [darkMode]
     );
 
-
     const formatDate = useCallback((dateString) => {
         if (!dateString) return '';
         const date = new Date(dateString);
