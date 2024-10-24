@@ -353,7 +353,6 @@ function Home() {
                                     <TableCell>{item.prenomTravailleur}</TableCell>
                                     <TableCell>{item.typeAccident}</TableCell>
 
-
                                     <>
                                         <TableCell style={{ padding: 0 }}>
                                             {(isAdmin || (isConseiller && isConseillerPrevention(item.entrepriseName))) ? (
