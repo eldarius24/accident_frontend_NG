@@ -391,9 +391,9 @@ export default function PlanAction({ accidentData }) {
         if (selectedYears.length === 0) {
             return [];
         }
-
+    
         let filtered = users;
-
+    
         // Filtrer d'abord par les entreprises de l'utilisateur si ce n'est pas un admin
         if (!isAdmin) {
             const userEntreprises = userInfo?.entreprisesConseillerPrevention || [];
@@ -401,19 +401,22 @@ export default function PlanAction({ accidentData }) {
                 userEntreprises.includes(action.AddActionEntreprise)
             );
         }
-
+    
         // Filtrer par années sélectionnées
         filtered = filtered.filter(action => selectedYears.includes(action.AddActionanne));
-
+    
         // Appliquer le filtre de recherche si nécessaire
         if (searchTerm) {
             const searchTermLower = searchTerm.toLowerCase();
             filtered = filtered.filter(addaction =>
                 ['AddActionEntreprise', 'AddActionDate', 'AddActionSecteur', 'AddAction', 'AddActionQui', 'AddActoinmoi', 'AddActionDange', 'AddActionanne']
-                    .some(field => addaction[field]?.toLowerCase().includes(searchTermLower))
+                    .some(field => {
+                        const value = addaction[field];
+                        return value && String(value).toLowerCase().includes(searchTermLower);
+                    })
             );
         }
-
+    
         return filtered;
     }, [users, searchTerm, selectedYears, isAdmin, userInfo]);
 
@@ -484,27 +487,35 @@ export default function PlanAction({ accidentData }) {
     const handleExport = useCallback(async () => {
         try {
             let dataToExport = users;
-
+    
+            // Filtre par entreprise si l'utilisateur n'est pas admin
             if (!isAdmin) {
                 dataToExport = dataToExport.filter(action =>
                     userInfo.entreprisesConseillerPrevention?.includes(action.AddActionEntreprise)
                 );
             }
-
+    
+            // Filtre par années sélectionnées
             if (selectedYears && selectedYears.length > 0) {
                 dataToExport = dataToExport.filter(action =>
                     selectedYears.includes(action.AddActionanne)
                 );
             }
-
+    
+            // Filtre par terme de recherche
             if (searchTerm) {
                 const searchTermLower = searchTerm.toLowerCase();
                 dataToExport = dataToExport.filter(addaction =>
-                    ['AddActionEntreprise', 'AddActionDate', 'AddActionSecteur', 'AddAction', 'AddActionQui', 'AddActoinmoi', 'AddActionDange', 'AddActionanne']
-                        .some(field => addaction[field]?.toLowerCase().includes(searchTermLower))
+                    ['AddActionEntreprise', 'AddActionDate', 'AddActionSecteur', 'AddAction', 
+                     'AddActionQui', 'AddActoinmoi', 'AddActionDange', 'AddActionanne']
+                        .some(field => {
+                            const value = addaction[field];
+                            // Vérification et conversion sécurisée en chaîne
+                            return value != null && String(value).toLowerCase().includes(searchTermLower);
+                        })
                 );
             }
-
+    
             await handleExportDataAction(dataToExport);
             showSnackbar('Exportation des données réussie', 'success');
         } catch (error) {
@@ -512,7 +523,6 @@ export default function PlanAction({ accidentData }) {
             showSnackbar('Erreur lors de l\'exportation des données', 'error');
         }
     }, [users, isAdmin, userInfo, selectedYears, searchTerm, showSnackbar]);
-
     const sortByYear = useCallback((a, b) => {
         return parseInt(a.AddActionanne) - parseInt(b.AddActionanne);
     }, []);
