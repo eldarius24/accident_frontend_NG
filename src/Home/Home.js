@@ -156,9 +156,9 @@ function Home() {
         const searchTermLower = searchTerm.toLowerCase();
         return accidents.filter(item => {
             if (!item.DateHeureAccident) return false;
-
+            //le filtre filtre unioquement sur ces données
             const date = new Date(item.DateHeureAccident).getFullYear();
-            return years.includes(date) && ['DateHeureAccident', 'entrepriseName', 'secteur', 'nomTravailleur', 'prenomTravailleur', 'typeAccident'].some(property =>
+            return years.includes(date) && ['AssureurStatus', 'DateHeureAccident', 'entrepriseName', 'secteur', 'nomTravailleur', 'prenomTravailleur', 'typeAccident'].some(property =>
                 item[property]?.toString().toLowerCase().includes(searchTermLower)
             );
         });

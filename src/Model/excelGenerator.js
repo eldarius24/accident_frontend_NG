@@ -38,6 +38,7 @@ export function handleExportData(data) {
     const worksheet = workbook.addWorksheet('Accidents');
 
     worksheet.addRow([
+        'Statut',
         'Nom de l entreprise',
         'Nom du secteur',
         'Type de travailleur',
@@ -75,6 +76,7 @@ export function handleExportData(data) {
     if (dataToExport.length > 0 && typeof dataToExport[0] === 'object') {
         dataToExport.forEach(item => {
             worksheet.addRow([
+                item.AssureurStatus,
                 item.entrepriseName,
                 item.secteur,
                 item.typeTravailleur,
@@ -164,6 +166,7 @@ export function handleExportDataAss(data) {
 
     // Ajouter l'en-tête
     worksheet.addRow([
+        'Statut',
         'entrepriseName',
         'secteur',
         'typeTravailleur',
@@ -337,6 +340,7 @@ export function handleExportDataAss(data) {
         dataToExport.forEach(item => {
             worksheet.addRow([
                 //infos entreprise
+                item.AssureurStatus,
                 item.entrepriseName,
                 item.secteur,
                 item.typeTravailleur,
