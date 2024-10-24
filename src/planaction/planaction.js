@@ -521,7 +521,17 @@ export default function PlanAction({ accidentData }) {
         return <LinearProgress color="success" />;
     }
 
-
+    //format d'affichage AddActionDange
+    const formatDangerCategories = (dangers) => {
+        try {
+            if (!dangers) return '';
+            const dangerString = typeof dangers === 'string' ? dangers : String(dangers);
+            return dangerString.split(/(?=[A-Z])/).join(' ');
+        } catch (error) {
+            console.error('Erreur lors du formatage des dangers:', error);
+            return dangers || ''; // Retourne la valeur originale ou une chaîne vide
+        }
+    };
 
     return (
         <div style={{ margin: '0 20px' }}>
@@ -679,7 +689,7 @@ export default function PlanAction({ accidentData }) {
                                             <TableCell>{addaction.AddActionEntreprise}</TableCell>
                                             <TableCell>{addaction.AddActionSecteur}</TableCell>
                                             <TableCell>{addaction.AddAction}</TableCell>
-                                            <TableCell>{addaction.AddActionDange}</TableCell>
+                                            <TableCell>{formatDangerCategories(addaction.AddActionDange)}</TableCell>
                                             <TableCell>{formatDate(addaction.AddActionDate)}</TableCell>
                                             <TableCell>{addaction.AddActionQui}</TableCell>
                                             <TableCell style={{ padding: 0, width: '70px' }}>
