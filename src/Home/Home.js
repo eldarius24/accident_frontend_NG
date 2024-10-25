@@ -57,6 +57,7 @@ function Home() {
         [darkMode]
     );
 
+
     const formatDate = useCallback((dateString) => {
         if (!dateString) return '';
         const date = new Date(dateString);
@@ -223,7 +224,11 @@ function Home() {
     }
 
     return (
-        <div style={{ margin: '0 20px' }}>
+        <div style={{
+            backgroundColor: darkMode ? '#6e6e6e' : '#ffffff',
+            color: darkMode ? '#ffffff' : '#000000',
+            margin: '0 20px'
+        }}>
             <div style={{ display: 'flex', justifyContent: 'center', margin: '20px 0rem' }}>
                 <Grid container spacing={2}>
                     <Grid item xs={6} md={2}>
@@ -332,17 +337,35 @@ function Home() {
             >
                 <Table>
                     <TableHead>
-                        <TableRow style={{ backgroundColor: darkMode ? '#535353' : '#0098f950' }}>
-                            {['N° Groupe', 'N° Entreprise', 'Status', 'Date accident', 'Entreprise', 'Secteur', 'Nom du travailleur', 'Prénom du travailleur', 'Type accident', 'Editer', 'Fichier', 'PDF', 'Supprimer'].map((header, index) => (
-                                <TableCell key={index} style={{ fontWeight: 'bold', padding: 0, width: index < 8 ? 'auto' : '70px' }}>{isAdminOuConseiller || index < 8 ? header : null}</TableCell>
-                            ))}
+                        <TableRow
+                            className={`table-row-separatormenu ${darkMode ? 'dark-separator' : ''}`}
+                            style={{
+                                backgroundColor: darkMode ? '#535353' : '#0098f950'
+                            }}
+                        >
+                            <TableCell style={{ fontWeight: 'bold' }}>N° Groupe</TableCell>
+                            <TableCell style={{ fontWeight: 'bold' }}>Status</TableCell>
+                            <TableCell style={{ fontWeight: 'bold' }}>Date accident</TableCell>
+                            <TableCell style={{ fontWeight: 'bold' }}>Entreprise</TableCell>
+                            <TableCell style={{ fontWeight: 'bold' }}>Secteur</TableCell>
+                            <TableCell style={{ fontWeight: 'bold' }}>Nom du travailleur</TableCell>
+                            <TableCell style={{ fontWeight: 'bold' }}>Prénom du travailleur</TableCell>
+                            <TableCell style={{ fontWeight: 'bold' }}>Type accident</TableCell>
+                            <TableCell style={{ fontWeight: 'bold' }}>Editer</TableCell>
+                            <TableCell style={{ fontWeight: 'bold' }}>Fichier</TableCell>
+                            <TableCell style={{ fontWeight: 'bold' }}>PDF</TableCell>
+                            <TableCell style={{ fontWeight: 'bold' }}>Supprimer</TableCell>
                         </TableRow>
-                        <TableRow className="table-row-separatormenu"></TableRow>
                     </TableHead>
                     <TableBody>
                         {filteredData.map((item, index) => (
                             <React.Fragment key={item._id}>
-                                <TableRow style={{ backgroundColor: rowColors[index % rowColors.length] }}>
+                                <TableRow
+                                    className={`table-row-separatormenu ${darkMode ? 'dark-separator' : ''}`}
+                                    style={{
+                                        backgroundColor: rowColors[index % rowColors.length]
+                                    }}
+                                >
                                     <TableCell>{item.numeroGroupe}</TableCell>
                                     <TableCell>{item.numeroEntreprise}</TableCell>
                                     <TableCell>{item.AssureurStatus}</TableCell>
@@ -441,7 +464,7 @@ function Home() {
                                         </TableCell>
                                     </>
                                 </TableRow>
-                                <TableRow className="table-row-separator"></TableRow>
+
                             </React.Fragment>
                         ))}
                     </TableBody>

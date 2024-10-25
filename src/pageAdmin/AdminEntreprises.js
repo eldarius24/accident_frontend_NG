@@ -198,7 +198,6 @@ export default function Adminusern() {
                                     <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>Modifier</TableCell>
                                     <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>Supprimer</TableCell>
                                 </TableRow>
-
                             </TableHead>
                             <TableBody>
                                 {entreprises.map((entreprise, index) => (

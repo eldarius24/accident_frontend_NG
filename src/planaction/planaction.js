@@ -36,12 +36,12 @@ const EnterpriseStats = React.memo(({ actions }) => {
 
     const getCardStyle = useCallback((completed, total) => {
         const completionRate = (completed / total) * 100;
-    /**
-     * Renvoie une couleur en fonction de la progression d'une t che (0-100%).
-     * En mode sombre, les couleurs sont plus sombres.
-     * @param {number} rate - Pourcentage de progression (0-100)
-     * @returns {string} La couleur correspondante
-     */
+        /**
+         * Renvoie une couleur en fonction de la progression d'une t che (0-100%).
+         * En mode sombre, les couleurs sont plus sombres.
+         * @param {number} rate - Pourcentage de progression (0-100)
+         * @returns {string} La couleur correspondante
+         */
         const getColorByCompletion = (rate) => {
             if (darkMode) {
                 // Couleurs plus sombres pour le mode sombre
@@ -221,14 +221,25 @@ export default function PlanAction({ accidentData }) {
         setSnackbar({ open: true, message, severity });
     }, []);
 
-    const getRowColor = useCallback((isChecked, index) => {
-        if (isChecked) {
-            return darkMode ? '#4f7c4f' : '#90EE90'; // Vert clair pour les lignes cochées
+    const rowColors = useMemo(() => ({
+        dark: {
+            checked: '#4f7c4f',
+            rows: ['#7a7a7a', '#979797']
+        },
+        light: {
+            checked: '#90EE90',
+            rows: ['#e62a5625', '#95519b25']
         }
-        return darkMode
-            ? (index % 2 === 0 ? '#7a7a7a' : '#979797')
-            : (index % 2 === 0 ? '#e62a5625' : '#95519b25');
-    }, [darkMode]);
+    }), []);
+
+    // Fonction pour obtenir la couleur de la ligne
+    const getRowColor = useCallback((isChecked, index) => {
+        const theme = darkMode ? 'dark' : 'light';
+        if (isChecked) {
+            return rowColors[theme].checked;
+        }
+        return rowColors[theme].rows[index % 2];
+    }, [darkMode, rowColors]);
 
     const updateUserSelectedYears = useCallback(async (newSelectedYears) => {
         try {
@@ -397,9 +408,9 @@ export default function PlanAction({ accidentData }) {
         if (selectedYears.length === 0) {
             return [];
         }
-    
+
         let filtered = users;
-    
+
         // Filtrer d'abord par les entreprises de l'utilisateur si ce n'est pas un admin
         if (!isAdmin) {
             const userEntreprises = userInfo?.entreprisesConseillerPrevention || [];
@@ -407,10 +418,10 @@ export default function PlanAction({ accidentData }) {
                 userEntreprises.includes(action.AddActionEntreprise)
             );
         }
-    
+
         // Filtrer par années sélectionnées
         filtered = filtered.filter(action => selectedYears.includes(action.AddActionanne));
-    
+
         // Appliquer le filtre de recherche si nécessaire
         if (searchTerm) {
             const searchTermLower = searchTerm.toLowerCase();
@@ -422,7 +433,7 @@ export default function PlanAction({ accidentData }) {
                     })
             );
         }
-    
+
         return filtered;
     }, [users, searchTerm, selectedYears, isAdmin, userInfo]);
 
@@ -493,27 +504,27 @@ export default function PlanAction({ accidentData }) {
     const handleExport = useCallback(async () => {
         try {
             let dataToExport = users;
-    
+
             // Filtre par entreprise si l'utilisateur n'est pas admin
             if (!isAdmin) {
                 dataToExport = dataToExport.filter(action =>
                     userInfo.entreprisesConseillerPrevention?.includes(action.AddActionEntreprise)
                 );
             }
-    
+
             // Filtre par années sélectionnées
             if (selectedYears && selectedYears.length > 0) {
                 dataToExport = dataToExport.filter(action =>
                     selectedYears.includes(action.AddActionanne)
                 );
             }
-    
+
             // Filtre par terme de recherche
             if (searchTerm) {
                 const searchTermLower = searchTerm.toLowerCase();
                 dataToExport = dataToExport.filter(addaction =>
-                    ['AddActionEntreprise', 'AddActionDate', 'AddActionSecteur', 'AddAction', 
-                     'AddActionQui', 'AddActoinmoi', 'AddActionDange', 'AddActionanne']
+                    ['AddActionEntreprise', 'AddActionDate', 'AddActionSecteur', 'AddAction',
+                        'AddActionQui', 'AddActoinmoi', 'AddActionDange', 'AddActionanne']
                         .some(field => {
                             const value = addaction[field];
                             // Vérification et conversion sécurisée en chaîne
@@ -521,7 +532,7 @@ export default function PlanAction({ accidentData }) {
                         })
                 );
             }
-    
+
             await handleExportDataAction(dataToExport);
             showSnackbar('Exportation des données réussie', 'success');
         } catch (error) {
@@ -653,7 +664,10 @@ export default function PlanAction({ accidentData }) {
                     <Table>
                         <TableHead>
                             <React.Fragment>
-                                <TableRow style={{ backgroundColor: darkMode ? '#535353' : '#0098f950' }}>
+                                <TableRow className={`table-row-separatormenu ${darkMode ? 'dark-separator' : ''}`}
+                                    style={{
+                                        backgroundColor: darkMode ? '#535353' : '#0098f950',
+                                    }}>
                                     <TableCell style={{ fontWeight: 'bold' }}>Status</TableCell>
                                     <TableCell style={{ fontWeight: 'bold' }}>Année</TableCell>
                                     <TableCell style={{ fontWeight: 'bold' }}>Mois</TableCell>
@@ -668,7 +682,7 @@ export default function PlanAction({ accidentData }) {
                                     <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>Delete</TableCell>
                                 </TableRow>
                             </React.Fragment>
-                            <TableRow className="table-row-separatormenu"></TableRow>
+
                         </TableHead>
                         <TableBody>
                             {filteredUsers
@@ -677,8 +691,10 @@ export default function PlanAction({ accidentData }) {
                                     canViewAction(addaction) && (
                                         <TableRow
                                             key={addaction._id || `action-${index}`}
-                                            className="table-row-separatormenu"
-                                            style={{ backgroundColor: getRowColor(addaction.AddboolStatus, index) }}
+                                            className={`table-row-separatormenu ${darkMode ? 'dark-separator' : ''}`}
+                                            style={{
+                                                backgroundColor: getRowColor(addaction.AddboolStatus, index)
+                                            }}
                                         >
                                             <TableCell>
                                                 <Tooltip title="Sélectionnez quand l'action est réalisée" arrow>
