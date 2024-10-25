@@ -65,39 +65,39 @@ const FileViewer = ({ file, fileContent }) => {
 
     switch (fileType) {
         case 'pdf':
-    if (loading) {
-        return <Typography>Chargement du document...</Typography>;
-    }
-    return (
-        <div style={{ 
-            width: '100%', 
-            height: 'calc(100vh - 140px)',
-            position: 'relative',
-            overflow: 'hidden'
-        }}>
-            <object
-                data={`${fullContent}#toolbar=0&navpanes=0&scrollbar=1&view=FitH&zoom=page-fit`}
-                type="application/pdf"
-                style={{ 
-                    width: '100%', 
-                    height: '100%', 
-                    border: 'none',
-                }}
-            >
-                <iframe
-                    src={`${fullContent}#toolbar=0&navpanes=0&scrollbar=1&view=FitH&zoom=page-fit`}
-                    style={{ 
-                        width: '100%', 
-                        height: '100%', 
-                        border: 'none',
-                    }}
-                    title={file.fileName}
-                >
-                    <p>Ce navigateur ne supporte pas l'affichage des PDF.</p>
-                </iframe>
-            </object>
-        </div>
-    );
+            if (loading) {
+                return <Typography>Chargement du document...</Typography>;
+            }
+            return (
+                <div style={{
+                    width: '100%',
+                    height: 'calc(100vh - 140px)',
+                    position: 'relative',
+                    overflow: 'hidden'
+                }}>
+                    <object
+                        data={`${fullContent}#toolbar=0&navpanes=0&scrollbar=1&view=FitH&zoom=page-fit`}
+                        type="application/pdf"
+                        style={{
+                            width: '100%',
+                            height: '100%',
+                            border: 'none',
+                        }}
+                    >
+                        <iframe
+                            src={`${fullContent}#toolbar=0&navpanes=0&scrollbar=1&view=FitH&zoom=page-fit`}
+                            style={{
+                                width: '100%',
+                                height: '100%',
+                                border: 'none',
+                            }}
+                            title={file.fileName}
+                        >
+                            <p>Ce navigateur ne supporte pas l'affichage des PDF.</p>
+                        </iframe>
+                    </object>
+                </div>
+            );
         case 'txt':
             return (
                 <Typography sx={{ fontSize: 14 }} color="text.primary">
@@ -109,9 +109,9 @@ const FileViewer = ({ file, fileContent }) => {
         case 'png':
         case 'gif':
             return (
-                <img 
-                    src={fileContent.url} 
-                    alt={file.fileName} 
+                <img
+                    src={fileContent.url}
+                    alt={file.fileName}
                     style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }}
                 />
             );
@@ -187,15 +187,15 @@ export default function ListFilesInAccident(accidentId) {
                 const response = await axios.get(`http://localhost:3100/api/accidents/${accidentId}`);
                 if (!response || !response.data.files) throw new Error('Pas de fichiers trouvés');
                 setFiles(response.data.files);
-                
+
                 const previewPromises = response.data.files.map(file => getPreview(file.fileId, file.fileName));
                 const previewResults = await Promise.all(previewPromises);
-                
+
                 const previewMap = response.data.files.reduce((acc, file, index) => {
                     acc[file.fileId] = previewResults[index];
                     return acc;
                 }, {});
-                
+
                 setPreviews(previewMap);
                 showSnackbar('Fichiers chargés avec succès', 'success');
             } catch (error) {
@@ -230,19 +230,19 @@ export default function ListFilesInAccident(accidentId) {
                     <p className="custom-confirm-message">Êtes-vous sûr de vouloir supprimer cet élément?</p>
                     <div className="custom-confirm-buttons">
                         <Tooltip title="Cliquez sur OUI pour supprimer" arrow>
-                            <button 
-                                className="custom-confirm-button" 
-                                onClick={() => { 
-                                    handleDeleteFile(fileId); 
-                                    onClose(); 
+                            <button
+                                className="custom-confirm-button"
+                                onClick={() => {
+                                    handleDeleteFile(fileId);
+                                    onClose();
                                 }}
                             >
                                 Oui
                             </button>
                         </Tooltip>
                         <Tooltip title="Cliquez sur NON pour annuler la suppression" arrow>
-                            <button 
-                                className="custom-confirm-button custom-confirm-no" 
+                            <button
+                                className="custom-confirm-button custom-confirm-no"
                                 onClick={onClose}
                             >
                                 Non
@@ -299,7 +299,7 @@ export default function ListFilesInAccident(accidentId) {
             return null;
         }
     };
-    
+
 
     const downloadFile = async ({ fileId, fileName }) => {
         if (!fileId || !fileName) throw new Error('Informations de fichier manquantes');
@@ -332,14 +332,95 @@ export default function ListFilesInAccident(accidentId) {
                     <li key={file.fileId} style={{ listStyleType: 'none', margin: '10px' }}>
                         <Card sx={{
                             backgroundColor: '#fab82b56',
-                            minWidth: 275,
-                            maxWidth: 275,
-                            minHeight: 275,
-                            maxHeight: 275,
-                            border: '2px solid #000000'
+                            width: 275,
+                            height: 275,
+                            border: '2px solid #000000',
+                            display: 'flex',
+                            flexDirection: 'row',
+                            padding: 0 // Enlever le padding par défaut
                         }}>
-                            <CardContent sx={{ maxWidth: 200, maxHeight: 190 }}>
-                                <Typography sx={{ fontSize: 12, color: 'text.secondary', marginTop: '10px' }}>
+
+                        
+                            <Box sx={{
+                                width: '50px', // Largeur fixe pour la zone des boutons
+                                height: '100%',
+                                display: 'flex',
+                                flexDirection: 'column',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                gap: 3,
+                                borderRight: '5px solid rgba(0, 0, 0, 0.1)',
+                                padding: '8px'
+                            }}>
+                                <Tooltip title="Télécharger le fichier" arrow>
+                                    <Button
+                                        sx={{
+                                            minWidth: '36px',
+                                            width: '36px',
+                                            height: '36px',
+                                            padding: 0,
+                                            transition: 'all 0.3s ease-in-out',
+                                            '&:hover': {
+                                                transform: 'scale(1.08)',
+                                                boxShadow: 6
+                                            }
+                                        }}
+                                        onClick={() => downloadFile({ fileId: file.fileId, fileName: file.fileName })}
+                                        variant="contained"
+                                        color="primary"
+                                    >
+                                        <GetAppIcon sx={{ fontSize: 20 }} />
+                                    </Button>
+                                </Tooltip>
+                                <Tooltip title="Supprimer le fichier" arrow>
+                                    <Button
+                                        sx={{
+                                            minWidth: '36px',
+                                            width: '36px',
+                                            height: '36px',
+                                            padding: 0,
+                                            transition: 'all 0.3s ease-in-out',
+                                            '&:hover': {
+                                                transform: 'scale(1.08)',
+                                                boxShadow: 6
+                                            }
+                                        }}
+                                        onClick={() => popUpDelete(file.fileId)}
+                                        variant="contained"
+                                        color="error"
+                                    >
+                                        <DeleteForeverIcon sx={{ fontSize: 20 }} />
+                                    </Button>
+                                </Tooltip>
+                                <Tooltip title="Visualiser le fichier" arrow>
+                                    <Button
+                                        sx={{
+                                            minWidth: '36px',
+                                            width: '36px',
+                                            height: '36px',
+                                            padding: 0,
+                                            transition: 'all 0.3s ease-in-out',
+                                            '&:hover': {
+                                                transform: 'scale(1.08)',
+                                                boxShadow: 6
+                                            }
+                                        }}
+                                        onClick={() => handleOpenModal(file)}
+                                        variant="contained"
+                                        color="secondary"
+                                    >
+                                        <VisibilityIcon sx={{ fontSize: 20 }} />
+                                    </Button>
+                                </Tooltip>
+                            </Box>
+
+                            {/* Conteneur pour le contenu */}
+                            <Box sx={{
+                                flexGrow: 1,
+                                overflow: 'hidden',
+                                padding: '16px'
+                            }}>
+                                <Typography sx={{ fontSize: 12, color: 'text.secondary', marginBottom: 1 }}>
                                     {file.fileName}
                                 </Typography>
                                 {previews[file.fileId] ? (
@@ -357,62 +438,12 @@ export default function ListFilesInAccident(accidentId) {
                                         {file.fileName}
                                     </Typography>
                                 )}
-                            </CardContent>
-                            <CardActions>
-                                <Tooltip title="Télécharger le fichier" arrow>
-                                    <Button 
-                                        sx={{
-                                            transition: 'all 0.3s ease-in-out',
-                                            '&:hover': {
-                                                transform: 'scale(1.08)',
-                                                boxShadow: 6
-                                            }
-                                        }} 
-                                        onClick={() => downloadFile({ fileId: file.fileId, fileName: file.fileName })} 
-                                        variant="contained" 
-                                        color="primary"
-                                    >
-                                        <GetAppIcon />
-                                    </Button>
-                                </Tooltip>
-                                <Tooltip title="Supprimer le fichier" arrow>
-                                    <Button 
-                                        sx={{
-                                            transition: 'all 0.3s ease-in-out',
-                                            '&:hover': {
-                                                transform: 'scale(1.08)',
-                                                boxShadow: 6
-                                            }
-                                        }} 
-                                        onClick={() => popUpDelete(file.fileId)} 
-                                        variant="contained" 
-                                        color="error"
-                                    >
-                                        <DeleteForeverIcon />
-                                    </Button>
-                                </Tooltip>
-                                <Tooltip title="Visualiser le fichier" arrow>
-                                    <Button
-                                        sx={{
-                                            transition: 'all 0.3s ease-in-out',
-                                            '&:hover': {
-                                                transform: 'scale(1.08)',
-                                                boxShadow: 6
-                                            }
-                                        }}
-                                        onClick={() => handleOpenModal(file)}
-                                        variant="contained"
-                                        color="secondary"
-                                    >
-                                        <VisibilityIcon />
-                                    </Button>
-                                </Tooltip>
-                            </CardActions>
+                            </Box>
                         </Card>
                     </li>
                 ))}
             </ul>
-            
+
             <Modal
                 open={modalOpen}
                 onClose={handleCloseModal}

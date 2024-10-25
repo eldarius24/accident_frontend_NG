@@ -98,6 +98,7 @@ export default function PageDownloadFile() {
                                 fontSize: '16px',
                                 width: '60%', // Prend toute la largeur du conteneur
                                 backgroundColor: '#f0f8ff', // Donne un fond léger et contrastant
+                                color: 'black', // Texte en noir
                             }}
                         />
                         <div className="custom-confirm-buttons">
