@@ -1,42 +1,179 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Button, Tooltip, Card, CardActions, CardContent } from '@mui/material';
+import { Button, Tooltip, Card, CardActions, CardContent, Modal, Box } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import GetAppIcon from '@mui/icons-material/GetApp';
-import ZoomInIcon from '@mui/icons-material/ZoomIn';
-import ZoomOutIcon from '@mui/icons-material/ZoomOut';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import CloseIcon from '@mui/icons-material/Close';
 import { confirmAlert } from 'react-confirm-alert';
 import { saveAs } from 'file-saver';
-import deleteFile from "./deleteFile";
 import * as pdfjsLib from 'pdfjs-dist/webpack';
 import CustomSnackbar from '../../_composants/CustomSnackbar';
 
-/**
- * Fonction pour lister les fichiers associés à un accident
- * @param {number} accidentId Identifiant de l'accident
- * @returns {Promise<object[]>} La liste des fichiers associés à l'accident
- */
-export default function listFilesInAccident(accidentId) {
+const modalStyle = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: '90%',
+    height: '90%',
+    bgcolor: 'background.paper',
+    border: '2px solid #000',
+    boxShadow: 24,
+    p: 4,
+    overflow: 'hidden'
+};
+
+const FileViewer = ({ file, fileContent }) => {
+    const [fullContent, setFullContent] = useState(null);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const loadFullContent = async () => {
+            if (file.fileName.toLowerCase().endsWith('.pdf')) {
+                try {
+                    const response = await axios.get(`http://localhost:3100/api/getFile/${file.fileId}`, {
+                        responseType: 'blob'
+                    });
+                    // Créer un blob avec le bon type MIME
+                    const pdfBlob = new Blob([response.data], { type: 'application/pdf' });
+                    const url = URL.createObjectURL(pdfBlob);
+                    setFullContent(url);
+                } catch (error) {
+                    console.error('Erreur lors du chargement du fichier:', error);
+                } finally {
+                    setLoading(false);
+                }
+            }
+        };
+
+        if (file) {
+            loadFullContent();
+        }
+
+        return () => {
+            if (fullContent) {
+                URL.revokeObjectURL(fullContent);
+            }
+        };
+    }, [file]);
+
+    if (!fileContent) return null;
+
+    const fileType = file.fileName.split('.').pop().toLowerCase();
+
+    switch (fileType) {
+        case 'pdf':
+    if (loading) {
+        return <Typography>Chargement du document...</Typography>;
+    }
+    return (
+        <div style={{ 
+            width: '100%', 
+            height: 'calc(100vh - 140px)',
+            position: 'relative',
+            overflow: 'hidden'
+        }}>
+            <object
+                data={`${fullContent}#toolbar=0&navpanes=0&scrollbar=1&view=FitH&zoom=page-fit`}
+                type="application/pdf"
+                style={{ 
+                    width: '100%', 
+                    height: '100%', 
+                    border: 'none',
+                }}
+            >
+                <iframe
+                    src={`${fullContent}#toolbar=0&navpanes=0&scrollbar=1&view=FitH&zoom=page-fit`}
+                    style={{ 
+                        width: '100%', 
+                        height: '100%', 
+                        border: 'none',
+                    }}
+                    title={file.fileName}
+                >
+                    <p>Ce navigateur ne supporte pas l'affichage des PDF.</p>
+                </iframe>
+            </object>
+        </div>
+    );
+        case 'txt':
+            return (
+                <Typography sx={{ fontSize: 14 }} color="text.primary">
+                    {fileContent.text}
+                </Typography>
+            );
+        case 'jpg':
+        case 'jpeg':
+        case 'png':
+        case 'gif':
+            return (
+                <img 
+                    src={fileContent.url} 
+                    alt={file.fileName} 
+                    style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }}
+                />
+            );
+        default:
+            return (
+                <Typography>
+                    Ce type de fichier ne peut pas être prévisualisé
+                </Typography>
+            );
+    }
+};
+
+
+const getPreview = async (fileId, fileName) => {
+    try {
+        const response = await axios.get(`http://localhost:3100/api/getFile/${fileId}`, {
+            responseType: 'blob',
+        });
+        const blob = response.data;
+        const fileType = fileName.split('.').pop().toLowerCase();
+
+        if (fileType === 'pdf') {
+            const pdf = await pdfjsLib.getDocument(URL.createObjectURL(blob)).promise;
+            const page = await pdf.getPage(1);
+            const scale = 1.5;
+            const viewport = page.getViewport({ scale });
+
+            const canvas = document.createElement('canvas');
+            const context = canvas.getContext('2d');
+            canvas.width = viewport.width;
+            canvas.height = viewport.height;
+
+            await page.render({ canvasContext: context, viewport }).promise;
+            return { type: 'pdf', url: canvas.toDataURL() };
+        } else if (fileType === 'txt') {
+            const text = await blob.text();
+            return { type: 'txt', text: text.substring(0, 200) + (text.length > 200 ? "..." : "") };
+        } else {
+            return { type: 'image', url: URL.createObjectURL(blob) };
+        }
+    } catch (error) {
+        console.error('Erreur lors de la récupération de la prévisualisation:', error);
+        return null;
+    }
+};
+
+
+export default function ListFilesInAccident(accidentId) {
     const [files, setFiles] = useState([]);
     const [previews, setPreviews] = useState({});
+    const [selectedFile, setSelectedFile] = useState(null);
+    const [modalOpen, setModalOpen] = useState(false);
     const [snackbar, setSnackbar] = useState({
         open: false,
         message: '',
         severity: 'info',
     });
 
-
-    /**
-     * Affiche un message dans une snackbar.
-     * @param {string} message - Le message à afficher.
-     * @param {string} [severity='info'] - La gravité du message. Les valeurs possibles sont 'info', 'success', 'warning' et 'error'.
-     */
     const showSnackbar = (message, severity = 'info') => {
         setSnackbar({ open: true, message, severity });
     };
 
-    // Function to close Snackbar
     const handleCloseSnackbar = (event, reason) => {
         if (reason === 'clickaway') {
             return;
@@ -45,20 +182,20 @@ export default function listFilesInAccident(accidentId) {
     };
 
     useEffect(() => {
-        /**
-         * Charge les fichiers associés à l'accident et les aperçus correspondants.
-         * Met à jour les états `files` et `previews` et affiche un message dans une snackbar pour indiquer le résultat de l'opération.
-         * @returns {Promise<void>}
-         */
         async function fetchData() {
             try {
-                const files = await listFilesInAccident(accidentId);
-                setFiles(files);
-                const previews = await Promise.all(files.map(file => getPreview(file.fileId, file.fileName)));
-                const previewMap = files.reduce((acc, file, index) => {
-                    acc[file.fileId] = previews[index];
+                const response = await axios.get(`http://localhost:3100/api/accidents/${accidentId}`);
+                if (!response || !response.data.files) throw new Error('Pas de fichiers trouvés');
+                setFiles(response.data.files);
+                
+                const previewPromises = response.data.files.map(file => getPreview(file.fileId, file.fileName));
+                const previewResults = await Promise.all(previewPromises);
+                
+                const previewMap = response.data.files.reduce((acc, file, index) => {
+                    acc[file.fileId] = previewResults[index];
                     return acc;
                 }, {});
+                
                 setPreviews(previewMap);
                 showSnackbar('Fichiers chargés avec succès', 'success');
             } catch (error) {
@@ -66,25 +203,18 @@ export default function listFilesInAccident(accidentId) {
                 showSnackbar('Erreur lors du chargement des fichiers', 'error');
             }
         }
+
         if (accidentId) {
             fetchData();
         }
     }, [accidentId]);
 
-    /**
-     * Supprime un fichier de la base de données et de la liste des fichiers de l'accident
-     * Lorsque la suppression est terminée, recharge la page pour afficher les modifications
-     * Affiche des messages dans une snackbar pour informer l'utilisateur du résultat de l'opération
-     * @param {string} fileId - L'ID du fichier à supprimer
-     * @returns {Promise<void>}
-     */
     async function handleDeleteFile(fileId) {
         try {
-            await deleteFile({ fileId, accidentId });
-            const updatedFiles = files.filter(file => file.id !== fileId);
+            await axios.delete(`http://localhost:3100/api/deleteFile/${fileId}/${accidentId}`);
+            const updatedFiles = files.filter(file => file.fileId !== fileId);
             setFiles(updatedFiles);
-            showSnackbar('Fichier en cours de suppression', 'success');
-            setTimeout(() => showSnackbar('Fichier supprimé avec succès', 'success'), 1000);
+            showSnackbar('Fichier supprimé avec succès', 'success');
             setTimeout(() => window.location.reload(), 2000);
         } catch (error) {
             console.error('Erreur lors de la suppression du fichier:', error);
@@ -92,57 +222,36 @@ export default function listFilesInAccident(accidentId) {
         }
     }
 
-    /**
-     * Affiche une boîte de dialogue de confirmation pour supprimer un fichier
-     * Appelle la fonction handleDeleteFile pour supprimer le fichier si l'utilisateur clique sur "Oui"
-     * Ferme la boîte de dialogue si l'utilisateur clique sur "Non"
-     * @param {string} fileId - L'ID du fichier à supprimer
-     */
     function popUpDelete(fileId) {
-        return (
-            confirmAlert({
-                /**
-                 * Fonction personnalisée pour afficher une boîte de dialogue de confirmation de suppression
-                 * 
-                 * Cette fonction retourne un JSX élément représentant une boîte de dialogue personnalisée.
-                 * La boîte de dialogue affiche un titre, un message de confirmation et des boutons "Oui" et "Non".
-                 * Lorsque l'utilisateur clique sur le bouton "Oui", la fonction handleDeleteFile est appelée pour supprimer le fichier.
-                 * Lorsque l'utilisateur clique sur le bouton "Non", la boîte de dialogue se ferme.
-                 * @param {{ onClose: () => void }} props - Les props de la boîte de dialogue
-                 * @returns {JSX.Element} Le JSX élément représentant la boîte de dialogue personnalisée
-                 */
-                customUI: ({ onClose }) => (
-                    <div className="custom-confirm-dialog">
-                        <h1 className="custom-confirm-title">Supprimer</h1>
-                        <p className="custom-confirm-message">Êtes-vous sûr de vouloir supprimer cet élément?</p>
-                        <div className="custom-confirm-buttons">
-                            <Tooltip title="Cliquez sur OUI pour supprimer" arrow>
-                                <button className="custom-confirm-button" onClick={() => { handleDeleteFile(fileId); onClose(); }} >
-                                    Oui
-                                </button>
-                            </Tooltip>
-                            <Tooltip title="Cliquez sur NON pour annuler la suppression" arrow>
-                                <button className="custom-confirm-button custom-confirm-no" onClick={onClose}>
-                                    Non
-                                </button>
-                            </Tooltip>
-                        </div>
+        confirmAlert({
+            customUI: ({ onClose }) => (
+                <div className="custom-confirm-dialog">
+                    <h1 className="custom-confirm-title">Supprimer</h1>
+                    <p className="custom-confirm-message">Êtes-vous sûr de vouloir supprimer cet élément?</p>
+                    <div className="custom-confirm-buttons">
+                        <Tooltip title="Cliquez sur OUI pour supprimer" arrow>
+                            <button 
+                                className="custom-confirm-button" 
+                                onClick={() => { 
+                                    handleDeleteFile(fileId); 
+                                    onClose(); 
+                                }}
+                            >
+                                Oui
+                            </button>
+                        </Tooltip>
+                        <Tooltip title="Cliquez sur NON pour annuler la suppression" arrow>
+                            <button 
+                                className="custom-confirm-button custom-confirm-no" 
+                                onClick={onClose}
+                            >
+                                Non
+                            </button>
+                        </Tooltip>
                     </div>
-                )
-            })
-        );
-    }
-
-    async function listFilesInAccident(accidentId) {
-        if (!accidentId) throw new Error('Pas d\'accidentId indiqué');
-
-        try {
-            const accident = await axios.get(`http://localhost:3100/api/accidents/${accidentId}`);
-            if (!accident || !accident.data.files) throw new Error('Pas de fichiers trouvés');
-            return accident.data.files;
-        } catch (error) {
-            throw new Error('Erreur de requête:', error);
-        }
+                </div>
+            )
+        });
     }
 
     async function getFile(fileId) {
@@ -160,7 +269,6 @@ export default function listFilesInAccident(accidentId) {
         }
     }
 
-    // Fonction pour générer une miniature pour les fichiers PDF
     const getPDFThumbnail = async (blob) => {
         try {
             const pdf = await pdfjsLib.getDocument(URL.createObjectURL(blob)).promise;
@@ -174,46 +282,24 @@ export default function listFilesInAccident(accidentId) {
             canvas.height = viewport.height;
 
             await page.render({ canvasContext: context, viewport }).promise;
-            return canvas.toDataURL(); // Retourne l'image en base64
+            return canvas.toDataURL();
         } catch (error) {
             console.error('Erreur lors de la génération de la miniature PDF:', error);
             return null;
         }
     };
 
-    // Fonction pour obtenir un extrait de texte pour les fichiers .txt
     const getTextPreview = async (blob) => {
         try {
             const text = await blob.text();
-            const previewText = text.substring(0, 200); // On extrait les 200 premiers caractères
+            const previewText = text.substring(0, 200);
             return previewText + (text.length > 200 ? "..." : "");
         } catch (error) {
             console.error('Erreur lors de la récupération de l\'extrait de texte:', error);
             return null;
         }
     };
-
-    // Modifier cette fonction pour gérer les fichiers PDF et TXT
-    const getPreview = async (fileId, fileName) => {
-        try {
-            const blob = await getFile(fileId);
-            const fileType = fileName.split('.').pop().toLowerCase();
-
-            if (fileType === 'pdf') {
-                const pdfThumbnail = await getPDFThumbnail(blob);
-                return { type: 'pdf', url: pdfThumbnail };
-            } else if (fileType === 'txt') {
-                const textPreview = await getTextPreview(blob);
-                return { type: 'txt', text: textPreview };
-            } else {
-                return { type: 'image', url: URL.createObjectURL(blob) };
-            }
-        } catch (error) {
-            console.error('Erreur lors de la récupération de la prévisualisation:', error);
-            return null;
-        }
-    };
-
+    
 
     const downloadFile = async ({ fileId, fileName }) => {
         if (!fileId || !fileName) throw new Error('Informations de fichier manquantes');
@@ -228,8 +314,15 @@ export default function listFilesInAccident(accidentId) {
         }
     };
 
+    const handleOpenModal = (file) => {
+        setSelectedFile(file);
+        setModalOpen(true);
+    };
 
-    const [scaledFileId, setScaledFileId] = useState(null);
+    const handleCloseModal = () => {
+        setSelectedFile(null);
+        setModalOpen(false);
+    };
 
     return (
         <div>
@@ -238,13 +331,6 @@ export default function listFilesInAccident(accidentId) {
                 {Array.isArray(files) && files.map(file => (
                     <li key={file.fileId} style={{ listStyleType: 'none', margin: '10px' }}>
                         <Card sx={{
-                            position: scaledFileId === file.fileId ? 'fixed' : 'static',
-                            transform: scaledFileId === file.fileId ? 'translate(-50%, -50%) scale(3)' : 'scale(1)',
-                            top: scaledFileId === file.fileId ? '50vh' : 'auto',
-                            left: scaledFileId === file.fileId ? '50vw' : 'auto',
-                            transformOrigin: 'center',
-                            zIndex: scaledFileId === file.fileId ? 999 : 'auto',
-                            transition: 'all 0.3s ease',
                             backgroundColor: '#fab82b56',
                             minWidth: 275,
                             maxWidth: 275,
@@ -273,41 +359,52 @@ export default function listFilesInAccident(accidentId) {
                                 )}
                             </CardContent>
                             <CardActions>
-                                <Tooltip title="Cliquez ici pour télécharger le fichié sur votre ordinateur" arrow>
-                                    <Button sx={{
-                                        transition: 'all 0.3s ease-in-out',
-                                        '&:hover': {
-                                            transform: 'scale(1.08)',
-                                            boxShadow: 6
-                                        }
-                                    }} onClick={() => downloadFile({ fileId: file.fileId, fileName: file.fileName })} variant="contained" color="primary">
+                                <Tooltip title="Télécharger le fichier" arrow>
+                                    <Button 
+                                        sx={{
+                                            transition: 'all 0.3s ease-in-out',
+                                            '&:hover': {
+                                                transform: 'scale(1.08)',
+                                                boxShadow: 6
+                                            }
+                                        }} 
+                                        onClick={() => downloadFile({ fileId: file.fileId, fileName: file.fileName })} 
+                                        variant="contained" 
+                                        color="primary"
+                                    >
                                         <GetAppIcon />
                                     </Button>
                                 </Tooltip>
-                                <Tooltip title="Cliquez ici pour supprimer le fichier" arrow>
-                                    <Button sx={{
-                                        transition: 'all 0.3s ease-in-out',
-                                        '&:hover': {
-                                            transform: 'scale(1.08)',
-                                            boxShadow: 6
-                                        }
-                                    }} onClick={() => popUpDelete(file.fileId)} variant="contained" color="error">
+                                <Tooltip title="Supprimer le fichier" arrow>
+                                    <Button 
+                                        sx={{
+                                            transition: 'all 0.3s ease-in-out',
+                                            '&:hover': {
+                                                transform: 'scale(1.08)',
+                                                boxShadow: 6
+                                            }
+                                        }} 
+                                        onClick={() => popUpDelete(file.fileId)} 
+                                        variant="contained" 
+                                        color="error"
+                                    >
                                         <DeleteForeverIcon />
                                     </Button>
                                 </Tooltip>
-                                <Tooltip title={scaledFileId === file.fileId ? "Réduire" : "Agrandir"} arrow>
-                                    <Button sx={{
-                                        transition: 'all 0.3s ease-in-out',
-                                        '&:hover': {
-                                            transform: 'scale(1.08)',
-                                            boxShadow: 6
-                                        }
-                                    }}
-                                        onClick={() => setScaledFileId(scaledFileId === file.fileId ? null : file.fileId)}
+                                <Tooltip title="Visualiser le fichier" arrow>
+                                    <Button
+                                        sx={{
+                                            transition: 'all 0.3s ease-in-out',
+                                            '&:hover': {
+                                                transform: 'scale(1.08)',
+                                                boxShadow: 6
+                                            }
+                                        }}
+                                        onClick={() => handleOpenModal(file)}
                                         variant="contained"
                                         color="secondary"
                                     >
-                                        {scaledFileId === file.fileId ? <ZoomOutIcon /> : <ZoomInIcon />}
+                                        <VisibilityIcon />
                                     </Button>
                                 </Tooltip>
                             </CardActions>
@@ -315,6 +412,32 @@ export default function listFilesInAccident(accidentId) {
                     </li>
                 ))}
             </ul>
+            
+            <Modal
+                open={modalOpen}
+                onClose={handleCloseModal}
+                aria-labelledby="file-viewer-modal"
+            >
+                <Box sx={modalStyle}>
+                    <Button
+                        onClick={handleCloseModal}
+                        sx={{
+                            position: 'absolute',
+                            right: 8,
+                            top: 8,
+                        }}
+                    >
+                        <CloseIcon />
+                    </Button>
+                    {selectedFile && (
+                        <FileViewer
+                            file={selectedFile}
+                            fileContent={previews[selectedFile.fileId]}
+                        />
+                    )}
+                </Box>
+            </Modal>
+
             <CustomSnackbar
                 open={snackbar.open}
                 handleClose={handleCloseSnackbar}
