@@ -8,6 +8,7 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import CloseIcon from '@mui/icons-material/Close';
 import { confirmAlert } from 'react-confirm-alert';
 import { saveAs } from 'file-saver';
+import deleteFile from "./deleteFile";
 import * as pdfjsLib from 'pdfjs-dist/webpack';
 import CustomSnackbar from '../../_composants/CustomSnackbar';
 
@@ -211,10 +212,11 @@ export default function ListFilesInAccident(accidentId) {
 
     async function handleDeleteFile(fileId) {
         try {
-            await axios.delete(`http://localhost:3100/api/deleteFile/${fileId}/${accidentId}`);
-            const updatedFiles = files.filter(file => file.fileId !== fileId);
+            await deleteFile({ fileId, accidentId });
+            const updatedFiles = files.filter(file => file.id !== fileId);
             setFiles(updatedFiles);
-            showSnackbar('Fichier supprimé avec succès', 'success');
+            showSnackbar('Fichier en cours de suppression', 'success');
+            setTimeout(() => showSnackbar('Fichier supprimé avec succès', 'success'), 1000);
             setTimeout(() => window.location.reload(), 2000);
         } catch (error) {
             console.error('Erreur lors de la suppression du fichier:', error);
