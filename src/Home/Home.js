@@ -19,11 +19,12 @@ import FileUploadIcon from '@mui/icons-material/FileUpload';
 import InputAdornment from '@mui/material/InputAdornment';
 import config from '../config.json';
 import editPDF from '../Model/pdfGenerator.js';
-import { handleExportData, handleExportDataAss } from '../Model/excelGenerator.js';
 import getAccidents from './_actions/get-accidents.js';
 import { useUserConnected } from '../Hook/userConnected.js';
 import CustomSnackbar from '../_composants/CustomSnackbar';
 import { useTheme } from '../pageAdmin/user/ThemeContext';
+import { handleExportDataAccident } from './_actions/exportAcci';
+import { handleExportDataAssurance } from './_actions/exportAss';
 
 const apiUrl = config.apiUrl;
 
@@ -159,6 +160,26 @@ function Home() {
         });
     }, [accidents, yearsChecked, searchTerm]);
 
+    const handleExportAccidentClick = useCallback(() => {
+        handleExportDataAccident({
+            filteredData,
+            isAdmin,
+            userInfo,
+            onSuccess: (message) => showSnackbar(message, 'success'),
+            onError: (message) => showSnackbar(message, 'error')
+        });
+    }, [filteredData, isAdmin, userInfo, showSnackbar]);
+
+    const handleExportAssuranceClick = useCallback(() => {
+        handleExportDataAssurance({
+            filteredData,
+            isAdmin,
+            userInfo,
+            onSuccess: (message) => showSnackbar(message, 'success'),
+            onError: (message) => showSnackbar(message, 'error')
+        });
+    }, [filteredData, isAdmin, userInfo, showSnackbar]);
+
     /**
      * Met à jour les années sélectionnées en fonction de la nouvelle valeur reçue via l'événement de changement.
      * Si la valeur est une chaîne, la fonction la divise en un tableau de valeurs en utilisant la virgule comme séparateur.
@@ -181,38 +202,6 @@ function Home() {
         setSelectAllYears(checked);
         setYearsChecked(checked ? yearsFromData : []);
     };
-
-    const handleExportDataAccident = useCallback(() => {
-        let dataToExport = filteredData;
-        if (!isAdmin) {
-            dataToExport = dataToExport.filter(accident =>
-                userInfo.entreprisesConseillerPrevention?.includes(accident.entrepriseName)
-            );
-        }
-        try {
-            handleExportData(dataToExport);
-            showSnackbar('Exportation des données réussie', 'success');
-        } catch (error) {
-            console.error('Erreur lors de l\'exportation des données:', error);
-            showSnackbar('Erreur lors de l\'exportation des données', 'error');
-        }
-    }, [filteredData, isAdmin, userInfo, showSnackbar]);
-
-    const handleExportDataAssurance = useCallback(() => {
-        let dataToExport = filteredData;
-        if (!isAdmin) {
-            dataToExport = dataToExport.filter(accident =>
-                userInfo.entreprisesConseillerPrevention?.includes(accident.entrepriseName)
-            );
-        }
-        try {
-            handleExportDataAss(dataToExport);
-            showSnackbar('Exportation des données d\'assurance réussie', 'success');
-        } catch (error) {
-            console.error('Erreur lors de l\'exportation des données d\'assurance:', error);
-            showSnackbar('Erreur lors de l\'exportation des données d\'assurance', 'error');
-        }
-    }, [filteredData, isAdmin, userInfo, showSnackbar]);
 
     if (accidentsIsPending) {
         return <LinearProgress color="success" />;
@@ -297,7 +286,7 @@ function Home() {
                                         sx={{ color: 'black', padding: '15px', width: '100%', backgroundColor: '#ee752d60', transition: 'all 0.3s ease-in-out', '&:hover': { backgroundColor: '#95ad22', transform: 'scale(1.08)', boxShadow: 6 }, boxShadow: 3, textTransform: 'none' }}
                                         variant="contained"
                                         color="primary"
-                                        onClick={handleExportDataAccident}
+                                        onClick={handleExportAccidentClick}
                                         startIcon={<FileUploadIcon />}
                                     >
                                         Accident
@@ -310,7 +299,7 @@ function Home() {
                                         sx={{ color: 'black', padding: '15px', width: '100%', backgroundColor: '#ee752d60', transition: 'all 0.3s ease-in-out', '&:hover': { backgroundColor: '#95ad22', transform: 'scale(1.08)', boxShadow: 6 }, boxShadow: 3, textTransform: 'none' }}
                                         variant="contained"
                                         color="primary"
-                                        onClick={handleExportDataAssurance}
+                                        onClick={handleExportAssuranceClick}
                                         startIcon={<FileUploadIcon />}
                                     >
                                         Assurance
@@ -321,7 +310,6 @@ function Home() {
                     )}
                 </Grid>
             </div>
-
             <TableContainer
                 className="frameStyle-style"
                 style={{
@@ -347,10 +335,10 @@ function Home() {
                             <TableCell style={{ fontWeight: 'bold' }}>Nom du travailleur</TableCell>
                             <TableCell style={{ fontWeight: 'bold' }}>Prénom du travailleur</TableCell>
                             <TableCell style={{ fontWeight: 'bold' }}>Type accident</TableCell>
-                            <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px'  }}>Editer</TableCell>
-                            <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px'  }}>Fichier</TableCell>
-                            <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px'  }}>PDF</TableCell>
-                            <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px'  }}>Supprimer</TableCell>
+                            <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>Editer</TableCell>
+                            <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>Fichier</TableCell>
+                            <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>PDF</TableCell>
+                            <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>Supprimer</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -372,7 +360,7 @@ function Home() {
                                     <TableCell>{item.prenomTravailleur}</TableCell>
                                     <TableCell>{item.typeAccident}</TableCell>
                                     <>
-                                        <TableCell style={{ padding: 0, width: '70px'  }}>
+                                        <TableCell style={{ padding: 0, width: '70px' }}>
                                             {(isAdmin || (isConseiller && isConseillerPrevention(item.entrepriseName))) ? (
                                                 <Tooltip title="Cliquez ici pour éditer les données de l'accident" arrow>
                                                     <Button sx={{
@@ -387,7 +375,7 @@ function Home() {
                                                 </Tooltip>
                                             ) : null}
                                         </TableCell>
-                                        <TableCell style={{ padding: 0, width: '70px'  }}>
+                                        <TableCell style={{ padding: 0, width: '70px' }}>
                                             {(isAdmin || (isConseiller && isConseillerPrevention(item.entrepriseName))) ? (
                                                 <Tooltip title="Cliquez ici pour ajouter des fichiers a l'accident" arrow>
                                                     <Button sx={{
@@ -402,7 +390,7 @@ function Home() {
                                                 </Tooltip>
                                             ) : null}
                                         </TableCell>
-                                        <TableCell style={{ padding: 0, width: '70px'  }}>
+                                        <TableCell style={{ padding: 0, width: '70px' }}>
                                             {(isAdmin || (isConseiller && isConseillerPrevention(item.entrepriseName))) ? (
                                                 <Tooltip title="Cliquez ici pour générer la déclaration d'accident Belfius si vous avez remplis tous les champs du formulaire" arrow>
                                                     <Button sx={{
@@ -417,7 +405,7 @@ function Home() {
                                                 </Tooltip>
                                             ) : null}
                                         </TableCell>
-                                        <TableCell style={{ padding: 0, width: '70px'  }}>
+                                        <TableCell style={{ padding: 0, width: '70px' }}>
                                             {(isAdmin || (isConseiller && isConseillerPrevention(item.entrepriseName))) ? (
                                                 <Tooltip title="Cliquez ici pour supprimer l'accident" arrow>
                                                     <Button sx={{
@@ -459,7 +447,6 @@ function Home() {
                                         </TableCell>
                                     </>
                                 </TableRow>
-
                             </React.Fragment>
                         ))}
                     </TableBody>
