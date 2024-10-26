@@ -339,6 +339,7 @@ function Home() {
                             }}
                         >
                             <TableCell style={{ fontWeight: 'bold' }}>N° Groupe</TableCell>
+                            <TableCell style={{ fontWeight: 'bold' }}>N° Entreprise</TableCell>
                             <TableCell style={{ fontWeight: 'bold' }}>Status</TableCell>
                             <TableCell style={{ fontWeight: 'bold' }}>Date accident</TableCell>
                             <TableCell style={{ fontWeight: 'bold' }}>Entreprise</TableCell>
@@ -346,10 +347,10 @@ function Home() {
                             <TableCell style={{ fontWeight: 'bold' }}>Nom du travailleur</TableCell>
                             <TableCell style={{ fontWeight: 'bold' }}>Prénom du travailleur</TableCell>
                             <TableCell style={{ fontWeight: 'bold' }}>Type accident</TableCell>
-                            <TableCell style={{ fontWeight: 'bold' }}>Editer</TableCell>
-                            <TableCell style={{ fontWeight: 'bold' }}>Fichier</TableCell>
-                            <TableCell style={{ fontWeight: 'bold' }}>PDF</TableCell>
-                            <TableCell style={{ fontWeight: 'bold' }}>Supprimer</TableCell>
+                            <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px'  }}>Editer</TableCell>
+                            <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px'  }}>Fichier</TableCell>
+                            <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px'  }}>PDF</TableCell>
+                            <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px'  }}>Supprimer</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -371,7 +372,7 @@ function Home() {
                                     <TableCell>{item.prenomTravailleur}</TableCell>
                                     <TableCell>{item.typeAccident}</TableCell>
                                     <>
-                                        <TableCell style={{ padding: 0 }}>
+                                        <TableCell style={{ padding: 0, width: '70px'  }}>
                                             {(isAdmin || (isConseiller && isConseillerPrevention(item.entrepriseName))) ? (
                                                 <Tooltip title="Cliquez ici pour éditer les données de l'accident" arrow>
                                                     <Button sx={{
@@ -386,7 +387,7 @@ function Home() {
                                                 </Tooltip>
                                             ) : null}
                                         </TableCell>
-                                        <TableCell style={{ padding: 0 }}>
+                                        <TableCell style={{ padding: 0, width: '70px'  }}>
                                             {(isAdmin || (isConseiller && isConseillerPrevention(item.entrepriseName))) ? (
                                                 <Tooltip title="Cliquez ici pour ajouter des fichiers a l'accident" arrow>
                                                     <Button sx={{
@@ -401,7 +402,7 @@ function Home() {
                                                 </Tooltip>
                                             ) : null}
                                         </TableCell>
-                                        <TableCell style={{ padding: 0 }}>
+                                        <TableCell style={{ padding: 0, width: '70px'  }}>
                                             {(isAdmin || (isConseiller && isConseillerPrevention(item.entrepriseName))) ? (
                                                 <Tooltip title="Cliquez ici pour générer la déclaration d'accident Belfius si vous avez remplis tous les champs du formulaire" arrow>
                                                     <Button sx={{
@@ -416,7 +417,7 @@ function Home() {
                                                 </Tooltip>
                                             ) : null}
                                         </TableCell>
-                                        <TableCell style={{ padding: 0 }}>
+                                        <TableCell style={{ padding: 0, width: '70px'  }}>
                                             {(isAdmin || (isConseiller && isConseillerPrevention(item.entrepriseName))) ? (
                                                 <Tooltip title="Cliquez ici pour supprimer l'accident" arrow>
                                                     <Button sx={{
