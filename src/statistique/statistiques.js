@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import axios from 'axios';
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Legend, ResponsiveContainer,
   LineChart, Line, PieChart, Pie, Cell, Tooltip
@@ -8,11 +7,10 @@ import {
   FormControl, InputLabel, Select, MenuItem, Checkbox, ListItemText, Box
 } from '@mui/material';
 import { filter, useAccidentStats } from './filters';
+import chargerDonnees from './dataLoader';
+import genererDonneesGraphiques, { MONTHS, DAYS } from './chartData';
 
 const COLORS = ['#0088FE', '#FF8042', '#00C49F', '#FFBB28', '#FF8042', '#0088FE', '#00C49F'];
-const MONTHS = ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Juin', 'Juil', 'Aoû', 'Sep', 'Oct', 'Nov', 'Déc'];
-const DAYS = ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'];
-
 
 
 const Statistiques = () => {
@@ -56,58 +54,30 @@ const Statistiques = () => {
   );
 
   useEffect(() => {
-  /**
-   * Fetches accident data from API and initializes filters with the fetched data.
-   * The function sets the `data` state with the fetched data and initializes the
-   * following filters with the fetched data:
-   * - `allYears` and `selectedYears` with the years of the accidents
-   * - `workerTypes` and `selectedWorkerTypes` with the types of workers
-   * - `sectors` and `selectedSectors` with the sectors of the accidents
-   * - `assureurStatus` and `selectedAssureurStatus` with the statuses of the accidents
-   * - `accidentTypes` and `selectedAccidentTypes` with the types of accidents
-   * @async
-   */
-    const fetchData = async () => {
-      try {
-        const apiUrl = process.env.REACT_APP_API_URL || 'localhost';
-        const response = await axios.get(`http://${apiUrl}:3100/api/accidents`);
-        const rawData = response.data;
-        setData(rawData);
-
-        // Initialisation des filtres
-        const years = [...new Set(rawData.map(accident =>
-          new Date(accident.DateHeureAccident).getFullYear()
-        ))];
-        setAllYears(years);
-        const currentYear = new Date().getFullYear();
-        setSelectedYears(years.includes(currentYear) ? [currentYear] : [years[years.length - 1]]);
-
-        const types = [...new Set(rawData.map(accident => accident.typeTravailleur))];
-        setWorkerTypes(types);
-        setSelectedWorkerTypes(types);
-
-        const extractedSectors = [...new Set(rawData.map(accident => accident.secteur))];
-        setSectors(extractedSectors);
-        setSelectedSectors(extractedSectors);
-
-        const uniqueAssureurStatus = [...new Set(rawData.map(accident =>
-          accident.AssureurStatus
-        ))].filter(Boolean);
-        setAssureurStatus(uniqueAssureurStatus);
-        setSelectedAssureurStatus(uniqueAssureurStatus);
-
-        const uniqueTypes = [...new Set(rawData.map(accident =>
-          accident.typeAccident || 'Non spécifié'
-        ))];
-        setAccidentTypes(uniqueTypes);
-        setSelectedAccidentTypes(uniqueTypes);
-      } catch (error) {
-        console.error('Erreur lors de la récupération des données:', error.message);
-      }
+    const initialiserDonnees = async () => {
+        try {
+            await chargerDonnees({
+                setData,
+                setAllYears,
+                setSelectedYears,
+                setWorkerTypes,
+                setSelectedWorkerTypes,
+                setSectors,
+                setSelectedSectors,
+                setAssureurStatus,
+                setSelectedAssureurStatus,
+                setAccidentTypes,
+                setSelectedAccidentTypes
+            });
+        } catch (erreur) {
+            console.error('Erreur lors de l\'initialisation:', erreur);
+            // Gérer l'erreur ici si nécessaire
+        }
     };
 
-    fetchData();
-  }, []);
+    initialiserDonnees();
+}, []);
+
 
   const [allChecked, setAllChecked] = useState(true);
   /**
@@ -181,13 +151,13 @@ const Statistiques = () => {
     }
   };
 
-/**
- * Updates the selected AssureurStatus based on the new value received from the change event.
- * If the value includes 'all', it toggles the selection between all and none.
- * Otherwise, it updates the selection to the specified value.
- * 
- * @param {Event} event - The change event containing the new values for AssureurStatus.
- */
+  /**
+   * Updates the selected AssureurStatus based on the new value received from the change event.
+   * If the value includes 'all', it toggles the selection between all and none.
+   * Otherwise, it updates the selection to the specified value.
+   * 
+   * @param {Event} event - The change event containing the new values for AssureurStatus.
+   */
   const handleChangeAssureurStatus = (event) => {
     const value = event.target.value;
     if (value.includes('all')) {
@@ -213,42 +183,10 @@ const Statistiques = () => {
     }
   };
 
-  const memoizedChartData = useMemo(() => ({
-    accidentsBySexData: Object.entries(stats.accidentsBySex).map(([sexe, NombreAT]) => ({ name: sexe, value: NombreAT })),
-    accidentMonthData: Object.entries(stats.accidentsByMonth).map(([month, NombreAT]) => ({ month: MONTHS[parseInt(month)], NombreAT })),
-    accidentYearData: Object.entries(stats.accidentsByYear).map(([year, NombreAT]) => ({ year: year.toString(), NombreAT })),
-    accidentMonthByCompanyData: MONTHS.map((month, index) => ({
-      month,
-      ...Object.fromEntries(Object.entries(stats.accidentsByMonthByCompany).map(([company, data]) => [company, data[index] || 0]))
-    })),
-    accidentYearByCompanyData: Object.keys(stats.accidentsByYear).map(year => ({
-      year,
-      ...Object.fromEntries(Object.entries(stats.accidentsByYearByCompany).map(([company, data]) => [company, data[year] || 0]))
-    })),
-    accidentSectorData: Object.entries(stats.accidentsBySector).map(([sector, NombreAT]) => ({ name: sector, value: NombreAT })),
-    accidentsByDayOfWeekByCompanyData: Object.entries(stats.accidentsByDayOfWeekByCompany).map(([company, data]) => ({
-      company,
-      data: Object.entries(data).map(([day, NombreAT]) => ({ day: DAYS[parseInt(day)], NombreAT }))
-    })),
-    accidentDayOfWeekData: DAYS.map((day, index) => ({
-      day,
-      NombreAT: stats.accidentsByDayOfWeek[index],
-    })),
-    accidentsByAgeByCompanyData: Object.entries(stats.accidentsByAgeByCompany).map(([company, ageData]) => ({
-      company,
-      data: Object.entries(ageData)
-        .map(([age, NombreAT]) => ({ age: parseInt(age), NombreAT }))
-        .sort((a, b) => a.age - b.age)
-    })),
-    accidentsByTypeTravailleurData: Object.entries(stats.accidentsByTypeTravailleur).map(([type, NombreAT]) => ({
-      type, NombreAT
-    })),
-    accidentsByAgeData: Object.entries(stats.accidentsByAge)
-      .map(([age, NombreAT]) => ({ age: parseInt(age), NombreAT }))
-      .sort((a, b) => a.age - b.age)
-  }), [stats]);
-
-
+  const memoizedChartData = useMemo(() =>
+    genererDonneesGraphiques(stats),
+    [stats]
+  );
   /**
    * Rend une charte en fonction du type, des données et de la configuration.
    * 
