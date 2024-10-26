@@ -23,11 +23,12 @@ import { handleExportDataAction } from '../Model/excelGenerator.js';
 import CustomSnackbar from '../_composants/CustomSnackbar';
 import { useTheme } from '../pageAdmin/user/ThemeContext';
 import EnterpriseStats from './entrepriseStats';
-import updateUserSelectedYears from './updateUserSelecterYears';
-import filteredUsers from './filteredUsers';
-
+import createUpdateUserSelectedYears from './updateUserSelecterYears';
+import createFilteredUsers from './filteredUsers';
 
 const apiUrl = config.apiUrl;
+
+
 
 /**
  * Page qui affiche le plan d'action
@@ -59,10 +60,40 @@ export default function PlanAction({ accidentData }) {
         severity: 'info',
     });
     const navigate = useNavigate();
+    // Then inside your PlanAction component, add these lines after your state declarations:
+
 
     const showSnackbar = useCallback((message, severity = 'info') => {
         setSnackbar({ open: true, message, severity });
     }, []);
+
+    const updateUserSelectedYears = useCallback(
+        createUpdateUserSelectedYears(apiUrl, showSnackbar)(userInfo, setSelectedYears),
+        [apiUrl, showSnackbar, userInfo]
+    );
+    
+    const getFilteredUsers = useMemo(
+        () => createFilteredUsers(),
+        []
+    );
+    
+    const filteredUsers = useMemo(
+        () => getFilteredUsers(users, searchTerm, selectedYears, isAdmin, userInfo),
+        [getFilteredUsers, users, searchTerm, selectedYears, isAdmin, userInfo]
+    );
+
+
+    /**
+     * Ferme la snackbar si l'utilisateur clique sur le bouton "Fermer" ou en dehors de la snackbar.
+     * Si l'utilisateur clique sur la snackbar elle-même (et non sur le bouton "Fermer"), la snackbar ne se ferme pas.
+     * 
+     * @param {object} event - L'événement qui a déclenché la fermeture de la snackbar.
+     * @param {string} reason - La raison pour laquelle la snackbar se ferme. Si elle vaut 'clickaway', cela signifie que l'utilisateur a cliqué en dehors de la snackbar.
+     */
+    const handleCloseSnackbar = (event, reason) => {
+        if (reason === 'clickaway') return;
+        setSnackbar(prev => ({ ...prev, open: false }));
+    };
 
     const rowColors = useMemo(() => ({
         dark: {
@@ -114,12 +145,6 @@ export default function PlanAction({ accidentData }) {
         const year = date.getFullYear();
         return `${day}-${month}-${year}`;
     };
-
-    const handleCloseSnackbar = useCallback((event, reason) => {
-        if (reason === 'clickaway') return;
-        setSnackbar(prev => ({ ...prev, open: false }));
-    }, []);
-
 
     const handleEdit = useCallback((actionIdToModify) => {
         const actionToEdit = users.find(action => action._id === actionIdToModify);
