@@ -1,4 +1,27 @@
+
 import React, { useCallback } from 'react';
+
+const dropZoneStyle = {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: '200px',
+    border: '2px dashed #00b1b2',
+    borderRadius: '10px',
+    cursor: 'pointer',
+    margin: '20px 1rem',
+    backgroundColor: '#00b2b246',
+};
+
+const labelStyle = {
+    textAlign: 'center',
+    width: '45%',
+    backgroundColor: '#00b1b2',
+    color: 'black',
+    padding: '10px 20px',
+    cursor: 'pointer',
+    transition: 'background-color 0.3s',
+};
 
 /**
  * Renders a form for uploading files with drag and drop functionality and a button for file selection.
@@ -39,7 +62,7 @@ export default function Formulaire({ location }) {
                     borderRadius: '10px',
                     cursor: 'pointer',
                     margin: '20px 1rem',
-                    backgroundColor: '#d2e2d2',
+                    backgroundColor: '#00b2b246',
                 }}
                 onDrop={handleDrop}
                 onDragOver={(e) => {
@@ -63,14 +86,14 @@ export default function Formulaire({ location }) {
                     style={{
                         textAlign: 'center',
                         width: '45%',
-                        backgroundColor: '#84a784',
+                        backgroundColor: '#00b1b2',
                         color: 'black',
                         padding: '10px 20px',
                         cursor: 'pointer',
                         transition: 'background-color 0.3s',
                     }}
-                    onMouseEnter={(e) => (e.target.style.backgroundColor = 'green')}
-                    onMouseLeave={(e) => (e.target.style.backgroundColor = '#84a784')}
+                    onMouseEnter={(e) => (e.target.style.backgroundColor = '#95ad22')}
+                    onMouseLeave={(e) => (e.target.style.backgroundColor = '#00b1b2')}
                 >
                     Télécharger un document
                 </label>

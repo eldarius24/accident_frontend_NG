@@ -14,25 +14,7 @@ import CustomSnackbar from '../../_composants/CustomSnackbar';
 import FileViewer from './fileViewer';
 import getPreview from "./getPreview";
 import handleRenameFile from "./handleRenameFile";
-import { red, 
-    pink,
-    purple,
-    deepPurple,
-    indigo,
-    blue,
-    lightBlue,
-    cyan,
-    teal,
-    green,
-    lightGreen,
-    lime,
-    yellow,
-    amber,
-    orange,
-    deepOrange,
-    brown,
-    grey,
-    blueGrey   } from '@mui/material/colors';
+import { blueGrey } from '@mui/material/colors';
 
 const modalStyle = {
     position: 'absolute',
