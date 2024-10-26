@@ -6,7 +6,7 @@ import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import GetAppIcon from '@mui/icons-material/GetApp';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import CloseIcon from '@mui/icons-material/Close';
-import EditIcon from '@mui/icons-material/Edit';  // Ajout de l'icône d'édition
+import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutline';
 import { confirmAlert } from 'react-confirm-alert';
 import { saveAs } from 'file-saver';
 import deleteFile from "./deleteFile";
@@ -14,6 +14,25 @@ import CustomSnackbar from '../../_composants/CustomSnackbar';
 import FileViewer from './fileViewer';
 import getPreview from "./getPreview";
 import handleRenameFile from "./handleRenameFile";
+import { red, 
+    pink,
+    purple,
+    deepPurple,
+    indigo,
+    blue,
+    lightBlue,
+    cyan,
+    teal,
+    green,
+    lightGreen,
+    lime,
+    yellow,
+    amber,
+    orange,
+    deepOrange,
+    brown,
+    grey,
+    blueGrey   } from '@mui/material/colors';
 
 const modalStyle = {
     position: 'absolute',
@@ -219,12 +238,12 @@ export default function ListFilesInAccident(accidentId) {
         setModalOpen(true);
     };
 
-/**
- * Closes the modal and resets the selected file state.
- * 
- * This function sets the selected file to null and changes
- * the modal's open state to false, effectively closing the modal.
- */
+    /**
+     * Closes the modal and resets the selected file state.
+     * 
+     * This function sets the selected file to null and changes
+     * the modal's open state to false, effectively closing the modal.
+     */
     const handleCloseModal = () => {
         setSelectedFile(null);
         setModalOpen(false);
@@ -259,12 +278,14 @@ export default function ListFilesInAccident(accidentId) {
                                 <Tooltip title="Renommer le fichier" arrow>
                                     <Button
                                         sx={{
+                                            backgroundColor: blueGrey[500], // Au lieu de color: pink[500]
                                             minWidth: '36px',
                                             width: '36px',
                                             height: '36px',
                                             padding: 0,
                                             transition: 'all 0.3s ease-in-out',
                                             '&:hover': {
+                                                backgroundColor: blueGrey[700], // Couleur plus foncée au survol
                                                 transform: 'scale(1.08)',
                                                 boxShadow: 6
                                             }
@@ -277,9 +298,9 @@ export default function ListFilesInAccident(accidentId) {
                                             setFiles
                                         )}
                                         variant="contained"
-                                        color="warning"
+                                    // Enlever color='pink[500]' car nous utilisons sx pour la couleur
                                     >
-                                        <EditIcon sx={{ fontSize: 20 }} />
+                                        <DriveFileRenameOutlineIcon sx={{ fontSize: 20 }} />
                                     </Button>
                                 </Tooltip>
                                 <Tooltip title="Télécharger le fichier" arrow>

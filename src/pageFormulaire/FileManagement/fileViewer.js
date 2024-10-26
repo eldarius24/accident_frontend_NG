@@ -1,30 +1,62 @@
-
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import mammoth from 'mammoth';
-import {CircularProgress } from '@mui/material';
+import { CircularProgress } from '@mui/material';
+import * as XLSX from 'xlsx';
 
-/**
- * Affiche le contenu d'un fichier uploadé par l'utilisateur.
- *
- * @param {{ file: { fileId: string, fileName: string } }} props - Les informations du fichier uploadé.
- *
- * @returns {JSX.Element} Le composant qui affiche le contenu du fichier.
- */
 const FileViewer = ({ file }) => {
     const [fullContent, setFullContent] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
+    const processExcelFile = async (blob) => {
+        try {
+            const buffer = await blob.arrayBuffer();
+            const workbook = XLSX.read(buffer, { type: 'array' });
+            
+            // Prendre la première feuille
+            const firstSheetName = workbook.SheetNames[0];
+            const worksheet = workbook.Sheets[firstSheetName];
+            
+            // Convertir en HTML avec des styles
+            const html = XLSX.utils.sheet_to_html(worksheet, { editable: false });
+            
+            // Ajouter des styles CSS pour un meilleur rendu
+            const styledHtml = `
+                <style>
+                    table {
+                        border-collapse: collapse;
+                        width: 100%;
+                        font-family: Arial, sans-serif;
+                        font-size: 14px;
+                    }
+                    th, td {
+                        border: 1px solid #ddd;
+                        padding: 8px;
+                        text-align: left;
+                    }
+                    th {
+                        background-color: #f5f5f5;
+                        font-weight: bold;
+                    }
+                    tr:nth-child(even) {
+                        background-color: #f9f9f9;
+                    }
+                    tr:hover {
+                        background-color: #f0f0f0;
+                    }
+                </style>
+                ${html}
+            `;
+            
+            return styledHtml;
+        } catch (error) {
+            console.error('Erreur lors du traitement du fichier Excel:', error);
+            throw new Error('Erreur lors du traitement du fichier Excel');
+        }
+    };
+
     useEffect(() => {
-        /**
-         * Charge le contenu complet d'un fichier uploadé par l'utilisateur.
-         * 
-         * @async
-         * @throws {Error} Si le fichier n'a pas pu être chargé.
-         * @throws {Error} Si le fichier n'est pas un fichier PDF, DOCX, TXT, JPG, JPEG, PNG, GIF.
-         * @throws {Error} Si le fichier DOCX n'a pas pu être converti en HTML.
-         */
         const loadFullContent = async () => {
             if (!file) return;
             
@@ -39,6 +71,16 @@ const FileViewer = ({ file }) => {
                 const fileType = file.fileName.split('.').pop().toLowerCase();
                 
                 switch(fileType) {
+                    case 'xlsx':
+                    case 'xls':
+                        try {
+                            const excelHtml = await processExcelFile(response.data);
+                            setFullContent({ type: 'excel', content: excelHtml });
+                        } catch (excelError) {
+                            setError("Erreur lors de la conversion du fichier Excel");
+                        }
+                        break;
+
                     case 'pdf':
                         const pdfBlob = new Blob([response.data], { type: 'application/pdf' });
                         const url = URL.createObjectURL(pdfBlob);
@@ -137,6 +179,16 @@ const FileViewer = ({ file }) => {
     }
 
     switch (fullContent.type) {
+        case 'excel':
+            return (
+                <div className="w-full h-[calc(100vh-140px)] overflow-auto bg-white p-4">
+                    <div 
+                        className="excel-preview"
+                        dangerouslySetInnerHTML={{ __html: fullContent.content }}
+                    />
+                </div>
+            );
+
         case 'pdf':
             return (
                 <div className="w-full h-[calc(100vh-140px)] relative overflow-hidden">
