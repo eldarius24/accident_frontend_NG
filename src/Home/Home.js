@@ -47,6 +47,12 @@ function Home() {
     const { isAdmin, isAdminOuConseiller, userInfo, isConseiller } = useUserConnected();
     const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'info' });
 
+    /**
+     * Renvoie un tableau de deux couleurs pour le background des lignes de la table.
+     * Si le thème est sombre, les couleurs sont #7a7a7a et #979797.
+     * Si le thème est clair, les couleurs sont #e62a5625 et #95519b25.
+     * @returns {Array<string>} Un tableau de deux couleurs.
+     */
     const rowColors = useMemo(() =>
         darkMode
             ? ['#7a7a7a', '#979797']  // Couleurs pour le thème sombre
@@ -54,6 +60,14 @@ function Home() {
         [darkMode]
     );
 
+    /**
+     * Formatte une date en string au format "DD/MM/YYYY HH:mm:ss".
+     * La date est attendue au format "YYYY-MM-DDTHH:mm:ss.sssZ".
+     * Si la date est nulle ou vide, la fonction renvoie une chaîne vide.
+     * 
+     * @param {string} dateString - La date à formater.
+     * @returns {string} La date formatée.
+     */
     const formatDate = useCallback((dateString) => {
         if (!dateString) return '';
         const date = new Date(dateString);
@@ -63,6 +77,13 @@ function Home() {
         });
     }, []);
 
+    /**
+     * Display a snackbar with the specified message and severity.
+     *
+     * @param {string} message - The message to display in the snackbar.
+     * @param {string} [severity='info'] - The severity level of the message. 
+     *                                      Possible values are 'info', 'success', 'warning', 'error'.
+     */
     const showSnackbar = useCallback((message, severity = 'info') => {
         setSnackbar({ open: true, message, severity });
     }, []);
@@ -75,61 +96,113 @@ function Home() {
      * @param {string} reason - La raison pour laquelle la snackbar se ferme. Si elle vaut 'clickaway', cela signifie que l'utilisateur a cliqué en dehors de la snackbar.
      */
     const handleCloseSnackbar = (event, reason) => {
+        // If the reason is 'clickaway', do not close the snackbar
         if (reason === 'clickaway') return;
+        // Close the snackbar by setting its 'open' state to false
         setSnackbar(prev => ({ ...prev, open: false }));
     };
 
+    /**
+     * Vérifie si l'utilisateur est un conseiller de prévention pour une entreprise.
+     * La fonction prend en paramètre le nom de l'entreprise.
+     * La fonction renvoie true si l'utilisateur est un conseiller de prévention pour l'entreprise, false sinon.
+     * La fonction utilise l'information stockée dans userInfo pour faire la vérification.
+     * @param {string} entrepriseName - Le nom de l'entreprise.
+     * @returns {boolean} - True si l'utilisateur est un conseiller de prévention pour l'entreprise, false sinon.
+     */
     const isConseillerPrevention = useCallback((entrepriseName) => {
         return userInfo?.entreprisesConseillerPrevention?.includes(entrepriseName) || false;
     }, [userInfo]);
 
+    /**
+     * Supprime un accident en envoyant une requête DELETE à l'API.
+     * Met à jour la liste des accidents localement et affiche un message de réussite ou d'erreur.
+     * 
+     * @param {string} accidentIdToDelete - L'ID de l'accident à supprimer.
+     */
     const handleDelete = useCallback((accidentIdToDelete) => {
         axios.delete(`http://${apiUrl}:3100/api/accidents/${accidentIdToDelete}`)
             .then(response => {
                 if ([200, 204].includes(response.status)) {
+                    // Met à jour la liste des accidents en supprimant l'accident supprimé
                     setAccidents(prevAccidents => prevAccidents.filter(item => item._id !== accidentIdToDelete));
+                    // Affiche un message de succès dans la snackbar
                     showSnackbar('Accident supprimé avec succès', 'success');
                 } else {
+                    // Affiche un message d'erreur pour un statut de réponse inattendu
                     showSnackbar(`Erreur lors de la suppression de l'accident: ${response.status} ${response.statusText}`, 'error');
                 }
             })
             .catch(error => {
+                // Affiche un message d'erreur en cas d'échec de la requête
                 console.error(error);
                 showSnackbar('Erreur lors de la suppression de l accident', 'error');
             });
     }, [apiUrl, showSnackbar]);
 
+    /**
+     * Génère un PDF pour l'accident passé en paramètre
+     * L'accident est recherché dans la liste des accidents enregistrés
+     * Si l'accident est trouvé, la fonction editPDF est appelée pour générer le PDF
+     * Si l'accident n'est pas trouvé, une erreur est affichée
+     * 
+     * @param {string} accidentIdToGenerate L'ID de l'accident pour lequel le PDF doit être généré
+     */
     const handleGeneratePDF = useCallback(async (accidentIdToGenerate) => {
         const accident = accidents.find(item => item._id === accidentIdToGenerate);
         if (accident) {
             try {
+                // Génère le PDF avec les données de l'accident
                 await editPDF(accident);
+                // Affiche une snackbar pour indiquer que l'opération a réussi
                 showSnackbar('PDF généré avec succès', 'success');
             } catch (error) {
                 console.error(error);
+                // Affiche une erreur si la génération du PDF a échoué
                 showSnackbar('Erreur lors de la génération du PDF', 'error');
             }
         } else {
+            // Affiche une erreur si l'accident n'a pas été trouvé
             showSnackbar('Accident non trouvé', 'error');
         }
     }, [accidents, showSnackbar]);
 
+    /**
+     * Redirige l'utilisateur vers la page de modification d'un accident de travail
+     * en passant en paramètre l'ID de l'accident.
+     * 
+     * @param {string} accidentIdToModify L'ID de l'accident à modifier.
+     */
     const handleEdit = useCallback(async (accidentIdToModify) => {
         try {
+            // Récupère les données de l'accident avec l'ID passé en paramètre
             const { data } = await axios.get(`http://${apiUrl}:3100/api/accidents/${accidentIdToModify}`);
+
+            // Redirige l'utilisateur vers la page de formulaire en passant en paramètre
+            // l'objet accident complet
             navigate("/formulaire", { state: data });
+
+            // Affiche une snackbar pour indiquer que l'opération a réussi
             showSnackbar('Modification de l accident initiée', 'info');
         } catch (error) {
+            // Gestion des erreurs
             console.error(error);
             showSnackbar('Erreur lors de la récupération des données de l accident', 'error');
         }
     }, [apiUrl, navigate, showSnackbar]);
 
+    /**
+     * Rafraichit la liste des accidents en appelant la fonction getAccidents.
+     * Met à jour l'état de la liste des accidents et des années.
+     * Affiche un message de réussite ou d'erreur en fonction du résultat.
+     */
     const refreshListAccidents = useCallback(() => {
         startGetAccidents(async () => {
             try {
                 const fetchedAccidents = await getAccidents();
                 setAccidents(fetchedAccidents);
+                // Récupère les années uniques de la liste des accidents
+                const years = [...new Set(fetchedAccidents.map(accident => new Date(accident.DateHeureAccident).getFullYear()))];
                 setYearsFromData([...new Set(fetchedAccidents.map(accident => new Date(accident.DateHeureAccident).getFullYear()))]);
                 showSnackbar('Liste des accidents actualisée', 'success');
             } catch (error) {
@@ -139,27 +212,57 @@ function Home() {
         });
     }, [showSnackbar]);
 
+
     useEffect(() => {
+        /**
+         * Rafraîchit la liste des accidents dès le montage du composant.
+         * Ajoute l'année courante aux années sélectionnées.
+         */
         refreshListAccidents();
+
+        // Obtient l'année courante
         const currentYear = new Date().getFullYear();
+
+        // Met à jour les années sélectionnées en ajoutant l'année courante
         setYearsChecked(prevYears => [...prevYears, currentYear]);
     }, [refreshListAccidents]);
 
+    /**
+     * Filtre les données des accidents en fonction des années sélectionnées et du terme de recherche.
+     * Utilise useMemo pour optimiser le recalcul des données filtrées.
+     * 
+     * @returns {Array} - Un tableau des accidents filtrés.
+     */
     const filteredData = useMemo(() => {
+        // Vérifie si les accidents ou les années sélectionnées sont vides ou non définis
         if (!accidents || !yearsChecked) return [];
 
+        // Convertit les années sélectionnées en nombres
         const years = yearsChecked.map(Number);
+        // Met en minuscule le terme de recherche pour une comparaison insensible à la casse
         const searchTermLower = searchTerm.toLowerCase();
+        
+        // Filtre les accidents selon les années et le terme de recherche
         return accidents.filter(item => {
-            if (!item.DateHeureAccident) return false;
-            //le filtre filtre unioquement sur ces données
-            const date = new Date(item.DateHeureAccident).getFullYear();
+            if (!item.DateHeureAccident) return false; // Exclut les accidents sans date
+            
+            const date = new Date(item.DateHeureAccident).getFullYear(); // Extrait l'année de la date de l'accident
+            // Vérifie si l'année est incluse dans les années sélectionnées et si l'un des champs contient le terme de recherche
             return years.includes(date) && ['AssureurStatus', 'DateHeureAccident', 'entrepriseName', 'secteur', 'nomTravailleur', 'prenomTravailleur', 'typeAccident'].some(property =>
                 item[property]?.toString().toLowerCase().includes(searchTermLower)
             );
         });
     }, [accidents, yearsChecked, searchTerm]);
 
+    /**
+     * Exporte les données filtrées vers un fichier Excel.
+     * @param {object} params - Les paramètres d'exportation
+     * @param {object[]} params.filteredData - Les données filtrées à exporter
+     * @param {boolean} params.isAdmin - Si l'utilisateur est administrateur
+     * @param {object} params.userInfo - Les informations de l'utilisateur
+     * @param {function} [params.onSuccess] - La fonction à appeler en cas de succès
+     * @param {function} [params.onError] - La fonction à appeler en cas d'erreur
+     */
     const handleExportAccidentClick = useCallback(() => {
         handleExportDataAccident({
             filteredData,
@@ -170,6 +273,16 @@ function Home() {
         });
     }, [filteredData, isAdmin, userInfo, showSnackbar]);
 
+
+    /**
+     * Exporte les données filtrées vers un fichier Excel.
+     * @param {object} params - Les paramètres d'exportation
+     * @param {object[]} params.filteredData - Les données filtrées à exporter
+     * @param {boolean} params.isAdmin - Si l'utilisateur est administrateur
+     * @param {object} params.userInfo - Les informations de l'utilisateur
+     * @param {function} [params.onSuccess] - La fonction à appeler en cas de succès
+     * @param {function} [params.onError] - La fonction à appeler en cas d'erreur
+     */
     const handleExportAssuranceClick = useCallback(() => {
         handleExportDataAssurance({
             filteredData,
@@ -197,10 +310,16 @@ function Home() {
      * Sinon, la fonction met à jour les années sélectionnées avec un tableau vide.
      * @param {Event} event - L'événement de changement contenant la nouvelle valeur du champ de sélection 'Tout'
      */
+    /**
+     * Met à jour la sélection 'Tout' des années selon l'état coché.
+     * Si coché, toutes les années disponibles dans les données sont sélectionnées.
+     * Si décoché, aucune année n'est sélectionnée.
+     * @param {Event} event - L'événement de changement contenant l'état coché
+     */
     const handleSelectAllYears = (event) => {
         const checked = event.target.checked;
-        setSelectAllYears(checked);
-        setYearsChecked(checked ? yearsFromData : []);
+        setSelectAllYears(checked); // Met à jour l'état 'Tout' coché
+        setYearsChecked(checked ? yearsFromData : []); // Sélectionne toutes les années ou aucune
     };
 
     if (accidentsIsPending) {
