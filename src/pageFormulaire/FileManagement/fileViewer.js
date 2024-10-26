@@ -23,55 +23,63 @@ const FileViewer = ({ file }) => {
                 
                 const fileType = file.fileName.split('.').pop().toLowerCase();
                 
-                if (fileType === 'pdf') {
-                    const pdfBlob = new Blob([response.data], { type: 'application/pdf' });
-                    const url = URL.createObjectURL(pdfBlob);
-                    setFullContent(url);
-                } 
-                else if (fileType === 'docx') {
-                    console.log("Processing DOCX file...");
-                    const arrayBuffer = await response.data.arrayBuffer();
-                    
-                    try {
-                        const result = await mammoth.convertToHtml({ arrayBuffer });
-                        console.log("Conversion result:", result);
+                switch(fileType) {
+                    case 'pdf':
+                        const pdfBlob = new Blob([response.data], { type: 'application/pdf' });
+                        const url = URL.createObjectURL(pdfBlob);
+                        setFullContent({ type: 'pdf', url });
+                        break;
+
+                    case 'docx':
+                        console.log("Processing DOCX file...");
+                        const arrayBuffer = await response.data.arrayBuffer();
                         
-                        if (result && result.value) {
-                            // Ajouter des styles de base pour améliorer la lisibilité
-                            const styledContent = `
-                                <div style="
-                                    font-family: Arial, sans-serif;
-                                    line-height: 1.6;
-                                    color: #333;
-                                    max-width: 800px;
-                                    margin: 0 auto;
-                                    padding: 20px;
-                                ">
-                                    ${result.value}
-                                </div>
-                            `;
-                            setFullContent(styledContent);
-                        } else {
-                            throw new Error("La conversion n'a pas produit de contenu");
+                        try {
+                            const result = await mammoth.convertToHtml({ arrayBuffer });
+                            console.log("Conversion result:", result);
+                            
+                            if (result && result.value) {
+                                const styledContent = `
+                                    <div style="
+                                        font-family: Arial, sans-serif;
+                                        line-height: 1.6;
+                                        color: #333;
+                                        max-width: 800px;
+                                        margin: 0 auto;
+                                        padding: 20px;
+                                    ">
+                                        ${result.value}
+                                    </div>
+                                `;
+                                setFullContent({ type: 'docx', content: styledContent });
+                            } else {
+                                throw new Error("La conversion n'a pas produit de contenu");
+                            }
+                        } catch (conversionError) {
+                            setError("Erreur lors de la conversion du document DOCX");
                         }
-                    } catch (conversionError) {
-                        console.error("Erreur lors de la conversion DOCX:", conversionError);
-                        setError("Erreur lors de la conversion du document DOCX");
-                        setFullContent(null);
-                    }
-                } 
-                else if (fileType === 'txt') {
-                    const text = await response.data.text();
-                    setFullContent(text);
-                }
-                else if (['jpg', 'jpeg', 'png', 'gif'].includes(fileType)) {
-                    const url = URL.createObjectURL(response.data);
-                    setFullContent(url);
+                        break;
+
+                    case 'txt':
+                        const text = await response.data.text();
+                        setFullContent({ type: 'txt', content: text });
+                        break;
+
+                    case 'jpg':
+                    case 'jpeg':
+                    case 'png':
+                    case 'gif':
+                        const imageUrl = URL.createObjectURL(response.data);
+                        setFullContent({ type: 'image', url: imageUrl });
+                        break;
+
+                    default:
+                        setError(`Le format de fichier "${fileType}" n'est pas pris en charge pour la visualisation`);
+                        break;
                 }
             } catch (error) {
                 console.error('Erreur lors du chargement du fichier:', error);
                 setError("Erreur lors du chargement du fichier");
-                setFullContent(null);
             } finally {
                 setLoading(false);
             }
@@ -80,20 +88,15 @@ const FileViewer = ({ file }) => {
         loadFullContent();
 
         return () => {
-            if (fullContent && typeof fullContent === 'string' && fullContent.startsWith('blob:')) {
-                URL.revokeObjectURL(fullContent);
+            if (fullContent && fullContent.url) {
+                URL.revokeObjectURL(fullContent.url);
             }
         };
     }, [file]);
 
     if (loading) {
         return (
-            <div style={{ 
-                display: 'flex', 
-                justifyContent: 'center', 
-                alignItems: 'center',
-                height: 'calc(100vh - 140px)'
-            }}>
+            <div className="flex justify-center items-center h-[calc(100vh-140px)]">
                 <CircularProgress />
             </div>
         );
@@ -101,45 +104,35 @@ const FileViewer = ({ file }) => {
 
     if (error) {
         return (
-            <div style={{
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                height: 'calc(100vh - 140px)',
-                color: 'red'
-            }}>
-                <Typography>{error}</Typography>
+            <div className="flex justify-center items-center h-[calc(100vh-140px)]">
+                <div className="text-center">
+                    <p className="text-red-500 mb-2">{error}</p>
+                    <p className="text-gray-600">Vous pouvez toujours télécharger le fichier pour le visualiser avec une application appropriée.</p>
+                </div>
             </div>
         );
     }
 
-    const fileType = file.fileName.split('.').pop().toLowerCase();
+    if (!fullContent) {
+        return (
+            <div className="flex justify-center items-center h-[calc(100vh-140px)]">
+                <p className="text-gray-600">Aucun contenu à afficher</p>
+            </div>
+        );
+    }
 
-    switch (fileType) {
+    switch (fullContent.type) {
         case 'pdf':
             return (
-                <div style={{
-                    width: '100%',
-                    height: 'calc(100vh - 140px)',
-                    position: 'relative',
-                    overflow: 'hidden'
-                }}>
+                <div className="w-full h-[calc(100vh-140px)] relative overflow-hidden">
                     <object
-                        data={`${fullContent}#toolbar=0&navpanes=0&scrollbar=1&view=FitH&zoom=page-fit`}
+                        data={`${fullContent.url}#toolbar=0&navpanes=0&scrollbar=1&view=FitH&zoom=page-fit`}
                         type="application/pdf"
-                        style={{
-                            width: '100%',
-                            height: '100%',
-                            border: 'none',
-                        }}
+                        className="w-full h-full border-none"
                     >
                         <iframe
-                            src={`${fullContent}#toolbar=0&navpanes=0&scrollbar=1&view=FitH&zoom=page-fit`}
-                            style={{
-                                width: '100%',
-                                height: '100%',
-                                border: 'none',
-                            }}
+                            src={`${fullContent.url}#toolbar=0&navpanes=0&scrollbar=1&view=FitH&zoom=page-fit`}
+                            className="w-full h-full border-none"
                             title={file.fileName}
                         >
                             <p>Ce navigateur ne supporte pas l'affichage des PDF.</p>
@@ -151,70 +144,35 @@ const FileViewer = ({ file }) => {
         case 'docx':
             return (
                 <div 
-                    style={{
-                        width: '100%',
-                        height: 'calc(100vh - 140px)',
-                        overflow: 'auto',
-                        backgroundColor: '#fff',
-                        boxShadow: 'inset 0 0 10px rgba(0,0,0,0.1)'
-                    }}
-                    dangerouslySetInnerHTML={{ __html: fullContent }}
+                    className="w-full h-[calc(100vh-140px)] overflow-auto bg-white shadow-inner p-4"
+                    dangerouslySetInnerHTML={{ __html: fullContent.content }}
                 />
             );
 
         case 'txt':
             return (
-                <div style={{
-                    width: '100%',
-                    height: 'calc(100vh - 140px)',
-                    overflow: 'auto',
-                    padding: '20px',
-                    backgroundColor: '#fff'
-                }}>
-                    <Typography sx={{ fontSize: 14, whiteSpace: 'pre-wrap' }}>
-                        {fullContent}
-                    </Typography>
+                <div className="w-full h-[calc(100vh-140px)] overflow-auto bg-white p-4">
+                    <pre className="whitespace-pre-wrap text-sm">
+                        {fullContent.content}
+                    </pre>
                 </div>
             );
 
-        case 'jpg':
-        case 'jpeg':
-        case 'png':
-        case 'gif':
+        case 'image':
             return (
-                <div style={{
-                    width: '100%',
-                    height: 'calc(100vh - 140px)',
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    backgroundColor: '#fff'
-                }}>
+                <div className="w-full h-[calc(100vh-140px)] flex justify-center items-center bg-white">
                     <img
-                        src={fullContent}
+                        src={fullContent.url}
                         alt={file.fileName}
-                        style={{ 
-                            maxWidth: '100%',
-                            maxHeight: '100%',
-                            objectFit: 'contain'
-                        }}
+                        className="max-w-full max-h-full object-contain"
                     />
                 </div>
             );
 
         default:
             return (
-                <div style={{
-                    width: '100%',
-                    height: 'calc(100vh - 140px)',
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    backgroundColor: '#fff'
-                }}>
-                    <Typography>
-                        Ce type de fichier ne peut pas être prévisualisé
-                    </Typography>
+                <div className="flex justify-center items-center h-[calc(100vh-140px)]">
+                    <p className="text-gray-600">Format non pris en charge</p>
                 </div>
             );
     }

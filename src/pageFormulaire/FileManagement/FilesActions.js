@@ -6,12 +6,14 @@ import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import GetAppIcon from '@mui/icons-material/GetApp';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import CloseIcon from '@mui/icons-material/Close';
+import EditIcon from '@mui/icons-material/Edit';  // Ajout de l'icône d'édition
 import { confirmAlert } from 'react-confirm-alert';
 import { saveAs } from 'file-saver';
 import deleteFile from "./deleteFile";
 import CustomSnackbar from '../../_composants/CustomSnackbar';
 import FileViewer from './fileViewer';
 import getPreview from "./getPreview";
+import handleRenameFile from "./handleRenameFile";
 
 const modalStyle = {
     position: 'absolute',
@@ -177,8 +179,6 @@ export default function ListFilesInAccident(accidentId) {
                             flexDirection: 'row',
                             padding: 0 // Enlever le padding par défaut
                         }}>
-
-
                             <Box sx={{
                                 width: '50px', // Largeur fixe pour la zone des boutons
                                 height: '100%',
@@ -190,6 +190,34 @@ export default function ListFilesInAccident(accidentId) {
                                 borderRight: '5px solid rgba(0, 0, 0, 0.1)',
                                 padding: '8px'
                             }}>
+
+                                <Tooltip title="Renommer le fichier" arrow>
+                                    <Button
+                                        sx={{
+                                            minWidth: '36px',
+                                            width: '36px',
+                                            height: '36px',
+                                            padding: 0,
+                                            transition: 'all 0.3s ease-in-out',
+                                            '&:hover': {
+                                                transform: 'scale(1.08)',
+                                                boxShadow: 6
+                                            }
+                                        }}
+                                        onClick={() => handleRenameFile(
+                                            file.fileId,
+                                            file.fileName,
+                                            accidentId,
+                                            files,
+                                            setFiles
+                                        )}
+                                        variant="contained"
+                                        color="warning"
+                                    >
+                                        <EditIcon sx={{ fontSize: 20 }} />
+                                    </Button>
+                                </Tooltip>
+
                                 <Tooltip title="Télécharger le fichier" arrow>
                                     <Button
                                         sx={{
