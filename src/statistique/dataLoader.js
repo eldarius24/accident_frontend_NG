@@ -1,5 +1,26 @@
 import recupererDonnees from './recupererDonnees';
 
+/**
+ * Charge les données d'accidents à partir de l'API.
+ * 
+ * Une fois les données chargées, elle les stocke dans l'état `data` et
+ * initialise les autres états avec les données extraites :
+ * - `allYears`: toutes les années disponibles dans les données
+ * - `selectedYears`: l'année courante ou la plus récente
+ * - `workerTypes`: les types de travailleurs
+ * - `selectedWorkerTypes`: tous les types de travailleurs
+ * - `sectors`: les secteurs d'activité
+ * - `selectedSectors`: tous les secteurs
+ * - `assureurStatus`: les statuts assureur
+ * - `selectedAssureurStatus`: tous les statuts assureur
+ * - `accidentTypes`: les types d'accidents
+ * - `selectedAccidentTypes`: tous les types d'accidents
+ * 
+ * Si une erreur se produit pendant le chargement des données, elle est
+ * capturée et affichée dans la console.
+ * 
+ * @param {{ setData: (any) => void; setAllYears: (any) => void; setSelectedYears: (any) => void; setWorkerTypes: (any) => void; setSelectedWorkerTypes: (any) => void; setSectors: (any) => void; setSelectedSectors: (any) => void; setAssureurStatus: (any) => void; setSelectedAssureurStatus: (any) => void; setAccidentTypes: (any) => void; setSelectedAccidentTypes: (any) => void }} props
+ */
 export default async function chargerDonnees({
     setData,
     setAllYears,

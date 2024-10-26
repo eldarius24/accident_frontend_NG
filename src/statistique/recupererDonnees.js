@@ -1,5 +1,15 @@
 import axios from 'axios';
 
+/**
+ * Récupère les données des accidents à partir de l'API.
+ * 
+ * Cette fonction effectue une requête GET vers l'API pour récupérer les données des accidents.
+ * Si la requête échoue, une erreur est levée avec un message d'erreur.
+ * Si la réponse est valide, les données sont renvoyées.
+ * 
+ * @returns {Array} Un tableau contenant les données des accidents.
+ * @throws {Error} Si la requête échoue, une erreur est levée avec un message d'erreur.
+ */
 export default async function recupererDonnees() {
     try {
         const urlApi = process.env.REACT_APP_API_URL || 'localhost';

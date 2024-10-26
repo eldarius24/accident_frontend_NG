@@ -1,18 +1,23 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Legend, ResponsiveContainer,
-  LineChart, Line, PieChart, Pie, Cell, Tooltip
+   PieChart, Pie, Cell, Tooltip
 } from 'recharts';
 import {
   FormControl, InputLabel, Select, MenuItem, Checkbox, ListItemText, Box
 } from '@mui/material';
-import { filter, useAccidentStats } from './filters';
+import { useAccidentStats } from './filters';
 import chargerDonnees from './dataLoader';
 import genererDonneesGraphiques, { MONTHS, DAYS } from './chartData';
+import { renderOptimizedChart, getRenderConfig, COLORS } from './chartComponents';
 
-const COLORS = ['#0088FE', '#FF8042', '#00C49F', '#FFBB28', '#FF8042', '#0088FE', '#00C49F'];
-
-
+/**
+ * Affiche les graphiques des accidents de travail par type de travailleur, âge, jour de la semaine, mois, an, secteur et par entreprise.
+ * 
+ * @param {Object} props - Les propriétés reçues en entrée.
+ * 
+ * @returns {React.ReactElement} - Le composant react qui affiche les graphiques.
+ */
 const Statistiques = () => {
   const [data, setData] = useState([]);
 
@@ -54,32 +59,50 @@ const Statistiques = () => {
   );
 
   useEffect(() => {
+/**
+ * Initialise les données nécessaires pour les statistiques d'accidents.
+ * 
+ * Cette fonction charge les données à l'aide de la fonction `chargerDonnees`
+ * et met à jour les états avec les données reçues, notamment:
+ * - `data`: les données des accidents
+ * - `allYears`: toutes les années disponibles dans les données
+ * - `selectedYears`: les années sélectionnées pour le filtrage
+ * - `workerTypes`: les types de travailleurs
+ * - `selectedWorkerTypes`: les types de travailleurs sélectionnés pour le filtrage
+ * - `sectors`: les secteurs d'activité
+ * - `selectedSectors`: les secteurs sélectionnés pour le filtrage
+ * - `assureurStatus`: les statuts assureur
+ * - `selectedAssureurStatus`: les statuts assureur sélectionnés pour le filtrage
+ * - `accidentTypes`: les types d'accidents
+ * - `selectedAccidentTypes`: les types d'accidents sélectionnés pour le filtrage
+ * 
+ * En cas d'erreur lors du chargement des données, elle est capturée et 
+ * affichée dans la console.
+ */
     const initialiserDonnees = async () => {
-        try {
-            await chargerDonnees({
-                setData,
-                setAllYears,
-                setSelectedYears,
-                setWorkerTypes,
-                setSelectedWorkerTypes,
-                setSectors,
-                setSelectedSectors,
-                setAssureurStatus,
-                setSelectedAssureurStatus,
-                setAccidentTypes,
-                setSelectedAccidentTypes
-            });
-        } catch (erreur) {
-            console.error('Erreur lors de l\'initialisation:', erreur);
-            // Gérer l'erreur ici si nécessaire
-        }
+      try {
+        await chargerDonnees({
+          setData,
+          setAllYears,
+          setSelectedYears,
+          setWorkerTypes,
+          setSelectedWorkerTypes,
+          setSectors,
+          setSelectedSectors,
+          setAssureurStatus,
+          setSelectedAssureurStatus,
+          setAccidentTypes,
+          setSelectedAccidentTypes
+        });
+      } catch (erreur) {
+        console.error('Erreur lors de l\'initialisation:', erreur);
+        // Gérer l'erreur ici si nécessaire
+      }
     };
 
     initialiserDonnees();
-}, []);
+  }, []);
 
-
-  const [allChecked, setAllChecked] = useState(true);
   /**
    * Met à jour les années sélectionnées en fonction de la nouvelle valeur reçue via l'événement de changement.
    * Si la valeur inclut 'All', met à jour la sélection en fonction de la longueur de allYears.
@@ -187,30 +210,6 @@ const Statistiques = () => {
     genererDonneesGraphiques(stats),
     [stats]
   );
-  /**
-   * Rend une charte en fonction du type, des données et de la configuration.
-   * 
-   * @param {string} type - Le type de la charte (par exemple, "bar", "line", etc.)
-   * @param {object[]} data - Les données à afficher sur la charte
-   * @param {object} config - La configuration de la charte, qui inclut le composant de charte
-   *                          à utiliser, la classe CSS pour le conteneur, le titre de la charte,
-   *                          et les enfants à afficher dans le composant de charte.
-   * 
-   * @returns {ReactElement} La charte rendue
-   */
-  const renderChart = (type, data, config) => {
-    const ChartComponent = config.component;
-    return (
-      <div className={config.className}>
-        <h2>{config.title}</h2>
-        <ResponsiveContainer width="100%" height={300}>
-          <ChartComponent data={data}>
-            {config.children}
-          </ChartComponent>
-        </ResponsiveContainer>
-      </div>
-    );
-  };
 
   const isAllSelected = selectedWorkerTypes.length === workerTypes.length;
   const isAllSectorsSelected = selectedSectors.length === sectors.length;
@@ -379,218 +378,116 @@ const Statistiques = () => {
         <p className="text-3xl font-bold text-center">{stats.totalAccidents}</p>
       </div>
 
-      {graphs.accidentsBySex.visible && renderChart('pie', memoizedChartData.accidentsBySexData, {
-        component: PieChart,
-        title: "Accidents par sexe",
-        className: "col-span-full",
-        children: (
-          <>
-            <Pie
-              data={memoizedChartData.accidentsBySexData}
-              cx="50%"
-              cy="50%"
-              labelLine={false}
-              outerRadius={80}
-              fill="#8884d8"
-              dataKey="value"
-              label={({ name, value }) => `${name}: ${value}`}
-            >
-              {memoizedChartData.accidentsBySexData.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-              ))}
-            </Pie>
-            <Tooltip />
-            <Legend />
-          </>
-        )
-      })}
+      {/* Partie graphiques */}
+      {graphs.accidentsBySex.visible && renderOptimizedChart('pie',
+        memoizedChartData.accidentsBySexData,
+        getRenderConfig('pie', memoizedChartData.accidentsBySexData, {
+          title: "Accidents par sexe"
+        })
+      )}
 
-      {graphs.accidentsByTypeTravailleur.visible && renderChart('bar', memoizedChartData.accidentsByTypeTravailleurData, {
-        component: BarChart,
-        title: "Nombre d'accidents par type de travailleur",
-        className: "col-span-full",
-        children: (
-          <>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="type" />
-            <YAxis />
-            <Tooltip />
-            <Legend />
-            <Bar dataKey="NombreAT" fill="#82ca9d" />
-          </>
-        )
-      })}
+      {graphs.accidentsByTypeTravailleur.visible && renderOptimizedChart('bar',
+        memoizedChartData.accidentsByTypeTravailleurData,
+        getRenderConfig('bar', memoizedChartData.accidentsByTypeTravailleurData, {
+          title: "Nombre d'accidents par type de travailleur",
+          xAxis: "type",
+          fill: "#82ca9d"
+        })
+      )}
 
-      {graphs.accidentsByAge.visible && renderChart('bar', memoizedChartData.accidentsByAgeData, {
-        component: BarChart,
-        title: "Nombre d'accidents par âge du travailleur",
-        className: "col-span-full",
-        children: (
-          <>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="age" />
-            <YAxis />
-            <Tooltip />
-            <Legend />
-            <Bar dataKey="NombreAT" fill="#8884d8" />
-          </>
-        )
-      })}
-      {graphs.accidentsByDayOfWeek.visible && renderChart(BarChart, memoizedChartData.accidentDayOfWeekData, {
-        component: BarChart,
-        title: "Accidents par jour de la semaine",
-        className: "col-span-full",
-        children: (
-          <>
-            <XAxis dataKey="day" />
-            <YAxis />
-            <Tooltip />
-            <CartesianGrid strokeDasharray="3 3" />
-            <Bar dataKey="NombreAT" fill="#FFBB28" />
-          </>
-        )
-      })}
+      {graphs.accidentsByAge.visible && renderOptimizedChart('bar',
+        memoizedChartData.accidentsByAgeData,
+        getRenderConfig('bar', memoizedChartData.accidentsByAgeData, {
+          title: "Nombre d'accidents par âge du travailleur",
+          xAxis: "age",
+          fill: "#8884d8"
+        })
+      )}
 
-      {graphs.accidentsByMonth.visible && renderChart('bar', memoizedChartData.accidentMonthData, {
-        component: BarChart,
-        title: "Nombre total d'accidents par mois",
-        className: "col-span-full",
-        children: (
-          <>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="month" />
-            <YAxis />
-            <Tooltip />
-            <Legend />
-            <Bar dataKey="NombreAT" fill="#82ca9d" />
-          </>
-        )
-      })}
+      {graphs.accidentsByDayOfWeek.visible && renderOptimizedChart('bar',
+        memoizedChartData.accidentDayOfWeekData,
+        getRenderConfig('bar', memoizedChartData.accidentDayOfWeekData, {
+          title: "Accidents par jour de la semaine",
+          xAxis: "day",
+          fill: "#FFBB28"
+        })
+      )}
 
-      {graphs.accidentsByYear.visible && renderChart('bar', memoizedChartData.accidentYearData, {
-        component: BarChart,
-        title: "Nombre total d'accidents par an",
-        className: "col-span-full",
-        children: (
-          <>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="year" />
-            <YAxis />
-            <Tooltip />
-            <Legend />
-            <Bar dataKey="NombreAT" fill="#ffc658" />
-          </>
-        )
-      })}
+      {graphs.accidentsByMonth.visible && renderOptimizedChart('bar',
+        memoizedChartData.accidentMonthData,
+        getRenderConfig('bar', memoizedChartData.accidentMonthData, {
+          title: "Nombre total d'accidents par mois",
+          xAxis: "month",
+          fill: "#82ca9d"
+        })
+      )}
 
-      {graphs.accidentsBySector.visible && renderChart('pie', memoizedChartData.accidentSectorData, {
-        component: PieChart,
-        title: "Accidents par secteur",
-        className: "col-span-full",
-        children: (
-          <>
-            <Pie
-              data={memoizedChartData.accidentSectorData}
-              cx="50%"
-              cy="50%"
-              labelLine={false}
-              outerRadius={80}
-              fill="#8884d8"
-              dataKey="value"
-              label={({ name, value }) => `${name}: ${value}`}
-            >
-              {memoizedChartData.accidentSectorData.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-              ))}
-            </Pie>
-            <Tooltip />
-            <Legend />
-          </>
-        )
-      })}
+      {graphs.accidentsByYear.visible && renderOptimizedChart('bar',
+        memoizedChartData.accidentYearData,
+        getRenderConfig('bar', memoizedChartData.accidentYearData, {
+          title: "Nombre total d'accidents par an",
+          xAxis: "year",
+          fill: "#ffc658"
+        })
+      )}
 
-      {graphs.accidentsByYearAndCompany.visible && renderChart('line', memoizedChartData.accidentYearByCompanyData, {
-        component: LineChart,
-        title: "Accidents par an et par entreprise",
-        className: "col-span-full",
-        children: (
-          <>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="year" />
-            <YAxis />
-            <Tooltip />
-            <Legend />
-            {Object.keys(stats.accidentsByYearByCompany).map((companyName, index) => (
-              <Line
-                key={companyName}
-                type="monotone"
-                dataKey={companyName}
-                stroke={COLORS[index % COLORS.length]}
-                activeDot={{ r: 8 }}
-              />
-            ))}
-          </>
-        )
-      })}
+      {graphs.accidentsBySector.visible && renderOptimizedChart('pie',
+        memoizedChartData.accidentSectorData,
+        getRenderConfig('pie', memoizedChartData.accidentSectorData, {
+          title: "Accidents par secteur"
+        })
+      )}
 
-      {graphs.accidentsByMonthAndCompany.visible && renderChart('line', memoizedChartData.accidentMonthByCompanyData, {
-        component: LineChart,
-        title: "Accidents par mois et par entreprise",
-        className: "col-span-full",
-        children: (
-          <>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="month" />
-            <YAxis />
-            <Tooltip />
-            <Legend />
-            {Object.keys(stats.accidentsByMonthByCompany).map((companyName, index) => (
-              <Line
-                key={companyName}
-                type="monotone"
-                dataKey={companyName}
-                stroke={COLORS[index % COLORS.length]}
-                activeDot={{ r: 8 }}
-              />
-            ))}
-          </>
-        )
-      })}
+      {graphs.accidentsByYearAndCompany.visible && renderOptimizedChart('line',
+        memoizedChartData.accidentYearByCompanyData,
+        getRenderConfig('line', memoizedChartData.accidentYearByCompanyData, {
+          title: "Accidents par an et par entreprise",
+          xAxis: "year",
+          series: Object.keys(stats.accidentsByYearByCompany)
+        })
+      )}
 
-      {graphs.accidentsByCompanyAndSector.visible && (
-        <div className="text-center">
-          <h2>Accidents par entreprise par secteur</h2>
-          <div className="col-span-full flex flex-wrap overflow-x-auto">
-            {Object.keys(stats.accidentsByCompany).map((companyName) => (
-              <div key={companyName} className="my-4 w-1/3 min-w-[300px]">
-                <h3 className="text-xl font-bold text-center">{companyName}</h3>
-                <ResponsiveContainer width="100%" height={300}>
-                  <PieChart>
-                    <Pie
-                      data={Object.entries(stats.accidentsByCompany[companyName]).map(([sector, NombreAT]) => ({
-                        name: sector,
-                        value: NombreAT,
-                      }))}
-                      cx="50%"
-                      cy="50%"
-                      labelLine={false}
-                      outerRadius={80}
-                      fill="#8884d8"
-                      dataKey="value"
-                      label={({ name, value }) => `${name}: ${value}`}
-                    >
-                      {Object.entries(stats.accidentsByCompany[companyName]).map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                      ))}
-                    </Pie>
-                    <Tooltip />
-                    <Legend />
-                  </PieChart>
-                </ResponsiveContainer>
-              </div>
-            ))}
-          </div>
-        </div>
+      {graphs.accidentsByMonthAndCompany.visible && renderOptimizedChart('line',
+        memoizedChartData.accidentMonthByCompanyData,
+        getRenderConfig('line', memoizedChartData.accidentMonthByCompanyData, {
+          title: "Accidents par mois et par entreprise",
+          xAxis: "month",
+          series: Object.keys(stats.accidentsByMonthByCompany)
+        })
+      )}
+
+      {graphs.accidentsByCompanyAndSector.visible && renderOptimizedChart('company',
+        null,
+        getRenderConfig('company', null, {
+          title: "Accidents par entreprise par secteur",
+          component: PieChart,
+          companies: Object.keys(stats.accidentsByCompany).map(companyName => ({
+            company: companyName,
+            data: stats.accidentsByCompany[companyName]
+          })),
+          renderData: (data) => ({
+            component: PieChart,
+            chartContent: (
+              <Pie
+                data={Object.entries(data).map(([sector, NombreAT]) => ({
+                  name: sector,
+                  value: NombreAT
+                }))}
+                cx="50%"
+                cy="50%"
+                labelLine={false}
+                outerRadius={80}
+                fill="#8884d8"
+                dataKey="value"
+                label={({ name, value }) => `${name}: ${value}`}
+              >
+                {Object.entries(data).map((_, index) => (
+                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                ))}
+              </Pie>
+            )
+          })
+        })
       )}
 
       {graphs.accidentsByDayOfWeekAndCompany.visible && (
@@ -647,10 +544,12 @@ const Statistiques = () => {
               <div key={companyName} className="my-4 w-full md:w-1/2 lg:w-1/3">
                 <h3 className="text-xl font-bold text-center">{companyName}</h3>
                 <ResponsiveContainer width="100%" height={300}>
-                  <BarChart data={Object.entries(typeTravailleurData).map(([typeTravailleur, NombreAT]) => ({
-                    typeTravailleur,
-                    NombreAT
-                  }))}>
+                  <BarChart
+                    data={Object.entries(typeTravailleurData).map(([typeTravailleur, NombreAT]) => ({
+                      typeTravailleur,
+                      NombreAT
+                    }))}
+                  >
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis dataKey="typeTravailleur" />
                     <YAxis />
@@ -664,8 +563,6 @@ const Statistiques = () => {
           </div>
         </div>
       )}
-
-
 
       <div className="image-cortigroupe"></div>
       <h5 style={{ marginBottom: '40px' }}> Développé par Remy et Benoit pour Le Cortigroupe. Support: bgillet.lecortil@cortigroupe.be</h5>
