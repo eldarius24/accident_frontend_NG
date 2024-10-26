@@ -1,9 +1,7 @@
-
 import React, { useState, useEffect, useCallback,useMemo } from 'react';
 import axios from 'axios';
 import { useTheme } from '../pageAdmin/user/ThemeContext';
 import {Grid,Card, CardContent, Typography} from '@mui/material';
-
 
 const EnterpriseStats = React.memo(({ actions }) => {
     const { darkMode } = useTheme();
@@ -95,7 +93,6 @@ const EnterpriseStats = React.memo(({ actions }) => {
                                     }
                                 }}
                             >
-
                                 <CardContent>
                                     <Typography
                                         variant="h6"

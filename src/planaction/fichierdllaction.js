@@ -25,7 +25,6 @@ export default function Formulaire({ location }) {
         }
     }, []);
 
-
     return (
         <form>
             <h3>Vous pouvez ajouter des pièces à joindre l'action (courriers, e-mails, etc..).</h3>

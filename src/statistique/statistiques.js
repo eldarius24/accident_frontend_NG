@@ -15,10 +15,8 @@ const DAYS = ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Sa
 
 
 
-
 const Statistiques = () => {
   const [data, setData] = useState([]);
-  
 
   const [graphs, setGraphs] = useState({
     accidentsBySex: { visible: true, label: "TOTAL Accidents par sexe" },
@@ -57,8 +55,18 @@ const Statistiques = () => {
     accidentTypes
   );
 
-
   useEffect(() => {
+  /**
+   * Fetches accident data from API and initializes filters with the fetched data.
+   * The function sets the `data` state with the fetched data and initializes the
+   * following filters with the fetched data:
+   * - `allYears` and `selectedYears` with the years of the accidents
+   * - `workerTypes` and `selectedWorkerTypes` with the types of workers
+   * - `sectors` and `selectedSectors` with the sectors of the accidents
+   * - `assureurStatus` and `selectedAssureurStatus` with the statuses of the accidents
+   * - `accidentTypes` and `selectedAccidentTypes` with the types of accidents
+   * @async
+   */
     const fetchData = async () => {
       try {
         const apiUrl = process.env.REACT_APP_API_URL || 'localhost';
@@ -67,7 +75,7 @@ const Statistiques = () => {
         setData(rawData);
 
         // Initialisation des filtres
-        const years = [...new Set(rawData.map(accident => 
+        const years = [...new Set(rawData.map(accident =>
           new Date(accident.DateHeureAccident).getFullYear()
         ))];
         setAllYears(years);
@@ -82,13 +90,13 @@ const Statistiques = () => {
         setSectors(extractedSectors);
         setSelectedSectors(extractedSectors);
 
-        const uniqueAssureurStatus = [...new Set(rawData.map(accident => 
+        const uniqueAssureurStatus = [...new Set(rawData.map(accident =>
           accident.AssureurStatus
         ))].filter(Boolean);
         setAssureurStatus(uniqueAssureurStatus);
         setSelectedAssureurStatus(uniqueAssureurStatus);
 
-        const uniqueTypes = [...new Set(rawData.map(accident => 
+        const uniqueTypes = [...new Set(rawData.map(accident =>
           accident.typeAccident || 'Non spécifié'
         ))];
         setAccidentTypes(uniqueTypes);
@@ -100,8 +108,6 @@ const Statistiques = () => {
 
     fetchData();
   }, []);
-
-  
 
   const [allChecked, setAllChecked] = useState(true);
   /**
@@ -175,6 +181,13 @@ const Statistiques = () => {
     }
   };
 
+/**
+ * Updates the selected AssureurStatus based on the new value received from the change event.
+ * If the value includes 'all', it toggles the selection between all and none.
+ * Otherwise, it updates the selection to the specified value.
+ * 
+ * @param {Event} event - The change event containing the new values for AssureurStatus.
+ */
   const handleChangeAssureurStatus = (event) => {
     const value = event.target.value;
     if (value.includes('all')) {
@@ -184,6 +197,13 @@ const Statistiques = () => {
     }
   };
 
+  /**
+   * Updates the selected AccidentTypes based on the new value received from the change event.
+   * If the value includes 'all', it toggles the selection between all and none.
+   * Otherwise, it updates the selection to the specified value.
+   * 
+   * @param {Event} event - The change event containing the new values for AccidentTypes.
+   */
   const handleChangeAccidentTypesFilter = (event) => {
     const value = event.target.value;
     if (value.includes('all')) {

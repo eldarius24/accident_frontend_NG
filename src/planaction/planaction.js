@@ -25,9 +25,6 @@ import { useTheme } from '../pageAdmin/user/ThemeContext';
 import EnterpriseStats from './entrepriseStats';
 const apiUrl = config.apiUrl;
 
-// Extraction du composant de statistiques dans un composant mémorisé
-
-
 /**
  * Page qui affiche le plan d'action
  * @param {object} accidentData Données de l'accident
@@ -115,7 +112,6 @@ export default function PlanAction({ accidentData }) {
         }
     }, [userInfo?._id, apiUrl, showSnackbar]);
 
-
     const handleYearsChange = useCallback((event) => {
         const newSelectedYears = event.target.value;
         // Mettre à jour immédiatement l'état local
@@ -147,8 +143,6 @@ export default function PlanAction({ accidentData }) {
         return `${day}-${month}-${year}`;
     };
 
-
-
     const handleCloseSnackbar = useCallback((event, reason) => {
         if (reason === 'clickaway') return;
         setSnackbar(prev => ({ ...prev, open: false }));
@@ -164,8 +158,6 @@ export default function PlanAction({ accidentData }) {
             showSnackbar('Erreur : Action non trouvée', 'error');
         }
     }, [navigate, users, showSnackbar]);
-
-
 
     const fetchData = useCallback(async () => {
         try {
@@ -209,8 +201,6 @@ export default function PlanAction({ accidentData }) {
 
     }, [users]);
 
-
-
     // Modifiez d'abord les useEffects pour la gestion des années disponibles et sélectionnées
     useEffect(() => {
         // Obtenir les années disponibles en fonction des droits de l'utilisateur
@@ -242,8 +232,6 @@ export default function PlanAction({ accidentData }) {
         }
 
     }, [users, isAdmin, userInfo?.entreprisesConseillerPrevention]);
-
-
 
     const filteredUsers = useMemo(() => {
         // Si aucune année n'est sélectionnée, retourner un tableau vide
@@ -295,7 +283,6 @@ export default function PlanAction({ accidentData }) {
             });
     }, [showSnackbar]);
 
-
     const refreshListAccidents = useCallback(() => {
         setLoading(true);
         axios.get(`http://${apiUrl}:3100/api/planaction`)
@@ -318,7 +305,6 @@ export default function PlanAction({ accidentData }) {
             .filter(s => s.entrepriseId === entrepriseId)
             .map(s => s.secteurName);
     }, [allSectors]);
-
 
     const onSubmit = useCallback((data) => {
         axios.put(`http://${apiUrl}:3100/api/planaction`, data)
@@ -374,7 +360,6 @@ export default function PlanAction({ accidentData }) {
                         })
                 );
             }
-
             await handleExportDataAction(dataToExport);
             showSnackbar('Exportation des données réussie', 'success');
         } catch (error) {
@@ -502,7 +487,6 @@ export default function PlanAction({ accidentData }) {
                         backgroundColor: darkMode ? '#6e6e6e' : '#ffffff',
                     }}
                 >
-
                     <Table>
                         <TableHead>
                             <React.Fragment>
@@ -524,7 +508,6 @@ export default function PlanAction({ accidentData }) {
                                     <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>Delete</TableCell>
                                 </TableRow>
                             </React.Fragment>
-
                         </TableHead>
                         <TableBody>
                             {filteredUsers

@@ -33,8 +33,6 @@ export default function FormulaireAction() {
     const navigate = useNavigate();
     const [availableSectors, setAvailableSectors] = useState([]);
 
-
-
     const [AddAction, setAddAction] = useState(watch('AddAction') ? watch('AddAction') : (actionData && actionData.AddAction ? actionData.AddAction : null));
     const [AddActionDate, setAddActionDate] = useState(watch('AddActionDate') ? watch('AddActionDate') : (actionData && actionData.AddActionDate ? actionData.AddActionDate : null));
     const [AddActionQui, setAddActionQui] = useState(watch('AddActionQui') ? watch('AddActionQui') : (actionData && actionData.AddActionQui ? actionData.AddActionQui : null));
@@ -44,7 +42,6 @@ export default function FormulaireAction() {
     const [AddActionanne, setAddActionanne] = useState(watch('AddActionanne') ? watch('AddActionanne') : (actionData && actionData.AddActionanne ? actionData.AddActionanne : null));
     const [AddActoinmoi, setAddActoinmoi] = useState(watch('AddActoinmoi') ? watch('AddActoinmoi') : (actionData && actionData.AddActoinmoi ? actionData.AddActoinmoi : null));
     const [AddActionDange, setAddActionDange] = useState(watch('AddActionDange') ? Array.isArray(watch('AddActionDange')) ? watch('AddActionDange') : [watch('AddActionDange')] : (actionData && actionData.AddActionDange ? Array.isArray(actionData.AddActionDange) ? actionData.AddActionDange : [actionData.AddActionDange] : []));
-
 
     const [snackbar, setSnackbar] = useState({
         open: false,
@@ -69,6 +66,20 @@ export default function FormulaireAction() {
     const [yearOptions] = useState(generateYearOptions());
 
     useEffect(() => {
+/**
+ * Fetches actions, enterprises, and sectors data from APIs concurrently.
+ * 
+ * - Sets actions data in component state.
+ * - Transforms and filters enterprises data based on user role:
+ *   - Maps enterprises to include only their name and ID.
+ *   - If the user is not an admin, filters enterprises to those the user is a conseiller for.
+ * - Sets enterprises and sectors data in component state.
+ * - Initializes available sectors with sector names.
+ * - Displays an error message in a snackbar if the fetching fails.
+ * - Sets loading state to false after completion.
+ * 
+ * @async
+ */
         const fetchData = async () => {
             try {
                 const [actionsResponse, enterprisesResponse, sectorsResponse] = await Promise.all([
@@ -88,7 +99,6 @@ export default function FormulaireAction() {
 
                     );
                 }
-
                 setEntreprises(entreprisesData);
                 const secteursData = sectorsResponse.data;
                 setAllSectors(secteursData);
@@ -100,7 +110,6 @@ export default function FormulaireAction() {
                 setLoading(false);
             }
         };
-
         fetchData();
     }, [apiUrl, isAdmin, isConseiller]);
 
@@ -115,7 +124,6 @@ export default function FormulaireAction() {
             setAddActionDange(actionData.AddActionDange || '');
             setAddActionanne(actionData.AddActionanne || '');
             setAddActoinmoi(actionData.AddActoinmoi || '');
-
             Object.keys(actionData).forEach(key => {
                 setValue(key, actionData[key]);
             });
@@ -204,7 +212,6 @@ export default function FormulaireAction() {
                 showSnackbar(`Erreur lors de la ${actionData ? 'modification' : 'création'} de l'action`, 'error');
             });
     }, [actionData, apiUrl, navigate, showSnackbar, AddActionEntreprise, AddActionSecteur, AddActionDate, AddActionQui, AddAction, AddboolStatus, AddActionDange, AddActionanne, AddActoinmoi]);
-
 
     if (loading) {
         return <LinearProgress color="success" />;
