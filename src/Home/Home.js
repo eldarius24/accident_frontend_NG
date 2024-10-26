@@ -25,10 +25,6 @@ import { useUserConnected } from '../Hook/userConnected.js';
 import CustomSnackbar from '../_composants/CustomSnackbar';
 import { useTheme } from '../pageAdmin/user/ThemeContext';
 
-
-
-
-
 const apiUrl = config.apiUrl;
 
 /**
@@ -56,7 +52,6 @@ function Home() {
             : ['#e62a5625', '#95519b25'],  // Couleurs pour le thème clair
         [darkMode]
     );
-
 
     const formatDate = useCallback((dateString) => {
         if (!dateString) return '';
@@ -470,14 +465,12 @@ function Home() {
                     </TableBody>
                 </Table>
             </TableContainer>
-
             <CustomSnackbar
                 open={snackbar.open}
                 handleClose={handleCloseSnackbar}
                 message={snackbar.message}
                 severity={snackbar.severity}
             />
-
             <div className="image-cortigroupe"></div>
             <Tooltip title="Si vous rencontrez un souci avec le site, envoyer un mail à l'adresse suivante : bgillet.lecortil@cortigroupe.be et expliquer le soucis rencontré" arrow>
                 <h5 style={{ marginBottom: '40px' }}> Développé par Remy et Benoit pour Le Cortigroupe. Support: bgillet.lecortil@cortigroupe.be</h5>

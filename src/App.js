@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Login from './login/Login';
 import Home from './Home/Home';
 import Formulaire from './pageFormulaire/Formulaire';
-import Statistiques from './pageFormulaire/statistiques';
+import Statistiques from './statistique/statistiques';
 import AdminPanelSettingsAction from './pageAdmin/AdminPanelSettingsaction';
 import AdminAddEntreprise from './pageAdmin/AdminAddEntreprise';
 import AddSecteur from './pageAdmin/AdminAddSecteur';

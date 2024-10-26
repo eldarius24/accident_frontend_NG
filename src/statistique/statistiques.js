@@ -7,6 +7,7 @@ import {
 import {
   FormControl, InputLabel, Select, MenuItem, Checkbox, ListItemText, Box
 } from '@mui/material';
+import { filter, useAccidentStats } from './filters';
 
 const COLORS = ['#0088FE', '#FF8042', '#00C49F', '#FFBB28', '#FF8042', '#0088FE', '#00C49F'];
 const MONTHS = ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Juin', 'Juil', 'Aoû', 'Sep', 'Oct', 'Nov', 'Déc'];
@@ -17,23 +18,7 @@ const DAYS = ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Sa
 
 const Statistiques = () => {
   const [data, setData] = useState([]);
-  const [stats, setStats] = useState({
-    totalAccidents: 0,
-    accidentsByType: {},
-    accidentsByMonth: {},
-    accidentsByYear: {},
-    accidentsByMonthByCompany: {},
-    accidentsByYearByCompany: {},
-    accidentsBySex: {},
-    accidentsBySector: {},
-    accidentsByCompany: {},
-    accidentsByDayOfWeek: {},
-    accidentsByDayOfWeekByCompany: {},
-    accidentsByAge: {},
-    accidentsByAgeByCompany: {},
-    accidentsByTypeTravailleur: {},
-    accidentsByTypeTravailleurByCompany: {},
-  });
+  
 
   const [graphs, setGraphs] = useState({
     accidentsBySex: { visible: true, label: "TOTAL Accidents par sexe" },
@@ -62,34 +47,52 @@ const Statistiques = () => {
   const [accidentTypes, setAccidentTypes] = useState([]);
   const [selectedAccidentTypes, setSelectedAccidentTypes] = useState([]);
 
+  const stats = useAccidentStats(
+    data,
+    selectedYears,
+    selectedWorkerTypes,
+    selectedSectors,
+    selectedAssureurStatus,
+    selectedAccidentTypes,
+    accidentTypes
+  );
+
+
   useEffect(() => {
-    /**
-     * Récupère les données d'accidents depuis l'API
-     * Initialise les filtres et les données du graphique
-     * 
-     * @returns {Promise<void>}
-     */
     const fetchData = async () => {
       try {
         const apiUrl = process.env.REACT_APP_API_URL || 'localhost';
         const response = await axios.get(`http://${apiUrl}:3100/api/accidents`);
-        setData(response.data);
-        const years = [...new Set(response.data.map(accident => new Date(accident.DateHeureAccident).getFullYear()))];
+        const rawData = response.data;
+        setData(rawData);
+
+        // Initialisation des filtres
+        const years = [...new Set(rawData.map(accident => 
+          new Date(accident.DateHeureAccident).getFullYear()
+        ))];
         setAllYears(years);
         const currentYear = new Date().getFullYear();
         setSelectedYears(years.includes(currentYear) ? [currentYear] : [years[years.length - 1]]);
-        const types = [...new Set(response.data.map(accident => accident.typeTravailleur))];
+
+        const types = [...new Set(rawData.map(accident => accident.typeTravailleur))];
         setWorkerTypes(types);
         setSelectedWorkerTypes(types);
-        const extractedSectors = [...new Set(response.data.map(accident => accident.secteur))];
+
+        const extractedSectors = [...new Set(rawData.map(accident => accident.secteur))];
         setSectors(extractedSectors);
         setSelectedSectors(extractedSectors);
-        const uniqueAssureurStatus = [...new Set(response.data.map(accident => accident.AssureurStatus))].filter(Boolean);
+
+        const uniqueAssureurStatus = [...new Set(rawData.map(accident => 
+          accident.AssureurStatus
+        ))].filter(Boolean);
         setAssureurStatus(uniqueAssureurStatus);
         setSelectedAssureurStatus(uniqueAssureurStatus);
-        const uniquetypes = [...new Set(response.data.map(accident => accident.typeAccident || 'Non spécifié'))];
-        setAccidentTypes(uniquetypes);
-        setSelectedAccidentTypes(uniquetypes);
+
+        const uniqueTypes = [...new Set(rawData.map(accident => 
+          accident.typeAccident || 'Non spécifié'
+        ))];
+        setAccidentTypes(uniqueTypes);
+        setSelectedAccidentTypes(uniqueTypes);
       } catch (error) {
         console.error('Erreur lors de la récupération des données:', error.message);
       }
@@ -98,106 +101,7 @@ const Statistiques = () => {
     fetchData();
   }, []);
 
-  useEffect(() => {
-    if (data.length > 0) {
-      const filteredData = data.filter(accident => {
-        const accidentYear = new Date(accident.DateHeureAccident).getFullYear();
-        const accidentType = accident.typeAccident || 'Non spécifié';
-        return selectedYears.includes(accidentYear) &&
-          selectedWorkerTypes.includes(accident.typeTravailleur) &&
-          selectedSectors.includes(accident.secteur) &&
-          selectedAssureurStatus.includes(accident.AssureurStatus) &&
-          (selectedAccidentTypes.length === accidentTypes.length || selectedAccidentTypes.includes(accidentType));
-      });
-
-      const newStats = {
-        totalAccidents: filteredData.length,
-        accidentsByType: {},
-        accidentsByMonth: {},
-        accidentsByYear: {},
-        accidentsByYearByCompany: {},
-        accidentsByMonthByCompany: {},
-        accidentsBySex: { Masculin: 0, Féminin: 0 },
-        accidentsBySector: {},
-        accidentsByCompany: {},
-        accidentsByDayOfWeek: { 0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0 },
-        accidentsByDayOfWeekByCompany: {},
-        accidentsByAge: {},
-        accidentsByAgeByCompany: {},
-        accidentsByTypeTravailleur: {},
-        accidentsByTypeTravailleurByCompany: {},
-      };
-
-      /**
-       * Calculates the age of a person given their birth date and accident date
-       * @param {Date} birthDate - The birth date of the person
-       * @param {Date} accidentDate - The date of the accident
-       * @returns {number} The age of the person at the time of the accident
-       */
-      const calculateAge = (birthDate, accidentDate) => {
-        let age = accidentDate.getFullYear() - birthDate.getFullYear();
-        const monthDiff = accidentDate.getMonth() - birthDate.getMonth();
-        if (monthDiff < 0 || (monthDiff === 0 && accidentDate.getDate() < birthDate.getDate())) {
-          age--;
-        }
-        return age;
-      };
-
-      // Comptage des accidents par type de travailleur
-      filteredData.forEach((accident) => {
-        const { DateHeureAccident, entrepriseName, sexe, secteur, dateNaissance } = accident;
-        const typeAccident = accident.typeAccident || 'Non spécifié';
-        const date = new Date(DateHeureAccident);
-        const month = date.getMonth();
-        const year = date.getFullYear();
-        const dayOfWeek = date.getDay();
-        const companyName = entrepriseName || 'Inconnue';
-        const typeTravailleur = accident.typeTravailleur || 'Non spécifié';
-
-        if (dateNaissance && DateHeureAccident) {
-          const birthDate = new Date(dateNaissance);
-          const accidentDate = new Date(DateHeureAccident);
-          const age = calculateAge(birthDate, accidentDate);
-          newStats.accidentsByAge[age] = (newStats.accidentsByAge[age] || 0) + 1;
-          if (!newStats.accidentsByAgeByCompany[companyName]) {
-            newStats.accidentsByAgeByCompany[companyName] = {};
-          }
-          newStats.accidentsByAgeByCompany[companyName][age] = (newStats.accidentsByAgeByCompany[companyName][age] || 0) + 1;
-          if (!newStats.accidentsByTypeTravailleurByCompany[companyName]) {
-            newStats.accidentsByTypeTravailleurByCompany[companyName] = {};
-          }
-          newStats.accidentsByTypeTravailleurByCompany[companyName][typeTravailleur] =
-            (newStats.accidentsByTypeTravailleurByCompany[companyName][typeTravailleur] || 0) + 1;
-        }
-
-        // Increment counters
-        newStats.accidentsByTypeTravailleur[typeTravailleur] = (newStats.accidentsByTypeTravailleur[typeTravailleur] || 0) + 1;
-        newStats.accidentsByType[typeAccident] = (newStats.accidentsByType[typeAccident] || 0) + 1;
-        newStats.accidentsByMonth[month] = (newStats.accidentsByMonth[month] || 0) + 1;
-        newStats.accidentsByYear[year] = (newStats.accidentsByYear[year] || 0) + 1;
-        newStats.accidentsByDayOfWeek[dayOfWeek] = (newStats.accidentsByDayOfWeek[dayOfWeek] || 0) + 1;
-
-        // Company specific stats
-        newStats.accidentsByYearByCompany[companyName] = newStats.accidentsByYearByCompany[companyName] || {};
-        newStats.accidentsByYearByCompany[companyName][year] = (newStats.accidentsByYearByCompany[companyName][year] || 0) + 1;
-        newStats.accidentsByMonthByCompany[companyName] = newStats.accidentsByMonthByCompany[companyName] || {};
-        newStats.accidentsByMonthByCompany[companyName][month] = (newStats.accidentsByMonthByCompany[companyName][month] || 0) + 1;
-        newStats.accidentsByDayOfWeekByCompany[companyName] = newStats.accidentsByDayOfWeekByCompany[companyName] || { 0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0 };
-        newStats.accidentsByDayOfWeekByCompany[companyName][dayOfWeek] = (newStats.accidentsByDayOfWeekByCompany[companyName][dayOfWeek] || 0) + 1;
-
-        if (sexe === 'Masculin' || sexe === 'Féminin') {
-          newStats.accidentsBySex[sexe] += 1;
-        }
-
-        const sector = secteur || 'Non spécifié';
-        newStats.accidentsBySector[sector] = (newStats.accidentsBySector[sector] || 0) + 1;
-        newStats.accidentsByCompany[companyName] = newStats.accidentsByCompany[companyName] || {};
-        newStats.accidentsByCompany[companyName][sector] = (newStats.accidentsByCompany[companyName][sector] || 0) + 1;
-      });
-
-      setStats(newStats);
-    }
-  }, [data, selectedYears, selectedWorkerTypes, selectedSectors, selectedAssureurStatus, selectedAccidentTypes]);
+  
 
   const [allChecked, setAllChecked] = useState(true);
   /**
