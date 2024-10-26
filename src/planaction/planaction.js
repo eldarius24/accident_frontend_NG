@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import {
     Table, TableBody, TableCell, TableContainer, TableHead, TableRow,
-    Button, Checkbox, Grid, LinearProgress, TextField, Tooltip, 
+    Button, Checkbox, Grid, LinearProgress, TextField, Tooltip,
     FormControl, InputLabel, Select, MenuItem, ListItemText, OutlinedInput
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
@@ -23,6 +23,10 @@ import { handleExportDataAction } from '../Model/excelGenerator.js';
 import CustomSnackbar from '../_composants/CustomSnackbar';
 import { useTheme } from '../pageAdmin/user/ThemeContext';
 import EnterpriseStats from './entrepriseStats';
+import updateUserSelectedYears from './updateUserSelecterYears';
+import filteredUsers from './filteredUsers';
+
+
 const apiUrl = config.apiUrl;
 
 /**
@@ -79,38 +83,6 @@ export default function PlanAction({ accidentData }) {
         }
         return rowColors[theme].rows[index % 2];
     }, [darkMode, rowColors]);
-
-    const updateUserSelectedYears = useCallback(async (newSelectedYears) => {
-        try {
-            if (!userInfo?._id) return;
-
-            const response = await axios.put(
-                `http://${apiUrl}:3100/api/users/${userInfo._id}/updateSelectedYears`,
-                {
-                    selectedYears: newSelectedYears
-                }
-            );
-
-            if (response.data.success) {
-                // Mettre à jour le localStorage
-                const token = JSON.parse(localStorage.getItem('token'));
-                token.data.selectedYears = newSelectedYears;
-                localStorage.setItem('token', JSON.stringify(token));
-
-                // Mettre à jour le state
-                setSelectedYears(newSelectedYears);
-
-                showSnackbar('Années sélectionnées mises à jour avec succès', 'success');
-            }
-        } catch (error) {
-            console.error('Erreur lors de la mise à jour des années sélectionnées:', error);
-            showSnackbar(
-                `Erreur lors de la sauvegarde des années sélectionnées: ${error.response?.data?.message || error.message
-                }`,
-                'error'
-            );
-        }
-    }, [userInfo?._id, apiUrl, showSnackbar]);
 
     const handleYearsChange = useCallback((event) => {
         const newSelectedYears = event.target.value;
@@ -232,40 +204,6 @@ export default function PlanAction({ accidentData }) {
         }
 
     }, [users, isAdmin, userInfo?.entreprisesConseillerPrevention]);
-
-    const filteredUsers = useMemo(() => {
-        // Si aucune année n'est sélectionnée, retourner un tableau vide
-        if (selectedYears.length === 0) {
-            return [];
-        }
-
-        let filtered = users;
-
-        // Filtrer d'abord par les entreprises de l'utilisateur si ce n'est pas un admin
-        if (!isAdmin) {
-            const userEntreprises = userInfo?.entreprisesConseillerPrevention || [];
-            filtered = filtered.filter(action =>
-                userEntreprises.includes(action.AddActionEntreprise)
-            );
-        }
-
-        // Filtrer par années sélectionnées
-        filtered = filtered.filter(action => selectedYears.includes(action.AddActionanne));
-
-        // Appliquer le filtre de recherche si nécessaire
-        if (searchTerm) {
-            const searchTermLower = searchTerm.toLowerCase();
-            filtered = filtered.filter(addaction =>
-                ['AddActionEntreprise', 'AddActionDate', 'AddActionSecteur', 'AddAction', 'AddActionQui', 'AddActoinmoi', 'AddActionDange', 'AddActionanne']
-                    .some(field => {
-                        const value = addaction[field];
-                        return value && String(value).toLowerCase().includes(searchTermLower);
-                    })
-            );
-        }
-
-        return filtered;
-    }, [users, searchTerm, selectedYears, isAdmin, userInfo]);
 
     const handleDelete = useCallback((userIdToDelete) => {
         axios.delete(`http://${apiUrl}:3100/api/planaction/${userIdToDelete}`)
