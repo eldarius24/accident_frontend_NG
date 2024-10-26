@@ -148,7 +148,7 @@ function ResponsiveAppBar() {
 
 
   return (
-    <AppBar position="sticky" sx={{ backgroundColor: darkMode ? '#535353' : '#f9ba2b90' }}>
+    <AppBar position="sticky" sx={{ backgroundColor: darkMode ? '#535353' : '#ffdb88' }}>
       <Container maxWidth="lg">
         <Toolbar disableGutters>
           <Tooltip title="Changer de thème">
