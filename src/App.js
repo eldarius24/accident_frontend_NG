@@ -23,6 +23,7 @@ import AddUser from './pageAdmin/user/addUser/AddUser';
 import ProtectedRouteAdminOrConseiller from './Model/protectedRouteConseillerPrevention'; // Importer le nouveau composant
 import FormulaireAction from './planaction/FormulaireAction';
 import { ThemeProvider } from './pageAdmin/user/ThemeContext'; // Importez ThemeProvider
+import LogView from './pageAdmin/logView';
 /**
  * App est le composant principal de l'application. Il contient les routes 
  * ainsi que la barre de navigation.
@@ -48,6 +49,7 @@ const App = () => {
           <Route path="/" element={<ProtectedRoute><Home /></ProtectedRoute>} />
           
           {/* Routes accessibles uniquement par isAdmin */}
+          <Route path="/logView" element={<ProtectedRouteAdmin><LogView/></ProtectedRouteAdmin>} />
           <Route path="/adminUser" element={<ProtectedRouteAdmin><Adminuser /></ProtectedRouteAdmin>} />
           <Route path="/adminaction" element={<ProtectedRouteAdmin><AdminPanelSettingsAction /></ProtectedRouteAdmin>} />
           <Route path="/addEntreprise" element={<ProtectedRouteAdmin><AdminAddEntreprise /></ProtectedRouteAdmin>} />

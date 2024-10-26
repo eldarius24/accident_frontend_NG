@@ -80,6 +80,16 @@ export default function AdminPanelSettingsaction() {
                             sx={defaultStyle} variant="contained">Consulter les entreprises
                         </Button>
                     </Tooltip>
+                    </Box>
+                    <h3>Visualisation des logs</h3>
+                    <Box sx={{ display: 'flex', justifyContent: 'center', marginLeft: '120px', marginRight: '120px' }}>
+                    <Tooltip title="Visualisation des logs" arrow>
+                        <Button type="submit"
+                            component={Link}
+                            to={'/logView'}
+                            sx={defaultStyle} variant="contained"> Visualisation des logs
+                        </Button>
+                    </Tooltip>
 
                 </Box>
             </div>
