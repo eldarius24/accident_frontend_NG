@@ -4,12 +4,27 @@ import axios from 'axios';
 import mammoth from 'mammoth';
 import {CircularProgress } from '@mui/material';
 
+/**
+ * Affiche le contenu d'un fichier uploadé par l'utilisateur.
+ *
+ * @param {{ file: { fileId: string, fileName: string } }} props - Les informations du fichier uploadé.
+ *
+ * @returns {JSX.Element} Le composant qui affiche le contenu du fichier.
+ */
 const FileViewer = ({ file }) => {
     const [fullContent, setFullContent] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
     useEffect(() => {
+        /**
+         * Charge le contenu complet d'un fichier uploadé par l'utilisateur.
+         * 
+         * @async
+         * @throws {Error} Si le fichier n'a pas pu être chargé.
+         * @throws {Error} Si le fichier n'est pas un fichier PDF, DOCX, TXT, JPG, JPEG, PNG, GIF.
+         * @throws {Error} Si le fichier DOCX n'a pas pu être converti en HTML.
+         */
         const loadFullContent = async () => {
             if (!file) return;
             

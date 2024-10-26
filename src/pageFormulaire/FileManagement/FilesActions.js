@@ -29,6 +29,12 @@ const modalStyle = {
     overflow: 'hidden'
 };
 
+/**
+ * Affiche la liste des fichiers associés à un accident.
+ * 
+ * @param {number} accidentId Identifiant de l'accident
+ * @returns {JSX.Element} Liste des fichiers associés à l'accident
+ */
 export default function ListFilesInAccident(accidentId) {
     const [files, setFiles] = useState([]);
     const [previews, setPreviews] = useState({});
@@ -40,10 +46,22 @@ export default function ListFilesInAccident(accidentId) {
         severity: 'info',
     });
 
+    /**
+     * Affiche un message dans une snackbar.
+     * @param {string} message - Le message à afficher.
+     * @param {string} [severity='info'] - La gravité du message. Les valeurs possibles sont 'info', 'success', 'warning' et 'error'.
+     */
     const showSnackbar = (message, severity = 'info') => {
         setSnackbar({ open: true, message, severity });
     };
 
+    /**
+     * Ferme la snackbar si l'utilisateur clique sur le bouton "Fermer" ou en dehors de la snackbar.
+     * Si l'utilisateur clique sur la snackbar elle-même (et non sur le bouton "Fermer"), la snackbar ne se ferme pas.
+     * 
+     * @param {object} event - L'événement qui a déclenché la fermeture de la snackbar.
+     * @param {string} reason - La raison pour laquelle la snackbar se ferme. Si elle vaut 'clickaway', cela signifie que l'utilisateur a cliqué en dehors de la snackbar.
+     */
     const handleCloseSnackbar = (event, reason) => {
         if (reason === 'clickaway') {
             return;
@@ -52,6 +70,11 @@ export default function ListFilesInAccident(accidentId) {
     };
 
     useEffect(() => {
+        /**
+         * Récupère la liste des fichiers associés à un accident, ainsi que les prévisualisations des fichiers.
+         * Met à jour l'état de la liste des fichiers et des prévisualisations.
+         * Affiche un message de réussite ou d'erreur en fonction du résultat.
+         */
         async function fetchData() {
             try {
                 const response = await axios.get(`http://localhost:3100/api/accidents/${accidentId}`);
@@ -79,6 +102,12 @@ export default function ListFilesInAccident(accidentId) {
         }
     }, [accidentId]);
 
+    /**
+     * Supprime un fichier de la base de données et de la liste des fichiers de l'accident
+     * Si la suppression réussit, met à jour l'état de la liste des fichiers et affiche un message de réussite.
+     * Si la suppression échoue, affiche un message d'erreur.
+     * @param {string} fileId - L'ID du fichier à supprimer
+     */
     async function handleDeleteFile(fileId) {
         try {
             await deleteFile({ fileId, accidentId });
@@ -93,8 +122,24 @@ export default function ListFilesInAccident(accidentId) {
         }
     }
 
+    /**
+     * Affiche une boîte de dialogue de confirmation de suppression
+     * pour demander confirmation de suppression d'un fichier
+     * @param {string} fileId - L'ID du fichier à supprimer
+     */
     function popUpDelete(fileId) {
         confirmAlert({
+            /**
+             * Boîte de dialogue personnalisée pour demander confirmation de suppression
+             * 
+             * Cette fonction retourne un JSX élément représentant une boîte de dialogue personnalisée.
+             * La boîte de dialogue affiche un titre, un message de confirmation et des boutons "Oui" et "Non".
+             * Lorsque l'utilisateur clique sur le bouton "Oui", la fonction handleDelete est appelée pour supprimer le fichier.
+             * Lorsque l'utilisateur clique sur le bouton "Non", la boîte de dialogue se ferme.
+             * 
+             * @param {{ onClose: () => void }} props - Fonction pour fermer la boîte de dialogue
+             * @returns Un JSX Element qui contient la boîte de dialogue personnalisée
+             */
             customUI: ({ onClose }) => (
                 <div className="custom-confirm-dialog">
                     <h1 className="custom-confirm-title">Supprimer</h1>
@@ -125,6 +170,12 @@ export default function ListFilesInAccident(accidentId) {
         });
     }
 
+    /**
+     * Récupère un fichier de la base de données en fonction de son ID.
+     * @param {string} fileId - L'ID du fichier à récupérer.
+     * @returns {Promise<Blob>} Le fichier récupéré sous forme de blob.
+     * @throws {Error} Si le fichier n'a pas pu être récupéré.
+     */
     async function getFile(fileId) {
         if (!fileId) throw new Error('Pas de fileId indiqué');
 
@@ -141,6 +192,11 @@ export default function ListFilesInAccident(accidentId) {
     }
 
 
+    /**
+     * Télécharge un fichier de la base de données.
+     * @param {{fileId: string, fileName: string}} options - Les informations du fichier à télécharger.
+     * @throws {Error} Si le fichier n'a pas pu être téléchargé.
+     */
     const downloadFile = async ({ fileId, fileName }) => {
         if (!fileId || !fileName) throw new Error('Informations de fichier manquantes');
 
@@ -154,11 +210,21 @@ export default function ListFilesInAccident(accidentId) {
         }
     };
 
+    /**
+     * Ouvre la modale pour afficher le fichier.
+     * @param {{fileId: string, fileName: string, fileType: string}} file - Les informations du fichier.
+     */
     const handleOpenModal = (file) => {
         setSelectedFile(file);
         setModalOpen(true);
     };
 
+/**
+ * Closes the modal and resets the selected file state.
+ * 
+ * This function sets the selected file to null and changes
+ * the modal's open state to false, effectively closing the modal.
+ */
     const handleCloseModal = () => {
         setSelectedFile(null);
         setModalOpen(false);
@@ -190,7 +256,6 @@ export default function ListFilesInAccident(accidentId) {
                                 borderRight: '5px solid rgba(0, 0, 0, 0.1)',
                                 padding: '8px'
                             }}>
-
                                 <Tooltip title="Renommer le fichier" arrow>
                                     <Button
                                         sx={{
@@ -217,7 +282,6 @@ export default function ListFilesInAccident(accidentId) {
                                         <EditIcon sx={{ fontSize: 20 }} />
                                     </Button>
                                 </Tooltip>
-
                                 <Tooltip title="Télécharger le fichier" arrow>
                                     <Button
                                         sx={{
@@ -279,7 +343,6 @@ export default function ListFilesInAccident(accidentId) {
                                     </Button>
                                 </Tooltip>
                             </Box>
-
                             {/* Conteneur pour le contenu */}
                             <Box sx={{
                                 flexGrow: 1,
@@ -309,7 +372,6 @@ export default function ListFilesInAccident(accidentId) {
                     </li>
                 ))}
             </ul>
-
             <Modal
                 open={modalOpen}
                 onClose={handleCloseModal}
@@ -334,7 +396,6 @@ export default function ListFilesInAccident(accidentId) {
                     )}
                 </Box>
             </Modal>
-
             <CustomSnackbar
                 open={snackbar.open}
                 handleClose={handleCloseSnackbar}
