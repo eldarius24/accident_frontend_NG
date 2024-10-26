@@ -19,16 +19,15 @@ import 'react-confirm-alert/src/react-confirm-alert.css';
 import '../pageFormulaire/formulaire.css';
 import config from '../config.json';
 import { useUserConnected } from '../Hook/userConnected';
-import { handleExportDataAction } from '../Model/excelGenerator.js';
 import CustomSnackbar from '../_composants/CustomSnackbar';
 import { useTheme } from '../pageAdmin/user/ThemeContext';
 import EnterpriseStats from './entrepriseStats';
 import createUpdateUserSelectedYears from './updateUserSelecterYears';
 import createFilteredUsers from './filteredUsers';
+import createFetchData from './fetchData.js';
+import createHandleExport from './handleExport';
 
 const apiUrl = config.apiUrl;
-
-
 
 /**
  * Page qui affiche le plan d'action
@@ -53,6 +52,7 @@ export default function PlanAction({ accidentData }) {
         const token = JSON.parse(localStorage.getItem('token'));
         return token?.data?.selectedYears || [];
     });
+
     const [availableYears, setAvailableYears] = useState([]);
     const [snackbar, setSnackbar] = useState({
         open: false,
@@ -62,26 +62,29 @@ export default function PlanAction({ accidentData }) {
     const navigate = useNavigate();
     // Then inside your PlanAction component, add these lines after your state declarations:
 
-
     const showSnackbar = useCallback((message, severity = 'info') => {
         setSnackbar({ open: true, message, severity });
     }, []);
+
+    const handleExport = useCallback(
+        createHandleExport(users, isAdmin, userInfo, selectedYears, searchTerm, showSnackbar),
+        [users, isAdmin, userInfo, selectedYears, searchTerm, showSnackbar]
+    );
 
     const updateUserSelectedYears = useCallback(
         createUpdateUserSelectedYears(apiUrl, showSnackbar)(userInfo, setSelectedYears),
         [apiUrl, showSnackbar, userInfo]
     );
-    
+
     const getFilteredUsers = useMemo(
         () => createFilteredUsers(),
         []
     );
-    
+
     const filteredUsers = useMemo(
         () => getFilteredUsers(users, searchTerm, selectedYears, isAdmin, userInfo),
         [getFilteredUsers, users, searchTerm, selectedYears, isAdmin, userInfo]
     );
-
 
     /**
      * Ferme la snackbar si l'utilisateur clique sur le bouton "Fermer" ou en dehors de la snackbar.
@@ -156,36 +159,20 @@ export default function PlanAction({ accidentData }) {
         }
     }, [navigate, users, showSnackbar]);
 
-    const fetchData = useCallback(async () => {
-        try {
-            const [actionsResponse, enterprisesResponse, sectorsResponse] = await Promise.all([
-                axios.get(`http://${apiUrl}:3100/api/planaction`),
-                axios.get(`http://${apiUrl}:3100/api/entreprises`),
-                axios.get(`http://${apiUrl}:3100/api/secteurs`)
-            ]);
-
-            setAddactions(actionsResponse.data);
-            let entreprisesData = enterprisesResponse.data.map(e => ({
-                label: e.AddEntreName,
-                id: e._id
-            }));
-
-            if (!isAdmin) {
-                entreprisesData = entreprisesData.filter(e =>
-                    userInfo.entreprisesConseillerPrevention?.includes(e.label)
-                );
-            }
-            setEntreprises(entreprisesData);
-            const secteursData = sectorsResponse.data;
-            setAllSectors(secteursData);
-            setAvailableSectors(secteursData.map(s => s.secteurName));
-        } catch (error) {
-            console.error('Error fetching data:', error);
-            showSnackbar('Erreur lors de la récupération des données', 'error');
-        } finally {
-            setLoading(false);
-        }
-    }, [isAdmin, userInfo, showSnackbar]);
+    const fetchData = useCallback(
+        createFetchData(apiUrl)(
+            setAddactions,
+            setEntreprises,
+            setAllSectors,
+            setAvailableSectors,
+            setLoading,
+            showSnackbar,
+            isAdmin,
+            userInfo
+        ),
+        [apiUrl, setAddactions, setEntreprises, setAllSectors, setAvailableSectors,
+            setLoading, showSnackbar, isAdmin, userInfo]
+    );
 
     useEffect(() => {
         fetchData();
@@ -292,44 +279,6 @@ export default function PlanAction({ accidentData }) {
         }
     }, [isAdmin, userEnterprise]);
 
-    const handleExport = useCallback(async () => {
-        try {
-            let dataToExport = users;
-
-            // Filtre par entreprise si l'utilisateur n'est pas admin
-            if (!isAdmin) {
-                dataToExport = dataToExport.filter(action =>
-                    userInfo.entreprisesConseillerPrevention?.includes(action.AddActionEntreprise)
-                );
-            }
-
-            // Filtre par années sélectionnées
-            if (selectedYears && selectedYears.length > 0) {
-                dataToExport = dataToExport.filter(action =>
-                    selectedYears.includes(action.AddActionanne)
-                );
-            }
-
-            // Filtre par terme de recherche
-            if (searchTerm) {
-                const searchTermLower = searchTerm.toLowerCase();
-                dataToExport = dataToExport.filter(addaction =>
-                    ['AddActionEntreprise', 'AddActionDate', 'AddActionSecteur', 'AddAction',
-                        'AddActionQui', 'AddActoinmoi', 'AddActionDange', 'AddActionanne']
-                        .some(field => {
-                            const value = addaction[field];
-                            // Vérification et conversion sécurisée en chaîne
-                            return value != null && String(value).toLowerCase().includes(searchTermLower);
-                        })
-                );
-            }
-            await handleExportDataAction(dataToExport);
-            showSnackbar('Exportation des données réussie', 'success');
-        } catch (error) {
-            console.error('Erreur lors de l\'exportation des données:', error);
-            showSnackbar('Erreur lors de l\'exportation des données', 'error');
-        }
-    }, [users, isAdmin, userInfo, selectedYears, searchTerm, showSnackbar]);
     const sortByYear = useCallback((a, b) => {
         return parseInt(a.AddActionanne) - parseInt(b.AddActionanne);
     }, []);
