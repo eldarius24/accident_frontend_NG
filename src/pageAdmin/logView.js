@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import axios from 'axios';
 import {
   Table,
@@ -27,6 +27,7 @@ import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import { useTheme } from '../pageAdmin/user/ThemeContext';
 import { useUserConnected } from '../Hook/userConnected';
 import config from '../config.json';
+import '../pageFormulaire/formulaire.css';
 
 const apiUrl = config.apiUrl || 'localhost';
 
@@ -51,9 +52,12 @@ const LogsViewer = () => {
   const [totalPages, setTotalPages] = useState(1);
   const logsPerPage = 200;
 
-  const rowColors = darkMode
-    ? ['#7a7a7a', '#979797']
-    : ['#e62a5625', '#95519b25'];
+  const rowColors = useMemo(() =>
+    darkMode
+      ? ['#7a7a7a', '#979797']  // Couleurs pour le thème sombre
+      : ['#e62a5625', '#95519b25'],  // Couleurs pour le thème clair
+    [darkMode]
+  );
 
   const showSnackbar = useCallback((message, severity = 'info') => {
     setSnackbar({ open: true, message, severity });
@@ -335,12 +339,12 @@ const LogsViewer = () => {
 
   return (
     <>
-      <Paper sx={{
+      <Paper style={{
         p: 3,
-        backgroundColor: darkMode ? '#2a2a2a' : '#ffffff',
+        backgroundColor: darkMode ? '#6e6e6e' : '#ffffff',
         color: darkMode ? '#ffffff' : '#000000',
+        margin: '0 20px'
       }}>
-
 
         <h2>Logs Système</h2>
 
@@ -423,12 +427,21 @@ const LogsViewer = () => {
               </Button>
             </Tooltip>
           </Grid>
-
           <Grid item xs={12}>
-            <TableContainer sx={{ maxHeight: 440 }}>
-              <Table stickyHeader>
+            <TableContainer className="frameStyle-style"
+              style={{
+                maxHeight: '600px',
+                overflowY: 'auto',
+                backgroundColor: darkMode ? '#6e6e6e' : '#ffffff',
+              }}>
+              <Table>
                 <TableHead>
-                  <TableRow>
+                  <TableRow
+                    className={`table-row-separatormenu ${darkMode ? 'dark-separator' : ''}`}
+                    style={{
+                      backgroundColor: darkMode ? '#535353' : '#0098f950'
+                    }}
+                  >
                     <TableCell>Date</TableCell>
                     <TableCell>Utilisateur</TableCell>
                     <TableCell>Type d'action</TableCell>
@@ -438,14 +451,17 @@ const LogsViewer = () => {
                 </TableHead>
                 <TableBody>
                   {filteredLogs.length === 0 ? (
-                    <TableRow>
+                    <TableRow >
                       <TableCell colSpan={5} align="center">
                         {loading ? 'Chargement...' : 'Aucun log trouvé'}
                       </TableCell>
                     </TableRow>
                   ) : (
                     filteredLogs.map((log, index) => (
-                      <TableRow key={log._id || index} sx={{ backgroundColor: rowColors[index % 2] }}>
+                      <TableRow key={log._id || index} className={`table-row-separatormenu ${darkMode ? 'dark-separator' : ''}`}
+                        style={{
+                          backgroundColor: rowColors[index % rowColors.length]
+                        }}>
                         <TableCell>{formatDate(log.timestamp)}</TableCell>
                         <TableCell>{log.userName}</TableCell>
                         <TableCell>
@@ -461,7 +477,7 @@ const LogsViewer = () => {
                 </TableBody>
               </Table>
             </TableContainer>
-            <Pagination count={totalPages} page={page} onChange={handlePageChange} color="primary" />
+            <Pagination style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }} count={totalPages} page={page} onChange={handlePageChange} color="primary" />
           </Grid>
         </Grid>
       </Paper >
@@ -479,8 +495,14 @@ const LogsViewer = () => {
           {snackbar.message}
         </Alert>
       </Snackbar>
+      <div className="image-cortigroupe"></div>
+      <Tooltip title="Si vous rencontrez un souci avec le site, envoyer un mail à l'adresse suivante : bgillet.lecortil@cortigroupe.be et expliquer le soucis rencontré" arrow>
+        <h5 style={{ marginBottom: '40px' }}> Développé par Remy et Benoit pour Le Cortigroupe. Support: bgillet.lecortil@cortigroupe.be</h5>
+      </Tooltip>
     </>
+
   );
+
 };
 
 export default LogsViewer;
