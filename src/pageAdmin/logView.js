@@ -40,7 +40,7 @@ const LogsViewer = () => {
   const [filteredLogs, setFilteredLogs] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const today = new Date().toISOString().split('T')[0];
-  const [selectedDate, setSelectedDate] = useState('');
+  const [selectedDate, setSelectedDate] = useState(today);
   const [selectedType, setSelectedType] = useState('all');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -171,7 +171,7 @@ const LogsViewer = () => {
 
   const handleReset = useCallback(() => {
     setSearchTerm('');
-    setSelectedDate('all');
+    setSelectedDate(today);
     setSelectedType('all');
     setLogs([]); // Vide les logs avant de recharger
     fetchLogs();
