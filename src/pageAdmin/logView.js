@@ -228,8 +228,7 @@ const LogsViewer = () => {
 
         <h2>Logs Système</h2>
 
-        <Grid container item xs={12} spacing={2} sx={{ mb: 3 }}>
-
+        <Grid container item xs={12} spacing={2} sx={{ mb: 3,justifyContent: 'center' }}>
           <Grid item xs={12} md={3}>
             <FormControl fullWidth sx={{ backgroundColor: '#ee752d60' }}>
               <InputLabel>Type d'action</InputLabel>
@@ -371,12 +370,12 @@ const LogsViewer = () => {
       </div >
       <Snackbar
         open={snackbar.open}
-        autoHideDuration={6000}
+        autoHideDuration={2000}
         onClose={() => setSnackbar(prev => ({ ...prev, open: false }))}
       >
         <Alert
           severity={snackbar.severity}
-          sx={{ width: '100%' }}
+          sx={{width: '100%',fontSize: '1rem', padding: '10px', outline: '3px solid green' }}
           onClose={() => setSnackbar(prev => ({ ...prev, open: false }))}
         >
           {snackbar.message}
