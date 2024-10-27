@@ -30,9 +30,9 @@ export const handleExportDataAssurance = async ({
 
         // Création du log pour l'export
         await logAction({
-            actionType: 'téléchargement',
+            actionType: 'export',
             details: `Export Excel des données d'assurance - ${dataToExport.length} déclarations exportées - Période: ${new Date().toLocaleDateString()}`,
-            entity: 'Export Assurance',
+            entity: 'Export',
             entityId: null,
             entreprise: userInfo.entreprisesConseillerPrevention?.[0] || 'Toutes'
         });

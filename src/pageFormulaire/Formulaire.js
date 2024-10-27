@@ -14,6 +14,7 @@ import FormulaireDeclarationASSBelfius from './formulaireDeclarationAssBelfius';
 import config from '../config.json';
 import CustomSnackbar from '../_composants/CustomSnackbar';
 import { Tooltip, Button } from '@mui/material';
+import { useLogger } from '../Hook/useLogger';
 
 const forms = [
     { id: 0, component: FormulaireEntreprise },
@@ -29,6 +30,7 @@ const mandatoryFields = [
 ];
 
 export default function Formulaire() {
+    const { logAction } = useLogger();
     const { state: accidentData } = useLocation();
     const apiUrl = config.apiUrl;
     const [activeStep, setActiveStep] = useState(0);
@@ -83,8 +85,22 @@ export default function Formulaire() {
         const method = accidentData ? 'put' : 'post';
 
         axios[method](url, data)
-            .then(response => {
+            .then(async response => {
                 console.log(`Réponse du serveur en ${accidentData ? 'modification' : 'création'} :`, response.data);
+
+                // Création du log
+                try {
+                    await logAction({
+                        actionType: accidentData ? 'modification' : 'creation',
+                        details: `${accidentData ? 'Modification' : 'Création'} d'un accident du travail - Travailleur: ${data.nomTravailleur} ${data.prenomTravailleur} - Date: ${new Date(data.DateHeureAccident).toLocaleDateString()}`,
+                        entity: 'Accident',
+                        entityId: accidentData?._id || response.data._id,
+                        entreprise: data.entrepriseName
+                    });
+                } catch (logError) {
+                    console.error('Erreur lors de la création du log:', logError);
+                }
+
                 showSnackbar(`Accident en cours de ${accidentData ? 'édition' : 'création'}`, 'success');
                 setTimeout(() => showSnackbar(`Accident ${accidentData ? 'édité' : 'créé'} avec succès`, 'success'), 1000);
                 setTimeout(() => navigate('/'), 2000);
@@ -93,7 +109,7 @@ export default function Formulaire() {
                 console.error('Erreur de requête:', error.message);
                 showSnackbar(`Erreur lors de la ${accidentData ? 'modification' : 'création'} de l'accident`, 'error');
             });
-    }, [accidentData, apiUrl, navigate, showSnackbar]);
+    }, [accidentData, apiUrl, navigate, showSnackbar, logAction]);
 
     const handleStepChange = useCallback((direction) => {
         setActiveStep(prevStep => prevStep + direction);
@@ -136,7 +152,7 @@ export default function Formulaire() {
     ), [activeStep, handleStepChange]);
 
     return (
-        <form className="background-image" onSubmit={handleSubmit(onSubmit)} style={{margin: '0 20px'}}>
+        <form className="background-image" onSubmit={handleSubmit(onSubmit)} style={{ margin: '0 20px' }}>
             {renderNavigationButtons('top')}
             {React.createElement(forms[activeStep].component, { setValue, accidentData, watch })}
             {renderNavigationButtons('bottom')}

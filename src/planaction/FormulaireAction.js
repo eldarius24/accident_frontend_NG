@@ -19,10 +19,12 @@ import DatePickerQ from '../_composants/datePickerQ';
 import listeaddaction from '../liste/listeaddaction.json';
 import { useUserConnected } from '../Hook/userConnected';
 import CustomSnackbar from '../_composants/CustomSnackbar';
+import { useLogger } from '../Hook/useLogger';
 
 const apiUrl = config.apiUrl;
 
 export default function FormulaireAction() {
+    const { logAction } = useLogger();
     const { state: actionData } = useLocation();
     const [users, setAddactions] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -199,10 +201,23 @@ export default function FormulaireAction() {
         const method = actionData ? 'put' : 'post';
 
         axios[method](url, formData)
-            .then(response => {
-                console.log(`Réponse du serveur:`, response.data);
-                showSnackbar(`Action ${actionData ? 'modifiée' : 'créée'} avec succès`, 'success');
-                setTimeout(() => navigate('/planAction'), 750);
+            .then(async response => {
+                console.log(`Réponse du serveur en ${actionData ? 'modification' : 'création'} :`, response.data);
+                // Création du log
+                try {
+                    await logAction({
+                        actionType: actionData ? 'modification' : 'creation',
+                        details: `${actionData ? 'Modification' : 'Création'} d'un plan d'action - pour l'année: ${data.AddActionanne} Risque: ${AddActionDange.join(', ')} - Date: ${new Date(AddActionDate).toLocaleDateString()} - Entreprise: ${AddActionEntreprise}`,
+                        entity: 'Plan action',
+                        entityId: actionData?._id || response.data._id,
+                        entreprise: AddActionEntreprise
+                    });
+                } catch (logError) {
+                    console.error('Erreur lors de la création du log:', logError);
+                }
+                showSnackbar(`Action en cours de ${actionData ? 'édition' : 'création'}`, 'success');
+                setTimeout(() => showSnackbar(`Action ${actionData ? 'éditée' : 'créée'} avec succès`, 'success'), 1000);
+                setTimeout(() => navigate('/planAction'), 2000);
             })
             .catch(error => {
                 console.error('Erreur complète:', error);
@@ -211,7 +226,7 @@ export default function FormulaireAction() {
                 console.error('Headers de l\'erreur:', error.response?.headers);
                 showSnackbar(`Erreur lors de la ${actionData ? 'modification' : 'création'} de l'action`, 'error');
             });
-    }, [actionData, apiUrl, navigate, showSnackbar, AddActionEntreprise, AddActionSecteur, AddActionDate, AddActionQui, AddAction, AddboolStatus, AddActionDange, AddActionanne, AddActoinmoi]);
+    }, [logAction, actionData, apiUrl, navigate, showSnackbar, AddActionEntreprise, AddActionSecteur, AddActionDate, AddActionQui, AddAction, AddboolStatus, AddActionDange, AddActionanne, AddActoinmoi]);
 
     if (loading) {
         return <LinearProgress color="success" />;
@@ -274,7 +289,6 @@ export default function FormulaireAction() {
                 defaultValue={AddActionDange}
                 required={true}
             />
-
             <div style={{ display: 'flex', justifyContent: 'center' }}>
                 <Tooltip title={`Cliquez ici pour ${actionData ? 'modifier' : 'créer'} l'action (certains champs doivent être obligatoirement remplis)`} arrow>
                     <Button

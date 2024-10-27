@@ -103,8 +103,10 @@ export default function MultipleAutoComplete({
             onChange={handleChange}
             onBlur={() => setTouched(true)}
             renderOption={(props, option, { selected }) => {
+                // Extract key from props and rest of the properties
+                const { key, ...otherProps } = props;
                 return (
-                    <li {...props}>
+                    <li key={key} {...otherProps}>
                         <Checkbox
                             icon={icon}
                             checkedIcon={checkedIcon}

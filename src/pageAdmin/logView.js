@@ -205,8 +205,10 @@ const LogsViewer = () => {
 
   const getActionTypeStyle = useCallback((type) => {
     const styles = {
-      téléchargement: { backgroundColor: '#c8e6c9', color: '#388e3c' },
+      export: { backgroundColor: '#c8e6c9', color: '#388e3c' },
+      import: { backgroundColor: '#c8e6c9', color: '#388e3c' },
       connexion: { backgroundColor: '#a5d6a7', color: '#366637' },
+      déconnexion: { backgroundColor: '#e0e0e0', color: '#616161' },
       creation: { backgroundColor: '#a5d6a7', color: '#2e7d32' },
       modification: { backgroundColor: '#90caf9', color: '#1976d2' },
       suppression: { backgroundColor: '#ef9a9a', color: '#d32f2f' },
@@ -264,14 +266,15 @@ const LogsViewer = () => {
                 label="Type d'action"
               >
                 <MenuItem value="all">Toutes les actions</MenuItem>
-                <MenuItem value="téléchargement">Téléchargement</MenuItem>
+                <MenuItem value="export">Export</MenuItem>
                 <MenuItem value="error">Error</MenuItem>
+                <MenuItem value="import">Import</MenuItem>
+                <MenuItem value="déconnexion">Déconnexion</MenuItem>
                 <MenuItem value="connexion">Connexion</MenuItem>
                 <MenuItem value="creation">Création</MenuItem>
                 <MenuItem value="modification">Modification</MenuItem>
                 <MenuItem value="suppression">Suppression</MenuItem>
                 <MenuItem value="consultation">Consultation</MenuItem>
-                <MenuItem value="error">Erreur</MenuItem>
               </Select>
             </FormControl>
           </Grid>

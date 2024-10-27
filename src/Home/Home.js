@@ -125,13 +125,13 @@ function Home() {
         try {
             // Récupère les informations de l'accident avant la suppression
             const accidentToDelete = accidents.find(item => item._id === accidentIdToDelete);
-            
+
             const response = await axios.delete(`http://${apiUrl}:3100/api/accidents/${accidentIdToDelete}`);
-            
+
             if ([200, 204].includes(response.status)) {
                 // Met à jour la liste des accidents en supprimant l'accident supprimé
                 setAccidents(prevAccidents => prevAccidents.filter(item => item._id !== accidentIdToDelete));
-                
+
                 // Crée un log pour la suppression
                 await logAction({
                     actionType: 'suppression',
@@ -168,16 +168,16 @@ function Home() {
             try {
                 // Génère le PDF avec les données de l'accident
                 await editPDF(accident);
-                
+
                 // Crée un log pour le téléchargement en utilisant les données de l'accident trouvé
                 await logAction({
-                    actionType: 'téléchargement',
+                    actionType: 'export',
                     details: `Téléchargement de la déclaration PDF - Travailleur: ${accident.nomTravailleur} ${accident.prenomTravailleur} - Date: ${new Date(accident.DateHeureAccident).toLocaleDateString()}`,
-                    entity: 'Accident',
+                    entity: 'Export',
                     entityId: accidentIdToGenerate,
                     entreprise: accident.entrepriseName
                 });
-    
+
                 // Affiche une snackbar pour indiquer que l'opération a réussi
                 showSnackbar('PDF généré avec succès', 'success');
             } catch (error) {
@@ -197,25 +197,16 @@ function Home() {
      * 
      * @param {string} accidentIdToModify L'ID de l'accident à modifier.
      */
-    
+
     const handleEdit = useCallback(async (accidentIdToModify) => {
         try {
             // Récupère les données de l'accident avec l'ID passé en paramètre
             const { data } = await axios.get(`http://${apiUrl}:3100/api/accidents/${accidentIdToModify}`);
-            
-            // Création du log avec les données récupérées
-            await logAction({
-                actionType: 'modification',
-                details: `Modification de l'accident du travail - Travailleur: ${data.nomTravailleur} ${data.prenomTravailleur} - Date: ${new Date(data.DateHeureAccident).toLocaleDateString()}`,
-                entity: 'Accident',
-                entityId: accidentIdToModify,
-                entreprise: data.entrepriseName
-            });
-    
+
             // Redirige l'utilisateur vers la page de formulaire en passant en paramètre
             // l'objet accident complet
             navigate("/formulaire", { state: data });
-    
+
             // Affiche une snackbar pour indiquer que l'opération a réussi
             showSnackbar('Modification de l accident initiée', 'info');
         } catch (error) {
@@ -275,11 +266,11 @@ function Home() {
         const years = yearsChecked.map(Number);
         // Met en minuscule le terme de recherche pour une comparaison insensible à la casse
         const searchTermLower = searchTerm.toLowerCase();
-        
+
         // Filtre les accidents selon les années et le terme de recherche
         return accidents.filter(item => {
             if (!item.DateHeureAccident) return false; // Exclut les accidents sans date
-            
+
             const date = new Date(item.DateHeureAccident).getFullYear(); // Extrait l'année de la date de l'accident
             // Vérifie si l'année est incluse dans les années sélectionnées et si l'un des champs contient le terme de recherche
             return years.includes(date) && ['AssureurStatus', 'DateHeureAccident', 'entrepriseName', 'secteur', 'nomTravailleur', 'prenomTravailleur', 'typeAccident'].some(property =>

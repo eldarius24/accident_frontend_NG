@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Switch, FormControlLabel, AppBar, Toolbar, Typography, Container, Button, Tooltip } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
@@ -14,6 +14,8 @@ import axios from 'axios';
 import config from './config.json';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 import LightModeIcon from '@mui/icons-material/LightMode';
+import { useLogger } from './Hook/useLogger';
+import { useNavigate } from 'react-router-dom';
 /**
  * A responsive app bar that displays different buttons based on the user's
  * privileges and the current page.
@@ -26,6 +28,51 @@ function ResponsiveAppBar() {
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const { darkMode, toggleDarkMode } = useTheme();
   const apiUrl = config.apiUrl;
+  const { logAction } = useLogger();
+  const navigate = useNavigate();
+
+  const handleLogout = useCallback(async () => {
+    try {
+        if (userInfo) {
+            // Crée un log de déconnexion avant de supprimer le token
+            await logAction({
+                actionType: 'déconnexion',
+                details: `Déconnexion de l'utilisateur ${userInfo.userName}`,
+                entity: 'Auth',
+                entityId: userInfo._id,
+                entreprise: userInfo.entreprisesConseillerPrevention?.[0] || null
+            });
+        }
+        
+        // Supprime le token et redirige
+        localStorage.removeItem('token');
+        navigate('/login');
+    } catch (error) {
+        console.error('Erreur lors de la déconnexion:', error);
+    }
+}, [userInfo, logAction, navigate]);
+
+const renderLogoutButton = () => (
+  <Tooltip title="Cliquez ici pour vous déconnecter" arrow>
+      <Button
+          onClick={handleLogout}  // Utilise handleLogout au lieu du lien direct
+          variant="contained"
+          sx={{
+              ...buttonStyle,
+              transition: 'all 0.3s ease-in-out',
+              '&:hover': {
+                  backgroundColor: '#95ad22',
+                  transform: 'scale(1.08)',
+                  boxShadow: 6
+              }
+          }}
+          startIcon={<LogoutIcon />}
+      >
+          {showText && "logout"}
+      </Button>
+  </Tooltip>
+);
+
 
   useEffect(() => {
     document.body.style.backgroundColor = darkMode ? '#6e6e6e' : '#ffffff';
@@ -160,7 +207,7 @@ function ResponsiveAppBar() {
               checkedIcon={<DarkModeIcon />}
             />
           </Tooltip>
-          {renderButton("/login", "Cliquez ici pour vous déconnecter", <LogoutIcon />, "logout")}
+          {renderLogoutButton("/login", "Cliquez ici pour vous déconnecter", <LogoutIcon />, "logout")}
 
           {isAdmin && ['/logView','/', '/addSecteur', '/adminaction', '/adminUser', "/adminEntreprises", "/addEntreprise", "/addUser"].includes(location.pathname) &&
             renderButton("/adminaction", "Cliquez ici accèder à l'espace d'administration", <AdminPanelSettingsIcon />, "Admin")}

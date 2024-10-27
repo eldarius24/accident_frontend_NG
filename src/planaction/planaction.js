@@ -26,7 +26,7 @@ import createUpdateUserSelectedYears from './updateUserSelecterYears';
 import createFilteredUsers from './filteredUsers';
 import createFetchData from './fetchData.js';
 import createHandleExport from './handleExport';
-
+import { useLogger } from '../Hook/useLogger';
 const apiUrl = config.apiUrl;
 
 /**
@@ -35,6 +35,7 @@ const apiUrl = config.apiUrl;
  * @returns {JSX.Element} La page du plan d'action
  */
 export default function PlanAction({ accidentData }) {
+    const { logAction } = useLogger();
     const { darkMode } = useTheme();
     const [users, setAddactions] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -67,8 +68,16 @@ export default function PlanAction({ accidentData }) {
     }, []);
 
     const handleExport = useCallback(
-        createHandleExport(users, isAdmin, userInfo, selectedYears, searchTerm, showSnackbar),
-        [users, isAdmin, userInfo, selectedYears, searchTerm, showSnackbar]
+        createHandleExport(
+            users, 
+            isAdmin, 
+            userInfo, 
+            selectedYears, 
+            searchTerm, 
+            showSnackbar,
+            logAction  // Ajout du paramètre logAction
+        ),
+        [users, isAdmin, userInfo, selectedYears, searchTerm, showSnackbar, logAction]
     );
 
     const updateUserSelectedYears = useCallback(
@@ -149,15 +158,30 @@ export default function PlanAction({ accidentData }) {
         return `${day}-${month}-${year}`;
     };
 
-    const handleEdit = useCallback((actionIdToModify) => {
-        const actionToEdit = users.find(action => action._id === actionIdToModify);
-        if (actionToEdit) {
-            navigate("/formulaireAction", { state: actionToEdit });
-            showSnackbar('Modification de l\'action initiée', 'info');
-        } else {
-            showSnackbar('Erreur : Action non trouvée', 'error');
+    const handleEdit = useCallback(async (actionIdToModify) => {
+        try {
+            const actionToEdit = users.find(action => action._id === actionIdToModify);
+            if (actionToEdit) {
+                // Crée un log pour l'édition
+                await logAction({
+                    actionType: 'modification',
+                    details: `Début de modification de l'action - Action: ${actionToEdit.AddAction} - Entreprise: ${actionToEdit.AddActionEntreprise} - Année: ${actionToEdit.AddActionanne}`,
+                    entity: 'Plan Action',
+                    entityId: actionIdToModify,
+                    entreprise: actionToEdit.AddActionEntreprise
+                });
+    
+                // Redirige vers le formulaire d'édition
+                navigate("/formulaireAction", { state: actionToEdit });
+                showSnackbar('Modification de l\'action initiée', 'info');
+            } else {
+                showSnackbar('Erreur : Action non trouvée', 'error');
+            }
+        } catch (error) {
+            console.error('Erreur lors de l\'initialisation de la modification:', error);
+            showSnackbar('Erreur lors de l\'initialisation de la modification', 'error');
         }
-    }, [navigate, users, showSnackbar]);
+    }, [navigate, users, showSnackbar, logAction]);
 
     const fetchData = useCallback(
         createFetchData(apiUrl)(
@@ -217,21 +241,39 @@ export default function PlanAction({ accidentData }) {
 
     }, [users, isAdmin, userInfo?.entreprisesConseillerPrevention]);
 
-    const handleDelete = useCallback((userIdToDelete) => {
-        axios.delete(`http://${apiUrl}:3100/api/planaction/${userIdToDelete}`)
-            .then(response => {
-                if (response.status === 204 || response.status === 200) {
-                    setAddactions(prevAddactions => prevAddactions.filter(addaction => addaction._id !== userIdToDelete));
-                    showSnackbar('Action supprimée avec succès', 'success');
-                } else {
-                    showSnackbar(`Erreur lors de la suppression de l'action: ${response.status} ${response.statusText}`, 'error');
-                }
-            })
-            .catch(error => {
-                console.error(error);
-                showSnackbar('Erreur lors de la suppression de l\'action', 'error');
-            });
-    }, [showSnackbar]);
+    const handleDelete = useCallback(async (userIdToDelete) => {
+        try {
+            // Récupère les informations de l'action avant la suppression
+            const actionToDelete = users.find(action => action._id === userIdToDelete);
+            if (!actionToDelete) {
+                showSnackbar('Erreur : Action non trouvée', 'error');
+                return;
+            }
+    
+            const response = await axios.delete(`http://${apiUrl}:3100/api/planaction/${userIdToDelete}`);
+            
+            if (response.status === 204 || response.status === 200) {
+                // Met à jour la liste des actions localement
+                setAddactions(prevAddactions => prevAddactions.filter(addaction => addaction._id !== userIdToDelete));
+                
+                // Crée un log pour la suppression
+                await logAction({
+                    actionType: 'suppression',
+                    details: `Suppression de l'action - Action: ${actionToDelete.AddAction} - Entreprise: ${actionToDelete.AddActionEntreprise} - Année: ${actionToDelete.AddActionanne}`,
+                    entity: 'Plan Action',
+                    entityId: userIdToDelete,
+                    entreprise: actionToDelete.AddActionEntreprise
+                });
+    
+                showSnackbar('Action supprimée avec succès', 'success');
+            } else {
+                showSnackbar(`Erreur lors de la suppression de l'action: ${response.status} ${response.statusText}`, 'error');
+            }
+        } catch (error) {
+            console.error(error);
+            showSnackbar('Erreur lors de la suppression de l\'action', 'error');
+        }
+    }, [apiUrl, users, logAction, showSnackbar]);
 
     const refreshListAccidents = useCallback(() => {
         setLoading(true);
