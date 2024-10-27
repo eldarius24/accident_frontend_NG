@@ -137,7 +137,7 @@ const LogsViewer = () => {
       isMounted.current = true;
     }
     fetchLogs();
-  }, [fetchLogs, page]); // Dépendances vides pour le chargement initial
+  }, [page]); // Dépendances vides pour le chargement initial
 
 
   /**
