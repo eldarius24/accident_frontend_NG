@@ -38,18 +38,3 @@ export const useLogger = () => {
 
   return { logAction };
 };
-
-// src/utils/loggerMiddleware.js
-export const logApiAction = async (userInfo, action) => {
-  if (!userInfo || !action) return;
-
-  try {
-    await axios.post(`http://${config.apiUrl}:3100/api/logs`, {
-      userId: userInfo._id,
-      userName: userInfo.userName,
-      ...action
-    });
-  } catch (error) {
-    console.error('Erreur middleware de log:', error);
-  }
-};

@@ -25,7 +25,7 @@ import CustomSnackbar from '../_composants/CustomSnackbar';
 import { useTheme } from '../pageAdmin/user/ThemeContext';
 import { handleExportDataAccident } from './_actions/exportAcci';
 import { handleExportDataAssurance } from './_actions/exportAss';
-
+import { useLogger } from '../Hook/useLogger';
 const apiUrl = config.apiUrl;
 
 /**
@@ -46,6 +46,7 @@ function Home() {
     const [searchTerm, setSearchTerm] = useState('');
     const { isAdmin, isAdminOuConseiller, userInfo, isConseiller } = useUserConnected();
     const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'info' });
+    const { logAction } = useLogger();  // Ajout du hook useLogger
 
     /**
      * Renvoie un tableau de deux couleurs pour le background des lignes de la table.
@@ -120,25 +121,38 @@ function Home() {
      * 
      * @param {string} accidentIdToDelete - L'ID de l'accident à supprimer.
      */
-    const handleDelete = useCallback((accidentIdToDelete) => {
-        axios.delete(`http://${apiUrl}:3100/api/accidents/${accidentIdToDelete}`)
-            .then(response => {
-                if ([200, 204].includes(response.status)) {
-                    // Met à jour la liste des accidents en supprimant l'accident supprimé
-                    setAccidents(prevAccidents => prevAccidents.filter(item => item._id !== accidentIdToDelete));
-                    // Affiche un message de succès dans la snackbar
-                    showSnackbar('Accident supprimé avec succès', 'success');
-                } else {
-                    // Affiche un message d'erreur pour un statut de réponse inattendu
-                    showSnackbar(`Erreur lors de la suppression de l'accident: ${response.status} ${response.statusText}`, 'error');
-                }
-            })
-            .catch(error => {
-                // Affiche un message d'erreur en cas d'échec de la requête
-                console.error(error);
-                showSnackbar('Erreur lors de la suppression de l accident', 'error');
-            });
-    }, [apiUrl, showSnackbar]);
+    const handleDelete = useCallback(async (accidentIdToDelete) => {
+        try {
+            // Récupère les informations de l'accident avant la suppression
+            const accidentToDelete = accidents.find(item => item._id === accidentIdToDelete);
+            
+            const response = await axios.delete(`http://${apiUrl}:3100/api/accidents/${accidentIdToDelete}`);
+            
+            if ([200, 204].includes(response.status)) {
+                // Met à jour la liste des accidents en supprimant l'accident supprimé
+                setAccidents(prevAccidents => prevAccidents.filter(item => item._id !== accidentIdToDelete));
+                
+                // Crée un log pour la suppression
+                await logAction({
+                    actionType: 'suppression',
+                    details: `Suppression de l'accident du travail - Travailleur: ${accidentToDelete.nomTravailleur} ${accidentToDelete.prenomTravailleur} - Date: ${new Date(accidentToDelete.DateHeureAccident).toLocaleDateString()}`,
+                    entity: 'Accident',
+                    entityId: accidentIdToDelete,
+                    entreprise: accidentToDelete.entrepriseName
+                });
+
+                // Affiche un message de succès dans la snackbar
+                showSnackbar('Accident supprimé avec succès', 'success');
+            } else {
+                // Affiche un message d'erreur pour un statut de réponse inattendu
+                showSnackbar(`Erreur lors de la suppression de l'accident: ${response.status} ${response.statusText}`, 'error');
+            }
+        } catch (error) {
+            // Affiche un message d'erreur en cas d'échec de la requête
+            console.error(error);
+            showSnackbar('Erreur lors de la suppression de l accident', 'error');
+        }
+    }, [apiUrl, showSnackbar, accidents, logAction]);
 
     /**
      * Génère un PDF pour l'accident passé en paramètre
@@ -154,6 +168,16 @@ function Home() {
             try {
                 // Génère le PDF avec les données de l'accident
                 await editPDF(accident);
+                
+                // Crée un log pour le téléchargement en utilisant les données de l'accident trouvé
+                await logAction({
+                    actionType: 'téléchargement',
+                    details: `Téléchargement de la déclaration PDF - Travailleur: ${accident.nomTravailleur} ${accident.prenomTravailleur} - Date: ${new Date(accident.DateHeureAccident).toLocaleDateString()}`,
+                    entity: 'Accident',
+                    entityId: accidentIdToGenerate,
+                    entreprise: accident.entrepriseName
+                });
+    
                 // Affiche une snackbar pour indiquer que l'opération a réussi
                 showSnackbar('PDF généré avec succès', 'success');
             } catch (error) {
@@ -165,7 +189,7 @@ function Home() {
             // Affiche une erreur si l'accident n'a pas été trouvé
             showSnackbar('Accident non trouvé', 'error');
         }
-    }, [accidents, showSnackbar]);
+    }, [accidents, showSnackbar, logAction]); // Ajout de logAction dans les dépendances
 
     /**
      * Redirige l'utilisateur vers la page de modification d'un accident de travail
@@ -173,15 +197,25 @@ function Home() {
      * 
      * @param {string} accidentIdToModify L'ID de l'accident à modifier.
      */
+    
     const handleEdit = useCallback(async (accidentIdToModify) => {
         try {
             // Récupère les données de l'accident avec l'ID passé en paramètre
             const { data } = await axios.get(`http://${apiUrl}:3100/api/accidents/${accidentIdToModify}`);
-
+            
+            // Création du log avec les données récupérées
+            await logAction({
+                actionType: 'modification',
+                details: `Modification de l'accident du travail - Travailleur: ${data.nomTravailleur} ${data.prenomTravailleur} - Date: ${new Date(data.DateHeureAccident).toLocaleDateString()}`,
+                entity: 'Accident',
+                entityId: accidentIdToModify,
+                entreprise: data.entrepriseName
+            });
+    
             // Redirige l'utilisateur vers la page de formulaire en passant en paramètre
             // l'objet accident complet
             navigate("/formulaire", { state: data });
-
+    
             // Affiche une snackbar pour indiquer que l'opération a réussi
             showSnackbar('Modification de l accident initiée', 'info');
         } catch (error) {
@@ -189,7 +223,7 @@ function Home() {
             console.error(error);
             showSnackbar('Erreur lors de la récupération des données de l accident', 'error');
         }
-    }, [apiUrl, navigate, showSnackbar]);
+    }, [apiUrl, navigate, showSnackbar, logAction]); // Ajout de logAction dans les dépendances
 
     /**
      * Rafraichit la liste des accidents en appelant la fonction getAccidents.
@@ -254,12 +288,15 @@ function Home() {
         });
     }, [accidents, yearsChecked, searchTerm]);
 
+
     /**
-     * Exporte les données filtrées vers un fichier Excel.
+     * Exporte les données d'accidents vers un fichier Excel.
+     * 
      * @param {object} params - Les paramètres d'exportation
      * @param {object[]} params.filteredData - Les données filtrées à exporter
      * @param {boolean} params.isAdmin - Si l'utilisateur est administrateur
      * @param {object} params.userInfo - Les informations de l'utilisateur
+     * @param {function} params.logAction - La fonction pour créer des logs
      * @param {function} [params.onSuccess] - La fonction à appeler en cas de succès
      * @param {function} [params.onError] - La fonction à appeler en cas d'erreur
      */
@@ -268,18 +305,20 @@ function Home() {
             filteredData,
             isAdmin,
             userInfo,
+            logAction, // Ajout de la fonction logAction
             onSuccess: (message) => showSnackbar(message, 'success'),
             onError: (message) => showSnackbar(message, 'error')
         });
-    }, [filteredData, isAdmin, userInfo, showSnackbar]);
-
+    }, [filteredData, isAdmin, userInfo, logAction, showSnackbar]);
 
     /**
-     * Exporte les données filtrées vers un fichier Excel.
+     * Exporte les données d'assurance vers un fichier Excel.
+     * 
      * @param {object} params - Les paramètres d'exportation
      * @param {object[]} params.filteredData - Les données filtrées à exporter
      * @param {boolean} params.isAdmin - Si l'utilisateur est administrateur
      * @param {object} params.userInfo - Les informations de l'utilisateur
+     * @param {function} params.logAction - La fonction pour créer des logs
      * @param {function} [params.onSuccess] - La fonction à appeler en cas de succès
      * @param {function} [params.onError] - La fonction à appeler en cas d'erreur
      */
@@ -288,10 +327,12 @@ function Home() {
             filteredData,
             isAdmin,
             userInfo,
+            logAction, // Ajout de la fonction logAction
             onSuccess: (message) => showSnackbar(message, 'success'),
             onError: (message) => showSnackbar(message, 'error')
         });
-    }, [filteredData, isAdmin, userInfo, showSnackbar]);
+    }, [filteredData, isAdmin, userInfo, logAction, showSnackbar]);
+
 
     /**
      * Met à jour les années sélectionnées en fonction de la nouvelle valeur reçue via l'événement de changement.
