@@ -9,12 +9,13 @@ import CloseIcon from '@mui/icons-material/Close';
 import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutline';
 import { confirmAlert } from 'react-confirm-alert';
 import { saveAs } from 'file-saver';
-import deleteFile from "./deleteFile";
 import CustomSnackbar from '../../_composants/CustomSnackbar';
 import FileViewer from './fileViewer';
 import getPreview from "./getPreview";
 import handleRenameFile from "./handleRenameFile";
 import { blueGrey } from '@mui/material/colors';
+import { useLogger } from '../../Hook/useLogger';
+import deleteFile, { getAccidentDetails } from "./deleteFile";
 
 const modalStyle = {
     position: 'absolute',
@@ -37,6 +38,7 @@ const modalStyle = {
  * @returns {JSX.Element} Liste des fichiers associés à l'accident
  */
 export default function ListFilesInAccident(accidentId) {
+    const { logAction } = useLogger();
     const [files, setFiles] = useState([]);
     const [previews, setPreviews] = useState({});
     const [selectedFile, setSelectedFile] = useState(null);
@@ -111,7 +113,24 @@ export default function ListFilesInAccident(accidentId) {
      */
     async function handleDeleteFile(fileId) {
         try {
-            await deleteFile({ fileId, accidentId });
+            const fileToDelete = files.find(file => file.fileId === fileId);
+            const accidentDetails = await getAccidentDetails(accidentId);
+
+            await deleteFile({
+                fileId,
+                accidentId,
+                fileName: fileToDelete.fileName,
+                async onDeleteSuccess() {
+                    await logAction({
+                        actionType: 'suppression',
+                        details: `Suppression du fichier - Nom: ${fileToDelete.fileName} - Travailleur: ${accidentDetails?.nomTravailleur} ${accidentDetails?.prenomTravailleur} - Date accident: ${accidentDetails?.dateAccident}`,
+                        entity: 'Accident',
+                        entityId: fileId,
+                        entreprise: accidentDetails?.entreprise || null
+                    });
+                }
+            });
+
             const updatedFiles = files.filter(file => file.id !== fileId);
             setFiles(updatedFiles);
             showSnackbar('Fichier en cours de suppression', 'success');
@@ -194,16 +213,34 @@ export default function ListFilesInAccident(accidentId) {
 
 
     /**
-     * Télécharge un fichier de la base de données.
-     * @param {{fileId: string, fileName: string}} options - Les informations du fichier à télécharger.
-     * @throws {Error} Si le fichier n'a pas pu être téléchargé.
-     */
+  * Télécharge un fichier et crée un log de l'action.
+  * @param {Object} params Les paramètres de la fonction
+  * @param {string} params.fileId L'ID du fichier
+  * @param {string} params.fileName Le nom du fichier
+  * @param {string} params.accidentId L'ID de l'accident associé
+  */
     const downloadFile = async ({ fileId, fileName }) => {
-        if (!fileId || !fileName) throw new Error('Informations de fichier manquantes');
+        if (!fileId || !fileName) {
+            throw new Error('Informations de fichier manquantes');
+        }
 
         try {
+            // Téléchargement du fichier
             const blob = await getFile(fileId);
             saveAs(blob, fileName);
+
+            // Récupération des détails de l'accident
+            const accidentDetails = await getAccidentDetails(accidentId);
+
+            // Log de l'action de téléchargement
+            await logAction({
+                actionType: 'export',
+                details: `Téléchargement du fichier - Nom: ${fileName} - Travailleur: ${accidentDetails?.nomTravailleur} ${accidentDetails?.prenomTravailleur} - Date accident: ${accidentDetails?.dateAccident}`,
+                entity: 'Accident',
+                entityId: fileId,
+                entreprise: accidentDetails?.entreprise || null
+            });
+
             showSnackbar('Téléchargement réussi', 'success');
         } catch (error) {
             console.error('Erreur de téléchargement:', error);
@@ -298,7 +335,7 @@ export default function ListFilesInAccident(accidentId) {
                                                 boxShadow: 6
                                             }
                                         }}
-                                        onClick={() => downloadFile({ fileId: file.fileId, fileName: file.fileName })}
+                                        onClick={() => downloadFile({ fileId: file.fileId, fileName: file.fileName, accidentId: accidentId })}
                                         variant="contained"
                                         color="primary"
                                     >
@@ -395,8 +432,10 @@ export default function ListFilesInAccident(accidentId) {
                         <FileViewer
                             file={selectedFile}
                             fileContent={previews[selectedFile.fileId]}
+                            accidentId={accidentId}  // Ajout de l'ID de l'accident
                         />
                     )}
+                    
                 </Box>
             </Modal>
             <CustomSnackbar

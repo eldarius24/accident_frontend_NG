@@ -5,6 +5,7 @@ import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css'; // Importez les styles pour la boîte de dialogue
 import listFilesInAccident from './FilesActions';
 import { Tooltip } from '@mui/material';
+import { useLogger } from '../../Hook/useLogger';
 
 const dropZoneStyle = {
     display: 'flex',
@@ -28,6 +29,24 @@ const labelStyle = {
     transition: 'background-color 0.3s',
 };
 
+const getAccidentDetails = async (accidentId) => {
+    try {
+        const response = await axios.get(`http://localhost:3100/api/accidents/${accidentId}`);
+        if (response.data) {
+            return {
+                nomTravailleur: response.data.nomTravailleur,
+                prenomTravailleur: response.data.prenomTravailleur,
+                entreprise: response.data.entrepriseName,
+                dateAccident: new Date(response.data.DateHeureAccident).toLocaleDateString()
+            };
+        }
+        return null;
+    } catch (error) {
+        console.error('Erreur lors de la récupération des détails de l\'accident:', error);
+        return null;
+    }
+};
+
 /**
  * Page de téléchargement de fichier
  * 
@@ -36,24 +55,35 @@ const labelStyle = {
  */
 export default function PageDownloadFile() {
     const accidentId = useLocation().state;
-
+    const { logAction } = useLogger(); // Ajout du hook useLogger
     /** Fonction pour envoyer un fichier vers le serveur 
      * 
      * @param {*} file Fichier à envoyer
      * @param {string} name Nom du fichier
      */
     const handleFileUpload = async (file, name) => {
-        if (!accidentId) return console.error('Pas d\'accidentId dans le state');
-        if (!file) return console.error('Pas de fichier à envoyer');
+        if (!accidentId || !file) return;
 
         try {
+            // Récupérer les détails de l'accident
+            const accidentDetails = await getAccidentDetails(accidentId);
             const dataFile = new FormData();
             dataFile.append('file', file, name);
+            
             const response = await axios.post(`http://localhost:3100/api/stockFile/${accidentId}`, dataFile, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }
             });
+
+            await logAction({
+                actionType: 'import',
+                details: `Upload de fichier - Nom: ${name} - Taille: ${(file.size / 1024).toFixed(2)}KB - Type: ${file.type} - Travailleur: ${accidentDetails?.nomTravailleur} ${accidentDetails?.prenomTravailleur} - Date accident: ${accidentDetails?.dateAccident}`,
+                entity: 'Accident',
+                entityId: response.data._id || null,
+                entreprise: accidentDetails?.entreprise || null
+            });
+
             console.log('Réponse du serveur :', response.data);
             window.location.reload();
         } catch (error) {

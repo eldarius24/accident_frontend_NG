@@ -2,48 +2,85 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { confirmAlert } from 'react-confirm-alert';
 import { Tooltip, Snackbar, Alert } from '@mui/material';
+import { useLogger } from '../../Hook/useLogger';
 
-/**
- * Component for renaming a file within an accident record.
- *
- * This component displays a dialog for renaming a specific file.
- * It includes a text input for entering the new file name and buttons
- * for confirming or canceling the renaming operation.
- * On confirmation, it updates the file name in the database and the
- * local state, and displays a snackbar message indicating success or error.
- *
- * @param {string} fileId - The ID of the file to rename.
- * @param {string} currentFileName - The current name of the file.
- * @param {string} accidentId - The ID of the accident associated with the file.
- * @param {Array} files - The array of files associated with the accident.
- * @param {Function} setFiles - Function to update the files state.
- * @param {Function} onClose - Function to close the dialog.
- */
+// Fonction pour récupérer les détails de l'accident
+const getAccidentDetails = async (accidentId) => {
+    try {
+        const response = await axios.get(`http://localhost:3100/api/accidents/${accidentId}`);
+        if (response.data) {
+            return {
+                nomTravailleur: response.data.nomTravailleur || '',
+                prenomTravailleur: response.data.prenomTravailleur || '',
+                entreprise: response.data.entrepriseName || '',
+                dateAccident: response.data.DateHeureAccident ? 
+                    new Date(response.data.DateHeureAccident).toLocaleDateString() : ''
+            };
+        }
+        return null;
+    } catch (error) {
+        console.error('Erreur lors de la récupération des détails de l\'accident:', error);
+        return null;
+    }
+};
+
 const RenameDialog = ({ fileId, currentFileName, accidentId, files, setFiles, onClose }) => {
+    const { logAction } = useLogger(); // Hook useLogger à l'intérieur du composant
     const [snackbar, setSnackbar] = useState({
         open: false,
         message: '',
         severity: 'info',
     });
+    const [newFileName, setNewFileName] = useState(currentFileName); // État pour le nouveau nom
 
-    /**
-     * Affiche un message dans une snackbar.
-     * @param {string} message - Le message à afficher.
-     * @param {string} [severity='info'] - La gravité du message. Les valeurs possibles sont 'info', 'success', 'warning' et 'error'.
-     */
     const showSnackbar = (message, severity = 'info') => {
         setSnackbar({ open: true, message, severity });
     };
 
-    /**
-     * Ferme la snackbar si l'utilisateur clique sur le bouton "Fermer" ou en dehors de la snackbar.
-     * Si l'utilisateur clique sur la snackbar elle-même (et non sur le bouton "Fermer"), la snackbar ne se ferme pas.
-     */
     const handleCloseSnackbar = () => {
         setSnackbar({ ...snackbar, open: false });
     };
 
-    let newFileName = currentFileName;
+    const handleRename = async () => {
+        try {
+            // Récupérer les détails de l'accident
+            const accidentDetails = await getAccidentDetails(accidentId);
+            if (!accidentDetails) {
+                throw new Error('Impossible de récupérer les détails de l\'accident');
+            }
+
+            // Mettre à jour le nom du fichier
+            await axios.put(`http://localhost:3100/api/accidents/${accidentId}`, {
+                files: files.map(file =>
+                    file.fileId === fileId
+                        ? { ...file, fileName: newFileName }
+                        : file
+                )
+            });
+
+            // Mettre à jour l'état local
+            setFiles(files.map(file =>
+                file.fileId === fileId
+                    ? { ...file, fileName: newFileName }
+                    : file
+            ));
+
+            // Créer le log
+            await logAction({
+                actionType: 'modification',
+                details: `Renommage de fichier - Ancien nom: ${currentFileName} - Nouveau nom: ${newFileName} - Travailleur: ${accidentDetails.nomTravailleur} ${accidentDetails.prenomTravailleur} - Date accident: ${accidentDetails.dateAccident}`,
+                entity: 'Fichier',
+                entityId: fileId,
+                entreprise: accidentDetails.entreprise
+            });
+
+            showSnackbar('Fichier renommé avec succès', 'success');
+            onClose();
+        } catch (error) {
+            console.error('Erreur lors du renommage du fichier:', error);
+            showSnackbar('Erreur lors du renommage du fichier', 'error');
+        }
+    };
 
     return (
         <>
@@ -52,8 +89,8 @@ const RenameDialog = ({ fileId, currentFileName, accidentId, files, setFiles, on
                 <p className="custom-confirm-message">Entrez le nouveau nom du fichier:</p>
                 <input
                     type="text"
-                    defaultValue={currentFileName}
-                    onChange={(e) => { newFileName = e.target.value; }}
+                    value={newFileName}
+                    onChange={(e) => setNewFileName(e.target.value)}
                     style={{
                         width: '100%',
                         padding: '8px',
@@ -67,29 +104,7 @@ const RenameDialog = ({ fileId, currentFileName, accidentId, files, setFiles, on
                     <Tooltip title="Cliquez pour confirmer le nouveau nom" arrow>
                         <button
                             className="custom-confirm-button"
-                            onClick={async () => {
-                                try {
-                                    await axios.put(`http://localhost:3100/api/accidents/${accidentId}`, {
-                                        files: files.map(file =>
-                                            file.fileId === fileId
-                                                ? { ...file, fileName: newFileName }
-                                                : file
-                                        )
-                                    });
-                                    
-                                    setFiles(files.map(file =>
-                                        file.fileId === fileId
-                                            ? { ...file, fileName: newFileName }
-                                            : file
-                                    ));
-                                    
-                                    showSnackbar('Fichier renommé avec succès', 'success');
-                                    onClose();
-                                } catch (error) {
-                                    console.error('Erreur lors du renommage du fichier:', error);
-                                    showSnackbar('Erreur lors du renommage du fichier', 'error');
-                                }
-                            }}
+                            onClick={handleRename}
                         >
                             Confirmer
                         </button>
@@ -117,35 +132,8 @@ const RenameDialog = ({ fileId, currentFileName, accidentId, files, setFiles, on
     );
 };
 
-/**
- * Opens a confirmation dialog for renaming a file.
- *
- * This function triggers a custom confirmation alert that displays 
- * a dialog for renaming a specific file associated with an accident record.
- * Within the dialog, the user can enter a new file name, which, upon 
- * confirmation, updates the file name both in the local state and 
- * in the database.
- *
- * @param {string} fileId - The ID of the file to rename.
- * @param {string} currentFileName - The current name of the file.
- * @param {string} accidentId - The ID of the accident associated with the file.
- * @param {Array} files - The array of files associated with the accident.
- * @param {Function} setFiles - Function to update the files state.
- */
 const handleRenameFile = (fileId, currentFileName, accidentId, files, setFiles) => {
     confirmAlert({
-        /**
-         * Boîte de dialogue personnalisée pour renommer un fichier
-         * 
-         * La boîte de dialogue affiche un champ de saisie pour renommer le fichier
-         * et deux boutons : "Confirmer" et "Annuler".
-         * Lorsque le bouton "Confirmer" est cliqué, la fonction handleRename est appelée
-         * avec le fichier à renommer, le nouveau nom du fichier et l'id de l'accident.
-         * Lorsque le bouton "Annuler" est cliqué, la fonction onClose est appelée pour fermer la boîte de dialogue.
-         * 
-         * @param {{ onClose: () => void }} props - Fonction pour fermer la boîte de dialogue
-         * @returns {JSX.Element} Le JSX Element qui contient la boîte de dialogue personnalisée
-         */
         customUI: ({ onClose }) => (
             <RenameDialog
                 fileId={fileId}

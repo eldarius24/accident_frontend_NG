@@ -16,23 +16,24 @@ import {
   MenuItem,
   Paper,
   Typography,
-  InputAdornment,
   Tooltip,
   CircularProgress,
   Snackbar,
-  Alert
+  Alert,
+  Pagination
 } from '@mui/material';
-import SearchIcon from '@mui/icons-material/Search';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import { useTheme } from '../pageAdmin/user/ThemeContext';
 import { useUserConnected } from '../Hook/userConnected';
 import config from '../config.json';
 
-
-
 const apiUrl = config.apiUrl || 'localhost';
 
+/**
+ * Component qui affiche la liste des logs du système.
+ * @returns Un élément JSX qui affiche la liste des logs du système.
+ */
 const LogsViewer = () => {
   const { darkMode } = useTheme();
   const { isAdmin, userInfo } = useUserConnected();
@@ -46,6 +47,10 @@ const LogsViewer = () => {
   const [error, setError] = useState(null);
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'info' });
 
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const logsPerPage = 200;
+
   const rowColors = darkMode
     ? ['#7a7a7a', '#979797']
     : ['#e62a5625', '#95519b25'];
@@ -54,17 +59,32 @@ const LogsViewer = () => {
     setSnackbar({ open: true, message, severity });
   }, []);
 
-  const fetchLogs = useCallback(async () => {
+  /**
+   * Fonction qui permet de charger les logs du système.
+   * La fonction utilise `axios` pour envoyer une requête GET vers l'API de logs.
+   * La fonction accepte un objet `params` qui contient les paramètres de la requête.
+   * Les paramètres suivants sont supportés :
+   *   - `date` : la date pour laquelle on souhaite charger les logs.
+   *   - `type` : le type de logs que l'on souhaite charger.
+   *   - `search` : le terme de recherche pour filtrer les logs.
+   *   - `userId` : l'identifiant de l'utilisateur dont on souhaite charger les logs.
+   * La fonction renvoie une promesse qui se résout avec un objet qui contient les logs chargés.
+   * Si une erreur se produit, la fonction renvoie une promesse qui se rejette avec l'erreur.
+   * @param {Object} [params] - Les paramètres de la requête.
+   * @returns {Promise<Object>} - Une promesse qui se résout avec un objet qui contient les logs chargés.
+   */
+  const fetchLogs = useCallback(async (params = {}) => {
     setLoading(true);
     setError(null);
     try {
-      const params = new URLSearchParams();
-      if (selectedDate !== 'all') params.append('date', selectedDate);
-      if (selectedType !== 'all') params.append('type', selectedType);
-      if (searchTerm) params.append('search', searchTerm);
-      if (!isAdmin && userInfo?._id) params.append('userId', userInfo._id);
-
-      const url = `http://${apiUrl}:3100/api/logs?${params}`;
+      const urlParams = new URLSearchParams();
+      if (selectedDate !== 'all') urlParams.append('date', selectedDate);
+      if (selectedType !== 'all') urlParams.append('type', selectedType);
+      if (searchTerm) urlParams.append('search', searchTerm);
+      if (!isAdmin && userInfo?._id) urlParams.append('userId', userInfo._id);
+      urlParams.append('page', page); // Pagination
+      urlParams.append('limit', logsPerPage); // Nombre de logs par page
+      const url = `http://${apiUrl}:3100/api/logs?${urlParams}`;
       console.log('URL de requête:', url);
 
       const response = await axios.get(url);
@@ -73,6 +93,12 @@ const LogsViewer = () => {
       if (response.data?.data) {
         setLogs(response.data.data);
         setFilteredLogs(response.data.data);
+
+
+        // Calculer le nombre total de pages
+        const totalLogs = response.data.total || 0; // `total` doit être renvoyé par l'API
+        setTotalPages(Math.ceil(totalLogs / logsPerPage));
+
         showSnackbar(`${response.data.data.length} logs chargés`, 'success');
       } else {
         console.log('Format de réponse inattendu:', response.data);
@@ -93,7 +119,11 @@ const LogsViewer = () => {
     } finally {
       setLoading(false);
     }
-  }, [selectedDate, selectedType, searchTerm, isAdmin, userInfo, showSnackbar]);
+  }, [selectedDate, selectedType, searchTerm, isAdmin, userInfo, showSnackbar, page]);
+
+  const handlePageChange = (event, value) => {
+    setPage(value);
+  };
 
   const isMounted = useRef(false);
 
@@ -106,10 +136,20 @@ const LogsViewer = () => {
       });
       isMounted.current = true;
     }
-  }, []); // Dépendances vides pour le chargement initial
+    fetchLogs();
+  }, [fetchLogs, page]); // Dépendances vides pour le chargement initial
 
 
+  /**
+   * Formatte une date en string au format "DD/MM/YYYY HH:mm:ss".
+   * La date est attendue au format "YYYY-MM-DDTHH:mm:ss.sssZ".
+   * Si la date est nulle ou vide, la fonction renvoie une chaîne vide.
+   * 
+   * @param {string} dateString - La date à formater.
+   * @returns {string} La date formatée.
+   */
   const formatDate = useCallback((dateString) => {
+    if (!dateString) return '';
     const date = new Date(dateString);
     return date.toLocaleString('fr-FR', {
       day: '2-digit',
@@ -120,6 +160,16 @@ const LogsViewer = () => {
     });
   }, []);
 
+  /**
+   * Fonction qui permet de filtrer les logs en fonction des paramètres définis.
+   * La fonction est appelée lorsque l'utilisateur modifie les paramètres de filtrage.
+   * La fonction utilise les paramètres suivants :
+   *   - `searchTerm` : le terme de recherche pour filtrer les logs.
+   *   - `selectedDate` : la date pour laquelle on souhaite filtrer les logs.
+   *   - `selectedType` : le type de logs que l'on souhaite filtrer.
+   * La fonction renvoie un tableau filtré qui contient les logs qui correspondent aux paramètres définis.
+   * @returns {Array<Object>} - Un tableau filtré qui contient les logs qui correspondent aux paramètres définis.
+   */
   const filterLogs = useCallback(() => {
     console.log('Filtrage des logs...', {
       totalLogs: logs.length,
@@ -144,6 +194,12 @@ const LogsViewer = () => {
       );
     }
 
+    /**
+     * Filtrer les logs en fonction de la date sélectionnée.
+     * La date est convertie en un objet Date et on utilise la méthode toDateString()
+     * pour extraire la date au format 'dd/mm/yyyy'. On filtre ensuite les logs
+     * en fonction de la date correspondante.
+     */
     if (selectedDate !== 'all') {
       const logDate = new Date(selectedDate);
       filtered = filtered.filter(log => {
@@ -152,6 +208,7 @@ const LogsViewer = () => {
         return date.toDateString() === logDate.toDateString();
       });
     }
+
 
     if (selectedType !== 'all') {
       filtered = filtered.filter(log => log.actionType === selectedType);
@@ -171,14 +228,20 @@ const LogsViewer = () => {
 
   const handleReset = useCallback(() => {
     setSearchTerm('');
-    setSelectedDate(today);
+    setSelectedDate('all');
     setSelectedType('all');
     setLogs([]); // Vide les logs avant de recharger
     fetchLogs();
   }, [fetchLogs]);
 
+  /**
+   * Exporte les logs filtrés vers un fichier CSV.
+   * La fonction utilise les paramètres de filtrage actuels pour déterminer quels logs exporter.
+   * Un fichier CSV est créé et téléchargé automatiquement sur l'appareil de l'utilisateur.
+   */
   const exportLogs = useCallback(async () => {
     try {
+      // Effectuer une requête GET pour obtenir les logs exportés sous forme de blob
       const response = await axios.get(`http://${apiUrl}:3100/api/logs/export`, {
         responseType: 'blob',
         params: {
@@ -189,20 +252,38 @@ const LogsViewer = () => {
         }
       });
 
+      // Créer un lien de téléchargement pour le fichier CSV
       const url = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement('a');
       link.href = url;
       link.setAttribute('download', `logs_${new Date().toISOString()}.csv`);
       document.body.appendChild(link);
       link.click();
-      link.remove();
+      link.remove(); // Supprimer le lien après le téléchargement
+
+      // Afficher un message de succès
       showSnackbar('Export réussi', 'success');
     } catch (error) {
+      // Gérer les erreurs et afficher un message d'erreur
       console.error('Erreur lors de l\'export:', error);
       showSnackbar('Erreur lors de l\'export des logs', 'error');
     }
   }, [selectedType, selectedDate, searchTerm, isAdmin, userInfo, showSnackbar]);
 
+  /**
+   * Renvoie un objet contenant les styles CSS pour un type d'action donné.
+   * Les styles sont définis en fonction du type d'action :
+   *   - export : vert clair (#c8e6c9) avec du texte vert (#388e3c)
+   *   - import : vert clair (#c8e6c9) avec du texte vert (#388e3c)
+   *   - connexion : vert pâle (#a5d6a7) avec du texte vert (#366637)
+   *   - déconnexion : gris (#e0e0e0) avec du texte gris (#616161)
+   *   - création : vert pâle (#a5d6a7) avec du texte vert (#2e7d32)
+   *   - modification : bleu pâle (#90caf9) avec du texte bleu (#1976d2)
+   *   - suppression : rouge pâle (#ef9a9a) avec du texte rouge (#d32f2f)
+   *   - consultation : gris (#e0e0e0) avec du texte gris (#616161)
+   *   - error : jaune pâle (#ffcdd2) avec du texte rouge (#c62828)
+   * Si le type d'action n'est pas reconnu, les styles par défaut sont gris (#e0e0e0) avec du texte gris (#616161)
+   */
   const getActionTypeStyle = useCallback((type) => {
     const styles = {
       export: { backgroundColor: '#c8e6c9', color: '#388e3c' },
@@ -218,11 +299,18 @@ const LogsViewer = () => {
     return styles[type] || styles.consultation;
   }, []);
 
+  /**
+   * Formatte une date en string pour l'affichage.
+   * La date est attendue au format "YYYY-MM-DDTHH:mm:ss.sssZ".
+   * Si la date est nulle ou vide, la fonction renvoie "Toutes les dates".
+   * 
+   * @param {string} dateString - La date à formater.
+   * @returns {string} La date formatée.
+   */
   const formatDateForDisplay = useCallback((dateString) => {
     if (!dateString) return 'Toutes les dates';
     return new Date(dateString).toLocaleDateString('fr-FR');
   }, []);
-
 
   if (loading) {
     return (
@@ -257,6 +345,7 @@ const LogsViewer = () => {
         <h2>Logs Système</h2>
 
         <Grid container item xs={12} spacing={2} sx={{ mb: 3 }}>
+
           <Grid item xs={12} md={3}>
             <FormControl fullWidth sx={{ backgroundColor: '#ee752d60' }}>
               <InputLabel>Type d'action</InputLabel>
@@ -335,7 +424,6 @@ const LogsViewer = () => {
             </Tooltip>
           </Grid>
 
-
           <Grid item xs={12}>
             <TableContainer sx={{ maxHeight: 440 }}>
               <Table stickyHeader>
@@ -357,24 +445,11 @@ const LogsViewer = () => {
                     </TableRow>
                   ) : (
                     filteredLogs.map((log, index) => (
-                      <TableRow
-                        key={log._id || index}
-                        sx={{ backgroundColor: rowColors[index % 2] }}
-                      >
-                        <TableCell className="font-mono">
-                          {formatDate(log.timestamp)}
-                        </TableCell>
+                      <TableRow key={log._id || index} sx={{ backgroundColor: rowColors[index % 2] }}>
+                        <TableCell>{formatDate(log.timestamp)}</TableCell>
                         <TableCell>{log.userName}</TableCell>
                         <TableCell>
-                          <Typography
-                            component="span"
-                            sx={{
-                              px: 1,
-                              py: 0.5,
-                              borderRadius: '12px',
-                              ...getActionTypeStyle(log.actionType)
-                            }}
-                          >
+                          <Typography component="span" sx={{ px: 1, py: 0.5, borderRadius: '12px', ...getActionTypeStyle(log.actionType) }}>
                             {log.actionType}
                           </Typography>
                         </TableCell>
@@ -386,6 +461,7 @@ const LogsViewer = () => {
                 </TableBody>
               </Table>
             </TableContainer>
+            <Pagination count={totalPages} page={page} onChange={handlePageChange} color="primary" />
           </Grid>
         </Grid>
       </Paper >

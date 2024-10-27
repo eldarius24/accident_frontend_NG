@@ -3,8 +3,28 @@ import axios from 'axios';
 import mammoth from 'mammoth';
 import { CircularProgress } from '@mui/material';
 import * as XLSX from 'xlsx';
+import { useLogger } from '../../Hook/useLogger';
 
-const FileViewer = ({ file }) => {
+const getAccidentDetails = async (accidentId) => {
+    try {
+        const response = await axios.get(`http://localhost:3100/api/accidents/${accidentId}`);
+        if (response.data) {
+            return {
+                nomTravailleur: response.data.nomTravailleur,
+                prenomTravailleur: response.data.prenomTravailleur,
+                entreprise: response.data.entrepriseName,
+                dateAccident: new Date(response.data.DateHeureAccident).toLocaleDateString()
+            };
+        }
+        return null;
+    } catch (error) {
+        console.error('Erreur lors de la récupération des détails de l\'accident:', error);
+        return null;
+    }
+};
+
+const FileViewer = ({ file,accidentId }) => {
+    const { logAction } = useLogger();
     const [fullContent, setFullContent] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -13,14 +33,14 @@ const FileViewer = ({ file }) => {
         try {
             const buffer = await blob.arrayBuffer();
             const workbook = XLSX.read(buffer, { type: 'array' });
-            
+
             // Prendre la première feuille
             const firstSheetName = workbook.SheetNames[0];
             const worksheet = workbook.Sheets[firstSheetName];
-            
+
             // Convertir en HTML avec des styles
             const html = XLSX.utils.sheet_to_html(worksheet, { editable: false });
-            
+
             // Ajouter des styles CSS pour un meilleur rendu
             const styledHtml = `
                 <style>
@@ -48,7 +68,7 @@ const FileViewer = ({ file }) => {
                 </style>
                 ${html}
             `;
-            
+
             return styledHtml;
         } catch (error) {
             console.error('Erreur lors du traitement du fichier Excel:', error);
@@ -59,18 +79,25 @@ const FileViewer = ({ file }) => {
     useEffect(() => {
         const loadFullContent = async () => {
             if (!file) return;
-            
+
             setLoading(true);
             setError(null);
-            
+
             try {
+                const accidentDetails = await getAccidentDetails(accidentId);
                 const response = await axios.get(`http://localhost:3100/api/getFile/${file.fileId}`, {
                     responseType: 'blob'
                 });
-                
+
                 const fileType = file.fileName.split('.').pop().toLowerCase();
-                
-                switch(fileType) {
+                await logAction({
+                    actionType: 'consultation',
+                    details: `Prévisualisation du fichier - Nom: ${file.fileName} - Type: ${file.fileName.split('.').pop().toLowerCase()} - Travailleur: ${accidentDetails.nomTravailleur} ${accidentDetails.prenomTravailleur} - Date accident: ${accidentDetails.dateAccident}`,
+                    entity: 'Fichier',
+                    entityId: file.fileId,
+                    entreprise: accidentDetails.entreprise
+                });
+                switch (fileType) {
                     case 'xlsx':
                     case 'xls':
                         try {
@@ -90,11 +117,11 @@ const FileViewer = ({ file }) => {
                     case 'docx':
                         console.log("Processing DOCX file...");
                         const arrayBuffer = await response.data.arrayBuffer();
-                        
+
                         try {
                             const result = await mammoth.convertToHtml({ arrayBuffer });
                             console.log("Conversion result:", result);
-                            
+
                             if (result && result.value) {
                                 const styledContent = `
                                     <div style="
@@ -182,7 +209,7 @@ const FileViewer = ({ file }) => {
         case 'excel':
             return (
                 <div className="w-full h-[calc(100vh-140px)] overflow-auto bg-white p-4">
-                    <div 
+                    <div
                         className="excel-preview"
                         dangerouslySetInnerHTML={{ __html: fullContent.content }}
                     />
@@ -210,7 +237,7 @@ const FileViewer = ({ file }) => {
 
         case 'docx':
             return (
-                <div 
+                <div
                     className="w-full h-[calc(100vh-140px)] overflow-auto bg-white shadow-inner p-4"
                     dangerouslySetInnerHTML={{ __html: fullContent.content }}
                 />
