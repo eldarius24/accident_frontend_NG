@@ -56,19 +56,6 @@ export default function Formulaire() {
         }
     }, []);
 
-    const handleDrop = useCallback((e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        const file = e.dataTransfer.files[0];
-        if (file) {
-            console.log("Fichier téléchargé :", file.name);
-        }
-    }, []);
-
-    const handleFileUpload = useCallback((file) => {
-        console.log("Fichier téléchargé :", file.name);
-    }, []);
-
     const onSubmit = useCallback((data) => {
         const missingFields = mandatoryFields.filter(field => !data[field]);
 
@@ -92,7 +79,7 @@ export default function Formulaire() {
                 try {
                     await logAction({
                         actionType: accidentData ? 'modification' : 'creation',
-                        details: `${accidentData ? 'Modification' : 'Création'} d'un accident du travail - Travailleur: ${data.nomTravailleur} ${data.prenomTravailleur} - Date: ${new Date(data.DateHeureAccident).toLocaleDateString()}`,
+                        details: `${accidentData ? 'Modification' : 'Création'} d'un accident du travail - Entreprise: ${data.entrepriseName} - Secteur: ${data.secteur} - Travailleur: ${data.nomTravailleur} ${data.prenomTravailleur} - Date: ${new Date(data.DateHeureAccident).toLocaleDateString()}`,
                         entity: 'Accident',
                         entityId: accidentData?._id || response.data._id,
                         entreprise: data.entrepriseName

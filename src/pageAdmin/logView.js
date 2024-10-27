@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react';
-import axios from 'axios';
 import {
   Table,
   TableBody,
@@ -30,6 +29,7 @@ import config from '../config.json';
 import '../pageFormulaire/formulaire.css';
 import fetchLogs from './foncLogs/fetchLogs';
 import filterLogs from './foncLogs/filterLogs';
+import exportLogs from './foncLogs/exportLogs';
 
 const apiUrl = config.apiUrl || 'localhost';
 
@@ -53,17 +53,13 @@ const LogsViewer = () => {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const logsPerPage = 200;
-
   const rowColors = useMemo(() =>
     darkMode
       ? ['#7a7a7a', '#979797']  // Couleurs pour le thème sombre
       : ['#e62a5625', '#95519b25'],  // Couleurs pour le thème clair
     [darkMode]
   );
-
-  const showSnackbar = useCallback((message, severity = 'info') => {
-    setSnackbar({ open: true, message, severity });
-  }, []);
+  const showSnackbar = useCallback((message, severity = 'info') => { setSnackbar({ open: true, message, severity }); }, []);
 
   /**
    * Gère le changement de page dans la pagination.
@@ -94,7 +90,6 @@ const LogsViewer = () => {
       showSnackbar
     });
   }, [selectedDate, selectedType, searchTerm, isAdmin, userInfo, page, logsPerPage, dateEnabled]);
-
 
   const filterLogsWithState = useCallback(() => {
     filterLogs({
@@ -138,17 +133,15 @@ const LogsViewer = () => {
     });
   }, []);
 
-
-
-// useEffect hook to apply filters whenever filterLogsWithState function changes
-useEffect(() => {
-  /**
-   * Applies the current filters to the logs.
-   * The filterLogsWithState function is used to filter logs based on
-   * the current state of search term, selected date, and log type.
-   */
-  filterLogsWithState();
-}, [filterLogsWithState]);
+  // useEffect hook to apply filters whenever filterLogsWithState function changes
+  useEffect(() => {
+    /**
+     * Applies the current filters to the logs.
+     * The filterLogsWithState function is used to filter logs based on
+     * the current state of search term, selected date, and log type.
+     */
+    filterLogsWithState();
+  }, [filterLogsWithState]);
 
   /**
    * Réinitialise les paramètres de filtrage des logs.
@@ -158,48 +151,12 @@ useEffect(() => {
    */
   const handleReset = useCallback(() => {
     setSearchTerm(''); // Supprime le terme de recherche
-    setSelectedDate(today); // Reset la date à aujourd'hui
+    setSelectedDate(''); // Reset la date à aujourd'hui
     setDateEnabled(true); // Active le champ de date
     setSelectedType('all'); // Reset le type de log à 'all'
     setLogs([]); // Supprime les logs affichés
     fetchLogsWithState(); // Recharge les logs avec les paramètres par défaut
   }, [fetchLogsWithState, today]);
-
-  /**
-   * Exporte les logs filtrés vers un fichier CSV.
-   * La fonction utilise les paramètres de filtrage actuels pour déterminer quels logs exporter.
-   * Un fichier CSV est créé et téléchargé automatiquement sur l'appareil de l'utilisateur.
-   */
-  const exportLogs = useCallback(async () => {
-    try {
-      // Effectuer une requête GET pour obtenir les logs exportés sous forme de blob
-      const response = await axios.get(`http://${apiUrl}:3100/api/logs/export`, {
-        responseType: 'blob',
-        params: {
-          type: selectedType !== 'all' ? selectedType : undefined,
-          date: selectedDate !== 'all' ? selectedDate : undefined,
-          search: searchTerm || undefined,
-          userId: !isAdmin && userInfo?._id ? userInfo._id : undefined
-        }
-      });
-
-      // Créer un lien de téléchargement pour le fichier CSV
-      const url = window.URL.createObjectURL(new Blob([response.data]));
-      const link = document.createElement('a');
-      link.href = url;
-      link.setAttribute('download', `logs_${new Date().toISOString()}.csv`);
-      document.body.appendChild(link);
-      link.click();
-      link.remove(); // Supprimer le lien après le téléchargement
-
-      // Afficher un message de succès
-      showSnackbar('Export réussi', 'success');
-    } catch (error) {
-      // Gérer les erreurs et afficher un message d'erreur
-      console.error('Erreur lors de l\'export:', error);
-      showSnackbar('Erreur lors de l\'export des logs', 'error');
-    }
-  }, [selectedType, selectedDate, searchTerm, isAdmin, userInfo, showSnackbar]);
 
   /**
    * Renvoie un objet contenant les styles CSS pour un type d'action donné.
@@ -238,10 +195,6 @@ useEffect(() => {
    * @param {string} dateString - La date à formater.
    * @returns {string} La date formatée.
    */
-  const formatDateForDisplay = useCallback((dateString) => {
-    if (!dateString) return 'Toutes les dates';
-    return new Date(dateString).toLocaleDateString('fr-FR');
-  }, []);
 
   if (loading) {
     return (
@@ -266,7 +219,7 @@ useEffect(() => {
 
   return (
     <>
-      <Paper style={{
+      <div style={{
         p: 3,
         backgroundColor: darkMode ? '#6e6e6e' : '#ffffff',
         color: darkMode ? '#ffffff' : '#000000',
@@ -337,7 +290,15 @@ useEffect(() => {
                 fullWidth
                 variant="contained"
                 color="primary"
-                onClick={exportLogs}
+                onClick={() => exportLogs({
+                  apiUrl,
+                  selectedType,
+                  selectedDate,
+                  searchTerm,
+                  isAdmin,
+                  userInfo,
+                  showSnackbar
+                })}
                 startIcon={<FileDownloadIcon />}
                 sx={{
                   height: '100%',
@@ -407,8 +368,7 @@ useEffect(() => {
             <Pagination style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }} count={totalPages} page={page} onChange={handlePageChange} color="primary" />
           </Grid>
         </Grid>
-      </Paper >
-
+      </div >
       <Snackbar
         open={snackbar.open}
         autoHideDuration={6000}
@@ -427,9 +387,7 @@ useEffect(() => {
         <h5 style={{ marginBottom: '40px' }}> Développé par Remy et Benoit pour Le Cortigroupe. Support: bgillet.lecortil@cortigroupe.be</h5>
       </Tooltip>
     </>
-
   );
-
 };
 
 export default LogsViewer;

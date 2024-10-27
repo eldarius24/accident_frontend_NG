@@ -4,6 +4,29 @@ import config from '../../config.json';
 
 const apiUrl = config.apiUrl || 'localhost';
 
+/**
+ * Fetches logs from the API based on provided filtering parameters.
+ * 
+ * - Constructs the query parameters for the API request from the given parameters.
+ * - Updates loading state, error state, logs, filtered logs, and total pages based on the API response.
+ * - Displays appropriate messages in a snackbar according to the success or failure of the fetch operation.
+ * 
+ * @param {Object} params - Parameters for fetching logs.
+ * @param {string} params.selectedDate - The selected date for filtering logs.
+ * @param {string} params.selectedType - The selected type for filtering logs.
+ * @param {string} params.searchTerm - The search term for filtering logs.
+ * @param {boolean} params.isAdmin - Whether the user is an admin.
+ * @param {Object} params.userInfo - Information about the user.
+ * @param {number} params.page - The current page number for pagination.
+ * @param {number} params.logsPerPage - The number of logs per page for pagination.
+ * @param {Function} params.setLoading - Function to set the loading state.
+ * @param {Function} params.setError - Function to set the error state.
+ * @param {Function} params.setLogs - Function to set the logs data.
+ * @param {Function} params.setFilteredLogs - Function to set the filtered logs data.
+ * @param {Function} params.setTotalPages - Function to set the total number of pages.
+ * @param {Function} params.showSnackbar - Function to display messages via a snackbar.
+ * @throws Will throw an error if the parameters object is not provided.
+ */
 const fetchLogs = async (params) => {
   const {
     selectedDate,
