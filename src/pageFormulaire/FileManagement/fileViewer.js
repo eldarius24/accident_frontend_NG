@@ -93,7 +93,7 @@ const FileViewer = ({ file,accidentId }) => {
                 await logAction({
                     actionType: 'consultation',
                     details: `Prévisualisation du fichier - Nom: ${file.fileName} - Type: ${file.fileName.split('.').pop().toLowerCase()} - Travailleur: ${accidentDetails.nomTravailleur} ${accidentDetails.prenomTravailleur} - Date accident: ${accidentDetails.dateAccident}`,
-                    entity: 'Fichier',
+                    entity: 'Accident',
                     entityId: file.fileId,
                     entreprise: accidentDetails.entreprise
                 });
