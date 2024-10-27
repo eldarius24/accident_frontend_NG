@@ -20,7 +20,7 @@ import {
   CircularProgress,
   Snackbar,
   Alert,
-  Pagination
+  Pagination,
 } from '@mui/material';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
@@ -28,6 +28,8 @@ import { useTheme } from '../pageAdmin/user/ThemeContext';
 import { useUserConnected } from '../Hook/userConnected';
 import config from '../config.json';
 import '../pageFormulaire/formulaire.css';
+import fetchLogs from './foncLogs/fetchLogs';
+import filterLogs from './foncLogs/filterLogs';
 
 const apiUrl = config.apiUrl || 'localhost';
 
@@ -43,11 +45,11 @@ const LogsViewer = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const today = new Date().toISOString().split('T')[0];
   const [selectedDate, setSelectedDate] = useState(today);
+  const [dateEnabled, setDateEnabled] = useState(true);
   const [selectedType, setSelectedType] = useState('all');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'info' });
-
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const logsPerPage = 200;
@@ -64,85 +66,57 @@ const LogsViewer = () => {
   }, []);
 
   /**
-   * Fonction qui permet de charger les logs du système.
-   * La fonction utilise `axios` pour envoyer une requête GET vers l'API de logs.
-   * La fonction accepte un objet `params` qui contient les paramètres de la requête.
-   * Les paramètres suivants sont supportés :
-   *   - `date` : la date pour laquelle on souhaite charger les logs.
-   *   - `type` : le type de logs que l'on souhaite charger.
-   *   - `search` : le terme de recherche pour filtrer les logs.
-   *   - `userId` : l'identifiant de l'utilisateur dont on souhaite charger les logs.
-   * La fonction renvoie une promesse qui se résout avec un objet qui contient les logs chargés.
-   * Si une erreur se produit, la fonction renvoie une promesse qui se rejette avec l'erreur.
-   * @param {Object} [params] - Les paramètres de la requête.
-   * @returns {Promise<Object>} - Une promesse qui se résout avec un objet qui contient les logs chargés.
+   * Gère le changement de page dans la pagination.
+   * Met à jour l'état de la page actuelle.
+   * @param {object} event L'événement qui a déclenché la modification de page.
+   * @param {number} value La nouvelle page.
    */
-  const fetchLogs = useCallback(async (params = {}) => {
-    setLoading(true);
-    setError(null);
-    try {
-      const urlParams = new URLSearchParams();
-      if (selectedDate !== 'all') urlParams.append('date', selectedDate);
-      if (selectedType !== 'all') urlParams.append('type', selectedType);
-      if (searchTerm) urlParams.append('search', searchTerm);
-      if (!isAdmin && userInfo?._id) urlParams.append('userId', userInfo._id);
-      urlParams.append('page', page); // Pagination
-      urlParams.append('limit', logsPerPage); // Nombre de logs par page
-      const url = `http://${apiUrl}:3100/api/logs?${urlParams}`;
-      console.log('URL de requête:', url);
-
-      const response = await axios.get(url);
-      console.log('Réponse reçue:', response.data);
-
-      if (response.data?.data) {
-        setLogs(response.data.data);
-        setFilteredLogs(response.data.data);
-
-
-        // Calculer le nombre total de pages
-        const totalLogs = response.data.total || 0; // `total` doit être renvoyé par l'API
-        setTotalPages(Math.ceil(totalLogs / logsPerPage));
-
-        showSnackbar(`${response.data.data.length} logs chargés`, 'success');
-      } else {
-        console.log('Format de réponse inattendu:', response.data);
-        showSnackbar('Format de données incorrect', 'warning');
-        setLogs([]);
-        setFilteredLogs([]);
-      }
-    } catch (error) {
-      console.error('Erreur détaillée:', {
-        message: error.message,
-        response: error.response?.data,
-        status: error.response?.status
-      });
-      setError(error.message);
-      showSnackbar(`Erreur: ${error.message}`, 'error');
-      setLogs([]);
-      setFilteredLogs([]);
-    } finally {
-      setLoading(false);
-    }
-  }, [selectedDate, selectedType, searchTerm, isAdmin, userInfo, showSnackbar, page]);
-
   const handlePageChange = (event, value) => {
     setPage(value);
   };
 
   const isMounted = useRef(false);
 
+  const fetchLogsWithState = useCallback(() => {
+    return fetchLogs({
+      selectedDate: dateEnabled ? selectedDate : null,
+      selectedType,
+      searchTerm,
+      isAdmin,
+      userInfo,
+      page,
+      logsPerPage,
+      setLoading,
+      setError,
+      setLogs,
+      setFilteredLogs,
+      setTotalPages,
+      showSnackbar
+    });
+  }, [selectedDate, selectedType, searchTerm, isAdmin, userInfo, page, logsPerPage, dateEnabled]);
+
+
+  const filterLogsWithState = useCallback(() => {
+    filterLogs({
+      logs,
+      searchTerm,
+      selectedDate: dateEnabled ? selectedDate : null,
+      selectedType,
+      setFilteredLogs
+    });
+  }, [logs, searchTerm, selectedDate, selectedType, dateEnabled]);
+
   useEffect(() => {
     if (!isMounted.current) {
       console.log('Chargement initial des logs...');
-      fetchLogs().catch(error => {
+      fetchLogsWithState().catch(error => {
         console.error('Erreur dans useEffect:', error);
         showSnackbar('Erreur lors du chargement initial', 'error');
       });
       isMounted.current = true;
     }
-    fetchLogs();
-  }, [page]); // Dépendances vides pour le chargement initial
-
+    fetchLogsWithState();
+  }, [page]);
 
   /**
    * Formatte une date en string au format "DD/MM/YYYY HH:mm:ss".
@@ -164,79 +138,32 @@ const LogsViewer = () => {
     });
   }, []);
 
+
+
+// useEffect hook to apply filters whenever filterLogsWithState function changes
+useEffect(() => {
   /**
-   * Fonction qui permet de filtrer les logs en fonction des paramètres définis.
-   * La fonction est appelée lorsque l'utilisateur modifie les paramètres de filtrage.
-   * La fonction utilise les paramètres suivants :
-   *   - `searchTerm` : le terme de recherche pour filtrer les logs.
-   *   - `selectedDate` : la date pour laquelle on souhaite filtrer les logs.
-   *   - `selectedType` : le type de logs que l'on souhaite filtrer.
-   * La fonction renvoie un tableau filtré qui contient les logs qui correspondent aux paramètres définis.
-   * @returns {Array<Object>} - Un tableau filtré qui contient les logs qui correspondent aux paramètres définis.
+   * Applies the current filters to the logs.
+   * The filterLogsWithState function is used to filter logs based on
+   * the current state of search term, selected date, and log type.
    */
-  const filterLogs = useCallback(() => {
-    console.log('Filtrage des logs...', {
-      totalLogs: logs.length,
-      searchTerm,
-      selectedDate,
-      selectedType
-    });
+  filterLogsWithState();
+}, [filterLogsWithState]);
 
-    if (!Array.isArray(logs)) {
-      console.error('logs n\'est pas un tableau:', logs);
-      setFilteredLogs([]);
-      return;
-    }
-
-    let filtered = [...logs];
-
-    if (searchTerm) {
-      filtered = filtered.filter(log =>
-        (log.details?.toLowerCase() || '').includes(searchTerm.toLowerCase()) ||
-        (log.userName?.toLowerCase() || '').includes(searchTerm.toLowerCase()) ||
-        (log.actionType?.toLowerCase() || '').includes(searchTerm.toLowerCase())
-      );
-    }
-
-    /**
-     * Filtrer les logs en fonction de la date sélectionnée.
-     * La date est convertie en un objet Date et on utilise la méthode toDateString()
-     * pour extraire la date au format 'dd/mm/yyyy'. On filtre ensuite les logs
-     * en fonction de la date correspondante.
-     */
-    if (selectedDate !== 'all') {
-      const logDate = new Date(selectedDate);
-      filtered = filtered.filter(log => {
-        if (!log.timestamp) return false;
-        const date = new Date(log.timestamp);
-        return date.toDateString() === logDate.toDateString();
-      });
-    }
-
-
-    if (selectedType !== 'all') {
-      filtered = filtered.filter(log => log.actionType === selectedType);
-    }
-
-    console.log('Résultat du filtrage:', {
-      filteredCount: filtered.length,
-      firstItem: filtered[0]
-    });
-
-    setFilteredLogs(filtered);
-  }, [logs, searchTerm, selectedDate, selectedType]);
-
-  useEffect(() => {
-    filterLogs();
-  }, [filterLogs]);
-
+  /**
+   * Réinitialise les paramètres de filtrage des logs.
+   * Supprime le terme de recherche, reset la date à aujourd'hui et active le champ de date.
+   * Reset le type de log à 'all'.
+   * Supprime les logs affichés et recharge les logs avec les paramètres par défaut.
+   */
   const handleReset = useCallback(() => {
-    setSearchTerm('');
-    setSelectedDate('all');
-    setSelectedType('all');
-    setLogs([]); // Vide les logs avant de recharger
-    fetchLogs();
-  }, [fetchLogs]);
+    setSearchTerm(''); // Supprime le terme de recherche
+    setSelectedDate(today); // Reset la date à aujourd'hui
+    setDateEnabled(true); // Active le champ de date
+    setSelectedType('all'); // Reset le type de log à 'all'
+    setLogs([]); // Supprime les logs affichés
+    fetchLogsWithState(); // Recharge les logs avec les paramètres par défaut
+  }, [fetchLogsWithState, today]);
 
   /**
    * Exporte les logs filtrés vers un fichier CSV.
