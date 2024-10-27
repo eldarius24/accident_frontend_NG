@@ -26,6 +26,7 @@ import { useTheme } from '../pageAdmin/user/ThemeContext';
 import { handleExportDataAccident } from './_actions/exportAcci';
 import { handleExportDataAssurance } from './_actions/exportAss';
 import { useLogger } from '../Hook/useLogger';
+import useHandleDelete from './_actions/handleDelete.js';
 const apiUrl = config.apiUrl;
 
 /**
@@ -36,6 +37,7 @@ const apiUrl = config.apiUrl;
  * @returns {React.ReactElement} 
  */
 function Home() {
+
     const { darkMode } = useTheme();
     const navigate = useNavigate();
     const [yearsFromData, setYearsFromData] = useState([]);
@@ -47,6 +49,36 @@ function Home() {
     const { isAdmin, isAdminOuConseiller, userInfo, isConseiller } = useUserConnected();
     const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'info' });
     const { logAction } = useLogger();  // Ajout du hook useLogger
+    const showSnackbar = useCallback((message, severity = 'info') => {
+        setSnackbar({ open: true, message, severity });
+    }, []);
+    const handleDelete = useHandleDelete({
+        setAccidents,
+        accidents,
+        logAction,
+        showSnackbar
+    });
+
+    /**
+        * Rafraichit la liste des accidents en appelant la fonction getAccidents.
+        * Met à jour l'état de la liste des accidents et des années.
+        * Affiche un message de réussite ou d'erreur en fonction du résultat.
+        */
+    const refreshListAccidents = useCallback(() => {
+        startGetAccidents(async () => {
+            try {
+                const fetchedAccidents = await getAccidents();
+                setAccidents(fetchedAccidents);
+                // Récupère les années uniques de la liste des accidents
+                const years = [...new Set(fetchedAccidents.map(accident => new Date(accident.DateHeureAccident).getFullYear()))];
+                setYearsFromData([...new Set(fetchedAccidents.map(accident => new Date(accident.DateHeureAccident).getFullYear()))]);
+                showSnackbar('Liste des accidents actualisée', 'success');
+            } catch (error) {
+                console.error("Erreur lors de la récupération des accidents:", error);
+                showSnackbar('Erreur lors de l actualisation de la liste des accidents', 'error');
+            }
+        });
+    }, [showSnackbar]);
 
     /**
      * Renvoie un tableau de deux couleurs pour le background des lignes de la table.
@@ -79,17 +111,6 @@ function Home() {
     }, []);
 
     /**
-     * Display a snackbar with the specified message and severity.
-     *
-     * @param {string} message - The message to display in the snackbar.
-     * @param {string} [severity='info'] - The severity level of the message. 
-     *                                      Possible values are 'info', 'success', 'warning', 'error'.
-     */
-    const showSnackbar = useCallback((message, severity = 'info') => {
-        setSnackbar({ open: true, message, severity });
-    }, []);
-
-    /**
      * Ferme la snackbar si l'utilisateur clique sur le bouton "Fermer" ou en dehors de la snackbar.
      * Si l'utilisateur clique sur la snackbar elle-même (et non sur le bouton "Fermer"), la snackbar ne se ferme pas.
      * 
@@ -114,45 +135,6 @@ function Home() {
     const isConseillerPrevention = useCallback((entrepriseName) => {
         return userInfo?.entreprisesConseillerPrevention?.includes(entrepriseName) || false;
     }, [userInfo]);
-
-    /**
-     * Supprime un accident en envoyant une requête DELETE à l'API.
-     * Met à jour la liste des accidents localement et affiche un message de réussite ou d'erreur.
-     * 
-     * @param {string} accidentIdToDelete - L'ID de l'accident à supprimer.
-     */
-    const handleDelete = useCallback(async (accidentIdToDelete) => {
-        try {
-            // Récupère les informations de l'accident avant la suppression
-            const accidentToDelete = accidents.find(item => item._id === accidentIdToDelete);
-
-            const response = await axios.delete(`http://${apiUrl}:3100/api/accidents/${accidentIdToDelete}`);
-
-            if ([200, 204].includes(response.status)) {
-                // Met à jour la liste des accidents en supprimant l'accident supprimé
-                setAccidents(prevAccidents => prevAccidents.filter(item => item._id !== accidentIdToDelete));
-
-                // Crée un log pour la suppression
-                await logAction({
-                    actionType: 'suppression',
-                    details: `Suppression de l'accident du travail - Travailleur: ${accidentToDelete.nomTravailleur} ${accidentToDelete.prenomTravailleur} - Date: ${new Date(accidentToDelete.DateHeureAccident).toLocaleDateString()}`,
-                    entity: 'Accident',
-                    entityId: accidentIdToDelete,
-                    entreprise: accidentToDelete.entrepriseName
-                });
-
-                // Affiche un message de succès dans la snackbar
-                showSnackbar('Accident supprimé avec succès', 'success');
-            } else {
-                // Affiche un message d'erreur pour un statut de réponse inattendu
-                showSnackbar(`Erreur lors de la suppression de l'accident: ${response.status} ${response.statusText}`, 'error');
-            }
-        } catch (error) {
-            // Affiche un message d'erreur en cas d'échec de la requête
-            console.error(error);
-            showSnackbar('Erreur lors de la suppression de l accident', 'error');
-        }
-    }, [apiUrl, showSnackbar, accidents, logAction]);
 
     /**
      * Génère un PDF pour l'accident passé en paramètre
@@ -216,28 +198,6 @@ function Home() {
         }
     }, [apiUrl, navigate, showSnackbar, logAction]); // Ajout de logAction dans les dépendances
 
-    /**
-     * Rafraichit la liste des accidents en appelant la fonction getAccidents.
-     * Met à jour l'état de la liste des accidents et des années.
-     * Affiche un message de réussite ou d'erreur en fonction du résultat.
-     */
-    const refreshListAccidents = useCallback(() => {
-        startGetAccidents(async () => {
-            try {
-                const fetchedAccidents = await getAccidents();
-                setAccidents(fetchedAccidents);
-                // Récupère les années uniques de la liste des accidents
-                const years = [...new Set(fetchedAccidents.map(accident => new Date(accident.DateHeureAccident).getFullYear()))];
-                setYearsFromData([...new Set(fetchedAccidents.map(accident => new Date(accident.DateHeureAccident).getFullYear()))]);
-                showSnackbar('Liste des accidents actualisée', 'success');
-            } catch (error) {
-                console.error("Erreur lors de la récupération des accidents:", error);
-                showSnackbar('Erreur lors de l actualisation de la liste des accidents', 'error');
-            }
-        });
-    }, [showSnackbar]);
-
-
     useEffect(() => {
         /**
          * Rafraîchit la liste des accidents dès le montage du composant.
@@ -278,7 +238,6 @@ function Home() {
             );
         });
     }, [accidents, yearsChecked, searchTerm]);
-
 
     /**
      * Exporte les données d'accidents vers un fichier Excel.
@@ -559,13 +518,14 @@ function Home() {
                                         <TableCell style={{ padding: 0, width: '70px' }}>
                                             {(isAdmin || (isConseiller && isConseillerPrevention(item.entrepriseName))) ? (
                                                 <Tooltip title="Cliquez ici pour supprimer l'accident" arrow>
-                                                    <Button sx={{
-                                                        transition: 'all 0.3s ease-in-out',
-                                                        '&:hover': {
-                                                            transform: 'scale(1.08)',
-                                                            boxShadow: 6
-                                                        }
-                                                    }}
+                                                    <Button
+                                                        sx={{
+                                                            transition: 'all 0.3s ease-in-out',
+                                                            '&:hover': {
+                                                                transform: 'scale(1.08)',
+                                                                boxShadow: 6
+                                                            }
+                                                        }}
                                                         variant="contained"
                                                         color="error"
                                                         onClick={() => {
@@ -573,15 +533,24 @@ function Home() {
                                                                 customUI: ({ onClose }) => (
                                                                     <div className="custom-confirm-dialog">
                                                                         <h1 className="custom-confirm-title">Supprimer</h1>
-                                                                        <p className="custom-confirm-message">Êtes-vous sûr de vouloir supprimer cet élément?</p>
+                                                                        <p className="custom-confirm-message">Êtes-vous sûr de vouloir supprimer cet accident?</p>
                                                                         <div className="custom-confirm-buttons">
                                                                             <Tooltip title="Cliquez sur OUI pour supprimer" arrow>
-                                                                                <button className="custom-confirm-button" onClick={() => { handleDelete(item._id); onClose(); }}>
+                                                                                <button
+                                                                                    className="custom-confirm-button"
+                                                                                    onClick={() => {
+                                                                                        handleDelete(item._id);
+                                                                                        onClose();
+                                                                                    }}
+                                                                                >
                                                                                     Oui
                                                                                 </button>
                                                                             </Tooltip>
                                                                             <Tooltip title="Cliquez sur NON pour annuler la suppression" arrow>
-                                                                                <button className="custom-confirm-button custom-confirm-no" onClick={onClose}>
+                                                                                <button
+                                                                                    className="custom-confirm-button custom-confirm-no"
+                                                                                    onClick={onClose}
+                                                                                >
                                                                                     Non
                                                                                 </button>
                                                                             </Tooltip>
