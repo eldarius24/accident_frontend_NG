@@ -204,7 +204,7 @@ const LogsViewer = () => {
 
   const getActionTypeStyle = useCallback((type) => {
     const styles = {
-      Connexion: { backgroundColor: '#a5d6a7', color: '#2e7d32' },
+      Connexion: { backgroundColor: '#a5d6a7', color: '#44da49' },
       creation: { backgroundColor: '#a5d6a7', color: '#2e7d32' },
       modification: { backgroundColor: '#90caf9', color: '#1976d2' },
       suppression: { backgroundColor: '#ef9a9a', color: '#d32f2f' },
@@ -262,6 +262,7 @@ const LogsViewer = () => {
                 label="Type d'action"
               >
                 <MenuItem value="all">Toutes les actions</MenuItem>
+                <MenuItem value="error">Error</MenuItem>
                 <MenuItem value="connexion">Connexion</MenuItem>
                 <MenuItem value="creation">Création</MenuItem>
                 <MenuItem value="modification">Modification</MenuItem>

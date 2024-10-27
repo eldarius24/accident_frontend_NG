@@ -51,7 +51,7 @@ const Login = () => {
         
         // Log d'échec de connexion
         await logAction({
-          actionType: 'connexion',
+          actionType: 'error',
           details: `Échec de connexion pour l'utilisateur: ${email} - Données invalides`,
           entity: 'Auth',
           userName: email,
@@ -86,7 +86,7 @@ const Login = () => {
       
       // Log d'erreur de connexion
       await logAction({
-        actionType: 'connexion',
+        actionType: 'error',
         details: `Erreur de connexion pour l'utilisateur: ${email} - ${error.response ? error.response.data : error.message}`,
         entity: 'Auth',
         userName: email,
