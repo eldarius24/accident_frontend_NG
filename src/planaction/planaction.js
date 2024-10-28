@@ -291,13 +291,6 @@ export default function PlanAction({ accidentData }) {
             });
     }, [showSnackbar]);
 
-    const getLinkedSecteurs = useCallback((entrepriseId) => {
-        if (!entrepriseId) return [];
-        return allSectors
-            .filter(s => s.entrepriseId === entrepriseId)
-            .map(s => s.secteurName);
-    }, [allSectors]);
-
     const onSubmit = useCallback((data) => {
         axios.put(`http://${apiUrl}:3100/api/planaction`, data)
             .then(response => {
