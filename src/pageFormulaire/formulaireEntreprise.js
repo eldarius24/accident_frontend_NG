@@ -1,164 +1,230 @@
-import React, { useState, useEffect, useCallback,useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import AutoCompleteQ from '../_composants/autoCompleteQ';
+import config from '../config.json';
+import listEntreprises from '../liste/listEntreprise.json';
+import { useUserConnected } from '../Hook/userConnected';
+import TextFieldQ from '../_composants/textFieldQ';
+import DatePickerQ from '../_composants/datePickerQ';
+import listeDeclarationAssBelfius from '../liste/listeDeclarationAssBelfius.json';
+import DateHeurePickerQ from '../_composants/dateHeurePickerQ';
+import listAccident from '../liste/listAccident.json';
+import listAssureur from '../liste/listAssureur.json';
 import { useTheme } from '../pageAdmin/user/ThemeContext';
-import {Grid,Card, CardContent, Typography} from '@mui/material';
+/**
+ * FormulaireEntreprise component.
+ * 
+ * - Manages the state of form fields related to an enterprise involved in an accident.
+ * - Fetches and filters enterprise and sector data based on user role.
+ * - Initializes form fields with existing accident data if available.
+ * - Updates form values in response to user interactions.
+ * 
+ * @param {Object} props The props for the component:
+ * - setValue: Function to update form values.
+ * - accidentData: Existing accident data, if available.
+ * - watch: Function to monitor form field values.
+ * 
+ * @returns {JSX.Element} The enterprise form component.
+ */
+export default function FormulaireEntreprise({ setValue, accidentData, watch }) {
+  const [entreprises, setEntreprises] = useState([]);
+  const [entreprise, setEntreprise] = useState(watch('entrepriseName') || (accidentData && accidentData.entrepriseName) || '');
+  const [secteurs, setSecteurs] = useState([]);
+  const [secteur, setSecteur] = useState(watch('secteur') || (accidentData && accidentData.secteur) || '');
+  const [typeTravailleur, setTypeTravailleur] = useState(watch('typeTravailleur') || (accidentData && accidentData.typeTravailleur) || '');
+  const [loading, setLoading] = useState(true);
+  const apiUrl = config.apiUrl;
+  const { isAdmin, isAdminOuConseiller, userInfo, isConseiller } = useUserConnected();
+  const [formData, setFormData] = useState(accidentData);
+  const { darkMode } = useTheme();
 
-const EnterpriseStats = React.memo(({ actions }) => {
-    const { darkMode } = useTheme();
-    const [, forceUpdate] = useState();
+  const [nomTravailleur, setNomTravailleur] = useState(watch('nomTravailleur') ? watch('nomTravailleur') : (accidentData && accidentData.nomTravailleur ? accidentData.nomTravailleur : null));
+  const [prenomTravailleur, setPrenomTravailleur] = useState(watch('prenomTravailleur') ? watch('prenomTravailleur') : (accidentData && accidentData.prenomTravailleur ? accidentData.prenomTravailleur : null));
+  const [dateNaissance, setDateNaissance] = useState(watch('dateNaissance') ? watch('dateNaissance') : (accidentData && accidentData.dateNaissance ? accidentData.dateNaissance : null));
+  const [sexe, setsexe] = useState(watch('sexe') ? watch('sexe') : (accidentData && accidentData.sexe ? accidentData.sexe : null));
+  const [typeAccident, setTypeAccident] = useState(watch('typeAccident') ? watch('typeAccident') : (accidentData && accidentData.typeAccident ? accidentData.typeAccident : null));
+  const [DateHeureAccident, setDateHeureAccident] = useState(watch('DateHeureAccident') ? watch('DateHeureAccident') : (accidentData && accidentData.DateHeureAccident ? accidentData.DateHeureAccident : null));
+  const [blessures, setBlessures] = useState(watch('blessures') ? watch('blessures') : (accidentData && accidentData.blessures ? accidentData.blessures : ""));
+  const [assureurStatus, setAssureurStatus] = useState(watch('AssureurStatus') ? watch('AssureurStatus') : (accidentData && accidentData.AssureurStatus ? accidentData.AssureurStatus : null));
 
-    useEffect(() => {
-        forceUpdate({});
-    }, [darkMode]);
 
-    const getCardStyle = useCallback((completed, total) => {
-        const completionRate = (completed / total) * 100;
-        /**
-         * Renvoie une couleur en fonction de la progression d'une t che (0-100%).
-         * En mode sombre, les couleurs sont plus sombres.
-         * @param {number} rate - Pourcentage de progression (0-100)
-         * @returns {string} La couleur correspondante
-         */
-        const getColorByCompletion = (rate) => {
-            if (darkMode) {
-                // Couleurs plus sombres pour le mode sombre
-                if (rate === 100) return '#50A150'; // Vert assombri
-                if (rate >= 75) return '#7A9E7A'; // Vert clair assombri
-                if (rate >= 50) return '#BFA980'; // Beige assombri
-                if (rate >= 25) return '#B67F7F'; // Rose assombri
-                return '#B68080'; // Rouge clair assombri
-            } else {
-                // Couleurs originales pour le mode clair
-                if (rate === 100) return '#90EE90';
-                if (rate >= 75) return '#B7E4B7';
-                if (rate >= 50) return '#FFE4B5';
-                if (rate >= 25) return '#FFB6B6';
-                return '#FFCCCB';
-            }
-        };
+  useEffect(() => {
+    const data = sessionStorage.getItem('accidentData');
+    if (data) {
+      const parsedData = JSON.parse(data);
+      setFormData(parsedData);
+    }
+  }, []);
 
-        return {
-            backgroundColor: getColorByCompletion(completionRate),
-            color: darkMode ? '#ffffff' : 'inherit',
-            boxShadow: darkMode ? '0 4px 8px 0 rgba(0,0,0,0.2)' : 3,
-            transition: 'all 0.3s ease-in-out',
-            '&:hover': {
-                transform: 'scale(1.02)',
-                boxShadow: darkMode ? '0 8px 16px 0 rgba(0,0,0,0.3)' : 6,
-            }
-        };
-    }, [darkMode]);
+  useEffect(() => {
+    console.info("fomulaireEntreprise => formData : ", formData);
+    sessionStorage.setItem('accidentData', JSON.stringify(formData));
+  }, [formData])
 
-    const getProgressBarColor = useCallback((completed, total) => {
-        const completionRate = (completed / total) * 100;
-        if (completionRate === 100) return '#006400';
-        if (completionRate > 75) return '#4CAF50';
-        if (completionRate > 50) return '#8BC34A';
-        if (completionRate > 25) return '#FFA726';
-        return '#FF5722';
-    }, []);
+  useEffect(() => {
+    /**
+     * Fetches entreprises and secteurs data from API
+     * - entreprises data is filtered based on user role (only show entreprises that the user is conseiller for)
+     * - sets entreprises and secteurs in component state
+     * - sets loading to false when done
+     * @async
+     */
+    const fetchData = async () => {
+      try {
+        const [entreprisesResponse, secteursResponse] = await Promise.all([
+          axios.get(`http://${apiUrl}:3100/api/entreprises`),
+          axios.get(`http://${apiUrl}:3100/api/secteurs`)
+        ]);
+        let entreprisesData = entreprisesResponse.data.map(e => ({
+          label: e.AddEntreName,
+          id: e._id
+        }));
 
-    const getEnterpriseStats = useMemo(() => {
-        const stats = {};
-        actions.forEach(action => {
-            const enterprise = action.AddActionEntreprise;
-            if (!stats[enterprise]) {
-                stats[enterprise] = {
-                    total: 0,
-                    completed: 0
-                };
-            }
-            stats[enterprise].total += 1;
-            if (action.AddboolStatus) {
-                stats[enterprise].completed += 1;
-            }
-        });
-        return stats;
-    }, [actions]);
+        // Filter entreprises based on user role
+        if (!isAdmin) {
+          entreprisesData = entreprisesData.filter(e =>
+            userInfo.entreprisesConseillerPrevention?.includes(e.label)
+          );
+        }
 
-    return (
+        setEntreprises(entreprisesData);
+        const secteursData = secteursResponse.data;
+        setSecteurs(secteursData);
+        setLoading(false);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, [apiUrl, isAdmin, isConseiller]);
+
+  useEffect(() => {
+    setValue('entrepriseName', entreprise);
+    setValue('secteur', secteur);
+    setValue('typeTravailleur', typeTravailleur);
+    setValue('nomTravailleur', nomTravailleur)
+    setValue('prenomTravailleur', prenomTravailleur)
+    setValue('dateNaissance', dateNaissance)
+    setValue('sexe', sexe)
+    setValue('typeAccident', typeAccident)
+    setValue('DateHeureAccident', DateHeureAccident)
+    setValue('blessures', blessures)
+    setValue('AssureurStatus', assureurStatus)
+  }, [assureurStatus, blessures, DateHeureAccident, typeAccident, sexe, entreprise, secteur, typeTravailleur, nomTravailleur, prenomTravailleur, dateNaissance, setValue]);
+
+  /**
+   * Handles the selection of an entreprise in the form.
+   * @param {string} entrepriseSelect - The label of the selected entreprise.
+   * @description
+   * This function is called when the user selects an entreprise in the form.
+   * It updates the state of the component by setting the selected entreprise,
+   * resetting the selected secteur, and updating the list of available secteurs
+   * based on the selected entreprise.
+   */
+  const handleEntrepriseSelect = (entrepriseSelect) => {
+    const selectedEntreprise = entreprises.find(e => e.label === entrepriseSelect);
+    if (selectedEntreprise) {
+      setEntreprise(selectedEntreprise.label);
+      setSecteur(''); // Reset secteur when entreprise changes
+    }
+  };
+
+  /**
+   * Retrieves the list of sector names linked to the currently selected enterprise.
+   *
+   * @returns {Array<string>} An array of sector names associated with the selected enterprise.
+   *                          Returns an empty array if no enterprise is selected or if there are no linked sectors.
+   */
+  const getLinkedSecteurs = () => {
+    const selectedEntreprise = entreprises.find(e => e.label === entreprise);
+    if (selectedEntreprise) {
+      return secteurs
+        .filter(s => s.entrepriseId === selectedEntreprise.id)
+        .map(s => s.secteurName);
+    }
+    return [];
+  };
+
+  if (loading) {
+    return <div>Chargement...</div>;
+  }
+
+  return (
+    <div className="frameStyle-style" style={{
+      backgroundColor: darkMode ? '#6e6e6e' : '#ffffff',
+      color: darkMode ? '#ffffff' : '#000000',
+    }}>
+      <div>
         <div>
-            <Grid container spacing={2}>
-                {Object.entries(getEnterpriseStats).map(([enterprise, { total, completed }]) => {
-                    const completionRate = (completed / total) * 100;
-                    return (
-                        <Grid item xs={12} sm={6} md={4} key={enterprise}>
-                            <Card
-                                sx={{
-                                    ...getCardStyle(completed, total),
-                                    '&:hover': {
-                                        boxShadow: 6, // augmente l'ombre au survol
-                                        transform: 'scale(1.02)', // agrandit légèrement la carte
-                                        transition: 'all 0.3s ease-in-out'
-                                    }
-                                }}
-                            >
-                                <CardContent>
-                                    <Typography
-                                        variant="h6"
-                                        component="div"
-                                        sx={{
-                                            fontWeight: completionRate === 100 ? 'bold' : 'normal',
-                                            color: completionRate === 100 ? '#006400' : 'inherit'
-                                        }}
-                                    >
-                                        {enterprise}
-                                        {completionRate === 100 &&
-                                            <span style={{ marginLeft: '10px', fontSize: '0.8em' }}>✓</span>
-                                        }
-                                    </Typography>
-                                    <Typography color="text.secondary">
-                                        Actions totales: {total}
-                                    </Typography>
-                                    <Typography
-                                        color="text.secondary"
-                                        sx={{
-                                            color: completionRate === 100 ? '#006400' : 'inherit'
-                                        }}
-                                    >
-                                        Actions terminées: {completed}
-                                    </Typography>
-                                    <Typography color="text.secondary">
-                                        Actions restantes: {total - completed}
-                                    </Typography>
-                                    <div
-                                        style={{
-                                            width: '100%',
-                                            height: '4px',
-                                            backgroundColor: '#e0e0e0',
-                                            marginTop: '8px',
-                                            borderRadius: '2px'
-                                        }}
-                                    >
-                                        <div
-                                            style={{
-                                                width: `${(completed / total) * 100}%`,
-                                                height: '100%',
-                                                backgroundColor: getProgressBarColor(completed, total),
-                                                transition: 'width 0.3s ease-in-out, background-color 0.3s ease-in-out',
-                                                borderRadius: '2px'
-                                            }}
-                                        />
-                                    </div>
-                                    <Typography
-                                        variant="body2"
-                                        sx={{
-                                            mt: 1,
-                                            textAlign: 'right',
-                                            fontWeight: completionRate === 100 ? 'bold' : 'normal',
-                                            color: completionRate === 100 ? '#006400' : 'inherit'
-                                        }}
-                                    >
-                                        {Math.round(completionRate)}% complété
-                                    </Typography>
-                                </CardContent>
-                            </Card>
-                        </Grid>
-                    );
-                })}
-            </Grid>
-        </div>
-    );
-});
+          <div>
+            <h2>Formulaire Pris en compte pour les statistiques</h2>
 
-export default EnterpriseStats;
+          </div>
+          <div className="autocomplete">
+            {/* *********************************** Autocomplete AssureurStatus **********************************/}
+            <AutoCompleteQ
+              id='AssureurStatus'
+              option={listAssureur.AssureurStatus}
+              label='Status'
+              onChange={(AssureurStatusSelect) => {
+                setAssureurStatus(AssureurStatusSelect);
+                setValue('AssureurStatus', AssureurStatusSelect);
+              }}
+              defaultValue={assureurStatus}
+              required={true}
+            >
+            </AutoCompleteQ>
+            <AutoCompleteQ
+              id='entreprise'
+              option={entreprises.map(e => e.label)}
+              label='Entreprise'
+              onChange={handleEntrepriseSelect}
+              defaultValue={entreprise}
+              required={true}
+            />
+            <AutoCompleteQ
+              id='secteur'
+              option={getLinkedSecteurs()}
+              label='Secteur'
+              onChange={setSecteur}
+              defaultValue={secteur}
+              required={true}
+            />
+            <AutoCompleteQ
+              id='typeTravailleur'
+              option={listEntreprises.typeTravailleur}
+              label="Type de travailleur"
+              onChange={setTypeTravailleur}
+              defaultValue={typeTravailleur}
+              required={true}
+            />
+            <TextFieldQ id='nomTravailleur' label='Nom du travailleur' onChange={setNomTravailleur} defaultValue={nomTravailleur} required={true} />
+            <TextFieldQ id='prenomTravailleur' label='Prénom du travailleur' onChange={setPrenomTravailleur} defaultValue={prenomTravailleur} required={true} />
+            <DatePickerQ id='dateNaissance' label='Date de naissance' onChange={setDateNaissance} defaultValue={dateNaissance} required={true} />
+            <AutoCompleteQ id='sexe' label='Sexe' onChange={setsexe} option={listeDeclarationAssBelfius.ListeSexe} defaultValue={sexe} required={true} />
+            <AutoCompleteQ
+              id='typeAccident'
+              option={listAccident.typeAccident} // Assurez-vous que listAccident.typeAccident est correctement défini
+              label='Type d accident'
+              required={true}
+              onChange={setTypeAccident} // Assurez-vous que setFormData gère correctement les changements
+              defaultValue={typeAccident}
+            />
+            <DateHeurePickerQ id="DateHeureAccident" label="Date et heure de l'accident" required={true} onChange={(DateHeureAccidentChoose) => {
+              setDateHeureAccident(DateHeureAccidentChoose);
+              setValue('DateHeureAccident', DateHeureAccidentChoose);
+            }} defaultValue={DateHeureAccident}></DateHeurePickerQ>
+            <TextFieldQ id="blessures" label="Blessures" required={true} onChange={(blessuresText) => {
+              setBlessures(blessuresText);
+              setValue('blessures', blessuresText);
+            }} defaultValue={blessures}></TextFieldQ>
+
+
+
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
