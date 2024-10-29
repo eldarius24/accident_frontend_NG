@@ -7,14 +7,14 @@ import config from '../config.json';
 import CustomSnackbar from '../_composants/CustomSnackbar';
 import { useLogger } from '../Hook/useLogger';
 import '../pageFormulaire/formulaire.css';
-
+import { useTheme } from '../pageAdmin/user/ThemeContext';
 const QuesEntrep = () => {
     const { logAction } = useLogger();
     const location = useLocation();
     const navigate = useNavigate();
     const { enterprise } = location.state || {};
     const apiUrl = config.apiUrl;
-
+    const { darkMode } = useTheme();
     // États pour tous les champs du questionnaire
     const [questionnaireData, setQuestionnaireData] = useState({
         quesEntreAnnee: '',
@@ -99,7 +99,10 @@ const QuesEntrep = () => {
 
     return (
         <form onSubmit={handleSubmit} className="background-image">
-            <div className="frameStyle-style">
+            <div className="frameStyle-style" style={{
+                backgroundColor: darkMode ? '#6e6e6e' : '#ffffff',
+                color: darkMode ? '#ffffff' : '#000000',
+            }}>
                 <Typography variant="h4" component="h1" align="center" gutterBottom>
                     Questionnaire {enterprise?.AddEntreName}
                 </Typography>
