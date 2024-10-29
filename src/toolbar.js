@@ -33,45 +33,45 @@ function ResponsiveAppBar() {
 
   const handleLogout = useCallback(async () => {
     try {
-        if (userInfo) {
-            // Crée un log de déconnexion avant de supprimer le token
-            await logAction({
-                actionType: 'déconnexion',
-                details: `Déconnexion de l'utilisateur ${userInfo.userName}`,
-                entity: 'Auth',
-                entityId: userInfo._id,
-                entreprise: userInfo.entreprisesConseillerPrevention?.[0] || null
-            });
-        }
-        
-        // Supprime le token et redirige
-        localStorage.removeItem('token');
-        navigate('/login');
-    } catch (error) {
-        console.error('Erreur lors de la déconnexion:', error);
-    }
-}, [userInfo, logAction, navigate]);
+      if (userInfo) {
+        // Crée un log de déconnexion avant de supprimer le token
+        await logAction({
+          actionType: 'déconnexion',
+          details: `Déconnexion de l'utilisateur ${userInfo.userName}`,
+          entity: 'Auth',
+          entityId: userInfo._id,
+          entreprise: userInfo.entreprisesConseillerPrevention?.[0] || null
+        });
+      }
 
-const renderLogoutButton = () => (
-  <Tooltip title="Cliquez ici pour vous déconnecter" arrow>
+      // Supprime le token et redirige
+      localStorage.removeItem('token');
+      navigate('/login');
+    } catch (error) {
+      console.error('Erreur lors de la déconnexion:', error);
+    }
+  }, [userInfo, logAction, navigate]);
+
+  const renderLogoutButton = () => (
+    <Tooltip title="Cliquez ici pour vous déconnecter" arrow>
       <Button
-          onClick={handleLogout}  // Utilise handleLogout au lieu du lien direct
-          variant="contained"
-          sx={{
-              ...buttonStyle,
-              transition: 'all 0.3s ease-in-out',
-              '&:hover': {
-                  backgroundColor: '#95ad22',
-                  transform: 'scale(1.08)',
-                  boxShadow: 6
-              }
-          }}
-          startIcon={<LogoutIcon />}
+        onClick={handleLogout}  // Utilise handleLogout au lieu du lien direct
+        variant="contained"
+        sx={{
+          ...buttonStyle,
+          transition: 'all 0.3s ease-in-out',
+          '&:hover': {
+            backgroundColor: '#95ad22',
+            transform: 'scale(1.08)',
+            boxShadow: 6
+          }
+        }}
+        startIcon={<LogoutIcon />}
       >
-          {showText && "logout"}
+        {showText && "logout"}
       </Button>
-  </Tooltip>
-);
+    </Tooltip>
+  );
 
 
   useEffect(() => {
@@ -88,7 +88,7 @@ const renderLogoutButton = () => (
 
   const showText = windowWidth > 900;
 
-  const {issiegelesion, isnaturelesion, isagentmateriel,isdeviation, isAddSecteur, isadminEntreprises, isaddEntrprise, isadminUser, isaddUser, isFormulaireAction, isFormulaireAccident, isPageAdmin, isPageStats, isLoginPage, isplanAction, isHiddenPage } = useMemo(() => ({
+  const {isEntreprise, issiegelesion, isnaturelesion, isagentmateriel, isdeviation, isAddSecteur, isadminEntreprises, isaddEntrprise, isadminUser, isaddUser, isFormulaireAction, isFormulaireAccident, isPageAdmin, isPageStats, isLoginPage, isplanAction, isHiddenPage } = useMemo(() => ({
     isFormulaireAccident: location.pathname === '/formulaire',
     isPageAdmin: location.pathname === '/adminaction',
     isPageStats: location.pathname === '/statistiques',
@@ -105,6 +105,7 @@ const renderLogoutButton = () => (
     isagentmateriel: location.pathname === '/agentmateriel',
     isnaturelesion: location.pathname === '/naturelesion',
     issiegelesion: location.pathname === '/siegelesion',
+    isEntreprise: location.pathname === '/entreprise',
 
   }), [location.pathname]);
 
@@ -175,11 +176,11 @@ const renderLogoutButton = () => (
         if (token && token.data) {
           // Basculer le thème
           toggleDarkMode();
-          
+
           // Mettre à jour le token dans le localStorage
           token.data.darkMode = !darkMode;
           localStorage.setItem('token', JSON.stringify(token));
-          
+
           // Mettre à jour le thème sur le serveur si nécessaire
           if (token.data._id) {
             await axios.put(`http://${apiUrl}:3100/api/users/${token.data._id}/updateTheme`, {
@@ -209,7 +210,7 @@ const renderLogoutButton = () => (
           </Tooltip>
           {renderLogoutButton("/login", "Cliquez ici pour vous déconnecter", <LogoutIcon />, "logout")}
 
-          {isAdmin && ['/logView','/', '/addSecteur', '/adminaction', '/adminUser', "/adminEntreprises", "/addEntreprise", "/addUser"].includes(location.pathname) &&
+          {isAdmin && ['/logView', '/', '/addSecteur', '/adminaction', '/adminUser', "/adminEntreprises", "/addEntreprise", "/addUser"].includes(location.pathname) &&
             renderButton("/adminaction", "Cliquez ici accèder à l'espace d'administration", <AdminPanelSettingsIcon />, "Admin")}
 
           <Typography variant="h5" noWrap sx={textStyle}>
@@ -221,29 +222,32 @@ const renderLogoutButton = () => (
 
           {isAdminOuConseiller && (
             <>
-              {!['/logView','/fichierdll', '/fichierdllaction', '/addSecteur', '/addUser', '/adminUser', '/addEntreprise', '/adminEntreprises', '/adminaction', '/formulaireAction', '/planAction', '/formulaire', '/statistiques'].includes(location.pathname) &&
+              {!['/entreprise','/logView', '/fichierdll', '/fichierdllaction', '/addSecteur', '/addUser', '/adminUser', '/addEntreprise', '/adminEntreprises', '/adminaction', '/formulaireAction', '/planAction', '/formulaire', '/statistiques'].includes(location.pathname) &&
                 renderButton("/formulaire", "Cliquez ici pour ajouté un nouvelle accident", <AddIcon />, "Accident")}
 
-              {!['/logView','/fichierdll', '/fichierdllaction', '/addSecteur', '/addUser', '/adminUser', '/addEntreprise', '/adminEntreprises', '/adminaction', '/formulaireAction', '/planAction', '/formulaire', '/statistiques'].includes(location.pathname) &&
+              {!['/entreprise','/logView', '/fichierdll', '/fichierdllaction', '/addSecteur', '/addUser', '/adminUser', '/addEntreprise', '/adminEntreprises', '/adminaction', '/formulaireAction', '/planAction', '/formulaire', '/statistiques'].includes(location.pathname) &&
                 renderButton("/statistiques", "Cliquez ici pour accéder aux statistiques", <BarChartIcon />, "Statistiques")}
 
-              {!['/logView','/fichierdll', '/addSecteur', '/addUser', '/adminUser', '/addEntreprise', '/adminEntreprises', '/adminaction', '/planAction', '/formulaire', '/statistiques'].includes(location.pathname) &&
+              {!['/entreprise','/logView', '/fichierdll', '/addSecteur', '/addUser', '/adminUser', '/addEntreprise', '/adminEntreprises', '/adminaction', '/planAction', '/formulaire', '/statistiques'].includes(location.pathname) &&
                 renderButton("/planAction", "Cliquez ici pour accéder aux plans d'actions", <PendingActionsIcon />, "Plans d'actions")}
 
-              {!['/logView','/fichierdll', '/fichierdllaction', '/addSecteur', '/addUser', '/adminUser', '/addEntreprise', '/adminEntreprises', '/adminaction', '/', '/formulaireAction', '/formulaire', '/statistiques'].includes(location.pathname) &&
+              {!['/entreprise','/logView', '/fichierdll', '/fichierdllaction', '/addSecteur', '/addUser', '/adminUser', '/addEntreprise', '/adminEntreprises', '/adminaction', '/', '/formulaireAction', '/formulaire', '/statistiques'].includes(location.pathname) &&
                 renderButton("/formulaireAction", "Cliquez ici pour ajouter une nouvelle action", <AddIcon />, "Nouvelle action")}
 
-              {!['/logView','/fichierdll', '/fichierdllaction', '/addSecteur', '/addEntreprise', '/addUser', '/adminEntreprises', '/planAction', '/', '/formulaireAction', '/formulaire', '/statistiques'].includes(location.pathname) &&
+              {!['/entreprise','/logView', '/fichierdll', '/fichierdllaction', '/addSecteur', '/addEntreprise', '/addUser', '/adminEntreprises', '/planAction', '/', '/formulaireAction', '/formulaire', '/statistiques'].includes(location.pathname) &&
                 renderButton("/addUser", "Cliquez ici pour ajouter un nouvel utilisateur", <AddIcon />, "Utilisateur")}
 
-              {!['/logView','/fichierdll', '/fichierdllaction', '/addSecteur', '/adminUser', '/addEntreprise', '/adminEntreprises', '/planAction', '/', '/formulaireAction', '/formulaire', '/statistiques'].includes(location.pathname) &&
+              {!['/entreprise','/logView', '/fichierdll', '/fichierdllaction', '/addSecteur', '/adminUser', '/addEntreprise', '/adminEntreprises', '/planAction', '/', '/formulaireAction', '/formulaire', '/statistiques'].includes(location.pathname) &&
                 renderButton("/adminUser", "Cliquez ici pour gérer les utilisateurs", <ViewListIcon />, "utilisateurs")}
 
-              {!['/logView','/fichierdll', '/fichierdllaction', '/addUser', '/adminUser', '/addEntreprise', '/planAction', '/', '/formulaireAction', '/formulaire', '/statistiques'].includes(location.pathname) &&
+              {!['/entreprise','/logView', '/fichierdll', '/fichierdllaction', '/addUser', '/adminUser', '/addEntreprise', '/planAction', '/', '/formulaireAction', '/formulaire', '/statistiques'].includes(location.pathname) &&
                 renderButton("/addEntreprise", "Cliquez ici pour ajouter une nouvelle entreprise", <AddIcon />, "Entreprise")}
 
-              {!['/logView','/fichierdll', '/fichierdllaction', '/addUser', '/adminUser', '/adminEntreprises', '/planAction', '/', '/formulaireAction', '/formulaire', '/statistiques'].includes(location.pathname) &&
+              {!['/entreprise','/logView', '/fichierdll', '/fichierdllaction', '/addUser', '/adminUser', '/adminEntreprises', '/planAction', '/', '/formulaireAction', '/formulaire', '/statistiques'].includes(location.pathname) &&
                 renderButton("/adminEntreprises", "Cliquez ici pour gérer les entreprises", <ViewListIcon />, "Entreprises")}
+
+              {!["/adminaction",'/entreprise','/logView', '/fichierdll', '/fichierdllaction', '/addUser', '/adminUser', '/adminEntreprises', '/planAction','/formulaireAction', '/formulaire', '/statistiques'].includes(location.pathname) &&
+                renderButton("/entreprise", "Cliquez ici pour gérer les entreprises", <ViewListIcon />, "Entreprise")}
             </>
           )}
         </Toolbar>
