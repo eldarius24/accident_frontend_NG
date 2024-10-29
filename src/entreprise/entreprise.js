@@ -17,6 +17,7 @@ import {
     Select,
     MenuItem,
     FormControl,
+    Tooltip,
     InputLabel
 } from '@mui/material';
 import PhoneIcon from '@mui/icons-material/Phone';
@@ -32,38 +33,18 @@ import config from '../config.json';
 import { useTheme } from '../pageAdmin/user/ThemeContext';
 import { useUserConnected } from '../Hook/userConnected';
 import { useNavigate } from 'react-router-dom';
-
+import '../pageFormulaire/formulaire.css';
 const Enterprise = () => {
     const navigate = useNavigate();
     const { darkMode } = useTheme();
     const [enterprises, setEnterprises] = useState([]);
     const [loading, setLoading] = useState(true);
-    const { isAdmin, userInfo } = useUserConnected();
+    const { isAdmin, isConseiller, userInfo } = useUserConnected(); // Ajout de isConseiller
     const apiUrl = config.apiUrl;
 
-    // États pour le dialogue et la sélection d'année
-    const [openDialog, setOpenDialog] = useState(false);
-    const [selectedEnterprise, setSelectedEnterprise] = useState(null);
-    const [selectedYear, setSelectedYear] = useState('');
-
-    // Générer les années (de l'année actuelle à 5 ans en arrière)
-    const years = Array.from({ length: 6 }, (_, i) => new Date().getFullYear() - i);
-
-
-
-    // Gestionnaires d'événements pour le dialogue
-
-
-
-    const handleStartQuestionnaire = (enterprise) => {
-        navigate('/quesEntrep', {
-            state: { enterprise }  // On passe l'entreprise sélectionnée à la page du questionnaire
-        });
-    };
-
-
-
-
+    const isConseillerPrevention = useCallback((entrepriseName) => {
+        return userInfo?.entreprisesConseillerPrevention?.includes(entrepriseName) || false;
+    }, [userInfo]);
 
     const fetchEnterprises = useCallback(async () => {
         try {
@@ -71,8 +52,9 @@ const Enterprise = () => {
             if (isAdmin) {
                 setEnterprises(response.data);
             } else {
+                // Modification du filtrage pour utiliser isConseillerPrevention
                 const filteredEnterprises = response.data.filter(enterprise =>
-                    userInfo?.entreprisesConseillerPrevention?.includes(enterprise.AddEntreName)
+                    isConseiller && isConseillerPrevention(enterprise.AddEntreName)
                 );
                 setEnterprises(filteredEnterprises);
             }
@@ -81,7 +63,13 @@ const Enterprise = () => {
             console.error('Error fetching enterprises:', error);
             setLoading(false);
         }
-    }, [apiUrl, isAdmin, userInfo?.entreprisesConseillerPrevention]);
+    }, [apiUrl, isAdmin, isConseiller, isConseillerPrevention]);
+
+    const handleStartQuestionnaire = (enterprise) => {
+        navigate('/quesEntrep', {
+            state: { enterprise }  // On passe l'entreprise sélectionnée à la page du questionnaire
+        });
+    };
 
     useEffect(() => {
         fetchEnterprises();
@@ -97,8 +85,6 @@ const Enterprise = () => {
             boxShadow: '0 8px 16px rgba(0,0,0,0.2)'
         }
     }), [darkMode]);
-
-
 
     const IconWrapper = ({ icon: Icon, text }) => (
         <Box display="flex" alignItems="center" gap={1} mb={1}>
@@ -245,8 +231,14 @@ const Enterprise = () => {
                     </Grid>
                 ))}
             </Grid>
+            <div className="image-cortigroupe"></div>
+            <Tooltip title="Si vous rencontrez un souci avec le site, envoyer un mail à l'adresse suivante : bgillet.lecortil@cortigroupe.be et expliquer le soucis rencontré" arrow>
+                <h5 style={{ marginBottom: '40px' }}> Développé par Remy et Benoit pour Le Cortigroupe. Support: bgillet.lecortil@cortigroupe.be</h5>
+            </Tooltip>
         </Box>
+
     );
+
 };
 
 export default Enterprise;
