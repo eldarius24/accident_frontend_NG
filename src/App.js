@@ -25,6 +25,7 @@ import FormulaireAction from './planaction/FormulaireAction';
 import { ThemeProvider } from './pageAdmin/user/ThemeContext'; // Importez ThemeProvider
 import LogView from './pageAdmin/logView';
 import Entreprise from './entreprise/entreprise';
+import QuesEntrep from './entreprise/quesEntrep';
 /**
  * App est le composant principal de l'application. Il contient les routes 
  * ainsi que la barre de navigation.
@@ -59,6 +60,7 @@ const App = () => {
           <Route path="/addUser" element={<ProtectedRouteAdmin><AddUser /></ProtectedRouteAdmin>} />
           
           {/* Routes accessibles par isAdmin ou Conseiller */}
+          <Route path="/quesEntrep" element={<ProtectedRouteAdminOrConseiller><QuesEntrep /></ProtectedRouteAdminOrConseiller>} />
           <Route path="/entreprise" element={<ProtectedRouteAdminOrConseiller><Entreprise/></ProtectedRouteAdminOrConseiller>} />
           <Route path="/formulaireAction" element={<ProtectedRouteAdminOrConseiller><FormulaireAction /></ProtectedRouteAdminOrConseiller>} />
           <Route path="/formulaire" element={<ProtectedRouteAdminOrConseiller><Formulaire /></ProtectedRouteAdminOrConseiller>} />
