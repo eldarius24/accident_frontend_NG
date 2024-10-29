@@ -88,7 +88,7 @@ function ResponsiveAppBar() {
 
   const showText = windowWidth > 900;
 
-  const { isquesEntrep, isEntreprise, issiegelesion, isnaturelesion, isagentmateriel, isdeviation, isAddSecteur, isadminEntreprises, isaddEntrprise, isadminUser, isaddUser, isFormulaireAction, isFormulaireAccident, isPageAdmin, isPageStats, isLoginPage, isplanAction, isHiddenPage } = useMemo(() => ({
+  const { isquesEntrep, isentreprise, issiegelesion, isnaturelesion, isagentmateriel, isdeviation, isAddSecteur, isadminEntreprises, isaddEntrprise, isadminUser, isaddUser, isFormulaireAction, isFormulaireAccident, isPageAdmin, isPageStats, isLoginPage, isplanAction, isHiddenPage } = useMemo(() => ({
     isFormulaireAccident: location.pathname === '/formulaire',
     isPageAdmin: location.pathname === '/adminaction',
     isPageStats: location.pathname === '/statistiques',
@@ -100,13 +100,14 @@ function ResponsiveAppBar() {
     isaddEntrprise: location.pathname === '/addEntreprise',
     isadminEntreprises: location.pathname === '/adminEntreprises',
     isAddSecteur: location.pathname === '/addSecteur',
-    isHiddenPage: [].includes(location.pathname),
     isdeviation: location.pathname === '/deviation',
     isagentmateriel: location.pathname === '/agentmateriel',
     isnaturelesion: location.pathname === '/naturelesion',
     issiegelesion: location.pathname === '/siegelesion',
-    isEntreprise: location.pathname === '/entreprise',
+    isentreprise: location.pathname === '/entreprise',
     isquesEntrep: location.pathname === '/quesEntrep',
+    isHiddenPage: [].includes(location.pathname),
+
 
   }), [location.pathname]);
 
@@ -236,21 +237,21 @@ function ResponsiveAppBar() {
                 renderButton("/formulaireAction", "Cliquez ici pour ajouter une nouvelle action", <AddIcon />, "Nouvelle action")}
 
               {!['/quesEntrep', '/entreprise', '/logView', '/fichierdll', '/fichierdllaction', '/addSecteur', '/addEntreprise', '/addUser', '/adminEntreprises', '/planAction', '/', '/formulaireAction', '/formulaire', '/statistiques'].includes(location.pathname) &&
-                renderButton("/addUser", "Cliquez ici pour ajouter un nouvel utilisateur", <AddIcon />, "Utilisateur")}
+                renderButton("/addUser", "Cliquez ici pour ajouter un nouvel utilisateur", <AddIcon />, "Utilisateurs")}
 
               {!['/quesEntrep', '/entreprise', '/logView', '/fichierdll', '/fichierdllaction', '/addSecteur', '/adminUser', '/addEntreprise', '/adminEntreprises', '/planAction', '/', '/formulaireAction', '/formulaire', '/statistiques'].includes(location.pathname) &&
                 renderButton("/adminUser", "Cliquez ici pour gérer les utilisateurs", <ViewListIcon />, "utilisateurs")}
 
               {!['/quesEntrep', '/entreprise', '/logView', '/fichierdll', '/fichierdllaction', '/addUser', '/adminUser', '/addEntreprise', '/planAction', '/', '/formulaireAction', '/formulaire', '/statistiques'].includes(location.pathname) &&
-                renderButton("/addEntreprise", "Cliquez ici pour ajouter une nouvelle entreprise", <AddIcon />, "Entreprise")}
+                renderButton("/addEntreprise", "Cliquez ici pour ajouter une nouvelle entreprise", <AddIcon />, "Entreprises")}
 
               {!['/quesEntrep', '/entreprise', '/logView', '/fichierdll', '/fichierdllaction', '/addUser', '/adminUser', '/adminEntreprises', '/planAction', '/', '/formulaireAction', '/formulaire', '/statistiques'].includes(location.pathname) &&
                 renderButton("/adminEntreprises", "Cliquez ici pour gérer les entreprises", <ViewListIcon />, "Entreprises")}
 
-              {![ "/adminaction", '/entreprise', '/logView', '/fichierdll', '/fichierdllaction', '/addUser', '/adminUser', '/adminEntreprises', '/planAction', '/formulaireAction', '/formulaire', '/statistiques'].includes(location.pathname) &&
-                renderButton("/entreprise", "Cliquez ici pour gérer les entreprises", <ViewListIcon />, "Entreprise")}
+              {!['/addSecteur', '/addEntreprise', '/adminaction', '/entreprise', '/logView', '/fichierdll', '/fichierdllaction', '/addUser', '/adminUser', '/adminEntreprises', '/planAction', '/formulaireAction', '/formulaire', '/statistiques'].includes(location.pathname) &&
+                renderButton("/entreprise", "Cliquez ici pour gérer les entreprises", <ViewListIcon />, "Entrepr")}
 
-              {!["/addEntreprise",'/','/quesEntrep', "/adminaction", '/entreprise', '/logView', '/fichierdll', '/fichierdllaction', '/addUser', '/adminUser', '/adminEntreprises', '/planAction', '/formulaireAction', '/formulaire', '/statistiques'].includes(location.pathname) &&
+              {!['/addSecteur' ,'/addEntreprise', '/quesEntrep', '/adminaction', '/entreprise', '/logView', '/fichierdll', '/fichierdllaction', '/addUser', '/adminUser', '/adminEntreprises', '/planAction', '/formulaireAction', '/formulaire', '/statistiques'].includes(location.pathname) &&
                 renderButton("/quesEntrep", "Cliquez ici pour gérer les entreprises", <ViewListIcon />, "Entr")}
 
             </>
