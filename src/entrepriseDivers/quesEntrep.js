@@ -1,13 +1,18 @@
+// QuesEntrep.js
 import React, { useState, useCallback } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { Button, Tooltip, Typography } from '@mui/material';
 import TextFieldP from '../_composants/textFieldP';
+import AutoCompleteP from '../_composants/autoCompleteP';
+import MultipleAutoCompleteCMQ from '../_composants/autoCompleteCMQ';
 import config from '../config.json';
 import CustomSnackbar from '../_composants/CustomSnackbar';
 import { useLogger } from '../Hook/useLogger';
 import '../pageFormulaire/formulaire.css';
 import { useTheme } from '../pageAdmin/user/ThemeContext';
+import listeQuesEntr from '../liste/listeQuesEntre.json';
+
 const QuesEntrep = () => {
     const { logAction } = useLogger();
     const location = useLocation();
@@ -15,13 +20,15 @@ const QuesEntrep = () => {
     const { enterprise } = location.state || {};
     const apiUrl = config.apiUrl;
     const { darkMode } = useTheme();
-    // États pour tous les champs du questionnaire
+    const currentYear = new Date().getFullYear();
+    const yearsRange = Array.from(
+        { length: 21 },
+        (_, i) => (currentYear - 10 + i).toString()
+    );
+
     const [questionnaireData, setQuestionnaireData] = useState({
-        quesEntreAnnee: '',
-        quesEntreEffectif: '',
-        quesEntreCa: '',
-        quesEntreSecurite: '',
-        quesEntreFormation: '',
+        quesEntreAnnee: [],
+        quesEntreType: '',
         quesEntreCommentaire: ''
     });
 
@@ -40,7 +47,6 @@ const QuesEntrep = () => {
         setSnackbar(prev => ({ ...prev, open: false }));
     };
 
-    // Fonction générique pour mettre à jour les champs
     const handleFieldChange = (field) => (value) => {
         setQuestionnaireData(prev => ({
             ...prev,
@@ -50,53 +56,46 @@ const QuesEntrep = () => {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-
-        // Validation de l'année
-        const yearNumber = parseInt(questionnaireData.quesEntreAnnee);
-        if (isNaN(yearNumber) || yearNumber < 1900 || yearNumber > 2100) {
-            showSnackbar('Veuillez entrer une année valide entre 1900 et 2100', 'error');
+    
+        if (questionnaireData.quesEntreAnnee.length === 0) {
+            showSnackbar('Veuillez sélectionner au moins une année', 'error');
             return;
         }
-
+    
+        if (!questionnaireData.quesEntreType) {
+            showSnackbar('Veuillez sélectionner un type de fichier', 'error');
+            return;
+        }
+    
         try {
             const dataToSubmit = {
                 entrepriseId: enterprise?._id,
                 entrepriseName: enterprise?.AddEntreName,
-                annee: questionnaireData.quesEntreAnnee,
-                reponses: {
-                    effectif: questionnaireData.quesEntreEffectif,
-                    chiffreAffaires: questionnaireData.quesEntreCa,
-                    securite: questionnaireData.quesEntreSecurite,
-                    formation: questionnaireData.quesEntreFormation,
-                    commentaire: questionnaireData.quesEntreCommentaire
-                }
+                annees: questionnaireData.quesEntreAnnee,
+                typeFichier: questionnaireData.quesEntreType,
+                commentaire: questionnaireData.quesEntreCommentaire
             };
-
+    
             const response = await axios.post(`http://${apiUrl}:3100/api/questionnaires`, dataToSubmit);
-
-            if (response.status === 201 || response.status === 200) {
+    
+            
                 await logAction({
-                    actionType: 'création',
-                    details: `Création d'un questionnaire - Entreprise: ${enterprise?.AddEntreName} - Année: ${questionnaireData.quesEntreAnnee}`,
-                    entity: 'Questionnaire',
+                    actionType: 'creation',
+                    details: `Création d'un questionnaire - Entreprise: ${enterprise?.AddEntreName} - Années: ${questionnaireData.quesEntreAnnee.join(', ')} - Type: ${questionnaireData.quesEntreType}`,
+                    entity: 'Divers Entreprise',
                     entityId: response.data._id,
                     entreprise: enterprise?.AddEntreName
                 });
-
+    
                 showSnackbar('Questionnaire créé avec succès', 'success');
-                setTimeout(() => {
-                    navigate('/questionnaires');
-                }, 2000);
-            }
+                setTimeout(() => navigate('/entreprise'), 2000);
+            
         } catch (error) {
             console.error('Erreur lors de la création du questionnaire:', error);
-            showSnackbar(
-                error.response?.data?.message || 'Erreur lors de la création du questionnaire',
-                'error'
-            );
+            showSnackbar(error.response?.data?.message || 'Erreur lors de la création du questionnaire', 'error');
         }
     };
-
+    
     return (
         <form onSubmit={handleSubmit} className="background-image">
             <div className="frameStyle-style" style={{
@@ -106,15 +105,20 @@ const QuesEntrep = () => {
                 <Typography variant="h4" component="h1" align="center" gutterBottom>
                     Questionnaire {enterprise?.AddEntreName}
                 </Typography>
-
-                <TextFieldP
-                    id="quesEntreAnnee"
-                    label="Année du questionnaire"
-                    onChange={handleFieldChange('quesEntreAnnee')}
-                    value={questionnaireData.quesEntreAnnee}
-                    inputProps={{ maxLength: 4 }}
+                <AutoCompleteP
+                    id="quesEntreType"
+                    label="Type de fichier"
+                    option={listeQuesEntr.typeFicher}
+                    onChange={handleFieldChange('quesEntreType')}
+                    defaultValue={questionnaireData.quesEntreType}
                 />
-
+                <MultipleAutoCompleteCMQ
+                    id="quesEntreAnnee"
+                    label="Réaliser en Années"
+                    option={yearsRange}
+                    onChange={handleFieldChange('quesEntreAnnee')}
+                    defaultValue={questionnaireData.quesEntreAnnee}
+                />
                 <TextFieldP
                     id="quesEntreCommentaire"
                     label="Commentaires additionnels"
@@ -122,7 +126,6 @@ const QuesEntrep = () => {
                     value={questionnaireData.quesEntreCommentaire}
                     multiline
                 />
-
                 <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
                     <Tooltip title="Cliquer pour enregistrer le questionnaire" arrow>
                         <Button
@@ -150,7 +153,6 @@ const QuesEntrep = () => {
                     </Tooltip>
                 </div>
             </div>
-
             <CustomSnackbar
                 open={snackbar.open}
                 handleClose={handleCloseSnackbar}
@@ -159,10 +161,11 @@ const QuesEntrep = () => {
             />
             <div className="image-cortigroupe"></div>
             <Tooltip title="Si vous rencontrez un souci avec le site, envoyer un mail à l'adresse suivante : bgillet.lecortil@cortigroupe.be et expliquer le soucis rencontré" arrow>
-                <h5 style={{ marginBottom: '40px' }}> Développé par Remy et Benoit pour Le Cortigroupe. Support: bgillet.lecortil@cortigroupe.be</h5>
+                <h5 style={{ marginBottom: '40px' }}> 
+                    Développé par Remy et Benoit pour Le Cortigroupe. Support: bgillet.lecortil@cortigroupe.be
+                </h5>
             </Tooltip>
         </form>
-
     );
 };
 

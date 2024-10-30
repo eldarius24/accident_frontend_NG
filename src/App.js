@@ -24,8 +24,8 @@ import ProtectedRouteAdminOrConseiller from './Model/protectedRouteConseillerPre
 import FormulaireAction from './planaction/FormulaireAction';
 import { ThemeProvider } from './pageAdmin/user/ThemeContext'; // Importez ThemeProvider
 import LogView from './pageAdmin/logView';
-import Entreprise from './entreprise/entreprise';
-import QuesEntrep from './entreprise/quesEntrep';
+import Entreprise from './entrepriseDivers/entreprise';
+import QuesEntrep from './entrepriseDivers/quesEntrep';
 /**
  * App est le composant principal de l'application. Il contient les routes 
  * ainsi que la barre de navigation.
