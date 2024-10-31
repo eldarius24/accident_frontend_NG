@@ -144,7 +144,7 @@ const Enterprise = () => {
             await axios.put(`http://${apiUrl}:3100/api/questionnaires/${questionnaireId}`, {
                 ...currentQuestionnaire,
                 files: updatedFiles
-                
+
             });
             await logAction({
                 actionType: 'suppression',
@@ -335,7 +335,7 @@ const Enterprise = () => {
                                     icon={EmailIcon}
                                     text={enterprise.AddEntrEmail}
                                 />
-                                <Divider sx={{ my: 2, backgroundColor: darkMode ? '#555' : '#ddd' }} />
+                                <Divider sx={{ my: 2, backgroundColor: darkMode ? '#ffffff' : '#000000' }} />
 
                                 <IconWrapper
                                     icon={BusinessIcon}
@@ -349,7 +349,7 @@ const Enterprise = () => {
                                     icon={WorkIcon}
                                     text={`Activité: ${enterprise.AddEntreActiventre}`}
                                 />
-                                <Divider sx={{ my: 2, backgroundColor: darkMode ? '#555' : '#ddd' }} />
+                                <Divider sx={{ my: 2, backgroundColor: darkMode ? '#ffffff' : '#000000' }} />
                                 <Box sx={{ mb: 1, display: 'flex', alignItems: 'center', gap: 1 }}>
                                     <GroupIcon sx={{ color: darkMode ? '#90caf9' : '#1976d2' }} />
                                     <Typography
@@ -371,7 +371,7 @@ const Enterprise = () => {
                                         {enterprise.AddEntrScadresse}, {enterprise.AddEntrSccpost} {enterprise.AddEntrSclocalite}
                                     </Typography>
                                 </Box>
-                                <Divider sx={{ my: 2, backgroundColor: darkMode ? '#555' : '#ddd' }} />
+                                <Divider sx={{ my: 2, backgroundColor: darkMode ? '#ffffff' : '#000000' }} />
                                 <Box sx={{ mb: 1, display: 'flex', alignItems: 'center', gap: 1 }}>
                                     <SecurityIcon sx={{ color: darkMode ? '#90caf9' : '#1976d2' }} />
                                     <Typography
@@ -393,7 +393,7 @@ const Enterprise = () => {
                                         Unité: {enterprise.AddEntrEnite}
                                     </Typography>
                                 </Box>
-                                <Divider sx={{ my: 2, backgroundColor: darkMode ? '#555' : '#ddd' }} />
+                                <Divider sx={{ my: 2, backgroundColor: darkMode ? '#ffffff' : '#000000' }} />
                                 <Box sx={{ mb: 1, display: 'flex', alignItems: 'center', gap: 1 }}>
                                     <AssignmentIcon sx={{ color: darkMode ? '#90caf9' : '#1976d2' }} />
                                     <Typography
@@ -403,36 +403,49 @@ const Enterprise = () => {
                                         Questionnaires
                                     </Typography>
                                 </Box>
-                                {questionnaires[enterprise._id]?.map((q) => (
-                                    <Box key={q._id} display="flex" alignItems="center" gap={1} mb={1}>
-                                        <Box flex="1">
-                                            <Typography variant="body2" sx={{ color: darkMode ? '#fff' : 'text.secondary' }}>
-                                                Type: {q.typeFichier} | Années: {q.annees.join(', ')} | Commentaires: {q.commentaire} | Entreprise: {q.entrepriseName} | files: {q.files.length}
-                                            </Typography>
-                                            {q.files && q.files.map(file => (
-                                                <Box key={file.fileId} display="flex" alignItems="center" gap={1} ml={2}>
-                                                    <Typography variant="body2" sx={{ color: darkMode ? '#bbb' : '#666' }}>
-                                                        {file.fileName}
-                                                    </Typography>
-                                                    <IconButton
-                                                        size="small"
-                                                        onClick={() => handleDeleteFile(q._id, file.fileId, enterprise._id)}
-                                                        color="error"
-                                                    >
-                                                        <DeleteIcon />
-                                                    </IconButton>
-                                                </Box>
-                                            ))}
+                                {questionnaires[enterprise._id]?.map((q, index, array) => (
+                                    <React.Fragment key={q._id}>
+                                        <Box display="flex" alignItems="center" gap={1} mb={1}>
+                                            <Box flex="1">
+                                                <Typography variant="body2" sx={{ color: darkMode ? '#fff' : 'text.secondary' }}>
+                                                    Type: {q.typeFichier} | Années: {q.annees.join(', ')} | Commentaires: {q.commentaire} | Entreprise: {q.entrepriseName} | files: {q.files.length}
+                                                </Typography>
+                                                {q.files && q.files.map(file => (
+                                                    <Box key={file.fileId} display="flex" alignItems="center" gap={1} ml={2}>
+                                                        <Typography variant="body2" sx={{ color: darkMode ? '#ffffff' : '#666' }}>
+                                                            {file.fileName}
+                                                        </Typography>
+                                                        <IconButton
+                                                            size="small"
+                                                            onClick={() => handleDeleteFile(q._id, file.fileId, enterprise._id)}
+                                                            color="error"
+                                                        >
+                                                            <DeleteIcon />
+                                                        </IconButton>
+                                                    </Box>
+                                                ))}
+                                            </Box>
+                                            <IconButton
+                                                color="error"
+                                                onClick={() => handleDeleteQuestionnaire(q._id, enterprise._id)}
+                                                sx={{ ml: 'auto' }}
+                                            >
+                                                <DeleteIcon />
+                                            </IconButton>
                                         </Box>
-                                        <IconButton
-                                            color="error"
-                                            onClick={() => handleDeleteQuestionnaire(q._id, enterprise._id)}
-                                            sx={{ ml: 'auto' }}
-                                        >
-                                            <DeleteIcon />
-                                        </IconButton>
-                                    </Box>
+                                        {index < array.length - 1 && (
+                                            <Divider
+                                                sx={{
+                                                    my: 1,
+                                                    backgroundColor: darkMode ? '#0b5a59' : '#01aeac',
+                                                    opacity: 0.7,
+                                                    height: '3px'
+                                                }}
+                                            />
+                                        )}
+                                    </React.Fragment>
                                 ))}
+                                <Divider sx={{ my: 2, backgroundColor: darkMode ? '#ffffff' : '#000000' }} />
                                 <Button
                                     variant="contained"
                                     startIcon={<AssignmentIcon />}
