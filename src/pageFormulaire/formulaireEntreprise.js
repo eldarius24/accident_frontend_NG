@@ -11,6 +11,8 @@ import DateHeurePickerQ from '../_composants/dateHeurePickerQ';
 import listAccident from '../liste/listAccident.json';
 import listAssureur from '../liste/listAssureur.json';
 import { useTheme } from '../pageAdmin/user/ThemeContext';
+import { FormGroup } from '@mui/material';
+import ControlLabelP from '../_composants/controlLabelP';
 /**
  * FormulaireEntreprise component.
  * 
@@ -46,7 +48,7 @@ export default function FormulaireEntreprise({ setValue, accidentData, watch }) 
   const [DateHeureAccident, setDateHeureAccident] = useState(watch('DateHeureAccident') ? watch('DateHeureAccident') : (accidentData && accidentData.DateHeureAccident ? accidentData.DateHeureAccident : null));
   const [blessures, setBlessures] = useState(watch('blessures') ? watch('blessures') : (accidentData && accidentData.blessures ? accidentData.blessures : ""));
   const [assureurStatus, setAssureurStatus] = useState(watch('AssureurStatus') ? watch('AssureurStatus') : (accidentData && accidentData.AssureurStatus ? accidentData.AssureurStatus : null));
-
+  const [boolAsCloture, setboolAsCloture] = useState(watch('boolAsCloture') ? watch('boolAsCloture') : (accidentData && accidentData.boolAsCloture ? accidentData.boolAsCloture : ''));
 
   useEffect(() => {
     const data = sessionStorage.getItem('accidentData');
@@ -111,7 +113,8 @@ export default function FormulaireEntreprise({ setValue, accidentData, watch }) 
     setValue('DateHeureAccident', DateHeureAccident)
     setValue('blessures', blessures)
     setValue('AssureurStatus', assureurStatus)
-  }, [assureurStatus, blessures, DateHeureAccident, typeAccident, sexe, entreprise, secteur, typeTravailleur, nomTravailleur, prenomTravailleur, dateNaissance, setValue]);
+    setValue('boolAsCloture', boolAsCloture)
+  }, [boolAsCloture, assureurStatus, blessures, DateHeureAccident, typeAccident, sexe, entreprise, secteur, typeTravailleur, nomTravailleur, prenomTravailleur, dateNaissance, setValue]);
 
   /**
    * Handles the selection of an entreprise in the form.
@@ -173,6 +176,7 @@ export default function FormulaireEntreprise({ setValue, accidentData, watch }) 
               }}
               defaultValue={assureurStatus}
               required={true}
+              isOptionEqualToValue={(option, value) => option === value || option.label === value}
             >
             </AutoCompleteQ>
             <AutoCompleteQ
@@ -219,7 +223,15 @@ export default function FormulaireEntreprise({ setValue, accidentData, watch }) 
               setBlessures(blessuresText);
               setValue('blessures', blessuresText);
             }} defaultValue={blessures}></TextFieldQ>
-
+            {/* *********************************** Checkbox Cloturé **********************************/}
+            <div>
+              <FormGroup>
+                <ControlLabelP id="boolAsCloture" label="Cloturé" onChange={(boolAsClotureCoche) => {
+                  setboolAsCloture(boolAsClotureCoche);
+                  setValue('boolAsCloture', boolAsClotureCoche);
+                }} defaultValue={Boolean(boolAsCloture)}></ControlLabelP>
+              </FormGroup>
+            </div>
 
 
           </div>

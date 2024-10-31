@@ -436,6 +436,7 @@ function Home() {
                                 backgroundColor: darkMode ? '#535353' : '#0098f950'
                             }}
                         >
+                            <TableCell style={{ fontWeight: 'bold' }}>Etat</TableCell>
                             <TableCell style={{ fontWeight: 'bold' }}>N° Groupe</TableCell>
                             <TableCell style={{ fontWeight: 'bold' }}>N° Entreprise</TableCell>
                             <TableCell style={{ fontWeight: 'bold' }}>Status</TableCell>
@@ -460,6 +461,7 @@ function Home() {
                                         backgroundColor: rowColors[index % rowColors.length]
                                     }}
                                 >
+                                    <TableCell>{item.boolAsCloture ? "true" : "false"}</TableCell>
                                     <TableCell>{item.numeroGroupe}</TableCell>
                                     <TableCell>{item.numeroEntreprise}</TableCell>
                                     <TableCell>{item.AssureurStatus}</TableCell>

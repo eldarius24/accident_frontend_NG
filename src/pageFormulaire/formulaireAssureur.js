@@ -1,12 +1,9 @@
 /* IMPORT REACT */
 import { useState, useEffect } from 'react';
-/* IMPORT MUI */
-import { FormGroup } from '@mui/material';
 /* IMPORT PERSO */
 import DatePickerP from '../_composants/datePickerP';
 import listAssureur from '../liste/listAssureur.json';
 import AutoCompleteP from '../_composants/autoCompleteP';
-import ControlLabelP from '../_composants/controlLabelP';
 import TextFieldP from '../_composants/textFieldP';
 import { useTheme } from '../pageAdmin/user/ThemeContext';
 
@@ -40,8 +37,7 @@ export default function FormulaireAssureur({ setValue, accidentData, watch }) {
   const [commentaireetSuivit, setcommentaireetSuivit] = useState(watch('commentaireetSuivit') ? watch('commentaireetSuivit') : (accidentData && accidentData.commentaireetSuivit ? accidentData.commentaireetSuivit : ""));
   const [Getionnaiesinistre, setGetionnaiesinistre] = useState(watch('Getionnaiesinistre') ? watch('Getionnaiesinistre') : (accidentData && accidentData.Getionnaiesinistre ? accidentData.Getionnaiesinistre : ""));
   const [assureurStatus, setAssureurStatus] = useState(watch('AssureurStatus') ? watch('AssureurStatus') : (accidentData && accidentData.AssureurStatus ? accidentData.AssureurStatus : null));
-  const [boolAsCloture, setboolAsCloture] = useState(watch('boolAsCloture') ? watch('boolAsCloture') : (accidentData && accidentData.boolAsCloture ? accidentData.boolAsCloture : false));
-
+ 
   /**
    * Etape 2 : mettre à jour les données du formulaire à chaque modification d'un des champs
    */
@@ -52,8 +48,8 @@ export default function FormulaireAssureur({ setValue, accidentData, watch }) {
     setValue('commentaireetSuivit', commentaireetSuivit)
     setValue('Getionnaiesinistre', Getionnaiesinistre)
     setValue('AssureurStatus', assureurStatus)
-    setValue('boolAsCloture', boolAsCloture)
-  }, [NumeroPoliceAssurance, referenceduSinistre, DateEnvoieDeclarationAccident, commentaireetSuivit, Getionnaiesinistre, assureurStatus, boolAsCloture, setValue]);
+    
+  }, [NumeroPoliceAssurance, referenceduSinistre, DateEnvoieDeclarationAccident, commentaireetSuivit, Getionnaiesinistre, assureurStatus, setValue]);
 
 
   /**
@@ -106,15 +102,7 @@ export default function FormulaireAssureur({ setValue, accidentData, watch }) {
             setValue('AssureurStatus', AssureurStatusSelect);
           }} defaultValue={assureurStatus}> </AutoCompleteP>
 
-          {/* *********************************** Checkbox Cloturé **********************************/}
-          <div>
-            <FormGroup>
-              <ControlLabelP id="boolAsCloture" label="Cloturé" onChange={(boolAsClotureCoche) => {
-                setboolAsCloture(boolAsClotureCoche);
-                setValue('boolAsCloture', boolAsClotureCoche);
-              }} defaultValue={boolAsCloture}></ControlLabelP>
-            </FormGroup>
-          </div>
+          
         </div>
       </div>
     </div>
