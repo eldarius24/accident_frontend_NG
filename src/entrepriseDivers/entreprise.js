@@ -313,15 +313,6 @@ const Enterprise = () => {
                                     >
                                         {enterprise.AddEntreName}
                                     </Typography>
-                                    <Chip
-                                        label="Active"
-                                        color="success"
-                                        size="small"
-                                        sx={{
-                                            backgroundColor: darkMode ? '#1b5e20' : '#c8e6c9',
-                                            color: darkMode ? '#fff' : 'inherit'
-                                        }}
-                                    />
                                 </Box>
                                 <IconWrapper
                                     icon={LocationOnIcon}
