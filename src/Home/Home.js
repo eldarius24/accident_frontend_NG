@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState, useTransition, useMemo } from 
 import {
     Table, TableBody, TableCell, TableContainer, TableHead, TableRow,
     Button, LinearProgress, TextField, Grid, FormControl, InputLabel,
-    Select, MenuItem, Checkbox, ListItemText, Tooltip
+    Select, MenuItem, Checkbox, ListItemText, Tooltip, Chip
 } from '@mui/material';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
@@ -461,7 +461,13 @@ function Home() {
                                         backgroundColor: rowColors[index % rowColors.length]
                                     }}
                                 >
-                                    <TableCell>{item.boolAsCloture ? "Clôturé" : "En attente"}</TableCell>
+                                    <TableCell>
+                                        <Chip
+                                            label={item.boolAsCloture ? "Clôturé" : "En attente"}
+                                            color={item.boolAsCloture ? "success" : "error"}
+                                            size="small"
+                                        />
+                                    </TableCell>
                                     <TableCell>{item.numeroGroupe}</TableCell>
                                     <TableCell>{item.numeroEntreprise}</TableCell>
                                     <TableCell>{item.AssureurStatus}</TableCell>

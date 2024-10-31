@@ -20,8 +20,10 @@ import { useTheme } from '../pageAdmin/user/ThemeContext';
 import { useUserConnected } from '../Hook/userConnected';
 import { useNavigate } from 'react-router-dom';
 import '../pageFormulaire/formulaire.css';
+import { useLogger } from '../Hook/useLogger';
 
 const Enterprise = () => {
+    const { logAction } = useLogger();
     const navigate = useNavigate();
     const { darkMode } = useTheme();
     const [enterprises, setEnterprises] = useState([]);
@@ -31,21 +33,40 @@ const Enterprise = () => {
     const [questionnaires, setQuestionnaires] = useState({});
     const [filteredEnterprises, setFilteredEnterprises] = useState([]);
     const [selectedEnterprises, setSelectedEnterprises] = useState([]);
-    
     const isConseillerPrevention = useCallback((entrepriseName) => {
-        return userInfo?.entreprisesConseillerPrevention?.includes(entrepriseName) || false;
+        return Array.isArray(userInfo?.entreprisesConseillerPrevention)
+            && userInfo?.entreprisesConseillerPrevention.includes(entrepriseName);
     }, [userInfo]);
 
     const fetchEnterprises = useCallback(async () => {
         try {
             const response = await axios.get(`http://${apiUrl}:3100/api/entreprises`);
+            const enterpriseData = response.data;
+
+            // Vérification des données reçues
+            console.log("Données reçues pour les entreprises:", enterpriseData);
+
+            if (!Array.isArray(enterpriseData)) {
+                console.error("Données non conformes : tableau attendu, mais reçu :", enterpriseData);
+                setEnterprises([]);  // Définit `enterprises` à un tableau vide en cas d'erreur
+                return;
+            }
+
+            // Vérifiez les valeurs de `isAdmin` et `isConseiller`
+            console.log("Valeur de isAdmin:", isAdmin);
+            console.log("Valeur de isConseiller:", isConseiller);
+
             const filteredData = isAdmin
-                ? response.data
-                : response.data.filter(enterprise => isConseiller && isConseillerPrevention(enterprise.AddEntreName));
+                ? enterpriseData
+                : enterpriseData.filter(enterprise =>
+                    isConseiller && isConseillerPrevention(enterprise.AddEntreName)
+                );
+
             setEnterprises(filteredData);
-            setLoading(false);
         } catch (error) {
-            console.error('Error fetching enterprises:', error);
+            console.error("Erreur lors de la récupération des entreprises:", error);
+            setEnterprises([]);  // Par défaut à un tableau vide en cas d'erreur
+        } finally {
             setLoading(false);
         }
     }, [apiUrl, isAdmin, isConseiller, isConseillerPrevention]);
@@ -69,8 +90,7 @@ const Enterprise = () => {
     useEffect(() => {
         fetchEnterprises();
         fetchQuestionnaires();
-    }, [fetchEnterprises, fetchQuestionnaires]);
-
+    }, []);
 
     useEffect(() => {
         const initializeEnterprises = async () => {
@@ -78,7 +98,7 @@ const Enterprise = () => {
                 const response = await axios.get(`http://${apiUrl}:3100/api/entreprises`);
                 const data = response.data;
                 let enterprisesData;
-    
+
                 if (isAdmin) {
                     enterprisesData = data;
                 } else {
@@ -86,11 +106,12 @@ const Enterprise = () => {
                         isConseiller && isConseillerPrevention(enterprise.AddEntreName)
                     );
                 }
-    
+
                 setEnterprises(enterprisesData);
-                setFilteredEnterprises(selectedEnterprises.length > 0 
-                    ? enterprisesData.filter(e => selectedEnterprises.includes(e.AddEntreName))
-                    : enterprisesData
+                setFilteredEnterprises(
+                    Array.isArray(enterprises) && Array.isArray(selectedEnterprises) && selectedEnterprises.length > 0
+                        ? enterprises.filter(e => selectedEnterprises.includes(e.AddEntreName))
+                        : enterprises || [] // Fallback to empty array if enterprises is undefined
                 );
             } catch (error) {
                 console.error('Error fetching enterprises:', error);
@@ -98,23 +119,94 @@ const Enterprise = () => {
                 setLoading(false);
             }
         };
-    
+
         initializeEnterprises();
     }, [apiUrl, isAdmin, isConseiller, isConseillerPrevention, selectedEnterprises]);
 
 
-    const handleDeleteQuestionnaire = async (questionnaireId, enterpriseId) => {
+    const handleDeleteFile = async (questionnaireId, fileId, enterpriseId) => {
         try {
-            await axios.delete(`http://${apiUrl}:3100/api/questionnaires/${questionnaireId}`);
-            setQuestionnaires((prev) => ({
-                ...prev,
-                [enterpriseId]: prev[enterpriseId].filter((q) => q._id !== questionnaireId),
-            }));
+            // Defensive checks
+            if (!questionnaires || !questionnaires[enterpriseId]) {
+                console.error('No questionnaires found for this enterprise');
+                return;
+            }
+            const entrepriseName = enterprises.find(e => e._id === enterpriseId)?.AddEntreName;
+            const currentQuestionnaire = questionnaires[enterpriseId]?.find(q => q._id === questionnaireId);
+            if (!currentQuestionnaire) {
+                console.error('Questionnaire not found');
+                return;
+            }
+
+            // Safe filtering with default empty array
+            const updatedFiles = currentQuestionnaire.files?.filter(f => f.fileId !== fileId) || [];
+
+            await axios.put(`http://${apiUrl}:3100/api/questionnaires/${questionnaireId}`, {
+                ...currentQuestionnaire,
+                files: updatedFiles
+                
+            });
+            await logAction({
+                actionType: 'suppression',
+                details: `Suppression d'un document - Entreprise: ${entrepriseName}`,
+                entity: 'Divers Entreprise',
+                entityId: questionnaireId,
+                entreprise: entrepriseName
+            });
+            // Defensive state update
+            setQuestionnaires(prev => {
+                // Ensure the enterprise exists in state
+                if (!prev[enterpriseId]) {
+                    return prev;
+                }
+
+                return {
+                    ...prev,
+                    [enterpriseId]: prev[enterpriseId].map(q =>
+                        q._id === questionnaireId
+                            ? { ...q, files: updatedFiles }
+                            : q
+                    )
+                };
+            });
+
+            // Rest of the code remains the same
         } catch (error) {
-            console.error('Error deleting questionnaire:', error);
+            console.error('Error deleting file:', error);
         }
     };
+    // Fonction pour gérer la suppression d'un questionnaire
+    const handleDeleteQuestionnaire = async (questionnaireId, enterpriseId) => {
+        try {
+            const entrepriseName = enterprises.find(e => e._id === enterpriseId)?.AddEntreName;
+            const questionnaire = questionnaires[enterpriseId]?.find(q => q._id === questionnaireId);
 
+            // Si le questionnaire a des fichiers, les supprimer d'abord
+            if (questionnaire?.files?.length > 0) {
+                for (const file of questionnaire.files) {
+                    await axios.delete(`http://${apiUrl}:3100/api/file/${file.fileId}`);
+                }
+            }
+            // Supprimer le questionnaire
+            await axios.delete(`http://${apiUrl}:3100/api/questionnaires/${questionnaireId}`);
+
+            await logAction({
+                actionType: 'suppression',
+                details: `Suppression d'un questionnaire - Entreprise: ${entrepriseName}`,
+                entity: 'Divers Entreprise',
+                entityId: questionnaireId,
+                entreprise: entrepriseName
+            });
+            // Mettre à jour l'état local
+            setQuestionnaires(prev => ({
+                ...prev,
+                [enterpriseId]: prev[enterpriseId].filter(q => q._id !== questionnaireId)
+            }));
+
+        } catch (error) {
+            console.error('Erreur lors de la suppression du questionnaire:', error);
+        }
+    };
 
     const handleStartQuestionnaire = (enterprise) => {
         navigate('/quesEntrep', {
@@ -126,7 +218,6 @@ const Enterprise = () => {
         const selectedValues = event.target.value;
         setSelectedEnterprises(selectedValues);
     };
-    
 
     const getCardStyle = useCallback(() => ({
         height: '100%',
@@ -167,7 +258,6 @@ const Enterprise = () => {
             >
                 Liste des Entreprises
             </Typography>
-
             {isAdmin && (
                 <Box sx={{ mb: 3, width: '100%', maxWidth: 500, mx: 'auto' }}>
                     <FormControl fullWidth>
@@ -233,7 +323,6 @@ const Enterprise = () => {
                                         }}
                                     />
                                 </Box>
-
                                 <IconWrapper
                                     icon={LocationOnIcon}
                                     text={`${enterprise.AddEntrRue}, ${enterprise.AddEntrCodpost} ${enterprise.AddEntrLocalite}`}
@@ -246,7 +335,6 @@ const Enterprise = () => {
                                     icon={EmailIcon}
                                     text={enterprise.AddEntrEmail}
                                 />
-
                                 <Divider sx={{ my: 2, backgroundColor: darkMode ? '#555' : '#ddd' }} />
 
                                 <IconWrapper
@@ -261,9 +349,7 @@ const Enterprise = () => {
                                     icon={WorkIcon}
                                     text={`Activité: ${enterprise.AddEntreActiventre}`}
                                 />
-
                                 <Divider sx={{ my: 2, backgroundColor: darkMode ? '#555' : '#ddd' }} />
-
                                 <Box sx={{ mb: 1, display: 'flex', alignItems: 'center', gap: 1 }}>
                                     <GroupIcon sx={{ color: darkMode ? '#90caf9' : '#1976d2' }} />
                                     <Typography
@@ -285,9 +371,7 @@ const Enterprise = () => {
                                         {enterprise.AddEntrScadresse}, {enterprise.AddEntrSccpost} {enterprise.AddEntrSclocalite}
                                     </Typography>
                                 </Box>
-
                                 <Divider sx={{ my: 2, backgroundColor: darkMode ? '#555' : '#ddd' }} />
-
                                 <Box sx={{ mb: 1, display: 'flex', alignItems: 'center', gap: 1 }}>
                                     <SecurityIcon sx={{ color: darkMode ? '#90caf9' : '#1976d2' }} />
                                     <Typography
@@ -309,9 +393,7 @@ const Enterprise = () => {
                                         Unité: {enterprise.AddEntrEnite}
                                     </Typography>
                                 </Box>
-
                                 <Divider sx={{ my: 2, backgroundColor: darkMode ? '#555' : '#ddd' }} />
-
                                 <Box sx={{ mb: 1, display: 'flex', alignItems: 'center', gap: 1 }}>
                                     <AssignmentIcon sx={{ color: darkMode ? '#90caf9' : '#1976d2' }} />
                                     <Typography
@@ -321,31 +403,36 @@ const Enterprise = () => {
                                         Questionnaires
                                     </Typography>
                                 </Box>
-                                <Box sx={{ ml: 3 }}>
-                                    {questionnaires[enterprise._id]?.map((q) => (
-                                        <Box key={q._id} display="flex" alignItems="center" gap={1} mb={1}>
-                                            <Typography
-                                                variant="body2"
-                                                sx={{ color: darkMode ? '#fff' : 'text.secondary' }}
-                                            >
-                                                Type: {q.typeFichier} | Années: {q.annees.join(', ')}
+                                {questionnaires[enterprise._id]?.map((q) => (
+                                    <Box key={q._id} display="flex" alignItems="center" gap={1} mb={1}>
+                                        <Box flex="1">
+                                            <Typography variant="body2" sx={{ color: darkMode ? '#fff' : 'text.secondary' }}>
+                                                Type: {q.typeFichier} | Années: {q.annees.join(', ')} | Commentaires: {q.commentaire} | Entreprise: {q.entrepriseName} | files: {q.files.length}
                                             </Typography>
-                                            <IconButton
-                                                color="error"
-                                                onClick={() => handleDeleteQuestionnaire(q._id, enterprise._id)}
-                                                sx={{ ml: 'auto' }}
-                                            >
-                                                <DeleteIcon />
-                                            </IconButton>
+                                            {q.files && q.files.map(file => (
+                                                <Box key={file.fileId} display="flex" alignItems="center" gap={1} ml={2}>
+                                                    <Typography variant="body2" sx={{ color: darkMode ? '#bbb' : '#666' }}>
+                                                        {file.fileName}
+                                                    </Typography>
+                                                    <IconButton
+                                                        size="small"
+                                                        onClick={() => handleDeleteFile(q._id, file.fileId, enterprise._id)}
+                                                        color="error"
+                                                    >
+                                                        <DeleteIcon />
+                                                    </IconButton>
+                                                </Box>
+                                            ))}
                                         </Box>
-                                    ))}
-                                    {(!questionnaires[enterprise._id] || questionnaires[enterprise._id].length === 0) && (
-                                        <Typography variant="body2" sx={{ color: darkMode ? '#fff' : 'text.secondary' }}>
-                                            Aucun questionnaire
-                                        </Typography>
-                                    )}
-                                </Box>
-                                
+                                        <IconButton
+                                            color="error"
+                                            onClick={() => handleDeleteQuestionnaire(q._id, enterprise._id)}
+                                            sx={{ ml: 'auto' }}
+                                        >
+                                            <DeleteIcon />
+                                        </IconButton>
+                                    </Box>
+                                ))}
                                 <Button
                                     variant="contained"
                                     startIcon={<AssignmentIcon />}
@@ -365,7 +452,6 @@ const Enterprise = () => {
                     </Grid>
                 ))}
             </Grid>
-
             <div className="image-cortigroupe"></div>
             <Tooltip title="Si vous rencontrez un souci avec le site, envoyer un mail à l'adresse suivante : bgillet.lecortil@cortigroupe.be et expliquer le soucis rencontré" arrow>
                 <h5 style={{ marginBottom: '40px' }}>
