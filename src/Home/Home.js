@@ -461,7 +461,7 @@ function Home() {
                                         backgroundColor: rowColors[index % rowColors.length]
                                     }}
                                 >
-                                    <TableCell>{item.boolAsCloture ? "true" : "false"}</TableCell>
+                                    <TableCell>{item.boolAsCloture ? "Clôturé" : "En attente"}</TableCell>
                                     <TableCell>{item.numeroGroupe}</TableCell>
                                     <TableCell>{item.numeroEntreprise}</TableCell>
                                     <TableCell>{item.AssureurStatus}</TableCell>
