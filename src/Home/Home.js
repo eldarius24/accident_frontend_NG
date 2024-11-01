@@ -27,6 +27,7 @@ import { handleExportDataAccident } from './_actions/exportAcci';
 import { handleExportDataAssurance } from './_actions/exportAss';
 import { useLogger } from '../Hook/useLogger';
 import useHandleDelete from './_actions/handleDelete.js';
+import { blueGrey } from '@mui/material/colors';
 const apiUrl = config.apiUrl;
 
 /**
@@ -482,12 +483,16 @@ function Home() {
                                             {(isAdmin || (isConseiller && isConseillerPrevention(item.entrepriseName))) ? (
                                                 <Tooltip title="Cliquez ici pour éditer les données de l'accident" arrow>
                                                     <Button sx={{
+                                                        backgroundColor: blueGrey[500],
                                                         transition: 'all 0.3s ease-in-out',
-                                                        '&:hover': {
+                                                        '&:hover': {                                                           
+                                                            backgroundColor: blueGrey[700],
                                                             transform: 'scale(1.08)',
                                                             boxShadow: 6
                                                         }
-                                                    }} variant="contained" color="primary" onClick={() => handleEdit(item._id)}>
+                                                    }} variant="contained" 
+                                                    color="primary" 
+                                                    onClick={() => handleEdit(item._id)}>
                                                         <EditIcon />
                                                     </Button >
                                                 </Tooltip>

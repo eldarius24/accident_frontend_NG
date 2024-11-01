@@ -16,6 +16,7 @@ import handleRenameFile from "./handleRenameFile";
 import { blueGrey } from '@mui/material/colors';
 import { useLogger } from '../../Hook/useLogger';
 import deleteFile, { getAccidentDetails } from "./deleteFile";
+import showDeleteConfirm from './showDeleteConfirm';
 
 const modalStyle = {
     position: 'absolute',
@@ -147,48 +148,12 @@ export default function ListFilesInAccident(accidentId) {
      * pour demander confirmation de suppression d'un fichier
      * @param {string} fileId - L'ID du fichier à supprimer
      */
-    function popUpDelete(fileId) {
-        confirmAlert({
-            /**
-             * Boîte de dialogue personnalisée pour demander confirmation de suppression
-             * 
-             * Cette fonction retourne un JSX élément représentant une boîte de dialogue personnalisée.
-             * La boîte de dialogue affiche un titre, un message de confirmation et des boutons "Oui" et "Non".
-             * Lorsque l'utilisateur clique sur le bouton "Oui", la fonction handleDelete est appelée pour supprimer le fichier.
-             * Lorsque l'utilisateur clique sur le bouton "Non", la boîte de dialogue se ferme.
-             * 
-             * @param {{ onClose: () => void }} props - Fonction pour fermer la boîte de dialogue
-             * @returns Un JSX Element qui contient la boîte de dialogue personnalisée
-             */
-            customUI: ({ onClose }) => (
-                <div className="custom-confirm-dialog">
-                    <h1 className="custom-confirm-title">Supprimer</h1>
-                    <p className="custom-confirm-message">Êtes-vous sûr de vouloir supprimer cet élément?</p>
-                    <div className="custom-confirm-buttons">
-                        <Tooltip title="Cliquez sur OUI pour supprimer" arrow>
-                            <button
-                                className="custom-confirm-button"
-                                onClick={() => {
-                                    handleDeleteFile(fileId);
-                                    onClose();
-                                }}
-                            >
-                                Oui
-                            </button>
-                        </Tooltip>
-                        <Tooltip title="Cliquez sur NON pour annuler la suppression" arrow>
-                            <button
-                                className="custom-confirm-button custom-confirm-no"
-                                onClick={onClose}
-                            >
-                                Non
-                            </button>
-                        </Tooltip>
-                    </div>
-                </div>
-            )
+    const handleFileDelete = (fileId) => {
+        showDeleteConfirm({
+            message: "Êtes-vous sûr de vouloir supprimer ce fichier ?",
+            onConfirm: () => handleDeleteFile(fileId)
         });
-    }
+    };
 
     /**
      * Récupère un fichier de la base de données en fonction de son ID.
@@ -355,7 +320,7 @@ export default function ListFilesInAccident(accidentId) {
                                                 boxShadow: 6
                                             }
                                         }}
-                                        onClick={() => popUpDelete(file.fileId)}
+                                        onClick={() => handleFileDelete (file.fileId)}
                                         variant="contained"
                                         color="error"
                                     >

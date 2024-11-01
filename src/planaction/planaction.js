@@ -27,6 +27,7 @@ import createFilteredUsers from './filteredUsers';
 import createFetchData from './fetchData.js';
 import createHandleExport from './handleExport';
 import { useLogger } from '../Hook/useLogger';
+import { blueGrey } from '@mui/material/colors';
 const apiUrl = config.apiUrl;
 
 /**
@@ -505,8 +506,10 @@ export default function PlanAction({ accidentData }) {
                                             <TableCell style={{ padding: 0, width: '70px' }}>
                                                 <Tooltip title="Cliquez ici pour éditer les données de l'action" arrow>
                                                     <Button sx={{
+                                                        backgroundColor: blueGrey[500],
                                                         transition: 'all 0.3s ease-in-out',
                                                         '&:hover': {
+                                                            backgroundColor: blueGrey[700],
                                                             transform: 'scale(1.08)',
                                                             boxShadow: 6
                                                         }

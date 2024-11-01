@@ -40,7 +40,7 @@ const QuesEntrep = () => {
     const { logAction } = useLogger();
     const location = useLocation();
     const navigate = useNavigate();
-    const { enterprise } = location.state || {};
+    const { enterprise, editMode, questionnaire } = location.state || {};
     const apiUrl = config.apiUrl;
     const { darkMode } = useTheme();
     const currentYear = new Date().getFullYear();
@@ -50,12 +50,14 @@ const QuesEntrep = () => {
     );
 
     const [questionnaireData, setQuestionnaireData] = useState({
-        quesEntreAnnee: [],
-        quesEntreType: '',
-        quesEntreCommentaire: ''
+        quesEntreAnnee: editMode ? questionnaire.annees : [],
+        quesEntreType: editMode ? questionnaire.typeFichier : '',
+        quesEntreCommentaire: editMode ? questionnaire.commentaire : ''
     });
 
-    const [uploadedFiles, setUploadedFiles] = useState([]);
+    const [uploadedFiles, setUploadedFiles] = useState(
+        editMode ? questionnaire.files : []
+    );
 
     const [snackbar, setSnackbar] = useState({
         open: false,
@@ -169,17 +171,7 @@ const QuesEntrep = () => {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-
-        if (questionnaireData.quesEntreAnnee.length === 0) {
-            showSnackbar('Veuillez sélectionner au moins une année', 'error');
-            return;
-        }
-
-        if (!questionnaireData.quesEntreType) {
-            showSnackbar('Veuillez sélectionner un type de fichier', 'error');
-            return;
-        }
-
+    
         try {
             const dataToSubmit = {
                 entrepriseId: enterprise?._id,
@@ -189,22 +181,57 @@ const QuesEntrep = () => {
                 commentaire: questionnaireData.quesEntreCommentaire,
                 files: uploadedFiles
             };
-
-            const response = await axios.post(`http://${apiUrl}:3100/api/questionnaires`, dataToSubmit);
-
-            await logAction({
-                actionType: 'creation',
-                details: `Création d'un questionnaire - Entreprise: ${enterprise?.AddEntreName} - Années: ${questionnaireData.quesEntreAnnee.join(', ')} - Type: ${questionnaireData.quesEntreType} - Nombre de fichiers: ${uploadedFiles.length}`,
-                entity: 'Divers Entreprise',
-                entityId: response.data._id,
-                entreprise: enterprise?.AddEntreName
-            });
-
-            showSnackbar('Questionnaire créé avec succès', 'success');
-            setTimeout(() => navigate('/entreprise'), 2000);
+    
+            let response;
+            
+            if (editMode && questionnaire?._id) {
+                // Modification
+                response = await axios.put(
+                    `http://${apiUrl}:3100/api/questionnaires/${questionnaire._id}`,
+                    dataToSubmit
+                );
+                
+                console.log('Mise à jour questionnaire:', response.data);
+                await logAction({
+                    actionType: 'modification',
+                    details: `Modification du questionnaire - Entreprise: ${enterprise?.AddEntreName} - Type: ${dataToSubmit.typeFichier} - Années: ${dataToSubmit.annees.join(', ')}`,
+                    entity: 'Divers Entreprise',
+                    entityId: questionnaire._id,
+                    entreprise: enterprise?.AddEntreName
+                });
+                
+                showSnackbar('Questionnaire modifié avec succès', 'success');
+            } else {
+                // Création
+                response = await axios.post(
+                    `http://${apiUrl}:3100/api/questionnaires`,
+                    dataToSubmit
+                );
+                
+                await logAction({
+                    actionType: 'creation',
+                    details: `Création d'un questionnaire - Entreprise: ${enterprise?.AddEntreName} - Type: ${dataToSubmit.typeFichier} - Années: ${dataToSubmit.annees.join(', ')}`,
+                    entity: 'Divers Entreprise',
+                    entityId: response.data._id,
+                    entreprise: enterprise?.AddEntreName
+                });
+                
+                showSnackbar('Questionnaire créé avec succès', 'success');
+            }
+    
+            // Attendre un peu avant de rediriger
+            setTimeout(() => {
+                navigate('/entreprise');
+                window.location.reload(); // Pour recharger les données
+            }, 2000);
+    
         } catch (error) {
-            console.error('Erreur lors de la création du questionnaire:', error);
-            showSnackbar(error.response?.data?.message || 'Erreur lors de la création du questionnaire', 'error');
+            console.error('Erreur lors de la sauvegarde:', error);
+            showSnackbar(
+                error.response?.data?.message || 
+                `Erreur lors de la ${editMode ? 'modification' : 'création'} du questionnaire`,
+                'error'
+            );
         }
     };
 

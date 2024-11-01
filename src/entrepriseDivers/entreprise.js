@@ -27,6 +27,11 @@ import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import { confirmAlert } from 'react-confirm-alert';
 import GetAppIcon from '@mui/icons-material/GetApp';
 import handleFileDownload from './fileUtils';
+import showDeleteConfirm from '../pageFormulaire/FileManagement/showDeleteConfirm';
+import EditIcon from '@mui/icons-material/Edit';
+import { blueGrey } from '@mui/material/colors';
+
+
 
 const modalStyles = {
     position: 'absolute',
@@ -63,6 +68,50 @@ const Enterprise = () => {
         severity: 'info'
     });
 
+    const showMessage = (message, severity = 'info') => {
+        setSnackbar({
+            open: true,
+            message,
+            severity
+        });
+    };
+
+
+    const handleEdit = useCallback(async (questionnaireId, enterpriseId) => {
+        try {
+            // Récupérer le questionnaire complet via l'API
+            const response = await axios.get(`http://${apiUrl}:3100/api/questionnaires/${questionnaireId}`);
+            const questionnaire = response.data;
+            const entrepriseName = enterprises.find(e => e._id === enterpriseId)?.AddEntreName;
+
+            if (questionnaire) {
+                // Log de l'action d'édition
+                await logAction({
+                    actionType: 'modification',
+                    details: `Début de modification du questionnaire - Type: ${questionnaire.typeFichier} - Entreprise: ${entrepriseName} - Années: ${questionnaire.annees.join(', ')}`,
+                    entity: 'Divers Entreprise',
+                    entityId: questionnaireId,
+                    entreprise: entrepriseName
+                });
+
+                // Navigation vers le formulaire avec les données existantes
+                navigate("/quesEntrep", {
+                    state: {
+                        enterprise: enterprises.find(e => e._id === enterpriseId),
+                        editMode: true,
+                        questionnaire: questionnaire
+                    }
+                });
+                showMessage('Modification du questionnaire initiée', 'info');
+            } else {
+                showMessage('Erreur : Questionnaire non trouvé', 'error');
+            }
+        } catch (error) {
+            console.error('Erreur lors de l\'initialisation de la modification:', error);
+            showMessage('Erreur lors de l\'initialisation de la modification', 'error');
+        }
+    }, [apiUrl, navigate, enterprises, logAction, showMessage]);
+
     const buttonStyle = {
         backgroundColor: '#01aeac',
         '&:hover': { backgroundColor: '#95519b' },
@@ -71,13 +120,7 @@ const Enterprise = () => {
     };
 
     // Fonction utilitaire pour gérer les messages
-    const showMessage = (message, severity = 'info') => {
-        setSnackbar({
-            open: true,
-            message,
-            severity
-        });
-    };
+
 
     const handleCloseSnackbar = (event, reason) => {
         // If the reason is 'clickaway', do not close the snackbar
@@ -196,7 +239,6 @@ const Enterprise = () => {
                         isConseiller && isConseillerPrevention(enterprise.AddEntreName)
                     );
                 }
-
                 setEnterprises(enterprisesData);
                 setFilteredEnterprises(
                     Array.isArray(enterprises) && Array.isArray(selectedEnterprises) && selectedEnterprises.length > 0
@@ -209,7 +251,6 @@ const Enterprise = () => {
                 setLoading(false);
             }
         };
-
         initializeEnterprises();
     }, [apiUrl, isAdmin, isConseiller, isConseillerPrevention, selectedEnterprises]);
 
@@ -226,10 +267,8 @@ const Enterprise = () => {
                 console.error('Questionnaire not found');
                 return;
             }
-
             // Safe filtering with default empty array
             const updatedFiles = currentQuestionnaire.files?.filter(f => f.fileId !== fileId) || [];
-
             await axios.put(`http://${apiUrl}:3100/api/questionnaires/${questionnaireId}`, {
                 ...currentQuestionnaire,
                 files: updatedFiles
@@ -248,7 +287,6 @@ const Enterprise = () => {
                 if (!prev[enterpriseId]) {
                     return prev;
                 }
-
                 return {
                     ...prev,
                     [enterpriseId]: prev[enterpriseId].map(q =>
@@ -258,7 +296,6 @@ const Enterprise = () => {
                     )
                 };
             });
-
             // Rest of the code remains the same
         } catch (error) {
             console.error('Error deleting file:', error);
@@ -270,7 +307,6 @@ const Enterprise = () => {
         try {
             const entrepriseName = enterprises.find(e => e._id === enterpriseId)?.AddEntreName;
             const questionnaire = questionnaires[enterpriseId]?.find(q => q._id === questionnaireId);
-
             // Si le questionnaire a des fichiers, les supprimer d'abord
             if (questionnaire?.files?.length > 0) {
                 for (const file of questionnaire.files) {
@@ -279,7 +315,6 @@ const Enterprise = () => {
             }
             // Supprimer le questionnaire
             await axios.delete(`http://${apiUrl}:3100/api/questionnaires/${questionnaireId}`);
-
             await logAction({
                 actionType: 'suppression',
                 details: `Suppression d'un questionnaire - Entreprise: ${entrepriseName}`,
@@ -337,41 +372,18 @@ const Enterprise = () => {
         setSelectedEnterprises([]);
     };
 
-    function popUpDelete(questionnaireId, fileId, enterpriseId, type) {
-        confirmAlert({
-            customUI: ({ onClose }) => (
-                <div className="custom-confirm-dialog">
-                    <h1 className="custom-confirm-title">Supprimer</h1>
-                    <p className="custom-confirm-message">Êtes-vous sûr de vouloir supprimer cet élément?</p>
-                    <div className="custom-confirm-buttons">
-                        <Tooltip title="Cliquez sur OUI pour supprimer" arrow>
-                            <button
-                                className="custom-confirm-button"
-                                onClick={() => {
-                                    if (type === 'file') {
-                                        handleDeleteFile(questionnaireId, fileId, enterpriseId);
-                                    } else if (type === 'questionnaire') {
-                                        handleDeleteQuestionnaire(questionnaireId, enterpriseId);
-                                    }
-                                    onClose();
-                                }}
-                            >
-                                Oui
-                            </button>
-                        </Tooltip>
-                        <Tooltip title="Cliquez sur NON pour annuler la suppression" arrow>
-                            <button
-                                className="custom-confirm-button custom-confirm-no"
-                                onClick={onClose}
-                            >
-                                Non
-                            </button>
-                        </Tooltip>
-                    </div>
-                </div>
-            )
+    const handleDelete = (questionnaireId, fileId, enterpriseId, type) => {
+        showDeleteConfirm({
+            message: `Êtes-vous sûr de vouloir supprimer ${type === 'file' ? 'ce fichier' : 'ce questionnaire'} ?`,
+            onConfirm: () => {
+                if (type === 'file') {
+                    handleDeleteFile(questionnaireId, fileId, enterpriseId);
+                } else if (type === 'questionnaire') {
+                    handleDeleteQuestionnaire(questionnaireId, enterpriseId);
+                }
+            }
         });
-    }
+    };
 
 
     return (
@@ -488,8 +500,6 @@ const Enterprise = () => {
                                         {enterprise.AddEntrScadresse}, {enterprise.AddEntrSccpost} {enterprise.AddEntrSclocalite}
                                     </Typography>
                                 </Box>
-
-
                                 <Divider sx={{ my: 2, backgroundColor: darkMode ? '#ffffff' : '#000000' }} />
                                 <Box sx={{ mb: 1, display: 'flex', alignItems: 'center', gap: 1 }}>
                                     <AssignmentIcon sx={{ color: darkMode ? '#90caf9' : '#1976d2' }} />
@@ -502,13 +512,36 @@ const Enterprise = () => {
                                     </Typography>
                                 </Box>
                                 {questionnaires[enterprise._id]?.map((q, index, array) => (
-                                    <Box display="flex" flexDirection="column" gap={1} mb={1}>
-                                        <Box display="flex" alignItems="center" gap={2}>
+                                    <Box key={q._id} display="flex" flexDirection="column" gap={1} mb={1}>
+                                        <Box display="flex" alignItems="center" gap={1}>
                                             <Box flex="1">
                                                 <Typography variant="body2" sx={{ color: darkMode ? '#fff' : 'text.secondary' }}>
                                                     <strong>Type:</strong> {q.typeFichier} | <strong>Années:</strong> {q.annees.join(', ')} | <strong>Commentaires:</strong> {q.commentaire} | <strong>Entreprise:</strong> {q.entrepriseName} | <strong>files:</strong> {q.files.length}
                                                 </Typography>
                                             </Box>
+                                            <Tooltip title="Modifier le questionnaire" arrow>
+                                                <Button
+                                                    sx={{
+                                                        backgroundColor: blueGrey[500],
+                                                        minWidth: '36px',
+                                                        width: '36px',
+                                                        height: '36px',
+                                                        padding: 0,
+                                                        transition: 'all 0.3s ease-in-out',
+                                                        '&:hover': {
+                                                            backgroundColor: blueGrey[700],
+                                                            transform: 'scale(1.08)',
+                                                            boxShadow: 6
+                                                        }
+                                                    }}
+                                                    onClick={() => handleEdit(q._id, enterprise._id)}
+                                                    variant="contained"
+                                                    color="primary"
+                                                >
+                                                    <EditIcon sx={{ fontSize: 20 }} />
+                                                </Button>
+                                            </Tooltip>
+                                            <Tooltip title="Supprimer le questionnaire" arrow>
                                             <Button
                                                 sx={{
                                                     minWidth: '36px',
@@ -521,20 +554,21 @@ const Enterprise = () => {
                                                         boxShadow: 6
                                                     }
                                                 }}
-                                                onClick={() => popUpDelete(q._id, null, enterprise._id, 'questionnaire')}
+                                                onClick={() => handleDelete(q._id, null, enterprise._id, 'questionnaire')}
                                                 variant="contained"
                                                 color="error"
                                             >
                                                 <DeleteForeverIcon sx={{ fontSize: 20 }} />
                                             </Button>
+                                            </Tooltip>
                                         </Box>
-
                                         {q.files && q.files.map(file => (
                                             <Box key={file.fileId} display="flex" alignItems="center" gap={2} ml={2}>
-                                                <Typography variant="body2" sx={{ color: darkMode ? '#bbb' : '#666', flex: 1 }}>
+                                                <Typography variant="body2" sx={{ textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap', color: darkMode ? '#bbb' : '#666', flex: 1 }}>
                                                     {file.fileName}
                                                 </Typography>
                                                 <Box display="flex" gap={1}>
+                                                    <Tooltip title="Telecharger le fichier" arrow>
                                                     <Button
                                                         sx={{
                                                             minWidth: '36px',
@@ -559,6 +593,8 @@ const Enterprise = () => {
                                                     >
                                                         <GetAppIcon sx={{ fontSize: 20 }} />
                                                     </Button>
+                                                    </Tooltip>
+                                                    <Tooltip title="Voir le fichier" arrow>
                                                     <Button
                                                         sx={{
                                                             minWidth: '36px',
@@ -577,6 +613,8 @@ const Enterprise = () => {
                                                     >
                                                         <VisibilityIcon sx={{ fontSize: 20 }} />
                                                     </Button>
+                                                    </Tooltip>
+                                                    <Tooltip title="Supprimer le fichier" arrow>
                                                     <Button
                                                         sx={{
                                                             minWidth: '36px',
@@ -589,16 +627,16 @@ const Enterprise = () => {
                                                                 boxShadow: 6
                                                             }
                                                         }}
-                                                        onClick={() => popUpDelete(q._id, file.fileId, enterprise._id, 'file')}
+                                                        onClick={() => handleDelete(q._id, file.fileId, enterprise._id, 'file')}
                                                         variant="contained"
                                                         color="error"
                                                     >
                                                         <DeleteForeverIcon sx={{ fontSize: 20 }} />
                                                     </Button>
+                                                    </Tooltip>
                                                 </Box>
                                             </Box>
                                         ))}
-
                                         {index < array.length - 1 && (
                                             <Divider
                                                 sx={{
@@ -612,6 +650,7 @@ const Enterprise = () => {
                                     </Box>
                                 ))}
                                 <Divider sx={{ my: 2, backgroundColor: darkMode ? '#ffffff' : '#000000' }} />
+                                <Tooltip title="Ajouter un nouveau document lié a l'entreprise" arrow>
                                 <Button
                                     variant="contained"
                                     startIcon={<GetAppIcon />}
@@ -627,8 +666,8 @@ const Enterprise = () => {
                                     }}
                                 >
                                     Ajouter un pièce
-
                                 </Button>
+                                </Tooltip>
                             </CardContent>
                         </Card>
                     </Grid>
