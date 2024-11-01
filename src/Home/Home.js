@@ -467,6 +467,12 @@ function Home() {
                                             label={item.boolAsCloture ? "Clôturé" : "En attente"}
                                             color={item.boolAsCloture ? "success" : "error"}
                                             size="small"
+                                            sx={{
+                                                opacity: 0.6,  // Ajuste la transparence (0 = invisible, 1 = opaque)
+                                                '& .MuiChip-label': {
+                                                    opacity: 1  // Garde le texte complètement visible
+                                                }
+                                            }}
                                         />
                                     </TableCell>
                                     <TableCell>{item.numeroGroupe}</TableCell>
@@ -485,14 +491,14 @@ function Home() {
                                                     <Button sx={{
                                                         backgroundColor: blueGrey[500],
                                                         transition: 'all 0.3s ease-in-out',
-                                                        '&:hover': {                                                           
+                                                        '&:hover': {
                                                             backgroundColor: blueGrey[700],
                                                             transform: 'scale(1.08)',
                                                             boxShadow: 6
                                                         }
-                                                    }} variant="contained" 
-                                                    color="primary" 
-                                                    onClick={() => handleEdit(item._id)}>
+                                                    }} variant="contained"
+                                                        color="primary"
+                                                        onClick={() => handleEdit(item._id)}>
                                                         <EditIcon />
                                                     </Button >
                                                 </Tooltip>
