@@ -1,20 +1,40 @@
-
 import React, { useState, useCallback } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { Button, Tooltip, Typography, Box, IconButton } from '@mui/material';
+import { Button, Tooltip, Typography, Box } from '@mui/material';
 import TextFieldP from '../_composants/textFieldP';
 import AutoCompleteP from '../_composants/autoCompleteP';
 import MultipleAutoCompleteCMQ from '../_composants/autoCompleteCMQ';
-import DeleteIcon from '@mui/icons-material/Delete';
-import UploadFileIcon from '@mui/icons-material/UploadFile';
+import { confirmAlert } from 'react-confirm-alert';
+import 'react-confirm-alert/src/react-confirm-alert.css';
 import config from '../config.json';
 import CustomSnackbar from '../_composants/CustomSnackbar';
 import { useLogger } from '../Hook/useLogger';
 import '../pageFormulaire/formulaire.css';
 import { useTheme } from '../pageAdmin/user/ThemeContext';
 import listeQuesEntr from '../liste/listeQuesEntre.json';
-import GetAppIcon from '@mui/icons-material/GetApp';
+
+const dropZoneStyle = {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: '200px',
+    border: '2px dashed #00b1b2',
+    borderRadius: '10px',
+    cursor: 'pointer',
+    margin: '20px 1rem',
+    backgroundColor: '#00b2b246',
+};
+
+const labelStyle = {
+    textAlign: 'center',
+    width: '45%',
+    backgroundColor: '#00b1b2',
+    color: 'black',
+    padding: '10px 20px',
+    cursor: 'pointer',
+    transition: 'background-color 0.3s',
+};
 
 const QuesEntrep = () => {
     const { logAction } = useLogger();
@@ -59,12 +79,60 @@ const QuesEntrep = () => {
         }));
     };
 
-    const handleFileSelect = async (event) => {
-        const file = event.target.files[0];
-        if (!file) return;
+    const promptForFileName = (file) => {
+        confirmAlert({
+            customUI: ({ onClose }) => {
+                let fileName = file.name;
 
+                return (
+                    <div className="custom-confirm-dialog" style={{ textAlign: 'center' }}>
+                        <h1 className="custom-confirm-title">Renommer le fichier</h1>
+                        <p className="custom-confirm-message">Si vous le désirez, entrez un nouveau nom pour le fichier:</p>
+                        <input
+                            type="text"
+                            defaultValue={fileName}
+                            onChange={(e) => { fileName = e.target.value; }}
+                            className="custom-confirm-input"
+                            style={{
+                                border: '2px solid #0098f9',
+                                padding: '10px',
+                                borderRadius: '5px',
+                                fontSize: '16px',
+                                width: '60%',
+                                backgroundColor: '#f0f8ff',
+                                color: 'black',
+                            }}
+                        />
+                        <div className="custom-confirm-buttons">
+                            <Tooltip title="Cliquez sur ENVOYER après avoir changé le nom si besoin" arrow>
+                                <button
+                                    className="custom-confirm-button"
+                                    onClick={async () => {
+                                        await handleFileUpload(file, fileName);
+                                        onClose();
+                                    }}
+                                >
+                                    Envoyer
+                                </button>
+                            </Tooltip>
+                            <Tooltip title="Cliquez sur ANNULER pour annuler l'envoi du fichier" arrow>
+                                <button
+                                    className="custom-confirm-button custom-confirm-no"
+                                    onClick={onClose}
+                                >
+                                    Annuler
+                                </button>
+                            </Tooltip>
+                        </div>
+                    </div>
+                );
+            }
+        });
+    };
+
+    const handleFileUpload = async (file, name) => {
         const formData = new FormData();
-        formData.append('file', file);
+        formData.append('file', file, name);
 
         try {
             const uploadResponse = await axios.post(
@@ -77,7 +145,7 @@ const QuesEntrep = () => {
 
             setUploadedFiles(prev => [...prev, {
                 fileId: uploadResponse.data.fileId,
-                fileName: file.name
+                fileName: name
             }]);
 
             showSnackbar('Fichier téléchargé avec succès', 'success');
@@ -87,8 +155,16 @@ const QuesEntrep = () => {
         }
     };
 
-    const handleDeleteFile = (fileId) => {
-        setUploadedFiles(prev => prev.filter(f => f.fileId !== fileId));
+    const handleDrop = useCallback(e => {
+        e.preventDefault();
+        e.stopPropagation();
+        const file = e.dataTransfer.files[0];
+        if (file) promptForFileName(file);
+    }, []);
+
+    const handleFileInputChange = e => {
+        const file = e.target.files[0];
+        if (file) promptForFileName(file);
     };
 
     const handleSubmit = async (event) => {
@@ -163,37 +239,48 @@ const QuesEntrep = () => {
                     multiline
                 />
 
-                <Box sx={{ mt: 2, p: 2, border: '1px dashed grey', borderRadius: 1 }}>
+                <Box sx={{ mt: 2 }}>
                     <Typography variant="h6" gutterBottom>
                         Fichiers joints
                     </Typography>
                     
+                    <Tooltip title="Faites glisser un fichier ici pour l'ajouter au questionnaire" arrow>
+                        <div
+                            style={dropZoneStyle}
+                            onDrop={handleDrop}
+                            onDragOver={e => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                            }}
+                        >
+                            <span style={{ textAlign: 'center', width: '45%', color: 'black' }}>
+                                Pour ajouter un fichier, Glisser-déposer le ici
+                            </span>
+                        </div>
+                    </Tooltip>
+
+                    <div style={{ display: 'flex', justifyContent: 'center' }}>
+                        <Tooltip title="Cliquez ici pour importer des fichiers" arrow>
+                            <label
+                                htmlFor="file-upload"
+                                style={labelStyle}
+                                onMouseEnter={e => (e.target.style.backgroundColor = '#95ad22')}
+                                onMouseLeave={e => (e.target.style.backgroundColor = '#00b1b2')}
+                            >
+                                Ajouter un fichier au questionnaire
+                            </label>
+                        </Tooltip>
+                    </div>
+
                     <input
                         type="file"
                         id="file-upload"
                         style={{ display: 'none' }}
-                        onChange={handleFileSelect}
+                        onChange={handleFileInputChange}
                     />
-                    
-                    <label htmlFor="file-upload">
-                        <Button
-                            component="span"
-                            variant="contained"
-                            startIcon={<UploadFileIcon />}
-                            sx={{
-                                mb: 2,
-                                backgroundColor: darkMode ? '#90caf9' : '#1976d2',
-                                '&:hover': {
-                                    backgroundColor: darkMode ? '#5f9bd1' : '#115293',
-                                }
-                            }}
-                        >
-                            Ajouter un fichier
-                        </Button>
-                    </label>
 
                     <Box sx={{ mt: 2 }}>
-                        {uploadedFiles.map((file, index) => (
+                        {uploadedFiles.map((file) => (
                             <Box
                                 key={file.fileId}
                                 display="flex"
@@ -204,13 +291,6 @@ const QuesEntrep = () => {
                                 <Typography variant="body2">
                                     {file.fileName}
                                 </Typography>
-                                <IconButton
-                                    size="small"
-                                    onClick={() => handleDeleteFile(file.fileId)}
-                                    color="error"
-                                >
-                                    <DeleteIcon />
-                                </IconButton>
                             </Box>
                         ))}
                     </Box>

@@ -5,7 +5,7 @@ import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css'; // Importez les styles pour la boîte de dialogue
 import listFilesInAccident from './FilesActions';
 import { Tooltip } from '@mui/material';
-import { useLogger } from '../../Hook/useLogger';
+import { useLogger } from '../../Hook/useLogger'; 
 
 const dropZoneStyle = {
     display: 'flex',

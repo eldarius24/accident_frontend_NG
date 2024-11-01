@@ -3,9 +3,8 @@ import axios from 'axios';
 import {
     Card, CardContent, Typography, Grid, LinearProgress,
     Box, Divider, Button, Select, MenuItem, Modal,
-    FormControl, Tooltip, InputLabel, IconButton
+    FormControl, Tooltip, InputLabel
 } from '@mui/material';
-import DeleteIcon from '@mui/icons-material/Delete';
 import PhoneIcon from '@mui/icons-material/Phone';
 import EmailIcon from '@mui/icons-material/Email';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
@@ -13,7 +12,6 @@ import BusinessIcon from '@mui/icons-material/Business';
 import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
 import WorkIcon from '@mui/icons-material/Work';
 import GroupIcon from '@mui/icons-material/Group';
-import SecurityIcon from '@mui/icons-material/Security';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import config from '../config.json';
 import { useTheme } from '../pageAdmin/user/ThemeContext';
@@ -25,6 +23,10 @@ import FileViewer from '../pageFormulaire/FileManagement/fileViewer';
 import CustomSnackbar from '../_composants/CustomSnackbar';
 import CloseIcon from '@mui/icons-material/Close';
 import VisibilityIcon from '@mui/icons-material/Visibility';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import { confirmAlert } from 'react-confirm-alert';
+import GetAppIcon from '@mui/icons-material/GetApp';
+import handleFileDownload from './fileUtils';
 
 const modalStyles = {
     position: 'absolute',
@@ -60,6 +62,13 @@ const Enterprise = () => {
         message: '',
         severity: 'info'
     });
+
+    const buttonStyle = {
+        backgroundColor: '#01aeac',
+        '&:hover': { backgroundColor: '#95519b' },
+        mr: 1,
+        whiteSpace: 'nowrap',
+    };
 
     // Fonction utilitaire pour gérer les messages
     const showMessage = (message, severity = 'info') => {
@@ -255,7 +264,7 @@ const Enterprise = () => {
             console.error('Error deleting file:', error);
         }
     };
-    
+
     // Fonction pour gérer la suppression d'un questionnaire
     const handleDeleteQuestionnaire = async (questionnaireId, enterpriseId) => {
         try {
@@ -328,6 +337,43 @@ const Enterprise = () => {
         setSelectedEnterprises([]);
     };
 
+    function popUpDelete(questionnaireId, fileId, enterpriseId, type) {
+        confirmAlert({
+            customUI: ({ onClose }) => (
+                <div className="custom-confirm-dialog">
+                    <h1 className="custom-confirm-title">Supprimer</h1>
+                    <p className="custom-confirm-message">Êtes-vous sûr de vouloir supprimer cet élément?</p>
+                    <div className="custom-confirm-buttons">
+                        <Tooltip title="Cliquez sur OUI pour supprimer" arrow>
+                            <button
+                                className="custom-confirm-button"
+                                onClick={() => {
+                                    if (type === 'file') {
+                                        handleDeleteFile(questionnaireId, fileId, enterpriseId);
+                                    } else if (type === 'questionnaire') {
+                                        handleDeleteQuestionnaire(questionnaireId, enterpriseId);
+                                    }
+                                    onClose();
+                                }}
+                            >
+                                Oui
+                            </button>
+                        </Tooltip>
+                        <Tooltip title="Cliquez sur NON pour annuler la suppression" arrow>
+                            <button
+                                className="custom-confirm-button custom-confirm-no"
+                                onClick={onClose}
+                            >
+                                Non
+                            </button>
+                        </Tooltip>
+                    </div>
+                </div>
+            )
+        });
+    }
+
+
     return (
         <Box sx={{ p: 3 }}>
             <Typography
@@ -388,38 +434,36 @@ const Enterprise = () => {
                             <CardContent>
                                 <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
                                     <Typography
-                                        variant="h6"
+                                        variant="h5"
                                         component="h2"
                                         sx={{ color: darkMode ? '#fff' : 'inherit' }}
                                     >
-                                        {enterprise.AddEntreName}
+                                        <strong>Entreprise: </strong>{enterprise.AddEntreName}
                                     </Typography>
                                 </Box>
                                 <IconWrapper
                                     icon={LocationOnIcon}
-                                    text={`${enterprise.AddEntrRue}, ${enterprise.AddEntrCodpost} ${enterprise.AddEntrLocalite}`}
+                                    text={<><strong>Adresse:</strong> {`${enterprise.AddEntrRue}, ${enterprise.AddEntrCodpost} ${enterprise.AddEntrLocalite}`}</>}
                                 />
                                 <IconWrapper
                                     icon={PhoneIcon}
-                                    text={enterprise.AddEntrTel}
+                                    text={<><strong>Téléphone:</strong> {enterprise.AddEntrTel}</>}
                                 />
                                 <IconWrapper
                                     icon={EmailIcon}
-                                    text={enterprise.AddEntrEmail}
+                                    text={<><strong>Email:</strong> {enterprise.AddEntrEmail}</>}
                                 />
-                                <Divider sx={{ my: 2, backgroundColor: darkMode ? '#ffffff' : '#000000' }} />
-
                                 <IconWrapper
                                     icon={BusinessIcon}
-                                    text={`N° Entreprise: ${enterprise.AddEntrNumentr}`}
+                                    text={<><strong>N° Entreprise:</strong> {enterprise.AddEntrNumentr}</>}
                                 />
                                 <IconWrapper
                                     icon={AccountBalanceIcon}
-                                    text={`IBAN: ${enterprise.AddEntrIban}`}
+                                    text={<><strong>IBAN:</strong> {enterprise.AddEntrIban}</>}
                                 />
                                 <IconWrapper
                                     icon={WorkIcon}
-                                    text={`Activité: ${enterprise.AddEntreActiventre}`}
+                                    text={<><strong>Activité:</strong> {enterprise.AddEntreActiventre}</>}
                                 />
                                 <Divider sx={{ my: 2, backgroundColor: darkMode ? '#ffffff' : '#000000' }} />
                                 <Box sx={{ mb: 1, display: 'flex', alignItems: 'center', gap: 1 }}>
@@ -427,8 +471,9 @@ const Enterprise = () => {
                                     <Typography
                                         variant="subtitle2"
                                         sx={{ color: darkMode ? '#fff' : 'inherit' }}
+                                        component="h2"
                                     >
-                                        Secrétariat Social
+                                        <strong>Secrétariat Social</strong>
                                     </Typography>
                                 </Box>
                                 <Box sx={{ ml: 3, mb: 2 }}>
@@ -438,79 +483,122 @@ const Enterprise = () => {
                                     >
                                         {enterprise.AddEntrSecsoci}
                                         <br />
-                                        N° Affiliation: {enterprise.AddEntrNumaffi}
+                                        <strong>N° Affiliation:</strong> {enterprise.AddEntrNumaffi}
                                         <br />
                                         {enterprise.AddEntrScadresse}, {enterprise.AddEntrSccpost} {enterprise.AddEntrSclocalite}
                                     </Typography>
                                 </Box>
-                                <Divider sx={{ my: 2, backgroundColor: darkMode ? '#ffffff' : '#000000' }} />
-                                <Box sx={{ mb: 1, display: 'flex', alignItems: 'center', gap: 1 }}>
-                                    <SecurityIcon sx={{ color: darkMode ? '#90caf9' : '#1976d2' }} />
-                                    <Typography
-                                        variant="subtitle2"
-                                        sx={{ color: darkMode ? '#fff' : 'inherit' }}
-                                    >
-                                        Informations Légales
-                                    </Typography>
-                                </Box>
-                                <Box sx={{ ml: 3 }}>
-                                    <Typography
-                                        variant="body2"
-                                        sx={{ color: darkMode ? '#fff' : 'text.secondary' }}
-                                    >
-                                        Police N°: {enterprise.AddEntrePolice}
-                                        <br />
-                                        ONSS: {enterprise.AddEntrOnss}
-                                        <br />
-                                        Unité: {enterprise.AddEntrEnite}
-                                    </Typography>
-                                </Box>
+
+
                                 <Divider sx={{ my: 2, backgroundColor: darkMode ? '#ffffff' : '#000000' }} />
                                 <Box sx={{ mb: 1, display: 'flex', alignItems: 'center', gap: 1 }}>
                                     <AssignmentIcon sx={{ color: darkMode ? '#90caf9' : '#1976d2' }} />
                                     <Typography
                                         variant="subtitle2"
                                         sx={{ color: darkMode ? '#fff' : 'inherit' }}
+                                        component="h2"
                                     >
-                                        Questionnaires
+                                        <strong>Pièces jointes</strong>
                                     </Typography>
                                 </Box>
                                 {questionnaires[enterprise._id]?.map((q, index, array) => (
-                                    <React.Fragment key={q._id}>
-                                        <Box display="flex" alignItems="center" gap={1} mb={1}>
+                                    <Box display="flex" flexDirection="column" gap={1} mb={1}>
+                                        <Box display="flex" alignItems="center" gap={2}>
                                             <Box flex="1">
                                                 <Typography variant="body2" sx={{ color: darkMode ? '#fff' : 'text.secondary' }}>
-                                                    Type: {q.typeFichier} | Années: {q.annees.join(', ')} | Commentaires: {q.commentaire} | Entreprise: {q.entrepriseName} | files: {q.files.length}
+                                                    <strong>Type:</strong> {q.typeFichier} | <strong>Années:</strong> {q.annees.join(', ')} | <strong>Commentaires:</strong> {q.commentaire} | <strong>Entreprise:</strong> {q.entrepriseName} | <strong>files:</strong> {q.files.length}
                                                 </Typography>
-                                                {q.files && q.files.map(file => (
-                                                    <Box key={file.fileId} display="flex" alignItems="center" gap={1} ml={2}>
-                                                        <Typography variant="body2" sx={{ color: darkMode ? '#bbb' : '#666' }}>
-                                                            {file.fileName}
-                                                        </Typography>
-                                                        <IconButton
-                                                            size="small"
-                                                            onClick={() => handleOpenPreview(file.fileId, file.fileName)}
-                                                        >
-                                                            <VisibilityIcon fontSize="small" />
-                                                        </IconButton>
-                                                        <IconButton
-                                                            size="small"
-                                                            onClick={() => handleDeleteFile(q._id, file.fileId, enterprise._id)}
-                                                            color="error"
-                                                        >
-                                                            <DeleteIcon />
-                                                        </IconButton>
-                                                    </Box>
-                                                ))}
                                             </Box>
-                                            <IconButton
+                                            <Button
+                                                sx={{
+                                                    minWidth: '36px',
+                                                    width: '36px',
+                                                    height: '36px',
+                                                    padding: 0,
+                                                    transition: 'all 0.3s ease-in-out',
+                                                    '&:hover': {
+                                                        transform: 'scale(1.08)',
+                                                        boxShadow: 6
+                                                    }
+                                                }}
+                                                onClick={() => popUpDelete(q._id, null, enterprise._id, 'questionnaire')}
+                                                variant="contained"
                                                 color="error"
-                                                onClick={() => handleDeleteQuestionnaire(q._id, enterprise._id)}
-                                                sx={{ ml: 'auto' }}
                                             >
-                                                <DeleteIcon />
-                                            </IconButton>
+                                                <DeleteForeverIcon sx={{ fontSize: 20 }} />
+                                            </Button>
                                         </Box>
+
+                                        {q.files && q.files.map(file => (
+                                            <Box key={file.fileId} display="flex" alignItems="center" gap={2} ml={2}>
+                                                <Typography variant="body2" sx={{ color: darkMode ? '#bbb' : '#666', flex: 1 }}>
+                                                    {file.fileName}
+                                                </Typography>
+                                                <Box display="flex" gap={1}>
+                                                    <Button
+                                                        sx={{
+                                                            minWidth: '36px',
+                                                            width: '36px',
+                                                            height: '36px',
+                                                            padding: 0,
+                                                            transition: 'all 0.3s ease-in-out',
+                                                            '&:hover': {
+                                                                transform: 'scale(1.08)',
+                                                                boxShadow: 6
+                                                            }
+                                                        }}
+                                                        onClick={() => handleFileDownload({
+                                                            fileId: file.fileId,
+                                                            fileName: file.fileName,
+                                                            entrepriseName: enterprise.AddEntreName,
+                                                            logAction,
+                                                            showMessage
+                                                        })}
+                                                        variant="contained"
+                                                        color="primary"
+                                                    >
+                                                        <GetAppIcon sx={{ fontSize: 20 }} />
+                                                    </Button>
+                                                    <Button
+                                                        sx={{
+                                                            minWidth: '36px',
+                                                            width: '36px',
+                                                            height: '36px',
+                                                            padding: 0,
+                                                            transition: 'all 0.3s ease-in-out',
+                                                            '&:hover': {
+                                                                transform: 'scale(1.08)',
+                                                                boxShadow: 6
+                                                            }
+                                                        }}
+                                                        onClick={() => handleOpenPreview(file.fileId, file.fileName)}
+                                                        variant="contained"
+                                                        color="secondary"
+                                                    >
+                                                        <VisibilityIcon sx={{ fontSize: 20 }} />
+                                                    </Button>
+                                                    <Button
+                                                        sx={{
+                                                            minWidth: '36px',
+                                                            width: '36px',
+                                                            height: '36px',
+                                                            padding: 0,
+                                                            transition: 'all 0.3s ease-in-out',
+                                                            '&:hover': {
+                                                                transform: 'scale(1.08)',
+                                                                boxShadow: 6
+                                                            }
+                                                        }}
+                                                        onClick={() => popUpDelete(q._id, file.fileId, enterprise._id, 'file')}
+                                                        variant="contained"
+                                                        color="error"
+                                                    >
+                                                        <DeleteForeverIcon sx={{ fontSize: 20 }} />
+                                                    </Button>
+                                                </Box>
+                                            </Box>
+                                        ))}
+
                                         {index < array.length - 1 && (
                                             <Divider
                                                 sx={{
@@ -521,22 +609,25 @@ const Enterprise = () => {
                                                 }}
                                             />
                                         )}
-                                    </React.Fragment>
+                                    </Box>
                                 ))}
                                 <Divider sx={{ my: 2, backgroundColor: darkMode ? '#ffffff' : '#000000' }} />
                                 <Button
                                     variant="contained"
-                                    startIcon={<AssignmentIcon />}
+                                    startIcon={<GetAppIcon />}
                                     onClick={() => handleStartQuestionnaire(enterprise)}
                                     sx={{
-                                        mt: 2,
-                                        backgroundColor: darkMode ? '#90caf9' : '#1976d2',
+                                        ...buttonStyle,
+                                        transition: 'all 0.3s ease-in-out',
                                         '&:hover': {
-                                            backgroundColor: darkMode ? '#5f9bd1' : '#115293',
+                                            backgroundColor: '#95ad22',
+                                            transform: 'scale(1.08)',
+                                            boxShadow: 6
                                         }
                                     }}
                                 >
-                                    Questionnaire
+                                    Ajouter un pièce
+
                                 </Button>
                             </CardContent>
                         </Card>
