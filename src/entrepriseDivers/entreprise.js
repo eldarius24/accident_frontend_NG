@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import {
     Card, CardContent, Typography, Grid, LinearProgress,
-    Chip, Box, Divider, Button, Select, MenuItem,
+    Box, Divider, Button, Select, MenuItem, Modal,
     FormControl, Tooltip, InputLabel, IconButton
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -21,6 +21,26 @@ import { useUserConnected } from '../Hook/userConnected';
 import { useNavigate } from 'react-router-dom';
 import '../pageFormulaire/formulaire.css';
 import { useLogger } from '../Hook/useLogger';
+import FileViewer from '../pageFormulaire/FileManagement/fileViewer';
+import CustomSnackbar from '../_composants/CustomSnackbar';
+import CloseIcon from '@mui/icons-material/Close';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+
+const modalStyles = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: '90%',
+    height: '90%',
+    bgcolor: 'background.paper',
+    border: '2px solid #000',
+    boxShadow: 24,
+    p: 4,
+    overflow: 'hidden',
+    display: 'flex',
+    flexDirection: 'column'
+};
 
 const Enterprise = () => {
     const { logAction } = useLogger();
@@ -33,10 +53,71 @@ const Enterprise = () => {
     const [questionnaires, setQuestionnaires] = useState({});
     const [filteredEnterprises, setFilteredEnterprises] = useState([]);
     const [selectedEnterprises, setSelectedEnterprises] = useState([]);
+    const [modalOpen, setModalOpen] = useState(false);
+    const [selectedFile, setSelectedFile] = useState(null);
+    const [snackbar, setSnackbar] = useState({
+        open: false,
+        message: '',
+        severity: 'info'
+    });
+
+    // Fonction utilitaire pour gérer les messages
+    const showMessage = (message, severity = 'info') => {
+        setSnackbar({
+            open: true,
+            message,
+            severity
+        });
+    };
+
+    const handleCloseSnackbar = (event, reason) => {
+        // If the reason is 'clickaway', do not close the snackbar
+        if (reason === 'clickaway') return;
+        // Close the snackbar by setting its 'open' state to false
+        setSnackbar(prev => ({ ...prev, open: false }));
+    };
+
     const isConseillerPrevention = useCallback((entrepriseName) => {
         return Array.isArray(userInfo?.entreprisesConseillerPrevention)
             && userInfo?.entreprisesConseillerPrevention.includes(entrepriseName);
     }, [userInfo]);
+
+    const handleOpenPreview = async (fileId, fileName) => {
+        if (!fileId || !fileName) return;
+
+        // Créer l'objet file avec la structure attendue par FileViewer
+        setSelectedFile({
+            fileId,
+            fileName,
+            file: { fileId, fileName }  // Ajout de cette structure
+        });
+        setModalOpen(true);
+
+        try {
+            const entreprise = enterprises.find(e =>
+                questionnaires[e._id]?.some(q =>
+                    q.files?.some(f => f.fileId === fileId)
+                )
+            );
+
+            if (entreprise) {
+                await logAction({
+                    actionType: 'consultation',
+                    details: `Prévisualisation du fichier - Nom: ${fileName} - Entreprise: ${entreprise.AddEntreName}`,
+                    entity: 'Entreprise',
+                    entityId: fileId,
+                    entreprise: entreprise.AddEntreName
+                });
+            }
+        } catch (error) {
+            console.error('Erreur lors du log de la prévisualisation:', error);
+        }
+    };
+
+    const handleCloseModal = () => {
+        setSelectedFile(null);
+        setModalOpen(false);
+    };
 
     const fetchEnterprises = useCallback(async () => {
         try {
@@ -123,7 +204,6 @@ const Enterprise = () => {
         initializeEnterprises();
     }, [apiUrl, isAdmin, isConseiller, isConseillerPrevention, selectedEnterprises]);
 
-
     const handleDeleteFile = async (questionnaireId, fileId, enterpriseId) => {
         try {
             // Defensive checks
@@ -175,6 +255,7 @@ const Enterprise = () => {
             console.error('Error deleting file:', error);
         }
     };
+    
     // Fonction pour gérer la suppression d'un questionnaire
     const handleDeleteQuestionnaire = async (questionnaireId, enterpriseId) => {
         try {
@@ -403,9 +484,15 @@ const Enterprise = () => {
                                                 </Typography>
                                                 {q.files && q.files.map(file => (
                                                     <Box key={file.fileId} display="flex" alignItems="center" gap={1} ml={2}>
-                                                        <Typography variant="body2" sx={{ color: darkMode ? '#ffffff' : '#666' }}>
+                                                        <Typography variant="body2" sx={{ color: darkMode ? '#bbb' : '#666' }}>
                                                             {file.fileName}
                                                         </Typography>
+                                                        <IconButton
+                                                            size="small"
+                                                            onClick={() => handleOpenPreview(file.fileId, file.fileName)}
+                                                        >
+                                                            <VisibilityIcon fontSize="small" />
+                                                        </IconButton>
                                                         <IconButton
                                                             size="small"
                                                             onClick={() => handleDeleteFile(q._id, file.fileId, enterprise._id)}
@@ -462,6 +549,44 @@ const Enterprise = () => {
                     Développé par Remy et Benoit pour Le Cortigroupe. Support: bgillet.lecortil@cortigroupe.be
                 </h5>
             </Tooltip>
+            <Modal
+                open={modalOpen}
+                onClose={handleCloseModal}
+                aria-labelledby="file-viewer-modal"
+            >
+                <Box sx={modalStyles}>
+                    <Button
+                        onClick={handleCloseModal}
+                        sx={{
+                            position: 'absolute',
+                            right: 8,
+                            top: 8,
+                            zIndex: 1,
+                            color: 'white',
+                            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                            '&:hover': {
+                                backgroundColor: 'rgba(0, 0, 0, 0.7)',
+                            }
+                        }}
+                    >
+                        <CloseIcon />
+                    </Button>
+                    {selectedFile && (
+                        <Box sx={{ width: '100%', height: '100%', overflow: 'auto' }}>
+                            <FileViewer
+                                file={selectedFile.file}
+                                accidentId={null}
+                            />
+                        </Box>
+                    )}
+                </Box>
+            </Modal>
+            <CustomSnackbar
+                open={snackbar.open}
+                handleClose={handleCloseSnackbar}
+                message={snackbar.message}
+                severity={snackbar.severity}
+            />
         </Box>
     );
 };

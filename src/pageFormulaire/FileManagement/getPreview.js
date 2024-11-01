@@ -7,7 +7,7 @@ const getPreview = async (fileId, fileName) => {
     try {
         const response = await axios.get(`http://localhost:3100/api/getFile/${fileId}`, {
             responseType: 'blob',
-        });
+        }); 
         const blob = response.data;
         const fileType = fileName.split('.').pop().toLowerCase();
 
