@@ -3,12 +3,62 @@ import axios from 'axios';
 import mammoth from 'mammoth';
 import { Box, Typography, CircularProgress } from '@mui/material';
 import { useLogger } from '../../Hook/useLogger';
+import * as XLSX from 'xlsx';
 
 const FileViewer = ({ file, accidentId, isEntreprise = false }) => {
     const [fullContent, setFullContent] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const { logAction } = useLogger();
+
+    const processExcelFile = async (blob) => {
+        try {
+            const buffer = await blob.arrayBuffer();
+            const workbook = XLSX.read(buffer, { type: 'array' });
+
+            // Prendre la première feuille
+            const firstSheetName = workbook.SheetNames[0];
+            const worksheet = workbook.Sheets[firstSheetName];
+
+            // Convertir en HTML avec des styles
+            const html = XLSX.utils.sheet_to_html(worksheet, { editable: false });
+
+            // Ajouter des styles CSS pour un meilleur rendu
+            const styledHtml = `
+                <style>
+                    table {
+                        border-collapse: collapse;
+                        width: 100%;
+                        font-family: Arial, sans-serif;
+                        font-size: 14px;
+                    }
+                    th, td {
+                        border: 1px solid #ddd;
+                        padding: 8px;
+                        text-align: left;
+                    }
+                    th {
+                        background-color: #f5f5f5;
+                        font-weight: bold;
+                    }
+                    tr:nth-child(even) {
+                        background-color: #f9f9f9;
+                    }
+                    tr:hover {
+                        background-color: #f0f0f0;
+                    }
+                </style>
+                ${html}
+            `;
+
+            return styledHtml;
+        } catch (error) {
+            console.error('Erreur lors du traitement du fichier Excel:', error);
+            throw new Error('Erreur lors du traitement du fichier Excel');
+        }
+    };
+
+
 
     useEffect(() => {
         const loadFullContent = async () => {
@@ -40,14 +90,25 @@ const FileViewer = ({ file, accidentId, isEntreprise = false }) => {
                 const blob = response.data;
                 const fileType = file.fileName.split('.').pop().toLowerCase();
 
+
+                
                 try {
                     switch (fileType) {
+                        case 'xlsx':
+                        case 'xls':
+                            try {
+                                const excelHtml = await processExcelFile(response.data);
+                                setFullContent({ type: 'excel', content: excelHtml });
+                            } catch (excelError) {
+                                setError("Erreur lors de la conversion du fichier Excel");
+                            }
+                            break;
                         case 'pdf':
                             // Créer un nouveau Blob avec le type MIME PDF explicite
                             const pdfBlob = new Blob([blob], { type: 'application/pdf' });
                             const url = URL.createObjectURL(pdfBlob);
-                            setFullContent({ 
-                                type: 'pdf', 
+                            setFullContent({
+                                type: 'pdf',
                                 url,
                                 // Ajouter des options pour la prévisualisation PDF
                                 options: {
@@ -145,7 +206,18 @@ const FileViewer = ({ file, accidentId, isEntreprise = false }) => {
         );
     }
 
+
+
     switch (fullContent.type) {
+        case 'excel':
+            return (
+                <div className="w-full h-[calc(100vh-140px)] overflow-auto bg-white p-4">
+                    <div
+                        className="excel-preview"
+                        dangerouslySetInnerHTML={{ __html: fullContent.content }}
+                    />
+                </div>
+            );
         case 'pdf':
             return (
                 <Box className="w-full h-full relative">
@@ -167,7 +239,7 @@ const FileViewer = ({ file, accidentId, isEntreprise = false }) => {
 
         case 'docx':
             return (
-                <Box 
+                <Box
                     className="w-full h-full overflow-auto bg-white p-4"
                     dangerouslySetInnerHTML={{ __html: fullContent.content }}
                 />
