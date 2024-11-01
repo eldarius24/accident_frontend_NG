@@ -542,24 +542,24 @@ const Enterprise = () => {
                                                 </Button>
                                             </Tooltip>
                                             <Tooltip title="Supprimer le questionnaire" arrow>
-                                            <Button
-                                                sx={{
-                                                    minWidth: '36px',
-                                                    width: '36px',
-                                                    height: '36px',
-                                                    padding: 0,
-                                                    transition: 'all 0.3s ease-in-out',
-                                                    '&:hover': {
-                                                        transform: 'scale(1.08)',
-                                                        boxShadow: 6
-                                                    }
-                                                }}
-                                                onClick={() => handleDelete(q._id, null, enterprise._id, 'questionnaire')}
-                                                variant="contained"
-                                                color="error"
-                                            >
-                                                <DeleteForeverIcon sx={{ fontSize: 20 }} />
-                                            </Button>
+                                                <Button
+                                                    sx={{
+                                                        minWidth: '36px',
+                                                        width: '36px',
+                                                        height: '36px',
+                                                        padding: 0,
+                                                        transition: 'all 0.3s ease-in-out',
+                                                        '&:hover': {
+                                                            transform: 'scale(1.08)',
+                                                            boxShadow: 6
+                                                        }
+                                                    }}
+                                                    onClick={() => handleDelete(q._id, null, enterprise._id, 'questionnaire')}
+                                                    variant="contained"
+                                                    color="error"
+                                                >
+                                                    <DeleteForeverIcon sx={{ fontSize: 20 }} />
+                                                </Button>
                                             </Tooltip>
                                         </Box>
                                         {q.files && q.files.map(file => (
@@ -569,70 +569,70 @@ const Enterprise = () => {
                                                 </Typography>
                                                 <Box display="flex" gap={1}>
                                                     <Tooltip title="Telecharger le fichier" arrow>
-                                                    <Button
-                                                        sx={{
-                                                            minWidth: '36px',
-                                                            width: '36px',
-                                                            height: '36px',
-                                                            padding: 0,
-                                                            transition: 'all 0.3s ease-in-out',
-                                                            '&:hover': {
-                                                                transform: 'scale(1.08)',
-                                                                boxShadow: 6
-                                                            }
-                                                        }}
-                                                        onClick={() => handleFileDownload({
-                                                            fileId: file.fileId,
-                                                            fileName: file.fileName,
-                                                            entrepriseName: enterprise.AddEntreName,
-                                                            logAction,
-                                                            showMessage
-                                                        })}
-                                                        variant="contained"
-                                                        color="primary"
-                                                    >
-                                                        <GetAppIcon sx={{ fontSize: 20 }} />
-                                                    </Button>
+                                                        <Button
+                                                            sx={{
+                                                                minWidth: '36px',
+                                                                width: '36px',
+                                                                height: '36px',
+                                                                padding: 0,
+                                                                transition: 'all 0.3s ease-in-out',
+                                                                '&:hover': {
+                                                                    transform: 'scale(1.08)',
+                                                                    boxShadow: 6
+                                                                }
+                                                            }}
+                                                            onClick={() => handleFileDownload({
+                                                                fileId: file.fileId,
+                                                                fileName: file.fileName,
+                                                                entrepriseName: enterprise.AddEntreName,
+                                                                logAction,
+                                                                showMessage
+                                                            })}
+                                                            variant="contained"
+                                                            color="primary"
+                                                        >
+                                                            <GetAppIcon sx={{ fontSize: 20 }} />
+                                                        </Button>
                                                     </Tooltip>
-                                                    <Tooltip title="Voir le fichier" arrow>
-                                                    <Button
-                                                        sx={{
-                                                            minWidth: '36px',
-                                                            width: '36px',
-                                                            height: '36px',
-                                                            padding: 0,
-                                                            transition: 'all 0.3s ease-in-out',
-                                                            '&:hover': {
-                                                                transform: 'scale(1.08)',
-                                                                boxShadow: 6
-                                                            }
-                                                        }}
-                                                        onClick={() => handleOpenPreview(file.fileId, file.fileName)}
-                                                        variant="contained"
-                                                        color="secondary"
-                                                    >
-                                                        <VisibilityIcon sx={{ fontSize: 20 }} />
-                                                    </Button>
+                                                    <Tooltip title="Visualiser le fichier" arrow>
+                                                        <Button
+                                                            sx={{
+                                                                minWidth: '36px',
+                                                                width: '36px',
+                                                                height: '36px',
+                                                                padding: 0,
+                                                                transition: 'all 0.3s ease-in-out',
+                                                                '&:hover': {
+                                                                    transform: 'scale(1.08)',
+                                                                    boxShadow: 6
+                                                                }
+                                                            }}
+                                                            onClick={() => handleOpenPreview(file.fileId, file.fileName)}
+                                                            variant="contained"
+                                                            color="secondary"
+                                                        >
+                                                            <VisibilityIcon sx={{ fontSize: 20 }} />
+                                                        </Button>
                                                     </Tooltip>
                                                     <Tooltip title="Supprimer le fichier" arrow>
-                                                    <Button
-                                                        sx={{
-                                                            minWidth: '36px',
-                                                            width: '36px',
-                                                            height: '36px',
-                                                            padding: 0,
-                                                            transition: 'all 0.3s ease-in-out',
-                                                            '&:hover': {
-                                                                transform: 'scale(1.08)',
-                                                                boxShadow: 6
-                                                            }
-                                                        }}
-                                                        onClick={() => handleDelete(q._id, file.fileId, enterprise._id, 'file')}
-                                                        variant="contained"
-                                                        color="error"
-                                                    >
-                                                        <DeleteForeverIcon sx={{ fontSize: 20 }} />
-                                                    </Button>
+                                                        <Button
+                                                            sx={{
+                                                                minWidth: '36px',
+                                                                width: '36px',
+                                                                height: '36px',
+                                                                padding: 0,
+                                                                transition: 'all 0.3s ease-in-out',
+                                                                '&:hover': {
+                                                                    transform: 'scale(1.08)',
+                                                                    boxShadow: 6
+                                                                }
+                                                            }}
+                                                            onClick={() => handleDelete(q._id, file.fileId, enterprise._id, 'file')}
+                                                            variant="contained"
+                                                            color="error"
+                                                        >
+                                                            <DeleteForeverIcon sx={{ fontSize: 20 }} />
+                                                        </Button>
                                                     </Tooltip>
                                                 </Box>
                                             </Box>
@@ -651,22 +651,22 @@ const Enterprise = () => {
                                 ))}
                                 <Divider sx={{ my: 2, backgroundColor: darkMode ? '#ffffff' : '#000000' }} />
                                 <Tooltip title="Ajouter un nouveau document lié a l'entreprise" arrow>
-                                <Button
-                                    variant="contained"
-                                    startIcon={<GetAppIcon />}
-                                    onClick={() => handleStartQuestionnaire(enterprise)}
-                                    sx={{
-                                        ...buttonStyle,
-                                        transition: 'all 0.3s ease-in-out',
-                                        '&:hover': {
-                                            backgroundColor: '#95ad22',
-                                            transform: 'scale(1.08)',
-                                            boxShadow: 6
-                                        }
-                                    }}
-                                >
-                                    Ajouter un pièce
-                                </Button>
+                                    <Button
+                                        variant="contained"
+                                        startIcon={<GetAppIcon />}
+                                        onClick={() => handleStartQuestionnaire(enterprise)}
+                                        sx={{
+                                            ...buttonStyle,
+                                            transition: 'all 0.3s ease-in-out',
+                                            '&:hover': {
+                                                backgroundColor: '#95ad22',
+                                                transform: 'scale(1.08)',
+                                                boxShadow: 6
+                                            }
+                                        }}
+                                    >
+                                        Ajouter un pièce
+                                    </Button>
                                 </Tooltip>
                             </CardContent>
                         </Card>
@@ -685,29 +685,32 @@ const Enterprise = () => {
                 aria-labelledby="file-viewer-modal"
             >
                 <Box sx={modalStyles}>
-                    <Button
-                        onClick={handleCloseModal}
-                        sx={{
-                            position: 'absolute',
-                            right: 8,
-                            top: 8,
-                            zIndex: 1,
-                            color: 'white',
-                            backgroundColor: 'rgba(0, 0, 0, 0.5)',
-                            '&:hover': {
-                                backgroundColor: 'rgba(0, 0, 0, 0.7)',
-                            }
-                        }}
-                    >
-                        <CloseIcon />
-                    </Button>
+                    <Tooltip title="Fermer la fenêtre" arrow>
+                        <Button
+                            onClick={handleCloseModal}
+                            sx={{
+                                position: 'absolute',
+                                right: 8,
+                                top: 8,
+                                zIndex: 1,
+                                color: 'white',
+                                backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                                '&:hover': {
+                                    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+                                }
+                            }}
+                        >
+                            <CloseIcon />
+                        </Button>
+                    </Tooltip>
                     {selectedFile && (
                         <Box sx={{ width: '100%', height: '100%', overflow: 'auto' }}>
-                            <FileViewer
-                                file={selectedFile.file}
-                                accidentId={null}
-                            />
-                        </Box>
+                        <pre>{JSON.stringify(selectedFile.fileName, null, 5)}</pre>
+                        <FileViewer
+                            file={selectedFile.file}
+                            accidentId={null}
+                        />
+                    </Box>
                     )}
                 </Box>
             </Modal>

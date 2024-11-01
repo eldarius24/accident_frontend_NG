@@ -29,7 +29,9 @@ const modalStyle = {
     border: '2px solid #000',
     boxShadow: 24,
     p: 4,
-    overflow: 'hidden'
+    overflow: 'hidden',
+    display: 'flex',
+    flexDirection: 'column'
 };
 
 /**
@@ -320,7 +322,7 @@ export default function ListFilesInAccident(accidentId) {
                                                 boxShadow: 6
                                             }
                                         }}
-                                        onClick={() => handleFileDelete (file.fileId)}
+                                        onClick={() => handleFileDelete(file.fileId)}
                                         variant="contained"
                                         color="error"
                                     >
@@ -383,24 +385,35 @@ export default function ListFilesInAccident(accidentId) {
                 aria-labelledby="file-viewer-modal"
             >
                 <Box sx={modalStyle}>
-                    <Button
-                        onClick={handleCloseModal}
-                        sx={{
-                            position: 'absolute',
-                            right: 8,
-                            top: 8,
-                        }}
-                    >
-                        <CloseIcon />
-                    </Button>
+                    <Tooltip title="Fermer la fenêtre" arrow>
+                        <Button
+                            onClick={handleCloseModal}
+                            sx={{
+                                position: 'absolute',
+                                right: 8,
+                                top: 8,
+                                zIndex: 1,
+                                color: 'white',
+                                backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                                '&:hover': {
+                                    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+                                }
+                            }}
+                        >
+                            <CloseIcon />
+                        </Button>
+                    </Tooltip>
                     {selectedFile && (
-                        <FileViewer
-                            file={selectedFile}
-                            fileContent={previews[selectedFile.fileId]}
-                            accidentId={accidentId}  // Ajout de l'ID de l'accident
-                        />
+
+                        <Box sx={{ width: '100%', height: '100%', overflow: 'auto' }}>
+                            <FileViewer
+                                file={selectedFile}
+                                fileContent={previews[selectedFile.fileId]}
+                                accidentId={accidentId}  // Ajout de l'ID de l'accident
+                            />
+                        </Box>
+
                     )}
-                    
                 </Box>
             </Modal>
             <CustomSnackbar
