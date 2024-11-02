@@ -69,7 +69,7 @@ const RenameDialog = ({ fileId, currentFileName, accidentId, files, setFiles, on
             await logAction({
                 actionType: 'modification',
                 details: `Renommage de fichier - Ancien nom: ${currentFileName} - Nouveau nom: ${newFileName} - Travailleur: ${accidentDetails.nomTravailleur} ${accidentDetails.prenomTravailleur} - Date accident: ${accidentDetails.dateAccident}`,
-                entity: 'Fichier',
+                entity: 'Fichier Accident',
                 entityId: fileId,
                 entreprise: accidentDetails.entreprise
             });
