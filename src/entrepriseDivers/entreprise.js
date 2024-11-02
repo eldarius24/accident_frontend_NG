@@ -49,7 +49,7 @@ const modalStyles = {
     flexDirection: 'column'
 };
 
-const Enterprise = () => {
+const EnterpriseDivers = () => {
     const { logAction } = useLogger();
     const navigate = useNavigate();
     const { darkMode } = useTheme();
@@ -730,4 +730,4 @@ const Enterprise = () => {
     );
 };
 
-export default Enterprise;
+export default EnterpriseDivers;
