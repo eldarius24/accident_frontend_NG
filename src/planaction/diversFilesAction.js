@@ -272,69 +272,37 @@ export default function ListFilesInaction(actionId) {
   */
 
     const downloadFile = async ({ fileId, fileName }) => {
-
         if (!fileId || !fileName) {
-
             throw new Error('Informations de fichier manquantes');
-
         }
-
-
 
         try {
-
             // Téléchargement du fichier
-
             const blob = await getFile(fileId);
-
             saveAs(blob, fileName);
 
-
-
             // Récupération des détails de l'action
-
             const actionDetails = await getactionDiversDetails(actionId);
 
-
-
             // Log de l'action de téléchargement
-
             await logAction({
-
                 actionType: 'export',
-
                 details: `Téléchargement du fichier - Nom: ${fileName} - Travailleur: ${actionDetails?.nomTravailleur} ${actionDetails?.prenomTravailleur} - Date action: ${actionDetails?.dateaction}`,
-
                 entity: 'action',
-
                 entityId: fileId,
-
                 entreprise: actionDetails?.entreprise || null
-
             });
 
-
-
             showSnackbar('Téléchargement réussi', 'success');
-
         } catch (error) {
-
             console.error('Erreur de téléchargement:', error);
-
             showSnackbar('Erreur lors du téléchargement du fichier', 'error');
-
         }
-
     };
 
-
-
     /**
-
      * Ouvre la modale pour afficher le fichier.
-
      * @param {{fileId: string, fileName: string, fileType: string}} file - Les informations du fichier.
-
      */
 
     const handleOpenModal = (file) => {

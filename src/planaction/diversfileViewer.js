@@ -51,6 +51,24 @@ const FileViewer = ({ file, actionId, isEntreprise = false }) => {
         }
     };
 
+    const getactionDiversDetails = async (actionId) => {
+        try {
+            const response = await axios.get(`http://localhost:3100/api/planaction/${actionId}`);
+            if (response.data) {
+                return {
+                    nomTravailleur: response.data.AddActionQui,
+                    entreprise: response.data.AddActionEntreprise,
+                    dateAction: new Date(response.data.AddActionDate).toLocaleDateString()
+                };
+            }
+            return null;
+        } catch (error) {
+            console.error('Erreur lors de la récupération des détails de l\'action:', error);
+            return null;
+        }
+    };
+
+
     useEffect(() => {
         const loadContent = async () => {
             if (!file) return;
@@ -59,6 +77,8 @@ const FileViewer = ({ file, actionId, isEntreprise = false }) => {
             setErrorMessage(null);
 
             try {
+
+                const actionDetails = await getactionDiversDetails(actionId);
                 const response = await axios.get(`http://localhost:3100/api/getFileAction/${file.fileId}`, {
                     responseType: 'blob',
                     headers: {
@@ -66,14 +86,16 @@ const FileViewer = ({ file, actionId, isEntreprise = false }) => {
                     }
                 });
 
-                if (isEntreprise) {
+                try {
                     await logAction({
                         actionType: 'consultation',
-                        details: `File preview - Name: ${file.fileName} - Company: ${file.entrepriseName}`,
-                        entity: 'Company',
+                        details: `Prévisualisation du fichier - Nom: ${file.fileName} - pour l'action de: ${actionDetails?.nomTravailleur} - Date action: ${actionDetails?.dateAction}`,
+                        entity: 'Action',
                         entityId: file.fileId,
-                        entreprise: file.entrepriseName
+                        entreprise: actionDetails?.entreprise || null
                     });
+                } catch (logError) {
+                    console.error('Erreur lors de la création du log:', logError);
                 }
 
                 const blob = response.data;

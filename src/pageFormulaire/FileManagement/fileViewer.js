@@ -77,7 +77,7 @@ const FileViewer = ({ file, accidentId, isEntreprise = false }) => {
                 });
 
                 // Log de l'action
-                if (isEntreprise) {
+                try {
                     await logAction({
                         actionType: 'consultation',
                         details: `Prévisualisation du fichier - Nom: ${file.fileName} - Entreprise: ${file.entrepriseName}`,
@@ -85,6 +85,8 @@ const FileViewer = ({ file, accidentId, isEntreprise = false }) => {
                         entityId: file.fileId,
                         entreprise: file.entrepriseName
                     });
+                } catch (logError) {
+                    console.error('Erreur lors de la création du log:', logError);
                 }
 
                 const blob = response.data;

@@ -315,6 +315,7 @@ const LogsViewer = () => {
             </Tooltip>
           </Grid>
           <Grid item xs={12}>
+          <Pagination style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }} count={totalPages} page={page} onChange={handlePageChange} color="primary" />
             <TableContainer className="frameStyle-style"
               style={{
                 maxHeight: '600px',
