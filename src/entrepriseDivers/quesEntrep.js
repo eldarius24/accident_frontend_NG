@@ -262,7 +262,6 @@ const QuesEntrep = () => {
             // Attendre un peu avant de rediriger
             setTimeout(() => {
                 navigate('/entreprise');
-                window.location.reload(); // Pour recharger les données
             }, 2000);
 
         } catch (error) {

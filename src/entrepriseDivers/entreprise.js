@@ -86,13 +86,7 @@ const EnterpriseDivers = () => {
 
             if (questionnaire) {
                 // Log de l'action d'édition
-                await logAction({
-                    actionType: 'modification',
-                    details: `Début de modification du questionnaire - Type: ${questionnaire.typeFichier} - Entreprise: ${entrepriseName} - Années: ${questionnaire.annees.join(', ')}`,
-                    entity: 'Divers Entreprise',
-                    entityId: questionnaireId,
-                    entreprise: entrepriseName
-                });
+               
 
                 // Navigation vers le formulaire avec les données existantes
                 navigate("/quesEntrep", {
