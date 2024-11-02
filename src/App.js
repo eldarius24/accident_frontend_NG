@@ -15,7 +15,7 @@ import Naturelesion from './pageFormulaire/codeNatureLesion';
 import Siegelesion from './pageFormulaire/codeSiegeLesion';
 import Fichierdll from './pageFormulaire/FileManagement/fichierdll';
 import PlanAction from './planaction/planaction';
-import Fichierdllaction from './planaction/fichierdllaction';
+import Diversfichierdllaction from './planaction/diversfichierdllaction';
 import ProtectedRoute from './Model/protectedRoute';
 import ProtectedRouteAdmin from './Model/protectedRouteAdmin';
 import Adminuser from './pageAdmin/user/AdminUser';
@@ -70,7 +70,7 @@ const App = () => {
           <Route path="/siegelesion" element={<ProtectedRouteAdminOrConseiller><Siegelesion /></ProtectedRouteAdminOrConseiller>} />
           <Route path="/fichierdll" element={<ProtectedRouteAdminOrConseiller><Fichierdll /></ProtectedRouteAdminOrConseiller>} />
           <Route path="/planAction" element={<ProtectedRouteAdminOrConseiller><PlanAction /></ProtectedRouteAdminOrConseiller>} />
-          <Route path="/fichierdllaction" element={<ProtectedRouteAdminOrConseiller><Fichierdllaction /></ProtectedRouteAdminOrConseiller>} />
+          <Route path="/diversfichierdllaction" element={<ProtectedRouteAdminOrConseiller><Diversfichierdllaction /></ProtectedRouteAdminOrConseiller>} />
           <Route path="/statistiques" element={<ProtectedRouteAdminOrConseiller><Statistiques /></ProtectedRouteAdminOrConseiller>} />
         </Routes>
       </div>

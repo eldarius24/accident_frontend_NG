@@ -42,7 +42,7 @@ export default function PlanAction({ accidentData }) {
     const [loading, setLoading] = useState(true);
     const { handleSubmit } = useForm();
     const location = useLocation();
-    const isFileUploadIcon = location.pathname === '/fichierdllaction';
+    const isFileUploadIcon = location.pathname === '/diversfichierdllaction';
     const [searchTerm, setSearchTerm] = useState('');
     const [enterprises, setEntreprises] = useState([]);
     const [allSectors, setAllSectors] = useState([]);
@@ -70,11 +70,11 @@ export default function PlanAction({ accidentData }) {
 
     const handleExport = useCallback(
         createHandleExport(
-            users, 
-            isAdmin, 
-            userInfo, 
-            selectedYears, 
-            searchTerm, 
+            users,
+            isAdmin,
+            userInfo,
+            selectedYears,
+            searchTerm,
             showSnackbar,
             logAction  // Ajout du paramètre logAction
         ),
@@ -171,7 +171,7 @@ export default function PlanAction({ accidentData }) {
                     entityId: actionIdToModify,
                     entreprise: actionToEdit.AddActionEntreprise
                 });
-    
+
                 // Redirige vers le formulaire d'édition
                 navigate("/formulaireAction", { state: actionToEdit });
                 showSnackbar('Modification de l\'action initiée', 'info');
@@ -250,13 +250,13 @@ export default function PlanAction({ accidentData }) {
                 showSnackbar('Erreur : Action non trouvée', 'error');
                 return;
             }
-    
+
             const response = await axios.delete(`http://${apiUrl}:3100/api/planaction/${userIdToDelete}`);
-            
+
             if (response.status === 204 || response.status === 200) {
                 // Met à jour la liste des actions localement
                 setAddactions(prevAddactions => prevAddactions.filter(addaction => addaction._id !== userIdToDelete));
-                
+
                 // Crée un log pour la suppression
                 await logAction({
                     actionType: 'suppression',
@@ -265,7 +265,7 @@ export default function PlanAction({ accidentData }) {
                     entityId: userIdToDelete,
                     entreprise: actionToDelete.AddActionEntreprise
                 });
-    
+
                 showSnackbar('Action supprimée avec succès', 'success');
             } else {
                 showSnackbar(`Erreur lors de la suppression de l'action: ${response.status} ${response.statusText}`, 'error');
@@ -524,16 +524,24 @@ export default function PlanAction({ accidentData }) {
                                             </TableCell>
                                             <TableCell style={{ padding: 0, width: '70px' }}>
                                                 <Tooltip title="Cliquez ici pour ajouter des fichiers a l'action" arrow>
-                                                    <Button sx={{
-                                                        transition: 'all 0.3s ease-in-out',
-                                                        '&:hover': {
-                                                            transform: 'scale(1.08)',
-                                                            boxShadow: 6
-                                                        }
-                                                    }}
-                                                        component={Link} to={isFileUploadIcon ? '/' : '/fichierdllaction'}
+                                                    <Button
+                                                        sx={{
+                                                            transition: 'all 0.3s ease-in-out',
+                                                            '&:hover': {
+                                                                transform: 'scale(1.08)',
+                                                                boxShadow: 6
+                                                            }
+                                                        }}
+                                                        onClick={() => {
+                                                            if (!isFileUploadIcon) {
+                                                                navigate('/diversfichierdllaction', { state: addaction._id });
+                                                            } else {
+                                                                navigate('/');
+                                                            }
+                                                        }}
                                                         variant="contained"
-                                                        color="secondary">
+                                                        color="secondary"
+                                                    >
                                                         <GetAppIcon />
                                                     </Button>
                                                 </Tooltip>
