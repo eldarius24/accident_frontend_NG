@@ -13,7 +13,7 @@ import { useLogger } from '../Hook/useLogger';
 import '../pageFormulaire/formulaire.css';
 import { useTheme } from '../pageAdmin/user/ThemeContext';
 import listeQuesEntr from '../liste/listeQuesEntre.json';
-
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 const dropZoneStyle = {
     display: 'flex',
     justifyContent: 'center',
@@ -157,6 +157,46 @@ const QuesEntrep = () => {
         }
     };
 
+
+    const handleFileDelete = async (fileId, fileName) => {
+        try {
+            // Suppression du fichier
+            await axios.delete(`http://${apiUrl}:3100/api/file/${fileId}`);
+            
+            // Mise à jour de la liste des fichiers locale
+            setUploadedFiles(prevFiles => prevFiles.filter(file => file.fileId !== fileId));
+    
+            // Logger l'action
+            await logAction({
+                actionType: 'suppression',
+                details: `Suppression du fichier - Nom: ${fileName} - Entreprise: ${enterprise?.AddEntreName}`,
+                entity: 'Divers Entreprise',
+                entityId: fileId,
+                entreprise: enterprise?.AddEntreName
+            });
+    
+            // Mise à jour du questionnaire dans la base de données
+            if (editMode && questionnaire?._id) {
+                await axios.put(`http://${apiUrl}:3100/api/questionnaires/${questionnaire._id}`, {
+                    ...questionnaire,
+                    files: uploadedFiles.filter(file => file.fileId !== fileId)
+                });
+            }
+    
+            showSnackbar('Fichier supprimé avec succès', 'success');
+            
+            // Rediriger vers la page entreprise après un court délai
+            setTimeout(() => {
+                navigate('/entreprise');
+            }, 1500);
+            
+        } catch (error) {
+            console.error('Erreur lors de la suppression du fichier:', error);
+            showSnackbar('Erreur lors de la suppression du fichier', 'error');
+        }
+    };
+    
+
     const handleDrop = useCallback(e => {
         e.preventDefault();
         e.stopPropagation();
@@ -171,7 +211,7 @@ const QuesEntrep = () => {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-    
+
         try {
             const dataToSubmit = {
                 entrepriseId: enterprise?._id,
@@ -181,16 +221,16 @@ const QuesEntrep = () => {
                 commentaire: questionnaireData.quesEntreCommentaire,
                 files: uploadedFiles
             };
-    
+
             let response;
-            
+
             if (editMode && questionnaire?._id) {
                 // Modification
                 response = await axios.put(
                     `http://${apiUrl}:3100/api/questionnaires/${questionnaire._id}`,
                     dataToSubmit
                 );
-                
+
                 console.log('Mise à jour questionnaire:', response.data);
                 await logAction({
                     actionType: 'modification',
@@ -199,7 +239,7 @@ const QuesEntrep = () => {
                     entityId: questionnaire._id,
                     entreprise: enterprise?.AddEntreName
                 });
-                
+
                 showSnackbar('Questionnaire modifié avec succès', 'success');
             } else {
                 // Création
@@ -207,7 +247,7 @@ const QuesEntrep = () => {
                     `http://${apiUrl}:3100/api/questionnaires`,
                     dataToSubmit
                 );
-                
+
                 await logAction({
                     actionType: 'creation',
                     details: `Création d'un questionnaire - Entreprise: ${enterprise?.AddEntreName} - Type: ${dataToSubmit.typeFichier} - Années: ${dataToSubmit.annees.join(', ')}`,
@@ -215,20 +255,20 @@ const QuesEntrep = () => {
                     entityId: response.data._id,
                     entreprise: enterprise?.AddEntreName
                 });
-                
+
                 showSnackbar('Questionnaire créé avec succès', 'success');
             }
-    
+
             // Attendre un peu avant de rediriger
             setTimeout(() => {
                 navigate('/entreprise');
                 window.location.reload(); // Pour recharger les données
             }, 2000);
-    
+
         } catch (error) {
             console.error('Erreur lors de la sauvegarde:', error);
             showSnackbar(
-                error.response?.data?.message || 
+                error.response?.data?.message ||
                 `Erreur lors de la ${editMode ? 'modification' : 'création'} du questionnaire`,
                 'error'
             );
@@ -270,7 +310,7 @@ const QuesEntrep = () => {
                     <Typography variant="h6" gutterBottom>
                         Fichiers joints
                     </Typography>
-                    
+
                     <Tooltip title="Faites glisser un fichier ici pour l'ajouter au questionnaire" arrow>
                         <div
                             style={dropZoneStyle}
@@ -313,11 +353,67 @@ const QuesEntrep = () => {
                                 display="flex"
                                 alignItems="center"
                                 justifyContent="space-between"
-                                sx={{ mb: 1, p: 1, bgcolor: 'rgba(0,0,0,0.05)', borderRadius: 1 }}
+                                sx={{
+                                    mb: 1,
+                                    p: 1,
+                                    bgcolor: 'rgba(0,0,0,0.05)',
+                                    borderRadius: 1,
+                                    '&:hover': {
+                                        bgcolor: 'rgba(0,0,0,0.08)'
+                                    }
+                                }}
                             >
                                 <Typography variant="body2">
                                     {file.fileName}
                                 </Typography>
+                                <Tooltip title="Supprimer le fichier" arrow>
+                                    <Button
+                                        onClick={() => {
+                                            confirmAlert({
+                                                customUI: ({ onClose }) => (
+                                                    <div className="custom-confirm-dialog">
+                                                        <h1 className="custom-confirm-title">Supprimer le fichier</h1>
+                                                        <p className="custom-confirm-message">
+                                                            Êtes-vous sûr de vouloir supprimer ce fichier ?
+                                                        </p>
+                                                        <div className="custom-confirm-buttons">
+                                                            <Tooltip title="Confirmer la suppression" arrow>
+                                                                <button
+                                                                    className="custom-confirm-button"
+                                                                    onClick={() => {
+                                                                        handleFileDelete(file.fileId, file.fileName);
+                                                                        onClose();
+                                                                    }}
+                                                                >
+                                                                    Oui
+                                                                </button>
+                                                            </Tooltip>
+                                                            <Tooltip title="Annuler la suppression" arrow>
+                                                                <button
+                                                                    className="custom-confirm-button custom-confirm-no"
+                                                                    onClick={onClose}
+                                                                >
+                                                                    Non
+                                                                </button>
+                                                            </Tooltip>
+                                                        </div>
+                                                    </div>
+                                                )
+                                            });
+                                        }}
+                                        sx={{
+                                            minWidth: '40px',
+                                            ml: 2,
+                                            color: 'error.main',
+                                            '&:hover': {
+                                                bgcolor: 'error.light',
+                                                color: 'white'
+                                            }
+                                        }}
+                                    >
+                                        <DeleteForeverIcon />
+                                    </Button>
+                                </Tooltip>
                             </Box>
                         ))}
                     </Box>
@@ -358,7 +454,7 @@ const QuesEntrep = () => {
             />
             <div className="image-cortigroupe"></div>
             <Tooltip title="Si vous rencontrez un souci avec le site, envoyer un mail à l'adresse suivante : bgillet.lecortil@cortigroupe.be et expliquer le soucis rencontré" arrow>
-                <h5 style={{ marginBottom: '40px' }}> 
+                <h5 style={{ marginBottom: '40px' }}>
                     Développé par Remy et Benoit pour Le Cortigroupe. Support: bgillet.lecortil@cortigroupe.be
                 </h5>
             </Tooltip>

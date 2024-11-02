@@ -261,19 +261,26 @@ const EnterpriseDivers = () => {
                 console.error('No questionnaires found for this enterprise');
                 return;
             }
+            
             const entrepriseName = enterprises.find(e => e._id === enterpriseId)?.AddEntreName;
             const currentQuestionnaire = questionnaires[enterpriseId]?.find(q => q._id === questionnaireId);
+            
             if (!currentQuestionnaire) {
                 console.error('Questionnaire not found');
                 return;
             }
-            // Safe filtering with default empty array
+    
+            // Supprimer le fichier
+            await axios.delete(`http://${apiUrl}:3100/api/file/${fileId}`);
+            
+            // Mettre à jour le questionnaire avec la nouvelle liste de fichiers
             const updatedFiles = currentQuestionnaire.files?.filter(f => f.fileId !== fileId) || [];
             await axios.put(`http://${apiUrl}:3100/api/questionnaires/${questionnaireId}`, {
                 ...currentQuestionnaire,
                 files: updatedFiles
-
             });
+    
+            // Log de l'action
             await logAction({
                 actionType: 'suppression',
                 details: `Suppression d'un document - Entreprise: ${entrepriseName}`,
@@ -281,24 +288,14 @@ const EnterpriseDivers = () => {
                 entityId: questionnaireId,
                 entreprise: entrepriseName
             });
-            // Defensive state update
-            setQuestionnaires(prev => {
-                // Ensure the enterprise exists in state
-                if (!prev[enterpriseId]) {
-                    return prev;
-                }
-                return {
-                    ...prev,
-                    [enterpriseId]: prev[enterpriseId].map(q =>
-                        q._id === questionnaireId
-                            ? { ...q, files: updatedFiles }
-                            : q
-                    )
-                };
-            });
-            // Rest of the code remains the same
+    
+            // Rafraîchir les questionnaires
+            fetchQuestionnaires();
+            showMessage('Fichier supprimé avec succès', 'success');
+    
         } catch (error) {
             console.error('Error deleting file:', error);
+            showMessage('Erreur lors de la suppression du fichier', 'error');
         }
     };
 
