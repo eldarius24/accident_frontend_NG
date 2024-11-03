@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Legend, ResponsiveContainer,
-   PieChart, Pie, Cell, Tooltip
+  PieChart, Pie, Cell, Tooltip, LineChart, Line
 } from 'recharts';
 import {
   FormControl, InputLabel, Select, MenuItem, Checkbox, ListItemText, Box
@@ -10,6 +10,8 @@ import { useAccidentStats } from './filters';
 import chargerDonnees from './dataLoader';
 import genererDonneesGraphiques, { MONTHS, DAYS } from './chartData';
 import { renderOptimizedChart, getRenderConfig, COLORS } from './chartComponents';
+import axios from 'axios';
+import config from '../config.json';
 
 /**
  * Affiche les graphiques des accidents de travail par type de travailleur, âge, jour de la semaine, mois, an, secteur et par entreprise.
@@ -20,7 +22,7 @@ import { renderOptimizedChart, getRenderConfig, COLORS } from './chartComponents
  */
 const Statistiques = () => {
   const [data, setData] = useState([]);
-
+  const [tfData, setTfData] = useState([]);
   const [graphs, setGraphs] = useState({
     accidentsBySex: { visible: true, label: "TOTAL Accidents par sexe" },
     accidentsByDayOfWeek: { visible: true, label: "TOTAL Accidents par jour de la semaine" }, // Nouvelle entrée
@@ -35,6 +37,8 @@ const Statistiques = () => {
     accidentsByDayOfWeekAndCompany: { visible: true, label: "Accidents par jour et par entreprise" },
     accidentsByAgeByCompany: { visible: true, label: "Accidents par age et par entreprise" },
     accidentsByTypeTravailleurByCompany: { visible: true, label: "Accidents par type de travailleur et par entreprise" },
+    tfByYearAndCompany: { visible: true, label: "Taux de fréquence par an et par entreprise" },
+    tfByCompany: { visible: true, label: "Taux de fréquence par entreprise" },
   });
 
   const [selectedYears, setSelectedYears] = useState([]);
@@ -47,6 +51,77 @@ const Statistiques = () => {
   const [selectedAssureurStatus, setSelectedAssureurStatus] = useState([]);
   const [accidentTypes, setAccidentTypes] = useState([]);
   const [selectedAccidentTypes, setSelectedAccidentTypes] = useState([]);
+  const [detailedTfData, setDetailedTfData] = useState([]);
+
+
+
+  const loadDetailedTfData = async () => {
+    try {
+      const response = await axios.get(`http://${config.apiUrl}:3100/api/questionnaires`);
+      const tfDataByCompany = {};
+
+      response.data.forEach(questionnaire => {
+        if (questionnaire.resultTf && questionnaire.entrepriseName && questionnaire.annees) {
+          if (!tfDataByCompany[questionnaire.entrepriseName]) {
+            tfDataByCompany[questionnaire.entrepriseName] = [];
+          }
+
+          questionnaire.annees.forEach(annee => {
+            tfDataByCompany[questionnaire.entrepriseName].push({
+              year: annee,
+              tf: parseFloat(questionnaire.resultTf),
+              heuresPreste: parseFloat(questionnaire.valueATf || 0),
+              accidents: parseFloat(questionnaire.valueBTf || 0)
+            });
+          });
+        }
+      });
+
+      // Transformer les données pour le format attendu par le composant
+      const transformedData = Object.entries(tfDataByCompany).map(([company, data]) => ({
+        company,
+        data: data.sort((a, b) => a.year - b.year)
+      }));
+
+      setDetailedTfData(transformedData);
+    } catch (error) {
+      console.error('Erreur lors du chargement des données Tf:', error);
+    }
+  };
+
+  // Ajoutez cette nouvelle fonction pour charger les données Tf
+  const loadTfData = async () => {
+    try {
+      const response = await axios.get(`http://${config.apiUrl}:3100/api/questionnaires`);
+      const tfDataByCompany = {};
+
+      response.data.forEach(questionnaire => {
+        if (questionnaire.resultTf && questionnaire.entrepriseName && questionnaire.annees) {
+          questionnaire.annees.forEach(annee => {
+            if (!tfDataByCompany[questionnaire.entrepriseName]) {
+              tfDataByCompany[questionnaire.entrepriseName] = {};
+            }
+            tfDataByCompany[questionnaire.entrepriseName][annee] = parseFloat(questionnaire.resultTf);
+          });
+        }
+      });
+
+      // Transformation des données pour le graphique
+      const transformedData = Object.entries(tfDataByCompany).map(([company, yearData]) => ({
+        company,
+        ...yearData
+      }));
+
+      setTfData(transformedData);
+    } catch (error) {
+      console.error('Erreur lors du chargement des données Tf:', error);
+    }
+  };
+
+  useEffect(() => {
+    loadTfData();
+    loadDetailedTfData();
+  }, []);
 
   const stats = useAccidentStats(
     data,
@@ -59,26 +134,26 @@ const Statistiques = () => {
   );
 
   useEffect(() => {
-/**
- * Initialise les données nécessaires pour les statistiques d'accidents.
- * 
- * Cette fonction charge les données à l'aide de la fonction `chargerDonnees`
- * et met à jour les états avec les données reçues, notamment:
- * - `data`: les données des accidents
- * - `allYears`: toutes les années disponibles dans les données
- * - `selectedYears`: les années sélectionnées pour le filtrage
- * - `workerTypes`: les types de travailleurs
- * - `selectedWorkerTypes`: les types de travailleurs sélectionnés pour le filtrage
- * - `sectors`: les secteurs d'activité
- * - `selectedSectors`: les secteurs sélectionnés pour le filtrage
- * - `assureurStatus`: les statuts assureur
- * - `selectedAssureurStatus`: les statuts assureur sélectionnés pour le filtrage
- * - `accidentTypes`: les types d'accidents
- * - `selectedAccidentTypes`: les types d'accidents sélectionnés pour le filtrage
- * 
- * En cas d'erreur lors du chargement des données, elle est capturée et 
- * affichée dans la console.
- */
+    /**
+     * Initialise les données nécessaires pour les statistiques d'accidents.
+     * 
+     * Cette fonction charge les données à l'aide de la fonction `chargerDonnees`
+     * et met à jour les états avec les données reçues, notamment:
+     * - `data`: les données des accidents
+     * - `allYears`: toutes les années disponibles dans les données
+     * - `selectedYears`: les années sélectionnées pour le filtrage
+     * - `workerTypes`: les types de travailleurs
+     * - `selectedWorkerTypes`: les types de travailleurs sélectionnés pour le filtrage
+     * - `sectors`: les secteurs d'activité
+     * - `selectedSectors`: les secteurs sélectionnés pour le filtrage
+     * - `assureurStatus`: les statuts assureur
+     * - `selectedAssureurStatus`: les statuts assureur sélectionnés pour le filtrage
+     * - `accidentTypes`: les types d'accidents
+     * - `selectedAccidentTypes`: les types d'accidents sélectionnés pour le filtrage
+     * 
+     * En cas d'erreur lors du chargement des données, elle est capturée et 
+     * affichée dans la console.
+     */
     const initialiserDonnees = async () => {
       try {
         await chargerDonnees({
@@ -456,112 +531,63 @@ const Statistiques = () => {
         })
       )}
 
-      {graphs.accidentsByCompanyAndSector.visible && renderOptimizedChart('company',
+      {graphs.tfByYearAndCompany.visible && tfData.length > 0 && renderOptimizedChart(
+        'tfYearCompany',
         null,
-        getRenderConfig('company', null, {
-          title: "Accidents par entreprise par secteur",
-          component: PieChart,
-          companies: Object.keys(stats.accidentsByCompany).map(companyName => ({
-            company: companyName,
-            data: stats.accidentsByCompany[companyName]
-          })),
-          renderData: (data) => ({
-            component: PieChart,
-            chartContent: (
-              <Pie
-                data={Object.entries(data).map(([sector, NombreAT]) => ({
-                  name: sector,
-                  value: NombreAT
-                }))}
-                cx="50%"
-                cy="50%"
-                labelLine={false}
-                outerRadius={80}
-                fill="#8884d8"
-                dataKey="value"
-                label={({ name, value }) => `${name}: ${value}`}
-              >
-                {Object.entries(data).map((_, index) => (
-                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                ))}
-              </Pie>
-            )
-          })
+        getRenderConfig('tfYearCompany', null, {
+          data: tfData,
+          selectedYears: selectedYears
         })
       )}
 
-      {graphs.accidentsByDayOfWeekAndCompany.visible && (
-        <div className="text-center">
-          <h2>Accidents par jour de la semaine par entreprise</h2>
-          <div className="flex flex-wrap justify-center">
-            {memoizedChartData.accidentsByDayOfWeekByCompanyData.map(({ company, data }) => (
-              <div key={company} className="my-4 w-full md:w-1/2 lg:w-1/3">
-                <h3 className="text-xl font-bold text-center">{company}</h3>
-                <ResponsiveContainer width="100%" height={300}>
-                  <BarChart data={data}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="day" />
-                    <YAxis />
-                    <Tooltip />
-                    <Legend />
-                    <Bar dataKey="NombreAT" fill="#0088FE" />
-                  </BarChart>
-                </ResponsiveContainer>
-              </div>
-            ))}
-          </div>
-        </div>
+      {graphs.accidentsByCompanyAndSector.visible && renderOptimizedChart(
+        'accidentSectorCompany',
+        null,
+        getRenderConfig('accidentSectorCompany', null, {
+          title: "Accidents par entreprise par secteur",
+          companies: Object.keys(stats.accidentsByCompany).map(companyName => ({
+            company: companyName,
+            data: stats.accidentsByCompany[companyName]
+          }))
+        })
       )}
 
-      {graphs.accidentsByAgeByCompany.visible && (
-        <div className="text-center">
-          <h2>Accidents par âge du travailleur et par entreprise</h2>
-          <div className="flex flex-wrap justify-center">
-            {memoizedChartData.accidentsByAgeByCompanyData.map(({ company, data }) => (
-              <div key={company} className="my-4 w-full md:w-1/2 lg:w-1/3">
-                <h3 className="text-xl font-bold text-center">{company}</h3>
-                <ResponsiveContainer width="100%" height={300}>
-                  <BarChart data={data}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="age" />
-                    <YAxis />
-                    <Tooltip />
-                    <Legend />
-                    <Bar dataKey="NombreAT" fill="#8884d8" />
-                  </BarChart>
-                </ResponsiveContainer>
-              </div>
-            ))}
-          </div>
-        </div>
+      {graphs.accidentsByDayOfWeekAndCompany.visible && renderOptimizedChart(
+        'dayOfWeekCompany',
+        null,
+        getRenderConfig('dayOfWeekCompany', null, {
+          data: memoizedChartData.accidentsByDayOfWeekByCompanyData
+        })
       )}
 
-      {graphs.accidentsByTypeTravailleurByCompany.visible && (
-        <div className="text-center">
-          <h2>Accidents par type de travailleur et par entreprise</h2>
-          <div className="flex flex-wrap justify-center">
-            {Object.entries(stats.accidentsByTypeTravailleurByCompany).map(([companyName, typeTravailleurData]) => (
-              <div key={companyName} className="my-4 w-full md:w-1/2 lg:w-1/3">
-                <h3 className="text-xl font-bold text-center">{companyName}</h3>
-                <ResponsiveContainer width="100%" height={300}>
-                  <BarChart
-                    data={Object.entries(typeTravailleurData).map(([typeTravailleur, NombreAT]) => ({
-                      typeTravailleur,
-                      NombreAT
-                    }))}
-                  >
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="typeTravailleur" />
-                    <YAxis />
-                    <Tooltip />
-                    <Legend />
-                    <Bar dataKey="NombreAT" fill="#0088FE" />
-                  </BarChart>
-                </ResponsiveContainer>
-              </div>
-            ))}
-          </div>
-        </div>
+      {graphs.accidentsByAgeByCompany.visible && renderOptimizedChart('ageByCompany',
+        null,
+        getRenderConfig('ageByCompany', null, {
+          title: "Accidents par âge du travailleur et par entreprise",
+          companies: memoizedChartData.accidentsByAgeByCompanyData
+        })
+      )}
+
+      {graphs.accidentsByTypeTravailleurByCompany.visible && renderOptimizedChart('workerTypeByCompany',
+        null,
+        getRenderConfig('workerTypeByCompany', null, {
+          title: "Accidents par type de travailleur et par entreprise",
+          companies: Object.entries(stats.accidentsByTypeTravailleurByCompany).map(([company, typeTravailleurData]) => ({
+            company,
+            data: Object.entries(typeTravailleurData).map(([typeTravailleur, NombreAT]) => ({
+              typeTravailleur,
+              NombreAT
+            }))
+          }))
+        })
+      )}
+
+      {graphs.tfByCompany.visible && renderOptimizedChart('tfByCompany',
+        null,
+        getRenderConfig('tfByCompany', null, {
+          companies: detailedTfData,
+          selectedYears: selectedYears
+        })
       )}
 
       <div className="image-cortigroupe"></div>

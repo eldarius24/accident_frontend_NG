@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import mammoth from 'mammoth';
 import { Box, Typography, CircularProgress } from '@mui/material';
-import { useLogger } from '../Hook/useLogger';
+import { useLogger } from '../../Hook/useLogger';
 import * as XLSX from 'xlsx';
 
 const FileViewer = ({ file, actionId, isEntreprise = false }) => {

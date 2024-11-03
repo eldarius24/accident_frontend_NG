@@ -28,6 +28,8 @@ const calculateAge = (birthDate, accidentDate) => {
     accidentsByAgeByCompany: {},
     accidentsByTypeTravailleur: {},
     accidentsByTypeTravailleurByCompany: {},
+    tfByYearAndCompany: {},
+    tfByCompany: {},
   });
   
   // Fonction principale de filtrage et calcul des statistiques

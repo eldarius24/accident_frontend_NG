@@ -1,4 +1,5 @@
 import recupererDonnees from './recupererDonnees';
+import axios from 'axios';
 
 /**
  * Charge les données d'accidents à partir de l'API.
@@ -21,6 +22,9 @@ import recupererDonnees from './recupererDonnees';
  * 
  * @param {{ setData: (any) => void; setAllYears: (any) => void; setSelectedYears: (any) => void; setWorkerTypes: (any) => void; setSelectedWorkerTypes: (any) => void; setSectors: (any) => void; setSelectedSectors: (any) => void; setAssureurStatus: (any) => void; setSelectedAssureurStatus: (any) => void; setAccidentTypes: (any) => void; setSelectedAccidentTypes: (any) => void }} props
  */
+/**
+ * Charge les données d'accidents et de TF à partir de l'API.
+ */
 export default async function chargerDonnees({
     setData,
     setAllYears,
@@ -35,54 +39,68 @@ export default async function chargerDonnees({
     setSelectedAccidentTypes
 }) {
     try {
-        const donneesRecues = await recupererDonnees();
+        // Charger les données d'accidents
+        const urlApi = process.env.REACT_APP_API_URL || 'localhost';
+        const [accidentsResponse, tfResponse] = await Promise.all([
+            axios.get(`http://${urlApi}:3100/api/accidents`),
+            axios.get(`http://${urlApi}:3100/api/questionnaires`)
+        ]);
+
+        const donneesAccidents = accidentsResponse.data;
+        const donneesTf = tfResponse.data;
         
-        if (!donneesRecues || !Array.isArray(donneesRecues)) {
+        if (!Array.isArray(donneesAccidents)) {
             throw new Error('Format de données invalide');
         }
 
-        setData(donneesRecues);
+        setData(donneesAccidents);
         
-        // Extraction des années
-        const annees = [...new Set(donneesRecues.map(accident =>
+        // Extraire les années des accidents
+        const anneesAccidents = [...new Set(donneesAccidents.map(accident =>
             new Date(accident.DateHeureAccident).getFullYear()
-        ))].filter(annee => !isNaN(annee)).sort((a, b) => a - b);
-        setAllYears(annees);
+        ))].filter(annee => !isNaN(annee));
+
+        // Extraire les années des données TF
+        const anneesTf = [...new Set(donneesTf.flatMap(questionnaire => 
+            questionnaire.annees || []
+        ))].map(annee => parseInt(annee)).filter(annee => !isNaN(annee));
+
+        // Combiner et trier toutes les années uniques
+        const toutesAnnees = [...new Set([...anneesAccidents, ...anneesTf])].sort((a, b) => a - b);
+        
+        setAllYears(toutesAnnees);
         
         // Définir l'année courante ou la plus récente
         const anneeCourante = new Date().getFullYear();
-        setSelectedYears(annees.includes(anneeCourante) ? [anneeCourante] : [annees[annees.length - 1]]);
+        setSelectedYears(toutesAnnees.includes(anneeCourante) ? [anneeCourante] : [toutesAnnees[toutesAnnees.length - 1]]);
         
-        // Extraction des types de travailleurs
-        const types = [...new Set(donneesRecues.map(accident => 
+        // Reste du code inchangé pour les autres setters...
+        const types = [...new Set(donneesAccidents.map(accident => 
             accident.typeTravailleur || 'Non spécifié'
         ))].filter(Boolean);
         setWorkerTypes(types);
         setSelectedWorkerTypes(types);
         
-        // Extraction des secteurs
-        const secteursExtraits = [...new Set(donneesRecues.map(accident => 
+        const secteursExtraits = [...new Set(donneesAccidents.map(accident => 
             accident.secteur || 'Non spécifié'
         ))].filter(Boolean);
         setSectors(secteursExtraits);
         setSelectedSectors(secteursExtraits);
         
-        // Extraction des statuts assureur
-        const statutsAssureur = [...new Set(donneesRecues.map(accident =>
+        const statutsAssureur = [...new Set(donneesAccidents.map(accident =>
             accident.AssureurStatus || 'Non spécifié'
         ))].filter(Boolean);
         setAssureurStatus(statutsAssureur);
         setSelectedAssureurStatus(statutsAssureur);
         
-        // Extraction des types d'accidents
-        const typesAccidents = [...new Set(donneesRecues.map(accident =>
+        const typesAccidents = [...new Set(donneesAccidents.map(accident =>
             accident.typeAccident || 'Non spécifié'
         ))].filter(Boolean);
         setAccidentTypes(typesAccidents);
         setSelectedAccidentTypes(typesAccidents);
         
     } catch (erreur) {
-        console.error('Échec du chargement des données d\'accidents:', erreur);
+        console.error('Échec du chargement des données:', erreur);
         throw erreur;
     }
 }

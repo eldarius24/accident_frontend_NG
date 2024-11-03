@@ -15,7 +15,7 @@ import Naturelesion from './pageFormulaire/codeNatureLesion';
 import Siegelesion from './pageFormulaire/codeSiegeLesion';
 import Fichierdll from './pageFormulaire/FileManagement/fichierdll';
 import PlanAction from './planaction/planaction';
-import Diversfichierdllaction from './planaction/diversfichierdllaction';
+import Actionfichierdll from './planaction/filesAction/actionfichierdll';
 import ProtectedRoute from './Model/protectedRoute';
 import ProtectedRouteAdmin from './Model/protectedRouteAdmin';
 import Adminuser from './pageAdmin/user/AdminUser';
@@ -70,12 +70,12 @@ const App = () => {
           <Route path="/siegelesion" element={<ProtectedRouteAdminOrConseiller><Siegelesion /></ProtectedRouteAdminOrConseiller>} />
           <Route path="/fichierdll" element={<ProtectedRouteAdminOrConseiller><Fichierdll /></ProtectedRouteAdminOrConseiller>} />
           <Route path="/planAction" element={<ProtectedRouteAdminOrConseiller><PlanAction /></ProtectedRouteAdminOrConseiller>} />
-          <Route path="/diversfichierdllaction" element={<ProtectedRouteAdminOrConseiller><Diversfichierdllaction /></ProtectedRouteAdminOrConseiller>} />
+          <Route path="/actionfichierdll" element={<ProtectedRouteAdminOrConseiller><Actionfichierdll /></ProtectedRouteAdminOrConseiller>} />
           <Route path="/statistiques" element={<ProtectedRouteAdminOrConseiller><Statistiques /></ProtectedRouteAdminOrConseiller>} />
         </Routes>
       </div>
     </Router>
-    </ThemeProvider>
+    </ThemeProvider> 
   );
 };
 

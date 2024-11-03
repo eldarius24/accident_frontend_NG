@@ -86,7 +86,7 @@ const EnterpriseDivers = () => {
 
             if (questionnaire) {
                 // Log de l'action d'édition
-               
+
 
                 // Navigation vers le formulaire avec les données existantes
                 navigate("/quesEntrep", {
@@ -255,25 +255,25 @@ const EnterpriseDivers = () => {
                 console.error('No questionnaires found for this enterprise');
                 return;
             }
-            
+
             const entrepriseName = enterprises.find(e => e._id === enterpriseId)?.AddEntreName;
             const currentQuestionnaire = questionnaires[enterpriseId]?.find(q => q._id === questionnaireId);
-            
+
             if (!currentQuestionnaire) {
                 console.error('Questionnaire not found');
                 return;
             }
-    
+
             // Supprimer le fichier
             await axios.delete(`http://${apiUrl}:3100/api/file/${fileId}`);
-            
+
             // Mettre à jour le questionnaire avec la nouvelle liste de fichiers
             const updatedFiles = currentQuestionnaire.files?.filter(f => f.fileId !== fileId) || [];
             await axios.put(`http://${apiUrl}:3100/api/questionnaires/${questionnaireId}`, {
                 ...currentQuestionnaire,
                 files: updatedFiles
             });
-    
+
             // Log de l'action
             await logAction({
                 actionType: 'suppression',
@@ -282,11 +282,11 @@ const EnterpriseDivers = () => {
                 entityId: questionnaireId,
                 entreprise: entrepriseName
             });
-    
+
             // Rafraîchir les questionnaires
             fetchQuestionnaires();
             showMessage('Fichier supprimé avec succès', 'success');
-    
+
         } catch (error) {
             console.error('Error deleting file:', error);
             showMessage('Erreur lors de la suppression du fichier', 'error');
@@ -513,7 +513,14 @@ const EnterpriseDivers = () => {
                                 <Box display="flex" alignItems="center" gap={1}>
                                     <Box flex="1">
                                         <Typography variant="body2" sx={{ color: darkMode ? '#fff' : 'text.secondary' }}>
-                                            <strong>Type:</strong> {q.typeFichier} | <strong>Années:</strong> {q.annees.join(', ')} | <strong>Commentaires:</strong> {q.commentaire} | <strong>Entreprise:</strong> {q.entrepriseName} | <strong>files:</strong> {q.files.length}
+                                            <strong>Type:</strong> {q.typeFichier} |{' '}
+                                            <strong>Années:</strong> {q.annees.join(', ')} |{' '}
+                                            <strong>Commentaires:</strong> {q.commentaire} |{' '}
+                                            <strong>Entreprise:</strong> {q.entrepriseName} |{' '}
+                                            <strong>Files:</strong> {q.files.length} |{' '}
+                                            <strong>Valeur A (Heures prestées):</strong> {q.valueATf || 'Non renseigné'} |{' '}
+                                            <strong>Valeur B (Accidents):</strong> {q.valueBTf || 'Non renseigné'} |{' '}
+                                            <strong>Tf:</strong> {q.resultTf || 'Non calculé'}
                                         </Typography>
                                     </Box>
                                     <Tooltip title="Modifier le questionnaire" arrow>

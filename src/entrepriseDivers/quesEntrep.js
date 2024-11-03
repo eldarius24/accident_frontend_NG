@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { Button, Tooltip, Typography, Box } from '@mui/material';
+import { Button, Tooltip, Typography, Box, Paper, Divider } from '@mui/material';
 import TextFieldP from '../_composants/textFieldP';
 import AutoCompleteP from '../_composants/autoCompleteP';
 import MultipleAutoCompleteCMQ from '../_composants/autoCompleteCMQ';
@@ -14,6 +14,7 @@ import '../pageFormulaire/formulaire.css';
 import { useTheme } from '../pageAdmin/user/ThemeContext';
 import listeQuesEntr from '../liste/listeQuesEntre.json';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+
 const dropZoneStyle = {
     display: 'flex',
     justifyContent: 'center',
@@ -36,6 +37,38 @@ const labelStyle = {
     transition: 'background-color 0.3s',
 };
 
+const TfFormula = () => (
+    <Box
+        sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            my: 2,
+            '& .formula': {
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                mx: 2,
+                fontSize: '1.2rem',
+            },
+            '& .divider': {
+                width: '100%',
+                borderTop: '2px solid',
+                my: '4px'
+            }
+        }}
+    >
+        <Typography component="div" sx={{ fontSize: '1.2rem', mr: 2 }}>
+            Tf =
+        </Typography>
+        <div className="formula">
+            <div>B × 1.000.000</div>
+            <div className="divider" />
+            <div>A</div>
+        </div>
+    </Box>
+);
+
 const QuesEntrep = () => {
     const { logAction } = useLogger();
     const location = useLocation();
@@ -49,39 +82,168 @@ const QuesEntrep = () => {
         (_, i) => (currentYear - 10 + i).toString()
     );
 
-    const [questionnaireData, setQuestionnaireData] = useState({
-        quesEntreAnnee: editMode ? questionnaire.annees : [],
-        quesEntreType: editMode ? questionnaire.typeFichier : '',
-        quesEntreCommentaire: editMode ? questionnaire.commentaire : ''
+    // État unifié pour le formulaire
+    const [formState, setFormState] = useState({
+        questionnaireData: {
+            quesEntreAnnee: editMode ? questionnaire?.annees || [] : [],
+            quesEntreType: editMode ? questionnaire?.typeFichier || '' : '',
+            quesEntreCommentaire: editMode ? questionnaire?.commentaire || '' : '',
+            valueATf: editMode ? questionnaire?.valueATf || '' : '',
+            valueBTf: editMode ? questionnaire?.valueBTf || '' : '',
+            resultTf: editMode ? questionnaire?.resultTf || '' : ''
+        },
+        uploadedFiles: editMode ? questionnaire?.files || [] : [],
+        tfCalculation: {
+            valueATf: editMode ? questionnaire?.valueATf || '' : '',
+            valueBTf: editMode ? questionnaire?.valueBTf || '' : '',
+            resultTf: editMode ? questionnaire?.resultTf || '' : ''
+        },
+        snackbar: {
+            open: false,
+            message: '',
+            severity: 'info'
+        }
     });
-
-    const [uploadedFiles, setUploadedFiles] = useState(
-        editMode ? questionnaire.files : []
-    );
-
-    const [snackbar, setSnackbar] = useState({
-        open: false,
-        message: '',
-        severity: 'info',
-    });
-
-    const showSnackbar = useCallback((message, severity = 'info') => {
-        setSnackbar({ open: true, message, severity });
-    }, []);
 
     const handleCloseSnackbar = (event, reason) => {
         if (reason === 'clickaway') return;
-        setSnackbar(prev => ({ ...prev, open: false }));
-    };
-
-    const handleFieldChange = (field) => (value) => {
-        setQuestionnaireData(prev => ({
+        setFormState(prev => ({
             ...prev,
-            [field]: value
+            snackbar: { ...prev.snackbar, open: false }
         }));
     };
 
-    const promptForFileName = (file) => {
+    const showSnackbar = useCallback((message, severity = 'info') => {
+        setFormState(prev => ({
+            ...prev,
+            snackbar: { open: true, message, severity }
+        }));
+    }, []);
+
+    const calculateTf = useCallback((a, b) => {
+        if (!a || !b || isNaN(a) || isNaN(b) || Number(a) === 0) {
+            return '';
+        }
+        return ((Number(b) * 1000000) / Number(a)).toFixed(2);
+    }, []);
+
+    const handleTfValueChange = useCallback((field) => (value) => {
+        const numValue = Number(value);
+        
+        setFormState(prev => {
+            const newTfCalculation = {
+                ...prev.tfCalculation,
+                [field]: value
+            };
+
+            if (field === 'valueATf' || field === 'valueBTf') {
+                const otherField = field === 'valueATf' ? 'valueBTf' : 'valueATf';
+                const resultTf = calculateTf(
+                    field === 'valueATf' ? numValue : Number(prev.tfCalculation[otherField]),
+                    field === 'valueBTf' ? numValue : Number(prev.tfCalculation[otherField])
+                );
+                newTfCalculation.resultTf = resultTf;
+            }
+
+            return {
+                ...prev,
+                tfCalculation: newTfCalculation,
+                questionnaireData: {
+                    ...prev.questionnaireData,
+                    [field]: value,
+                    resultTf: newTfCalculation.resultTf
+                }
+            };
+        });
+    }, [calculateTf]);
+
+    const handleFieldChange = useCallback((field) => (value) => {
+        setFormState(prev => ({
+            ...prev,
+            questionnaireData: {
+                ...prev.questionnaireData,
+                [field]: value
+            }
+        }));
+    }, []);
+
+    const handleFileUpload = useCallback(async (file, name) => {
+        if (!file || !name) {
+            showSnackbar('Fichier ou nom manquant', 'error');
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append('file', file, name);
+
+        try {
+            const response = await axios.post(
+                `http://${apiUrl}:3100/api/stockFile`,
+                formData,
+                {
+                    headers: { 'Content-Type': 'multipart/form-data' }
+                }
+            );
+
+            if (!response.data?.fileId) {
+                throw new Error('ID du fichier manquant dans la réponse');
+            }
+
+            setFormState(prev => ({
+                ...prev,
+                uploadedFiles: [
+                    ...prev.uploadedFiles,
+                    {
+                        fileId: response.data.fileId,
+                        fileName: name
+                    }
+                ]
+            }));
+
+            showSnackbar('Fichier téléchargé avec succès', 'success');
+        } catch (error) {
+            console.error('Erreur lors de l\'upload:', error);
+            showSnackbar('Erreur lors du téléchargement du fichier', 'error');
+        }
+    }, [apiUrl, showSnackbar]);
+
+    const handleFileDelete = async (fileId, fileName) => {
+        try {
+            await axios.delete(`http://${apiUrl}:3100/api/file/${fileId}`);
+
+            setFormState(prev => ({
+                ...prev,
+                uploadedFiles: prev.uploadedFiles.filter(file => file.fileId !== fileId)
+            }));
+
+            await logAction({
+                actionType: 'suppression',
+                details: `Suppression du fichier - Nom: ${fileName} - Entreprise: ${enterprise?.AddEntreName}`,
+                entity: 'Divers Entreprise',
+                entityId: fileId,
+                entreprise: enterprise?.AddEntreName
+            });
+
+            if (editMode && questionnaire?._id) {
+                await axios.put(`http://${apiUrl}:3100/api/questionnaires/${questionnaire._id}`, {
+                    ...questionnaire,
+                    files: formState.uploadedFiles.filter(file => file.fileId !== fileId)
+                });
+            }
+
+            showSnackbar('Fichier supprimé avec succès', 'success');
+            
+            setTimeout(() => {
+                navigate('/entreprise');
+            }, 1500);
+
+        } catch (error) {
+            console.error('Erreur lors de la suppression du fichier:', error);
+            showSnackbar('Erreur lors de la suppression du fichier', 'error');
+        }
+    };
+
+    const promptForFileName = useCallback((file) => {
         confirmAlert({
             customUI: ({ onClose }) => {
                 let fileName = file.name;
@@ -130,87 +292,29 @@ const QuesEntrep = () => {
                 );
             }
         });
-    };
-
-    const handleFileUpload = async (file, name) => {
-        const formData = new FormData();
-        formData.append('file', file, name);
-
-        try {
-            const uploadResponse = await axios.post(
-                `http://${apiUrl}:3100/api/stockFile`,
-                formData,
-                {
-                    headers: { 'Content-Type': 'multipart/form-data' }
-                }
-            );
-
-            setUploadedFiles(prev => [...prev, {
-                fileId: uploadResponse.data.fileId,
-                fileName: name
-            }]);
-
-            showSnackbar('Fichier téléchargé avec succès', 'success');
-        } catch (error) {
-            console.error('Erreur lors de l\'upload:', error);
-            showSnackbar('Erreur lors du téléchargement du fichier', 'error');
-        }
-    };
-
-
-    const handleFileDelete = async (fileId, fileName) => {
-        try {
-            // Suppression du fichier
-            await axios.delete(`http://${apiUrl}:3100/api/file/${fileId}`);
-            
-            // Mise à jour de la liste des fichiers locale
-            setUploadedFiles(prevFiles => prevFiles.filter(file => file.fileId !== fileId));
-    
-            // Logger l'action
-            await logAction({
-                actionType: 'suppression',
-                details: `Suppression du fichier - Nom: ${fileName} - Entreprise: ${enterprise?.AddEntreName}`,
-                entity: 'Divers Entreprise',
-                entityId: fileId,
-                entreprise: enterprise?.AddEntreName
-            });
-    
-            // Mise à jour du questionnaire dans la base de données
-            if (editMode && questionnaire?._id) {
-                await axios.put(`http://${apiUrl}:3100/api/questionnaires/${questionnaire._id}`, {
-                    ...questionnaire,
-                    files: uploadedFiles.filter(file => file.fileId !== fileId)
-                });
-            }
-    
-            showSnackbar('Fichier supprimé avec succès', 'success');
-            
-            // Rediriger vers la page entreprise après un court délai
-            setTimeout(() => {
-                navigate('/entreprise');
-            }, 1500);
-            
-        } catch (error) {
-            console.error('Erreur lors de la suppression du fichier:', error);
-            showSnackbar('Erreur lors de la suppression du fichier', 'error');
-        }
-    };
-    
+    }, [handleFileUpload]);
 
     const handleDrop = useCallback(e => {
         e.preventDefault();
         e.stopPropagation();
         const file = e.dataTransfer.files[0];
         if (file) promptForFileName(file);
-    }, []);
+    }, [promptForFileName]);
 
-    const handleFileInputChange = e => {
+    const handleFileInputChange = useCallback(e => {
         const file = e.target.files[0];
         if (file) promptForFileName(file);
-    };
+    }, [promptForFileName]);
 
     const handleSubmit = async (event) => {
         event.preventDefault();
+        const { questionnaireData, uploadedFiles } = formState;
+
+        // Validation
+        if (!questionnaireData.quesEntreType || !questionnaireData.quesEntreAnnee.length) {
+            showSnackbar('Veuillez remplir tous les champs obligatoires', 'error');
+            return;
+        }
 
         try {
             const dataToSubmit = {
@@ -219,61 +323,38 @@ const QuesEntrep = () => {
                 annees: questionnaireData.quesEntreAnnee,
                 typeFichier: questionnaireData.quesEntreType,
                 commentaire: questionnaireData.quesEntreCommentaire,
+                valueATf: questionnaireData.valueATf,
+                valueBTf: questionnaireData.valueBTf,
+                resultTf: questionnaireData.resultTf,
                 files: uploadedFiles
             };
 
-            let response;
+            const response = editMode && questionnaire?._id 
+                ? await axios.put(`http://${apiUrl}:3100/api/questionnaires/${questionnaire._id}`, dataToSubmit)
+                : await axios.post(`http://${apiUrl}:3100/api/questionnaires`, dataToSubmit);
 
-            if (editMode && questionnaire?._id) {
-                // Modification
-                response = await axios.put(
-                    `http://${apiUrl}:3100/api/questionnaires/${questionnaire._id}`,
-                    dataToSubmit
-                );
+            await logAction({
+                actionType: editMode ? 'modification' : 'creation',
+                details: `${editMode ? 'Modification' : 'Création'} du questionnaire - Entreprise: ${enterprise?.AddEntreName}`,
+                entity: 'Divers Entreprise',
+                entityId: editMode ? questionnaire._id : response.data._id,
+                entreprise: enterprise?.AddEntreName
+            });
 
-                console.log('Mise à jour questionnaire:', response.data);
-                await logAction({
-                    actionType: 'modification',
-                    details: `Modification du questionnaire - Entreprise: ${enterprise?.AddEntreName} - Type: ${dataToSubmit.typeFichier} - Années: ${dataToSubmit.annees.join(', ')}`,
-                    entity: 'Divers Entreprise',
-                    entityId: questionnaire._id,
-                    entreprise: enterprise?.AddEntreName
-                });
+            showSnackbar(`Questionnaire ${editMode ? 'modifié' : 'créé'} avec succès`, 'success');
 
-                showSnackbar('Questionnaire modifié avec succès', 'success');
-            } else {
-                // Création
-                response = await axios.post(
-                    `http://${apiUrl}:3100/api/questionnaires`,
-                    dataToSubmit
-                );
-
-                await logAction({
-                    actionType: 'creation',
-                    details: `Création d'un questionnaire - Entreprise: ${enterprise?.AddEntreName} - Type: ${dataToSubmit.typeFichier} - Années: ${dataToSubmit.annees.join(', ')}`,
-                    entity: 'Divers Entreprise',
-                    entityId: response.data._id,
-                    entreprise: enterprise?.AddEntreName
-                });
-
-                showSnackbar('Questionnaire créé avec succès', 'success');
-            }
-
-            // Attendre un peu avant de rediriger
-            setTimeout(() => {
-                navigate('/entreprise');
-            }, 2000);
-
+            setTimeout(() => navigate('/entreprise'), 2000);
         } catch (error) {
             console.error('Erreur lors de la sauvegarde:', error);
             showSnackbar(
-                error.response?.data?.message ||
+                error.response?.data?.message || 
                 `Erreur lors de la ${editMode ? 'modification' : 'création'} du questionnaire`,
                 'error'
             );
         }
     };
 
+    // JSX du composant
     return (
         <form onSubmit={handleSubmit} className="background-image">
             <div className="frameStyle-style" style={{
@@ -288,22 +369,64 @@ const QuesEntrep = () => {
                     label="Type de fichier"
                     option={listeQuesEntr.typeFicher}
                     onChange={handleFieldChange('quesEntreType')}
-                    defaultValue={questionnaireData.quesEntreType}
+                    defaultValue={formState.questionnaireData.quesEntreType}
                 />
                 <MultipleAutoCompleteCMQ
                     id="quesEntreAnnee"
                     label="Réaliser en Années"
                     option={yearsRange}
                     onChange={handleFieldChange('quesEntreAnnee')}
-                    defaultValue={questionnaireData.quesEntreAnnee}
+                    defaultValue={formState.questionnaireData.quesEntreAnnee}
                 />
                 <TextFieldP
                     id="quesEntreCommentaire"
                     label="Commentaires additionnels"
                     onChange={handleFieldChange('quesEntreCommentaire')}
-                    value={questionnaireData.quesEntreCommentaire}
+                    value={formState.questionnaireData.quesEntreCommentaire}
                     multiline
                 />
+                <Paper elevation={3} sx={{ p: 3, mt: 3, mb: 3 }}>
+                <Typography variant="h6" gutterBottom align="center">
+                        Calcul du Tf (Taux de fréquence)
+                    </Typography>
+
+                    <TfFormula />
+
+                    <Box sx={{ mt: 3 }}>
+                        <TextFieldP
+                            id="valueATf"
+                            label="Valeur A (Nombre d'heures prestées)"
+                            type="number"
+                            value={formState.tfCalculation.valueATf}
+                            onChange={handleTfValueChange('valueATf')}
+                            required
+                            inputProps={{ min: 0 }}
+                            helperText="Entrez le nombre total d'heures prestées"
+                        />
+                        <TextFieldP
+                            id="valueBTf"
+                            label="Valeur B (Nombre d'accidents)"
+                            type="number"
+                            value={formState.tfCalculation.valueBTf}
+                            onChange={handleTfValueChange('valueBTf')}
+                            required
+                            inputProps={{ min: 0 }}
+                            helperText="Entrez le nombre d'accidents"
+                        />
+                        <TextFieldP
+                            id="resultTf"
+                            label="Résultat Tf"
+                            value={formState.tfCalculation.resultTf}
+                            disabled
+                            InputProps={{
+                                readOnly: true,
+                                style: {
+                                    fontWeight: 'bold'
+                                }
+                            }}
+                        />
+                    </Box>
+                </Paper>
 
                 <Box sx={{ mt: 2 }}>
                     <Typography variant="h6" gutterBottom>
@@ -346,7 +469,7 @@ const QuesEntrep = () => {
                     />
 
                     <Box sx={{ mt: 2 }}>
-                        {uploadedFiles.map((file) => (
+                        {formState.uploadedFiles.map((file) => (
                             <Box
                                 key={file.fileId}
                                 display="flex"
@@ -446,10 +569,10 @@ const QuesEntrep = () => {
                 </div>
             </div>
             <CustomSnackbar
-                open={snackbar.open}
+                open={formState.snackbar.open}
                 handleClose={handleCloseSnackbar}
-                message={snackbar.message}
-                severity={snackbar.severity}
+                message={formState.snackbar.message}
+                severity={formState.snackbar.severity}
             />
             <div className="image-cortigroupe"></div>
             <Tooltip title="Si vous rencontrez un souci avec le site, envoyer un mail à l'adresse suivante : bgillet.lecortil@cortigroupe.be et expliquer le soucis rencontré" arrow>

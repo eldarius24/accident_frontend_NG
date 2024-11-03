@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { confirmAlert } from 'react-confirm-alert';
 import { Tooltip, Snackbar, Alert } from '@mui/material';
-import { useLogger } from '../Hook/useLogger';
+import { useLogger } from '../../Hook/useLogger';
 
 // Function to fetch action details
 const fetchActionDetails = async (actionId) => {

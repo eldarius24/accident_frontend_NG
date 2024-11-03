@@ -3,9 +3,9 @@ import React, { useCallback } from 'react';
 import { useLocation } from 'react-router-dom';
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css'; // Importez les styles pour la boîte de dialogue
-import listFilesInaction from './diversFilesAction';
+import listFilesInaction from './actionFilesAction';
 import { Tooltip } from '@mui/material';
-import { useLogger } from '../Hook/useLogger';
+import { useLogger } from '../../Hook/useLogger';
 
 const dropZoneStyle = {
     display: 'flex',

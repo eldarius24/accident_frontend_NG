@@ -42,7 +42,7 @@ export default function PlanAction({ accidentData }) {
     const [loading, setLoading] = useState(true);
     const { handleSubmit } = useForm();
     const location = useLocation();
-    const isFileUploadIcon = location.pathname === '/diversfichierdllaction';
+    const isFileUploadIcon = location.pathname === '/actionfichierdll';
     const [searchTerm, setSearchTerm] = useState('');
     const [enterprises, setEntreprises] = useState([]);
     const [allSectors, setAllSectors] = useState([]);
@@ -534,7 +534,7 @@ export default function PlanAction({ accidentData }) {
                                                         }}
                                                         onClick={() => {
                                                             if (!isFileUploadIcon) {
-                                                                navigate('/diversfichierdllaction', { state: addaction._id });
+                                                                navigate('/actionfichierdll', { state: addaction._id });
                                                             } else {
                                                                 navigate('/');
                                                             }

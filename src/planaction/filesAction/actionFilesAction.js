@@ -9,14 +9,14 @@ import CloseIcon from '@mui/icons-material/Close';
 import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutline';
 import { confirmAlert } from 'react-confirm-alert';
 import { saveAs } from 'file-saver';
-import CustomSnackbar from '../_composants/CustomSnackbar';
-import FileViewer from './diversfileViewer';
-import getPreview from "./diversgetPreview";
-import handleRenameFile from "./divershandleRenameFile";
+import CustomSnackbar from '../../_composants/CustomSnackbar';
+import FileViewer from './actionfileViewer';
+import getPreview from "./actiongetPreview";
+import handleRenameFile from "./actionhandleRenameFile";
 import { blueGrey } from '@mui/material/colors';
-import { useLogger } from '../Hook/useLogger';
-import deleteFile, { getactionDiversDetails } from "./diversdeleteFile";
-import showDeleteConfirm from './diversshowDeleteConfirm';
+import { useLogger } from '../../Hook/useLogger';
+import deleteFile, { getactionDiversDetails } from "./actiondeleteFile";
+import showDeleteConfirm from './actionshowDeleteConfirm';
 
 const modalStyle = {
     position: 'absolute',
