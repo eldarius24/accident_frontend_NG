@@ -118,16 +118,16 @@ function ResponsiveAppBar() {
     '&:hover': { backgroundColor: '#95519b' },
     mr: 1,
     whiteSpace: 'nowrap',
-    
-   
+
+
     minWidth: showText ? 'auto' : '40px',
     padding: showText ? 'auto' : '6px',
-    fontSize: windowWidth > 50000 ? '1.2rem' : windowWidth > 10000 ? '1rem' : '0.8rem',
+    fontSize: windowWidth > 1650 ? '1.2rem' : windowWidth > 1220 ? '1rem' : '0.8rem',
     transition: 'all 0.3s ease-in-out',
     // Ajuste la hauteur du bouton en fonction de la taille de la fenêtre
-    height: windowWidth > 50000 ? '50px' : windowWidth > 1650 ? '40px' : '32px',
+    height: windowWidth > 1850 ? '50px' : windowWidth > 1220 ? '40px' : '32px',
     // Ajuste le padding horizontal en fonction de la taille de la fenêtre
-    px: windowWidth > 50000 ? 4 : windowWidth > 1650 ? 2 :  1,
+    px: windowWidth > 1850 ? 4 : windowWidth > 1220 ? 2 : 1,
   }), [windowWidth, showText]);
 
 
@@ -227,10 +227,11 @@ function ResponsiveAppBar() {
           {isAdmin && ['/logView', '/', '/addSecteur', '/adminaction', '/adminUser', "/adminEntreprises", "/addEntreprise", "/addUser"].includes(location.pathname) &&
             renderButton("/adminaction", "Cliquez ici accèder à l'espace d'administration", <AdminPanelSettingsIcon />, "Admin")}
 
-          <Typography variant="h5" noWrap sx={textStyle}>
-            T.I.G.R.E
-          </Typography>
-
+          <box>
+            <Typography variant="h5" noWrap sx={textStyle}>
+              T.I.G.R.E
+            </Typography>
+          </box>
           {!['/'].includes(location.pathname) &&
             renderButton("/", "Cliquez ici pour revenir a l'accueil", <HomeIcon />, "Home")}
 
@@ -263,7 +264,7 @@ function ResponsiveAppBar() {
               {!['/actionfichierdll', '/addSecteur', '/addEntreprise', '/adminaction', '/entreprise', '/logView', '/fichierdll', '/fichierdllaction', '/addUser', '/adminUser', '/adminEntreprises', '/planAction', '/formulaireAction', '/formulaire', '/statistiques'].includes(location.pathname) &&
                 renderButton("/entreprise", "Cliquez ici pour gérer les entreprises", <ViewListIcon />, "Entreprise divers")}
 
-              {!['/actionfichierdll', "/",'/addSecteur' ,'/addEntreprise', '/quesEntrep', '/adminaction', '/entreprise', '/logView', '/fichierdll', '/fichierdllaction', '/addUser', '/adminUser', '/adminEntreprises', '/planAction', '/formulaireAction', '/formulaire', '/statistiques'].includes(location.pathname) &&
+              {!['/actionfichierdll', "/", '/addSecteur', '/addEntreprise', '/quesEntrep', '/adminaction', '/entreprise', '/logView', '/fichierdll', '/fichierdllaction', '/addUser', '/adminUser', '/adminEntreprises', '/planAction', '/formulaireAction', '/formulaire', '/statistiques'].includes(location.pathname) &&
                 renderButton("/quesEntrep", "Cliquez ici pour gérer les entreprises", <ViewListIcon />, "ajouter un fichier")}
 
             </>
