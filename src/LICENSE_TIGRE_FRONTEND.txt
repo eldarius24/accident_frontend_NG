@@ -1,0 +1,68 @@
+Licence d'Utilisation Non Commerciale avec Autorisation d'Usage Interne
+
+Nom du Projet T.I.G.R.E (Traitement Informatiser de la Gesion des Risques d'Entreprise) partie 1/2 FRONTEND - Licence d'Utilisation Non Commerciale et Interne
+
+1. Attribution
+
+Toute utilisation de ce logiciel doit inclure une attribution claire au créateur original du projet, incluant le nom du projet, de l’auteur, et un lien vers le dépôt original.
+2. Utilisation Non Commerciale avec Autorisation d'Usage Interne
+
+Ce logiciel est mis à disposition gratuitement et peut être utilisé, copié, modifié et redistribué sous certaines conditions :
+
+    Usage Interne Autorisé : Les entreprises, organisations et individus peuvent utiliser ce logiciel à des fins internes, y compris pour des opérations internes, de la recherche ou du développement non commercial. Cependant, toute utilisation externe visant un profit direct est interdite.
+
+    Interdiction de Revente et de Distribution Commerciale : Ce logiciel, y compris toutes versions modifiées, ne peut pas :
+        être vendu, loué ou sous-licencié ;
+        être intégré dans des produits ou services payants ou commerciaux ;
+        être utilisé dans des services ou applications nécessitant un paiement ou un abonnement par l’utilisateur final.
+
+    Redistribution Non Commerciale : Les utilisateurs peuvent redistribuer ce logiciel (y compris sous une forme modifiée), mais uniquement sous cette même licence et à titre gratuit.
+
+3. Modification et Partage
+
+Les utilisateurs sont libres de modifier ce logiciel et de partager leurs versions modifiées, tant que ces versions sont distribuées sous les mêmes termes de cette licence et sans objectif de vente ou de commercialisation.
+4. Exclusion de Garantie
+
+Ce logiciel est fourni "tel quel", sans garantie d'aucune sorte. Le créateur décline toute responsabilité pour les éventuels dommages résultant de son utilisation.
+5. Respect de la Licence
+
+L’utilisation de ce logiciel constitue une acceptation des termes de cette licence. Toute violation des conditions de non-commercialisation entraînera la révocation immédiate de la licence d’utilisation.
+
+Clause Additionnelle : Pour toute demande d’utilisation commerciale ou en dehors de ces termes, veuillez contacter le créateur à [benoitgillet4557@gmail.com].
+
+
+----------------------------------------------------------------------------------------------------------
+
+
+Non-Commercial Use License with Internal Use Permission
+
+Project Name: T.I.G.R.E (Computerized Management of Enterprise Risk) part 1/2 FRONTEND - Non-Commercial and Internal Use License
+1. Attribution
+
+Any use of this software must include clear attribution to the original creator of the project, including the project name, author’s name, and a link to the original repository.
+2. Non-Commercial Use with Internal Use Permission
+
+This software is made available free of charge and may be used, copied, modified, and redistributed under certain conditions:
+
+    Authorized Internal Use: Companies, organizations, and individuals may use this software for internal purposes, including internal operations, research, or non-commercial development. However, any external use aimed at direct profit is prohibited.
+
+    Prohibition of Resale and Commercial Distribution: This software, including all modified versions, may not:
+        be sold, rented, or sublicensed;
+        be integrated into paid or commercial products or services;
+        be used in services or applications requiring payment or subscription by the end-user.
+
+    Non-Commercial Redistribution: Users may redistribute this software (including in modified form), but only under this same license and free of charge.
+
+3. Modification and Sharing
+
+Users are free to modify this software and to share their modified versions, provided these versions are distributed under the same terms of this license and without the intention of sale or commercialization.
+4. Disclaimer of Warranty
+
+This software is provided "as is," without any warranty of any kind. The creator disclaims any responsibility for potential damages resulting from its use.
+5. Compliance with the License
+
+Using this software constitutes acceptance of the terms of this license. Any violation of the non-commercial terms will result in immediate revocation of the right to use this license.
+
+Additional Clause: For any request for commercial use or use outside these terms, please contact the creator at [benoitgillet4557@gmail.com].
+
+
