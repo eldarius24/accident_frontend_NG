@@ -1,5 +1,9 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import {
+  BarChart, Bar, XAxis, YAxis, CartesianGrid, Legend, ResponsiveContainer,
+  PieChart, Pie, Cell, Tooltip, LineChart, Line
+} from 'recharts';
+import {
   FormControl, InputLabel, Select, MenuItem, Checkbox, ListItemText, Box
 } from '@mui/material';
 import { useAccidentStats } from './filters';
@@ -17,7 +21,6 @@ import config from '../config.json';
  * @returns {React.ReactElement} - Le composant react qui affiche les graphiques.
  */
 const Statistiques = () => {
-
   const [data, setData] = useState([]);
   const [tfData, setTfData] = useState([]);
   const [graphs, setGraphs] = useState({
@@ -49,6 +52,7 @@ const Statistiques = () => {
   const [accidentTypes, setAccidentTypes] = useState([]);
   const [selectedAccidentTypes, setSelectedAccidentTypes] = useState([]);
   const [detailedTfData, setDetailedTfData] = useState([]);
+
 
 
   const loadDetailedTfData = async () => {
@@ -128,11 +132,6 @@ const Statistiques = () => {
     selectedAccidentTypes,
     accidentTypes
   );
-
-
-
-
-
 
   useEffect(() => {
     /**
@@ -359,12 +358,12 @@ const Statistiques = () => {
               const lastSelected = value[value.length - 1];
 
               // Fonction pour obtenir les années avec accidents
-              const getAccidentYears = () => allYears.filter(year =>
+              const getAccidentYears = () => allYears.filter(year => 
                 data.some(accident => new Date(accident.DateHeureAccident).getFullYear() === year)
               );
 
               // Fonction pour obtenir les années avec TF
-              const getTfYears = () => allYears.filter(year =>
+              const getTfYears = () => allYears.filter(year => 
                 tfData.some(tf => Object.keys(tf).some(key => key !== 'company' && parseInt(key) === year))
               );
 
@@ -373,22 +372,10 @@ const Statistiques = () => {
                 setSelectedYears(selectedYears.length === allYears.length ? [] : allYears);
               } else if (lastSelected === 'AllAccidents') {
                 const accidentYears = getAccidentYears();
-                // Si toutes les années d'accidents sont déjà sélectionnées, les désélectionner
-                const allAccidentsSelected = accidentYears.every(year => selectedYears.includes(year));
-                if (allAccidentsSelected) {
-                  setSelectedYears(selectedYears.filter(year => !accidentYears.includes(year)));
-                } else {
-                  setSelectedYears([...new Set([...selectedYears, ...accidentYears])]);
-                }
+                setSelectedYears(accidentYears); // Remplacer la sélection actuelle par les années d'accidents
               } else if (lastSelected === 'AllTF') {
                 const tfYears = getTfYears();
-                // Si toutes les années TF sont déjà sélectionnées, les désélectionner
-                const allTFSelected = tfYears.every(year => selectedYears.includes(year));
-                if (allTFSelected) {
-                  setSelectedYears(selectedYears.filter(year => !tfYears.includes(year)));
-                } else {
-                  setSelectedYears([...new Set([...selectedYears, ...tfYears])]);
-                }
+                setSelectedYears(tfYears); // Remplacer la sélection actuelle par les années TF
               } else {
                 // Sélection normale d'années individuelles
                 setSelectedYears(value.filter(v => v !== 'All' && v !== 'AllAccidents' && v !== 'AllTF'));
@@ -427,7 +414,6 @@ const Statistiques = () => {
               />
               <ListItemText primary="Sélectionner tous les TF" />
             </MenuItem>
-
             {allYears.map((year) => {
               // Vérifier si l'année existe dans les données d'accidents
               const hasAccidents = data.some(accident =>
