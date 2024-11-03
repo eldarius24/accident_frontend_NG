@@ -56,23 +56,32 @@ export default async function chargerDonnees({
         setData(donneesAccidents);
         
         // Extraire les années des accidents
-        const anneesAccidents = [...new Set(donneesAccidents.map(accident =>
-            new Date(accident.DateHeureAccident).getFullYear()
-        ))].filter(annee => !isNaN(annee));
+        const anneesAccidents = donneesAccidents
+            .map(accident => new Date(accident.DateHeureAccident).getFullYear())
+            .filter(annee => !isNaN(annee));
+        const ensembleAnneesAccidents = new Set(anneesAccidents);
 
         // Extraire les années des données TF
-        const anneesTf = [...new Set(donneesTf.flatMap(questionnaire => 
-            questionnaire.annees || []
-        ))].map(annee => parseInt(annee)).filter(annee => !isNaN(annee));
+        const anneesTf = donneesTf
+            .flatMap(questionnaire => questionnaire.annees || [])
+            .map(annee => parseInt(annee))
+            .filter(annee => !isNaN(annee));
+        const ensembleAnneesTf = new Set(anneesTf);
 
-        // Combiner et trier toutes les années uniques
-        const toutesAnnees = [...new Set([...anneesAccidents, ...anneesTf])].sort((a, b) => a - b);
-        
+        // Créer un tableau de toutes les années uniques avec leurs sources
+        const toutesAnnees = [...new Set([...anneesAccidents, ...anneesTf])]
+            .sort((a, b) => a - b);
+
+        console.log('Toutes les années chargées:', toutesAnnees); // Log pour debug
+
         setAllYears(toutesAnnees);
         
         // Définir l'année courante ou la plus récente
         const anneeCourante = new Date().getFullYear();
-        setSelectedYears(toutesAnnees.includes(anneeCourante) ? [anneeCourante] : [toutesAnnees[toutesAnnees.length - 1]]);
+        const anneeParDefaut = toutesAnnees.find(a => a === anneeCourante) || 
+            toutesAnnees[toutesAnnees.length - 1];
+
+        setSelectedYears(anneeParDefaut ? [anneeParDefaut] : []);
         
         // Reste du code inchangé pour les autres setters...
         const types = [...new Set(donneesAccidents.map(accident => 

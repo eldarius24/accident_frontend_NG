@@ -1,9 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import {
-  BarChart, Bar, XAxis, YAxis, CartesianGrid, Legend, ResponsiveContainer,
-  PieChart, Pie, Cell, Tooltip, LineChart, Line
-} from 'recharts';
-import {
   FormControl, InputLabel, Select, MenuItem, Checkbox, ListItemText, Box
 } from '@mui/material';
 import { useAccidentStats } from './filters';
@@ -21,6 +17,7 @@ import config from '../config.json';
  * @returns {React.ReactElement} - Le composant react qui affiche les graphiques.
  */
 const Statistiques = () => {
+
   const [data, setData] = useState([]);
   const [tfData, setTfData] = useState([]);
   const [graphs, setGraphs] = useState({
@@ -52,7 +49,6 @@ const Statistiques = () => {
   const [accidentTypes, setAccidentTypes] = useState([]);
   const [selectedAccidentTypes, setSelectedAccidentTypes] = useState([]);
   const [detailedTfData, setDetailedTfData] = useState([]);
-
 
 
   const loadDetailedTfData = async () => {
@@ -133,6 +129,11 @@ const Statistiques = () => {
     accidentTypes
   );
 
+
+
+
+
+
   useEffect(() => {
     /**
      * Initialise les données nécessaires pour les statistiques d'accidents.
@@ -188,7 +189,7 @@ const Statistiques = () => {
   const handleChangeYearsFilter = (event) => {
     const value = event.target.value;
     if (value.includes('All')) {
-      setSelectedYears(value.length === allYears.length + 1 ? [] : allYears);
+      setSelectedYears(selectedYears.length === allYears.length ? [] : allYears.map(yearData => yearData.annee));
     } else {
       setSelectedYears(value);
     }
@@ -343,6 +344,8 @@ const Statistiques = () => {
             ))}
           </Select>
         </FormControl>
+
+
         <FormControl sx={{ width: 'calc(33.33% - 7px)', minWidth: '200px' }}>
           <InputLabel id="years-label">Année</InputLabel>
           <Select
@@ -351,24 +354,118 @@ const Statistiques = () => {
             id="years-select"
             multiple
             value={selectedYears}
-            onChange={handleChangeYearsFilter}
+            onChange={(event) => {
+              const value = event.target.value;
+              const lastSelected = value[value.length - 1];
+
+              // Fonction pour obtenir les années avec accidents
+              const getAccidentYears = () => allYears.filter(year =>
+                data.some(accident => new Date(accident.DateHeureAccident).getFullYear() === year)
+              );
+
+              // Fonction pour obtenir les années avec TF
+              const getTfYears = () => allYears.filter(year =>
+                tfData.some(tf => Object.keys(tf).some(key => key !== 'company' && parseInt(key) === year))
+              );
+
+              if (lastSelected === 'All') {
+                // Sélectionner/désélectionner toutes les années
+                setSelectedYears(selectedYears.length === allYears.length ? [] : allYears);
+              } else if (lastSelected === 'AllAccidents') {
+                const accidentYears = getAccidentYears();
+                // Si toutes les années d'accidents sont déjà sélectionnées, les désélectionner
+                const allAccidentsSelected = accidentYears.every(year => selectedYears.includes(year));
+                if (allAccidentsSelected) {
+                  setSelectedYears(selectedYears.filter(year => !accidentYears.includes(year)));
+                } else {
+                  setSelectedYears([...new Set([...selectedYears, ...accidentYears])]);
+                }
+              } else if (lastSelected === 'AllTF') {
+                const tfYears = getTfYears();
+                // Si toutes les années TF sont déjà sélectionnées, les désélectionner
+                const allTFSelected = tfYears.every(year => selectedYears.includes(year));
+                if (allTFSelected) {
+                  setSelectedYears(selectedYears.filter(year => !tfYears.includes(year)));
+                } else {
+                  setSelectedYears([...new Set([...selectedYears, ...tfYears])]);
+                }
+              } else {
+                // Sélection normale d'années individuelles
+                setSelectedYears(value.filter(v => v !== 'All' && v !== 'AllAccidents' && v !== 'AllTF'));
+              }
+            }}
             renderValue={(selected) => `${selected.length} année(s)`}
             MenuProps={{
               PaperProps: { style: { maxHeight: 300, overflow: 'auto' } },
             }}
           >
             <MenuItem key="All" value="All" style={{ backgroundColor: '#ee742d59' }}>
-              <Checkbox checked={selectedYears.length === allYears.length} style={{ color: 'red' }} />
-              <ListItemText primary="All" />
+              <Checkbox
+                checked={selectedYears.length === allYears.length}
+                indeterminate={selectedYears.length > 0 && selectedYears.length < allYears.length}
+                style={{ color: 'red' }}
+              />
+              <ListItemText primary="Tout sélectionner" />
             </MenuItem>
-            {allYears.filter(Boolean).sort((a, b) => a - b).map((year) => (
-              <MenuItem key={year} value={year} style={{ backgroundColor: '#ee742d59' }}>
-                <Checkbox checked={selectedYears.includes(year)} style={{ color: '#257525' }} />
-                <ListItemText primary={year} />
-              </MenuItem>
-            ))}
+
+            <MenuItem key="AllAccidents" value="AllAccidents" style={{ backgroundColor: '#ee742d59' }}>
+              <Checkbox
+                checked={allYears.filter(year =>
+                  data.some(accident => new Date(accident.DateHeureAccident).getFullYear() === year)
+                ).every(year => selectedYears.includes(year))}
+                style={{ color: '#FF8042' }}
+              />
+              <ListItemText primary="Sélectionner tous les Accidents" />
+            </MenuItem>
+
+            <MenuItem key="AllTF" value="AllTF" style={{ backgroundColor: '#ee742d59' }}>
+              <Checkbox
+                checked={allYears.filter(year =>
+                  tfData.some(tf => Object.keys(tf).some(key => key !== 'company' && parseInt(key) === year))
+                ).every(year => selectedYears.includes(year))}
+                style={{ color: '#00C49F' }}
+              />
+              <ListItemText primary="Sélectionner tous les TF" />
+            </MenuItem>
+
+            {allYears.map((year) => {
+              // Vérifier si l'année existe dans les données d'accidents
+              const hasAccidents = data.some(accident =>
+                new Date(accident.DateHeureAccident).getFullYear() === year
+              );
+
+              // Vérifier si l'année existe dans les données TF
+              const hasTf = tfData.some(tf =>
+                Object.keys(tf).some(key => key !== 'company' && parseInt(key) === year)
+              );
+
+              // Créer le texte des sources
+              const sources = [];
+              if (hasAccidents) sources.push('Accidents');
+              if (hasTf) sources.push('TF');
+              const sourcesText = sources.length > 0 ? ` (${sources.join(' + ')})` : '';
+
+              return (
+                <MenuItem
+                  key={year}
+                  value={year}
+                  style={{ backgroundColor: '#ee742d59' }}
+                >
+                  <Checkbox
+                    checked={selectedYears.includes(year)}
+                    style={{ color: '#257525' }}
+                  />
+                  <ListItemText
+                    primary={`${year}${sourcesText}`}
+                    secondary={sources.length > 1 ? 'Données complètes' : sources.length === 1 ? `${sources[0]} seulement` : ''}
+                  />
+                </MenuItem>
+              );
+            })}
           </Select>
         </FormControl>
+
+
         <FormControl sx={{ width: 'calc(33.33% - 7px)', minWidth: '200px' }}>
           <InputLabel id="graphs-label">Graphiques</InputLabel>
           <Select
