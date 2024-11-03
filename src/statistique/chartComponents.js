@@ -300,45 +300,58 @@ const MemoizedAgeByCompanyChart = memo(({ companies }) => (
     </div>
 ));
 
-const MemoizedTfYearCompanyChart = memo(({ data, selectedYears }) => (
-    <div className="text-center mb-8">
-        <h2>Taux de fréquence par année et par entreprise</h2>
-        <ResponsiveContainer width="100%" height={400}>
-            <LineChart
-                margin={{ top: 20, right: 30, left: 20, bottom: 50 }}
-            >
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis
-                    dataKey="year"
-                    type="category"
-                    allowDuplicatedCategory={false}
-                />
-                <YAxis />
-                <Tooltip />
-                <Legend />
-                {data.map((item, index) => (
-                    <Line
-                        key={item.company}
-                        data={Object.entries(item)
-                            .filter(([key]) => key !== 'company')
-                            .filter(([year]) => selectedYears.includes(parseInt(year))) // Filtrer par années sélectionnées
-                            .map(([year, value]) => ({
-                                year,
-                                value
-                            }))
-                            .sort((a, b) => parseInt(a.year) - parseInt(b.year))} // Trier par année
-                        dataKey="value"
-                        name={item.company}
-                        stroke={COLORS[index % COLORS.length]}
-                        dot={{ r: 4 }}
-                        activeDot={{ r: 8 }}
-                        type="monotone"
+const MemoizedTfYearCompanyChart = memo(({ data, selectedYears }) => {
+    // Extraire toutes les années uniques et les trier
+    const sortedYears = [...new Set(
+        data.flatMap(item =>
+            Object.keys(item).filter(key =>
+                key !== 'company' && selectedYears.includes(parseInt(key))
+            )
+        )
+    )].sort((a, b) => parseInt(a) - parseInt(b));
+
+    // Préparer les données formatées et triées
+    const formattedData = sortedYears.map(year => ({
+        year,
+        ...Object.fromEntries(
+            data.map(item => [
+                item.company,
+                item[year] || null
+            ])
+        )
+    }));
+
+    return (
+        <div className="text-center mb-8">
+            <h2>Taux de fréquence par année et par entreprise</h2>
+            <ResponsiveContainer width="100%" height={400}>
+                <LineChart
+                    data={formattedData}
+                    margin={{ top: 20, right: 30, left: 20, bottom: 50 }}
+                >
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis
+                        dataKey="year"
+                        type="category"
                     />
-                ))}
-            </LineChart>
-        </ResponsiveContainer>
-    </div>
-));
+                    <YAxis />
+                    <Tooltip />
+                    <Legend />
+                    {data.map((item, index) => (
+                        <Line
+                            key={item.company}
+                            type="monotone"
+                            dataKey={item.company}
+                            stroke={COLORS[index % COLORS.length]}
+                            dot={{ r: 4 }}
+                            activeDot={{ r: 8 }}
+                        />
+                    ))}
+                </LineChart>
+            </ResponsiveContainer>
+        </div>
+    );
+});
 
 const MemoizedAccidentSectorCompanyChart = memo(({ companies, title }) => (
     <div className="text-center">

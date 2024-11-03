@@ -82,6 +82,7 @@ const QuesEntrep = () => {
         (_, i) => (currentYear - 10 + i).toString()
     );
 
+   
     // État unifié pour le formulaire
     const [formState, setFormState] = useState({
         questionnaireData: {
@@ -104,6 +105,9 @@ const QuesEntrep = () => {
             severity: 'info'
         }
     });
+
+     // Determine whether the Tf calculator should be shown based on the questionnaire type
+     const showTfCalculator = formState.questionnaireData.quesEntreType === "Rapport Annuelle SIPPT";
 
     const handleCloseSnackbar = (event, reason) => {
         if (reason === 'clickaway') return;
@@ -385,49 +389,48 @@ const QuesEntrep = () => {
                     value={formState.questionnaireData.quesEntreCommentaire}
                     multiline
                 />
-                <Paper elevation={3} sx={{ p: 3, mt: 3, mb: 3 }}>
-                    <Typography variant="h6" gutterBottom align="center">
-                        Calcul du Tf (Taux de fréquence)
-                    </Typography>
+                {showTfCalculator && (
+                    <Paper elevation={3} sx={{ p: 3, mt: 3, mb: 3 }}>
+                        <Typography variant="h6" gutterBottom align="center">
+                            Calcul du Tf (Taux de fréquence)
+                        </Typography>
 
-                    <TfFormula />
+                        <TfFormula />
 
-                    <Box sx={{ mt: 3 }}>
-                        <TextFieldP
-                            id="valueATf"
-                            label="Valeur A (Nombre d'heures prestées)"
-                            type="number"
-                            value={formState.tfCalculation.valueATf}
-                            onChange={handleTfValueChange('valueATf')}
-                            required
-                            inputProps={{ min: 0 }}
-                            helperText="Entrez le nombre total d'heures prestées"
-                        />
-                        <TextFieldP
-                            id="valueBTf"
-                            label="Valeur B (Nombre d'accidents)"
-                            type="number"
-                            value={formState.tfCalculation.valueBTf}
-                            onChange={handleTfValueChange('valueBTf')}
-                            required
-                            inputProps={{ min: 0 }}
-                            helperText="Entrez le nombre d'accidents"
-                        />
-                        <TextFieldP
-                            id="resultTf"
-                            label="Résultat Tf"
-                            value={formState.tfCalculation.resultTf}
-                            disabled
-                            InputProps={{
-                                readOnly: true,
-                                style: {
-                                    fontWeight: 'bold'
-                                }
-                            }}
-                        />
-                    </Box>
-                </Paper>
-
+                        <Box sx={{ mt: 3 }}>
+                            <TextFieldP
+                                id="valueATf"
+                                label="Valeur A (Nombre d'heures prestées)"
+                                type="number"
+                                value={formState.tfCalculation.valueATf}
+                                onChange={handleTfValueChange('valueATf')}
+                                inputProps={{ min: 0 }}
+                                helperText="Entrez le nombre total d'heures prestées"
+                            />
+                            <TextFieldP
+                                id="valueBTf"
+                                label="Valeur B (Nombre d'accidents)"
+                                type="number"
+                                value={formState.tfCalculation.valueBTf}
+                                onChange={handleTfValueChange('valueBTf')}
+                                inputProps={{ min: 0 }}
+                                helperText="Entrez le nombre d'accidents"
+                            />
+                            <TextFieldP
+                                id="resultTf"
+                                label="Résultat Tf"
+                                value={formState.tfCalculation.resultTf}
+                                disabled
+                                InputProps={{
+                                    readOnly: true,
+                                    style: {
+                                        fontWeight: 'bold'
+                                    }
+                                }}
+                            />
+                        </Box>
+                    </Paper>
+                )}
                 <Box sx={{ mt: 2 }}>
                     <Typography variant="h6" gutterBottom>
                         Fichiers joints

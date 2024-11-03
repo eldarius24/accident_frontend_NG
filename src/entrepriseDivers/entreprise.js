@@ -68,6 +68,15 @@ const EnterpriseDivers = () => {
         severity: 'info'
     });
 
+    const renderConditionalValue = (label, value) => {
+        if (!value || value === 'Non renseigné') return null;
+        return (
+            <span>
+                <strong>{label}:</strong> {value} |{' '}
+            </span>
+        );
+    };
+
     const showMessage = (message, severity = 'info') => {
         setSnackbar({
             open: true,
@@ -513,14 +522,14 @@ const EnterpriseDivers = () => {
                                 <Box display="flex" alignItems="center" gap={1}>
                                     <Box flex="1">
                                         <Typography variant="body2" sx={{ color: darkMode ? '#fff' : 'text.secondary' }}>
-                                            <strong>Type:</strong> {q.typeFichier} |{' '}
-                                            <strong>Années:</strong> {q.annees.join(', ')} |{' '}
-                                            <strong>Commentaires:</strong> {q.commentaire} |{' '}
-                                            <strong>Entreprise:</strong> {q.entrepriseName} |{' '}
-                                            <strong>Files:</strong> {q.files.length} |{' '}
-                                            <strong>Valeur A (Heures prestées):</strong> {q.valueATf || 'Non renseigné'} |{' '}
-                                            <strong>Valeur B (Accidents):</strong> {q.valueBTf || 'Non renseigné'} |{' '}
-                                            <strong>Tf:</strong> {q.resultTf || 'Non calculé'}
+                                            {renderConditionalValue('Type', q.typeFichier)}
+                                            {renderConditionalValue('Années', q.annees.join(', '))}
+                                            {renderConditionalValue('Commentaires', q.commentaire)}
+                                            {renderConditionalValue('Entreprise', q.entrepriseName)}
+                                            {renderConditionalValue('Files', q.files.length)}
+                                            {renderConditionalValue('Valeur A (Heures prestées)', q.valueATf)}
+                                            {renderConditionalValue('Valeur B (Accidents)', q.valueBTf)}
+                                            {renderConditionalValue('Tf', q.resultTf)}
                                         </Typography>
                                     </Box>
                                     <Tooltip title="Modifier le questionnaire" arrow>
