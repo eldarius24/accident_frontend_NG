@@ -86,7 +86,7 @@ function ResponsiveAppBar() {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  const showText = windowWidth > 900;
+  const showText = windowWidth > 1000;
 
   const { isquesEntrep, isentreprise, issiegelesion, isnaturelesion, isagentmateriel, isdeviation, isAddSecteur, isadminEntreprises, isaddEntrprise, isadminUser, isaddUser, isFormulaireAction, isFormulaireAccident, isPageAdmin, isPageStats, isLoginPage, isplanAction, isHiddenPage } = useMemo(() => ({
     isFormulaireAccident: location.pathname === '/formulaire',
@@ -111,14 +111,26 @@ function ResponsiveAppBar() {
 
   }), [location.pathname]);
 
-  const buttonStyle = {
+
+
+  const buttonStyle = useMemo(() => ({
     backgroundColor: '#01aeac',
     '&:hover': { backgroundColor: '#95519b' },
     mr: 1,
     whiteSpace: 'nowrap',
+    
+   
     minWidth: showText ? 'auto' : '40px',
     padding: showText ? 'auto' : '6px',
-  };
+    fontSize: windowWidth > 50000 ? '1.2rem' : windowWidth > 10000 ? '1rem' : '0.8rem',
+    transition: 'all 0.3s ease-in-out',
+    // Ajuste la hauteur du bouton en fonction de la taille de la fenêtre
+    height: windowWidth > 50000 ? '50px' : windowWidth > 1650 ? '40px' : '32px',
+    // Ajuste le padding horizontal en fonction de la taille de la fenêtre
+    px: windowWidth > 50000 ? 4 : windowWidth > 1650 ? 2 :  1,
+  }), [windowWidth, showText]);
+
+
 
   const textStyle = {
     fontFamily: 'monospace',
@@ -126,8 +138,8 @@ function ResponsiveAppBar() {
     color: '#95519b',
     textAlign: 'center',
     flexGrow: 1,
-    fontSize: windowWidth > 950 ? '2rem' : windowWidth > 850 ? '1.5rem' : '0.7rem',
-    letterSpacing: windowWidth > 950 ? '.3rem' : windowWidth > 850 ? '.1rem' : '.04rem',
+    fontSize: windowWidth > 1650 ? '2rem' : windowWidth > 530 ? '1.5rem' : '0.6rem',
+    letterSpacing: windowWidth > 1650 ? '.3rem' : windowWidth > 530 ? '.1rem' : '.01rem',
     transition: 'all 0.3s ease-in-out',
     '&:hover': {
       transform: 'scale(1.1)',
