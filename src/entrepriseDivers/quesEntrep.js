@@ -129,7 +129,7 @@ const QuesEntrep = () => {
 
     const handleTfValueChange = useCallback((field) => (value) => {
         const numValue = Number(value);
-        
+
         setFormState(prev => {
             const newTfCalculation = {
                 ...prev.tfCalculation,
@@ -232,7 +232,7 @@ const QuesEntrep = () => {
             }
 
             showSnackbar('Fichier supprimé avec succès', 'success');
-            
+
             setTimeout(() => {
                 navigate('/entreprise');
             }, 1500);
@@ -329,7 +329,7 @@ const QuesEntrep = () => {
                 files: uploadedFiles
             };
 
-            const response = editMode && questionnaire?._id 
+            const response = editMode && questionnaire?._id
                 ? await axios.put(`http://${apiUrl}:3100/api/questionnaires/${questionnaire._id}`, dataToSubmit)
                 : await axios.post(`http://${apiUrl}:3100/api/questionnaires`, dataToSubmit);
 
@@ -347,7 +347,7 @@ const QuesEntrep = () => {
         } catch (error) {
             console.error('Erreur lors de la sauvegarde:', error);
             showSnackbar(
-                error.response?.data?.message || 
+                error.response?.data?.message ||
                 `Erreur lors de la ${editMode ? 'modification' : 'création'} du questionnaire`,
                 'error'
             );
@@ -386,7 +386,7 @@ const QuesEntrep = () => {
                     multiline
                 />
                 <Paper elevation={3} sx={{ p: 3, mt: 3, mb: 3 }}>
-                <Typography variant="h6" gutterBottom align="center">
+                    <Typography variant="h6" gutterBottom align="center">
                         Calcul du Tf (Taux de fréquence)
                     </Typography>
 

@@ -28,7 +28,7 @@ export default async function recupererDonnees() {
 
     } catch (erreur) {
         let messageErreur = 'Erreur lors de la récupération des données : ';
-        
+
         if (erreur.response) {
             messageErreur += `Erreur serveur ${erreur.response.status}: ${erreur.response.data?.message || 'Erreur serveur inconnue'}`;
         } else if (erreur.request) {

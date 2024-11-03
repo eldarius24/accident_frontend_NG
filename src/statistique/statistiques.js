@@ -358,12 +358,12 @@ const Statistiques = () => {
               const lastSelected = value[value.length - 1];
 
               // Fonction pour obtenir les années avec accidents
-              const getAccidentYears = () => allYears.filter(year => 
+              const getAccidentYears = () => allYears.filter(year =>
                 data.some(accident => new Date(accident.DateHeureAccident).getFullYear() === year)
               );
 
               // Fonction pour obtenir les années avec TF
-              const getTfYears = () => allYears.filter(year => 
+              const getTfYears = () => allYears.filter(year =>
                 tfData.some(tf => Object.keys(tf).some(key => key !== 'company' && parseInt(key) === year))
               );
 
@@ -450,7 +450,6 @@ const Statistiques = () => {
             })}
           </Select>
         </FormControl>
-
 
         <FormControl sx={{ width: 'calc(33.33% - 7px)', minWidth: '200px' }}>
           <InputLabel id="graphs-label">Graphiques</InputLabel>
