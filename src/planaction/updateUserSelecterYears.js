@@ -51,14 +51,12 @@ const createUpdateUserSelectedYears = (apiUrl, showSnackbar) => (userInfo, setSe
     };
 };
 
-
-
 // Fonction utilitaire pour récupérer les années sélectionnées depuis les cookies
 export const getSelectedYearsFromCookie = () => {
     try {
         const encodedYears = Cookies.get(SELECTED_YEARS_COOKIE);
         if (!encodedYears) return [];
-        
+
         const decodedYears = JSON.parse(atob(encodedYears));
         return Array.isArray(decodedYears) ? decodedYears : [];
     } catch (error) {

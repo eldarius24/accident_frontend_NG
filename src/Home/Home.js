@@ -28,6 +28,7 @@ import { handleExportDataAssurance } from './_actions/exportAss';
 import { useLogger } from '../Hook/useLogger';
 import useHandleDelete from './_actions/handleDelete.js';
 import { blueGrey } from '@mui/material/colors';
+import { getCookie, setCookie } from './_actions/cookieUtils';
 const apiUrl = config.apiUrl;
 
 /**
@@ -200,17 +201,14 @@ function Home() {
     }, [apiUrl, navigate, showSnackbar, logAction]); // Ajout de logAction dans les dépendances
 
     useEffect(() => {
-        /**
-         * Rafraîchit la liste des accidents dès le montage du composant.
-         * Ajoute l'année courante aux années sélectionnées.
-         */
+        // Rafraîchit la liste des accidents
         refreshListAccidents();
 
-        // Obtient l'année courante
-        const currentYear = new Date().getFullYear();
-
-        // Met à jour les années sélectionnées en ajoutant l'année courante
-        setYearsChecked(prevYears => [...prevYears, currentYear]);
+        // Récupère les années sélectionnées depuis les cookies
+        const savedYears = getCookie('selectedYears');
+        if (savedYears) {
+            setYearsChecked(savedYears);
+        }
     }, [refreshListAccidents]);
 
     /**
@@ -285,33 +283,19 @@ function Home() {
     }, [filteredData, isAdmin, userInfo, logAction, showSnackbar]);
 
 
-    /**
-     * Met à jour les années sélectionnées en fonction de la nouvelle valeur reçue via l'événement de changement.
-     * Si la valeur est une chaîne, la fonction la divise en un tableau de valeurs en utilisant la virgule comme séparateur.
-     * Sinon, la fonction utilise la valeur telle quelle.
-     * @param {Event} event - L'événement de changement contenant la nouvelle valeur
-     */
     const handleChangeYearsFilter = (event) => {
         const value = event.target.value;
-        setYearsChecked(typeof value === 'string' ? value.split(',') : value);
+        const newYears = typeof value === 'string' ? value.split(',') : value;
+        setYearsChecked(newYears);
+        setCookie('selectedYears', newYears);
     };
 
-    /**
-     * Met à jour les années sélectionnées en fonction de la valeur du champ de sélection 'Tout'.
-     * Si le champ est coché, la fonction met à jour les années sélectionnées avec la liste de toutes les années trouvées dans la liste des accidents.
-     * Sinon, la fonction met à jour les années sélectionnées avec un tableau vide.
-     * @param {Event} event - L'événement de changement contenant la nouvelle valeur du champ de sélection 'Tout'
-     */
-    /**
-     * Met à jour la sélection 'Tout' des années selon l'état coché.
-     * Si coché, toutes les années disponibles dans les données sont sélectionnées.
-     * Si décoché, aucune année n'est sélectionnée.
-     * @param {Event} event - L'événement de changement contenant l'état coché
-     */
     const handleSelectAllYears = (event) => {
         const checked = event.target.checked;
-        setSelectAllYears(checked); // Met à jour l'état 'Tout' coché
-        setYearsChecked(checked ? yearsFromData : []); // Sélectionne toutes les années ou aucune
+        setSelectAllYears(checked);
+        const newYears = checked ? yearsFromData : [];
+        setYearsChecked(newYears);
+        setCookie('selectedYears', newYears);
     };
 
     if (accidentsIsPending) {

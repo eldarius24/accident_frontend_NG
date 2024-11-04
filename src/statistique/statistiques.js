@@ -56,78 +56,78 @@ const Statistiques = () => {
 
   // Dans le composant Statistiques
   // Dans le composant Statistiques
-useEffect(() => {
-  const savedFilters = loadFiltersFromCookies();
-  if (savedFilters) {
-    // Restaurer les filtres sauvegardés seulement si les données sont disponibles
-    if (savedFilters.selectedYears.length > 0) {
-      const validYears = savedFilters.selectedYears.filter(year => allYears.includes(year));
-      if (validYears.length > 0) setSelectedYears(validYears);
-    }
-    
-    if (savedFilters.selectedWorkerTypes.length > 0) {
-      const validWorkerTypes = savedFilters.selectedWorkerTypes.filter(type => workerTypes.includes(type));
-      if (validWorkerTypes.length > 0) setSelectedWorkerTypes(validWorkerTypes);
-    }
-    
-    if (savedFilters.selectedSectors.length > 0) {
-      const validSectors = savedFilters.selectedSectors.filter(sector => sectors.includes(sector));
-      if (validSectors.length > 0) setSelectedSectors(validSectors);
-    }
-    
-    if (savedFilters.selectedAssureurStatus.length > 0) {
-      const validAssureurStatus = savedFilters.selectedAssureurStatus.filter(status => assureurStatus.includes(status));
-      if (validAssureurStatus.length > 0) setSelectedAssureurStatus(validAssureurStatus);
-    }
-    
-    if (savedFilters.selectedAccidentTypes.length > 0) {
-      const validAccidentTypes = savedFilters.selectedAccidentTypes.filter(type => accidentTypes.includes(type));
-      if (validAccidentTypes.length > 0) setSelectedAccidentTypes(validAccidentTypes);
-    }
-    
-    // Restaurer la visibilité des graphiques
-    if (Object.keys(savedFilters.visibleGraphs).length > 0) {
-      setGraphs(prev => ({
-        ...prev,
-        ...Object.fromEntries(
-          Object.entries(prev).map(([key, graphData]) => [
-            key,
-            {
-              ...graphData,
-              visible: savedFilters.visibleGraphs[key] ?? graphData.visible
-            }
-          ])
-        )
-      }));
-    }
-  }
-}, [allYears, workerTypes, sectors, assureurStatus, accidentTypes]); 
+  useEffect(() => {
+    const savedFilters = loadFiltersFromCookies();
+    if (savedFilters) {
+      // Restaurer les filtres sauvegardés seulement si les données sont disponibles
+      if (savedFilters.selectedYears.length > 0) {
+        const validYears = savedFilters.selectedYears.filter(year => allYears.includes(year));
+        if (validYears.length > 0) setSelectedYears(validYears);
+      }
 
-// useEffect pour la sauvegarde
-useEffect(() => {
-  if (allYears.length > 0 && workerTypes.length > 0 && sectors.length > 0) {
-    saveFiltersToCookies({
-      selectedYears,
-      selectedWorkerTypes,
-      selectedSectors,
-      selectedAssureurStatus,
-      selectedAccidentTypes,
-      graphs,
-    });
-  }
-}, [
-  selectedYears,
-  selectedWorkerTypes,
-  selectedSectors,
-  selectedAssureurStatus,
-  selectedAccidentTypes,
-  graphs,
-  allYears,
-  workerTypes,
-  sectors,
-  assureurStatus,
-  accidentTypes
-]);
+      if (savedFilters.selectedWorkerTypes.length > 0) {
+        const validWorkerTypes = savedFilters.selectedWorkerTypes.filter(type => workerTypes.includes(type));
+        if (validWorkerTypes.length > 0) setSelectedWorkerTypes(validWorkerTypes);
+      }
+
+      if (savedFilters.selectedSectors.length > 0) {
+        const validSectors = savedFilters.selectedSectors.filter(sector => sectors.includes(sector));
+        if (validSectors.length > 0) setSelectedSectors(validSectors);
+      }
+
+      if (savedFilters.selectedAssureurStatus.length > 0) {
+        const validAssureurStatus = savedFilters.selectedAssureurStatus.filter(status => assureurStatus.includes(status));
+        if (validAssureurStatus.length > 0) setSelectedAssureurStatus(validAssureurStatus);
+      }
+
+      if (savedFilters.selectedAccidentTypes.length > 0) {
+        const validAccidentTypes = savedFilters.selectedAccidentTypes.filter(type => accidentTypes.includes(type));
+        if (validAccidentTypes.length > 0) setSelectedAccidentTypes(validAccidentTypes);
+      }
+
+      // Restaurer la visibilité des graphiques
+      if (Object.keys(savedFilters.visibleGraphs).length > 0) {
+        setGraphs(prev => ({
+          ...prev,
+          ...Object.fromEntries(
+            Object.entries(prev).map(([key, graphData]) => [
+              key,
+              {
+                ...graphData,
+                visible: savedFilters.visibleGraphs[key] ?? graphData.visible
+              }
+            ])
+          )
+        }));
+      }
+    }
+  }, [allYears, workerTypes, sectors, assureurStatus, accidentTypes]);
+
+  // useEffect pour la sauvegarde
+  useEffect(() => {
+    if (allYears.length > 0 && workerTypes.length > 0 && sectors.length > 0) {
+      saveFiltersToCookies({
+        selectedYears,
+        selectedWorkerTypes,
+        selectedSectors,
+        selectedAssureurStatus,
+        selectedAccidentTypes,
+        graphs,
+      });
+    }
+  }, [
+    selectedYears,
+    selectedWorkerTypes,
+    selectedSectors,
+    selectedAssureurStatus,
+    selectedAccidentTypes,
+    graphs,
+    allYears,
+    workerTypes,
+    sectors,
+    assureurStatus,
+    accidentTypes
+  ]);
 
 
   const loadDetailedTfData = async () => {
