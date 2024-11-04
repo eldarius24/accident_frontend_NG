@@ -57,21 +57,27 @@ export default function Formulaire() {
     }, []);
 
     const onSubmit = useCallback((data) => {
-        const missingFields = mandatoryFields.filter(field => !data[field]);
-
+        // Convertir explicitement boolAsCloture en booléen
+        const formattedData = {
+            ...data,
+            boolAsCloture: Boolean(data.boolAsCloture)
+        };
+    
+        const missingFields = mandatoryFields.filter(field => !formattedData[field]);
+    
         if (missingFields.length > 0) {
             const missingFieldNames = missingFields.map(field => field.replace('_', ' ')).join(', ');
             showSnackbar(`Veuillez remplir les champs obligatoires suivants : ${missingFieldNames}`, 'error');
             return;
         }
-
+    
         const url = accidentData
             ? `http://${apiUrl}:3100/api/accidents/${accidentData._id}`
             : `http://${apiUrl}:3100/api/accidents`;
-
+    
         const method = accidentData ? 'put' : 'post';
-
-        axios[method](url, data)
+    
+        axios[method](url, formattedData)  // Utiliser formattedData au lieu de data
             .then(async response => {
                 console.log(`Réponse du serveur en ${accidentData ? 'modification' : 'création'} :`, response.data);
 

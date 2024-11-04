@@ -206,21 +206,14 @@ function Home() {
 
     const handleEdit = useCallback(async (accidentIdToModify) => {
         try {
-            // Récupère les données de l'accident avec l'ID passé en paramètre
             const { data } = await axios.get(`http://${apiUrl}:3100/api/accidents/${accidentIdToModify}`);
-
-            // Redirige l'utilisateur vers la page de formulaire en passant en paramètre
-            // l'objet accident complet
             navigate("/formulaire", { state: data });
-
-            // Affiche une snackbar pour indiquer que l'opération a réussi
             showSnackbar('Modification de l accident initiée', 'info');
         } catch (error) {
-            // Gestion des erreurs
             console.error(error);
             showSnackbar('Erreur lors de la récupération des données de l accident', 'error');
         }
-    }, [apiUrl, navigate, showSnackbar, logAction]); // Ajout de logAction dans les dépendances
+    }, [apiUrl, navigate, showSnackbar]);
 
 
     /**
@@ -474,7 +467,7 @@ function Home() {
                                 >
                                     <TableCell>
                                         <Chip
-                                            label={item.boolAsCloture ? "En attente" : "Clôturé "}
+                                            label={item.boolAsCloture ? "Clôturé" : "En attente"}
                                             color={item.boolAsCloture ? "error" : "success"}
                                             size="small"
                                             sx={{
