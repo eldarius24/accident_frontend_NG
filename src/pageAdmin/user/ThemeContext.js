@@ -1,72 +1,51 @@
 import React, { createContext, useState, useContext, useEffect, useCallback } from 'react';
 
 const ThemeContext = createContext();
+const THEME_COOKIE_NAME = 'darkMode';
+
+// Fonction utilitaire pour gérer les cookies
+const Cookies = {
+  set: (name, value, days = 365) => {
+    const date = new Date();
+    date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+    const expires = `expires=${date.toUTCString()}`;
+    document.cookie = `${name}=${value};${expires};path=/;SameSite=Strict`;
+  },
+  get: (name) => {
+    const cookieName = `${name}=`;
+    const cookies = document.cookie.split(';');
+    for (let cookie of cookies) {
+      cookie = cookie.trim();
+      if (cookie.startsWith(cookieName)) {
+        return cookie.substring(cookieName.length);
+      }
+    }
+    return null;
+  }
+};
 
 export const ThemeProvider = ({ children }) => {
-  // Fonction pour récupérer le thème initial
+  // Fonction pour récupérer le thème initial depuis les cookies
   const getInitialTheme = useCallback(() => {
-    try {
-      // Essayer de récupérer le thème depuis le localStorage
-      const tokenString = localStorage.getItem('token');
-      if (tokenString) {
-        const token = JSON.parse(tokenString);
-        return token?.data?.darkMode || false;
-      }
-    } catch (error) {
-      console.error('Erreur lors de la récupération du thème:', error);
-    }
-    return false;
+    const savedTheme = Cookies.get(THEME_COOKIE_NAME);
+    return savedTheme === 'true';
   }, []);
 
   const [darkMode, setDarkMode] = useState(getInitialTheme);
 
   // Effet pour appliquer le thème
   useEffect(() => {
-    const applyTheme = () => {
-      // Appliquer les styles au body
-      document.body.style.backgroundColor = darkMode ? '#6e6e6e' : '#ffffff';
-      document.body.style.color = darkMode ? '#ffffff' : '#6e6e6e';
+    // Appliquer les styles au body
+    document.body.style.backgroundColor = darkMode ? '#6e6e6e' : '#ffffff';
+    document.body.style.color = darkMode ? '#ffffff' : '#6e6e6e';
 
-      // Sauvegarder le thème dans le localStorage
-      try {
-        const tokenString = localStorage.getItem('token');
-        if (tokenString) {
-          const token = JSON.parse(tokenString);
-          if (token && token.data) {
-            token.data.darkMode = darkMode;
-            localStorage.setItem('token', JSON.stringify(token));
-          }
-        }
-      } catch (error) {
-        console.error('Erreur lors de la sauvegarde du thème:', error);
-      }
-    };
-
-    applyTheme();
+    // Sauvegarder le thème dans les cookies
+    Cookies.set(THEME_COOKIE_NAME, darkMode.toString());
   }, [darkMode]);
 
   // Fonction pour basculer le thème
   const toggleDarkMode = useCallback(() => {
     setDarkMode(prevMode => !prevMode);
-  }, []);
-
-  // Effet pour écouter les changements dans le localStorage
-  useEffect(() => {
-    const handleStorageChange = (e) => {
-      if (e.key === 'token') {
-        try {
-          const newToken = JSON.parse(e.newValue);
-          if (newToken?.data?.darkMode !== undefined) {
-            setDarkMode(newToken.data.darkMode);
-          }
-        } catch (error) {
-          console.error('Erreur lors de la mise à jour du thème:', error);
-        }
-      }
-    };
-
-    window.addEventListener('storage', handleStorageChange);
-    return () => window.removeEventListener('storage', handleStorageChange);
   }, []);
 
   return (

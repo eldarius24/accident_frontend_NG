@@ -22,7 +22,7 @@ import { useUserConnected } from '../Hook/userConnected';
 import CustomSnackbar from '../_composants/CustomSnackbar';
 import { useTheme } from '../pageAdmin/user/ThemeContext';
 import EnterpriseStats from './entrepriseStats';
-import createUpdateUserSelectedYears from './updateUserSelecterYears';
+import createUpdateUserSelectedYears, { getSelectedYearsFromCookie } from './updateUserSelecterYears';
 import createFilteredUsers from './filteredUsers';
 import createFetchData from './fetchData.js';
 import createHandleExport from './handleExport';
@@ -50,9 +50,8 @@ export default function PlanAction({ accidentData }) {
     const { isAdmin, userInfo } = useUserConnected();
     const currentYear = new Date().getFullYear().toString();
     const [selectedYears, setSelectedYears] = useState(() => {
-        // Récupérer les années depuis le localStorage
-        const token = JSON.parse(localStorage.getItem('token'));
-        return token?.data?.selectedYears || [];
+        // Récupérer les années depuis le cookie
+        return getSelectedYearsFromCookie();
     });
 
     const [availableYears, setAvailableYears] = useState([]);

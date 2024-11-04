@@ -3,7 +3,7 @@ import axios from 'axios';
 import {
     Card, CardContent, Typography, Grid, LinearProgress,
     Box, Divider, Button, Select, MenuItem, Modal,
-    FormControl, Tooltip, InputLabel
+    FormControl, Tooltip, InputLabel, Accordion, AccordionSummary, AccordionDetails,
 } from '@mui/material';
 import PhoneIcon from '@mui/icons-material/Phone';
 import EmailIcon from '@mui/icons-material/Email';
@@ -30,8 +30,8 @@ import handleFileDownload from './fileUtils';
 import showDeleteConfirm from '../pageFormulaire/FileManagement/showDeleteConfirm';
 import EditIcon from '@mui/icons-material/Edit';
 import { blueGrey } from '@mui/material/colors';
-
-
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import Cookies from 'js-cookie';
 
 const modalStyles = {
     position: 'absolute',
@@ -48,6 +48,9 @@ const modalStyles = {
     display: 'flex',
     flexDirection: 'column'
 };
+
+const COOKIE_NAME = 'enterpriseAccordionState';
+const COOKIE_EXPIRY = 365; // Durée de validité du cookie en jours
 
 const EnterpriseDivers = () => {
     const { logAction } = useLogger();
@@ -68,6 +71,135 @@ const EnterpriseDivers = () => {
         severity: 'info'
     });
 
+    // Initialiser l'état des accordéons depuis les cookies
+    const [expandedYears, setExpandedYears] = useState(() => {
+        try {
+            const savedState = Cookies.get(COOKIE_NAME);
+            return savedState ? JSON.parse(savedState) : {};
+        } catch (error) {
+            console.error('Erreur lors de la lecture des cookies:', error);
+            return {};
+        }
+    });
+
+    useEffect(() => {
+        try {
+            Cookies.set(COOKIE_NAME, JSON.stringify(expandedYears), {
+                expires: COOKIE_EXPIRY,
+                sameSite: 'strict',
+                secure: true
+            });
+        } catch (error) {
+            console.error('Erreur lors de l\'enregistrement des cookies:', error);
+        }
+    }, [expandedYears]);
+
+    const handleAccordionChange = useCallback((year) => (event, isExpanded) => {
+        setExpandedYears(prev => {
+            const newState = {
+                ...prev,
+                [year]: isExpanded
+            };
+
+            // Mise à jour immédiate du cookie
+            try {
+                Cookies.set(COOKIE_NAME, JSON.stringify(newState), {
+                    expires: COOKIE_EXPIRY,
+                    sameSite: 'strict',
+                    secure: true
+                });
+            } catch (error) {
+                console.error('Erreur lors de la mise à jour des cookies:', error);
+            }
+
+            return newState;
+        });
+    }, []);
+
+    const handleToggleAll = useCallback((enterprises) => {
+        const allYears = new Set();
+        enterprises.forEach(enterprise => {
+            const questionnairesForEnterprise = questionnaires[enterprise._id] || [];
+            questionnairesForEnterprise.forEach(q => {
+                q.annees.forEach(year => allYears.add(year));
+            });
+        });
+
+        setExpandedYears(prev => {
+            // Vérifier si tous les accordéons sont ouverts
+            const areAllExpanded = Array.from(allYears).every(year => prev[year]);
+
+            // Créer le nouvel état (tous fermés si tous étaient ouverts, tous ouverts sinon)
+            const newState = Array.from(allYears).reduce((acc, year) => {
+                acc[year] = !areAllExpanded;
+                return acc;
+            }, {});
+
+            // Mise à jour du cookie
+            try {
+                Cookies.set(COOKIE_NAME, JSON.stringify(newState), {
+                    expires: COOKIE_EXPIRY,
+                    sameSite: 'strict',
+                    secure: true
+                });
+            } catch (error) {
+                console.error('Erreur lors de la mise à jour des cookies:', error);
+            }
+
+            return newState;
+        });
+    }, [questionnaires]);
+
+
+    const AccordionControls = useCallback(({ enterprises }) => (
+        <Box sx={{
+            display: 'flex',
+            justifyContent: 'flex-end',
+            mb: 2,
+            gap: 2
+        }}>
+            <Button
+                variant="outlined"
+                onClick={() => handleToggleAll(enterprises)}
+                sx={{
+                    color: darkMode ? '#90caf9' : '#1976d2',
+                    borderColor: darkMode ? '#90caf9' : '#1976d2',
+                    '&:hover': {
+                        backgroundColor: darkMode ? 'rgba(144, 202, 249, 0.08)' : 'rgba(25, 118, 210, 0.08)',
+                        borderColor: darkMode ? '#90caf9' : '#1976d2'
+                    }
+                }}
+            >
+                Tout {Object.values(expandedYears).every(Boolean) ? 'fermer' : 'ouvrir'}
+            </Button>
+        </Box>
+    ), [darkMode, expandedYears, handleToggleAll]);
+
+    const getAccordionStyle = useCallback((darkMode) => ({
+        backgroundColor: darkMode ? '#1e1e1e' : '#f5f5f5',
+        color: darkMode ? '#fff' : 'inherit',
+        marginBottom: '8px',
+        boxShadow: 'none',
+        border: `1px solid ${darkMode ? '#333' : '#ddd'}`,
+        '&:before': {
+            display: 'none',
+        },
+        '&.Mui-expanded': {
+            margin: '8px 0',
+        }
+    }), []);
+
+    const getAccordionSummaryStyle = useCallback((darkMode) => ({
+        backgroundColor: darkMode ? '#2a2a2a' : '#ebebeb',
+        '&:hover': {
+            backgroundColor: darkMode ? '#333' : '#e0e0e0',
+        },
+        '& .MuiAccordionSummary-content': {
+            alignItems: 'center'
+        }
+    }), []);
+
+
     const renderConditionalValue = (label, value) => {
         if (!value || value === 'Non renseigné') return null;
         return (
@@ -84,6 +216,31 @@ const EnterpriseDivers = () => {
             severity
         });
     };
+
+    // Fonction pour trier et grouper les questionnaires par année
+    const organizeQuestionnaires = useCallback((questionnairesArray) => {
+        if (!questionnairesArray) return [];
+
+        // Créer un map des questionnaires par année
+        const questionnairesByYear = {};
+
+        questionnairesArray.forEach(questionnaire => {
+            questionnaire.annees.forEach(annee => {
+                if (!questionnairesByYear[annee]) {
+                    questionnairesByYear[annee] = [];
+                }
+                questionnairesByYear[annee].push(questionnaire);
+            });
+        });
+
+        // Convertir le map en tableau trié par année décroissante
+        return Object.entries(questionnairesByYear)
+            .sort(([yearA], [yearB]) => Number(yearB) - Number(yearA))
+            .map(([year, questionnaires]) => ({
+                year,
+                questionnaires
+            }));
+    }, []);
 
 
     const handleEdit = useCallback(async (questionnaireId, enterpriseId) => {
@@ -439,8 +596,10 @@ const EnterpriseDivers = () => {
                     </FormControl>
                 </Box>
             )}
-
-            {filteredEnterprises.map((enterprise, index) => (
+            {filteredEnterprises.length > 0 && (
+                <AccordionControls enterprises={filteredEnterprises} />
+            )}
+            {filteredEnterprises.map((enterprise) => (
 
                 <Card
                     key={enterprise._id}
@@ -506,161 +665,202 @@ const EnterpriseDivers = () => {
                                 {enterprise.AddEntrScadresse}, {enterprise.AddEntrSccpost} {enterprise.AddEntrSclocalite}
                             </Typography>
                         </Box>
-                        <Divider sx={{ my: 2, backgroundColor: darkMode ? '#ffffff' : '#000000' }} />
-                        <Box sx={{ mb: 1, display: 'flex', alignItems: 'center', gap: 1 }}>
-                            <AssignmentIcon sx={{ color: darkMode ? '#90caf9' : '#1976d2' }} />
-                            <Typography
-                                variant="subtitle2"
-                                sx={{ color: darkMode ? '#fff' : 'inherit' }}
-                                component="h2"
+                        {organizeQuestionnaires(questionnaires[enterprise._id])?.map(({ year, questionnaires }) => (
+                            <Accordion
+                                key={year}
+                                expanded={expandedYears[year] || false}
+                                onChange={handleAccordionChange(year)}
+                                sx={getAccordionStyle(darkMode)}
                             >
-                                <strong>Pièces jointes</strong>
-                            </Typography>
-                        </Box>
-                        {questionnaires[enterprise._id]?.map((q, index, array) => (
-                            <Box key={q._id} display="flex" flexDirection="column" gap={1} mb={1}>
-                                <Box display="flex" alignItems="center" gap={1}>
-                                    <Box flex="1">
-                                        <Typography variant="body2" sx={{ color: darkMode ? '#fff' : 'text.secondary' }}>
-                                            {renderConditionalValue('Type', q.typeFichier)}
-                                            {renderConditionalValue('Années', q.annees.join(', '))}
-                                            {renderConditionalValue('Commentaires', q.commentaire)}
-                                            {renderConditionalValue('Entreprise', q.entrepriseName)}
-                                            {renderConditionalValue('Files', q.files.length)}
-                                            {renderConditionalValue('Valeur A (Heures prestées)', q.valueATf)}
-                                            {renderConditionalValue('Valeur B (Accidents)', q.valueBTf)}
-                                            {renderConditionalValue('Tf', q.resultTf)}
+                                <AccordionSummary
+                                    expandIcon={<ExpandMoreIcon sx={{ color: darkMode ? '#90caf9' : '#1976d2' }} />}
+                                    sx={getAccordionSummaryStyle(darkMode)}
+                                >
+                                    <Box sx={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        gap: 2,
+                                        width: '100%'
+                                    }}>
+                                        <Typography
+                                            variant="h6"
+                                            sx={{
+                                                color: darkMode ? '#90caf9' : '#1976d2',
+                                                fontWeight: 'bold'
+                                            }}
+                                        >
+                                            Année {year}
+                                        </Typography>
+                                        <Typography
+                                            variant="body2"
+                                            sx={{
+                                                color: darkMode ? '#bbb' : '#666',
+                                            }}
+                                        >
+                                            ({questionnaires.length} document{questionnaires.length > 1 ? 's' : ''})
                                         </Typography>
                                     </Box>
-                                    <Tooltip title="Modifier le questionnaire" arrow>
-                                        <Button
-                                            sx={{
-                                                backgroundColor: blueGrey[500],
-                                                minWidth: '36px',
-                                                width: '36px',
-                                                height: '36px',
-                                                padding: 0,
-                                                transition: 'all 0.3s ease-in-out',
-                                                '&:hover': {
-                                                    backgroundColor: blueGrey[700],
-                                                    transform: 'scale(1.08)',
-                                                    boxShadow: 6
-                                                }
-                                            }}
-                                            onClick={() => handleEdit(q._id, enterprise._id)}
-                                            variant="contained"
-                                            color="primary"
-                                        >
-                                            <EditIcon sx={{ fontSize: 20 }} />
-                                        </Button>
-                                    </Tooltip>
-                                    <Tooltip title="Supprimer le questionnaire" arrow>
-                                        <Button
-                                            sx={{
-                                                minWidth: '36px',
-                                                width: '36px',
-                                                height: '36px',
-                                                padding: 0,
-                                                transition: 'all 0.3s ease-in-out',
-                                                '&:hover': {
-                                                    transform: 'scale(1.08)',
-                                                    boxShadow: 6
-                                                }
-                                            }}
-                                            onClick={() => handleDelete(q._id, null, enterprise._id, 'questionnaire')}
-                                            variant="contained"
-                                            color="error"
-                                        >
-                                            <DeleteForeverIcon sx={{ fontSize: 20 }} />
-                                        </Button>
-                                    </Tooltip>
-                                </Box>
-                                {q.files && q.files.map(file => (
-                                    <Box key={file.fileId} display="flex" alignItems="center" gap={2} ml={2}>
-                                        <Typography variant="body2" sx={{ textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap', color: darkMode ? '#bbb' : '#666', flex: 1 }}>
-                                            {file.fileName}
-                                        </Typography>
-                                        <Box display="flex" gap={1}>
-                                            <Tooltip title="Telecharger le fichier" arrow>
-                                                <Button
+                                </AccordionSummary>
+                                <AccordionDetails sx={{
+                                    backgroundColor: darkMode ? '#2a2a2a' : '#fff',
+                                    padding: 2
+                                }}>
+                                    {questionnaires.map((q, qIndex) => (
+                                        <Box key={q._id} sx={{ mb: 2 }}>
+                                            <Box display="flex" alignItems="center" gap={1}>
+                                                <Box flex="1">
+                                                    <Typography variant="body2" sx={{ color: darkMode ? '#fff' : 'text.secondary' }}>
+                                                        {renderConditionalValue('Type', q.typeFichier)}
+                                                        {renderConditionalValue('Années', q.annees.join(', '))}
+                                                        {renderConditionalValue('Commentaires', q.commentaire)}
+                                                        {renderConditionalValue('Entreprise', q.entrepriseName)}
+                                                        {renderConditionalValue('Files', q.files.length)}
+                                                        {renderConditionalValue('Valeur A (Heures prestées)', q.valueATf)}
+                                                        {renderConditionalValue('Valeur B (Accidents)', q.valueBTf)}
+                                                        {renderConditionalValue('Tf', q.resultTf)}
+                                                    </Typography>
+                                                </Box>
+                                                <Box display="flex" gap={1}>
+                                                    <Tooltip title="Modifier le questionnaire" arrow>
+                                                        <Button
+                                                            sx={{
+                                                                backgroundColor: blueGrey[500],
+                                                                minWidth: '36px',
+                                                                width: '36px',
+                                                                height: '36px',
+                                                                padding: 0,
+                                                                '&:hover': {
+                                                                    backgroundColor: blueGrey[700],
+                                                                    transform: 'scale(1.08)'
+                                                                }
+                                                            }}
+                                                            onClick={() => handleEdit(q._id, enterprise._id)}
+                                                            variant="contained"
+                                                        >
+                                                            <EditIcon sx={{ fontSize: 20 }} />
+                                                        </Button>
+                                                    </Tooltip>
+                                                    <Tooltip title="Supprimer le questionnaire" arrow>
+                                                        <Button
+                                                            sx={{
+                                                                minWidth: '36px',
+                                                                width: '36px',
+                                                                height: '36px',
+                                                                padding: 0,
+                                                                '&:hover': {
+                                                                    transform: 'scale(1.08)'
+                                                                }
+                                                            }}
+                                                            onClick={() => handleDelete(q._id, null, enterprise._id, 'questionnaire')}
+                                                            variant="contained"
+                                                            color="error"
+                                                        >
+                                                            <DeleteForeverIcon sx={{ fontSize: 20 }} />
+                                                        </Button>
+                                                    </Tooltip>
+                                                </Box>
+                                            </Box>
+
+                                            {/* Fichiers du questionnaire */}
+                                            {q.files && q.files.map(file => (
+                                                <Box
+                                                    key={file.fileId}
+                                                    display="flex"
+                                                    alignItems="center"
+                                                    gap={2}
+                                                    ml={2}
+                                                    mt={1}
                                                     sx={{
-                                                        minWidth: '36px',
-                                                        width: '36px',
-                                                        height: '36px',
-                                                        padding: 0,
-                                                        transition: 'all 0.3s ease-in-out',
+                                                        backgroundColor: darkMode ? '#333' : '#f5f5f5',
+                                                        padding: '8px',
+                                                        borderRadius: '4px',
                                                         '&:hover': {
-                                                            transform: 'scale(1.08)',
-                                                            boxShadow: 6
+                                                            backgroundColor: darkMode ? '#444' : '#ebebeb'
                                                         }
                                                     }}
-                                                    onClick={() => handleFileDownload({
-                                                        fileId: file.fileId,
-                                                        fileName: file.fileName,
-                                                        entrepriseName: enterprise.AddEntreName,
-                                                        logAction,
-                                                        showMessage
-                                                    })}
-                                                    variant="contained"
-                                                    color="primary"
                                                 >
-                                                    <GetAppIcon sx={{ fontSize: 20 }} />
-                                                </Button>
-                                            </Tooltip>
-                                            <Tooltip title="Visualiser le fichier" arrow>
-                                                <Button
+                                                    <Typography
+                                                        variant="body2"
+                                                        sx={{
+                                                            textOverflow: 'ellipsis',
+                                                            overflow: 'hidden',
+                                                            whiteSpace: 'nowrap',
+                                                            color: darkMode ? '#bbb' : '#666',
+                                                            flex: 1
+                                                        }}
+                                                    >
+                                                        {file.fileName}
+                                                    </Typography>
+                                                    <Box display="flex" gap={1}>
+                                                        <Tooltip title="Télécharger le fichier" arrow>
+                                                            <Button
+                                                                sx={{
+                                                                    minWidth: '36px',
+                                                                    width: '36px',
+                                                                    height: '36px',
+                                                                    padding: 0
+                                                                }}
+                                                                onClick={() => handleFileDownload({
+                                                                    fileId: file.fileId,
+                                                                    fileName: file.fileName,
+                                                                    entrepriseName: enterprise.AddEntreName,
+                                                                    logAction,
+                                                                    showMessage
+                                                                })}
+                                                                variant="contained"
+                                                                color="primary"
+                                                            >
+                                                                <GetAppIcon sx={{ fontSize: 20 }} />
+                                                            </Button>
+                                                        </Tooltip>
+                                                        <Tooltip title="Visualiser le fichier" arrow>
+                                                            <Button
+                                                                sx={{
+                                                                    minWidth: '36px',
+                                                                    width: '36px',
+                                                                    height: '36px',
+                                                                    padding: 0
+                                                                }}
+                                                                onClick={() => handleOpenPreview(file.fileId, file.fileName)}
+                                                                variant="contained"
+                                                                color="secondary"
+                                                            >
+                                                                <VisibilityIcon sx={{ fontSize: 20 }} />
+                                                            </Button>
+                                                        </Tooltip>
+                                                        <Tooltip title="Supprimer le fichier" arrow>
+                                                            <Button
+                                                                sx={{
+                                                                    minWidth: '36px',
+                                                                    width: '36px',
+                                                                    height: '36px',
+                                                                    padding: 0
+                                                                }}
+                                                                onClick={() => handleDelete(q._id, file.fileId, enterprise._id, 'file')}
+                                                                variant="contained"
+                                                                color="error"
+                                                            >
+                                                                <DeleteForeverIcon sx={{ fontSize: 20 }} />
+                                                            </Button>
+                                                        </Tooltip>
+                                                    </Box>
+                                                </Box>
+                                            ))}
+
+                                            {qIndex < questionnaires.length - 1 && (
+                                                <Divider
                                                     sx={{
-                                                        minWidth: '36px',
-                                                        width: '36px',
-                                                        height: '36px',
-                                                        padding: 0,
-                                                        transition: 'all 0.3s ease-in-out',
-                                                        '&:hover': {
-                                                            transform: 'scale(1.08)',
-                                                            boxShadow: 6
-                                                        }
+                                                        my: 2,
+                                                        backgroundColor: darkMode ? '#0b5a59' : '#01aeac',
+                                                        opacity: 0.7,
+                                                        height: '2px'
                                                     }}
-                                                    onClick={() => handleOpenPreview(file.fileId, file.fileName)}
-                                                    variant="contained"
-                                                    color="secondary"
-                                                >
-                                                    <VisibilityIcon sx={{ fontSize: 20 }} />
-                                                </Button>
-                                            </Tooltip>
-                                            <Tooltip title="Supprimer le fichier" arrow>
-                                                <Button
-                                                    sx={{
-                                                        minWidth: '36px',
-                                                        width: '36px',
-                                                        height: '36px',
-                                                        padding: 0,
-                                                        transition: 'all 0.3s ease-in-out',
-                                                        '&:hover': {
-                                                            transform: 'scale(1.08)',
-                                                            boxShadow: 6
-                                                        }
-                                                    }}
-                                                    onClick={() => handleDelete(q._id, file.fileId, enterprise._id, 'file')}
-                                                    variant="contained"
-                                                    color="error"
-                                                >
-                                                    <DeleteForeverIcon sx={{ fontSize: 20 }} />
-                                                </Button>
-                                            </Tooltip>
+                                                />
+                                            )}
                                         </Box>
-                                    </Box>
-                                ))}
-                                {index < array.length - 1 && (
-                                    <Divider
-                                        sx={{
-                                            my: 1,
-                                            backgroundColor: darkMode ? '#0b5a59' : '#01aeac',
-                                            opacity: 0.7,
-                                            height: '3px'
-                                        }}
-                                    />
-                                )}
-                            </Box>
+                                    ))}
+                                </AccordionDetails>
+                            </Accordion>
                         ))}
                         <Divider sx={{ my: 2, backgroundColor: darkMode ? '#ffffff' : '#000000' }} />
                         <Tooltip title="Ajouter un nouveau document lié a l'entreprise" arrow>
@@ -681,7 +881,7 @@ const EnterpriseDivers = () => {
                                 Ajouter un pièce
                             </Button>
                         </Tooltip>
-                    </CardContent>
+                    </CardContent> 
                 </Card>
 
             ))}
