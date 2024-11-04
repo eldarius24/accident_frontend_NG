@@ -42,9 +42,28 @@ function Home() {
 
     const { darkMode } = useTheme();
     const navigate = useNavigate();
+
+    const ensureArray = (value) => {
+        if (!value) return [];
+        if (Array.isArray(value)) return value;
+        try {
+            // Si c'est une chaîne JSON, essayer de la parser
+            const parsed = JSON.parse(value);
+            return Array.isArray(parsed) ? parsed : [];
+        } catch {
+            return [];
+        }
+    };
+
     const [yearsFromData, setYearsFromData] = useState([]);
-    const [yearsChecked, setYearsChecked] = useState([]);
-    const [selectAllYears, setSelectAllYears] = useState(false);
+    const [yearsChecked, setYearsChecked] = useState(() => {
+        const savedYears = ensureArray(getCookie('selectedYears'));
+        return savedYears;
+    });
+    const [selectAllYears, setSelectAllYears] = useState(() => {
+        const savedSelectAll = getCookie('selectAllYears');
+        return savedSelectAll === true;
+    });
     const [accidents, setAccidents] = useState([]);
     const [accidentsIsPending, startGetAccidents] = useTransition();
     const [searchTerm, setSearchTerm] = useState('');
@@ -61,6 +80,8 @@ function Home() {
         showSnackbar
     });
 
+
+
     /**
         * Rafraichit la liste des accidents en appelant la fonction getAccidents.
         * Met à jour l'état de la liste des accidents et des années.
@@ -71,9 +92,10 @@ function Home() {
             try {
                 const fetchedAccidents = await getAccidents();
                 setAccidents(fetchedAccidents);
-                // Récupère les années uniques de la liste des accidents
-                const years = [...new Set(fetchedAccidents.map(accident => new Date(accident.DateHeureAccident).getFullYear()))];
-                setYearsFromData([...new Set(fetchedAccidents.map(accident => new Date(accident.DateHeureAccident).getFullYear()))]);
+                const years = [...new Set(fetchedAccidents.map(accident =>
+                    new Date(accident.DateHeureAccident).getFullYear()
+                ))].sort((a, b) => b - a);
+                setYearsFromData(years);
                 showSnackbar('Liste des accidents actualisée', 'success');
             } catch (error) {
                 console.error("Erreur lors de la récupération des accidents:", error);
@@ -200,16 +222,6 @@ function Home() {
         }
     }, [apiUrl, navigate, showSnackbar, logAction]); // Ajout de logAction dans les dépendances
 
-    useEffect(() => {
-        // Rafraîchit la liste des accidents
-        refreshListAccidents();
-
-        // Récupère les années sélectionnées depuis les cookies
-        const savedYears = getCookie('selectedYears');
-        if (savedYears) {
-            setYearsChecked(savedYears);
-        }
-    }, [refreshListAccidents]);
 
     /**
      * Filtre les données des accidents en fonction des années sélectionnées et du terme de recherche.
@@ -218,23 +230,20 @@ function Home() {
      * @returns {Array} - Un tableau des accidents filtrés.
      */
     const filteredData = useMemo(() => {
-        // Vérifie si les accidents ou les années sélectionnées sont vides ou non définis
-        if (!accidents || !yearsChecked) return [];
+        if (!accidents || !Array.isArray(yearsChecked)) return [];
 
-        // Convertit les années sélectionnées en nombres
         const years = yearsChecked.map(Number);
-        // Met en minuscule le terme de recherche pour une comparaison insensible à la casse
         const searchTermLower = searchTerm.toLowerCase();
 
-        // Filtre les accidents selon les années et le terme de recherche
         return accidents.filter(item => {
-            if (!item.DateHeureAccident) return false; // Exclut les accidents sans date
+            if (!item.DateHeureAccident) return false;
 
-            const date = new Date(item.DateHeureAccident).getFullYear(); // Extrait l'année de la date de l'accident
-            // Vérifie si l'année est incluse dans les années sélectionnées et si l'un des champs contient le terme de recherche
-            return years.includes(date) && ['AssureurStatus', 'DateHeureAccident', 'entrepriseName', 'secteur', 'nomTravailleur', 'prenomTravailleur', 'typeAccident'].some(property =>
-                item[property]?.toString().toLowerCase().includes(searchTermLower)
-            );
+            const date = new Date(item.DateHeureAccident).getFullYear();
+            return years.includes(date) &&
+                ['AssureurStatus', 'DateHeureAccident', 'entrepriseName', 'secteur',
+                    'nomTravailleur', 'prenomTravailleur', 'typeAccident'].some(property =>
+                        item[property]?.toString().toLowerCase().includes(searchTermLower)
+                    );
         });
     }, [accidents, yearsChecked, searchTerm]);
 
@@ -285,18 +294,33 @@ function Home() {
 
     const handleChangeYearsFilter = (event) => {
         const value = event.target.value;
-        const newYears = typeof value === 'string' ? value.split(',') : value;
-        setYearsChecked(newYears);
-        setCookie('selectedYears', newYears);
+        if (value === 'All') {
+            const allYears = [...yearsFromData];
+            setSelectAllYears(true);
+            setYearsChecked(allYears);
+            setCookie('selectedYears', JSON.stringify(allYears));
+            setCookie('selectAllYears', true);
+        } else {
+            const newYears = ensureArray(value);
+            setSelectAllYears(false);
+            setYearsChecked(newYears);
+            setCookie('selectedYears', JSON.stringify(newYears));
+            setCookie('selectAllYears', false);
+        }
     };
 
     const handleSelectAllYears = (event) => {
         const checked = event.target.checked;
+        const years = checked ? [...yearsFromData] : [];
         setSelectAllYears(checked);
-        const newYears = checked ? yearsFromData : [];
-        setYearsChecked(newYears);
-        setCookie('selectedYears', newYears);
+        setYearsChecked(years);
+        setCookie('selectedYears', JSON.stringify(years));
+        setCookie('selectAllYears', checked);
     };
+
+    useEffect(() => {
+        refreshListAccidents();
+    }, [refreshListAccidents]);
 
     if (accidentsIsPending) {
         return <LinearProgress color="success" />;
@@ -331,9 +355,11 @@ function Home() {
                                     labelId="sort-label"
                                     id="sort-select"
                                     multiple
-                                    value={selectAllYears ? yearsFromData : yearsChecked}
+                                    value={yearsChecked || []}
                                     onChange={handleChangeYearsFilter}
-                                    renderValue={selected => selected.join(', ')}
+                                    renderValue={(selected) => {
+                                        return Array.isArray(selected) ? selected.join(', ') : '';
+                                    }}
                                 >
                                     <MenuItem key="All" value="All" style={{ backgroundColor: '#ee742d59' }}>
                                         <Checkbox
@@ -341,12 +367,12 @@ function Home() {
                                             onChange={handleSelectAllYears}
                                             style={{ color: 'red' }}
                                         />
-                                        <ListItemText primary="All" />
+                                        <ListItemText primary="Toutes les années" />
                                     </MenuItem>
-                                    {yearsFromData.filter(Boolean).map(year => (
+                                    {yearsFromData.map(year => (
                                         <MenuItem key={year} value={year} style={{ backgroundColor: '#ee742d59' }}>
                                             <Checkbox
-                                                checked={yearsChecked.includes(year)}
+                                                checked={Array.isArray(yearsChecked) && yearsChecked.includes(year)}
                                                 style={{ color: '#257525' }}
                                             />
                                             <ListItemText primary={year} />
@@ -448,8 +474,8 @@ function Home() {
                                 >
                                     <TableCell>
                                         <Chip
-                                            label={item.boolAsCloture ? "Clôturé" : "En attente"}
-                                            color={item.boolAsCloture ? "success" : "error"}
+                                            label={item.boolAsCloture ? "En attente" : "Clôturé "}
+                                            color={item.boolAsCloture ? "error" : "success"}
                                             size="small"
                                             sx={{
                                                 opacity: 0.6,  // Ajuste la transparence (0 = invisible, 1 = opaque)

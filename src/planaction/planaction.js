@@ -28,6 +28,7 @@ import createFetchData from './fetchData.js';
 import createHandleExport from './handleExport';
 import { useLogger } from '../Hook/useLogger';
 import { blueGrey } from '@mui/material/colors';
+
 const apiUrl = config.apiUrl;
 
 /**
@@ -36,6 +37,10 @@ const apiUrl = config.apiUrl;
  * @returns {JSX.Element} La page du plan d'action
  */
 export default function PlanAction({ accidentData }) {
+
+
+    // Créer la fonction de mise à jour
+
     const { logAction } = useLogger();
     const { darkMode } = useTheme();
     const [users, setAddactions] = useState([]);
@@ -50,10 +55,10 @@ export default function PlanAction({ accidentData }) {
     const { isAdmin, userInfo } = useUserConnected();
     const currentYear = new Date().getFullYear().toString();
     const [selectedYears, setSelectedYears] = useState(() => {
-        // Récupérer les années depuis le cookie
+        // Récupérer les années depuis le cookie au chargement initial
         return getSelectedYearsFromCookie();
     });
-
+    
     const [availableYears, setAvailableYears] = useState([]);
     const [snackbar, setSnackbar] = useState({
         open: false,
@@ -127,13 +132,11 @@ export default function PlanAction({ accidentData }) {
         return rowColors[theme].rows[index % 2];
     }, [darkMode, rowColors]);
 
-    const handleYearsChange = useCallback((event) => {
+    const handleYearsChange = (event) => {
         const newSelectedYears = event.target.value;
-        // Mettre à jour immédiatement l'état local
         setSelectedYears(newSelectedYears);
-        // Puis mettre à jour le backend et le localStorage
         updateUserSelectedYears(newSelectedYears);
-    }, [updateUserSelectedYears]);
+    };
 
     const checkboxStyle = useMemo(
         () => ({

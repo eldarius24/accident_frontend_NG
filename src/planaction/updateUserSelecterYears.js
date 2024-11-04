@@ -1,17 +1,17 @@
 import Cookies from 'js-cookie';
 
 const SELECTED_YEARS_COOKIE = 'selectedYears';
-const COOKIE_EXPIRY_DAYS = 365; // Expire après 1 an
+const COOKIE_EXPIRY_DAYS = 365;
 
 const createUpdateUserSelectedYears = (apiUrl, showSnackbar) => (userInfo, setSelectedYears) => {
     return async (newSelectedYears) => {
         try {
-            // Valider les données avant de les stocker
+            // Valider les données
             if (!Array.isArray(newSelectedYears)) {
                 throw new Error('Les années sélectionnées doivent être un tableau');
             }
 
-            // Vérifier que toutes les valeurs sont des chaînes d'années valides
+            // Vérifier que toutes les valeurs sont des années valides
             const currentYear = new Date().getFullYear();
             const isValidYear = (year) => {
                 const yearNum = parseInt(year);
@@ -22,15 +22,14 @@ const createUpdateUserSelectedYears = (apiUrl, showSnackbar) => (userInfo, setSe
                 throw new Error('Années invalides détectées');
             }
 
-            // Stocker dans un cookie avec encryption basique
-            const encodedYears = btoa(JSON.stringify(newSelectedYears));
-            Cookies.set(SELECTED_YEARS_COOKIE, encodedYears, {
+            // Stocker dans un cookie
+            Cookies.set(SELECTED_YEARS_COOKIE, JSON.stringify(newSelectedYears), {
                 expires: COOKIE_EXPIRY_DAYS,
-                secure: true, // Cookie uniquement sur HTTPS
+                secure: true,
                 sameSite: 'strict'
             });
 
-            // Mettre à jour le localStorage pour la compatibilité
+            // Mettre à jour le localStorage
             const token = JSON.parse(localStorage.getItem('token'));
             if (token && token.data) {
                 token.data.selectedYears = newSelectedYears;
@@ -54,13 +53,18 @@ const createUpdateUserSelectedYears = (apiUrl, showSnackbar) => (userInfo, setSe
 // Fonction utilitaire pour récupérer les années sélectionnées depuis les cookies
 export const getSelectedYearsFromCookie = () => {
     try {
-        const encodedYears = Cookies.get(SELECTED_YEARS_COOKIE);
-        if (!encodedYears) return [];
+        const cookieValue = Cookies.get(SELECTED_YEARS_COOKIE);
+        if (!cookieValue) return [];
 
-        const decodedYears = JSON.parse(atob(encodedYears));
-        return Array.isArray(decodedYears) ? decodedYears : [];
+        try {
+            const parsedValue = JSON.parse(cookieValue);
+            return Array.isArray(parsedValue) ? parsedValue : [];
+        } catch (parseError) {
+            console.error('Erreur lors du parsing du cookie:', parseError);
+            return [];
+        }
     } catch (error) {
-        console.error('Erreur lors de la lecture des années depuis le cookie:', error);
+        console.error('Erreur lors de la lecture du cookie:', error);
         return [];
     }
 };
