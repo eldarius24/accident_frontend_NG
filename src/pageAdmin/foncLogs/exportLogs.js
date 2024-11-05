@@ -20,9 +20,23 @@ const exportLogs = async ({
   searchTerm,
   isAdmin,
   userInfo,
-  showSnackbar
+  showSnackbar,
+  logAction
 }) => {
   try {
+
+    const totalResponse = await axios.get(`http://${apiUrl}:3100/api/logs`, {
+      params: {
+        type: selectedType !== 'all' ? selectedType : undefined,
+        date: selectedDate !== 'all' ? selectedDate : undefined,
+        search: searchTerm || undefined,
+        userId: !isAdmin && userInfo?._id ? userInfo._id : undefined,
+        page: 1,
+        limit: 1
+      }
+    });
+
+    const logsCount = totalResponse.data.total || 0;
     // Effectuer une requête GET pour obtenir les logs exportés sous forme de blob
     const response = await axios.get(`http://${apiUrl}:3100/api/logs/export`, {
       responseType: 'blob',
@@ -38,10 +52,20 @@ const exportLogs = async ({
     const url = window.URL.createObjectURL(new Blob([response.data]));
     const link = document.createElement('a');
     link.href = url;
-    link.setAttribute('download', `logs_${new Date().toISOString()}.csv`);
+    const fileName = `logs_${new Date().toISOString()}.csv`;
+    link.setAttribute('download', fileName);
     document.body.appendChild(link);
     link.click();
     link.remove(); // Supprimer le lien après le téléchargement
+
+    // Journaliser l'action d'export
+    await logAction({
+      actionType: 'export',
+      details: `Export Excel de ${logsCount} logs - Filtres: ${selectedType !== 'all' ? `Type=${selectedType}, ` : ''}${selectedDate !== 'all' ? `Date=${selectedDate}, ` : ''}${searchTerm ? `Recherche=${searchTerm}` : ''}`,
+      entity: 'Logs',
+      entityId: null,
+      entreprise: userInfo?.entreprise || 'N/A'
+    });
 
     // Afficher un message de succès
     showSnackbar('Export réussi', 'success');

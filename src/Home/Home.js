@@ -184,7 +184,7 @@ function Home() {
                 await logAction({
                     actionType: 'export',
                     details: `Téléchargement de la déclaration PDF - Travailleur: ${accident.nomTravailleur} ${accident.prenomTravailleur} - Date: ${new Date(accident.DateHeureAccident).toLocaleDateString()}`,
-                    entity: 'Export',
+                    entity: 'Accident',
                     entityId: accidentIdToGenerate,
                     entreprise: accident.entrepriseName
                 });

@@ -33,7 +33,7 @@ export const handleExportDataAccident = async ({
         await logAction({
             actionType: 'export',
             details: `Export Excel des accidents - ${dataToExport.length} accidents exportés - Période: ${new Date().toLocaleDateString()}`,
-            entity: 'Export',
+            entity: 'Accident',
             entityId: null,
             entreprise: userInfo.entreprisesConseillerPrevention?.[0] || 'Toutes'
         });

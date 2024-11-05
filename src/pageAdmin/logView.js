@@ -30,6 +30,7 @@ import '../pageFormulaire/formulaire.css';
 import fetchLogs from './foncLogs/fetchLogs';
 import filterLogs from './foncLogs/filterLogs';
 import exportLogs from './foncLogs/exportLogs';
+import { useLogger } from '../Hook/useLogger';
 
 const apiUrl = config.apiUrl || 'localhost';
 
@@ -40,6 +41,7 @@ const apiUrl = config.apiUrl || 'localhost';
 const LogsViewer = () => {
   const { darkMode } = useTheme();
   const { isAdmin, userInfo } = useUserConnected();
+  const { logAction } = useLogger();
   const [logs, setLogs] = useState([]);
   const [filteredLogs, setFilteredLogs] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
@@ -296,6 +298,7 @@ const LogsViewer = () => {
                   searchTerm,
                   isAdmin,
                   userInfo,
+                  logAction,
                   showSnackbar
                 })}
                 startIcon={<FileDownloadIcon />}

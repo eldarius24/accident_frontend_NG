@@ -39,7 +39,7 @@ const createHandleExport = (users, isAdmin, userInfo, selectedYears, searchTerm,
             await logAction({
                 actionType: 'export',
                 details: `Export Excel des actions - ${dataToExport.length} actions exportées - Années: ${selectedYears.join(', ') || 'Toutes'} - Filtre: ${searchTerm || 'Aucun'}`,
-                entity: 'Export',
+                entity: 'Plan Action',
                 entityId: null,
                 entreprise: isAdmin ? 'Toutes' : userInfo.entreprisesConseillerPrevention?.[0]
             });
