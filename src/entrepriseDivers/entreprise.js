@@ -12,7 +12,6 @@ import BusinessIcon from '@mui/icons-material/Business';
 import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
 import WorkIcon from '@mui/icons-material/Work';
 import GroupIcon from '@mui/icons-material/Group';
-import AssignmentIcon from '@mui/icons-material/Assignment';
 import config from '../config.json';
 import { useTheme } from '../pageAdmin/user/ThemeContext';
 import { useUserConnected } from '../Hook/userConnected';
@@ -94,14 +93,16 @@ const EnterpriseDivers = () => {
         }
     }, [expandedYears]);
 
-    const handleAccordionChange = useCallback((year) => (event, isExpanded) => {
+    const handleAccordionChange = useCallback((enterpriseId, year) => (event, isExpanded) => {
         setExpandedYears(prev => {
             const newState = {
                 ...prev,
-                [year]: isExpanded
+                [enterpriseId]: {
+                    ...(prev[enterpriseId] || {}),
+                    [year]: isExpanded
+                }
             };
 
-            // Mise à jour immédiate du cookie
             try {
                 Cookies.set(COOKIE_NAME, JSON.stringify(newState), {
                     expires: COOKIE_EXPIRY,
@@ -116,26 +117,27 @@ const EnterpriseDivers = () => {
         });
     }, []);
 
-    const handleToggleAll = useCallback((enterprises) => {
-        const allYears = new Set();
-        enterprises.forEach(enterprise => {
-            const questionnairesForEnterprise = questionnaires[enterprise._id] || [];
-            questionnairesForEnterprise.forEach(q => {
-                q.annees.forEach(year => allYears.add(year));
-            });
+    const handleToggleForEnterprise = useCallback((enterprise) => {
+        const questionnairesForEnterprise = questionnaires[enterprise._id] || [];
+        const enterpriseYears = new Set();
+
+        questionnairesForEnterprise.forEach(q => {
+            q.annees.forEach(year => enterpriseYears.add(year));
         });
 
         setExpandedYears(prev => {
-            // Vérifier si tous les accordéons sont ouverts
-            const areAllExpanded = Array.from(allYears).every(year => prev[year]);
+            const currentYears = Array.from(enterpriseYears);
+            const currentEnterpriseState = prev[enterprise._id] || {};
+            const areAllExpanded = currentYears.every(year => currentEnterpriseState[year]);
 
-            // Créer le nouvel état (tous fermés si tous étaient ouverts, tous ouverts sinon)
-            const newState = Array.from(allYears).reduce((acc, year) => {
-                acc[year] = !areAllExpanded;
-                return acc;
-            }, {});
+            const newState = {
+                ...prev,
+                [enterprise._id]: currentYears.reduce((acc, year) => ({
+                    ...acc,
+                    [year]: !areAllExpanded
+                }), {})
+            };
 
-            // Mise à jour du cookie
             try {
                 Cookies.set(COOKIE_NAME, JSON.stringify(newState), {
                     expires: COOKIE_EXPIRY,
@@ -151,29 +153,41 @@ const EnterpriseDivers = () => {
     }, [questionnaires]);
 
 
-    const AccordionControls = useCallback(({ enterprises }) => (
-        <Box sx={{
-            display: 'flex',
-            justifyContent: 'flex-end',
-            mb: 2,
-            gap: 2
-        }}>
-            <Button
-                variant="outlined"
-                onClick={() => handleToggleAll(enterprises)}
-                sx={{
-                    color: darkMode ? '#90caf9' : '#1976d2',
-                    borderColor: darkMode ? '#90caf9' : '#1976d2',
-                    '&:hover': {
-                        backgroundColor: darkMode ? 'rgba(144, 202, 249, 0.08)' : 'rgba(25, 118, 210, 0.08)',
-                        borderColor: darkMode ? '#90caf9' : '#1976d2'
-                    }
-                }}
-            >
-                Tout {Object.values(expandedYears).every(Boolean) ? 'fermer' : 'ouvrir'}
-            </Button>
-        </Box>
-    ), [darkMode, expandedYears, handleToggleAll]);
+    const AccordionControls = useCallback(({ enterprise }) => {
+        const questionnairesForEnterprise = questionnaires[enterprise._id] || [];
+        const enterpriseYears = new Set();
+
+        questionnairesForEnterprise.forEach(q => {
+            q.annees.forEach(year => enterpriseYears.add(year));
+        });
+
+        const enterpriseState = expandedYears[enterprise._id] || {};
+        const areAllExpanded = Array.from(enterpriseYears).every(year => enterpriseState[year]);
+
+        return (
+            <Box sx={{
+                display: 'flex',
+                justifyContent: 'flex-end',
+                mb: 2,
+                gap: 2
+            }}>
+                <Button
+                    variant="outlined"
+                    onClick={() => handleToggleForEnterprise(enterprise)}
+                    sx={{
+                        color: darkMode ? '#90caf9' : '#1976d2',
+                        borderColor: darkMode ? '#90caf9' : '#1976d2',
+                        '&:hover': {
+                            backgroundColor: darkMode ? 'rgba(144, 202, 249, 0.08)' : 'rgba(25, 118, 210, 0.08)',
+                            borderColor: darkMode ? '#90caf9' : '#1976d2'
+                        }
+                    }}
+                >
+                    Tout {areAllExpanded ? 'fermer' : 'ouvrir'}
+                </Button>
+            </Box>
+        );
+    }, [darkMode, expandedYears, handleToggleForEnterprise, questionnaires]);
 
     const getAccordionStyle = useCallback((darkMode) => ({
         backgroundColor: darkMode ? '#1e1e1e' : '#f5f5f5',
@@ -596,9 +610,8 @@ const EnterpriseDivers = () => {
                     </FormControl>
                 </Box>
             )}
-            {filteredEnterprises.length > 0 && (
-                <AccordionControls enterprises={filteredEnterprises} />
-            )}
+
+
             {filteredEnterprises.map((enterprise) => (
 
                 <Card
@@ -609,6 +622,7 @@ const EnterpriseDivers = () => {
                         backgroundColor: darkMode ? '#2a2a2a' : '#ebebeb',
                     }}>
                     <CardContent>
+
                         <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
                             <Typography
                                 variant="h5"
@@ -665,11 +679,12 @@ const EnterpriseDivers = () => {
                                 {enterprise.AddEntrScadresse}, {enterprise.AddEntrSccpost} {enterprise.AddEntrSclocalite}
                             </Typography>
                         </Box>
+                        <AccordionControls enterprise={enterprise} />
                         {organizeQuestionnaires(questionnaires[enterprise._id])?.map(({ year, questionnaires }) => (
                             <Accordion
                                 key={year}
-                                expanded={expandedYears[year] || false}
-                                onChange={handleAccordionChange(year)}
+                                expanded={!!(expandedYears[enterprise._id]?.[year])}
+                                onChange={handleAccordionChange(enterprise._id, year)}
                                 sx={getAccordionStyle(darkMode)}
                             >
                                 <AccordionSummary
@@ -881,7 +896,7 @@ const EnterpriseDivers = () => {
                                 Ajouter un pièce
                             </Button>
                         </Tooltip>
-                    </CardContent> 
+                    </CardContent>
                 </Card>
 
             ))}
