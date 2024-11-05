@@ -28,7 +28,13 @@ import { handleExportDataAssurance } from './_actions/exportAss';
 import { useLogger } from '../Hook/useLogger';
 import useHandleDelete from './_actions/handleDelete.js';
 import { blueGrey } from '@mui/material/colors';
-import { getCookie, setCookie } from './_actions/cookieUtils';
+import { 
+    COOKIE_PREFIXES,
+    getSelectedYearsFromCookie,
+    getSelectAllFromCookie,
+    saveYearSelections
+} from './_actions/cookieUtils';
+
 const apiUrl = config.apiUrl;
 
 /**
@@ -56,14 +62,13 @@ function Home() {
     };
 
     const [yearsFromData, setYearsFromData] = useState([]);
-    const [yearsChecked, setYearsChecked] = useState(() => {
-        const savedYears = ensureArray(getCookie('selectedYears'));
-        return savedYears;
-    });
-    const [selectAllYears, setSelectAllYears] = useState(() => {
-        const savedSelectAll = getCookie('selectAllYears');
-        return savedSelectAll === true;
-    });
+    const [yearsChecked, setYearsChecked] = useState(() => 
+        getSelectedYearsFromCookie(COOKIE_PREFIXES.HOME)
+    );
+    
+    const [selectAllYears, setSelectAllYears] = useState(() =>
+        getSelectAllFromCookie(COOKIE_PREFIXES.HOME)
+    );
     const [accidents, setAccidents] = useState([]);
     const [accidentsIsPending, startGetAccidents] = useTransition();
     const [searchTerm, setSearchTerm] = useState('');
@@ -291,14 +296,12 @@ function Home() {
             const allYears = [...yearsFromData];
             setSelectAllYears(true);
             setYearsChecked(allYears);
-            setCookie('selectedYears', JSON.stringify(allYears));
-            setCookie('selectAllYears', true);
+            saveYearSelections(COOKIE_PREFIXES.HOME, allYears, true);
         } else {
             const newYears = ensureArray(value);
             setSelectAllYears(false);
             setYearsChecked(newYears);
-            setCookie('selectedYears', JSON.stringify(newYears));
-            setCookie('selectAllYears', false);
+            saveYearSelections(COOKIE_PREFIXES.HOME, newYears, false);
         }
     };
 
@@ -307,8 +310,7 @@ function Home() {
         const years = checked ? [...yearsFromData] : [];
         setSelectAllYears(checked);
         setYearsChecked(years);
-        setCookie('selectedYears', JSON.stringify(years));
-        setCookie('selectAllYears', checked);
+        saveYearSelections(COOKIE_PREFIXES.HOME, years, checked);
     };
 
     useEffect(() => {

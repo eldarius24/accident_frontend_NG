@@ -48,11 +48,7 @@ export default function FormulaireEntreprise({ setValue, accidentData, watch }) 
   const [DateHeureAccident, setDateHeureAccident] = useState(watch('DateHeureAccident') ? watch('DateHeureAccident') : (accidentData && accidentData.DateHeureAccident ? accidentData.DateHeureAccident : null));
   const [blessures, setBlessures] = useState(watch('blessures') ? watch('blessures') : (accidentData && accidentData.blessures ? accidentData.blessures : ''));
   const [assureurStatus, setAssureurStatus] = useState(watch('AssureurStatus') ? watch('AssureurStatus') : (accidentData && accidentData.AssureurStatus ? accidentData.AssureurStatus : ''));
-  const [boolAsCloture, setboolAsCloture] = useState(() => {
-    const watchValue = Boolean(watch('boolAsCloture'));
-    const accidentDataValue = accidentData ? Boolean(accidentData.boolAsCloture) : false;
-    return watchValue || accidentDataValue;
-  });
+  const [boolAsCloture, setboolAsCloture] = useState(() => { const watchValue = Boolean(watch('boolAsCloture')); const accidentDataValue = accidentData ? Boolean(accidentData.boolAsCloture) : false; return watchValue || accidentDataValue; });
 
 
 

@@ -22,12 +22,17 @@ import { useUserConnected } from '../Hook/userConnected';
 import CustomSnackbar from '../_composants/CustomSnackbar';
 import { useTheme } from '../pageAdmin/user/ThemeContext';
 import EnterpriseStats from './entrepriseStats';
-import createUpdateUserSelectedYears, { getSelectedYearsFromCookie } from './updateUserSelecterYears';
 import createFilteredUsers from './filteredUsers';
 import createFetchData from './fetchData.js';
 import createHandleExport from './handleExport';
 import { useLogger } from '../Hook/useLogger';
 import { blueGrey } from '@mui/material/colors';
+import createUpdateUserSelectedYears from './updateUserSelecterYears';
+import { 
+    COOKIE_PREFIXES,
+    getSelectedYearsFromCookie,
+    saveYearSelections
+} from '../Home/_actions/cookieUtils';
 
 const apiUrl = config.apiUrl;
 
@@ -54,10 +59,9 @@ export default function PlanAction({ accidentData }) {
     const [availableSectors, setAvailableSectors] = useState([]);
     const { isAdmin, userInfo } = useUserConnected();
     const currentYear = new Date().getFullYear().toString();
-    const [selectedYears, setSelectedYears] = useState(() => {
-        // Récupérer les années depuis le cookie au chargement initial
-        return getSelectedYearsFromCookie();
-    });
+    const [selectedYears, setSelectedYears] = useState(() => 
+    getSelectedYearsFromCookie(COOKIE_PREFIXES.PLAN_ACTION)
+);
     
     const [availableYears, setAvailableYears] = useState([]);
     const [snackbar, setSnackbar] = useState({
