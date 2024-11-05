@@ -61,7 +61,7 @@ const exportLogs = async ({
     // Journaliser l'action d'export
     await logAction({
       actionType: 'export',
-      details: `Export Excel de ${logsCount} logs - Filtres: ${selectedType !== 'all' ? `Type=${selectedType}, ` : ''}${selectedDate !== 'all' ? `Date=${selectedDate}, ` : ''}${searchTerm ? `Recherche=${searchTerm}` : ''}`,
+      details: `Export Excel de ${logsCount} logs`,
       entity: 'Logs',
       entityId: null,
       entreprise: userInfo?.entreprise || 'N/A'
