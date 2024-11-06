@@ -15,6 +15,7 @@ import config from '../config.json';
 import CustomSnackbar from '../_composants/CustomSnackbar';
 import { Tooltip, Button } from '@mui/material';
 import { useLogger } from '../Hook/useLogger';
+import { useTheme } from '../pageAdmin/user/ThemeContext';
 
 const forms = [
     { id: 0, component: FormulaireEntreprise },
@@ -30,6 +31,7 @@ const mandatoryFields = [
 ];
 
 export default function Formulaire() {
+    const { darkMode } = useTheme();
     const { logAction } = useLogger();
     const { state: accidentData } = useLocation();
     const apiUrl = config.apiUrl;
@@ -62,21 +64,21 @@ export default function Formulaire() {
             ...data,
             boolAsCloture: Boolean(data.boolAsCloture)
         };
-    
+
         const missingFields = mandatoryFields.filter(field => !formattedData[field]);
-    
+
         if (missingFields.length > 0) {
             const missingFieldNames = missingFields.map(field => field.replace('_', ' ')).join(', ');
             showSnackbar(`Veuillez remplir les champs obligatoires suivants : ${missingFieldNames}`, 'error');
             return;
         }
-    
+
         const url = accidentData
             ? `http://${apiUrl}:3100/api/accidents/${accidentData._id}`
             : `http://${apiUrl}:3100/api/accidents`;
-    
+
         const method = accidentData ? 'put' : 'post';
-    
+
         axios[method](url, formattedData)  // Utiliser formattedData au lieu de data
             .then(async response => {
                 console.log(`Réponse du serveur en ${accidentData ? 'modification' : 'création'} :`, response.data);
@@ -115,10 +117,21 @@ export default function Formulaire() {
                     <Button
                         onClick={() => handleStepChange(-1)}
                         sx={{
-                            backgroundColor: '#ee752d60',
-                            transition: 'all 0.3s ease-in-out', '&:hover': { backgroundColor: '#95ad22', transform: 'scale(1.08)', boxShadow: 6 },
+                            backgroundColor: darkMode ? '#424242' : '#ee752d60',
+                            color: darkMode ? '#ffffff' : 'black',
+                            transition: 'all 0.3s ease-in-out',
+                            '&:hover': {
+                                backgroundColor: darkMode ? '#7a8e1c' : '#95ad22',
+                                transform: 'scale(1.08)',
+                                boxShadow: darkMode ? '0 6px 12px rgba(255,255,255,0.2)' : 6
+                            },
+                            boxShadow: darkMode ? '0 3px 6px rgba(255,255,255,0.1)' : 3,
+                            border: darkMode ? '1px solid rgba(255,255,255,0.1)' : 'none',
                             padding: '10px 20px',
                             marginRight: '1rem',
+                            '& .MuiSvgIcon-root': {
+                                color: darkMode ? '#fff' : 'inherit'
+                            }
                         }}
                         startIcon={<ArrowBackIcon />}
                     >
@@ -131,9 +144,21 @@ export default function Formulaire() {
                     <Button
                         onClick={() => handleStepChange(1)}
                         sx={{
-                            backgroundColor: '#ee752d60',
-                            transition: 'all 0.3s ease-in-out', '&:hover': { backgroundColor: '#95ad22', transform: 'scale(1.08)', boxShadow: 6 },
+                            backgroundColor: darkMode ? '#424242' : '#ee752d60',
+                            color: darkMode ? '#ffffff' : 'black',
+                            transition: 'all 0.3s ease-in-out',
+                            '&:hover': {
+                                backgroundColor: darkMode ? '#7a8e1c' : '#95ad22',
+                                transform: 'scale(1.08)',
+                                boxShadow: darkMode ? '0 6px 12px rgba(255,255,255,0.2)' : 6
+                            },
+                            boxShadow: darkMode ? '0 3px 6px rgba(255,255,255,0.1)' : 3,
+                            border: darkMode ? '1px solid rgba(255,255,255,0.1)' : 'none',
                             padding: '10px 20px',
+                            marginRight: '1rem',
+                            '& .MuiSvgIcon-root': {
+                                color: darkMode ? '#fff' : 'inherit'
+                            }
                         }}
                         startIcon={<ArrowForwardIcon />}
                     >
@@ -158,14 +183,24 @@ export default function Formulaire() {
                         target="_blank"
                         rel="noopener noreferrer"
                         sx={{
-                            color: 'black',
-                            backgroundColor: '#ee752d60',
-                            transition: 'all 0.3s ease-in-out', '&:hover': { backgroundColor: '#95ad22', transform: 'scale(1.08)', boxShadow: 6 },
+                            color: darkMode ? '#ffffff' : 'black',
+                            backgroundColor: darkMode ? '#424242' : '#ee752d60',
+                            transition: 'all 0.3s ease-in-out',
+                            '&:hover': {
+                                backgroundColor: darkMode ? '#7a8e1c' : '#95ad22',
+                                transform: 'scale(1.08)',
+                                boxShadow: darkMode ? '0 6px 12px rgba(255,255,255,0.2)' : 6
+                            },
+                            boxShadow: darkMode ? '0 3px 6px rgba(255,255,255,0.1)' : 3,
+                            border: darkMode ? '1px solid rgba(255,255,255,0.1)' : 'none',
                             padding: '10px 20px',
                             width: '50%',
                             marginTop: '1cm',
                             height: '300%',
-                            fontSize: '300%'
+                            fontSize: '300%',
+                            '& .MuiSvgIcon-root': {
+                                color: darkMode ? '#fff' : 'inherit'
+                            }
                         }}
                         href="https://www.socialsecurity.be/app001/drselearning/aoat/aoat000/jsp/index_fatdecision.jsp"
                     >
@@ -181,14 +216,22 @@ export default function Formulaire() {
                     <Button
                         type="submit"
                         sx={{
-                            backgroundColor: '#ee752d60',
+                            color: darkMode ? '#ffffff' : 'black',
+                            backgroundColor: darkMode ? '#424242' : '#ee752d60',
                             transition: 'all 0.3s ease-in-out',
-                            '&:hover': { backgroundColor: '#95ad22', transform: 'scale(1.08)', boxShadow: 6 },
+                            '&:hover': { 
+                                backgroundColor: darkMode ? '#7a8e1c' : '#95ad22',
+                                transform: 'scale(1.08)',
+                                boxShadow: darkMode ? '0 6px 12px rgba(255,255,255,0.2)' : 6
+                             },
                             padding: '10px 20px',
                             width: '50%',
                             marginTop: '1cm',
                             height: '300%',
+                            boxShadow: darkMode ? '0 3px 6px rgba(255,255,255,0.1)' : 3,
+                            border: darkMode ? '1px solid rgba(255,255,255,0.1)' : 'none',
                             fontSize: '2rem',
+
                             '@media (min-width: 750px)': {
                                 fontSize: '3rem',
                             },

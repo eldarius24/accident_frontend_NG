@@ -20,10 +20,12 @@ import listeaddaction from '../liste/listeaddaction.json';
 import { useUserConnected } from '../Hook/userConnected';
 import CustomSnackbar from '../_composants/CustomSnackbar';
 import { useLogger } from '../Hook/useLogger';
+import { useTheme } from '../pageAdmin/user/ThemeContext';
 
 const apiUrl = config.apiUrl;
 
 export default function FormulaireAction() {
+    const { darkMode } = useTheme();
     const { logAction } = useLogger();
     const { state: actionData } = useLocation();
     const [users, setAddactions] = useState([]);
@@ -294,21 +296,31 @@ export default function FormulaireAction() {
                     <Button
                         type="submit"
                         sx={{
-                            backgroundColor: '#ee752d60',
+                            backgroundColor: darkMode ? '#424242' : '#ee752d60',
+                            color: darkMode ? '#ffffff' : 'black',
                             transition: 'all 0.3s ease-in-out',
-                            '&:hover': { backgroundColor: '#95ad22', transform: 'scale(1.08)', boxShadow: 6 },
+                            '&:hover': { 
+                                backgroundColor: darkMode ? '#7a8e1c' : '#95ad22',
+                                transform: 'scale(1.08)',
+                                boxShadow: darkMode ? '0 6px 12px rgba(255,255,255,0.2)' : 6
+                            },
+                            boxShadow: darkMode ? '0 3px 6px rgba(255,255,255,0.1)' : 3,
+                            border: darkMode ? '1px solid rgba(255,255,255,0.1)' : 'none',
                             padding: '10px 20px',
                             width: '50%',
                             marginTop: '1cm',
                             height: '300%',
                             fontSize: '2rem',
+                            '& .MuiSvgIcon-root': {
+                                color: darkMode ? '#fff' : 'inherit'
+                            },
                             '@media (min-width: 750px)': {
                                 fontSize: '3rem',
                             },
                             '@media (max-width: 550px)': {
                                 fontSize: '1.5rem',
                             },
-                        }}
+                         }}
                         variant="contained"
                     >
                         {actionData ? 'Modifier l\'action' : 'Créer l\'action'}

@@ -1,4 +1,4 @@
-import React, { useMemo} from 'react';
+import React, { useMemo } from 'react';
 import '../pageFormulaire/formulaire.css';
 import { Box, Tooltip } from '@mui/material';
 import Button from '@mui/material/Button';
@@ -46,51 +46,156 @@ export default function AdminPanelSettingsaction() {
             }}>
                 <h3>Administration des droits</h3>
 
-                <Box sx={{ display: 'flex', justifyContent: 'center', marginLeft: '120px', marginRight: '120px' }}>
+                <Box sx={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    marginLeft: '120px',
+                    marginRight: '120px',
+                    gap: '20px' // Ajoute un espacement entre les boutons
+                }}>
                     <Tooltip title="Cliquez ici Créer un nouvel utilisateur" arrow>
-                        <Button type="submit"
+                        <Button
+                            type="submit"
                             component={Link}
                             to={'/addUser'}
-                            sx={defaultStyle} variant="contained"> Créer un nouvel utilisateur
+                            sx={{
+                                ...defaultStyle,
+                                color: darkMode ? '#ffffff' : 'black',
+                                backgroundColor: darkMode ? '#424242' : '#ee742d59',
+                                transition: 'all 0.3s ease-in-out',
+                                '&:hover': {
+                                    backgroundColor: darkMode ? '#7a8e1c' : '#95ad22',
+                                    transform: 'scale(1.08)',
+                                    boxShadow: darkMode ? '0 6px 12px rgba(255,255,255,0.2)' : 6
+                                },
+                                boxShadow: darkMode ? '0 3px 6px rgba(255,255,255,0.1)' : 3,
+                                textTransform: 'none',
+                                border: darkMode ? '1px solid rgba(255,255,255,0.1)' : 'none'
+                            }}
+                            variant="contained"
+                        >
+                            Créer un nouvel utilisateur
                         </Button>
                     </Tooltip>
                     <Tooltip title="Cliquez ici afficher, éditér ou supprimer un utilisateur" arrow>
-                        <Button type="submit"
+                        <Button
+                            type="submit"
                             component={Link}
                             to={'/adminUser'}
-                            sx={defaultStyle} variant="contained">Consulter les utilisateurs
+                            sx={{
+                                ...defaultStyle,
+                                color: darkMode ? '#ffffff' : 'black',
+                                backgroundColor: darkMode ? '#424242' : '#ee742d59',
+                                transition: 'all 0.3s ease-in-out',
+                                '&:hover': {
+                                    backgroundColor: darkMode ? '#7a8e1c' : '#95ad22',
+                                    transform: 'scale(1.08)',
+                                    boxShadow: darkMode ? '0 6px 12px rgba(255,255,255,0.2)' : 6
+                                },
+                                boxShadow: darkMode ? '0 3px 6px rgba(255,255,255,0.1)' : 3,
+                                textTransform: 'none',
+                                border: darkMode ? '1px solid rgba(255,255,255,0.1)' : 'none'
+                            }}
+                            variant="contained"
+                        >
+                            Consulter les utilisateurs
+                        </Button>
+                    </Tooltip>
+                </Box>
+                <h3>Administration des entreprises</h3>
+
+                {/* Premier Box avec les boutons entreprise */}
+                <Box sx={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    marginLeft: '120px',
+                    marginRight: '120px',
+                    gap: '20px'
+                }}>
+                    <Tooltip title="Cliquez ici Créer une nouvelle entreprise" arrow>
+                        <Button
+                            type="submit"
+                            component={Link}
+                            to={'/addEntreprise'}
+                            sx={{
+                                ...defaultStyle,
+                                color: darkMode ? '#ffffff' : 'black',
+                                backgroundColor: darkMode ? '#424242' : '#ee742d59',
+                                transition: 'all 0.3s ease-in-out',
+                                '&:hover': {
+                                    backgroundColor: darkMode ? '#7a8e1c' : '#95ad22',
+                                    transform: 'scale(1.08)',
+                                    boxShadow: darkMode ? '0 6px 12px rgba(255,255,255,0.2)' : 6
+                                },
+                                boxShadow: darkMode ? '0 3px 6px rgba(255,255,255,0.1)' : 3,
+                                textTransform: 'none',
+                                border: darkMode ? '1px solid rgba(255,255,255,0.1)' : 'none'
+                            }}
+                            variant="contained"
+                        >
+                            Créer une nouvelle entreprise
+                        </Button>
+                    </Tooltip>
+                    <Tooltip title="Cliquez ici afficher, éditez ou supprimer une entreprise ou créer un secteur d'activé" arrow>
+                        <Button
+                            type="submit"
+                            component={Link}
+                            to={'/adminEntreprises'}
+                            sx={{
+                                ...defaultStyle,
+                                color: darkMode ? '#ffffff' : 'black',
+                                backgroundColor: darkMode ? '#424242' : '#ee742d59',
+                                transition: 'all 0.3s ease-in-out',
+                                '&:hover': {
+                                    backgroundColor: darkMode ? '#7a8e1c' : '#95ad22',
+                                    transform: 'scale(1.08)',
+                                    boxShadow: darkMode ? '0 6px 12px rgba(255,255,255,0.2)' : 6
+                                },
+                                boxShadow: darkMode ? '0 3px 6px rgba(255,255,255,0.1)' : 3,
+                                textTransform: 'none',
+                                border: darkMode ? '1px solid rgba(255,255,255,0.1)' : 'none'
+                            }}
+                            variant="contained"
+                        >
+                            Consulter les entreprises
                         </Button>
                     </Tooltip>
                 </Box>
 
-                <h3>Administration des entreprises</h3>
+                {/* Titre adapté au mode sombre */}
+                <h3 style={{ color: darkMode ? '#ffffff' : 'inherit' }}>Visualisation des logs</h3>
 
-                <Box sx={{ display: 'flex', justifyContent: 'center', marginLeft: '120px', marginRight: '120px' }}>
-                    <Tooltip title="Cliquez ici Créer une nouvelle entreprise" arrow>
-                        <Button type="submit"
-                            component={Link}
-                            to={'/addEntreprise'}
-                            sx={defaultStyle} variant="contained"> Créer une nouvelle entreprise
-                        </Button>
-                    </Tooltip>
-                    <Tooltip title="Cliquez ici afficher, éditez ou supprimer une entreprise ou créer un secteur d'activé" arrow>
-                        <Button type="submit"
-                            component={Link}
-                            to={'/adminEntreprises'}
-                            sx={defaultStyle} variant="contained">Consulter les entreprises
-                        </Button>
-                    </Tooltip>
-                    </Box>
-                    <h3>Visualisation des logs</h3>
-                    <Box sx={{ display: 'flex', justifyContent: 'center', marginLeft: '120px', marginRight: '120px' }}>
+                {/* Box pour le bouton des logs */}
+                <Box sx={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    marginLeft: '120px',
+                    marginRight: '120px'
+                }}>
                     <Tooltip title="Visualisation des logs" arrow>
-                        <Button type="submit"
+                        <Button
+                            type="submit"
                             component={Link}
                             to={'/logView'}
-                            sx={defaultStyle} variant="contained"> Visualisation des logs
+                            sx={{
+                                ...defaultStyle,
+                                color: darkMode ? '#ffffff' : 'black',
+                                backgroundColor: darkMode ? '#424242' : '#ee742d59',
+                                transition: 'all 0.3s ease-in-out',
+                                '&:hover': {
+                                    backgroundColor: darkMode ? '#7a8e1c' : '#95ad22',
+                                    transform: 'scale(1.08)',
+                                    boxShadow: darkMode ? '0 6px 12px rgba(255,255,255,0.2)' : 6
+                                },
+                                boxShadow: darkMode ? '0 3px 6px rgba(255,255,255,0.1)' : 3,
+                                textTransform: 'none',
+                                border: darkMode ? '1px solid rgba(255,255,255,0.1)' : 'none'
+                            }}
+                            variant="contained"
+                        >
+                            Visualisation des logs
                         </Button>
                     </Tooltip>
-
                 </Box>
             </div>
             <div className="image-cortigroupe"></div>

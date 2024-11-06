@@ -178,126 +178,146 @@ export default function Adminusern() {
                         overflowY: 'auto',
                         backgroundColor: darkMode ? '#6e6e6e' : '#ffffff',
                     }}>
-                   
-                        <Table>
-                            <TableHead>
-                                <TableRow className={`table-row-separatormenu ${darkMode ? 'dark-separator' : ''}`}
-                                    style={{
-                                        backgroundColor: darkMode ? '#535353' : '#0098f950',
-                                    }}>
-                                    <TableCell style={{ fontWeight: 'bold' }}>Nom</TableCell>
-                                    <TableCell style={{ fontWeight: 'bold' }}>Rue et n°</TableCell>
-                                    <TableCell style={{ fontWeight: 'bold' }}>Code postal</TableCell>
-                                    <TableCell style={{ fontWeight: 'bold' }}>Localité</TableCell>
-                                    <TableCell style={{ fontWeight: 'bold' }}>Tel</TableCell>
-                                    <TableCell style={{ fontWeight: 'bold' }}>Mail</TableCell>
-                                    <TableCell style={{ fontWeight: 'bold' }}>N° entreprise</TableCell>
-                                    <TableCell style={{ fontWeight: 'bold' }}>N° Police</TableCell>
-                                    <TableCell style={{ fontWeight: 'bold' }}>Secteurs</TableCell>
-                                    <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>Ajouter Secteur</TableCell>
-                                    <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>Modifier</TableCell>
-                                    <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>Supprimer</TableCell>
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
-                                {entreprises.map((entreprise, index) => (
-                                    <TableRow className={`table-row-separatormenu ${darkMode ? 'dark-separator' : ''}`} key={entreprise._id} style={{
-                                        backgroundColor: rowColors[index % rowColors.length],
-                                    }}>
-                                        <TableCell>{entreprise.AddEntreName}</TableCell>
-                                        <TableCell>{entreprise.AddEntrRue}</TableCell>
-                                        <TableCell>{entreprise.AddEntrCodpost}</TableCell>
-                                        <TableCell>{entreprise.AddEntrLocalite}</TableCell>
-                                        <TableCell>{entreprise.AddEntrTel}</TableCell>
-                                        <TableCell>{entreprise.AddEntrEmail}</TableCell>
-                                        <TableCell>{entreprise.AddEntrNumentr}</TableCell>
-                                        <TableCell>{entreprise.AddEntrePolice}</TableCell>
-                                        <TableCell>{getSecteursByEntreprise(entreprise._id)}</TableCell>
-                                        <TableCell style={{ padding: 0, width: '70px' }}>
-                                            <Tooltip title="Cliquez ici pour créer un nouveaux secteur pour cette entreprise" arrow>
-                                                <Button sx={{
-                                                    transition: 'all 0.3s ease-in-out',
-                                                    '&:hover': {
-                                                        transform: 'scale(1.08)',
-                                                        boxShadow: 6
-                                                    }
-                                                }}
-                                                    type="button"
-                                                    variant="contained"
-                                                    color="secondary"
-                                                    onClick={() => handleAddSecteur(entreprise)}>
-                                                    <AddRoundedIcon />
-                                                </Button>
-                                            </Tooltip>
-                                        </TableCell>
-                                        <TableCell style={{ padding: 0, width: '70px' }}>
-                                            <Tooltip title="Cliquez ici pour éditer cette entreprise" arrow>
-                                                <Button sx={{
-                                                    transition: 'all 0.3s ease-in-out',
-                                                    '&:hover': {
-                                                        transform: 'scale(1.08)',
-                                                        boxShadow: 6
-                                                    }
-                                                }}
-                                                    variant="contained"
-                                                    color="primary"
-                                                    onClick={() => handleEdit(entreprise)}
-                                                >
-                                                    <EditIcon />
-                                                </Button>
-                                            </Tooltip>
-                                        </TableCell>
-                                        <TableCell style={{ padding: 0, width: '70px' }}>
-                                            <Tooltip title="Cliquez ici pour supprimer cette entreprise" arrow>
-                                                <Button sx={{
-                                                    transition: 'all 0.3s ease-in-out',
-                                                    '&:hover': {
-                                                        transform: 'scale(1.08)',
-                                                        boxShadow: 6
-                                                    }
-                                                }}
-                                                    variant="contained"
-                                                    color="error"
-                                                    onClick={() => {
-                                                        confirmAlert({
-                                                            customUI: ({ onClose }) => {
-                                                                return (
-                                                                    <div className="custom-confirm-dialog">
-                                                                        <h1 className="custom-confirm-title">Supprimer</h1>
-                                                                        <p className="custom-confirm-message">Êtes-vous sûr de vouloir supprimer cette entreprise?</p>
-                                                                        <div className="custom-confirm-buttons">
-                                                                            <Tooltip title="Cliquez sur OUI pour supprimer" arrow>
-                                                                                <button
-                                                                                    className="custom-confirm-button"
-                                                                                    onClick={() => {
-                                                                                        handleDelete(entreprise._id);
-                                                                                        onClose();
-                                                                                    }}
-                                                                                >
-                                                                                    Oui
-                                                                                </button>
-                                                                            </Tooltip>
-                                                                            <Tooltip title="Cliquez sur NON pour annuler la suppression" arrow>
-                                                                                <button className="custom-confirm-button custom-confirm-no" onClick={onClose}>
-                                                                                    Non
-                                                                                </button>
-                                                                            </Tooltip>
-                                                                        </div>
+
+                    <Table>
+                        <TableHead>
+                            <TableRow className={`table-row-separatormenu ${darkMode ? 'dark-separator' : ''}`}
+                                style={{
+                                    backgroundColor: darkMode ? '#535353' : '#0098f950',
+                                }}>
+                                <TableCell style={{ fontWeight: 'bold' }}>Nom</TableCell>
+                                <TableCell style={{ fontWeight: 'bold' }}>Rue et n°</TableCell>
+                                <TableCell style={{ fontWeight: 'bold' }}>Code postal</TableCell>
+                                <TableCell style={{ fontWeight: 'bold' }}>Localité</TableCell>
+                                <TableCell style={{ fontWeight: 'bold' }}>Tel</TableCell>
+                                <TableCell style={{ fontWeight: 'bold' }}>Mail</TableCell>
+                                <TableCell style={{ fontWeight: 'bold' }}>N° entreprise</TableCell>
+                                <TableCell style={{ fontWeight: 'bold' }}>N° Police</TableCell>
+                                <TableCell style={{ fontWeight: 'bold' }}>Secteurs</TableCell>
+                                <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>Ajouter Secteur</TableCell>
+                                <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>Modifier</TableCell>
+                                <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>Supprimer</TableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {entreprises.map((entreprise, index) => (
+                                <TableRow className={`table-row-separatormenu ${darkMode ? 'dark-separator' : ''}`} key={entreprise._id} style={{
+                                    backgroundColor: rowColors[index % rowColors.length],
+                                }}>
+                                    <TableCell>{entreprise.AddEntreName}</TableCell>
+                                    <TableCell>{entreprise.AddEntrRue}</TableCell>
+                                    <TableCell>{entreprise.AddEntrCodpost}</TableCell>
+                                    <TableCell>{entreprise.AddEntrLocalite}</TableCell>
+                                    <TableCell>{entreprise.AddEntrTel}</TableCell>
+                                    <TableCell>{entreprise.AddEntrEmail}</TableCell>
+                                    <TableCell>{entreprise.AddEntrNumentr}</TableCell>
+                                    <TableCell>{entreprise.AddEntrePolice}</TableCell>
+                                    <TableCell>{getSecteursByEntreprise(entreprise._id)}</TableCell>
+                                    <TableCell style={{ padding: 0, width: '70px' }}>
+                                        <Tooltip title="Cliquez ici pour créer un nouveaux secteur pour cette entreprise" arrow>
+                                            <Button sx={{
+                                                backgroundColor: darkMode ? '#7b1fa2' : '#9c27b0',
+                                                transition: 'all 0.3s ease-in-out',
+                                                '&:hover': {
+                                                    backgroundColor: darkMode ? '#4a0072' : '#7b1fa2',
+                                                    transform: 'scale(1.08)',
+                                                    boxShadow: darkMode ? '0 6px 12px rgba(255,255,255,0.2)' : 6
+                                                },
+                                                '& .MuiSvgIcon-root': {
+                                                    color: darkMode ? '#fff' : 'inherit'
+                                                }
+                                            }}
+                                                type="button"
+                                                variant="contained"
+                                                color="secondary"
+                                                onClick={() => handleAddSecteur(entreprise)}>
+                                                <AddRoundedIcon />
+                                            </Button>
+                                        </Tooltip>
+                                    </TableCell>
+
+                                    <TableCell style={{ padding: 0, width: '70px' }}>
+                                        <Tooltip title="Cliquez ici pour éditer cette entreprise" arrow>
+                                            <Button sx={{
+                                                backgroundColor: darkMode ? '#424242' : '#1976d2',
+                                                transition: 'all 0.3s ease-in-out',
+                                                '&:hover': {
+                                                    backgroundColor: darkMode ? '#505050' : '#1565c0',
+                                                    transform: 'scale(1.08)',
+                                                    boxShadow: darkMode ? '0 6px 12px rgba(255,255,255,0.2)' : 6
+                                                },
+                                                '& .MuiSvgIcon-root': {
+                                                    color: darkMode ? '#fff' : 'inherit'
+                                                }
+                                            }}
+                                                variant="contained"
+                                                color="primary"
+                                                onClick={() => handleEdit(entreprise)}
+                                            >
+                                                <EditIcon />
+                                            </Button>
+                                        </Tooltip>
+                                    </TableCell>
+
+                                    <TableCell style={{ padding: 0, width: '70px' }}>
+                                        <Tooltip title="Cliquez ici pour supprimer cette entreprise" arrow>
+                                            <Button sx={{
+                                                backgroundColor: darkMode ? '#b71c1c' : '#d32f2f',
+                                                transition: 'all 0.3s ease-in-out',
+                                                '&:hover': {
+                                                    backgroundColor: darkMode ? '#d32f2f' : '#b71c1c',
+                                                    transform: 'scale(1.08)',
+                                                    boxShadow: darkMode ? '0 6px 12px rgba(255,255,255,0.2)' : 6
+                                                },
+                                                '& .MuiSvgIcon-root': {
+                                                    color: darkMode ? '#fff' : 'inherit'
+                                                }
+                                            }}
+                                                variant="contained"
+                                                color="error"
+                                                onClick={() => {
+                                                    confirmAlert({
+                                                        customUI: ({ onClose }) => {
+                                                            return (
+                                                                <div className="custom-confirm-dialog">
+                                                                    <h1 className="custom-confirm-title">Supprimer</h1>
+                                                                    <p className="custom-confirm-message">Êtes-vous sûr de vouloir supprimer cette entreprise?</p>
+                                                                    <div className="custom-confirm-buttons">
+                                                                        <Tooltip title="Cliquez sur OUI pour supprimer" arrow>
+                                                                            <button
+                                                                                className="custom-confirm-button"
+                                                                                onClick={() => {
+                                                                                    handleDelete(entreprise._id);
+                                                                                    onClose();
+                                                                                }}
+                                                                            >
+                                                                                Oui
+                                                                            </button>
+                                                                        </Tooltip>
+                                                                        <Tooltip title="Cliquez sur NON pour annuler la suppression" arrow>
+                                                                            <button
+                                                                                className="custom-confirm-button custom-confirm-no"
+                                                                                onClick={onClose}
+                                                                            >
+                                                                                Non
+                                                                            </button>
+                                                                        </Tooltip>
                                                                     </div>
-                                                                );
-                                                            }
-                                                        });
-                                                    }}
-                                                >
-                                                    <DeleteForeverIcon />
-                                                </Button>
-                                            </Tooltip>
-                                        </TableCell>
-                                    </TableRow>
-                                ))}
-                            </TableBody>
-                        </Table>
-                    
+                                                                </div>
+                                                            );
+                                                        }
+                                                    });
+                                                }}
+                                            >
+                                                <DeleteForeverIcon />
+                                            </Button>
+                                        </Tooltip>
+                                    </TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+
                 </TableContainer>
                 <CustomSnackbar
                     open={snackbar.open}

@@ -154,7 +154,22 @@ export default function AddUser() {
      * This component is used as the PaperComponent prop in the Autocomplete component.
      */
     const PaperComponent = (props) => (
-        <Paper {...props} sx={{ backgroundColor: '#bed7f6' }} />
+        <Paper
+            {...props}
+            sx={{
+                backgroundColor: darkMode ? '#424242' : '#bed7f6',
+                color: darkMode ? '#fff' : 'inherit',
+                '& .MuiMenuItem-root': {
+                    color: darkMode ? '#fff' : 'inherit'
+                },
+                '& .Mui-selected': {
+                    backgroundColor: darkMode ? '#505050 !important' : '#bed7f6 !important'
+                },
+                '&:hover': {
+                    backgroundColor: darkMode ? '#424242' : '#bed7f6'
+                }
+            }}
+        />
     );
 
     return (
@@ -193,7 +208,30 @@ export default function AddUser() {
                         id="checkboxes-tags-demo-prevention"
                         options={entreprises}
                         disableCloseOnSelect
-                        sx={{ width: '50%', boxShadow: 3, margin: '0 auto 1rem' }}
+                        sx={{
+                            width: '50%',
+                            boxShadow: darkMode ? '0 3px 6px rgba(255,255,255,0.1)' : 3,
+                            margin: '0 auto 1rem',
+                            '& .MuiOutlinedInput-root': {
+                                color: darkMode ? '#fff' : 'inherit',
+                                '& fieldset': {
+                                    borderColor: darkMode ? 'rgba(255,255,255,0.3)' : 'rgba(0,0,0,0.23)'
+                                },
+                                '&:hover fieldset': {
+                                    borderColor: darkMode ? 'rgba(255,255,255,0.5)' : 'rgba(0,0,0,0.5)'
+                                }
+                            },
+                            '& .MuiInputLabel-root': {
+                                color: darkMode ? '#fff' : 'inherit'
+                            },
+                            '& .MuiChip-root': {
+                                backgroundColor: darkMode ? '#505050' : '#e0e0e0',
+                                color: darkMode ? '#fff' : 'inherit',
+                                '& .MuiChip-deleteIcon': {
+                                    color: darkMode ? '#fff' : 'inherit'
+                                }
+                            }
+                        }}
                         getOptionLabel={(option) => option}
                         onChange={(_, value) => handleChange('entreprisesConseillerPrevention', value)}
                         value={user.entreprisesConseillerPrevention}
@@ -202,7 +240,13 @@ export default function AddUser() {
                                 <Checkbox
                                     icon={icon}
                                     checkedIcon={checkedIcon}
-                                    style={{ marginRight: 8, color: 'green' }}
+                                    sx={{
+                                        marginRight: 1,
+                                        color: darkMode ? '#4CAF50' : 'green',
+                                        '&.Mui-checked': {
+                                            color: darkMode ? '#81C784' : 'green'
+                                        }
+                                    }}
                                     checked={selected}
                                 />
                                 {option}
@@ -214,7 +258,18 @@ export default function AddUser() {
                                 {...params}
                                 label="Sélectionnez l'entreprise"
                                 placeholder="entreprise"
-                                sx={{ backgroundColor: '#00479871', boxShadow: 3 }}
+                                sx={{
+                                    backgroundColor: darkMode ? '#424242' : '#00479871',
+                                    boxShadow: darkMode ? '0 3px 6px rgba(255,255,255,0.1)' : 3,
+                                    '& .MuiInputLabel-root': {
+                                        color: darkMode ? '#fff' : 'inherit'
+                                    },
+                                    '& .MuiOutlinedInput-root': {
+                                        '& input': {
+                                            color: darkMode ? '#fff' : 'inherit'
+                                        }
+                                    }
+                                }}
                             />
                         )}
                         PaperComponent={PaperComponent}
@@ -230,14 +285,43 @@ export default function AddUser() {
                     onChange={(_, value) => { handleChange('entreprisesVisiteur', value) }}
                     value={user.entreprisesVisiteur}
                     disableCloseOnSelect
-                    sx={{ width: '50%', boxShadow: 3, margin: '0 auto 1rem' }}
+                    sx={{
+                        width: '50%',
+                        boxShadow: darkMode ? '0 3px 6px rgba(255,255,255,0.1)' : 3,
+                        margin: '0 auto 1rem',
+                        '& .MuiOutlinedInput-root': {
+                            color: darkMode ? '#fff' : 'inherit',
+                            '& fieldset': {
+                                borderColor: darkMode ? 'rgba(255,255,255,0.3)' : 'rgba(0,0,0,0.23)'
+                            },
+                            '&:hover fieldset': {
+                                borderColor: darkMode ? 'rgba(255,255,255,0.5)' : 'rgba(0,0,0,0.5)'
+                            }
+                        },
+                        '& .MuiInputLabel-root': {
+                            color: darkMode ? '#fff' : 'inherit'
+                        },
+                        '& .MuiChip-root': {
+                            backgroundColor: darkMode ? '#505050' : '#e0e0e0',
+                            color: darkMode ? '#fff' : 'inherit',
+                            '& .MuiChip-deleteIcon': {
+                                color: darkMode ? '#fff' : 'inherit'
+                            }
+                        }
+                    }}
                     getOptionLabel={(option) => option}
                     renderOption={(props, option, { selected }) => (
                         <li {...props}>
                             <Checkbox
                                 icon={icon}
                                 checkedIcon={checkedIcon}
-                                style={{ marginRight: 8, color: 'green' }}
+                                sx={{
+                                    marginRight: 1,
+                                    color: darkMode ? '#4CAF50' : 'green',
+                                    '&.Mui-checked': {
+                                        color: darkMode ? '#81C784' : 'green'
+                                    }
+                                }}
                                 checked={selected}
                             />
                             {option}
@@ -249,7 +333,18 @@ export default function AddUser() {
                             {...params}
                             label="Sélectionnez l'entreprise"
                             placeholder="entreprise"
-                            sx={{ backgroundColor: '#00479871', boxShadow: 3 }}
+                            sx={{
+                                backgroundColor: darkMode ? '#424242' : '#00479871',
+                                boxShadow: darkMode ? '0 3px 6px rgba(255,255,255,0.1)' : 3,
+                                '& .MuiInputLabel-root': {
+                                    color: darkMode ? '#fff' : 'inherit'
+                                },
+                                '& .MuiOutlinedInput-root': {
+                                    '& input': {
+                                        color: darkMode ? '#fff' : 'inherit'
+                                    }
+                                }
+                            }}
                         />
                     )}
                     PaperComponent={PaperComponent}

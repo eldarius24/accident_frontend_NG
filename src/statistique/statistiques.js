@@ -13,7 +13,7 @@ import { renderOptimizedChart, getRenderConfig, COLORS } from './chartComponents
 import axios from 'axios';
 import config from '../config.json';
 import { saveFiltersToCookies, loadFiltersFromCookies } from './filterPersistence';
-
+import { useTheme } from '../pageAdmin/user/ThemeContext';
 /**
  * Affiche les graphiques des accidents de travail par type de travailleur, âge, jour de la semaine, mois, an, secteur et par entreprise.
  * 
@@ -41,7 +41,7 @@ const Statistiques = () => {
     tfByYearAndCompany: { visible: true, label: "Taux de fréquence par an et par entreprise" },
     tfByCompany: { visible: true, label: "Taux de fréquence par entreprise" },
   });
-
+  const { darkMode } = useTheme();
   const [selectedYears, setSelectedYears] = useState([]);
   const [allYears, setAllYears] = useState([]);
   const [workerTypes, setWorkerTypes] = useState([]);
@@ -361,15 +361,88 @@ const Statistiques = () => {
     [stats]
   );
 
+  // Style commun pour tous les FormControl
+  const formControlStyle = {
+    width: 'calc(33.33% - 7px)',
+    minWidth: '200px',
+    '& .MuiInputLabel-root': {
+      color: darkMode ? '#fff' : 'inherit'
+    },
+    '& .MuiOutlinedInput-root': {
+      color: darkMode ? '#fff' : 'inherit',
+      '& fieldset': {
+        borderColor: darkMode ? 'rgba(255,255,255,0.3)' : 'rgba(0,0,0,0.23)'
+      },
+      '&:hover fieldset': {
+        borderColor: darkMode ? 'rgba(255,255,255,0.5)' : 'rgba(0,0,0,0.5)'
+      }
+    }
+  };
+
+  // Style commun pour les Select
+  const selectStyle = {
+    backgroundColor: darkMode ? '#424242' : '#ee742d59',
+    '& .MuiSelect-icon': {
+      color: darkMode ? '#fff' : 'inherit'
+    }
+  };
+
+  // Style commun pour les MenuItems
+const menuItemStyle = {
+  backgroundColor: darkMode ? '#424242' : '#ee742d59',
+  color: darkMode ? '#fff' : 'inherit',
+  '&:hover': {
+      backgroundColor: darkMode ? '#505050' : '#ee742d80'
+  },
+  '&.Mui-selected': {
+      backgroundColor: darkMode ? '#424242' : '#ee742d59', // Même couleur que l'état normal
+  },
+  '&.Mui-selected:hover': {
+      backgroundColor: darkMode ? '#505050' : '#ee742d80' // Même couleur que le hover normal
+  },
+  '& .MuiListItemText-primary, & .MuiListItemText-secondary': {
+      color: darkMode ? '#fff' : 'inherit'
+  }
+};
+
+  // Style pour les Checkbox selon leur type
+  const checkboxStyles = {
+    all: {
+      color: darkMode ? '#ff6b6b' : 'red',
+      '&.Mui-checked': {
+        color: darkMode ? '#ff8080' : 'red'
+      }
+    },
+    accidents: {
+      color: darkMode ? '#FF9E71' : '#FF8042',
+      '&.Mui-checked': {
+        color: darkMode ? '#FFB08E' : '#FF8042'
+      }
+    },
+    tf: {
+      color: darkMode ? '#00E5B7' : '#00C49F',
+      '&.Mui-checked': {
+        color: darkMode ? '#33EAC4' : '#00C49F'
+      }
+    },
+    default: {
+      color: darkMode ? '#4CAF50' : '#257525',
+      '&.Mui-checked': {
+        color: darkMode ? '#81C784' : '#257525'
+      }
+    }
+  };
+
+
   const isAllSelected = selectedWorkerTypes.length === workerTypes.length;
   const isAllSectorsSelected = selectedSectors.length === sectors.length;
   return (
     <div className="col-span-full" style={{ margin: '20px' }}>
       <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: '10px', marginBottom: '20px' }}>
-        <FormControl sx={{ width: 'calc(33.33% - 7px)', minWidth: '200px' }}>
+        <FormControl sx={formControlStyle}>
           <InputLabel id="accident-types-label">Type d'accident</InputLabel>
           <Select
-            sx={{ backgroundColor: '#ee742d59' }}
+            sx={selectStyle}
             labelId="accident-types-label"
             id="accident-types-select"
             multiple
@@ -380,22 +453,22 @@ const Statistiques = () => {
               PaperProps: { style: { maxHeight: 300, overflow: 'auto' } },
             }}
           >
-            <MenuItem value="all" style={{ backgroundColor: '#ee742d59' }}>
-              <Checkbox checked={selectedAccidentTypes.length === accidentTypes.length} style={{ color: 'red' }} />
+            <MenuItem value="all" sx={menuItemStyle}>
+              <Checkbox checked={selectedAccidentTypes.length === accidentTypes.length} sx={checkboxStyles.all}/>
               <ListItemText primary="Sélectionner tout" />
             </MenuItem>
             {accidentTypes.map((type) => (
-              <MenuItem key={type} value={type} style={{ backgroundColor: '#ee742d59' }}>
-                <Checkbox checked={selectedAccidentTypes.includes(type)} style={{ color: '#257525' }} />
+              <MenuItem key={type} value={type} sx={menuItemStyle}>
+                <Checkbox checked={selectedAccidentTypes.includes(type)} sx={checkboxStyles.default}/>
                 <ListItemText primary={type} />
               </MenuItem>
             ))}
           </Select>
         </FormControl>
-        <FormControl sx={{ width: 'calc(33.33% - 7px)', minWidth: '200px' }}>
+        <FormControl sx={formControlStyle}>
           <InputLabel id="assureur-status-label">Statut Assureur</InputLabel>
           <Select
-            sx={{ backgroundColor: '#ee742d59' }}
+            sx={selectStyle}
             labelId="assureur-status-label"
             id="assureur-status-select"
             multiple
@@ -406,13 +479,13 @@ const Statistiques = () => {
               PaperProps: { style: { maxHeight: 300, overflow: 'auto' } },
             }}
           >
-            <MenuItem value="all" style={{ backgroundColor: '#ee742d59' }}>
-              <Checkbox checked={selectedAssureurStatus.length === assureurStatus.length} style={{ color: 'red' }} />
+            <MenuItem value="all" sx={menuItemStyle}>
+              <Checkbox checked={selectedAssureurStatus.length === assureurStatus.length} sx={checkboxStyles.all} />
               <ListItemText primary="Sélectionner tout" />
             </MenuItem>
             {assureurStatus.map((status) => (
-              <MenuItem key={status} value={status} style={{ backgroundColor: '#ee742d59' }}>
-                <Checkbox checked={selectedAssureurStatus.includes(status)} style={{ color: '#257525' }} />
+              <MenuItem key={status} value={status} sx={menuItemStyle}>
+                <Checkbox checked={selectedAssureurStatus.includes(status)} sx={checkboxStyles.default} />
                 <ListItemText primary={status} />
               </MenuItem>
             ))}
@@ -420,10 +493,10 @@ const Statistiques = () => {
         </FormControl>
 
 
-        <FormControl sx={{ width: 'calc(33.33% - 7px)', minWidth: '200px' }}>
+        <FormControl sx={formControlStyle}>
           <InputLabel id="years-label">Année</InputLabel>
           <Select
-            sx={{ backgroundColor: '#ee742d59' }}
+            sx={selectStyle}
             labelId="years-label"
             id="years-select"
             multiple
@@ -461,31 +534,31 @@ const Statistiques = () => {
               PaperProps: { style: { maxHeight: 300, overflow: 'auto' } },
             }}
           >
-            <MenuItem key="All" value="All" style={{ backgroundColor: '#ee742d59' }}>
+            <MenuItem key="All" value="All" sx={menuItemStyle}>
               <Checkbox
                 checked={selectedYears.length === allYears.length}
                 indeterminate={selectedYears.length > 0 && selectedYears.length < allYears.length}
-                style={{ color: 'red' }}
+                sx={checkboxStyles.all}
               />
               <ListItemText primary="Tout sélectionner" />
             </MenuItem>
 
-            <MenuItem key="AllAccidents" value="AllAccidents" style={{ backgroundColor: '#ee742d59' }}>
+            <MenuItem key="AllAccidents" value="AllAccidents" sx={menuItemStyle}>
               <Checkbox
                 checked={allYears.filter(year =>
                   data.some(accident => new Date(accident.DateHeureAccident).getFullYear() === year)
                 ).every(year => selectedYears.includes(year))}
-                style={{ color: '#FF8042' }}
+                sx={checkboxStyles.accidents}
               />
               <ListItemText primary="Sélectionner tous les Accidents" />
             </MenuItem>
 
-            <MenuItem key="AllTF" value="AllTF" style={{ backgroundColor: '#ee742d59' }}>
+            <MenuItem key="AllTF" value="AllTF" sx={menuItemStyle}>
               <Checkbox
                 checked={allYears.filter(year =>
                   tfData.some(tf => Object.keys(tf).some(key => key !== 'company' && parseInt(key) === year))
                 ).every(year => selectedYears.includes(year))}
-                style={{ color: '#00C49F' }}
+                sx={checkboxStyles.tf}
               />
               <ListItemText primary="Sélectionner tous les TF" />
             </MenuItem>
@@ -510,11 +583,11 @@ const Statistiques = () => {
                 <MenuItem
                   key={year}
                   value={year}
-                  style={{ backgroundColor: '#ee742d59' }}
+                  sx={menuItemStyle}
                 >
                   <Checkbox
                     checked={selectedYears.includes(year)}
-                    style={{ color: '#257525' }}
+                    sx={checkboxStyles.default}
                   />
                   <ListItemText
                     primary={`${year}${sourcesText}`}
@@ -526,10 +599,10 @@ const Statistiques = () => {
           </Select>
         </FormControl>
 
-        <FormControl sx={{ width: 'calc(33.33% - 7px)', minWidth: '200px' }}>
+        <FormControl sx={formControlStyle}>
           <InputLabel id="graphs-label">Graphiques</InputLabel>
           <Select
-            sx={{ backgroundColor: '#ee742d59' }}
+            sx={selectStyle}
             labelId="graphs-label"
             id="graphs-select"
             multiple
@@ -540,22 +613,22 @@ const Statistiques = () => {
               PaperProps: { style: { maxHeight: 300, overflow: 'auto' } },
             }}
           >
-            <MenuItem key="All" value="All" style={{ backgroundColor: '#ee742d59' }}>
-              <Checkbox checked={Object.values(graphs).every(({ visible }) => visible)} style={{ color: 'red' }} />
+            <MenuItem key="All" value="All" sx={menuItemStyle}>
+              <Checkbox checked={Object.values(graphs).every(({ visible }) => visible)} sx={checkboxStyles.all} />
               <ListItemText primary="All" />
             </MenuItem>
             {Object.entries(graphs).map(([key, { label, visible }]) => (
-              <MenuItem key={key} value={key} style={{ backgroundColor: '#ee742d59' }}>
-                <Checkbox checked={visible} style={{ color: '#257525' }} />
+              <MenuItem key={key} value={key} sx={menuItemStyle}>
+                <Checkbox checked={visible} sx={checkboxStyles.default} />
                 <ListItemText primary={label} />
               </MenuItem>
             ))}
           </Select>
         </FormControl>
-        <FormControl sx={{ width: 'calc(33.33% - 7px)', minWidth: '200px' }}>
+        <FormControl sx={formControlStyle}>
           <InputLabel id="worker-types-label">Type de travailleur</InputLabel>
           <Select
-            sx={{ backgroundColor: '#ee742d59' }}
+            sx={selectStyle}
             labelId="worker-types-label"
             id="worker-types-select"
             multiple
@@ -566,22 +639,22 @@ const Statistiques = () => {
               PaperProps: { style: { maxHeight: 300, overflow: 'auto' } },
             }}
           >
-            <MenuItem value="all" style={{ backgroundColor: '#ee742d59' }}>
-              <Checkbox checked={isAllSelected} style={{ color: 'red' }} />
+            <MenuItem value="all" sx={menuItemStyle}>
+              <Checkbox checked={isAllSelected} sx={checkboxStyles.all} />
               <ListItemText primary="Sélectionner tout" />
             </MenuItem>
             {workerTypes.map((type, index) => (
-              <MenuItem key={index} value={type} style={{ backgroundColor: '#ee742d59' }}>
-                <Checkbox checked={selectedWorkerTypes.includes(type)} style={{ color: '#257525' }} />
+              <MenuItem key={index} value={type} sx={menuItemStyle}>
+                <Checkbox checked={selectedWorkerTypes.includes(type)} sx={checkboxStyles.default} />
                 <ListItemText primary={type} />
               </MenuItem>
             ))}
           </Select>
         </FormControl>
-        <FormControl sx={{ width: 'calc(33.33% - 7px)', minWidth: '200px' }}>
+        <FormControl sx={formControlStyle}>
           <InputLabel id="sectors-label">Secteurs</InputLabel>
           <Select
-            sx={{ backgroundColor: '#ee742d59' }}
+            sx={selectStyle}
             labelId="sectors-label"
             id="sectors-select"
             multiple
@@ -592,13 +665,13 @@ const Statistiques = () => {
               PaperProps: { style: { maxHeight: 300, overflow: 'auto' } },
             }}
           >
-            <MenuItem value="all" style={{ backgroundColor: '#ee742d59' }}>
-              <Checkbox checked={isAllSectorsSelected} style={{ color: 'red' }} />
+            <MenuItem value="all" sx={menuItemStyle}>
+              <Checkbox checked={isAllSectorsSelected} sx={checkboxStyles.all} />
               <ListItemText primary="Sélectionner tout" />
             </MenuItem>
             {sectors.map((sector) => (
-              <MenuItem key={sector} value={sector} style={{ backgroundColor: '#ee742d59' }}>
-                <Checkbox checked={selectedSectors.includes(sector)} style={{ color: '#257525' }} />
+              <MenuItem key={sector} value={sector} sx={menuItemStyle}>
+                <Checkbox checked={selectedSectors.includes(sector)} sx={checkboxStyles.default} />
                 <ListItemText primary={sector} />
               </MenuItem>
             ))}

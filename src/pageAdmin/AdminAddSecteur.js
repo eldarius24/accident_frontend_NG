@@ -193,20 +193,28 @@ export default function AddSecteur() {
                         <Button
                             type="submit"
                             sx={{
-                                backgroundColor: '#ee742d59',
+                                backgroundColor: darkMode ? '#424242' : '#ee742d59',
+                                color: darkMode ? '#ffffff' : 'black',
                                 transition: 'all 0.3s ease-in-out',
-                                '&:hover': { backgroundColor: '#95ad22', transform: 'scale(1.08)', boxShadow: 6 },
+                                '&:hover': {
+                                    backgroundColor: darkMode ? '#7a8e1c' : '#95ad22',
+                                    transform: 'scale(1.08)',
+                                    boxShadow: darkMode ? '0 6px 12px rgba(255,255,255,0.2)' : 6
+                                },
+                                boxShadow: darkMode ? '0 3px 6px rgba(255,255,255,0.1)' : 3,
                                 padding: '10px 20px',
                                 width: '50%',
                                 marginTop: '1cm',
                                 height: '300%',
                                 fontSize: '2rem',
+                                border: darkMode ? '1px solid rgba(255,255,255,0.1)' : 'none',
+                                textTransform: 'none',
                                 '@media (min-width: 750px)': {
                                     fontSize: '3rem',
                                 },
                                 '@media (max-width: 550px)': {
                                     fontSize: '1.5rem',
-                                },
+                                }
                             }}
                             variant="contained"
                         >
@@ -245,22 +253,47 @@ export default function AddSecteur() {
                                         <TableCell>{secteur.secteurName}</TableCell>
                                         <TableCell>
                                             <Tooltip title="Cliquez ici pour supprimer cette entreprise" arrow>
-                                                <Button sx={{
-                                                    transition: 'all 0.3s ease-in-out',
-                                                    '&:hover': {
-                                                        transform: 'scale(1.08)',
-                                                        boxShadow: 6
-                                                    }
-                                                }}
+                                                <Button
+                                                    sx={{
+                                                        backgroundColor: darkMode ? '#b71c1c' : '#d32f2f',
+                                                        transition: 'all 0.3s ease-in-out',
+                                                        '&:hover': {
+                                                            backgroundColor: darkMode ? '#d32f2f' : '#b71c1c',
+                                                            transform: 'scale(1.08)',
+                                                            boxShadow: darkMode ? '0 6px 12px rgba(255,255,255,0.2)' : 6
+                                                        },
+                                                        '& .MuiSvgIcon-root': {
+                                                            color: darkMode ? '#fff' : 'inherit'
+                                                        },
+                                                        boxShadow: darkMode ? '0 3px 6px rgba(255,255,255,0.1)' : 3,
+                                                        border: darkMode ? '1px solid rgba(255,255,255,0.1)' : 'none',
+                                                    }}
                                                     variant="contained"
                                                     color="error"
                                                     onClick={() => {
                                                         confirmAlert({
                                                             customUI: ({ onClose }) => {
                                                                 return (
-                                                                    <div className="custom-confirm-dialog">
-                                                                        <h1 className="custom-confirm-title">Supprimer</h1>
-                                                                        <p className="custom-confirm-message">Êtes-vous sûr de vouloir supprimer ce secteur ?</p>
+                                                                    <div
+                                                                        className="custom-confirm-dialog"
+                                                                        style={{
+                                                                            backgroundColor: darkMode ? '#424242' : '#fff',
+                                                                            color: darkMode ? '#fff' : 'inherit',
+                                                                            border: darkMode ? '1px solid rgba(255,255,255,0.1)' : '1px solid rgba(0,0,0,0.1)'
+                                                                        }}
+                                                                    >
+                                                                        <h1
+                                                                            className="custom-confirm-title"
+                                                                            style={{ color: darkMode ? '#fff' : 'inherit' }}
+                                                                        >
+                                                                            Supprimer
+                                                                        </h1>
+                                                                        <p
+                                                                            className="custom-confirm-message"
+                                                                            style={{ color: darkMode ? '#fff' : 'inherit' }}
+                                                                        >
+                                                                            Êtes-vous sûr de vouloir supprimer ce secteur ?
+                                                                        </p>
                                                                         <div className="custom-confirm-buttons">
                                                                             <Tooltip title="Cliquez sur OUI pour supprimer" arrow>
                                                                                 <button
@@ -269,12 +302,25 @@ export default function AddSecteur() {
                                                                                         handleDelete(secteur._id);
                                                                                         onClose();
                                                                                     }}
+                                                                                    style={{
+                                                                                        backgroundColor: darkMode ? '#b71c1c' : '#d32f2f',
+                                                                                        color: '#fff',
+                                                                                        border: darkMode ? '1px solid rgba(255,255,255,0.1)' : 'none'
+                                                                                    }}
                                                                                 >
                                                                                     Oui
                                                                                 </button>
                                                                             </Tooltip>
                                                                             <Tooltip title="Cliquez sur NON pour annuler la suppression" arrow>
-                                                                                <button className="custom-confirm-button custom-confirm-no" onClick={onClose}>
+                                                                                <button
+                                                                                    className="custom-confirm-button custom-confirm-no"
+                                                                                    onClick={onClose}
+                                                                                    style={{
+                                                                                        backgroundColor: darkMode ? '#424242' : '#f5f5f5',
+                                                                                        color: darkMode ? '#fff' : 'inherit',
+                                                                                        border: darkMode ? '1px solid rgba(255,255,255,0.1)' : 'none'
+                                                                                    }}
+                                                                                >
                                                                                     Non
                                                                                 </button>
                                                                             </Tooltip>

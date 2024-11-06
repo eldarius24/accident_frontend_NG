@@ -114,26 +114,30 @@ function ResponsiveAppBar() {
 
 
   const buttonStyle = useMemo(() => ({
-    backgroundColor: '#01aeac',
-    '&:hover': { backgroundColor: '#95519b' },
+    backgroundColor: darkMode ? '#424242' : '#01aeac',
+    color: darkMode ? '#000' : '#fff',
+    '&:hover': {
+      backgroundColor: darkMode ? '#95519b' : '#95ad22',
+      boxShadow: darkMode
+        ? '0 0 10px rgba(255,255,255,0.2)'
+        : '0 0 10px rgba(0,0,0,0.2)'
+    },
     mr: 1,
     whiteSpace: 'nowrap',
     minWidth: showText ? 'auto' : '40px',
     padding: showText ? 'auto' : '6px',
     fontSize: windowWidth > 1650 ? '1.2rem' : windowWidth > 1220 ? '1rem' : '0.8rem',
     transition: 'all 0.3s ease-in-out',
-    // Ajuste la hauteur du bouton en fonction de la taille de la fenêtre
     height: windowWidth > 1850 ? '50px' : windowWidth > 1220 ? '40px' : '32px',
-    // Ajuste le padding horizontal en fonction de la taille de la fenêtre
     px: windowWidth > 1850 ? 4 : windowWidth > 1220 ? 2 : 1,
-  }), [windowWidth, showText]);
+    border: darkMode ? '1px solid rgba(255,255,255,0.1)' : 'none',
+    backdropFilter: darkMode ? 'blur(4px)' : 'none',
+  }), [windowWidth, showText, darkMode]);
 
-
-
-  const textStyle = {
+  const textStyle = useMemo(() => ({
     fontFamily: 'monospace',
     fontWeight: 700,
-    color: '#95519b',
+    color: darkMode ? '#fff' : '#95519b',
     textAlign: 'center',
     flexGrow: 1,
     fontSize: windowWidth > 1350 ? '2rem' : windowWidth > 530 ? '1.5rem' : '0.6rem',
@@ -141,9 +145,11 @@ function ResponsiveAppBar() {
     transition: 'all 0.3s ease-in-out',
     '&:hover': {
       transform: 'scale(1.1)',
-
+      textShadow: darkMode
+        ? '0 0 10px rgba(255,255,255,0.3)'
+        : '0 0 10px rgba(149,81,155,0.3)'
     }
-  };
+  }), [windowWidth, darkMode]);
 
   if (isHiddenPage || isLoginPage || isdeviation || isagentmateriel || isnaturelesion || issiegelesion) {
     return null;
@@ -224,62 +230,62 @@ function ResponsiveAppBar() {
           transform: 'translateX(-50%)',
           pointerEvents: 'none' // Empêche le logo de interférer avec les clics
         }}>
-          </Box>
-          <Box>
-            <Typography variant="h5" noWrap sx={textStyle}>
-              T.I.G.R.E
-            </Typography>
-          </Box>
-        
+        </Box>
+        <Box>
+          <Typography variant="h5" noWrap sx={textStyle}>
+            T.I.G.R.E
+          </Typography>
+        </Box>
 
-          {/* Groupe de boutons à droite */}
-          <Box sx={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: 1,
-            justifyContent: 'flex-end',
-            mr: 0 // Marge droite à 0
-          }}>
-            {!['/'].includes(location.pathname) &&
-              renderButton("/", "Cliquez ici pour revenir a l'accueil", <HomeIcon />, "Home")}
 
-            {isAdminOuConseiller && (
-              <>
-                {!['/actionfichierdll', '/quesEntrep', '/entreprise', '/logView', '/fichierdll', '/fichierdllaction', '/addSecteur', '/addUser', '/adminUser', '/addEntreprise', '/adminEntreprises', '/adminaction', '/formulaireAction', '/planAction', '/formulaire', '/statistiques'].includes(location.pathname) &&
-                  renderButton("/formulaire", "Cliquez ici pour ajouté un nouvelle accident", <AddIcon />, "Accident")}
+        {/* Groupe de boutons à droite */}
+        <Box sx={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: 1,
+          justifyContent: 'flex-end',
+          mr: 0 // Marge droite à 0
+        }}>
+          {!['/'].includes(location.pathname) &&
+            renderButton("/", "Cliquez ici pour revenir a l'accueil", <HomeIcon />, "Home")}
 
-                {!['/actionfichierdll', '/quesEntrep', '/entreprise', '/logView', '/fichierdll', '/fichierdllaction', '/addSecteur', '/addUser', '/adminUser', '/addEntreprise', '/adminEntreprises', '/adminaction', '/formulaireAction', '/planAction', '/formulaire', '/statistiques'].includes(location.pathname) &&
-                  renderButton("/statistiques", "Cliquez ici pour accéder aux statistiques", <BarChartIcon />, "Statistiques")}
+          {isAdminOuConseiller && (
+            <>
+              {!['/actionfichierdll', '/quesEntrep', '/entreprise', '/logView', '/fichierdll', '/fichierdllaction', '/addSecteur', '/addUser', '/adminUser', '/addEntreprise', '/adminEntreprises', '/adminaction', '/formulaireAction', '/planAction', '/formulaire', '/statistiques'].includes(location.pathname) &&
+                renderButton("/formulaire", "Cliquez ici pour ajouté un nouvelle accident", <AddIcon />, "Accident")}
 
-                {!['/quesEntrep', '/entreprise', '/logView', '/fichierdll', '/addSecteur', '/addUser', '/adminUser', '/addEntreprise', '/adminEntreprises', '/adminaction', '/planAction', '/formulaire', '/statistiques'].includes(location.pathname) &&
-                  renderButton("/planAction", "Cliquez ici pour accéder aux plans d'actions", <PendingActionsIcon />, "Plans d'actions")}
+              {!['/actionfichierdll', '/quesEntrep', '/entreprise', '/logView', '/fichierdll', '/fichierdllaction', '/addSecteur', '/addUser', '/adminUser', '/addEntreprise', '/adminEntreprises', '/adminaction', '/formulaireAction', '/planAction', '/formulaire', '/statistiques'].includes(location.pathname) &&
+                renderButton("/statistiques", "Cliquez ici pour accéder aux statistiques", <BarChartIcon />, "Statistiques")}
 
-                {!['/actionfichierdll', '/quesEntrep', '/entreprise', '/logView', '/fichierdll', '/fichierdllaction', '/addSecteur', '/addUser', '/adminUser', '/addEntreprise', '/adminEntreprises', '/adminaction', '/', '/formulaireAction', '/formulaire', '/statistiques'].includes(location.pathname) &&
-                  renderButton("/formulaireAction", "Cliquez ici pour ajouter une nouvelle action", <AddIcon />, "Nouvelle action")}
+              {!['/quesEntrep', '/entreprise', '/logView', '/fichierdll', '/addSecteur', '/addUser', '/adminUser', '/addEntreprise', '/adminEntreprises', '/adminaction', '/planAction', '/formulaire', '/statistiques'].includes(location.pathname) &&
+                renderButton("/planAction", "Cliquez ici pour accéder aux plans d'actions", <PendingActionsIcon />, "Plans d'actions")}
 
-                {!['/actionfichierdll', '/quesEntrep', '/entreprise', '/logView', '/fichierdll', '/fichierdllaction', '/addSecteur', '/addEntreprise', '/addUser', '/adminEntreprises', '/planAction', '/', '/formulaireAction', '/formulaire', '/statistiques'].includes(location.pathname) &&
-                  renderButton("/addUser", "Cliquez ici pour ajouter un nouvel utilisateur", <AddIcon />, "Utilisateurs")}
+              {!['/actionfichierdll', '/quesEntrep', '/entreprise', '/logView', '/fichierdll', '/fichierdllaction', '/addSecteur', '/addUser', '/adminUser', '/addEntreprise', '/adminEntreprises', '/adminaction', '/', '/formulaireAction', '/formulaire', '/statistiques'].includes(location.pathname) &&
+                renderButton("/formulaireAction", "Cliquez ici pour ajouter une nouvelle action", <AddIcon />, "Nouvelle action")}
 
-                {!['/actionfichierdll', '/quesEntrep', '/entreprise', '/logView', '/fichierdll', '/fichierdllaction', '/addSecteur', '/adminUser', '/addEntreprise', '/adminEntreprises', '/planAction', '/', '/formulaireAction', '/formulaire', '/statistiques'].includes(location.pathname) &&
-                  renderButton("/adminUser", "Cliquez ici pour gérer les utilisateurs", <ViewListIcon />, "utilisateurs")}
+              {!['/actionfichierdll', '/quesEntrep', '/entreprise', '/logView', '/fichierdll', '/fichierdllaction', '/addSecteur', '/addEntreprise', '/addUser', '/adminEntreprises', '/planAction', '/', '/formulaireAction', '/formulaire', '/statistiques'].includes(location.pathname) &&
+                renderButton("/addUser", "Cliquez ici pour ajouter un nouvel utilisateur", <AddIcon />, "Utilisateurs")}
 
-                {!['/actionfichierdll', '/quesEntrep', '/entreprise', '/logView', '/fichierdll', '/fichierdllaction', '/addUser', '/adminUser', '/addEntreprise', '/planAction', '/', '/formulaireAction', '/formulaire', '/statistiques'].includes(location.pathname) &&
-                  renderButton("/addEntreprise", "Cliquez ici pour ajouter une nouvelle entreprise", <AddIcon />, "Entreprises")}
+              {!['/actionfichierdll', '/quesEntrep', '/entreprise', '/logView', '/fichierdll', '/fichierdllaction', '/addSecteur', '/adminUser', '/addEntreprise', '/adminEntreprises', '/planAction', '/', '/formulaireAction', '/formulaire', '/statistiques'].includes(location.pathname) &&
+                renderButton("/adminUser", "Cliquez ici pour gérer les utilisateurs", <ViewListIcon />, "utilisateurs")}
 
-                {!['/actionfichierdll', '/quesEntrep', '/entreprise', '/logView', '/fichierdll', '/fichierdllaction', '/addUser', '/adminUser', '/adminEntreprises', '/planAction', '/', '/formulaireAction', '/formulaire', '/statistiques'].includes(location.pathname) &&
-                  renderButton("/adminEntreprises", "Cliquez ici pour gérer les entreprises", <ViewListIcon />, "Entreprises")}
+              {!['/actionfichierdll', '/quesEntrep', '/entreprise', '/logView', '/fichierdll', '/fichierdllaction', '/addUser', '/adminUser', '/addEntreprise', '/planAction', '/', '/formulaireAction', '/formulaire', '/statistiques'].includes(location.pathname) &&
+                renderButton("/addEntreprise", "Cliquez ici pour ajouter une nouvelle entreprise", <AddIcon />, "Entreprises")}
 
-                {!['/actionfichierdll', '/addSecteur', '/addEntreprise', '/adminaction', '/entreprise', '/logView', '/fichierdll', '/fichierdllaction', '/addUser', '/adminUser', '/adminEntreprises', '/planAction', '/formulaireAction', '/formulaire', '/statistiques'].includes(location.pathname) &&
-                  renderButton("/entreprise", "Cliquez ici pour gérer les entreprises", <ViewListIcon />, "Entreprise divers")}
+              {!['/actionfichierdll', '/quesEntrep', '/entreprise', '/logView', '/fichierdll', '/fichierdllaction', '/addUser', '/adminUser', '/adminEntreprises', '/planAction', '/', '/formulaireAction', '/formulaire', '/statistiques'].includes(location.pathname) &&
+                renderButton("/adminEntreprises", "Cliquez ici pour gérer les entreprises", <ViewListIcon />, "Entreprises")}
 
-                {!['/actionfichierdll', "/", '/addSecteur', '/addEntreprise', '/quesEntrep', '/adminaction', '/entreprise', '/logView', '/fichierdll', '/fichierdllaction', '/addUser', '/adminUser', '/adminEntreprises', '/planAction', '/formulaireAction', '/formulaire', '/statistiques'].includes(location.pathname) &&
-                  renderButton("/quesEntrep", "Cliquez ici pour gérer les entreprises", <ViewListIcon />, "ajouter un fichier")}
+              {!['/actionfichierdll', '/addSecteur', '/addEntreprise', '/adminaction', '/entreprise', '/logView', '/fichierdll', '/fichierdllaction', '/addUser', '/adminUser', '/adminEntreprises', '/planAction', '/formulaireAction', '/formulaire', '/statistiques'].includes(location.pathname) &&
+                renderButton("/entreprise", "Cliquez ici pour gérer les entreprises", <ViewListIcon />, "Documents divers")}
 
-              </>
-            )}
-          </Box>
+              {!['/actionfichierdll', "/", '/addSecteur', '/addEntreprise', '/quesEntrep', '/adminaction', '/entreprise', '/logView', '/fichierdll', '/fichierdllaction', '/addUser', '/adminUser', '/adminEntreprises', '/planAction', '/formulaireAction', '/formulaire', '/statistiques'].includes(location.pathname) &&
+                renderButton("/quesEntrep", "Cliquez ici pour gérer les entreprises", <ViewListIcon />, "ajouter un fichier")}
+
+            </>
+          )}
+        </Box>
       </Toolbar>
-    
+
     </AppBar >
   );
 }

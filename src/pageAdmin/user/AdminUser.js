@@ -18,7 +18,7 @@ import { useTheme } from '../../pageAdmin/user/ThemeContext';
 import showDeleteConfirm from '../../pageFormulaire/FileManagement/showDeleteConfirm';
 import getUsers from './_actions/get-users';
 import deleteUser from './_actions/delete-user';
-
+import { blueGrey } from '@mui/material/colors';
 /**
  * Adminuser est un composant React qui permet de gérer les utilisateurs.
  * Il affiche une table avec les informations de chaque utilisateur, 
@@ -124,7 +124,7 @@ export default function Adminuser() {
                 >
                     <Table>
                         <TableHead>
-                            <TableRow 
+                            <TableRow
                                 className={`table-row-separatormenu ${darkMode ? 'dark-separator' : ''}`}
                                 style={{
                                     backgroundColor: darkMode ? '#535353' : '#0098f950',
@@ -139,7 +139,7 @@ export default function Adminuser() {
                         </TableHead>
                         <TableBody>
                             {users.map((user, index) => (
-                                <TableRow 
+                                <TableRow
                                     key={user._id}
                                     className={`table-row-separatormenu ${darkMode ? 'dark-separator' : ''}`}
                                     style={{
@@ -151,11 +151,23 @@ export default function Adminuser() {
                                     <TableCell>{user.userName}</TableCell>
                                     <TableCell style={{ padding: 0, width: '70px' }}>
                                         <Tooltip title="Cliquez ici pour éditer cet utilisateur" arrow>
-                                            <Button 
-                                                variant="contained" 
-                                                color="primary" 
-                                                component={Link} 
+                                            <Button
+                                                variant="contained"
+                                                color="primary"
+                                                component={Link}
                                                 to={`/addUser?userId=${user._id}`}
+                                                sx={{
+                                                    backgroundColor: darkMode ? blueGrey[700] : blueGrey[500],
+                                                    transition: 'all 0.3s ease-in-out',
+                                                    '&:hover': {
+                                                        backgroundColor: darkMode ? blueGrey[900] : blueGrey[700],
+                                                        transform: 'scale(1.08)',
+                                                        boxShadow: darkMode ? '0 6px 12px rgba(255,255,255,0.2)' : 6
+                                                    },
+                                                    '& .MuiSvgIcon-root': {
+                                                        color: darkMode ? '#fff' : 'inherit'
+                                                    }
+                                                }}
                                             >
                                                 <EditIcon />
                                             </Button>
@@ -163,10 +175,22 @@ export default function Adminuser() {
                                     </TableCell>
                                     <TableCell style={{ padding: 0, width: '70px' }}>
                                         <Tooltip title="Cliquez ici pour supprimer cet utilisateur" arrow>
-                                            <Button 
-                                                variant="contained" 
-                                                color="error" 
+                                            <Button
+                                                variant="contained"
+                                                color="error"
                                                 onClick={() => handleUserDelete(user._id)}
+                                                sx={{
+                                                    backgroundColor: darkMode ? '#b71c1c' : '#d32f2f',
+                                                    transition: 'all 0.3s ease-in-out',
+                                                    '&:hover': {
+                                                        backgroundColor: darkMode ? '#d32f2f' : '#b71c1c',
+                                                        transform: 'scale(1.08)',
+                                                        boxShadow: darkMode ? '0 6px 12px rgba(255,255,255,0.2)' : 6
+                                                    },
+                                                    '& .MuiSvgIcon-root': {
+                                                        color: darkMode ? '#fff' : 'inherit'
+                                                    }
+                                                }}
                                             >
                                                 <DeleteForeverIcon />
                                             </Button>
@@ -178,7 +202,7 @@ export default function Adminuser() {
                     </Table>
                 </TableContainer>
             </div>
-            
+
             <CustomSnackbar
                 open={snackbar.open}
                 handleClose={handleCloseSnackbar}

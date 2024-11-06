@@ -28,7 +28,7 @@ import { handleExportDataAssurance } from './_actions/exportAss';
 import { useLogger } from '../Hook/useLogger';
 import useHandleDelete from './_actions/handleDelete.js';
 import { blueGrey } from '@mui/material/colors';
-import { 
+import {
     COOKIE_PREFIXES,
     getSelectedYearsFromCookie,
     getSelectAllFromCookie,
@@ -62,10 +62,10 @@ function Home() {
     };
 
     const [yearsFromData, setYearsFromData] = useState([]);
-    const [yearsChecked, setYearsChecked] = useState(() => 
+    const [yearsChecked, setYearsChecked] = useState(() =>
         getSelectedYearsFromCookie(COOKIE_PREFIXES.HOME)
     );
-    
+
     const [selectAllYears, setSelectAllYears] = useState(() =>
         getSelectAllFromCookie(COOKIE_PREFIXES.HOME)
     );
@@ -332,7 +332,21 @@ function Home() {
                     <Grid item xs={6} md={2}>
                         <Tooltip title="Cliquez ici pour actualiser le tableau des accidents du travails" arrow>
                             <Button
-                                sx={{ color: 'black', padding: '15px', width: '100%', backgroundColor: '#ee752d60', transition: 'all 0.3s ease-in-out', '&:hover': { backgroundColor: '#95ad22', transform: 'scale(1.08)', boxShadow: 6 }, boxShadow: 3, textTransform: 'none' }}
+                                sx={{
+                                    color: darkMode ? '#ffffff' : 'black',
+                                    padding: '15px',
+                                    width: '100%',
+                                    backgroundColor: darkMode ? '#424242' : '#ee752d60',
+                                    transition: 'all 0.3s ease-in-out',
+                                    '&:hover': {
+                                        backgroundColor: darkMode ? '#7a8e1c' : '#95ad22',
+                                        transform: 'scale(1.08)',
+                                        boxShadow: darkMode ? '0 6px 12px rgba(255,255,255,0.2)' : 6
+                                    },
+                                    boxShadow: darkMode ? '0 3px 6px rgba(255,255,255,0.1)' : 3,
+                                    textTransform: 'none',
+                                    border: darkMode ? '1px solid rgba(255,255,255,0.1)' : 'none'
+                                }}
                                 variant="contained"
                                 color="secondary"
                                 onClick={refreshListAccidents}
@@ -344,8 +358,27 @@ function Home() {
                     </Grid>
                     <Grid item xs={6} md={2}>
                         <Tooltip title="Cliquez ici pour filtrer les accidents par années" arrow placement="top">
-                            <FormControl sx={{ boxShadow: 3, width: '100%', backgroundColor: '#ee752d60' }}>
-                                <InputLabel id="sort-label">Année</InputLabel>
+                            <FormControl sx={{
+                                boxShadow: darkMode ? '0 3px 6px rgba(255,255,255,0.1)' : 3,
+                                width: '100%',
+                                backgroundColor: darkMode ? '#424242' : '#ee752d60',
+                                border: darkMode ? '1px solid rgba(255,255,255,0.1)' : 'none',
+                                '& .MuiInputLabel-root': {
+                                    color: darkMode ? '#fff' : 'inherit'
+                                },
+                                '& .MuiSelect-select': {
+                                    color: darkMode ? '#fff' : 'inherit'
+                                },
+                                '& .MuiOutlinedInput-notchedOutline': {
+                                    borderColor: darkMode ? 'rgba(255,255,255,0.3)' : 'rgba(0,0,0,0.23)'
+                                },
+                                '&:hover .MuiOutlinedInput-notchedOutline': {
+                                    borderColor: darkMode ? 'rgba(255,255,255,0.5)' : 'rgba(0,0,0,0.5)'
+                                }
+                            }}>
+                                <InputLabel id="sort-label" sx={{ color: darkMode ? '#fff' : 'inherit' }}>
+                                    Année
+                                </InputLabel>
                                 <Select
                                     labelId="sort-label"
                                     id="sort-select"
@@ -355,22 +388,75 @@ function Home() {
                                     renderValue={(selected) => {
                                         return Array.isArray(selected) ? selected.join(', ') : '';
                                     }}
+                                    sx={{
+                                        '& .MuiSelect-icon': {
+                                            color: darkMode ? '#fff' : 'inherit'
+                                        }
+                                    }}
                                 >
-                                    <MenuItem key="All" value="All" style={{ backgroundColor: '#ee742d59' }}>
+                                    <MenuItem
+                                        key="All"
+                                        value="All"
+                                        sx={{
+                                            backgroundColor: darkMode ? '#424242' : '#ee742d59',
+                                            color: darkMode ? '#fff' : 'inherit',
+                                            '&:hover': {
+                                                backgroundColor: darkMode ? '#505050' : '#ee742d80'
+                                            },
+                                            '&.Mui-selected': {
+                                                backgroundColor: darkMode ? '#424242 !important' : '#ee742d59 !important'
+                                            },
+                                            '&.Mui-selected:hover': {
+                                                backgroundColor: darkMode ? '#505050 !important' : '#ee742d80 !important'
+                                            }
+                                        }}
+                                    >
                                         <Checkbox
                                             checked={selectAllYears}
                                             onChange={handleSelectAllYears}
-                                            style={{ color: 'red' }}
+                                            sx={{
+                                                color: darkMode ? '#ff6b6b' : 'red',
+                                                '&.Mui-checked': {
+                                                    color: darkMode ? '#ff8080' : 'red'
+                                                }
+                                            }}
                                         />
-                                        <ListItemText primary="Toutes les années" />
+                                        <ListItemText
+                                            primary="Toutes les années"
+                                            sx={{ color: darkMode ? '#fff' : 'inherit' }}
+                                        />
                                     </MenuItem>
                                     {yearsFromData.map(year => (
-                                        <MenuItem key={year} value={year} style={{ backgroundColor: '#ee742d59' }}>
+                                        <MenuItem
+                                            key={year}
+                                            value={year}
+                                            sx={{
+                                                backgroundColor: darkMode ? '#424242' : '#ee742d59',
+                                                color: darkMode ? '#fff' : 'inherit',
+                                                '&:hover': {
+                                                    backgroundColor: darkMode ? '#505050' : '#ee742d80'
+                                                },
+                                                '&.Mui-selected': {
+                                                    backgroundColor: darkMode ? '#424242 !important' : '#ee742d59 !important'
+                                                },
+                                                '&.Mui-selected:hover': {
+                                                    backgroundColor: darkMode ? '#505050 !important' : '#ee742d80 !important'
+                                                }
+                                            }}
+                                        >
                                             <Checkbox
                                                 checked={Array.isArray(yearsChecked) && yearsChecked.includes(year)}
-                                                style={{ color: '#257525' }}
+                                                sx={{
+                                                    color: darkMode ? '#4CAF50' : '#257525',
+                                                    '&.Mui-checked': {
+                                                        color: darkMode ? '#81C784' : '#257525'
+                                                    }
+                                                }}
                                             />
-                                            <ListItemText primary={year} />
+                                            <ListItemText
+                                                primary={year}
+                                                sx={{ color: darkMode ? '#fff' : 'inherit' }}
+                                            />
                                         </MenuItem>
                                     ))}
                                 </Select>
@@ -383,13 +469,37 @@ function Home() {
                                 value={searchTerm}
                                 onChange={event => setSearchTerm(event.target.value)}
                                 variant="outlined"
-                                sx={{ boxShadow: 3, backgroundColor: '#ee752d60', width: '100%' }}
+                                sx={{
+                                    boxShadow: darkMode ? '0 3px 6px rgba(255,255,255,0.1)' : 3,
+                                    backgroundColor: darkMode ? '#424242' : '#ee752d60',
+                                    width: '100%',
+                                    '& .MuiOutlinedInput-root': {
+                                        color: darkMode ? '#fff' : 'inherit',
+                                        '& fieldset': {
+                                            borderColor: darkMode ? 'rgba(255,255,255,0.3)' : 'rgba(0,0,0,0.23)'
+                                        },
+                                        '&:hover fieldset': {
+                                            borderColor: darkMode ? 'rgba(255,255,255,0.5)' : 'rgba(0,0,0,0.5)'
+                                        },
+                                        '&.Mui-focused fieldset': {
+                                            borderColor: darkMode ? 'rgba(255,255,255,0.7)' : '#1976d2'
+                                        }
+                                    },
+                                    '& .MuiInputLabel-root': {
+                                        color: darkMode ? '#fff' : 'inherit'
+                                    }
+                                }}
                                 InputProps={{
                                     startAdornment: (
                                         <InputAdornment position="start">
-                                            <SearchIcon />
+                                            <SearchIcon sx={{ color: darkMode ? '#fff' : 'inherit' }} />
                                         </InputAdornment>
                                     ),
+                                    sx: {
+                                        '&::placeholder': {
+                                            color: darkMode ? 'rgba(255,255,255,0.7)' : 'inherit'
+                                        }
+                                    }
                                 }}
                             />
                         </Tooltip>
@@ -399,7 +509,24 @@ function Home() {
                             <Grid item xs={6} md={3}>
                                 <Tooltip title="Cliquez ici pour exporter les données Accident en fonction des filtres sélèctionnes en excel" arrow>
                                     <Button
-                                        sx={{ color: 'black', padding: '15px', width: '100%', backgroundColor: '#ee752d60', transition: 'all 0.3s ease-in-out', '&:hover': { backgroundColor: '#95ad22', transform: 'scale(1.08)', boxShadow: 6 }, boxShadow: 3, textTransform: 'none' }}
+                                        sx={{
+                                            color: darkMode ? '#ffffff' : 'black',
+                                            padding: '15px',
+                                            width: '100%',
+                                            backgroundColor: darkMode ? '#424242' : '#ee752d60',
+                                            transition: 'all 0.3s ease-in-out',
+                                            '&:hover': {
+                                                backgroundColor: darkMode ? '#7a8e1c' : '#95ad22',
+                                                transform: 'scale(1.08)',
+                                                boxShadow: darkMode ? '0 6px 12px rgba(255,255,255,0.2)' : 6
+                                            },
+                                            boxShadow: darkMode ? '0 3px 6px rgba(255,255,255,0.1)' : 3,
+                                            textTransform: 'none',
+                                            border: darkMode ? '1px solid rgba(255,255,255,0.1)' : 'none',
+                                            '& .MuiSvgIcon-root': {
+                                                color: darkMode ? '#fff' : 'inherit'
+                                            }
+                                        }}
                                         variant="contained"
                                         color="primary"
                                         onClick={handleExportAccidentClick}
@@ -412,7 +539,24 @@ function Home() {
                             <Grid item xs={6} md={3}>
                                 <Tooltip title="Cliquez ici pour exporter les données Assurance en fonction des filtres sélèctionnes en excel" arrow>
                                     <Button
-                                        sx={{ color: 'black', padding: '15px', width: '100%', backgroundColor: '#ee752d60', transition: 'all 0.3s ease-in-out', '&:hover': { backgroundColor: '#95ad22', transform: 'scale(1.08)', boxShadow: 6 }, boxShadow: 3, textTransform: 'none' }}
+                                        sx={{
+                                            color: darkMode ? '#ffffff' : 'black',
+                                            padding: '15px',
+                                            width: '100%',
+                                            backgroundColor: darkMode ? '#424242' : '#ee752d60',
+                                            transition: 'all 0.3s ease-in-out',
+                                            '&:hover': {
+                                                backgroundColor: darkMode ? '#7a8e1c' : '#95ad22',
+                                                transform: 'scale(1.08)',
+                                                boxShadow: darkMode ? '0 6px 12px rgba(255,255,255,0.2)' : 6
+                                            },
+                                            boxShadow: darkMode ? '0 3px 6px rgba(255,255,255,0.1)' : 3,
+                                            textTransform: 'none',
+                                            border: darkMode ? '1px solid rgba(255,255,255,0.1)' : 'none',
+                                            '& .MuiSvgIcon-root': {
+                                                color: darkMode ? '#fff' : 'inherit'
+                                            }
+                                        }}
                                         variant="contained"
                                         color="primary"
                                         onClick={handleExportAssuranceClick}
@@ -494,62 +638,89 @@ function Home() {
                                             {(isAdmin || (isConseiller && isConseillerPrevention(item.entrepriseName))) ? (
                                                 <Tooltip title="Cliquez ici pour éditer les données de l'accident" arrow>
                                                     <Button sx={{
-                                                        backgroundColor: blueGrey[500],
+                                                        backgroundColor: darkMode ? blueGrey[700] : blueGrey[500],
                                                         transition: 'all 0.3s ease-in-out',
                                                         '&:hover': {
-                                                            backgroundColor: blueGrey[700],
+                                                            backgroundColor: darkMode ? blueGrey[900] : blueGrey[700],
                                                             transform: 'scale(1.08)',
-                                                            boxShadow: 6
+                                                            boxShadow: darkMode ? '0 6px 12px rgba(255,255,255,0.2)' : 6
+                                                        },
+                                                        '& .MuiSvgIcon-root': {
+                                                            color: darkMode ? '#fff' : 'inherit'
                                                         }
-                                                    }} variant="contained"
+                                                    }}
+                                                        variant="contained"
                                                         color="primary"
                                                         onClick={() => handleEdit(item._id)}>
                                                         <EditIcon />
-                                                    </Button >
+                                                    </Button>
                                                 </Tooltip>
                                             ) : null}
                                         </TableCell>
+
                                         <TableCell style={{ padding: 0, width: '70px' }}>
                                             {(isAdmin || (isConseiller && isConseillerPrevention(item.entrepriseName))) ? (
                                                 <Tooltip title="Cliquez ici pour ajouter des fichiers a l'accident" arrow>
                                                     <Button sx={{
+                                                        backgroundColor: darkMode ? '#7b1fa2' : '#9c27b0',
                                                         transition: 'all 0.3s ease-in-out',
                                                         '&:hover': {
+                                                            backgroundColor: darkMode ? '#4a0072' : '#7b1fa2',
                                                             transform: 'scale(1.08)',
-                                                            boxShadow: 6
+                                                            boxShadow: darkMode ? '0 6px 12px rgba(255,255,255,0.2)' : 6
+                                                        },
+                                                        '& .MuiSvgIcon-root': {
+                                                            color: darkMode ? '#fff' : 'inherit'
                                                         }
-                                                    }} variant="contained" color="secondary" onClick={() => navigate("/fichierdll", { state: item._id })}>
+                                                    }}
+                                                        variant="contained"
+                                                        color="secondary"
+                                                        onClick={() => navigate("/fichierdll", { state: item._id })}>
                                                         <GetAppIcon />
                                                     </Button>
                                                 </Tooltip>
                                             ) : null}
                                         </TableCell>
+
                                         <TableCell style={{ padding: 0, width: '70px' }}>
                                             {(isAdmin || (isConseiller && isConseillerPrevention(item.entrepriseName))) ? (
                                                 <Tooltip title="Cliquez ici pour générer la déclaration d'accident Belfius si vous avez remplis tous les champs du formulaire" arrow>
                                                     <Button sx={{
+                                                        backgroundColor: darkMode ? '#1b5e20' : '#2e7d32',
                                                         transition: 'all 0.3s ease-in-out',
                                                         '&:hover': {
+                                                            backgroundColor: darkMode ? '#2e7d32' : '#1b5e20',
                                                             transform: 'scale(1.08)',
-                                                            boxShadow: 6
+                                                            boxShadow: darkMode ? '0 6px 12px rgba(255,255,255,0.2)' : 6
+                                                        },
+                                                        '& .MuiSvgIcon-root': {
+                                                            color: darkMode ? '#fff' : 'inherit'
                                                         }
-                                                    }} variant="contained" color="success" onClick={() => handleGeneratePDF(item._id)}>
+                                                    }}
+                                                        variant="contained"
+                                                        color="success"
+                                                        onClick={() => handleGeneratePDF(item._id)}>
                                                         <PictureAsPdfIcon />
                                                     </Button>
                                                 </Tooltip>
                                             ) : null}
                                         </TableCell>
+
                                         <TableCell style={{ padding: 0, width: '70px' }}>
                                             {(isAdmin || (isConseiller && isConseillerPrevention(item.entrepriseName))) ? (
                                                 <Tooltip title="Cliquez ici pour supprimer l'accident" arrow>
-                                                    <Button
-                                                        sx={{
-                                                            transition: 'all 0.3s ease-in-out',
-                                                            '&:hover': {
-                                                                transform: 'scale(1.08)',
-                                                                boxShadow: 6
-                                                            }
-                                                        }}
+                                                    <Button sx={{
+                                                        backgroundColor: darkMode ? '#b71c1c' : '#d32f2f',
+                                                        transition: 'all 0.3s ease-in-out',
+                                                        '&:hover': {
+                                                            backgroundColor: darkMode ? '#d32f2f' : '#b71c1c',
+                                                            transform: 'scale(1.08)',
+                                                            boxShadow: darkMode ? '0 6px 12px rgba(255,255,255,0.2)' : 6
+                                                        },
+                                                        '& .MuiSvgIcon-root': {
+                                                            color: darkMode ? '#fff' : 'inherit'
+                                                        }
+                                                    }}
                                                         variant="contained"
                                                         color="error"
                                                         onClick={() => {

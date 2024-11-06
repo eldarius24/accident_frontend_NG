@@ -230,25 +230,79 @@ const LogsViewer = () => {
 
         <h2>Logs Système</h2>
 
-        <Grid container item xs={12} spacing={2} sx={{ mb: 3,justifyContent: 'center' }}>
+        <Grid container item xs={12} spacing={2} sx={{ mb: 3, justifyContent: 'center' }}>
           <Grid item xs={12} md={3}>
-            <FormControl fullWidth sx={{ backgroundColor: '#ee752d60' }}>
-              <InputLabel>Type d'action</InputLabel>
+            <FormControl
+              fullWidth
+              sx={{
+                backgroundColor: darkMode ? '#424242' : '#ee752d60',
+                '& .MuiInputLabel-root': {
+                  color: darkMode ? '#fff' : 'inherit'
+                },
+                '& .MuiSelect-select': {
+                  color: darkMode ? '#fff' : 'inherit'
+                },
+                '& .MuiOutlinedInput-notchedOutline': {
+                  borderColor: darkMode ? 'rgba(255,255,255,0.3)' : 'rgba(0,0,0,0.23)'
+                },
+                '&:hover .MuiOutlinedInput-notchedOutline': {
+                  borderColor: darkMode ? 'rgba(255,255,255,0.5)' : 'rgba(0,0,0,0.5)'
+                },
+                '& .MuiSvgIcon-root': {
+                  color: darkMode ? '#fff' : 'inherit'
+                },
+                boxShadow: darkMode ? '0 3px 6px rgba(255,255,255,0.1)' : 3,
+                border: darkMode ? '1px solid rgba(255,255,255,0.1)' : 'none',
+              }}
+            >
+              <InputLabel sx={{ color: darkMode ? '#fff' : 'inherit' }}>
+                Type d'action
+              </InputLabel>
               <Select
                 value={selectedType}
                 onChange={(e) => setSelectedType(e.target.value)}
                 label="Type d'action"
+                MenuProps={{
+                  PaperProps: {
+                    sx: {
+                      backgroundColor: darkMode ? '#424242' : '#fff',
+                      boxShadow: darkMode ? '0 3px 6px rgba(255,255,255,0.1)' : 3
+                    }
+                  }
+                }}
               >
-                <MenuItem value="all">Toutes les actions</MenuItem>
-                <MenuItem value="export">Export</MenuItem>
-                <MenuItem value="error">Error</MenuItem>
-                <MenuItem value="import">Import</MenuItem>
-                <MenuItem value="déconnexion">Déconnexion</MenuItem>
-                <MenuItem value="connexion">Connexion</MenuItem>
-                <MenuItem value="creation">Création</MenuItem>
-                <MenuItem value="modification">Modification</MenuItem>
-                <MenuItem value="suppression">Suppression</MenuItem>
-                <MenuItem value="consultation">Consultation</MenuItem>
+                {[
+                  { value: 'all', label: 'Toutes les actions' },
+                  { value: 'export', label: 'Export' },
+                  { value: 'error', label: 'Error' },
+                  { value: 'import', label: 'Import' },
+                  { value: 'déconnexion', label: 'Déconnexion' },
+                  { value: 'connexion', label: 'Connexion' },
+                  { value: 'creation', label: 'Création' },
+                  { value: 'modification', label: 'Modification' },
+                  { value: 'suppression', label: 'Suppression' },
+                  { value: 'consultation', label: 'Consultation' }
+                ].map((item) => (
+                  <MenuItem
+                    key={item.value}
+                    value={item.value}
+                    sx={{
+                      backgroundColor: darkMode ? '#424242' : '#fff',
+                      color: darkMode ? '#fff' : 'inherit',
+                      '&:hover': {
+                        backgroundColor: darkMode ? '#505050' : '#f5f5f5'
+                      },
+                      '&.Mui-selected': {
+                        backgroundColor: darkMode ? '#505050' : '#f5f5f5'
+                      },
+                      '&.Mui-selected:hover': {
+                        backgroundColor: darkMode ? '#606060' : '#eeeeee'
+                      }
+                    }}
+                  >
+                    {item.label}
+                  </MenuItem>
+                ))}
               </Select>
             </FormControl>
           </Grid>
@@ -259,7 +313,32 @@ const LogsViewer = () => {
               fullWidth
               value={selectedDate}
               onChange={(e) => setSelectedDate(e.target.value)}
-              sx={{ backgroundColor: '#ee752d60' }}
+              sx={{
+                backgroundColor: darkMode ? '#424242' : '#ee752d60',
+                '& .MuiInputBase-input': {
+                  color: darkMode ? '#fff' : 'inherit',
+                },
+                '& .MuiOutlinedInput-root': {
+                  color: darkMode ? '#fff' : 'inherit',
+                  '& fieldset': {
+                    borderColor: darkMode ? 'rgba(255,255,255,0.3)' : 'rgba(0,0,0,0.23)'
+                  },
+                  '&:hover fieldset': {
+                    borderColor: darkMode ? 'rgba(255,255,255,0.5)' : 'rgba(0,0,0,0.5)'
+                  },
+                  '&.Mui-focused fieldset': {
+                    borderColor: darkMode ? 'rgba(255,255,255,0.7)' : '#1976d2'
+                  }
+                },
+                '& .MuiInputLabel-root': {
+                  color: darkMode ? '#fff' : 'inherit'
+                },
+                '& .MuiSvgIcon-root': {
+                  color: darkMode ? '#fff' : 'inherit'
+                },
+                boxShadow: darkMode ? '0 3px 6px rgba(255,255,255,0.1)' : 3,
+                border: darkMode ? '1px solid rgba(255,255,255,0.1)' : 'none'
+              }}
             />
           </Grid>
 
@@ -272,12 +351,18 @@ const LogsViewer = () => {
                 startIcon={<RefreshIcon />}
                 sx={{
                   height: '100%',
-                  backgroundColor: '#ee752d60',
+                  backgroundColor: darkMode ? '#424242' : '#ee752d60',
+                  color: darkMode ? '#ffffff' : 'black',
                   transition: 'all 0.3s ease-in-out',
                   '&:hover': {
-                    backgroundColor: '#95ad22',
+                    backgroundColor: darkMode ? '#7a8e1c' : '#95ad22',
                     transform: 'scale(1.08)',
-                    boxShadow: 6
+                    boxShadow: darkMode ? '0 6px 12px rgba(255,255,255,0.2)' : 6
+                  },
+                  boxShadow: darkMode ? '0 3px 6px rgba(255,255,255,0.1)' : 3,
+                  border: darkMode ? '1px solid rgba(255,255,255,0.1)' : 'none',
+                  '& .MuiSvgIcon-root': {
+                    color: darkMode ? '#fff' : 'inherit'
                   }
                 }}
               >
@@ -304,12 +389,18 @@ const LogsViewer = () => {
                 startIcon={<FileDownloadIcon />}
                 sx={{
                   height: '100%',
-                  backgroundColor: '#ee752d60',
+                  backgroundColor: darkMode ? '#424242' : '#ee752d60',
+                  color: darkMode ? '#ffffff' : 'black',
                   transition: 'all 0.3s ease-in-out',
                   '&:hover': {
-                    backgroundColor: '#95ad22',
+                    backgroundColor: darkMode ? '#7a8e1c' : '#95ad22',
                     transform: 'scale(1.08)',
-                    boxShadow: 6
+                    boxShadow: darkMode ? '0 6px 12px rgba(255,255,255,0.2)' : 6
+                  },
+                  boxShadow: darkMode ? '0 3px 6px rgba(255,255,255,0.1)' : 3,
+                  border: darkMode ? '1px solid rgba(255,255,255,0.1)' : 'none',
+                  '& .MuiSvgIcon-root': {
+                    color: darkMode ? '#fff' : 'inherit'
                   }
                 }}
               >
@@ -318,7 +409,7 @@ const LogsViewer = () => {
             </Tooltip>
           </Grid>
           <Grid item xs={12}>
-          <Pagination style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }} count={totalPages} page={page} onChange={handlePageChange} color="primary" />
+            <Pagination style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }} count={totalPages} page={page} onChange={handlePageChange} color="primary" />
             <TableContainer className="frameStyle-style"
               style={{
                 maxHeight: '600px',
@@ -379,7 +470,7 @@ const LogsViewer = () => {
       >
         <Alert
           severity={snackbar.severity}
-          sx={{width: '100%',fontSize: '1rem', padding: '10px', outline: '3px solid green' }}
+          sx={{ width: '100%', fontSize: '1rem', padding: '10px', outline: '3px solid green' }}
           onClose={() => setSnackbar(prev => ({ ...prev, open: false }))}
         >
           {snackbar.message}

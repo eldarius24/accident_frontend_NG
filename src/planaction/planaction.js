@@ -28,7 +28,7 @@ import createHandleExport from './handleExport';
 import { useLogger } from '../Hook/useLogger';
 import { blueGrey } from '@mui/material/colors';
 import createUpdateUserSelectedYears from './updateUserSelecterYears';
-import { 
+import {
     COOKIE_PREFIXES,
     getSelectedYearsFromCookie,
     saveYearSelections
@@ -59,10 +59,10 @@ export default function PlanAction({ accidentData }) {
     const [availableSectors, setAvailableSectors] = useState([]);
     const { isAdmin, userInfo } = useUserConnected();
     const currentYear = new Date().getFullYear().toString();
-    const [selectedYears, setSelectedYears] = useState(() => 
-    getSelectedYearsFromCookie(COOKIE_PREFIXES.PLAN_ACTION)
-);
-    
+    const [selectedYears, setSelectedYears] = useState(() =>
+        getSelectedYearsFromCookie(COOKIE_PREFIXES.PLAN_ACTION)
+    );
+
     const [availableYears, setAvailableYears] = useState([]);
     const [snackbar, setSnackbar] = useState({
         open: false,
@@ -358,7 +358,23 @@ export default function PlanAction({ accidentData }) {
                     <Grid item xs={6} style={{ marginRight: '20px' }}>
                         <Tooltip title="Cliquez ici pour actualiser le tableau des actions" arrow>
                             <Button
-                                sx={{ marginLeft: '20px', color: 'black', padding: '15px 60px', backgroundColor: '#ee742d59', transition: 'all 0.3s ease-in-out', '&:hover': { backgroundColor: '#95ad22', transform: 'scale(1.08)', boxShadow: 6 }, boxShadow: 3, textTransform: 'none' }}
+                                sx={{
+                                    marginLeft: '20px',
+                                    color: darkMode ? '#ffffff' : 'black',
+                                    padding: '15px 60px',
+                                    backgroundColor: darkMode ? '#424242' : '#ee742d59',
+                                    transition: 'all 0.3s ease-in-out',
+                                    '&:hover': {
+                                        backgroundColor: darkMode ? '#7a8e1c' : '#95ad22',
+                                        transform: 'scale(1.08)',
+                                        boxShadow: darkMode ? '0 6px 12px rgba(255,255,255,0.2)' : 6
+                                    },
+                                    boxShadow: darkMode ? '0 3px 6px rgba(255,255,255,0.1)' : 3,
+                                    textTransform: 'none',
+                                    '& .MuiSvgIcon-root': {
+                                        color: darkMode ? '#fff' : 'inherit'
+                                    }
+                                }}
                                 variant="contained"
                                 color="secondary"
                                 onClick={refreshListAccidents}
@@ -368,10 +384,26 @@ export default function PlanAction({ accidentData }) {
                             </Button>
                         </Tooltip>
                     </Grid>
-                    <Grid item xs={6} style={{ marginRight: '20px', backgroundColor: '#ee752d60' }}>
+
+                    <Grid item xs={6} style={{ marginRight: '20px' }}>
                         <Tooltip title="Filtrer par année" arrow>
-                            <FormControl
-                                sx={{ boxShadow: 3, minWidth: 120 }}>
+                            <FormControl sx={{
+                                boxShadow: darkMode ? '0 3px 6px rgba(255,255,255,0.1)' : 3,
+                                minWidth: 120,
+                                backgroundColor: darkMode ? '#424242' : '#ee752d60',
+                                '& .MuiInputLabel-root': {
+                                    color: darkMode ? '#fff' : 'inherit'
+                                },
+                                '& .MuiOutlinedInput-root': {
+                                    color: darkMode ? '#fff' : 'inherit',
+                                    '& fieldset': {
+                                        borderColor: darkMode ? 'rgba(255,255,255,0.3)' : 'rgba(0,0,0,0.23)'
+                                    },
+                                    '&:hover fieldset': {
+                                        borderColor: darkMode ? 'rgba(255,255,255,0.5)' : 'rgba(0,0,0,0.5)'
+                                    }
+                                }
+                            }}>
                                 <InputLabel id="years-select-label">Filtrer par année(s)</InputLabel>
                                 <Select
                                     labelId="years-select-label"
@@ -385,15 +417,32 @@ export default function PlanAction({ accidentData }) {
                                             style: {
                                                 maxHeight: 48 * 4.5 + 8,
                                                 width: 250,
+                                                backgroundColor: darkMode ? '#424242' : '#fff'
                                             },
                                         },
                                     }}
                                 >
                                     {availableYears.map((year) => (
-                                        <MenuItem key={year} value={year} style={{ backgroundColor: '#ee742d59' }}>
+                                        <MenuItem
+                                            key={year}
+                                            value={year}
+                                            sx={{
+                                                backgroundColor: darkMode ? '#424242' : '#ee742d59',
+                                                color: darkMode ? '#fff' : 'inherit',
+                                                '&:hover': {
+                                                    backgroundColor: darkMode ? '#505050' : '#ee742d80'
+                                                }
+                                            }}
+                                        >
                                             <Checkbox
                                                 checked={selectedYears.indexOf(year) > -1}
-                                                style={{ marginRight: 8, color: '#257525' }}
+                                                sx={{
+                                                    marginRight: 8,
+                                                    color: darkMode ? '#4CAF50' : '#257525',
+                                                    '&.Mui-checked': {
+                                                        color: darkMode ? '#81C784' : '#257525'
+                                                    }
+                                                }}
                                             />
                                             <ListItemText primary={year} />
                                         </MenuItem>
@@ -402,13 +451,29 @@ export default function PlanAction({ accidentData }) {
                             </FormControl>
                         </Tooltip>
                     </Grid>
+
                     <Grid item xs={6} style={{ marginRight: '20px' }}>
-                        <Tooltip title="Filtrer les actions par mots clés" arrow>
+                        <Tooltip title="Filtrer les actions par mots clés" arrow>
                             <TextField
                                 variant="outlined"
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
-                                sx={{ boxShadow: 3, backgroundColor: '#ee742d59' }}
+                                sx={{
+                                    boxShadow: darkMode ? '0 3px 6px rgba(255,255,255,0.1)' : 3,
+                                    backgroundColor: darkMode ? '#424242' : '#ee742d59',
+                                    '& .MuiOutlinedInput-root': {
+                                        color: darkMode ? '#fff' : 'inherit',
+                                        '& fieldset': {
+                                            borderColor: darkMode ? 'rgba(255,255,255,0.3)' : 'rgba(0,0,0,0.23)'
+                                        },
+                                        '&:hover fieldset': {
+                                            borderColor: darkMode ? 'rgba(255,255,255,0.5)' : 'rgba(0,0,0,0.5)'
+                                        }
+                                    },
+                                    '& .MuiSvgIcon-root': {
+                                        color: darkMode ? '#fff' : 'inherit'
+                                    }
+                                }}
                                 InputProps={{
                                     startAdornment: (
                                         <InputAdornment position="start">
@@ -419,10 +484,27 @@ export default function PlanAction({ accidentData }) {
                             />
                         </Tooltip>
                     </Grid>
+
                     <Grid item xs={6} style={{ marginRight: '20px' }}>
                         <Tooltip title="Cliquez ici pour exporter les données du plan d'action, en excel, en fonction des filtres sélèctionnés " arrow>
                             <Button
-                                sx={{ marginRight: '20px', color: 'black', padding: '15px 60px', backgroundColor: '#ee742d59', transition: 'all 0.3s ease-in-out', '&:hover': { backgroundColor: '#95ad22', transform: 'scale(1.08)', boxShadow: 6 }, boxShadow: 3, textTransform: 'none' }}
+                                sx={{
+                                    marginRight: '20px',
+                                    color: darkMode ? '#ffffff' : 'black',
+                                    padding: '15px 60px',
+                                    backgroundColor: darkMode ? '#424242' : '#ee742d59',
+                                    transition: 'all 0.3s ease-in-out',
+                                    '&:hover': {
+                                        backgroundColor: darkMode ? '#7a8e1c' : '#95ad22',
+                                        transform: 'scale(1.08)',
+                                        boxShadow: darkMode ? '0 6px 12px rgba(255,255,255,0.2)' : 6
+                                    },
+                                    boxShadow: darkMode ? '0 3px 6px rgba(255,255,255,0.1)' : 3,
+                                    textTransform: 'none',
+                                    '& .MuiSvgIcon-root': {
+                                        color: darkMode ? '#fff' : 'inherit'
+                                    }
+                                }}
                                 variant="contained"
                                 color="primary"
                                 onClick={() => handleExport()}
@@ -512,12 +594,15 @@ export default function PlanAction({ accidentData }) {
                                             <TableCell style={{ padding: 0, width: '70px' }}>
                                                 <Tooltip title="Cliquez ici pour éditer les données de l'action" arrow>
                                                     <Button sx={{
-                                                        backgroundColor: blueGrey[500],
+                                                        backgroundColor: darkMode ? blueGrey[700] : blueGrey[500],
                                                         transition: 'all 0.3s ease-in-out',
                                                         '&:hover': {
-                                                            backgroundColor: blueGrey[700],
+                                                            backgroundColor: darkMode ? blueGrey[900] : blueGrey[700],
                                                             transform: 'scale(1.08)',
-                                                            boxShadow: 6
+                                                            boxShadow: darkMode ? '0 6px 12px rgba(255,255,255,0.2)' : 6
+                                                        },
+                                                        '& .MuiSvgIcon-root': {
+                                                            color: darkMode ? '#fff' : 'inherit'
                                                         }
                                                     }}
                                                         variant="contained"
@@ -528,16 +613,23 @@ export default function PlanAction({ accidentData }) {
                                                     </Button>
                                                 </Tooltip>
                                             </TableCell>
+
                                             <TableCell style={{ padding: 0, width: '70px' }}>
                                                 <Tooltip title="Cliquez ici pour ajouter des fichiers a l'action" arrow>
-                                                    <Button
-                                                        sx={{
-                                                            transition: 'all 0.3s ease-in-out',
-                                                            '&:hover': {
-                                                                transform: 'scale(1.08)',
-                                                                boxShadow: 6
-                                                            }
-                                                        }}
+                                                    <Button sx={{
+                                                        backgroundColor: darkMode ? '#7b1fa2' : '#9c27b0',
+                                                        transition: 'all 0.3s ease-in-out',
+                                                        '&:hover': {
+                                                            backgroundColor: darkMode ? '#4a0072' : '#7b1fa2',
+                                                            transform: 'scale(1.08)',
+                                                            boxShadow: darkMode ? '0 6px 12px rgba(255,255,255,0.2)' : 6
+                                                        },
+                                                        '& .MuiSvgIcon-root': {
+                                                            color: darkMode ? '#fff' : 'inherit'
+                                                        }
+                                                    }}
+                                                        variant="contained"
+                                                        color="secondary"
                                                         onClick={() => {
                                                             if (!isFileUploadIcon) {
                                                                 navigate('/actionfichierdll', { state: addaction._id });
@@ -545,47 +637,51 @@ export default function PlanAction({ accidentData }) {
                                                                 navigate('/');
                                                             }
                                                         }}
-                                                        variant="contained"
-                                                        color="secondary"
                                                     >
                                                         <GetAppIcon />
                                                     </Button>
                                                 </Tooltip>
                                             </TableCell>
+
                                             <TableCell style={{ padding: 0, width: '70px' }}>
                                                 <Tooltip title="Cliquez ici pour supprimer l'action" arrow>
                                                     <Button sx={{
+                                                        backgroundColor: darkMode ? '#b71c1c' : '#d32f2f',
                                                         transition: 'all 0.3s ease-in-out',
                                                         '&:hover': {
+                                                            backgroundColor: darkMode ? '#d32f2f' : '#b71c1c',
                                                             transform: 'scale(1.08)',
-                                                            boxShadow: 6
+                                                            boxShadow: darkMode ? '0 6px 12px rgba(255,255,255,0.2)' : 6
+                                                        },
+                                                        '& .MuiSvgIcon-root': {
+                                                            color: darkMode ? '#fff' : 'inherit'
                                                         }
                                                     }}
                                                         variant="contained"
                                                         color="error"
                                                         onClick={() => {
                                                             confirmAlert({
-                                                                /**
-                                                                 * Boîte de dialogue personnalisée pour demander confirmation de suppression de l'action
-                                                                 * @param {{ onClose: () => void }} props - Fonction pour fermer la boîte de dialogue
-                                                                 * @returns {JSX.Element} Le JSX Element qui contient la boîte de dialogue personnalisée
-                                                                 * La boîte de dialogue contient un titre, un message de confirmation et deux boutons : "Oui" et "Non".
-                                                                 * Lorsque le bouton "Oui" est cliqué, la fonction handleDelete est appelée
-                                                                 * avec l'id de l'action à supprimer, et la fonction onClose est appelée pour fermer la boîte de dialogue.
-                                                                 * Lorsque le bouton "Non" est cliqué, la fonction onClose est appelée pour fermer la boîte de dialogue.
-                                                                 */
                                                                 customUI: ({ onClose }) => (
                                                                     <div className="custom-confirm-dialog">
                                                                         <h1 className="custom-confirm-title">Supprimer</h1>
                                                                         <p className="custom-confirm-message">Êtes-vous sûr de vouloir supprimer cet action?</p>
                                                                         <div className="custom-confirm-buttons">
                                                                             <Tooltip title="Cliquez sur OUI pour supprimer" arrow>
-                                                                                <button className="custom-confirm-button" onClick={() => { handleDelete(addaction._id); onClose(); }}>
+                                                                                <button
+                                                                                    className="custom-confirm-button"
+                                                                                    onClick={() => {
+                                                                                        handleDelete(addaction._id);
+                                                                                        onClose();
+                                                                                    }}
+                                                                                >
                                                                                     Oui
                                                                                 </button>
                                                                             </Tooltip>
                                                                             <Tooltip title="Cliquez sur NON pour annuler la suppression" arrow>
-                                                                                <button className="custom-confirm-button custom-confirm-no" onClick={onClose}>
+                                                                                <button
+                                                                                    className="custom-confirm-button custom-confirm-no"
+                                                                                    onClick={onClose}
+                                                                                >
                                                                                     Non
                                                                                 </button>
                                                                             </Tooltip>
@@ -598,7 +694,6 @@ export default function PlanAction({ accidentData }) {
                                                     </Button>
                                                 </Tooltip>
                                             </TableCell>
-
                                         </TableRow>
                                     )
                                 ))}

@@ -1,5 +1,5 @@
 import axios from 'axios';
-import React, { useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import TextFieldP from '../_composants/textFieldP';
 import '../pageFormulaire/formulaire.css';
@@ -165,21 +165,30 @@ export default function AdminPanelSettings({ accidentData }) {
                         <Button
                             type="submit"
                             sx={{
-                                backgroundColor: '#ee742d59',
+                                backgroundColor: darkMode ? '#424242' : '#ee742d59',
+                                color: darkMode ? '#ffffff' : 'black',
                                 transition: 'all 0.3s ease-in-out',
-                                '&:hover': { backgroundColor: '#95ad22', transform: 'scale(1.08)', boxShadow: 6 },
+                                '&:hover': {
+                                    backgroundColor: darkMode ? '#7a8e1c' : '#95ad22',
+                                    transform: 'scale(1.08)',
+                                    boxShadow: darkMode ? '0 6px 12px rgba(255,255,255,0.2)' : 6
+                                },
+                                boxShadow: darkMode ? '0 3px 6px rgba(255,255,255,0.1)' : 3,
                                 padding: '10px 20px',
                                 width: '50%',
                                 marginTop: '1cm',
                                 height: '300%',
-                                fontSize: '2rem', // Taille de police de base
-
-                                // Utilisation de Media Queries pour ajuster la taille de police
+                                fontSize: '2rem',
+                                border: darkMode ? '1px solid rgba(255,255,255,0.1)' : 'none',
+                                '& .MuiSvgIcon-root': {
+                                    color: darkMode ? '#fff' : 'inherit'
+                                },
+                                // Media Queries restent les mêmes
                                 '@media (min-width: 750px)': {
-                                    fontSize: '3rem', // Taille de police plus grande pour les écrans plus larges
+                                    fontSize: '3rem',
                                 },
                                 '@media (max-width: 550px)': {
-                                    fontSize: '1.5rem', // Taille de police plus petite pour les écrans plus étroits
+                                    fontSize: '1.5rem',
                                 },
                             }}
                             variant="contained"
