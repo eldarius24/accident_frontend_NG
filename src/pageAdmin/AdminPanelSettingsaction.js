@@ -136,7 +136,7 @@ export default function AdminPanelSettingsaction() {
                             Créer une nouvelle entreprise
                         </Button>
                     </Tooltip>
-                    <Tooltip title="Cliquez ici afficher, éditez ou supprimer une entreprise ou créer un secteur d'activé" arrow>
+                    <Tooltip title="Cliquez ici pour afficher, éditez ou supprimer une entreprise ou créer un secteur d'activé" arrow>
                         <Button
                             type="submit"
                             component={Link}
