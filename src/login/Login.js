@@ -11,8 +11,6 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import axios from 'axios';
 import { useTheme } from '../pageAdmin/user/ThemeContext';
 
-
-
 // Fonction utilitaire pour les logs
 const logAction = async (action) => {
   try {
@@ -27,7 +25,7 @@ const Login = () => {
   const { register, handleSubmit } = useForm();
   const [isPasswordValid, setIsPasswordValid] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
-  const { setDarkMode } = useTheme();
+  const { setDarkMode, darkMode } = useTheme(); // Ajout de darkMode
 
   const onSubmit = async (data) => {
     const { email, password } = data;
@@ -38,8 +36,8 @@ const Login = () => {
         actionType: 'connexion',
         details: `Tentative de connexion pour l'utilisateur: ${email}`,
         entity: 'Auth',
-        userName: email, // On utilise l'email comme userName pour le moment
-        userId: 'anonymous' // ID temporaire pour les logs de tentative
+        userName: email,
+        userId: 'anonymous'
       });
 
       const response = await axios.post('http://localhost:3100/api/login', { email, password }, {
@@ -51,7 +49,6 @@ const Login = () => {
       if (!userData || response.status !== 200) {
         setIsPasswordValid(false);
         
-        // Log d'échec de connexion
         await logAction({
           actionType: 'error',
           details: `Échec de connexion pour l'utilisateur: ${email} - Données invalides`,
@@ -69,7 +66,6 @@ const Login = () => {
       };
       localStorage.setItem('token', JSON.stringify(tokenData));
   
-      // Log de connexion réussie
       await logAction({
         actionType: 'connexion',
         details: `Connexion réussie pour l'utilisateur: ${userData.userName}`,
@@ -86,7 +82,6 @@ const Login = () => {
       console.error('Erreur lors de la connexion:', error.response ? error.response.data : error.message);
       setIsPasswordValid(false);
       
-      // Log d'erreur de connexion
       await logAction({
         actionType: 'error',
         details: `Erreur de connexion pour l'utilisateur: ${email} - ${error.response ? error.response.data : error.message}`,
@@ -99,30 +94,53 @@ const Login = () => {
     }
   };
 
-  // Reste du code inchangé...
+  // Style des champs texte adapté au mode sombre/clair
   const textFieldStyles = {
     '& .MuiOutlinedInput-root': {
-      backgroundColor: '#ee752d60',
+      backgroundColor: darkMode ? '#424242' : '#ee752d60',
       '& fieldset': {
-        borderColor: '#ee752d',
+        borderColor: darkMode ? '#535353' : '#ee752d',
       },
       '&:hover fieldset': {
-        borderColor: '#ee752d',
+        borderColor: darkMode ? '#6e6e6e' : '#ee752d',
       },
       '&.Mui-focused fieldset': {
-        borderColor: '#ee752d',
+        borderColor: darkMode ? '#535353' : '#ee752d',
       },
     },
     '& .MuiInputBase-input': {
+      color: darkMode ? '#ffffff' : 'inherit',
       '&:-webkit-autofill, &:-webkit-autofill:hover, &:-webkit-autofill:focus': {
-        WebkitBoxShadow: '0 0 0 100px #ee752d60 inset',
-        WebkitTextFillColor: 'inherit',
+        WebkitBoxShadow: `0 0 0 100px ${darkMode ? '#424242' : '#ee752d60'} inset`,
+        WebkitTextFillColor: darkMode ? '#ffffff' : 'inherit',
       },
+    },
+    '& .MuiInputLabel-root': {
+      color: darkMode ? '#ffffff' : 'inherit',
+    },
+    '& .MuiIconButton-root': {
+      color: darkMode ? '#ffffff' : 'inherit',
     },
   };
 
+  // Style du bouton adapté au mode sombre/clair
+  const buttonStyle = {
+    backgroundColor: darkMode ? '#424242' : '#ee752d60',
+    color: darkMode ? '#ffffff' : 'inherit',
+    transition: 'all 0.3s ease-in-out',
+    '&:hover': {
+      backgroundColor: '#95ad22',
+      transform: 'scale(1.08)',
+      boxShadow: 6
+    }
+  };
+
   return (
-    <div>
+    <div style={{ 
+      backgroundColor: darkMode ? '#6e6e6e' : '#ffffff',
+      color: darkMode ? '#ffffff' : '#000000',
+      minHeight: '100vh'
+    }}>
       <div className="max-h-screen">
         <div className="image-tigre"></div>
         <div className="flex justify-center max-h-96">
@@ -172,27 +190,24 @@ const Login = () => {
 
           <Tooltip title="Rentrer votre Email et votre mot de passe pour vous connecter. Si vous n'en avez pas faite la demande au support via l'adresse suivante : bgillet.lecortil@cortigroupe.be" arrow>
             <Button 
-              sx={{
-                backgroundColor: '#ee752d60',
-                transition: 'all 0.3s ease-in-out',
-                '&:hover': {
-                  backgroundColor: '#95ad22',
-                  transform: 'scale(1.08)',
-                  boxShadow: 6
-                }
-              }}
+              sx={buttonStyle}
               type="submit"
               className="bg-[#00479871] hover:bg-green-950 w-1/2 shadow-md"
             >
               Se connecter
             </Button>
           </Tooltip>
-          <h6>Pour avoir accès, veuillez le demander au support</h6>
+          <h6 style={{ color: darkMode ? '#ffffff' : 'inherit' }}>
+            Pour avoir accès, veuillez le demander au support
+          </h6>
         </form>
 
         <div className="image-cortigroupe"></div>
         <Tooltip title="Si vous rencontrez un souci avec le site, envoyer un mail à l'adresse suivante : bgillet.lecortil@cortigroupe.be et expliquer le soucis rencontré" arrow>
-          <h5 style={{ marginBottom: '40px' }}>
+          <h5 style={{ 
+            marginBottom: '40px',
+            color: darkMode ? '#ffffff' : 'inherit'
+          }}>
             Développé par Remy et Benoit pour Le Cortigroupe.
           </h5>
         </Tooltip>
