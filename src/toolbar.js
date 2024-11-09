@@ -16,6 +16,8 @@ import DarkModeIcon from '@mui/icons-material/DarkMode';
 import LightModeIcon from '@mui/icons-material/LightMode';
 import { useLogger } from './Hook/useLogger';
 import { useNavigate } from 'react-router-dom';
+import SupportDialog from './Dialog/supportDialog';
+import HelpIcon from '@mui/icons-material/Help';
 /**
  * A responsive app bar that displays different buttons based on the user's
  * privileges and the current page.
@@ -23,6 +25,7 @@ import { useNavigate } from 'react-router-dom';
  * @returns {JSX.Element} The responsive app bar.
  */
 function ResponsiveAppBar() {
+  const [supportDialogOpen, setSupportDialogOpen] = useState(false);
   const location = useLocation();
   const { isAuthenticated, isAdmin, isAdminOuConseiller, userInfo, isConseiller } = useUserConnected();
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
@@ -280,9 +283,25 @@ function ResponsiveAppBar() {
 
               {!['/actionfichierdll', "/", '/addSecteur', '/addEntreprise', '/quesEntrep', '/adminaction', '/entreprise', '/logView', '/fichierdll', '/fichierdllaction', '/addUser', '/adminUser', '/adminEntreprises', '/planAction', '/formulaireAction', '/formulaire', '/statistiques'].includes(location.pathname) &&
                 renderButton("/quesEntrep", "Cliquez ici pour gérer les entreprises", <ViewListIcon />, "ajouter un fichier")}
- 
+
             </>
           )}
+          <Tooltip title="Contacter le support" arrow>
+            <Button
+              variant="contained"
+              onClick={() => setSupportDialogOpen(true)}
+              sx={buttonStyle}
+              startIcon={<HelpIcon />}
+            >
+              {showText && "Support"}
+            </Button>
+          </Tooltip>
+
+          <SupportDialog
+            open={supportDialogOpen}
+            onClose={() => setSupportDialogOpen(false)}
+          />
+
         </Box>
       </Toolbar>
 
