@@ -202,7 +202,7 @@ export default function AdminPanelSettings({ accidentData }) {
 
             </div>
             <div className="image-cortigroupe"></div>
-            <h5 style={{ marginBottom: '40px' }}> Développé par Remy et Benoit pour Le Cortigroupe. Support: bgillet.lecortil@cortigroupe.be</h5>
+            <h5 style={{ marginBottom: '40px' }}> Développé par Remy et Benoit pour Le Cortigroupe.</h5>
             <CustomSnackbar
                 open={snackbar.open}
                 handleClose={handleCloseSnackbar}

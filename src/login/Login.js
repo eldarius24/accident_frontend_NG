@@ -187,13 +187,13 @@ const Login = () => {
               Se connecter
             </Button>
           </Tooltip>
-          <h6>Pour avoir accès, veuillez le demander au support : bgillet.lecortil@cortigroupe.be</h6>
+          <h6>Pour avoir accès, veuillez le demander au support</h6>
         </form>
 
         <div className="image-cortigroupe"></div>
         <Tooltip title="Si vous rencontrez un souci avec le site, envoyer un mail à l'adresse suivante : bgillet.lecortil@cortigroupe.be et expliquer le soucis rencontré" arrow>
           <h5 style={{ marginBottom: '40px' }}>
-            Développé par Remy et Benoit pour Le Cortigroupe. Support: bgillet.lecortil@cortigroupe.be
+            Développé par Remy et Benoit pour Le Cortigroupe.
           </h5>
         </Tooltip>
       </div>

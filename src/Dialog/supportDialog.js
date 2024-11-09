@@ -10,6 +10,7 @@ import {
   CircularProgress
 } from '@mui/material';
 import { useUserConnected } from '../Hook/userConnected';
+import { useTheme } from '../pageAdmin/user/ThemeContext';
 import axios from 'axios';
 import config from '../config.json';
 import AutoCompleteQ from '../_composants/autoCompleteQ';
@@ -19,6 +20,7 @@ const defaultOptions = [""];
 
 const SupportDialog = ({ open, onClose, isLoginPage = false }) => {
   const { userInfo } = useUserConnected();
+  const { darkMode } = useTheme();
   const apiUrl = config.apiUrl;
 
   const [subject, setSubject] = useState('');
@@ -27,7 +29,7 @@ const SupportDialog = ({ open, onClose, isLoginPage = false }) => {
   const [guestEmail, setGuestEmail] = useState('');
   const [status, setStatus] = useState({ type: '', message: '' });
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [userName, setUserName] = useState(''); // Nouvel état pour le nom d'utilisateur
+  const [userName, setUserName] = useState('');
 
   const supportOptions = React.useMemo(() => {
     try {
@@ -39,6 +41,25 @@ const SupportDialog = ({ open, onClose, isLoginPage = false }) => {
       return defaultOptions;
     }
   }, []);
+
+  // Style pour les composants en fonction du mode sombre/clair
+  const dialogStyle = {
+    backgroundColor: darkMode ? '#6e6e6e' : '#ffffff',
+    color: darkMode ? '#ffffff' : '#000000',
+  };
+
+  const inputStyle = {
+    backgroundColor: darkMode ? '#424242' : '#ee752d60',
+    '& .MuiOutlinedInput-root': {
+      backgroundColor: darkMode ? '#424242' : '#ee752d60',
+    },
+    '& .MuiInputLabel-root': {
+      color: darkMode ? '#ffffff' : '#000000',
+    },
+    '& .MuiOutlinedInput-input': {
+      color: darkMode ? '#ffffff' : '#000000',
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -117,12 +138,15 @@ const SupportDialog = ({ open, onClose, isLoginPage = false }) => {
       aria-labelledby="support-dialog-title"
       keepMounted={false}
       disableEscapeKeyDown={isSubmitting}
+      PaperProps={{
+        style: dialogStyle
+      }}
     >
       <DialogTitle
         id="support-dialog-title"
         sx={{
-          backgroundColor: theme => theme.palette.mode === 'dark' ? '#535353' : '#ee752d60',
-          color: theme => theme.palette.mode === 'dark' ? 'white' : 'black'
+          backgroundColor: darkMode ? '#535353' : '#ee752d60',
+          color: darkMode ? 'white' : 'black'
         }}
       >
         Contacter le Support
@@ -143,10 +167,7 @@ const SupportDialog = ({ open, onClose, isLoginPage = false }) => {
                 disabled={isSubmitting}
                 sx={{
                   mb: 2,
-                  '& .MuiOutlinedInput-root': {
-                    backgroundColor: theme =>
-                      theme.palette.mode === 'dark' ? '#424242' : '#ee752d60',
-                  }
+                  ...inputStyle
                 }}
               />
               <TextField
@@ -160,10 +181,7 @@ const SupportDialog = ({ open, onClose, isLoginPage = false }) => {
                 disabled={isSubmitting}
                 sx={{
                   mb: 2,
-                  '& .MuiOutlinedInput-root': {
-                    backgroundColor: theme =>
-                      theme.palette.mode === 'dark' ? '#424242' : '#ee752d60',
-                  }
+                  ...inputStyle
                 }}
               />
             </>
@@ -189,10 +207,7 @@ const SupportDialog = ({ open, onClose, isLoginPage = false }) => {
             disabled={isSubmitting}
             sx={{
               mb: 2,
-              '& .MuiOutlinedInput-root': {
-                backgroundColor: theme =>
-                  theme.palette.mode === 'dark' ? '#424242' : '#ee752d60',
-              }
+              ...inputStyle
             }}
           />
 
@@ -206,12 +221,7 @@ const SupportDialog = ({ open, onClose, isLoginPage = false }) => {
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             disabled={isSubmitting}
-            sx={{
-              '& .MuiOutlinedInput-root': {
-                backgroundColor: theme =>
-                  theme.palette.mode === 'dark' ? '#424242' : '#ee752d60',
-              }
-            }}
+            sx={inputStyle}
           />
 
           {status.message && (
@@ -230,8 +240,7 @@ const SupportDialog = ({ open, onClose, isLoginPage = false }) => {
             disabled={isSubmitting}
             variant="contained"
             sx={{
-              backgroundColor: theme =>
-                theme.palette.mode === 'dark' ? '#424242' : '#ee752d60',
+              backgroundColor: darkMode ? '#424242' : '#ee752d60',
               '&:hover': {
                 backgroundColor: '#95ad22',
                 transform: 'scale(1.08)',
@@ -247,8 +256,7 @@ const SupportDialog = ({ open, onClose, isLoginPage = false }) => {
             variant="contained"
             startIcon={isSubmitting ? <CircularProgress size={20} /> : null}
             sx={{
-              backgroundColor: theme =>
-                theme.palette.mode === 'dark' ? '#424242' : '#ee752d60',
+              backgroundColor: darkMode ? '#424242' : '#ee752d60',
               '&:hover': {
                 backgroundColor: '#95ad22',
                 transform: 'scale(1.08)',
