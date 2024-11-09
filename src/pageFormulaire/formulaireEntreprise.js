@@ -13,6 +13,7 @@ import listAssureur from '../liste/listAssureur.json';
 import { useTheme } from '../pageAdmin/user/ThemeContext';
 import { FormGroup } from '@mui/material';
 import ControlLabelP from '../_composants/controlLabelP';
+
 /**
  * FormulaireEntreprise component.
  * 
@@ -49,7 +50,7 @@ export default function FormulaireEntreprise({ setValue, accidentData, watch }) 
   const [blessures, setBlessures] = useState(watch('blessures') ? watch('blessures') : (accidentData && accidentData.blessures ? accidentData.blessures : ''));
   const [assureurStatus, setAssureurStatus] = useState(watch('AssureurStatus') ? watch('AssureurStatus') : (accidentData && accidentData.AssureurStatus ? accidentData.AssureurStatus : ''));
   const [boolAsCloture, setboolAsCloture] = useState(() => { const watchValue = Boolean(watch('boolAsCloture')); const accidentDataValue = accidentData ? Boolean(accidentData.boolAsCloture) : false; return watchValue || accidentDataValue; });
-
+  const [circonstanceAccident, setCirconstanceAccident] = useState(watch('circonstanceAccident') ? watch('circonstanceAccident') : (accidentData && accidentData.circonstanceAccident ? accidentData.circonstanceAccident : ""));
 
 
   useEffect(() => {
@@ -116,7 +117,9 @@ export default function FormulaireEntreprise({ setValue, accidentData, watch }) 
     setValue('blessures', blessures)
     setValue('AssureurStatus', assureurStatus)
     setValue('boolAsCloture', Boolean(boolAsCloture));
-  }, [boolAsCloture, assureurStatus, blessures, DateHeureAccident, typeAccident, sexe, entreprise, secteur, typeTravailleur, nomTravailleur, prenomTravailleur, dateNaissance, setValue]);
+    setValue('circonstanceAccident', circonstanceAccident)
+
+  }, [circonstanceAccident, boolAsCloture, assureurStatus, blessures, DateHeureAccident, typeAccident, sexe, entreprise, secteur, typeTravailleur, nomTravailleur, prenomTravailleur, dateNaissance, setValue]);
 
   /**
    * Handles the selection of an entreprise in the form.
@@ -268,7 +271,16 @@ export default function FormulaireEntreprise({ setValue, accidentData, watch }) 
               }}
               defaultValue={DateHeureAccident}
             />
-
+            <TextFieldQ
+              id="circonstanceAccident"
+              label="Circonstance de l'accident"
+              required={true}
+              onChange={(circonstanceAccidentText) => {
+                setCirconstanceAccident(circonstanceAccidentText);
+                setValue('circonstanceAccident', circonstanceAccidentText);
+              }}
+              defaultValue={circonstanceAccident}
+            />
             {/* Blessures */}
             <TextFieldQ
               id="blessures"

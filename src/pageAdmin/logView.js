@@ -184,6 +184,8 @@ const LogsViewer = () => {
       modification: { backgroundColor: '#90caf9', color: '#1976d2' },
       suppression: { backgroundColor: '#ef9a9a', color: '#d32f2f' },
       consultation: { backgroundColor: '#e0e0e0', color: '#616161' },
+      email_sent: { backgroundColor: '#e3f2fd', color: '#1565c0' },
+      email_error: { backgroundColor: '#fce4ec', color: '#c2185b' },
       error: { backgroundColor: '#ffcdd2', color: '#c62828' }
     };
     return styles[type] || styles.consultation;
@@ -273,6 +275,8 @@ const LogsViewer = () => {
               >
                 {[
                   { value: 'all', label: 'Toutes les actions' },
+                  { value: 'email_sent', label: 'Email envoyé' },
+                  { value: 'email_error', label: 'Erreur email' },
                   { value: 'export', label: 'Export' },
                   { value: 'error', label: 'Error' },
                   { value: 'import', label: 'Import' },

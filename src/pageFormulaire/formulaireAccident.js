@@ -9,7 +9,6 @@ dayjs.locale('fr');
 /* IMPORT PERSO */
 import listAccident from '../liste/listAccident.json';
 import ControlLabelP from '../_composants/controlLabelP';
-import TextFieldP from '../_composants/textFieldP';
 import AutoCompleteP from '../_composants/autoCompleteP';
 import DatePickerP from '../_composants/datePickerP';
 import TextFieldMaskP from '../_composants/textFieldMaskP';
@@ -95,7 +94,6 @@ export default function FormulaireAccident({ setValue, accidentData, watch }) {
    */
   useEffect(() => {
     
-    setValue('circonstanceAccident', circonstanceAccident)
     setValue('DateJourIncapDebut', DateJourIncapDebut)
     setValue('DateJourIncapFin', DateJourIncapFin)
     setValue('indemnisationAccident', indemnisationAccident)
@@ -118,7 +116,7 @@ export default function FormulaireAccident({ setValue, accidentData, watch }) {
     setValue('codeNatureLesion', codeNatureLesion)
     setValue('codeSiegeLesion', codeSiegeLesion)
     setValue('horaireJourAccident', horaireJourAccident)
-  }, [horaireJourAccident, circonstanceAccident, DateJourIncapDebut, DateJourIncapFin, indemnisationAccident, boolAucun, boolChausure, boolLunette, boolGant, boolCasque, boolAuditive, boolMasque, boolEcran, boolTenue, boolFiltre, boolVeste, boolMaire, boolChute, boolAutre, codeDeviation, codeAgentMateriel, codeNatureLesion, codeSiegeLesion, setValue]);
+  }, [horaireJourAccident, DateJourIncapDebut, DateJourIncapFin, indemnisationAccident, boolAucun, boolChausure, boolLunette, boolGant, boolCasque, boolAuditive, boolMasque, boolEcran, boolTenue, boolFiltre, boolVeste, boolMaire, boolChute, boolAutre, codeDeviation, codeAgentMateriel, codeNatureLesion, codeSiegeLesion, setValue]);
 
   /**
    * Etape 3 : retourner le formulaire (IHMs)
@@ -131,15 +129,7 @@ export default function FormulaireAccident({ setValue, accidentData, watch }) {
       <div>
         <div className="infoAccident">
           <h2>Infos Accident</h2>
-          <h3>Rentrez les informations sur l'accident de travail.</h3>
-
-          
-          <TextFieldP id="circonstanceAccident" label="Circonstance de l'accident" onChange={(circonstanceAccidentText) => {
-            setCirconstanceAccident(circonstanceAccidentText);
-            setValue('circonstanceAccident', circonstanceAccidentText);
-          }} defaultValue={circonstanceAccident}></TextFieldP>
-
-          
+          <h3>Rentrez les informations sur l'accident de travail.</h3>       
 
           <TextFieldMaskP id='horaireJourAccident' label='Horaire de la victime le jour de l accident' onChange={sethoraireJourAccident} defaultValue={horaireJourAccident} mask="de 00h00 à 00h00 et de 00h00 à 00h00" />
 
