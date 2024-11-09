@@ -56,24 +56,26 @@ function ResponsiveAppBar() {
   }, [userInfo, logAction, navigate]);
 
   const renderLogoutButton = () => (
-    <Tooltip title="Cliquez ici pour vous déconnecter" arrow>
-      <Button
-        onClick={handleLogout}  // Utilise handleLogout au lieu du lien direct
-        variant="contained"
-        sx={{
-          ...buttonStyle,
-          transition: 'all 0.3s ease-in-out',
-          '&:hover': {
-            backgroundColor: '#95ad22',
-            transform: 'scale(1.08)',
-            boxShadow: 6
-          }
-        }}
-        startIcon={<LogoutIcon />}
-      >
-        {showText && "logout"}
-      </Button>
-    </Tooltip>
+    !isLoginPage && (
+      <Tooltip title="Cliquez ici pour vous déconnecter" arrow>
+        <Button
+          onClick={handleLogout}
+          variant="contained"
+          sx={{
+            ...buttonStyle,
+            transition: 'all 0.3s ease-in-out',
+            '&:hover': {
+              backgroundColor: '#95ad22',
+              transform: 'scale(1.08)',
+              boxShadow: 6
+            }
+          }}
+          startIcon={<LogoutIcon />}
+        >
+          {showText && "logout"}
+        </Button>
+      </Tooltip>
+    )
   );
 
 
@@ -154,7 +156,7 @@ function ResponsiveAppBar() {
     }
   }), [windowWidth, darkMode]);
 
-  if (isHiddenPage || isLoginPage || isdeviation || isagentmateriel || isnaturelesion || issiegelesion) {
+  if (isHiddenPage || isdeviation || isagentmateriel || isnaturelesion || issiegelesion) {
     return null;
   }
 
@@ -249,7 +251,7 @@ function ResponsiveAppBar() {
           justifyContent: 'flex-end',
           mr: 0 // Marge droite à 0
         }}>
-          {!['/'].includes(location.pathname) &&
+          {!['/', '/login'].includes(location.pathname) &&
             renderButton("/", "Cliquez ici pour revenir a l'accueil", <HomeIcon />, "Home")}
 
           {isAdminOuConseiller && (
@@ -297,9 +299,11 @@ function ResponsiveAppBar() {
             </Button>
           </Tooltip>
 
+
           <SupportDialog
             open={supportDialogOpen}
             onClose={() => setSupportDialogOpen(false)}
+            isLoginPage={isLoginPage}
           />
 
         </Box>
