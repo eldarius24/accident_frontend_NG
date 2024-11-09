@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Dialog,
   DialogTitle,
@@ -12,20 +12,57 @@ import {
 import { useUserConnected } from '../Hook/userConnected';
 import axios from 'axios';
 import config from '../config.json';
+import AutoCompleteQ from '../_composants/autoCompleteQ';
+import listetypeSupport from '../liste/listeSupport.json';
+
+// Options par défaut au cas où le fichier JSON ne se charge pas correctement
+const defaultOptions = [
+  ""
+
+];
 
 const SupportDialog = ({ open, onClose }) => {
   const { userInfo } = useUserConnected();
-  const [formData, setFormData] = useState({
-    subject: '',
-    message: ''
-  });
+  const apiUrl = config.apiUrl;
+
+  // États du formulaire
+  const [subject, setSubject] = useState('');
+  const [message, setMessage] = useState('');
+  const [typeSupport, setTypeSupport] = useState('');
   const [status, setStatus] = useState({ type: '', message: '' });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const apiUrl = config.apiUrl;
+  // Vérifier et préparer les options
+  const supportOptions = React.useMemo(() => {
+    try {
+      // Vérifier que listetypeSupport existe et a la propriété AssureurStatus
+      if (listetypeSupport && Array.isArray(listetypeSupport.AssureurStatus)) {
+        return listetypeSupport.AssureurStatus;
+      }
+      console.warn('Format de listeSupport.json invalide, utilisation des options par défaut');
+      return defaultOptions;
+    } catch (error) {
+      console.error('Erreur lors du chargement des options de support:', error);
+      return defaultOptions;
+    }
+  }, []);
+
+  useEffect(() => {
+    // Log pour debug
+    console.log('Type support actuel:', typeSupport);
+    console.log('Options disponibles:', supportOptions);
+  }, [typeSupport, supportOptions]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!typeSupport) {
+      setStatus({
+        type: 'error',
+        message: 'Veuillez sélectionner un type de support'
+      });
+      return;
+    }
+
     setIsSubmitting(true);
     setStatus({ type: '', message: '' });
 
@@ -34,13 +71,15 @@ const SupportDialog = ({ open, onClose }) => {
         throw new Error('Information utilisateur manquante');
       }
 
-      console.log('Envoi à:', `http://${apiUrl}:3100/api/support/send-email`);
-      const result = await axios.post(`http://${apiUrl}:3100/api/support/send-email`, {
-        subject: formData.subject,
-        message: formData.message,
+      const emailData = {
+        subject,
+        message,
+        typeSupport,
         from: userInfo.userLogin,
         userName: userInfo.userName || userInfo.userLogin
-      });
+      };
+
+      const result = await axios.post(`http://${apiUrl}:3100/api/support/send-email`, emailData);
 
       if (result.data.success) {
         setStatus({
@@ -49,10 +88,10 @@ const SupportDialog = ({ open, onClose }) => {
         });
         setTimeout(() => {
           onClose();
-          setFormData({ subject: '', message: '' });
+          setSubject('');
+          setMessage('');
+          setTypeSupport('');
         }, 2000);
-      } else {
-        throw new Error(result.data.message || 'Erreur lors de l\'envoi du message');
       }
     } catch (error) {
       console.error('Erreur lors de l\'envoi:', error);
@@ -65,50 +104,89 @@ const SupportDialog = ({ open, onClose }) => {
     }
   };
 
+  const handleClose = () => {
+    if (!isSubmitting) {
+      onClose();
+      setSubject('');
+      setMessage('');
+      setTypeSupport('');
+      setStatus({ type: '', message: '' });
+    }
+  };
+
   return (
-    <Dialog 
-      open={open} 
-      onClose={!isSubmitting ? onClose : undefined}
+    <Dialog
+      open={open}
+      onClose={handleClose}
       maxWidth="sm"
       fullWidth
+      aria-labelledby="support-dialog-title"
+      keepMounted={false}
+      disableEscapeKeyDown={isSubmitting}
+      disablePortal={false}
       PaperProps={{
         sx: {
           backgroundColor: theme => theme.palette.mode === 'dark' ? '#424242' : 'white'
-        }
+        },
+        role: 'dialog',
+        'aria-modal': 'true'
       }}
     >
-      <DialogTitle 
-        sx={{ 
+      <DialogTitle
+        id="support-dialog-title"
+        sx={{
           backgroundColor: theme => theme.palette.mode === 'dark' ? '#535353' : '#ee752d60',
           color: theme => theme.palette.mode === 'dark' ? 'white' : 'black'
         }}
       >
         Contacter le Support
       </DialogTitle>
-      
+
       <form onSubmit={handleSubmit}>
         <DialogContent sx={{ pt: 2 }}>
+          {/* Debug pour voir les options disponibles */}
+          {process.env.NODE_ENV === 'development' && (
+            <div style={{ display: 'none' }}>
+              Options disponibles: {JSON.stringify(supportOptions)}
+            </div>
+          )}
+
+          <AutoCompleteQ
+            id='typeSupport'
+            option={supportOptions} // Utilisation des options vérifiées
+            label='Type de support'
+            onChange={(typeSupportSelect) => {
+              console.log('Nouvelle sélection:', typeSupportSelect); // Debug log
+              setTypeSupport(typeSupportSelect);
+            }}
+            defaultValue={typeSupport}
+            required={true}
+            sx={{
+              width: '100%',
+              mb: 2
+            }}
+          />
+
           <TextField
             autoFocus
             margin="dense"
             label="Sujet"
             fullWidth
             required
-            value={formData.subject}
-            onChange={(e) => setFormData(prev => ({
-              ...prev,
-              subject: e.target.value
-            }))}
+            value={subject}
+            onChange={(e) => setSubject(e.target.value)}
             disabled={isSubmitting}
-            sx={{ 
+            id="support-subject"
+            aria-label="Sujet du message"
+            sx={{
               mb: 2,
               '& .MuiOutlinedInput-root': {
-                backgroundColor: theme => 
+                backgroundColor: theme =>
                   theme.palette.mode === 'dark' ? '#424242' : '#ee752d60',
               }
             }}
           />
-          
+
           <TextField
             margin="dense"
             label="Message"
@@ -116,24 +194,24 @@ const SupportDialog = ({ open, onClose }) => {
             required
             multiline
             rows={4}
-            value={formData.message}
-            onChange={(e) => setFormData(prev => ({
-              ...prev,
-              message: e.target.value
-            }))}
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
             disabled={isSubmitting}
-            sx={{ 
+            id="support-message"
+            aria-label="Contenu du message"
+            sx={{
               '& .MuiOutlinedInput-root': {
-                backgroundColor: theme => 
+                backgroundColor: theme =>
                   theme.palette.mode === 'dark' ? '#424242' : '#ee752d60',
               }
             }}
           />
 
           {status.message && (
-            <Alert 
+            <Alert
               severity={status.type === 'error' ? 'error' : 'success'}
               sx={{ mt: 2 }}
+              role="alert"
             >
               {status.message}
             </Alert>
@@ -142,11 +220,12 @@ const SupportDialog = ({ open, onClose }) => {
 
         <DialogActions sx={{ px: 3, pb: 2 }}>
           <Button
-            onClick={onClose}
+            onClick={handleClose}
             disabled={isSubmitting}
             variant="contained"
+            aria-label="Annuler et fermer le formulaire"
             sx={{
-              backgroundColor: theme => 
+              backgroundColor: theme =>
                 theme.palette.mode === 'dark' ? '#424242' : '#ee752d60',
               '&:hover': {
                 backgroundColor: '#95ad22',
@@ -161,9 +240,10 @@ const SupportDialog = ({ open, onClose }) => {
             type="submit"
             disabled={isSubmitting}
             variant="contained"
-            startIcon={isSubmitting ? <CircularProgress size={20} /> : null}
+            aria-label={isSubmitting ? 'Envoi en cours' : 'Envoyer le message'}
+            startIcon={isSubmitting ? <CircularProgress size={20} aria-hidden="true" /> : null}
             sx={{
-              backgroundColor: theme => 
+              backgroundColor: theme =>
                 theme.palette.mode === 'dark' ? '#424242' : '#ee752d60',
               '&:hover': {
                 backgroundColor: '#95ad22',
