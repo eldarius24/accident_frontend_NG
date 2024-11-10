@@ -31,6 +31,7 @@ export default function AddUser() {
         userPassword: "",
         userName: "",
         boolAdministrateur: false,
+        boolDeveloppeur: false,
         entreprisesConseillerPrevention: [],
         entreprisesVisiteur: [],
         darkMode: false,
@@ -186,7 +187,19 @@ export default function AddUser() {
                         />
                     </Box>
                 </Tooltip>
-
+                <Tooltip title="Cocher cette case si l'utilisateur est développeur du site. Il aura les mêmes droits qu'un administrateur" arrow>
+                        <div>
+                            <ControlLabelAdminP
+                                id="boolDeveloppeur"
+                                label="Développeur du site"
+                                onChange={(value) => {
+                                    handleChange('boolDeveloppeur', value);
+                                    setValue('boolDeveloppeur', value);
+                                }}
+                                defaultValue={user.boolDeveloppeur}
+                            />
+                        </div>
+                    </Tooltip>
                 <h3>Donner les accès conseiller en prévention:</h3>
                 <Tooltip title="Si le nouvel utilisateur est conseiller en prévention, sélectionner son entreprise" arrow>
                     <Autocomplete

@@ -18,7 +18,7 @@ const exportLogs = async ({
   selectedType,
   selectedDate,
   searchTerm,
-  isAdmin,
+  isAdminOrDev,
   userInfo,
   showSnackbar,
   logAction
@@ -30,7 +30,7 @@ const exportLogs = async ({
         type: selectedType !== 'all' ? selectedType : undefined,
         date: selectedDate !== 'all' ? selectedDate : undefined,
         search: searchTerm || undefined,
-        userId: !isAdmin && userInfo?._id ? userInfo._id : undefined,
+        userId: !isAdminOrDev && userInfo?._id ? userInfo._id : undefined,
         page: 1,
         limit: 1
       }
@@ -44,7 +44,7 @@ const exportLogs = async ({
         type: selectedType !== 'all' ? selectedType : undefined,
         date: selectedDate !== 'all' ? selectedDate : undefined,
         search: searchTerm || undefined,
-        userId: !isAdmin && userInfo?._id ? userInfo._id : undefined
+        userId: !isAdminOrDev && userInfo?._id ? userInfo._id : undefined
       }
     });
 

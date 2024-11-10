@@ -1,7 +1,7 @@
 
 
 // src/planaction/utils/filteredUsers.js
-const createFilteredUsers = () => (users, searchTerm, selectedYears, isAdmin, userInfo) => {
+const createFilteredUsers = () => (users, searchTerm, selectedYears, isAdminOrDev, userInfo) => {
     // If no years selected, return empty array
     if (selectedYears.length === 0) {
         return [];
@@ -10,7 +10,7 @@ const createFilteredUsers = () => (users, searchTerm, selectedYears, isAdmin, us
     let filtered = users;
     
     // Filter by user enterprises if not admin
-    if (!isAdmin) {
+    if (!isAdminOrDev) {
         const userEntreprises = userInfo?.entreprisesConseillerPrevention || [];
         filtered = filtered.filter(action =>
             userEntreprises.includes(action.AddActionEntreprise)

@@ -1,13 +1,13 @@
 // src/planaction/utils/handleExport.js
 import { handleExportDataAction } from '../Model/excelGenerator.js';
 
-const createHandleExport = (users, isAdmin, userInfo, selectedYears, searchTerm, showSnackbar, logAction) => {
+const createHandleExport = (users, isAdminOrDev, userInfo, selectedYears, searchTerm, showSnackbar, logAction) => {
     return async () => {
         try {
             let dataToExport = users;
            
             // Filtre par entreprise si l'utilisateur n'est pas admin
-            if (!isAdmin) {
+            if (!isAdminOrDev) {
                 dataToExport = dataToExport.filter(action =>
                     userInfo.entreprisesConseillerPrevention?.includes(action.AddActionEntreprise)
                 );
@@ -41,7 +41,7 @@ const createHandleExport = (users, isAdmin, userInfo, selectedYears, searchTerm,
                 details: `Export Excel des actions - ${dataToExport.length} actions exportées - Années: ${selectedYears.join(', ') || 'Toutes'} - Filtre: ${searchTerm || 'Aucun'}`,
                 entity: 'Plan Action',
                 entityId: null,
-                entreprise: isAdmin ? 'Toutes' : userInfo.entreprisesConseillerPrevention?.[0]
+                entreprise: isAdminOrDev ? 'Toutes' : userInfo.entreprisesConseillerPrevention?.[0]
             });
 
             showSnackbar('Exportation des données réussie', 'success');

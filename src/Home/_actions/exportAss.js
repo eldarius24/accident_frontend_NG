@@ -13,7 +13,7 @@ import { handleExportDataAss } from '../../Model/excelGenerator.js';
  */
 export const handleExportDataAssurance = async ({ 
     filteredData, 
-    isAdmin, 
+    isAdminOrDev, 
     userInfo, 
     logAction,
     onSuccess, 
@@ -22,7 +22,7 @@ export const handleExportDataAssurance = async ({
     try {
         // Si l'utilisateur n'est pas administrateur, ne garder que les accidents liés à une entreprise que l'utilisateur est habilité à consulter
         let dataToExport = filteredData;
-        if (!isAdmin) {
+        if (!isAdminOrDev) {
             dataToExport = dataToExport.filter(accident =>
                 userInfo.entreprisesConseillerPrevention?.includes(accident.entrepriseName)
             );

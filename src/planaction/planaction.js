@@ -57,7 +57,7 @@ export default function PlanAction({ accidentData }) {
     const [enterprises, setEntreprises] = useState([]);
     const [allSectors, setAllSectors] = useState([]);
     const [availableSectors, setAvailableSectors] = useState([]);
-    const { isAdmin, userInfo } = useUserConnected();
+    const { isAdmin, userInfo, isAdminOrDev } = useUserConnected();
     const currentYear = new Date().getFullYear().toString();
     const [selectedYears, setSelectedYears] = useState(() =>
         getSelectedYearsFromCookie(COOKIE_PREFIXES.PLAN_ACTION)
@@ -79,14 +79,14 @@ export default function PlanAction({ accidentData }) {
     const handleExport = useCallback(
         createHandleExport(
             users,
-            isAdmin,
+            isAdminOrDev,
             userInfo,
             selectedYears,
             searchTerm,
             showSnackbar,
             logAction  // Ajout du paramètre logAction
         ),
-        [users, isAdmin, userInfo, selectedYears, searchTerm, showSnackbar, logAction]
+        [users, isAdminOrDev, userInfo, selectedYears, searchTerm, showSnackbar, logAction]
     );
 
     const updateUserSelectedYears = useCallback(
@@ -100,8 +100,8 @@ export default function PlanAction({ accidentData }) {
     );
 
     const filteredUsers = useMemo(
-        () => getFilteredUsers(users, searchTerm, selectedYears, isAdmin, userInfo),
-        [getFilteredUsers, users, searchTerm, selectedYears, isAdmin, userInfo]
+        () => getFilteredUsers(users, searchTerm, selectedYears, isAdminOrDev, userInfo),
+        [getFilteredUsers, users, searchTerm, selectedYears, isAdminOrDev, userInfo]
     );
 
     /**
@@ -198,11 +198,11 @@ export default function PlanAction({ accidentData }) {
             setAvailableSectors,
             setLoading,
             showSnackbar,
-            isAdmin,
+            isAdminOrDev,
             userInfo
         ),
         [apiUrl, setAddactions, setEntreprises, setAllSectors, setAvailableSectors,
-            setLoading, showSnackbar, isAdmin, userInfo]
+            setLoading, showSnackbar, isAdminOrDev, userInfo]
     );
 
     useEffect(() => {
@@ -220,7 +220,7 @@ export default function PlanAction({ accidentData }) {
     useEffect(() => {
         // Obtenir les années disponibles en fonction des droits de l'utilisateur
         const getAvailableYearsForUser = () => {
-            let filteredActions = isAdmin
+            let filteredActions = isAdminOrDev
                 ? users
                 : users.filter(action =>
                     userInfo?.entreprisesConseillerPrevention?.includes(action.AddActionEntreprise)
@@ -246,7 +246,7 @@ export default function PlanAction({ accidentData }) {
             setSelectedYears(validYears);
         }
 
-    }, [users, isAdmin, userInfo?.entreprisesConseillerPrevention]);
+    }, [users, isAdminOrDev, userInfo?.entreprisesConseillerPrevention]);
 
     const handleDelete = useCallback(async (userIdToDelete) => {
         try {
@@ -314,12 +314,12 @@ export default function PlanAction({ accidentData }) {
     const userEnterprise = userInfo?.entreprisesConseillerPrevention || [];
 
     const canViewAction = useCallback((action) => {
-        if (isAdmin) {
+        if (isAdminOrDev) {
             return true;
         } else {
             return userEnterprise.includes(action.AddActionEntreprise);
         }
-    }, [isAdmin, userEnterprise]);
+    }, [isAdminOrDev, userEnterprise]);
 
     const sortByYear = useCallback((a, b) => {
         return parseInt(a.AddActionanne) - parseInt(b.AddActionanne);

@@ -33,7 +33,7 @@ export default function FormulaireAction() {
     const { setValue, watch, handleSubmit } = useForm();
     const [enterprises, setEntreprises] = useState([]);
     const [allSectors, setAllSectors] = useState([]);
-    const { isAdmin, isAdminOuConseiller, userInfo, isConseiller } = useUserConnected();
+    const { isAdmin, isAdminOuConseiller, userInfo, isConseiller, isAdminOrDev } = useUserConnected();
     const navigate = useNavigate();
     const [availableSectors, setAvailableSectors] = useState([]);
 
@@ -97,7 +97,7 @@ export default function FormulaireAction() {
                     id: e._id
                 }));
 
-                if (!isAdmin) {
+                if (!isAdminOrDev) {
                     entreprisesData = entreprisesData.filter(e =>
                         userInfo.entreprisesConseillerPrevention?.includes(e.label)
 
@@ -115,7 +115,7 @@ export default function FormulaireAction() {
             }
         };
         fetchData();
-    }, [apiUrl, isAdmin, isConseiller]);
+    }, [apiUrl, isAdminOrDev, isConseiller]);
 
     useEffect(() => {
         if (actionData) {

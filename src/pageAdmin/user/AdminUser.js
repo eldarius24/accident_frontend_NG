@@ -19,13 +19,16 @@ import showDeleteConfirm from '../../pageFormulaire/FileManagement/showDeleteCon
 import getUsers from './_actions/get-users';
 import deleteUser from './_actions/delete-user';
 import { blueGrey } from '@mui/material/colors';
+import {useUserConnected} from '../../Hook/userConnected';
+
 /**
  * Adminuser est un composant React qui permet de gérer les utilisateurs.
  * Il affiche une table avec les informations de chaque utilisateur, 
  * ainsi que des boutons pour modifier et supprimer.
  */
 export default function Adminuser() {
-    const { darkMode } = useTheme();
+    const { isAdmin, isAdminOuConseiller, userInfo, isConseiller, isAdminOrDev,isDeveloppeur } = useUserConnected();
+    const { darkMode } = useTheme(); 
     const [users, setUsers] = useState([]);
     const [usersIsPending, startGetUsers] = useTransition();
     const [snackbar, setSnackbar] = useState({
@@ -33,13 +36,6 @@ export default function Adminuser() {
         message: '',
         severity: 'info',
     });
-
-    const rowColors = useMemo(() =>
-        darkMode
-            ? ['#7a7a7a', '#979797']
-            : ['#e62a5625', '#95519b25'],
-        [darkMode]
-    );
 
     /**
      * Affiche un message dans une snackbar.
@@ -97,6 +93,26 @@ export default function Adminuser() {
         }
     }, [showSnackbar]);
 
+    /**
+     * Détermine le rôle/statut de l'utilisateur
+     */
+    const getRole = useCallback((user) => {
+        if (user.boolAdministrateur && user.boolDeveloppeur) return 'Administrateur et Développeur';
+        if (user.boolAdministrateur) return 'Administrateur';
+        if (user.boolDeveloppeur) return 'Développeur';
+        if (user.entreprisesConseillerPrevention && user.entreprisesConseillerPrevention.length > 0) {
+            return 'Conseiller en prévention';
+        }
+        return 'Utilisateur';
+    }, []);
+    
+    const rowColors = useMemo(() =>
+        darkMode
+            ? ['#7a7a7a', '#979797']
+            : ['#e62a5625', '#95519b25'],
+        [darkMode]
+    );
+
     useEffect(() => {
         startGetUsers(getAllUsers);
     }, [getAllUsers, startGetUsers]);
@@ -133,6 +149,7 @@ export default function Adminuser() {
                                 <TableCell style={{ fontWeight: 'bold' }}>Login</TableCell>
                                 <TableCell style={{ fontWeight: 'bold' }}>Password</TableCell>
                                 <TableCell style={{ fontWeight: 'bold' }}>Name</TableCell>
+                                <TableCell style={{ fontWeight: 'bold' }}>Statut</TableCell>
                                 <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>Edit</TableCell>
                                 <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>Delete</TableCell>
                             </TableRow>
@@ -149,6 +166,7 @@ export default function Adminuser() {
                                     <TableCell>{user.userLogin}</TableCell>
                                     <TableCell>{user.userPassword}</TableCell>
                                     <TableCell>{user.userName}</TableCell>
+                                    <TableCell>{getRole(user)}</TableCell>
                                     <TableCell style={{ padding: 0, width: '70px' }}>
                                         <Tooltip title="Cliquez ici pour éditer cet utilisateur" arrow>
                                             <Button

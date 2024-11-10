@@ -40,7 +40,7 @@ const apiUrl = config.apiUrl || 'localhost';
  */
 const LogsViewer = () => {
   const { darkMode } = useTheme();
-  const { isAdmin, userInfo } = useUserConnected();
+  const { isAdminOrDev, userInfo } = useUserConnected();
   const { logAction } = useLogger();
   const [logs, setLogs] = useState([]);
   const [filteredLogs, setFilteredLogs] = useState([]);
@@ -80,7 +80,7 @@ const LogsViewer = () => {
       selectedDate: dateEnabled ? selectedDate : null,
       selectedType,
       searchTerm,
-      isAdmin,
+      isAdminOrDev,
       userInfo,
       page,
       logsPerPage,
@@ -91,7 +91,7 @@ const LogsViewer = () => {
       setTotalPages,
       showSnackbar
     });
-  }, [selectedDate, selectedType, searchTerm, isAdmin, userInfo, page, logsPerPage, dateEnabled]);
+  }, [selectedDate, selectedType, searchTerm, isAdminOrDev, userInfo, page, logsPerPage, dateEnabled]);
 
   const filterLogsWithState = useCallback(() => {
     filterLogs({
@@ -385,7 +385,7 @@ const LogsViewer = () => {
                   selectedType,
                   selectedDate,
                   searchTerm,
-                  isAdmin,
+                  isAdminOrDev,
                   userInfo,
                   logAction,
                   showSnackbar

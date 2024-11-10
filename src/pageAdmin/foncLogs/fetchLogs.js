@@ -32,7 +32,7 @@ const fetchLogs = async (params) => {
     selectedDate,
     selectedType,
     searchTerm,
-    isAdmin,
+    isAdminOrDev,
     userInfo,
     page,
     logsPerPage,
@@ -56,7 +56,7 @@ const fetchLogs = async (params) => {
     if (selectedDate !== 'all') urlParams.append('date', selectedDate);
     if (selectedType !== 'all') urlParams.append('type', selectedType);
     if (searchTerm) urlParams.append('search', searchTerm);
-    if (!isAdmin && userInfo?._id) urlParams.append('userId', userInfo._id);
+    if (!isAdminOrDev && userInfo?._id) urlParams.append('userId', userInfo._id);
     urlParams.append('page', page);
     urlParams.append('limit', logsPerPage);
 

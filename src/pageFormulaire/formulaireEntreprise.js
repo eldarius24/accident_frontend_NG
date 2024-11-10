@@ -37,7 +37,7 @@ export default function FormulaireEntreprise({ setValue, accidentData, watch }) 
   const [typeTravailleur, setTypeTravailleur] = useState(watch('typeTravailleur') || (accidentData && accidentData.typeTravailleur) || '');
   const [loading, setLoading] = useState(true);
   const apiUrl = config.apiUrl;
-  const { isAdmin, isAdminOuConseiller, userInfo, isConseiller } = useUserConnected();
+  const { isAdmin, isAdminOuConseiller, userInfo, isConseiller,isAdminOrDev } = useUserConnected();
   const [formData, setFormData] = useState(accidentData);
   const { darkMode } = useTheme();
 
@@ -86,7 +86,7 @@ export default function FormulaireEntreprise({ setValue, accidentData, watch }) 
         }));
 
         // Filter entreprises based on user role
-        if (!isAdmin) {
+        if (!isAdminOrDev) {
           entreprisesData = entreprisesData.filter(e =>
             userInfo.entreprisesConseillerPrevention?.includes(e.label)
           );
@@ -102,7 +102,7 @@ export default function FormulaireEntreprise({ setValue, accidentData, watch }) 
       }
     };
     fetchData();
-  }, [apiUrl, isAdmin, isConseiller]);
+  }, [apiUrl, isAdminOrDev, isConseiller]);
 
   useEffect(() => {
     setValue('entrepriseName', entreprise);

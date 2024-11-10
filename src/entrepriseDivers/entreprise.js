@@ -59,7 +59,7 @@ const EnterpriseDivers = () => {
     const { darkMode } = useTheme();
     const [enterprises, setEnterprises] = useState([]);
     const [loading, setLoading] = useState(true);
-    const { isAdmin, isConseiller, userInfo } = useUserConnected();
+    const { isAdmin, isConseiller, userInfo, isAdminOrDev } = useUserConnected();
     const apiUrl = config.apiUrl;
     const [questionnaires, setQuestionnaires] = useState({});
     const [filteredEnterprises, setFilteredEnterprises] = useState([]);
@@ -368,10 +368,10 @@ const EnterpriseDivers = () => {
             }
 
             // Vérifiez les valeurs de `isAdmin` et `isConseiller`
-            console.log("Valeur de isAdmin:", isAdmin);
+            console.log("Valeur de isAdminOrDev:", isAdminOrDev);
             console.log("Valeur de isConseiller:", isConseiller);
 
-            const filteredData = isAdmin
+            const filteredData = isAdminOrDev
                 ? enterpriseData
                 : enterpriseData.filter(enterprise =>
                     isConseiller && isConseillerPrevention(enterprise.AddEntreName)
@@ -384,7 +384,7 @@ const EnterpriseDivers = () => {
         } finally {
             setLoading(false);
         }
-    }, [apiUrl, isAdmin, isConseiller, isConseillerPrevention]);
+    }, [apiUrl, isAdminOrDev, isConseiller, isConseillerPrevention]);
 
     const fetchQuestionnaires = useCallback(async () => {
         try {
@@ -425,7 +425,7 @@ const EnterpriseDivers = () => {
                 const enterpriseData = enterprisesResponse.data;
 
                 if (Array.isArray(enterpriseData)) {
-                    const filteredData = isAdmin
+                    const filteredData = isAdminOrDev
                         ? enterpriseData
                         : enterpriseData.filter(enterprise =>
                             isConseiller && isConseillerPrevention(enterprise.AddEntreName)
@@ -618,7 +618,7 @@ const EnterpriseDivers = () => {
             >
                 Liste des Entreprises
             </Typography>
-            {isAdmin && (
+            {isAdminOrDev && (
                 <Box sx={{ mb: 3, width: '100%', maxWidth: 500, mx: 'auto' }}>
                     <FormControl fullWidth>
                         <InputLabel>Filtrer les entreprises</InputLabel>

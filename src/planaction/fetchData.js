@@ -8,7 +8,7 @@ const createFetchData = (apiUrl) => (
     setAvailableSectors,
     setLoading,
     showSnackbar,
-    isAdmin,
+    isAdminOrDev,
     userInfo
 ) => {
     return async () => {
@@ -26,7 +26,7 @@ const createFetchData = (apiUrl) => (
                 id: e._id
             }));
 
-            if (!isAdmin) {
+            if (!isAdminOrDev) {
                 entreprisesData = entreprisesData.filter(e =>
                     userInfo.entreprisesConseillerPrevention?.includes(e.label)
                 );

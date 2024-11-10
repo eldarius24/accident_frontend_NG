@@ -27,7 +27,7 @@ import HelpIcon from '@mui/icons-material/Help';
 function ResponsiveAppBar() {
   const [supportDialogOpen, setSupportDialogOpen] = useState(false);
   const location = useLocation();
-  const { isAuthenticated, isAdmin, isAdminOuConseiller, userInfo, isConseiller } = useUserConnected();
+  const { isAuthenticated, isAdmin, isAdminOuConseiller, userInfo, isConseiller, isAdminOrDev,isAdminOrDevOrConseiller } = useUserConnected();
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const { darkMode, toggleDarkMode } = useTheme();
   const apiUrl = config.apiUrl;
@@ -224,7 +224,7 @@ function ResponsiveAppBar() {
             />
           </Tooltip>
           {renderLogoutButton()}
-          {isAdmin && ['/logView', '/', '/addSecteur', '/adminaction', '/adminUser', "/adminEntreprises", "/addEntreprise", "/addUser"].includes(location.pathname) &&
+          {isAdminOrDev && ['/logView', '/', '/addSecteur', '/adminaction', '/adminUser', "/adminEntreprises", "/addEntreprise", "/addUser"].includes(location.pathname) &&
             renderButton("/adminaction", "Cliquez ici accèder à l'espace d'administration", <AdminPanelSettingsIcon />, "Admin")}
         </Box>
 
@@ -256,7 +256,7 @@ function ResponsiveAppBar() {
           {!['/', '/login'].includes(location.pathname) &&
             renderButton("/", "Cliquez ici pour revenir a l'accueil", <HomeIcon />, "Home")}
 
-          {isAdminOuConseiller && (
+          {isAdminOrDevOrConseiller && (
             <>
               {!['/actionfichierdll', '/quesEntrep', '/entreprise', '/logView', '/fichierdll', '/fichierdllaction', '/addSecteur', '/addUser', '/adminUser', '/addEntreprise', '/adminEntreprises', '/adminaction', '/formulaireAction', '/planAction', '/formulaire', '/statistiques'].includes(location.pathname) &&
                 renderButton("/formulaire", "Cliquez ici pour ajouté un nouvelle accident", <AddIcon />, "Accident")}

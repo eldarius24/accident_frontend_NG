@@ -72,7 +72,7 @@ function Home() {
     const [accidents, setAccidents] = useState([]);
     const [accidentsIsPending, startGetAccidents] = useTransition();
     const [searchTerm, setSearchTerm] = useState('');
-    const { isAdmin, isAdminOuConseiller, userInfo, isConseiller } = useUserConnected();
+    const { isAdmin, isAdminOuConseiller, userInfo, isConseiller, isAdminOrDev,isAdminOrDevOrConseiller } = useUserConnected();
     const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'info' });
     const { logAction } = useLogger();  // Ajout du hook useLogger
     const showSnackbar = useCallback((message, severity = 'info') => {
@@ -259,20 +259,20 @@ function Home() {
     const handleExportAccidentClick = useCallback(() => {
         handleExportDataAccident({
             filteredData,
-            isAdmin,
+            isAdminOrDev,
             userInfo,
             logAction, // Ajout de la fonction logAction
             onSuccess: (message) => showSnackbar(message, 'success'),
             onError: (message) => showSnackbar(message, 'error')
         });
-    }, [filteredData, isAdmin, userInfo, logAction, showSnackbar]);
+    }, [filteredData, isAdminOrDev, userInfo, logAction, showSnackbar]);
 
     /**
      * Exporte les données d'assurance vers un fichier Excel.
      * 
      * @param {object} params - Les paramètres d'exportation
      * @param {object[]} params.filteredData - Les données filtrées à exporter
-     * @param {boolean} params.isAdmin - Si l'utilisateur est administrateur
+     * @param {boolean} params.isAdminOrDev - Si l'utilisateur est administrateur
      * @param {object} params.userInfo - Les informations de l'utilisateur
      * @param {function} params.logAction - La fonction pour créer des logs
      * @param {function} [params.onSuccess] - La fonction à appeler en cas de succès
@@ -281,13 +281,13 @@ function Home() {
     const handleExportAssuranceClick = useCallback(() => {
         handleExportDataAssurance({
             filteredData,
-            isAdmin,
+            isAdminOrDev,
             userInfo,
             logAction, // Ajout de la fonction logAction
             onSuccess: (message) => showSnackbar(message, 'success'),
             onError: (message) => showSnackbar(message, 'error')
         });
-    }, [filteredData, isAdmin, userInfo, logAction, showSnackbar]);
+    }, [filteredData, isAdminOrDev, userInfo, logAction, showSnackbar]);
 
 
     const handleChangeYearsFilter = (event) => {
@@ -504,7 +504,7 @@ function Home() {
                             />
                         </Tooltip>
                     </Grid>
-                    {isAdminOuConseiller && (
+                    {isAdminOrDevOrConseiller && (
                         <>
                             <Grid item xs={6} md={3}>
                                 <Tooltip title="Cliquez ici pour exporter les données Accident en fonction des filtres sélèctionnes en excel" arrow>
@@ -635,7 +635,7 @@ function Home() {
                                     <TableCell>{item.typeAccident}</TableCell>
                                     <>
                                         <TableCell style={{ padding: 0, width: '70px' }}>
-                                            {(isAdmin || (isConseiller && isConseillerPrevention(item.entrepriseName))) ? (
+                                            {(isAdminOrDev || (isConseiller && isConseillerPrevention(item.entrepriseName))) ? (
                                                 <Tooltip title="Cliquez ici pour éditer les données de l'accident" arrow>
                                                     <Button sx={{
                                                         backgroundColor: darkMode ? blueGrey[700] : blueGrey[500],
@@ -659,7 +659,7 @@ function Home() {
                                         </TableCell>
 
                                         <TableCell style={{ padding: 0, width: '70px' }}>
-                                            {(isAdmin || (isConseiller && isConseillerPrevention(item.entrepriseName))) ? (
+                                            {(isAdminOrDev || (isConseiller && isConseillerPrevention(item.entrepriseName))) ? (
                                                 <Tooltip title="Cliquez ici pour ajouter des fichiers a l'accident" arrow>
                                                     <Button sx={{
                                                         backgroundColor: darkMode ? '#7b1fa2' : '#9c27b0',
@@ -683,7 +683,7 @@ function Home() {
                                         </TableCell>
 
                                         <TableCell style={{ padding: 0, width: '70px' }}>
-                                            {(isAdmin || (isConseiller && isConseillerPrevention(item.entrepriseName))) ? (
+                                            {(isAdminOrDev || (isConseiller && isConseillerPrevention(item.entrepriseName))) ? (
                                                 <Tooltip title="Cliquez ici pour générer la déclaration d'accident Belfius si vous avez remplis tous les champs du formulaire" arrow>
                                                     <Button sx={{
                                                         backgroundColor: darkMode ? '#1b5e20' : '#2e7d32',
@@ -707,7 +707,7 @@ function Home() {
                                         </TableCell>
 
                                         <TableCell style={{ padding: 0, width: '70px' }}>
-                                            {(isAdmin || (isConseiller && isConseillerPrevention(item.entrepriseName))) ? (
+                                            {(isAdminOrDev || (isConseiller && isConseillerPrevention(item.entrepriseName))) ? (
                                                 <Tooltip title="Cliquez ici pour supprimer l'accident" arrow>
                                                     <Button sx={{
                                                         backgroundColor: darkMode ? '#b71c1c' : '#d32f2f',
