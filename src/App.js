@@ -49,7 +49,8 @@ const App = () => {
           {/* Routes accessibles uniquement par usernormal */}
           <Route path="/login" element={<Login />} />
           <Route path="/" element={<ProtectedRoute><Home /></ProtectedRoute>} />
-          
+          <Route path="/statistiques" element={<ProtectedRoute><Statistiques /></ProtectedRoute>} />
+
           {/* Routes accessibles uniquement par isAdmin */}
           <Route path="/logView" element={<ProtectedRouteAdmin><LogView/></ProtectedRouteAdmin>} />
           <Route path="/adminUser" element={<ProtectedRouteAdmin><Adminuser /></ProtectedRouteAdmin>} />
@@ -71,7 +72,7 @@ const App = () => {
           <Route path="/fichierdll" element={<ProtectedRouteAdminOrConseiller><Fichierdll /></ProtectedRouteAdminOrConseiller>} />
           <Route path="/planAction" element={<ProtectedRouteAdminOrConseiller><PlanAction /></ProtectedRouteAdminOrConseiller>} />
           <Route path="/actionfichierdll" element={<ProtectedRouteAdminOrConseiller><Actionfichierdll /></ProtectedRouteAdminOrConseiller>} />
-          <Route path="/statistiques" element={<ProtectedRouteAdminOrConseiller><Statistiques /></ProtectedRouteAdminOrConseiller>} />
+          
         </Routes>
       </div>
     </Router>

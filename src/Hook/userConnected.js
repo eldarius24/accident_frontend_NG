@@ -17,24 +17,23 @@ export const useUserConnected = () => {
     const token = JSON.parse(localStorage.getItem('token'));
     if (!token || !token.data)
         return { isAuthenticated: false };
-    
+   
     const userInfo = token.data;
     const isAdmin = userInfo.boolAdministrateur;
     const isDeveloppeur = userInfo.boolDeveloppeur;
+    const isConseiller = userInfo.entreprisesConseillerPrevention?.length > 0;
     const isAdminOrDevOrConseiller = isAdmin || isDeveloppeur || isConseiller;
-    const isConseiller = userInfo.entreprisesConseillerPrevention.length > 0;
     const isAdminOrDev = isAdmin || isDeveloppeur;
     const isAdminOuConseiller = isAdmin || isConseiller;
 
-    return { 
-        isAuthenticated: true, 
+    return {
+        userInfo,
+        isAuthenticated: true,
         isAdmin,
         isDeveloppeur,
         isAdminOrDevOrConseiller,
-        isConseiller, 
-        isAdminOuConseiller,
         isAdminOrDev,
-        userInfo 
-
+        isConseiller,
+        isAdminOuConseiller
     };
 };
