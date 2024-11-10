@@ -237,11 +237,11 @@ function ResponsiveAppBar() {
         }}>
         </Box>
         <Box>
-        <Tooltip title="Traitement Informatisé de Gestion des Risques et des Emergences">
-          <Typography variant="h5" noWrap sx={textStyle}>
-            T.I.G.R.E
-          </Typography>
-        </Tooltip>
+          <Tooltip title="Traitement Informatisé de Gestion des Risques et des Emergences">
+            <Typography variant="h5" noWrap sx={textStyle}>
+              T.I.G.R.E
+            </Typography>
+          </Tooltip>
         </Box>
 
 

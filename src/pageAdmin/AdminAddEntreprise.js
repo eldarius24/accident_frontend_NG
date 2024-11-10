@@ -9,6 +9,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import CustomSnackbar from '../_composants/CustomSnackbar';
 import { useTheme } from '../pageAdmin/user/ThemeContext';
 
+
 /**
  * AdminPanelSettings est un composant qui permet de créer une nouvelle entreprise
  * via un formulaire.
@@ -28,7 +29,7 @@ export default function AdminPanelSettings({ accidentData }) {
     });
     const location = useLocation();
     const entrepriseToEdit = location.state?.entreprise;
-    const { watch, register, setValue, handleSubmit } = useForm({
+    const { watch, register, setValue, handleSubmit, formState: { errors } } = useForm({
         defaultValues: entrepriseToEdit || {}
     });
 
@@ -104,12 +105,212 @@ export default function AdminPanelSettings({ accidentData }) {
         setValue('AddEntrSclocalite', AddEntrSclocalite)
     }, [AddEntreName, AddEntrePolice, AddEntrOnss, AddEntrEnite, AddEntrIban, AddEntrBic, AddEntrRue, AddEntrCodpost, AddEntrLocalite, AddEntrTel, AddEntrEmail, AddEntreActiventre, AddEntrSecsoci, AddEntrNumaffi, AddEntrScadresse, AddEntrSccpost, AddEntrSclocalite, AddEntrNumentr]);
 
+    const formatONSS = (value) => {
+        // Supprimer tout ce qui n'est pas un chiffre
+        const numbers = value.replace(/[^\d]/g, '');
+
+        // Construire le numéro formaté
+        let formatted = '';
+        for (let i = 0; i < numbers.length && i < 12; i++) {
+            if (i === 3) {
+                formatted += '-';
+            }
+            if (i === 10) {
+                formatted += '-';
+            }
+            formatted += numbers[i];
+        }
+
+        return formatted;
+    };
+
+    const handleONSSChange = (newValue) => {
+        // Si l'utilisateur essaie de coller un numéro complet
+        if (newValue.includes('-')) {
+            newValue = newValue.replace(/-/g, '');
+        }
+
+        const formattedValue = formatONSS(newValue);
+        setAddEntrOnss(formattedValue);
+        setValue('AddEntrOnss', formattedValue);
+    };
+
+    const validateONSS = (value) => {
+        if (!value) return "Le numéro ONSS est requis";
+        const pattern = /^\d{3}-\d{7}-\d{2}$/;
+        return pattern.test(value) || "Le format doit être 000-0000000-00";
+    };
+
+    const formatUniteEtablissement = (value) => {
+        // Supprimer tout ce qui n'est pas un chiffre
+        const numbers = value.replace(/[^\d]/g, '');
+
+        // Construire le numéro formaté
+        let formatted = '';
+        for (let i = 0; i < numbers.length && i < 10; i++) {
+            if (i === 1) {
+                formatted += '-';
+            }
+            if (i === 4) {
+                formatted += '-';
+            }
+            if (i === 7) {
+                formatted += '-';
+            }
+            formatted += numbers[i];
+        }
+
+        return formatted;
+    };
+
+    const handleUniteEtablissementChange = (newValue) => {
+        // Si l'utilisateur essaie de coller un numéro complet
+        if (newValue.includes('-')) {
+            newValue = newValue.replace(/-/g, '');
+        }
+
+        const formattedValue = formatUniteEtablissement(newValue);
+        setAddEntrEnite(formattedValue);
+        setValue('AddEntrEnite', formattedValue);
+    };
+
+    const validateUniteEtablissement = (value) => {
+        if (!value) return "Le numéro d'unité d'établissement est requis";
+        const pattern = /^\d{1}-\d{3}-\d{3}-\d{3}$/;
+        return pattern.test(value) || "Le format doit être 0-000-000-000";
+    };
+
+
+    // Ajouter ces fonctions avec les autres fonctions de formatage
+    const formatNumeroEntreprise = (value) => {
+        // Supprimer tout ce qui n'est pas un chiffre
+        const numbers = value.replace(/[^\d]/g, '');
+
+        // Construire le numéro formaté
+        let formatted = '';
+        for (let i = 0; i < numbers.length && i < 10; i++) {
+            if (i === 4) {
+                formatted += '.';
+            }
+            if (i === 7) {
+                formatted += '.';
+            }
+            formatted += numbers[i];
+        }
+
+        return formatted;
+    };
+
+    const handleNumeroEntrepriseChange = (newValue) => {
+        // Si l'utilisateur essaie de coller un numéro complet
+        if (newValue.includes('.')) {
+            newValue = newValue.replace(/\./g, '');
+        }
+
+        const formattedValue = formatNumeroEntreprise(newValue);
+        setAddEntrNumentr(formattedValue);
+        setValue('AddEntrNumentr', formattedValue);
+    };
+
+    const validateNumeroEntreprise = (value) => {
+        if (!value) return "Le numéro d'entreprise est requis";
+        const pattern = /^\d{4}\.\d{3}\.\d{3}$/;
+        return pattern.test(value) || "Le format doit être 0000.000.000";
+    };
+
+    // Ajouter ces fonctions avec les autres fonctions de formatage
+    const formatIBAN = (value) => {
+        // Convertir en majuscules
+        value = value.toUpperCase();
+
+        // Supprimer les espaces existants
+        value = value.replace(/ /g, '');
+
+        // Séparer les deux premiers caractères du reste
+        const countryCode = value.slice(0, 2);
+        const numbers = value.slice(2).replace(/[^\d]/g, '');
+
+        // Construire l'IBAN formaté
+        let formatted = countryCode;
+
+        // Ajouter les chiffres avec des espaces tous les 4 caractères
+        for (let i = 0; i < numbers.length && i < 14; i++) {
+            if (i === 0) {
+                formatted += ' ';
+            }
+            if (i === 2 || i === 6 || i === 10) {
+                formatted += ' ';
+            }
+            formatted += numbers[i];
+        }
+
+        return formatted;
+    };
+
+    const handleIBANChange = (newValue) => {
+        // Si l'utilisateur essaie de coller un numéro complet
+        if (newValue.includes(' ')) {
+            newValue = newValue.replace(/ /g, '');
+        }
+
+        const formattedValue = formatIBAN(newValue);
+        setAddEntrIban(formattedValue);
+        setValue('AddEntrIban', formattedValue);
+    };
+
+    const validateIBAN = (value) => {
+        if (!value) return "Le numéro IBAN est requis";
+        // Modifier le pattern pour accepter n'importe quelles lettres au début
+        const pattern = /^[A-Z]{2}\d{2}( \d{4}){3}$/;
+        return pattern.test(value) || "Le format doit être XX00 0000 0000 0000 (où XX sont des lettres)";
+    };
+
+    // Ajouter ces fonctions avec les autres fonctions de formatage
+    const formatBIC = (value) => {
+        // Convertir en majuscules et supprimer les tirets existants
+        value = value.toUpperCase().replace(/-/g, '');
+
+        // Construire le BIC formaté
+        let formatted = '';
+        for (let i = 0; i < value.length && i < 8; i++) {
+            if (i === 4 || i === 6) {
+                formatted += '-';
+            }
+            formatted += value[i];
+        }
+
+        return formatted;
+    };
+
+    const handleBICChange = (newValue) => {
+        // Si l'utilisateur essaie de coller un BIC complet
+        if (newValue.includes('-')) {
+            newValue = newValue.replace(/-/g, '');
+        }
+
+        const formattedValue = formatBIC(newValue);
+        setAddEntrBic(formattedValue);
+        setValue('AddEntrBic', formattedValue);
+    };
+
+    const validateBIC = (value) => {
+        if (!value) return "Le code BIC est requis";
+        const pattern = /^[A-Z]{4}-[A-Z]{2}-[A-Z]{2}$/;
+        return pattern.test(value) || "Le format doit être AAAA-AA-AA";
+    };
 
 
     /**************************************************************************
      * METHODE ON SUBMIT
      * ************************************************************************/
     const onSubmit = async (data) => {
+        // Valider le format ONSS avant soumission
+        const onssValidation = validateONSS(data.AddEntrOnss);
+        if (onssValidation !== true) {
+            showSnackbar(onssValidation, 'error');
+            return;
+        }
+
         try {
             const url = entrepriseToEdit
                 ? `http://${apiUrl}:3100/api/entreprises/${entrepriseToEdit._id}`
@@ -118,19 +319,12 @@ export default function AdminPanelSettings({ accidentData }) {
             const method = entrepriseToEdit ? 'put' : 'post';
 
             const response = await axios[method](url, data);
-            console.log(`Réponse du serveur en ${entrepriseToEdit ? 'modification' : 'création'} :`, response.data);
             showSnackbar(`Entreprise ${entrepriseToEdit ? 'modifiée' : 'créée'} avec succès`, 'success');
-            // Rediriger vers la liste des entreprises après un court délai
             setTimeout(() => navigate('/adminEntreprises'), 2000);
         } catch (error) {
             console.error('Erreur de requête:', error.message);
             showSnackbar(`Erreur lors de la ${entrepriseToEdit ? 'modification' : 'création'} de l'entreprise`, 'error');
         }
-
-
-
-        // Naviguer vers la page d'accueil
-        //navigate('/');
     };
 
     return (
@@ -147,12 +341,105 @@ export default function AdminPanelSettings({ accidentData }) {
                 <TextFieldP id='AddEntrLocalite' label="Localité" onChange={setAddEntrLocalite} defaultValue={AddEntrLocalite}></TextFieldP>
                 <TextFieldP id='AddEntrTel' label="Téléphone" onChange={setAddEntrTel} defaultValue={AddEntrTel}></TextFieldP>
                 <TextFieldP id='AddEntrEmail' label="Adresse e-mail" onChange={setAddEntrEmail} defaultValue={AddEntrEmail}></TextFieldP>
-                <TextFieldP id='AddEntrNumentr' label="Numéro d'entreprise" onChange={setAddEntrNumentr} defaultValue={AddEntrNumentr}></TextFieldP>
+                <TextFieldP
+                    id='AddEntrNumentr'
+                    label="Numéro d'entreprise"
+                    onChange={handleNumeroEntrepriseChange}
+                    defaultValue={AddEntrNumentr}
+                    error={Boolean(errors.AddEntrNumentr)}
+                    helperText={errors.AddEntrNumentr?.message || "Format: 0000.000.000"}
+                    inputProps={{
+                        maxLength: 12,
+                        placeholder: "0000.000.000",
+                        value: AddEntrNumentr || '',
+                        // Empêcher l'utilisateur de saisir manuellement les points
+                        onKeyPress: (e) => {
+                            if (e.key === '.') {
+                                e.preventDefault();
+                            }
+                        }
+                    }}
+                />
                 <TextFieldP id='AddEntrePolice' label="Numéro de la Police d'assurance" onChange={setAddEntrePolice} defaultValue={AddEntrePolice}></TextFieldP>
-                <TextFieldP id='AddEntrOnss' label="Numéro ONSS" onChange={setAddEntrOnss} defaultValue={AddEntrOnss}></TextFieldP>
-                <TextFieldP id='AddEntrEnite' label="Numéro d'unité de l'établissement" onChange={setAddEntrEnite} defaultValue={AddEntrEnite}></TextFieldP>
-                <TextFieldP id='AddEntrIban' label="IBAN" onChange={setAddEntrIban} defaultValue={AddEntrIban}></TextFieldP>
-                <TextFieldP id='AddEntrBic' label="BIC" onChange={setAddEntrBic} defaultValue={AddEntrBic}></TextFieldP>
+                <TextFieldP
+                    id='AddEntrOnss'
+                    label="Numéro ONSS"
+                    onChange={handleONSSChange}
+                    defaultValue={AddEntrOnss}
+                    error={Boolean(errors.AddEntrOnss)}
+                    helperText={errors.AddEntrOnss?.message || "Format: 000-0000000-00"}
+                    inputProps={{
+                        maxLength: 14,
+                        placeholder: "000-0000000-00",
+                        value: AddEntrOnss || '',
+                        // Empêcher l'utilisateur de saisir manuellement les tirets
+                        onKeyPress: (e) => {
+                            if (e.key === '-') {
+                                e.preventDefault();
+                            }
+                        }
+                    }}
+                />
+                <TextFieldP
+                    id='AddEntrEnite'
+                    label="Numéro d'unité de l'établissement"
+                    onChange={handleUniteEtablissementChange}
+                    defaultValue={AddEntrEnite}
+                    error={Boolean(errors.AddEntrEnite)}
+                    helperText={errors.AddEntrEnite?.message || "Format: 0-000-000-000"}
+                    inputProps={{
+                        maxLength: 13,
+                        placeholder: "0-000-000-000",
+                        value: AddEntrEnite || '',
+                        // Empêcher l'utilisateur de saisir manuellement les tirets
+                        onKeyPress: (e) => {
+                            if (e.key === '-') {
+                                e.preventDefault();
+                            }
+                        }
+                    }}
+                />
+                <TextFieldP
+                    id='AddEntrIban'
+                    label="IBAN"
+                    onChange={handleIBANChange}
+                    defaultValue={AddEntrIban}
+                    error={Boolean(errors.AddEntrIban)}
+                    helperText={errors.AddEntrIban?.message || "Format: XX00 0000 0000 0000"}
+                    inputProps={{
+                        maxLength: 20, // 2 lettres + 16 chiffres + 3 espaces
+                        placeholder: "XX00 0000 0000 0000",
+                        value: AddEntrIban || '',
+                        // Empêcher l'utilisateur de saisir manuellement les espaces
+                        onKeyPress: (e) => {
+                            if (e.key === ' ') {
+                                e.preventDefault();
+                            }
+                        },
+                        style: { textTransform: 'uppercase' } // Pour garder les lettres en majuscules
+                    }}
+                />
+
+                <TextFieldP
+                    id='AddEntrBic'
+                    label="BIC"
+                    onChange={handleBICChange}
+                    defaultValue={AddEntrBic}
+                    error={Boolean(errors.AddEntrBic)}
+                    helperText={errors.AddEntrBic?.message || "Format: AAAA-AA-AA"}
+                    inputProps={{
+                        maxLength: 10, // 8 lettres + 2 tirets
+                        placeholder: "AAAA-AA-AA",
+                        value: AddEntrBic || '',
+                        // Empêcher l'utilisateur de saisir manuellement les tirets
+                        onKeyPress: (e) => {
+                            if (e.key === '-') {
+                                e.preventDefault();
+                            }
+                        },
+                        style: { textTransform: 'uppercase' } // Pour garder les lettres en majuscules
+                    }}
+                />
                 <TextFieldP id='AddEntreActiventre' label="Activité de l'entreprise" onChange={setAddEntreActiventre} defaultValue={AddEntreActiventre}></TextFieldP>
                 <TextFieldP id='AddEntrSecsoci' label="Secrétariat sociale" onChange={setAddEntrSecsoci} defaultValue={AddEntrSecsoci}></TextFieldP>
                 <TextFieldP id='AddEntrNumaffi' label="Numéro d'affiliation" onChange={setAddEntrNumaffi} defaultValue={AddEntrNumaffi}></TextFieldP>

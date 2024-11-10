@@ -2,7 +2,8 @@
  * importation des librairies pour la génération du pdf
  */
 const { PDFDocument, StandardFonts, rgb } = require('pdf-lib');
-import dataEntreprises from '../liste/dataEnreprises.json'
+import axios from 'axios';
+import config from '../config.json';
 
 
 /**
@@ -40,57 +41,66 @@ const getDayOfWeek = (dateString) => {
     return daysOfWeek[date.getDay()];
 };
 
-
-
+/**
+ * Fonction pour récupérer les données de l'entreprise depuis la base de données
+ * @param {string} entrepriseName - Nom de l'entreprise
+ * @returns {Promise} - Données de l'entreprise
+ */
 
 export default async function editPDF(data) {
     try {
+        const apiUrl = config.apiUrl;
+        const entrepriseResponse = await axios.get(`http://${apiUrl}:3100/api/entreprises/search/byName/${encodeURIComponent(data.entrepriseName)}`);
+        const entreprise = entrepriseResponse.data;
+
         const response = await fetch('./LeCortilDeclarationBELFIUS.pdf');
         const buffer = await response.arrayBuffer();
         const pdfDoc = await PDFDocument.load(buffer);
         const form = pdfDoc.getForm();
-
-        const dataEntreprise = dataEntreprises.entreprises.find((entreprise) => entreprise.name === data.entrepriseName).data;
-        console.log(" dataEntreprise => ", dataEntreprise);
-
+        const cleanString = (str) => {
+            if (!str) return '';
+            return str.replace(/[\s-]/g, ''); // Supprime les espaces et les tirets
+        };
         //donnée selon entreprise
-        EditPdfTextField(form, '11 straat', dataEntreprise.rue);
-        EditPdfTextField(form, '1 verzekeringspolis', dataEntreprise.Police);
-        EditPdfTextField(form, '8 bedrijfsnummer', dataEntreprise.numEntreprise);
-        EditPdfTextField(form, '12 postcode', dataEntreprise.codePostal);
-        EditPdfTextField(form, '13 gemeente', dataEntreprise.localite);
-        EditPdfTextField(form, '16 emailadres', dataEntreprise.email);
-        EditPdfTextField(form, '15 telefoon', dataEntreprise.tel);
-        EditPdfTextField(form, '17 iban', dataEntreprise.IBAN1);
-        EditPdfTextField(form, '17 iban 1', dataEntreprise.IBAN2);
-        EditPdfTextField(form, '17 iban 2', dataEntreprise.IBAN3);
-        EditPdfTextField(form, '17 iban 3', dataEntreprise.IBAN4);
-        EditPdfTextField(form, '17 iban 9', dataEntreprise.BIC1);
-        EditPdfTextField(form, '17 iban 10', dataEntreprise.BIC2);
-        EditPdfTextField(form, '17 iban 11', dataEntreprise.BIC3);
-        EditPdfTextField(form, '10 naam of handelsnaam', dataEntreprise.nom);
-        EditPdfTextField(form, '9 RSZ 3', dataEntreprise.unitetablissement1);
-        EditPdfTextField(form, '9 RSZ 4', dataEntreprise.unitetablissement2);
-        EditPdfTextField(form, '9 RSZ 5', dataEntreprise.unitetablissement3);
-        EditPdfTextField(form, '9 RSZ 6', dataEntreprise.unitetablissement4);
-        EditPdfTextField(form, '9 RSZ', dataEntreprise.ONSS1);
-        EditPdfTextField(form, '9 RSZ 1', dataEntreprise.ONSS2);
-        EditPdfTextField(form, '9 RSZ 2', dataEntreprise.ONSS3);
-        EditPdfTextField(form, '14 activiteit', dataEntreprise.activEntreprise);
-        EditPdfTextField(form, '60', dataEntreprise.numAffi);
-        EditPdfTextField(form, '59', dataEntreprise.secretariasociale);
-        EditPdfTextField(form, '61', dataEntreprise.scAdresse);
-        EditPdfTextField(form, '62', dataEntreprise.scCodePostal);
-        EditPdfTextField(form, '63', dataEntreprise.scLocalite);
+        //données selon entreprise
+        EditPdfTextField(form, '11 straat', entreprise.AddEntrRue);
+        EditPdfTextField(form, '1 verzekeringspolis', entreprise.AddEntrePolice);
+        EditPdfTextField(form, '8 bedrijfsnummer', entreprise.AddEntrNumentr);
+        EditPdfTextField(form, '12 postcode', entreprise.AddEntrCodpost);
+        EditPdfTextField(form, '13 gemeente', entreprise.AddEntrLocalite);
+        EditPdfTextField(form, '16 emailadres', entreprise.AddEntrEmail);
+        EditPdfTextField(form, '15 telefoon', entreprise.AddEntrTel);
+        EditPdfTextField(form, '17 iban', entreprise.AddEntrIban ? cleanString(entreprise.AddEntrIban).substring(0, 4) : '');
+        EditPdfTextField(form, '17 iban 1', entreprise.AddEntrIban ? cleanString(entreprise.AddEntrIban).substring(4, 8) : '');
+        EditPdfTextField(form, '17 iban 2', entreprise.AddEntrIban ? cleanString(entreprise.AddEntrIban).substring(8, 12) : '');
+        EditPdfTextField(form, '17 iban 3', entreprise.AddEntrIban ? cleanString(entreprise.AddEntrIban).substring(12, 16) : '');
+        EditPdfTextField(form, '17 iban 9', entreprise.AddEntrBic ? cleanString(entreprise.AddEntrBic).substring(0, 4) : '');
+        EditPdfTextField(form, '17 iban 10', entreprise.AddEntrBic ? cleanString(entreprise.AddEntrBic).substring(4, 6) : '');
+        EditPdfTextField(form, '17 iban 11', entreprise.AddEntrBic ? cleanString(entreprise.AddEntrBic).substring(6, 8) : '');
+        EditPdfTextField(form, '10 naam of handelsnaam', entreprise.AddEntreName);
+        EditPdfTextField(form, '9 RSZ 3', entreprise.AddEntrEnite ? cleanString(entreprise.AddEntrEnite).substring(0, 1) : '');
+        EditPdfTextField(form, '9 RSZ 4', entreprise.AddEntrEnite ? cleanString(entreprise.AddEntrEnite).substring(1, 4) : '');
+        EditPdfTextField(form, '9 RSZ 5', entreprise.AddEntrEnite ? cleanString(entreprise.AddEntrEnite).substring(4, 7) : '');
+        EditPdfTextField(form, '9 RSZ 6', entreprise.AddEntrEnite ? cleanString(entreprise.AddEntrEnite).substring(7, 10) : '');
+        EditPdfTextField(form, '9 RSZ', entreprise.AddEntrOnss ? cleanString(entreprise.AddEntrOnss).substring(0, 3) : '');
+        EditPdfTextField(form, '9 RSZ 1', entreprise.AddEntrOnss ? cleanString(entreprise.AddEntrOnss).substring(3, 10) : '');
+        EditPdfTextField(form, '9 RSZ 2', entreprise.AddEntrOnss ? cleanString(entreprise.AddEntrOnss).substring(10, 12) : '');
+        EditPdfTextField(form, '14 activiteit', entreprise.AddEntreActiventre);
+        EditPdfTextField(form, '60', entreprise.AddEntrNumaffi);
+        EditPdfTextField(form, '59', entreprise.AddEntrSecsoci);
+        EditPdfTextField(form, '61', entreprise.AddEntrScadresse);
+        EditPdfTextField(form, '62', entreprise.AddEntrSccpost);
+        EditPdfTextField(form, '63', entreprise.AddEntrSclocalite);
+
         if (data.DateHeureAccident !== undefined && data.DateHeureAccident !== null) {
             EditPdfTextField(form, '2 jaar', (data.DateHeureAccident.substring(0, 4)));
             EditPdfTextField(form, '3 nummer', (data.DateHeureAccident.substring(0, 4) + data.DateHeureAccident.substring(5, 7) + data.DateHeureAccident.substring(8, 10) + data.DateHeureAccident.substring(13, 15) + data.DateHeureAccident.substring(16, 18)));
         };
-        EditPdfTextField(form, 'p2_20', dataEntreprise.LieuxAtAdresse);
-        EditPdfTextField(form, 'p2_21', dataEntreprise.LieuxAtCodePostal);
-        EditPdfTextField(form, 'p2_22', dataEntreprise.LieuxAtCommune);
-        EditPdfTextField(form, 'p2_23', dataEntreprise.ListeLieuxAtPays);
-        //-------------------------
+
+        EditPdfTextField(form, 'p2_20', entreprise.AddEntrRue);
+        EditPdfTextField(form, 'p2_21', entreprise.AddEntrCodpost);
+        EditPdfTextField(form, 'p2_22', entreprise.AddEntrLocalite);
+        EditPdfTextField(form, 'p2_23', "Belgique"); // Valeur par défaut pour la Belgique
 
         if (data.niss !== undefined && data.niss !== null) {
             EditPdfTextField(form, '17 iban 12', (data.niss.substring(0, 6)));
@@ -767,20 +777,18 @@ export default async function editPDF(data) {
 
         const fileName = `${data.DateHeureAccident.substring(0, 10)}_${data.entrepriseName}_${data.nomTravailleur}_${data.prenomTravailleur}.pdf`;
 
-
         if (window.navigator && window.navigator.msSaveOrOpenBlob) {
-            // For Internet Explorer
             window.navigator.msSaveOrOpenBlob(blob, fileName);
         } else {
-            // For other browsers
             const url = URL.createObjectURL(blob);
             const link = document.createElement('a');
             link.href = url;
             link.download = fileName;
             link.click();
-            URL.revokeObjectURL(url); // Release the URL
+            URL.revokeObjectURL(url);
         }
     } catch (error) {
         console.error('Error editing PDF:', error);
+        throw new Error(`Erreur lors de la génération du PDF : ${error.message}`);
     }
 }
