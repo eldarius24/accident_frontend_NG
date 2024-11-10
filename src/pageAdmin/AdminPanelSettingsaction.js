@@ -44,7 +44,7 @@ export default function AdminPanelSettingsaction() {
                 color: darkMode ? '#ffffff' : '#000000',
                 margin: '0 20px'
             }}>
-                <h3>Administration des droits</h3>
+                <h3 style={{ color: darkMode ? '#ffffff' : 'inherit' }}>Administration des droits</h3>
 
                 <Box sx={{
                     display: 'flex',
@@ -102,7 +102,7 @@ export default function AdminPanelSettingsaction() {
                         </Button>
                     </Tooltip>
                 </Box>
-                <h3>Administration des entreprises</h3>
+                <h3 style={{ color: darkMode ? '#ffffff' : 'inherit' }}>Administration des entreprises</h3>
 
                 {/* Premier Box avec les boutons entreprise */}
                 <Box sx={{
