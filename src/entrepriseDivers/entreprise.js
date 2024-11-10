@@ -403,38 +403,73 @@ const EnterpriseDivers = () => {
     }, [apiUrl]);
 
     useEffect(() => {
-        fetchEnterprises();
-        fetchQuestionnaires();
-    }, []);
+        let isSubscribed = true;
+        const controller = new AbortController();
 
-    useEffect(() => {
-        const initializeEnterprises = async () => {
+        const fetchData = async () => {
+            if (!apiUrl) return;
+
+            setLoading(true);
             try {
-                const response = await axios.get(`http://${apiUrl}:3100/api/entreprises`);
-                const data = response.data;
-                let enterprisesData;
+                const [enterprisesResponse, questionnairesResponse] = await Promise.all([
+                    axios.get(`http://${apiUrl}:3100/api/entreprises`, {
+                        signal: controller.signal
+                    }),
+                    axios.get(`http://${apiUrl}:3100/api/questionnaires`, {
+                        signal: controller.signal
+                    })
+                ]);
 
-                if (isAdmin) {
-                    enterprisesData = data;
-                } else {
-                    enterprisesData = data.filter(enterprise =>
-                        isConseiller && isConseillerPrevention(enterprise.AddEntreName)
+                if (!isSubscribed) return;
+
+                const enterpriseData = enterprisesResponse.data;
+
+                if (Array.isArray(enterpriseData)) {
+                    const filteredData = isAdmin
+                        ? enterpriseData
+                        : enterpriseData.filter(enterprise =>
+                            isConseiller && isConseillerPrevention(enterprise.AddEntreName)
+                        );
+
+                    setEnterprises(filteredData);
+                    setFilteredEnterprises(
+                        Array.isArray(selectedEnterprises) && selectedEnterprises.length > 0
+                            ? filteredData.filter(e => selectedEnterprises.includes(e.AddEntreName))
+                            : filteredData
                     );
                 }
-                setEnterprises(enterprisesData);
-                setFilteredEnterprises(
-                    Array.isArray(enterprises) && Array.isArray(selectedEnterprises) && selectedEnterprises.length > 0
-                        ? enterprises.filter(e => selectedEnterprises.includes(e.AddEntreName))
-                        : enterprises || [] // Fallback to empty array if enterprises is undefined
-                );
+
+                const questionnairesByEnterprise = questionnairesResponse.data.reduce((acc, q) => {
+                    if (!acc[q.entrepriseId]) {
+                        acc[q.entrepriseId] = [];
+                    }
+                    acc[q.entrepriseId].push(q);
+                    return acc;
+                }, {});
+
+                if (isSubscribed) {
+                    setQuestionnaires(questionnairesByEnterprise);
+                    setLoading(false);
+                }
+
             } catch (error) {
-                console.error('Error fetching enterprises:', error);
-            } finally {
-                setLoading(false);
+                if (error.name === 'AbortError') {
+                    return; // Ignorer les erreurs d'abort
+                }
+                console.error('Error fetching data:', error);
+                if (isSubscribed) {
+                    setLoading(false);
+                }
             }
         };
-        initializeEnterprises();
-    }, [apiUrl, isAdmin, isConseiller, isConseillerPrevention, selectedEnterprises]);
+
+        fetchData();
+
+        return () => {
+            isSubscribed = false;
+            controller.abort();
+        };
+    }, []);
 
     const handleDeleteFile = async (questionnaireId, fileId, enterpriseId) => {
         try {
@@ -521,6 +556,11 @@ const EnterpriseDivers = () => {
     const handleFilterChange = (event) => {
         const selectedValues = event.target.value;
         setSelectedEnterprises(selectedValues);
+        setFilteredEnterprises(
+            selectedValues.length > 0
+                ? enterprises.filter(e => selectedValues.includes(e.AddEntreName))
+                : enterprises
+        );
     };
 
     const getCardStyle = useCallback(() => ({
@@ -529,12 +569,12 @@ const EnterpriseDivers = () => {
         color: darkMode ? '#fff' : 'inherit',
         transition: 'all 0.3s ease-in-out',
         border: `2px solid ${darkMode ? '#4a4a4a' : '#01aeac'}`,
-        borderRadius: '12px',   
+        borderRadius: '12px',
         '&:hover': {
             borderColor: darkMode ? '#fff' : '#95ad22',
         }
     }), [darkMode]);
-    
+
 
     const IconWrapper = ({ icon: Icon, text }) => (
         <Box display="flex" alignItems="center" gap={1} mb={1}>
@@ -674,8 +714,8 @@ const EnterpriseDivers = () => {
                             icon={NumbersIcon}
                             text={<><strong>N° Affiliation:</strong> {enterprise.AddEntrNumaffi}</>}
                         />
-        
-  
+
+
                         <Divider sx={{ my: 2, backgroundColor: darkMode ? '#ffffff' : '#000000' }} />
                         <Tooltip title="Ajouter un nouveau document lié a l'entreprise" arrow>
                             <Button

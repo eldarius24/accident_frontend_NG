@@ -115,7 +115,7 @@ export default function AdminPanelSettings({ accidentData }) {
                 ? `http://${apiUrl}:3100/api/entreprises/${entrepriseToEdit._id}`
                 : `http://${apiUrl}:3100/api/entreprises`;
 
-            const method = entrepriseToEdit ? 'put' : 'put';
+            const method = entrepriseToEdit ? 'put' : 'post';
 
             const response = await axios[method](url, data);
             console.log(`Réponse du serveur en ${entrepriseToEdit ? 'modification' : 'création'} :`, response.data);

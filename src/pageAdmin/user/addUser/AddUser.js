@@ -16,121 +16,105 @@ import { useNavigate } from 'react-router-dom';
 import CustomSnackbar from '../../../_composants/CustomSnackbar';
 import { useTheme } from '../../../pageAdmin/user/ThemeContext';
 
-/**
- * Page pour la création/modification d'un utilisateur
- * @returns Formulaires pour la création/modification d'un utilisateur
- */
 export default function AddUser() {
-    const { darkMode, toggleDarkMode } = useTheme();
+    const { darkMode } = useTheme();
     const navigate = useNavigate();
     const params = new URLSearchParams(window.location.search);
     const userId = params.get('userId');
     const { setValue, watch, handleSubmit } = useForm();
     const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
     const checkedIcon = <CheckBoxIcon fontSize="small" />;
+
+    // États
+    const [user, setUser] = useState({
+        userLogin: "",
+        userPassword: "",
+        userName: "",
+        boolAdministrateur: false,
+        entreprisesConseillerPrevention: [],
+        entreprisesVisiteur: [],
+        darkMode: false,
+        selectedYears: [new Date().getFullYear().toString()]
+    });
+    const [entreprises, setEntreprises] = useState([]);
     const [snackbar, setSnackbar] = useState({
         open: false,
         message: '',
         severity: 'info',
     });
 
-    /**
-     * Affiche un message dans une snackbar.
-     * @param {string} message - Le message à afficher.
-     * @param {string} [severity='info'] - La gravité du message. Les valeurs possibles sont 'info', 'success', 'warning' et 'error'.
-     */
     const showSnackbar = (message, severity = 'info') => {
         setSnackbar({ open: true, message, severity });
     };
 
-    /**
-     * Ferme la snackbar si l'utilisateur clique sur le bouton "Fermer" ou en dehors de la snackbar.
-     * Si l'utilisateur clique sur la snackbar elle-même (et non sur le bouton "Fermer"), la snackbar ne se ferme pas.
-     * 
-     * @param {object} event - L'événement qui a déclenché la fermeture de la snackbar.
-     * @param {string} reason - La raison pour laquelle la snackbar se ferme. Si elle vaut 'clickaway', cela signifie que l'utilisateur a cliqué en dehors de la snackbar.
-     */
     const handleCloseSnackbar = (event, reason) => {
-        if (reason === 'clickaway') {
-            return;
-        }
+        if (reason === 'clickaway') return;
         setSnackbar({ ...snackbar, open: false });
     };
 
-    /**
-     * Récupère les données de l'utilisateur en fonction de son ID si celui-ci est fourni.
-     * Si l'utilisateur n'est pas trouvé, il est considéré comme inexistant.
-     * Si l'utilisateur est trouvé, ses données sont stockées dans l'état user.
-     */
+    // Récupération des données utilisateur existantes
     const getUserData = async () => {
         try {
-            if (!userId)
-                return;
+            if (!userId) return;
 
-            const user = await getUser(userId);
+            const userData = await getUser(userId);
+            if (!userData) throw new Error('Aucun utilisateur trouvé');
 
-            if (!user)
-                throw new Error('Aucun utilisateur trouvé');
+            // Mise à jour de l'état avec les données existantes
+            setUser({
+                ...userData,
+                darkMode: userData.darkMode ?? false,
+                selectedYears: userData.selectedYears ?? [new Date().getFullYear().toString()]
+            });
 
-            setUser(user);
+            // Mise à jour des champs du formulaire
+            Object.entries(userData).forEach(([key, value]) => {
+                setValue(key, value);
+            });
         } catch (error) {
             console.error('Erreur lors de la récupération de l\'utilisateur:', error.message);
+            showSnackbar('Erreur lors de la récupération de l\'utilisateur', 'error');
         }
-    }
+    };
 
-    useEffect(() => {
-        getUserData();
-    }, [userId]);
-
-    const [user, setUser] = useState({
-        userLogin: watch('userLogin') || "",
-        userPassword: watch('userPassword') || "",
-        userName: watch('userName') || "",
-        boolAdministrateur: watch('boolAdministrateur') || false,
-        entreprisesConseillerPrevention: watch('entreprisesConseillerPrevention') || [],
-        entreprisesVisiteur: watch('entreprisesVisiteur') || [],
-    });
-
-    //listes des entreprises
-    const [entreprises, setEntreprises] = useState([]);
-
-    /**
-     * Récupère les noms des entreprises à partir de l'API.
-     * Si l'appel à l'API échoue, une erreur est logguée dans la console.
-     * Si l'appel à l'API réussit, les noms des entreprises sont stockés dans l'état entreprises.
-     */
+    // Récupération des entreprises
     const getEntreprisesData = async () => {
         try {
             const entreprisesData = await getEntreprises();
-
-            if (!entreprisesData)
-                throw new Error('Aucune entreprise trouvée');
-
-            setEntreprises(entreprisesData.map((item) => item.AddEntreName) || []);
+            if (!entreprisesData) throw new Error('Aucune entreprise trouvée');
+            setEntreprises(entreprisesData.map(item => item.AddEntreName));
         } catch (error) {
-            console.error('Erreur de la récupération des entreprises:', error.message);
+            console.error('Erreur lors de la récupération des entreprises:', error.message);
+            showSnackbar('Erreur lors de la récupération des entreprises', 'error');
         }
     };
 
     useEffect(() => {
+        getUserData();
         getEntreprisesData();
-    }, []);
+    }, [userId]);
 
+    const handleChange = (key, value) => {
+        setUser(prevData => ({ ...prevData, [key]: value }));
+    };
 
-    /**************************************************************************
-     * METHODE ON SUBMIT
-     * ************************************************************************/
     const onSubmit = async () => {
         try {
+            // Préparation des données utilisateur
+            const userData = {
+                ...user,
+                darkMode: user.darkMode ?? false,
+                selectedYears: user.selectedYears ?? [new Date().getFullYear().toString()]
+            };
 
-            const result = await putUser(userId, user);
-            setTimeout(() => navigate('/adminUser'), 2000);
-            if (!result)
-                return console.error('Erreur lors de la création/modification de l\'utilisateur');
+            const result = await putUser(userId, userData);
+            if (!result) throw new Error('Erreur lors de la création/modification de l\'utilisateur');
 
-            console.log('Utilisateur créé/modifié:', result);
             showSnackbar('Utilisateur en cours de création', 'success');
-            setTimeout(() => showSnackbar('Utilisateur créée avec succès', 'success'), 1000);
+            setTimeout(() => {
+                showSnackbar('Utilisateur créé avec succès', 'success');
+                navigate('/adminUser');
+            }, 2000);
 
         } catch (error) {
             console.error('Erreur de requête:', error.message);
@@ -138,21 +122,6 @@ export default function AddUser() {
         }
     };
 
-    /**
-     * Handles the change of a key-value pair in the user data object.
-     * 
-     * @param {string} key - The key to be updated in the user data object.
-     * @param {any} value - The new value to be assigned to the key in the user data object.
-     */
-    const handleChange = (key, value) => {
-        setUser((prevData) => ({ ...prevData, [key]: value }));
-    };
-
-    /**
-     * PaperComponent is a custom component that wraps the MUI Paper component.
-     * It overrides the default background color of the Paper component to #bed7f6.
-     * This component is used as the PaperComponent prop in the Autocomplete component.
-     */
     const PaperComponent = (props) => (
         <Paper
             {...props}
@@ -180,29 +149,46 @@ export default function AddUser() {
             }}>
                 <h2>Administration des droits</h2>
 
-                <h3>Créer un nouvelle utilisateur</h3>
+                <h3>Créer un nouvel utilisateur</h3>
 
-                <TextFieldP id='userLogin' label="Adresse email" onChange={(value) => handleChange('userLogin', value)} defaultValue={user.userLogin}></TextFieldP>
+                <TextFieldP
+                    id='userLogin'
+                    label="Adresse email"
+                    onChange={(value) => handleChange('userLogin', value)}
+                    defaultValue={user.userLogin}
+                />
 
-                <TextFieldP id='userPassword' label="Mot de passe" onChange={(value) => handleChange('userPassword', value)} defaultValue={user.userPassword}></TextFieldP>
+                <TextFieldP
+                    id='userPassword'
+                    label="Mot de passe"
+                    onChange={(value) => handleChange('userPassword', value)}
+                    defaultValue={user.userPassword}
+                />
 
-                <TextFieldP id='userName' label="Nom et Prénom" onChange={(value) => handleChange('userName', value)} defaultValue={user.userName}></TextFieldP>
-
+                <TextFieldP
+                    id='userName'
+                    label="Nom et Prénom"
+                    onChange={(value) => handleChange('userName', value)}
+                    defaultValue={user.userName}
+                />
 
                 <h3>Donner les accès administration du site:</h3>
-                <Tooltip title="Cocher cette case si l'utilisateur est administrateur du site. Il aura acces a tous les menus pour toutes les entreprises" arrow>
+                <Tooltip title="Cocher cette case si l'utilisateur est administrateur du site. Il aura accès à tous les menus pour toutes les entreprises" arrow>
                     <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-
-                        <ControlLabelAdminP id="boolAdministrateur" label="Administrateur du site" onChange={(boolAdministrateurCoche) => {
-                            handleChange('boolAdministrateur', boolAdministrateurCoche);
-                            setValue('boolAdministrateur', boolAdministrateurCoche);
-                        }} defaultValue={user.boolAdministrateur}></ControlLabelAdminP>
-
+                        <ControlLabelAdminP
+                            id="boolAdministrateur"
+                            label="Administrateur du site"
+                            onChange={(value) => {
+                                handleChange('boolAdministrateur', value);
+                                setValue('boolAdministrateur', value);
+                            }}
+                            defaultValue={user.boolAdministrateur}
+                        />
                     </Box>
                 </Tooltip>
 
                 <h3>Donner les accès conseiller en prévention:</h3>
-                <Tooltip title="Si le nouvelle utilisateur est conseiller en prévention, sélèctioner son entrepriseafin qu'il ne puisse puisse pas gérer d'autres entreprise" arrow>
+                <Tooltip title="Si le nouvel utilisateur est conseiller en prévention, sélectionner son entreprise" arrow>
                     <Autocomplete
                         multiple
                         id="checkboxes-tags-demo-prevention"
@@ -277,12 +263,11 @@ export default function AddUser() {
                 </Tooltip>
 
                 <h3>Donner les accès Visiteur:</h3>
-
                 <Autocomplete
                     multiple
                     id="checkboxes-tags-demo-visiteur"
                     options={entreprises}
-                    onChange={(_, value) => { handleChange('entreprisesVisiteur', value) }}
+                    onChange={(_, value) => handleChange('entreprisesVisiteur', value)}
                     value={user.entreprisesVisiteur}
                     disableCloseOnSelect
                     sx={{
@@ -351,25 +336,33 @@ export default function AddUser() {
                 />
 
                 <div style={{ display: 'flex', justifyContent: 'center' }}>
-                    <Tooltip title="Cliquez ici pour enregistrer et créer le nouvelle utilisateur" arrow>
+                    <Tooltip title="Cliquez ici pour enregistrer et créer le nouvel utilisateur" arrow>
                         <Button
                             type="submit"
                             sx={{
-                                backgroundColor: '#ee742d59',
+                                backgroundColor: darkMode ? '#424242' : '#ee742d59',
+                                color: darkMode ? '#ffffff' : 'black',
                                 transition: 'all 0.3s ease-in-out',
-                                '&:hover': { backgroundColor: '#95ad22', transform: 'scale(1.08)', boxShadow: 6 },
+                                '&:hover': {
+                                    backgroundColor: darkMode ? '#7a8e1c' : '#95ad22',
+                                    transform: 'scale(1.08)',
+                                    boxShadow: darkMode ? '0 6px 12px rgba(255,255,255,0.2)' : 6
+                                },
+                                boxShadow: darkMode ? '0 3px 6px rgba(255,255,255,0.1)' : 3,
                                 padding: '10px 20px',
                                 width: '50%',
                                 marginTop: '1cm',
                                 height: '300%',
-                                fontSize: '2rem', // Taille de police de base
-
-                                // Utilisation de Media Queries pour ajuster la taille de police
+                                fontSize: '2rem',
+                                border: darkMode ? '1px solid rgba(255,255,255,0.1)' : 'none',
+                                '& .MuiSvgIcon-root': {
+                                    color: darkMode ? '#fff' : 'inherit'
+                                },
                                 '@media (min-width: 750px)': {
-                                    fontSize: '3rem', // Taille de police plus grande pour les écrans plus larges
+                                    fontSize: '3rem',
                                 },
                                 '@media (max-width: 550px)': {
-                                    fontSize: '1.5rem', // Taille de police plus petite pour les écrans plus étroits
+                                    fontSize: '1.5rem',
                                 },
                             }}
                             variant="contained"
@@ -378,21 +371,21 @@ export default function AddUser() {
                         </Button>
                     </Tooltip>
                 </div>
-
-                <div style={{ marginTop: '30px' }}></div>
-                <CustomSnackbar
-                    open={snackbar.open}
-                    handleClose={handleCloseSnackbar}
-                    message={snackbar.message}
-                    severity={snackbar.severity}
-                />
+                <div style={{ marginTop: '30px' }}>
+                    <CustomSnackbar
+                        open={snackbar.open}
+                        handleClose={handleCloseSnackbar}
+                        message={snackbar.message}
+                        severity={snackbar.severity}
+                    />
+                </div>
             </div>
             <div className="image-cortigroupe"></div>
             <Tooltip title="Si vous rencontrez un souci avec le site, envoyer un mail à l'adresse suivante : bgillet.lecortil@cortigroupe.be et expliquer le soucis rencontré" arrow>
-                <h5 style={{ marginBottom: '40px' }}> Développé par Remy et Benoit pour Le Cortigroupe.</h5>
+                <h5 style={{ marginBottom: '40px' }}>
+                    Développé par Remy et Benoit pour Le Cortigroupe.
+                </h5>
             </Tooltip>
-
         </form>
-
     );
 }

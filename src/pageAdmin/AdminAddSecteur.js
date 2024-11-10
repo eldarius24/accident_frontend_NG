@@ -119,13 +119,26 @@ export default function AddSecteur() {
      */
     const onSubmit = async (data) => {
         try {
-            data.entrepriseId = entreprise._id;
-            console.log('Adding secteur:', data);
-            const response = await axios.put(`http://${apiUrl}:3100/api/secteurs`, data);
-            console.log('Secteur added:', response.data);
-            await fetchSecteurs();
-            setSecteurName('');
-            showSnackbar('Secteur ajouté avec succès', 'success');
+            // Vérifier que le nom du secteur n'est pas vide
+            if (!data.secteurName?.trim()) {
+                showSnackbar('Le nom du secteur est requis', 'error');
+                return;
+            }
+    
+            const sectorData = {
+                secteurName: data.secteurName,
+                entrepriseId: entreprise._id
+            };
+    
+            const response = await axios.post(`http://${apiUrl}:3100/api/secteurs`, sectorData);
+            
+            if (response.status === 201) {
+                await fetchSecteurs();
+                setSecteurName('');
+                showSnackbar('Secteur ajouté avec succès', 'success');
+            } else {
+                throw new Error(`Erreur HTTP: ${response.status}`);
+            }
         } catch (error) {
             console.error('Error adding secteur:', error);
             showSnackbar('Erreur lors de l\'ajout du secteur', 'error');
@@ -140,25 +153,20 @@ export default function AddSecteur() {
      */
     const handleDelete = async (secteurId) => {
         try {
-            console.log('Deleting secteur:', secteurId);
             const response = await axios.delete(`http://${apiUrl}:3100/api/secteurs/${secteurId}`);
-            console.log('Delete response:', response);
-
+    
             if (response.status === 200 || response.status === 204) {
-                console.log('Secteur deleted successfully');
                 await fetchSecteurs();
                 showSnackbar('Secteur supprimé avec succès', 'success');
             } else {
-                console.error('Unexpected response status:', response.status);
-                throw new Error('Unexpected response status');
+                throw new Error(`Erreur HTTP: ${response.status}`);
             }
         } catch (error) {
             console.error('Error deleting secteur:', error);
-            if (error.response) {
-                console.error('Error response:', error.response.data);
-                console.error('Error status:', error.response.status);
-            }
-            showSnackbar('Erreur lors de la suppression du secteur', 'error');
+            showSnackbar(
+                error.response?.data?.message || 'Erreur lors de la suppression du secteur',
+                'error'
+            );
         }
     };
 

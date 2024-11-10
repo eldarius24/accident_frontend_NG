@@ -550,20 +550,26 @@ const QuesEntrep = () => {
                             type="submit"
                             variant="contained"
                             sx={{
-                                backgroundColor: '#ee742d59',
+                                backgroundColor: darkMode ? '#424242' : '#ee742d59',
+                                color: darkMode ? '#ffffff' : 'black',
                                 transition: 'all 0.3s ease-in-out',
                                 '&:hover': {
-                                    backgroundColor: '#95ad22',
+                                    backgroundColor: darkMode ? '#7a8e1c' : '#95ad22',
                                     transform: 'scale(1.08)',
-                                    boxShadow: 6
+                                    boxShadow: darkMode ? '0 6px 12px rgba(255,255,255,0.2)' : 6
                                 },
+                                boxShadow: darkMode ? '0 3px 6px rgba(255,255,255,0.1)' : 3,
                                 padding: '10px 20px',
                                 width: '50%',
                                 fontSize: {
                                     xs: '1.5rem',
                                     md: '2rem',
                                     lg: '3rem'
-                                }
+                                },
+                                border: darkMode ? '1px solid rgba(255,255,255,0.1)' : 'none',
+                                '& .MuiSvgIcon-root': {
+                                    color: darkMode ? '#fff' : 'inherit'
+                                },
                             }}
                         >
                             Enregistrer le questionnaire

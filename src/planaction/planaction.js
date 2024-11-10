@@ -207,7 +207,7 @@ export default function PlanAction({ accidentData }) {
 
     useEffect(() => {
         fetchData();
-    }, [fetchData]);
+    }, []);
 
     useEffect(() => {
         const years = [...new Set(users.map(action => action.AddActionanne))].filter(Boolean).sort();

@@ -17,30 +17,26 @@ const Cookies = {
     for (let cookie of cookies) {
       cookie = cookie.trim();
       if (cookie.startsWith(cookieName)) {
-        return cookie.substring(cookieName.length);
+        return cookie.substring(cookieName.length) === 'true';
       }
     }
-    return null;
+    return false;
   }
 };
 
 export const ThemeProvider = ({ children }) => {
   // Fonction pour récupérer le thème initial depuis les cookies
   const getInitialTheme = useCallback(() => {
-    const savedTheme = Cookies.get(THEME_COOKIE_NAME);
-    return savedTheme === 'true';
+    return Cookies.get(THEME_COOKIE_NAME);
   }, []);
 
   const [darkMode, setDarkMode] = useState(getInitialTheme);
 
-  // Effet pour appliquer le thème
+  // Effet pour appliquer le thème et sauvegarder dans les cookies
   useEffect(() => {
-    // Appliquer les styles au body
     document.body.style.backgroundColor = darkMode ? '#6e6e6e' : '#ffffff';
     document.body.style.color = darkMode ? '#ffffff' : '#6e6e6e';
-
-    // Sauvegarder le thème dans les cookies
-    Cookies.set(THEME_COOKIE_NAME, darkMode.toString());
+    Cookies.set(THEME_COOKIE_NAME, darkMode);
   }, [darkMode]);
 
   // Fonction pour basculer le thème

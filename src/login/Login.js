@@ -39,7 +39,7 @@ const Login = () => {
         userName: email,
         userId: 'anonymous'
       });
-
+  
       const response = await axios.post('http://localhost:3100/api/login', { email, password }, {
         headers: { 'Content-Type': 'application/json' }
       });
@@ -74,8 +74,8 @@ const Login = () => {
         userId: userData._id,
         entreprise: userData.entreprisesConseillerPrevention?.[0]
       });
-
-      setDarkMode(!!userData.darkMode);
+  
+      // Supprimé la ligne setDarkMode car maintenant géré uniquement par les cookies
       navigate('/');
       
     } catch (error) {
