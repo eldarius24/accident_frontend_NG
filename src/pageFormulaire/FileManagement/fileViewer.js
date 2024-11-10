@@ -4,6 +4,7 @@ import mammoth from 'mammoth';
 import { Box, Typography, CircularProgress } from '@mui/material';
 import { useLogger } from '../../Hook/useLogger';
 import * as XLSX from 'xlsx';
+import { getAccidentDetails } from "./deleteFile";
 
 const FileViewer = ({ file, accidentId, isEntreprise = false }) => {
     const [fullContent, setFullContent] = useState(null);
@@ -68,7 +69,6 @@ const FileViewer = ({ file, accidentId, isEntreprise = false }) => {
             setError(null);
 
             try {
-                // Configuration de la requête
                 const response = await axios.get(`http://localhost:3100/api/getFile/${file.fileId}`, {
                     responseType: 'blob',
                     headers: {
@@ -76,24 +76,30 @@ const FileViewer = ({ file, accidentId, isEntreprise = false }) => {
                     }
                 });
 
-                // Log de l'action
-                try {
-                    await logAction({
-                        actionType: 'consultation',
-                        details: `Prévisualisation du fichier - Nom: ${file.fileName} - Entreprise: ${file.entrepriseName}`,
-                        entity: 'Entreprise',
-                        entityId: file.fileId,
-                        entreprise: file.entrepriseName
-                    });
-                } catch (logError) {
-                    console.error('Erreur lors de la création du log:', logError);
+
+
+
+                // Log de l'action avec les détails de l'accident
+                if (!isEntreprise) {
+                    try {
+                        const accidentDetails = await getAccidentDetails(accidentId);
+                        await logAction({
+                            actionType: 'consultation',
+                            details: `Prévisualisation du fichier - Nom: ${file.fileName} - Travailleur: ${accidentDetails?.nomTravailleur} ${accidentDetails?.prenomTravailleur} - Date accident: ${accidentDetails?.dateAccident} - Entreprise: ${accidentDetails?.entreprise}`,
+                            entity: 'Accident',
+                            entityId: file.fileId,
+                            entreprise: accidentDetails?.entreprise || null
+                        });
+                    } catch (logError) {
+                        console.error('Erreur lors de la création du log:', logError);
+                    }
                 }
 
                 const blob = response.data;
                 const fileType = file.fileName.split('.').pop().toLowerCase();
 
 
-                
+
                 try {
                     switch (fileType) {
                         case 'xlsx':

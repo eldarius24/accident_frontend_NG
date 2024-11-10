@@ -57,8 +57,10 @@ const FileViewer = ({ file, actionId, isEntreprise = false }) => {
             if (response.data) {
                 return {
                     nomTravailleur: response.data.AddActionQui,
+                    prenomTravailleur: response.data.AddActionQui, // Si vous avez le prénom
                     entreprise: response.data.AddActionEntreprise,
-                    dateAction: new Date(response.data.AddActionDate).toLocaleDateString()
+                    dateAction: new Date(response.data.AddActionDate).toLocaleDateString(),
+                    action: response.data.AddAction // Ajout de l'action
                 };
             }
             return null;
@@ -79,7 +81,7 @@ const FileViewer = ({ file, actionId, isEntreprise = false }) => {
             try {
 
                 const actionDetails = await getactionDiversDetails(actionId);
-                const response = await axios.get(`http://localhost:3100/api/getFileAction/${file.fileId}`, {
+                const response = await axios.get(`http://localhost:3100/api/getFileAction/${file.fileId}`, { 
                     responseType: 'blob',
                     headers: {
                         'Accept': '*/*'
@@ -89,7 +91,7 @@ const FileViewer = ({ file, actionId, isEntreprise = false }) => {
                 try {
                     await logAction({
                         actionType: 'consultation',
-                        details: `Prévisualisation du fichier - Nom: ${file.fileName} - pour l'action de: ${actionDetails?.nomTravailleur} - Date action: ${actionDetails?.dateAction}`,
+                        details: `Prévisualisation du fichier - Nom: ${file.fileName} - Action: ${actionDetails?.action || 'Non spécifiée'} - La personne qui doit gerer le travail: ${actionDetails?.nomTravailleur || 'Non spécifié'} - Date action: ${actionDetails?.dateAction || 'Non spécifiée'}`,
                         entity: 'Action',
                         entityId: file.fileId,
                         entreprise: actionDetails?.entreprise || null

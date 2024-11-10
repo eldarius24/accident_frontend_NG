@@ -999,6 +999,7 @@ const EnterpriseDivers = () => {
                             <FileViewer
                                 file={selectedFile.file}
                                 accidentId={null}
+                                isEntreprise={true}
                             />
                         </Box>
                     )}
