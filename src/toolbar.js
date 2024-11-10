@@ -237,9 +237,11 @@ function ResponsiveAppBar() {
         }}>
         </Box>
         <Box>
+        <Tooltip title="Traitement Informatisé de Gestion des Risques et des Emergences">
           <Typography variant="h5" noWrap sx={textStyle}>
             T.I.G.R.E
           </Typography>
+        </Tooltip>
         </Box>
 
 
@@ -292,13 +294,20 @@ function ResponsiveAppBar() {
             <Button
               variant="contained"
               onClick={() => setSupportDialogOpen(true)}
-              sx={buttonStyle}
+              sx={{
+                ...buttonStyle,
+                transition: 'all 0.3s ease-in-out',
+                '&:hover': {
+                  backgroundColor: '#95ad22',
+                  transform: 'scale(1.08)',
+                  boxShadow: 6
+                }
+              }}
               startIcon={<HelpIcon />}
             >
               {showText && "Support"}
             </Button>
           </Tooltip>
-
 
           <SupportDialog
             open={supportDialogOpen}

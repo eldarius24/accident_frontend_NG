@@ -31,13 +31,6 @@ body {
   background-position: center;
   background-repeat: no-repeat;
   background-size: contain;
-  transition: all 0.9s ease-in-out;
-
-}
-
-.image-container2:hover {
-  transform: scale(1.5);
-
 }
 
 .image-cortigroupe {
@@ -47,12 +40,6 @@ body {
   background-position: center center;
   background-repeat: no-repeat;
   background-size: contain;
-  transition: all 0.9s ease-in-out;
-}
-
-.image-cortigroupe:hover {
-  transform: scale(1.2);
-
 }
 
 .image-tigre {
@@ -62,12 +49,6 @@ body {
   background-position: center center;
   background-repeat: no-repeat;
   background-size: contain;
-  transition: all 0.9s ease-in-out;
-
-}
-
-.image-tigre:hover {
-  transform: scale(1.3);
 
 }
 
