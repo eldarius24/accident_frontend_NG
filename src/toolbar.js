@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Switch, FormControlLabel, AppBar, Toolbar, Typography, Container, Button, Tooltip, Box } from '@mui/material';
+import { Switch, AppBar, Toolbar, Typography, Button, Tooltip, Box } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 import BarChartIcon from '@mui/icons-material/BarChart';
@@ -10,7 +10,6 @@ import PendingActionsIcon from '@mui/icons-material/PendingActions';
 import ViewListIcon from '@mui/icons-material/ViewList';
 import LogoutIcon from '@mui/icons-material/Logout';
 import { useTheme } from './pageAdmin/user/ThemeContext';
-import axios from 'axios';
 import config from './config.json';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 import LightModeIcon from '@mui/icons-material/LightMode';
@@ -33,7 +32,6 @@ function ResponsiveAppBar() {
   const apiUrl = config.apiUrl;
   const { logAction } = useLogger();
   const navigate = useNavigate();
-
   const handleLogout = useCallback(async () => {
     try {
       if (userInfo) {
@@ -78,12 +76,10 @@ function ResponsiveAppBar() {
     )
   );
 
-
   useEffect(() => {
     document.body.style.backgroundColor = darkMode ? '#6e6e6e' : '#ffffff';
     document.body.style.color = darkMode ? '#ffffff' : '#6e6e6e';
   }, [darkMode]);
-
 
   useEffect(() => {
     const handleResize = () => setWindowWidth(window.innerWidth);
@@ -113,10 +109,7 @@ function ResponsiveAppBar() {
     isquesEntrep: location.pathname === '/quesEntrep',
     isHiddenPage: [].includes(location.pathname),
 
-
   }), [location.pathname]);
-
-
 
   const buttonStyle = useMemo(() => ({
     backgroundColor: darkMode ? '#424242' : '#01aeac',
@@ -190,11 +183,9 @@ function ResponsiveAppBar() {
     </Tooltip>
   );
 
-
   const handleThemeChange = () => {
     toggleDarkMode();
   };
-
 
   return (
     <AppBar position="sticky" sx={{ backgroundColor: darkMode ? '#535353' : '#ffdb88' }}>
@@ -243,7 +234,6 @@ function ResponsiveAppBar() {
             </Typography>
           </Tooltip>
         </Box>
-
 
         {/* Groupe de boutons à droite */}
         <Box sx={{

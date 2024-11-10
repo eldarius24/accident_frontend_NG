@@ -30,7 +30,8 @@ export default function AdminPanelSettings({ accidentData }) {
     const location = useLocation();
     const entrepriseToEdit = location.state?.entreprise;
     const { watch, register, setValue, handleSubmit, formState: { errors } } = useForm({
-        defaultValues: entrepriseToEdit || {}
+        defaultValues: entrepriseToEdit || {},
+        mode: 'onChange' // Active la validation en temps réel
     });
 
     /**
@@ -226,23 +227,24 @@ export default function AdminPanelSettings({ accidentData }) {
         // Supprimer les espaces existants
         value = value.replace(/ /g, '');
 
-        // Séparer les deux premiers caractères du reste
-        const countryCode = value.slice(0, 2);
+        // Prendre les deux premières lettres (code pays)
+        const countryCode = value.slice(0, 2).replace(/[^A-Z]/g, '');
         const numbers = value.slice(2).replace(/[^\d]/g, '');
 
         // Construire l'IBAN formaté
         let formatted = countryCode;
 
         // Ajouter les chiffres avec des espaces tous les 4 caractères
-        for (let i = 0; i < numbers.length && i < 14; i++) {
-            if (i === 0) {
-                formatted += ' ';
-            }
-            if (i === 2 || i === 6 || i === 10) {
-                formatted += ' ';
-            }
-            formatted += numbers[i];
-        }
+        if (numbers.length > 0) formatted += ' ';
+
+        // Format: XX 00 0000 0000 0000
+        let chunks = [];
+        chunks.push(numbers.slice(0, 2));  // 00
+        chunks.push(numbers.slice(2, 6));  // 0000
+        chunks.push(numbers.slice(6, 10)); // 0000
+        chunks.push(numbers.slice(10, 14)); // 0000
+
+        formatted += chunks.filter(chunk => chunk).join(' ');
 
         return formatted;
     };
@@ -260,9 +262,10 @@ export default function AdminPanelSettings({ accidentData }) {
 
     const validateIBAN = (value) => {
         if (!value) return "Le numéro IBAN est requis";
-        // Modifier le pattern pour accepter n'importe quelles lettres au début
-        const pattern = /^[A-Z]{2}\d{2}( \d{4}){3}$/;
-        return pattern.test(value) || "Le format doit être XX00 0000 0000 0000 (où XX sont des lettres)";
+
+        // Format: XX 00 0000 0000 0000 (deux lettres puis groupes de chiffres)
+        const pattern = /^[A-Z]{2}\s\d{2}\s\d{4}\s\d{4}\s\d{4}$/;
+        return pattern.test(value) || "Le format doit être XX 00 0000 0000 0000 (où XX sont des lettres)";
     };
 
     // Ajouter ces fonctions avec les autres fonctions de formatage
@@ -344,6 +347,10 @@ export default function AdminPanelSettings({ accidentData }) {
                 <TextFieldP
                     id='AddEntrNumentr'
                     label="Numéro d'entreprise"
+                    {...register('AddEntrNumentr', {
+                        required: "Le numéro d'entreprise est requis",
+                        validate: validateNumeroEntreprise
+                    })}
                     onChange={handleNumeroEntrepriseChange}
                     defaultValue={AddEntrNumentr}
                     error={Boolean(errors.AddEntrNumentr)}
@@ -352,7 +359,6 @@ export default function AdminPanelSettings({ accidentData }) {
                         maxLength: 12,
                         placeholder: "0000.000.000",
                         value: AddEntrNumentr || '',
-                        // Empêcher l'utilisateur de saisir manuellement les points
                         onKeyPress: (e) => {
                             if (e.key === '.') {
                                 e.preventDefault();
@@ -383,6 +389,10 @@ export default function AdminPanelSettings({ accidentData }) {
                 <TextFieldP
                     id='AddEntrEnite'
                     label="Numéro d'unité de l'établissement"
+                    {...register('AddEntrEnite', {
+                        required: "Le numéro d'unité d'établissement est requis",
+                        validate: validateUniteEtablissement
+                    })}
                     onChange={handleUniteEtablissementChange}
                     defaultValue={AddEntrEnite}
                     error={Boolean(errors.AddEntrEnite)}
@@ -391,7 +401,6 @@ export default function AdminPanelSettings({ accidentData }) {
                         maxLength: 13,
                         placeholder: "0-000-000-000",
                         value: AddEntrEnite || '',
-                        // Empêcher l'utilisateur de saisir manuellement les tirets
                         onKeyPress: (e) => {
                             if (e.key === '-') {
                                 e.preventDefault();
@@ -402,50 +411,65 @@ export default function AdminPanelSettings({ accidentData }) {
                 <TextFieldP
                     id='AddEntrIban'
                     label="IBAN"
+                    {...register('AddEntrIban', {
+                        required: "Le numéro IBAN est requis",
+                        validate: validateIBAN
+                    })}
                     onChange={handleIBANChange}
                     defaultValue={AddEntrIban}
                     error={Boolean(errors.AddEntrIban)}
                     helperText={errors.AddEntrIban?.message || "Format: XX00 0000 0000 0000"}
                     inputProps={{
-                        maxLength: 20, // 2 lettres + 16 chiffres + 3 espaces
+                        maxLength: 20,
                         placeholder: "XX00 0000 0000 0000",
                         value: AddEntrIban || '',
-                        // Empêcher l'utilisateur de saisir manuellement les espaces
                         onKeyPress: (e) => {
                             if (e.key === ' ') {
                                 e.preventDefault();
                             }
                         },
-                        style: { textTransform: 'uppercase' } // Pour garder les lettres en majuscules
+                        style: { textTransform: 'uppercase' }
                     }}
                 />
 
                 <TextFieldP
                     id='AddEntrBic'
                     label="BIC"
+                    {...register('AddEntrBic', {
+                        required: "Le code BIC est requis",
+                        validate: validateBIC
+                    })}
                     onChange={handleBICChange}
                     defaultValue={AddEntrBic}
                     error={Boolean(errors.AddEntrBic)}
                     helperText={errors.AddEntrBic?.message || "Format: AAAA-AA-AA"}
                     inputProps={{
-                        maxLength: 10, // 8 lettres + 2 tirets
+                        maxLength: 10,
                         placeholder: "AAAA-AA-AA",
                         value: AddEntrBic || '',
-                        // Empêcher l'utilisateur de saisir manuellement les tirets
                         onKeyPress: (e) => {
                             if (e.key === '-') {
                                 e.preventDefault();
                             }
                         },
-                        style: { textTransform: 'uppercase' } // Pour garder les lettres en majuscules
+                        style: { textTransform: 'uppercase' }
                     }}
                 />
+
                 <TextFieldP id='AddEntreActiventre' label="Activité de l'entreprise" onChange={setAddEntreActiventre} defaultValue={AddEntreActiventre}></TextFieldP>
                 <TextFieldP id='AddEntrSecsoci' label="Secrétariat sociale" onChange={setAddEntrSecsoci} defaultValue={AddEntrSecsoci}></TextFieldP>
                 <TextFieldP id='AddEntrNumaffi' label="Numéro d'affiliation" onChange={setAddEntrNumaffi} defaultValue={AddEntrNumaffi}></TextFieldP>
                 <TextFieldP id='AddEntrScadresse' label="Adresse du secrétariat sociale" onChange={setAddEntrScadresse} defaultValue={AddEntrScadresse}></TextFieldP>
                 <TextFieldP id='AddEntrSccpost' label="Code postal du secrétariat sociale" onChange={setAddEntrSccpost} defaultValue={AddEntrSccpost}></TextFieldP>
                 <TextFieldP id='AddEntrSclocalite' label="Localité du secrétariat sociale" onChange={setAddEntrSclocalite} defaultValue={AddEntrSclocalite}></TextFieldP>
+
+                <h6 style={{
+                    color: darkMode ? '#790a0a' : '#ff0000',
+                    fontSize: '1.2em',
+                    fontWeight: 'bold'
+                }}>
+                    Attention de bien crée des secteurs après la création de l'entreprise
+                </h6>
 
                 <div style={{ display: 'flex', justifyContent: 'center' }}>
                     <Tooltip title="Cliquez ici pour crée et enregistrer l'entreprise" arrow>
@@ -496,7 +520,6 @@ export default function AdminPanelSettings({ accidentData }) {
                 message={snackbar.message}
                 severity={snackbar.severity}
             />
-
         </form>
     );
 }
