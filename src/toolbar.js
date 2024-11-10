@@ -286,7 +286,7 @@ function ResponsiveAppBar() {
                 ...buttonStyle,
                 transition: 'all 0.3s ease-in-out',
                 '&:hover': {
-                  backgroundColor: '#95ad22',
+                  backgroundColor: darkMode ? '#790a0a' : '#ff0000',
                   transform: 'scale(1.08)',
                   boxShadow: 6
                 }
@@ -301,7 +301,6 @@ function ResponsiveAppBar() {
             onClose={() => setSupportDialogOpen(false)}
             isLoginPage={isLoginPage}
           />
-
         </Box>
       </Toolbar>
 
