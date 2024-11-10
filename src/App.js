@@ -26,6 +26,7 @@ import { ThemeProvider } from './pageAdmin/user/ThemeContext'; // Importez Theme
 import LogView from './pageAdmin/logView';
 import Entreprise from './entrepriseDivers/entreprise';
 import QuesEntrep from './entrepriseDivers/quesEntrep';
+import MessSupport from './Dialog/messSupport';
 /**
  * App est le composant principal de l'application. Il contient les routes 
  * ainsi que la barre de navigation.
@@ -59,6 +60,7 @@ const App = () => {
           <Route path="/addSecteur" element={<ProtectedRouteAdmin><AddSecteur /></ProtectedRouteAdmin>} />
           <Route path="/adminEntreprises" element={<ProtectedRouteAdmin><AdminEntreprises /></ProtectedRouteAdmin>} />
           <Route path="/addUser" element={<ProtectedRouteAdmin><AddUser /></ProtectedRouteAdmin>} />
+          <Route path="/messSupport" element={<ProtectedRouteAdmin><MessSupport /></ProtectedRouteAdmin>} />
           
           {/* Routes accessibles par isAdmin ou Conseiller */}
           <Route path="/quesEntrep" element={<ProtectedRouteAdminOrConseiller><QuesEntrep /></ProtectedRouteAdminOrConseiller>} />

@@ -163,14 +163,15 @@ export default function AdminPanelSettingsaction() {
                 </Box>
 
                 {/* Titre adapté au mode sombre */}
-                <h3 style={{ color: darkMode ? '#ffffff' : 'inherit' }}>Visualisation des logs</h3>
+                <h3 style={{ color: darkMode ? '#ffffff' : 'inherit' }}>Visualisation des logs et des messages de support</h3>
 
                 {/* Box pour le bouton des logs */}
                 <Box sx={{
                     display: 'flex',
                     justifyContent: 'center',
                     marginLeft: '120px',
-                    marginRight: '120px'
+                    marginRight: '120px',
+                    gap: '20px'
                 }}>
                     <Tooltip title="Visualisation des logs" arrow>
                         <Button
@@ -194,6 +195,30 @@ export default function AdminPanelSettingsaction() {
                             variant="contained"
                         >
                             Visualisation des logs
+                        </Button>
+                    </Tooltip>
+                    <Tooltip title="Visualisation messages de support" arrow>
+                        <Button
+                            type="submit"
+                            component={Link}
+                            to={'/messSupport'}
+                            sx={{
+                                ...defaultStyle,
+                                color: darkMode ? '#ffffff' : 'black',
+                                backgroundColor: darkMode ? '#424242' : '#ee742d59',
+                                transition: 'all 0.3s ease-in-out',
+                                '&:hover': {
+                                    backgroundColor: darkMode ? '#7a8e1c' : '#95ad22',
+                                    transform: 'scale(1.08)',
+                                    boxShadow: darkMode ? '0 6px 12px rgba(255,255,255,0.2)' : 6
+                                },
+                                boxShadow: darkMode ? '0 3px 6px rgba(255,255,255,0.1)' : 3,
+                                textTransform: 'none',
+                                border: darkMode ? '1px solid rgba(255,255,255,0.1)' : 'none'
+                            }}
+                            variant="contained"
+                        >
+                            Visualisation des supports
                         </Button>
                     </Tooltip>
                 </Box>
