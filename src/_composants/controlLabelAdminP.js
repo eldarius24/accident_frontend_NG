@@ -1,8 +1,8 @@
 import React from 'react';
 import { FormControlLabel, Checkbox } from '@mui/material';
-import { useTheme } from '../pageAdmin/user/ThemeContext'; // Assurez-vous que le chemin d'importation est correct
+import { useTheme } from '../pageAdmin/user/ThemeContext';
 
-export default function ControlLabelAdminP({ id, label, onChange, defaultValue }) {
+export default function ControlLabelAdminP({ id, label, onChange, checked }) {
     const { darkMode } = useTheme();
 
     const handleChange = (_, value) => {
@@ -28,7 +28,7 @@ export default function ControlLabelAdminP({ id, label, onChange, defaultValue }
             id={id}
             control={
                 <Checkbox
-                    checked={defaultValue}
+                    checked={checked} // Utiliser checked au lieu de defaultValue
                     onChange={handleChange}
                 />
             }

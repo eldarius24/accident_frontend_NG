@@ -56,22 +56,37 @@ export default function AddUser() {
     // Récupération des données utilisateur existantes
     const getUserData = async () => {
         try {
-            if (!userId) return;
+            if (!userId) {
+                setUser({
+                    ...user,
+                    boolAdministrateur: false,
+                    boolDeveloppeur: false
+                });
+                return;
+            }
 
             const userData = await getUser(userId);
             if (!userData) throw new Error('Aucun utilisateur trouvé');
 
-            // Mise à jour de l'état avec les données existantes
-            setUser({
+            // Forcer la conversion en booléen avec Boolean()
+            const formattedData = {
                 ...userData,
+                boolAdministrateur: Boolean(userData.boolAdministrateur),
+                boolDeveloppeur: Boolean(userData.boolDeveloppeur),
                 darkMode: userData.darkMode ?? false,
                 selectedYears: userData.selectedYears ?? [new Date().getFullYear().toString()]
-            });
+            };
 
-            // Mise à jour des champs du formulaire
-            Object.entries(userData).forEach(([key, value]) => {
+            setUser(formattedData);
+
+            // Mettre à jour les champs du formulaire
+            Object.entries(formattedData).forEach(([key, value]) => {
                 setValue(key, value);
             });
+
+            // Log pour déboguer
+            console.log("Données utilisateur chargées:", formattedData);
+
         } catch (error) {
             console.error('Erreur lors de la récupération de l\'utilisateur:', error.message);
             showSnackbar('Erreur lors de la récupération de l\'utilisateur', 'error');
@@ -89,6 +104,13 @@ export default function AddUser() {
             showSnackbar('Erreur lors de la récupération des entreprises', 'error');
         }
     };
+
+    useEffect(() => {
+        console.log("État actuel:", {
+            boolAdministrateur: user.boolAdministrateur,
+            boolDeveloppeur: user.boolDeveloppeur
+        });
+    }, [user.boolAdministrateur, user.boolDeveloppeur]);
 
     useEffect(() => {
         getUserData();
@@ -183,23 +205,23 @@ export default function AddUser() {
                                 handleChange('boolAdministrateur', value);
                                 setValue('boolAdministrateur', value);
                             }}
-                            defaultValue={user.boolAdministrateur}
+                            checked={Boolean(user.boolAdministrateur)}
+                            defaultChecked={Boolean(user.boolAdministrateur)}
                         />
                     </Box>
                 </Tooltip>
                 <Tooltip title="Cocher cette case si l'utilisateur est développeur du site. Il aura les mêmes droits qu'un administrateur" arrow>
-                        <div>
-                            <ControlLabelAdminP
-                                id="boolDeveloppeur"
-                                label="Développeur du site"
-                                onChange={(value) => {
-                                    handleChange('boolDeveloppeur', value);
-                                    setValue('boolDeveloppeur', value);
-                                }}
-                                defaultValue={user.boolDeveloppeur}
-                            />
-                        </div>
-                    </Tooltip>
+                    <ControlLabelAdminP
+                        id="boolDeveloppeur"
+                        label="Développeur du site"
+                        onChange={(value) => {
+                            handleChange('boolDeveloppeur', value);
+                            setValue('boolDeveloppeur', value);
+                        }}
+                        checked={Boolean(user.boolDeveloppeur)}
+                        defaultChecked={Boolean(user.boolDeveloppeur)}
+                    />
+                </Tooltip>
                 <h3>Donner les accès conseiller en prévention:</h3>
                 <Tooltip title="Si le nouvel utilisateur est conseiller en prévention, sélectionner son entreprise" arrow>
                     <Autocomplete
