@@ -94,7 +94,7 @@ export default async function editPDF(data) {
 
         if (data.DateHeureAccident !== undefined && data.DateHeureAccident !== null) {
             EditPdfTextField(form, '2 jaar', (data.DateHeureAccident.substring(0, 4)));
-            EditPdfTextField(form, '3 nummer', (data.DateHeureAccident.substring(0, 4) + data.DateHeureAccident.substring(5, 7) + data.DateHeureAccident.substring(8, 10) + data.DateHeureAccident.substring(13, 15) + data.DateHeureAccident.substring(16, 18)));
+            EditPdfTextField(form, '3 nummer', data.DateHeureAccident);
         };
 
         EditPdfTextField(form, 'p2_20', entreprise.AddEntrRue);
@@ -550,8 +550,8 @@ export default async function editPDF(data) {
             EditPdfTextField(form, 'p2_4', (data.DateHeureAccident.substring(0, 4)));
             EditPdfTextField(form, 'p2_3', (data.DateHeureAccident.substring(5, 7)));
             EditPdfTextField(form, 'p2_2', (data.DateHeureAccident.substring(8, 10)));
-            EditPdfTextField(form, 'p2_5', (data.DateHeureAccident.substring(13, 15)));
-            EditPdfTextField(form, 'p2_6', (data.DateHeureAccident.substring(16, 18)));
+            EditPdfTextField(form, 'p2_5', (data.DateHeureAccident.substring(11, 13)));
+            EditPdfTextField(form, 'p2_6', (data.DateHeureAccident.substring(14, 16)));
         };
         //date et heure de notification a l'employeur
         if (data.dateNotifEmployeur !== undefined && data.dateNotifEmployeur !== null) {
