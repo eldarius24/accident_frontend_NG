@@ -37,38 +37,6 @@ const labelStyle = {
     transition: 'background-color 0.3s',
 };
 
-const TfFormula = () => (
-    <Box
-        sx={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            my: 2,
-            '& .formula': {
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                mx: 2,
-                fontSize: '1.2rem',
-            },
-            '& .divider': {
-                width: '100%',
-                borderTop: '2px solid',
-                my: '4px'
-            }
-        }}
-    >
-        <Typography component="div" sx={{ fontSize: '1.2rem', mr: 2 }}>
-            Tf =
-        </Typography>
-        <div className="formula">
-            <div>B × 1.000.000</div>
-            <div className="divider" />
-            <div>A</div>
-        </div>
-    </Box>
-);
-
 const QuesEntrep = () => {
     const { logAction } = useLogger();
     const location = useLocation();
@@ -81,8 +49,43 @@ const QuesEntrep = () => {
         { length: 21 },
         (_, i) => (currentYear - 10 + i).toString()
     );
+    const TfFormula = () => {
+        const { darkMode } = useTheme(); // Accéder au thème dans le composant
 
-   
+        return (
+            <Box
+                style={{ color: darkMode ? '#ffffff' : 'inherit' }}
+                sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    my: 2,
+                    '& .formula': {
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        mx: 2,
+                        fontSize: '1.2rem',
+                    },
+                    '& .divider': {
+                        width: '100%',
+                        borderTop: '2px solid',
+                        my: '4px'
+                    }
+                }}
+            >
+                <Typography component="div" sx={{ fontSize: '1.2rem', mr: 2, color: darkMode ? '#ffffff' : 'inherit' }}>
+                    Tf =
+                </Typography>
+                <div className="formula">
+                    <div>B × 1.000.000</div>
+                    <div className="divider" />
+                    <div>A</div>
+                </div>
+            </Box>
+        );
+    };
+
     // État unifié pour le formulaire
     const [formState, setFormState] = useState({
         questionnaireData: {
@@ -106,8 +109,8 @@ const QuesEntrep = () => {
         }
     });
 
-     // Determine whether the Tf calculator should be shown based on the questionnaire type
-     const showTfCalculator = formState.questionnaireData.quesEntreType === "Rapport Annuelle SIPPT";
+    // Determine whether the Tf calculator should be shown based on the questionnaire type
+    const showTfCalculator = formState.questionnaireData.quesEntreType === "Rapport Annuelle SIPPT";
 
     const handleCloseSnackbar = (event, reason) => {
         if (reason === 'clickaway') return;
@@ -365,7 +368,7 @@ const QuesEntrep = () => {
                 backgroundColor: darkMode ? '#6e6e6e' : '#ffffff',
                 color: darkMode ? '#ffffff' : '#000000',
             }}>
-                <Typography variant="h4" component="h1" align="center" gutterBottom>
+                <Typography variant="h4" component="h1" align="center" gutterBottom style={{ color: darkMode ? '#ffffff' : 'inherit' }}>
                     Questionnaire {enterprise?.AddEntreName}
                 </Typography>
                 <AutoCompleteP
@@ -390,8 +393,8 @@ const QuesEntrep = () => {
                     multiline
                 />
                 {showTfCalculator && (
-                    <Paper elevation={3} sx={{ p: 3, mt: 3, mb: 3 }}>
-                        <Typography variant="h6" gutterBottom align="center">
+                    <Paper elevation={3} sx={{ backgroundColor: darkMode ? '#6e6e6e' : '#ffffff', p: 3, mt: 3, mb: 3 }}>
+                        <Typography variant="h6" gutterBottom align="center" style={{ color: darkMode ? '#ffffff' : 'inherit' }}>
                             Calcul du Tf (Taux de fréquence)
                         </Typography>
 
@@ -424,15 +427,19 @@ const QuesEntrep = () => {
                                 InputProps={{
                                     readOnly: true,
                                     style: {
-                                        fontWeight: 'bold'
+                                        fontWeight: 'bold',
+                                        color: darkMode ? '#ffffff' : 'inherit', 
+                                       
                                     }
                                 }}
+                                
+                                
                             />
                         </Box>
                     </Paper>
                 )}
                 <Box sx={{ mt: 2 }}>
-                    <Typography variant="h6" gutterBottom>
+                    <Typography variant="h6" gutterBottom style={{ color: darkMode ? '#ffffff' : 'inherit' }}>
                         Fichiers joints
                     </Typography>
 

@@ -63,7 +63,7 @@ export default function FormulaireAssureur({ setValue, accidentData, watch }) {
       <div>
         <div className="infoAssureur">
           <h2>Infos Assureur</h2>
-          <h3>Rentrez les informations relative a l'assurance.</h3>
+          <h3 style={{ color: darkMode ? '#ffffff' : 'inherit' }}>Rentrez les informations relative a l'assurance.</h3>
 
           {/* *********************************** Numéro de police d'assurance **********************************/}
           <TextFieldP id="NumeroPoliceAssurance" label="Numéro de police d'assurance" onChange={(NumeroPoliceAssuranceSelect) => {

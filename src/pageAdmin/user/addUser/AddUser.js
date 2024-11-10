@@ -172,7 +172,7 @@ export default function AddUser() {
             }}>
                 <h2>Administration des droits</h2>
 
-                <h3>Créer un nouvel utilisateur</h3>
+                <h3 style={{ color: darkMode ? '#ffffff' : 'inherit' }}>Créer un nouvel utilisateur</h3>
 
                 <TextFieldP
                     id='userLogin'
@@ -195,7 +195,7 @@ export default function AddUser() {
                     defaultValue={user.userName}
                 />
 
-                <h3>Donner les accès administration du site:</h3>
+                <h3 style={{ color: darkMode ? '#ffffff' : 'inherit' }}>Donner les accès administration du site:</h3>
                 <Tooltip title="Cocher cette case si l'utilisateur est administrateur du site. Il aura accès à tous les menus pour toutes les entreprises" arrow>
                     <Box sx={{ display: 'flex', justifyContent: 'center' }}>
                         <ControlLabelAdminP
@@ -210,6 +210,7 @@ export default function AddUser() {
                         />
                     </Box>
                 </Tooltip>
+                <h3 style={{ color: darkMode ? '#ffffff' : 'inherit' }}>Donner les accès developpeur du site:</h3>
                 <Tooltip title="Cocher cette case si l'utilisateur est développeur du site. Il aura les mêmes droits qu'un administrateur" arrow>
                     <Box sx={{ display: 'flex', justifyContent: 'center' }}>
                         <ControlLabelAdminP
@@ -224,7 +225,7 @@ export default function AddUser() {
                         />
                     </Box>
                 </Tooltip>
-                <h3>Donner les accès conseiller en prévention:</h3>
+                <h3 style={{ color: darkMode ? '#ffffff' : 'inherit' }}>Donner les accès conseiller en prévention:</h3>
                 <Tooltip title="Si le nouvel utilisateur est conseiller en prévention, sélectionner son entreprise" arrow>
                     <Autocomplete
                         multiple
@@ -299,7 +300,7 @@ export default function AddUser() {
                     />
                 </Tooltip>
 
-                <h3>Donner les accès Visiteur:</h3>
+                <h3 style={{ color: darkMode ? '#ffffff' : 'inherit' }}>Donner les accès Visiteur:</h3>
                 <Autocomplete
                     multiple
                     id="checkboxes-tags-demo-visiteur"

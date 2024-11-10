@@ -139,7 +139,7 @@ export default function FormulaireSalarie({ setValue, accidentData, watch }) {
     }}>
       <div>
         <h2>Infos du travailleur</h2>
-        <h3>Rentrez les informations sur la victime de l'accident de travail.</h3>
+        <h3 style={{ color: darkMode ? '#ffffff' : 'inherit' }}>Rentrez les informations sur la victime de l'accident de travail.</h3>
         <TextFieldP id='lieuxnaissance' label='Lieu de naissance' onChange={setLieuxnaissance} defaultValue={lieuxnaissance} />
         <TextFieldMaskP id='niss' label='NISS du travailleur' onChange={setNiss} defaultValue={niss} mask="000000-000-00"/>
         <TextFieldMaskP id="numCompteBancaire" label="Numéro de compte bancaire" onChange={setnumCompteBancaire} defaultValue={numCompteBancaire} mask="AA00-0000-0000-0000-0000-0000-0000-0000-00" />

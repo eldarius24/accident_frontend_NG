@@ -236,7 +236,7 @@ export default function FormulaireAction() {
 
     return (
         <form className="background-image" onSubmit={handleSubmit(onSubmit)}>
-            <h3>{actionData ? 'Modifier une action' : 'Ajouter une action'}</h3>
+            <h3 style={{ color: darkMode ? '#ffffff' : 'inherit' }}>{actionData ? 'Modifier une action' : 'Ajouter une action'}</h3>
             <AutoCompleteQ
                 id='AddActionanne'
                 option={yearOptions}

@@ -337,7 +337,7 @@ export default function AdminPanelSettings({ accidentData }) {
                 color: darkMode ? '#ffffff' : '#000000',
             }}>
                 <h2>Créer une nouvelle entreprise</h2>
-                <h3>Toutes les données doivent êtres obligatoirement remplie</h3>
+                <h3 style={{ color: darkMode ? '#ffffff' : 'inherit' }}>Toutes les champs doivent êtres obligatoirement remplie</h3>
                 <TextFieldP id='AddEntreName' label="Nom de la nouvelle entreprise" onChange={setAddEntreName} defaultValue={AddEntreName}></TextFieldP>
                 <TextFieldP id='AddEntrRue' label="Rue et numéro" onChange={setAddEntrRue} defaultValue={AddEntrRue}></TextFieldP>
                 <TextFieldP id='AddEntrCodpost' label="Code postal" onChange={setAddEntrCodpost} defaultValue={AddEntrCodpost}></TextFieldP>

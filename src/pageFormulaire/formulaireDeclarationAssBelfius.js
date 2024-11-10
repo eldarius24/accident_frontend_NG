@@ -230,7 +230,7 @@ export default function FormulaireDeclarationASSBelfius({ setValue, accidentData
           }}>
             <div className="infoDeclarationAss">
                 <h2>Infos Déclaration</h2>
-                <h3>Rentrez les informations relative a la déclaration.</h3>
+                <h3 style={{ color: darkMode ? '#ffffff' : 'inherit' }}>Rentrez les informations relative a la déclaration.</h3>
 
                 <AutoCompleteP id="ListeVicTravailExt" option={listeDeclarationAss.ListeVicTravailExt} label="Au moment de l'accident, la victime travaillait-elle dans l'établissement d'un autre employeur dans le cadre de travaux effectuées par une entreprise extérieure" onChange={(value) => { setListeVicTravailExt(value); }} defaultValue={ListeVicTravailExt} />
 
@@ -453,7 +453,7 @@ export default function FormulaireDeclarationASSBelfius({ setValue, accidentData
                     <DatePickerP id="dateChangementFonction" label="Si oui, date du dernier changement de fonction" onChange={setdateChangementFonction} defaultValue={dateChangementFonction} />
                 )}
 
-                <h3>Questions 65</h3>
+                <h3 style={{ color: darkMode ? '#ffffff' : 'inherit' }}>Questions 65</h3>
                 <TextFieldP id="heureTravaillePerdu" label="Nombre d’heures de travail perdues le jour de l’accident" onChange={setheureTravaillePerdu} defaultValue={heureTravaillePerdu} />
                 <TextFieldP id="salaireTravaillePerdu" label="Perte salariale pour les heures de travail perdues" onChange={setsalaireTravaillePerdu} defaultValue={salaireTravaillePerdu} />
             </div>

@@ -129,7 +129,7 @@ export default function FormulaireAccident({ setValue, accidentData, watch }) {
       <div>
         <div className="infoAccident">
           <h2>Infos Accident</h2>
-          <h3>Rentrez les informations sur l'accident de travail.</h3>       
+          <h3 style={{ color: darkMode ? '#ffffff' : 'inherit' }}>Rentrez les informations sur l'accident de travail.</h3>       
 
           <TextFieldMaskP id='horaireJourAccident' label='Horaire de la victime le jour de l accident' onChange={sethoraireJourAccident} defaultValue={horaireJourAccident} mask="de 00h00 à 00h00 et de 00h00 à 00h00" />
 
