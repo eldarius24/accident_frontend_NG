@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useContext } from 'react';
 import {
     Card,
@@ -19,16 +20,16 @@ import {
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useTheme } from '../pageAdmin/user/ThemeContext';
-import { useUserConnected } from '../Hook/userConnected'; // Import correct
-import { useLogger } from '../Hook/useLogger'; // Import du logger
+import { useUserConnected } from '../Hook/userConnected';
+import { useLogger } from '../Hook/useLogger';
 import axios from 'axios';
 import config from '../config.json';
 
 const MessSupport = () => {
     const { darkMode } = useTheme();
     const apiUrl = config.apiUrl;
-    const { userInfo, isAuthenticated } = useUserConnected(); // Utilisation correcte du hook
-    const { logAction } = useLogger(); // Utilisation du logger
+    const { userInfo, isAuthenticated } = useUserConnected();
+    const { logAction } = useLogger();
     const [messages, setMessages] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -43,16 +44,118 @@ const MessSupport = () => {
         { value: 'En test', label: 'En test' }
     ];
 
+    const Legend = () => (
+        <Box sx={{
+            mb: 3,
+            p: 2,
+            borderRadius: 1,
+            backgroundColor: darkMode ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.05)',
+            display: 'flex',
+            gap: 2,
+            flexWrap: 'wrap',
+            alignItems: 'center'
+        }}>
+            <Typography variant="subtitle2" sx={{ mr: 2, color: darkMode ? '#ffffff' : '#000000' }}>Type de destination :</Typography>
+            {[
+                { type: 'dev', label: 'Développeurs', color: darkMode ? '#2c3e50' : '#bb8a21' },
+                { type: 'admin', label: 'Administrateurs', color: darkMode ? '#433c51' : '#01aeac' },
+                { type: 'both', label: 'Les deux', color: darkMode ? '#424242' : '#ffff00' }
+            ].map(({ type, label, color }) => (
+                <Box key={type} sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                    <Box sx={{
+                        width: 16,
+                        height: 16,
+                        backgroundColor: color,
+                        border: '1px solid',
+                        borderColor: darkMode ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.2)',
+                        borderRadius: 0.5
+                    }} />
+                    <Typography variant="body2">{label}</Typography>
+                </Box>
+            ))}
+        </Box>
+    );
+
+    // Support type routing configuration
+    const SUPPORT_TYPE_ROUTING = {
+        'Bug': 'dev',
+        'Améliorations de fonctionnalités': 'dev',
+        'Connexion et accès': 'admin',
+        'Autorisation et permissions': 'admin',
+        'Mise à jour des informations de profil': 'admin',
+        'Suppression de compte': 'admin',
+        'Autre': 'both'
+    };
+
+    const getDestinationInfo = (typeSupport) => {
+        const routingType = SUPPORT_TYPE_ROUTING[typeSupport];
+        switch (routingType) {
+            case 'dev':
+                return {
+                    label: 'Développeurs',
+                    color: darkMode ? '#90caf9' : '#1976d2',  // Bleu plus clair en mode sombre
+                    bgColor: darkMode ? 'rgba(144, 202, 249, 0.2)' : 'rgba(25, 118, 210, 0.1)'
+                };
+            case 'admin':
+                return {
+                    label: 'Administrateurs',
+                    color: darkMode ? '#ce93d8' : '#9c27b0',  // Violet plus clair en mode sombre
+                    bgColor: darkMode ? 'rgba(206, 147, 216, 0.2)' : 'rgba(156, 39, 176, 0.1)'
+                };
+            case 'both':
+                return {
+                    label: 'Tous',
+                    color: darkMode ? '#b0bec5' : '#78909c',  // Gris plus clair en mode sombre
+                    bgColor: darkMode ? 'rgba(176, 190, 197, 0.2)' : 'rgba(120, 144, 156, 0.1)'
+                };
+            default:
+                return {
+                    label: 'Non défini',
+                    color: darkMode ? '#bdbdbd' : '#9e9e9e',  // Gris neutre plus clair en mode sombre
+                    bgColor: darkMode ? 'rgba(189, 189, 189, 0.2)' : 'rgba(158, 158, 158, 0.1)'
+                };
+        }
+    };
+
+    // Function to get card background color based on support type
+    const getCardBackgroundColor = (typeSupport) => {
+        const routingType = SUPPORT_TYPE_ROUTING[typeSupport];
+        if (darkMode) {
+            switch (routingType) {
+                case 'dev':
+                    return '#2c3e50'; // Dark blue for dev
+                case 'admin':
+                    return '#433c51'; // Dark purple for admin
+                case 'both':
+                    return '#424242'; // Default dark for both
+                default:
+                    return '#424242';
+            }
+        } else {
+            switch (routingType) {
+                case 'dev':
+                    return '#bb8a21'; // Light blue for dev
+                case 'admin':
+                    return '#01aeac'; // Light purple for admin
+                case 'both':
+                    return '#ffff00'; // Default white for both
+                default:
+                    return '#ffffff';
+            }
+        }
+    };
+
     // Style pour les composants en fonction du mode sombre/clair
-    const cardStyle = {
-        backgroundColor: darkMode ? '#424242' : '#ffffff',
+    const getCardStyle = (typeSupport) => ({
+        backgroundColor: getCardBackgroundColor(typeSupport),
         color: darkMode ? '#ffffff' : '#000000',
         marginBottom: 2,
+        transition: 'all 0.3s ease',
         '&:hover': {
             transform: 'scale(1.02)',
             transition: 'transform 0.2s ease-in-out'
         }
-    };
+    });
 
     const buttonStyle = {
         backgroundColor: darkMode ? '#535353' : '#ee752d60',
@@ -68,8 +171,6 @@ const MessSupport = () => {
             setError('Vous devez être connecté pour accéder à cette fonctionnalité');
         }
     }, [isAuthenticated]);
-
-    // Récupération des messages
 
     useEffect(() => {
         const fetchMessages = async () => {
@@ -202,68 +303,83 @@ const MessSupport = () => {
             <Typography variant="h4" sx={{ mb: 3, color: darkMode ? '#ffffff' : '#000000' }}>
                 Messages de Support
             </Typography>
+            <Legend />
             {messages.length === 0 ? (
-            <Alert severity="info" sx={{ mt: 2 }}>
-                Aucun message de support à afficher
-            </Alert>
-        ) : (
-            <Grid container spacing={3}>
-                {messages.map((message) => (
-                    <Grid item xs={12} md={6} lg={4} key={message._id}>
-                        <Card sx={cardStyle}>
-                            <CardContent>
-                                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-                                    <Typography variant="h6" component="div">
-                                        {message.subject}
+                <Alert severity="info" sx={{ mt: 2, color: darkMode ? '#ffffff' : '#000000' }}>
+                    Aucun message de support à afficher
+                </Alert>
+            ) : (
+                <Grid container spacing={3}>
+                    {messages.map((message) => (
+                        <Grid item xs={12} md={6} lg={4} key={message._id}>
+                            <Card sx={getCardStyle(message.typeSupport)}>
+                                <CardContent>
+                                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
+                                        <Typography variant="h6" component="div">
+                                            {message.subject}
+                                        </Typography>
+                                        <Box sx={{
+                                            display: 'inline-flex',
+                                            alignItems: 'center',
+                                            px: 1,
+                                            py: 0.5,
+                                            borderRadius: 1,
+                                            ...getDestinationInfo(message.typeSupport),
+                                            backgroundColor: getDestinationInfo(message.typeSupport).bgColor,
+                                            color: getDestinationInfo(message.typeSupport).color,
+                                            fontSize: '0.75rem',
+                                            fontWeight: 'medium',
+                                        }}>
+                                            {getDestinationInfo(message.typeSupport).label}
+                                        </Box>
+                                        <IconButton
+                                            onClick={() => {
+                                                setSelectedMessage(message);
+                                                setDeleteDialogOpen(true);
+                                            }}
+                                            sx={{ color: darkMode ? '#ff1744' : '#d32f2f' }}
+                                        >
+                                            <DeleteIcon />
+                                        </IconButton>
+                                    </Box>
+
+                                    <Typography variant="body2" sx={{ mb: 2 }}>
+                                        De: {message.userName} ({message.userEmail})
                                     </Typography>
-                                    <IconButton
-                                        onClick={() => {
-                                            setSelectedMessage(message);
-                                            setDeleteDialogOpen(true);
-                                        }}
-                                        sx={{ color: darkMode ? '#ff1744' : '#d32f2f' }}
-                                    >
-                                        <DeleteIcon />
-                                    </IconButton>
-                                </Box>
 
-                                <Typography variant="body2" sx={{ mb: 2 }}>
-                                    De: {message.userName} ({message.userEmail})
-                                </Typography>
-
-                                <Typography variant="body2" sx={{ mb: 2 }}>
-                                    Type: {message.typeSupport}
-                                </Typography>
-
-                                <Typography variant="body1" sx={{ mb: 2 }}>
-                                    {message.message}
-                                </Typography>
-
-                                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                    <Button
-                                        variant="contained"
-                                        sx={{
-                                            ...buttonStyle,
-                                            backgroundColor: getStatusColor(message.status)
-                                        }}
-                                        onClick={() => {
-                                            setSelectedMessage(message);
-                                            setSelectedStatus(message.status);
-                                            setStatusDialogOpen(true);
-                                        }}
-                                    >
-                                        {getStatusLabel(message.status)}
-                                    </Button>
-                                    <Typography variant="caption">
-                                        {new Date(message.timestamp).toLocaleString()}
+                                    <Typography variant="body2" sx={{ mb: 2 }}>
+                                        Type: {message.typeSupport}
                                     </Typography>
-                                </Box>
-                            </CardContent>
-                        </Card>
-                    </Grid>
-                ))}
-            </Grid>
-        )}
+
+                                    <Typography variant="body1" sx={{ mb: 2 }}>
+                                        {message.message}
+                                    </Typography>
+
+                                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                        <Button
+                                            variant="contained"
+                                            sx={{
+                                                ...buttonStyle,
+                                                backgroundColor: getStatusColor(message.status)
+                                            }}
+                                            onClick={() => {
+                                                setSelectedMessage(message);
+                                                setSelectedStatus(message.status);
+                                                setStatusDialogOpen(true);
+                                            }}
+                                        >
+                                            {getStatusLabel(message.status)}
+                                        </Button>
+                                        <Typography variant="caption">
+                                            {new Date(message.timestamp).toLocaleString()}
+                                        </Typography>
+                                    </Box>
+                                </CardContent>
+                            </Card>
+                        </Grid>
+                    ))}
+                </Grid>
+            )}
 
             {/* Dialog de confirmation de suppression */}
             <Dialog
