@@ -57,9 +57,9 @@ const MessSupport = () => {
         }}>
             <Typography variant="subtitle2" sx={{ mr: 2, color: darkMode ? '#ffffff' : '#000000' }}>Destinataire :</Typography>
             {[
-                { type: 'dev', label: 'Développeurs', color: darkMode ? '#2c3e50' : '#bb8a21' },
-                { type: 'admin', label: 'Administrateurs', color: darkMode ? '#433c51' : '#01aeac' },
-                { type: 'both', label: 'Développeurs & Administrateurs', color: darkMode ? '#424242' : '#ffff00' }
+                { type: 'dev', label: 'Développeurs', color: darkMode ? '#2c3e50' : '#aa90598a' },
+                { type: 'admin', label: 'Administrateurs', color: darkMode ? '#433c51' : '#4aa3a28e' },
+                { type: 'both', label: 'Développeurs & Administrateurs', color: darkMode ? '#424242' : '#55ac5c9c' }
             ].map(({ type, label, color }) => (
                 <Box key={type} sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                     <Box sx={{
@@ -134,11 +134,11 @@ const MessSupport = () => {
         } else {
             switch (routingType) {
                 case 'dev':
-                    return '#bb8a21'; // Light blue for dev
+                    return '#aa90598a'; // Light blue for dev 
                 case 'admin':
-                    return '#01aeac'; // Light purple for admin
+                    return '#4aa3a28e'; // Light purple for admin
                 case 'both':
-                    return '#ffff00'; // Default white for both
+                    return '#55ac5c9c'; // Default white for both
                 default:
                     return '#ffffff';
             }

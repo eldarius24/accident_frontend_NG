@@ -1,15 +1,11 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import {
-  BarChart, Bar, XAxis, YAxis, CartesianGrid, Legend, ResponsiveContainer,
-  PieChart, Pie, Cell, Tooltip, LineChart, Line
-} from 'recharts';
-import {
   FormControl, InputLabel, Select, MenuItem, Checkbox, ListItemText, Box
 } from '@mui/material';
 import { useAccidentStats } from './filters';
 import chargerDonnees from './dataLoader';
-import genererDonneesGraphiques, { MONTHS, DAYS } from './chartData';
-import { renderOptimizedChart, getRenderConfig, COLORS } from './chartComponents';
+import genererDonneesGraphiques from './chartData';
+import { renderOptimizedChart, getRenderConfig } from './chartComponents';
 import axios from 'axios';
 import config from '../config.json';
 import { saveFiltersToCookies, loadFiltersFromCookies } from './filterPersistence';
@@ -388,22 +384,22 @@ const Statistiques = () => {
   };
 
   // Style commun pour les MenuItems
-const menuItemStyle = {
-  backgroundColor: darkMode ? '#424242' : '#ee742d59',
-  color: darkMode ? '#fff' : 'inherit',
-  '&:hover': {
+  const menuItemStyle = {
+    backgroundColor: darkMode ? '#424242' : '#ee742d59',
+    color: darkMode ? '#fff' : 'inherit',
+    '&:hover': {
       backgroundColor: darkMode ? '#505050' : '#ee742d80'
-  },
-  '&.Mui-selected': {
+    },
+    '&.Mui-selected': {
       backgroundColor: darkMode ? '#424242' : '#ee742d59', // Même couleur que l'état normal
-  },
-  '&.Mui-selected:hover': {
+    },
+    '&.Mui-selected:hover': {
       backgroundColor: darkMode ? '#505050' : '#ee742d80' // Même couleur que le hover normal
-  },
-  '& .MuiListItemText-primary, & .MuiListItemText-secondary': {
+    },
+    '& .MuiListItemText-primary, & .MuiListItemText-secondary': {
       color: darkMode ? '#fff' : 'inherit'
-  }
-};
+    }
+  };
 
   // Style pour les Checkbox selon leur type
   const checkboxStyles = {
@@ -454,12 +450,12 @@ const menuItemStyle = {
             }}
           >
             <MenuItem value="all" sx={menuItemStyle}>
-              <Checkbox checked={selectedAccidentTypes.length === accidentTypes.length} sx={checkboxStyles.all}/>
+              <Checkbox checked={selectedAccidentTypes.length === accidentTypes.length} sx={checkboxStyles.all} />
               <ListItemText primary="Sélectionner tout" />
             </MenuItem>
             {accidentTypes.map((type) => (
               <MenuItem key={type} value={type} sx={menuItemStyle}>
-                <Checkbox checked={selectedAccidentTypes.includes(type)} sx={checkboxStyles.default}/>
+                <Checkbox checked={selectedAccidentTypes.includes(type)} sx={checkboxStyles.default} />
                 <ListItemText primary={type} />
               </MenuItem>
             ))}
@@ -687,7 +683,8 @@ const menuItemStyle = {
       {graphs.accidentsBySex.visible && renderOptimizedChart('pie',
         memoizedChartData.accidentsBySexData,
         getRenderConfig('pie', memoizedChartData.accidentsBySexData, {
-          title: "Accidents par sexe"
+          title: "Accidents par sexe",
+          darkMode: darkMode
         })
       )}
 
@@ -696,7 +693,8 @@ const menuItemStyle = {
         getRenderConfig('bar', memoizedChartData.accidentsByTypeTravailleurData, {
           title: "Nombre d'accidents par type de travailleur",
           xAxis: "type",
-          fill: "#82ca9d"
+          fill: "#82ca9d",
+          darkMode: darkMode
         })
       )}
 
@@ -705,7 +703,8 @@ const menuItemStyle = {
         getRenderConfig('bar', memoizedChartData.accidentsByAgeData, {
           title: "Nombre d'accidents par âge du travailleur",
           xAxis: "age",
-          fill: "#8884d8"
+          fill: "#8884d8",
+          darkMode: darkMode
         })
       )}
 
@@ -714,7 +713,8 @@ const menuItemStyle = {
         getRenderConfig('bar', memoizedChartData.accidentDayOfWeekData, {
           title: "Accidents par jour de la semaine",
           xAxis: "day",
-          fill: "#FFBB28"
+          fill: "#FFBB28",
+          darkMode: darkMode
         })
       )}
 
@@ -723,7 +723,8 @@ const menuItemStyle = {
         getRenderConfig('bar', memoizedChartData.accidentMonthData, {
           title: "Nombre total d'accidents par mois",
           xAxis: "month",
-          fill: "#82ca9d"
+          fill: "#82ca9d",
+          darkMode: darkMode
         })
       )}
 
@@ -732,14 +733,16 @@ const menuItemStyle = {
         getRenderConfig('bar', memoizedChartData.accidentYearData, {
           title: "Nombre total d'accidents par an",
           xAxis: "year",
-          fill: "#ffc658"
+          fill: "#ffc658",
+          darkMode: darkMode
         })
       )}
 
       {graphs.accidentsBySector.visible && renderOptimizedChart('pie',
         memoizedChartData.accidentSectorData,
         getRenderConfig('pie', memoizedChartData.accidentSectorData, {
-          title: "Accidents par secteur"
+          title: "Accidents par secteur",
+          darkMode: darkMode
         })
       )}
 
@@ -748,6 +751,7 @@ const menuItemStyle = {
         getRenderConfig('line', memoizedChartData.accidentYearByCompanyData, {
           title: "Accidents par an et par entreprise",
           xAxis: "year",
+          darkMode: darkMode,
           series: Object.keys(stats.accidentsByYearByCompany)
         })
       )}
@@ -757,7 +761,9 @@ const menuItemStyle = {
         getRenderConfig('line', memoizedChartData.accidentMonthByCompanyData, {
           title: "Accidents par mois et par entreprise",
           xAxis: "month",
+          darkMode: darkMode,
           series: Object.keys(stats.accidentsByMonthByCompany)
+          
         })
       )}
 
@@ -766,7 +772,8 @@ const menuItemStyle = {
         null,
         getRenderConfig('tfYearCompany', null, {
           data: tfData,
-          selectedYears: selectedYears
+          selectedYears: selectedYears,
+          darkMode: darkMode
         })
       )}
 
@@ -775,9 +782,10 @@ const menuItemStyle = {
         null,
         getRenderConfig('accidentSectorCompany', null, {
           title: "Accidents par entreprise par secteur",
+          darkMode: darkMode,
           companies: Object.keys(stats.accidentsByCompany).map(companyName => ({
             company: companyName,
-            data: stats.accidentsByCompany[companyName]
+            data: stats.accidentsByCompany[companyName],
           }))
         })
       )}
@@ -786,7 +794,8 @@ const menuItemStyle = {
         'dayOfWeekCompany',
         null,
         getRenderConfig('dayOfWeekCompany', null, {
-          data: memoizedChartData.accidentsByDayOfWeekByCompanyData
+          data: memoizedChartData.accidentsByDayOfWeekByCompanyData,
+          darkMode: darkMode
         })
       )}
 
@@ -794,7 +803,8 @@ const menuItemStyle = {
         null,
         getRenderConfig('ageByCompany', null, {
           title: "Accidents par âge du travailleur et par entreprise",
-          companies: memoizedChartData.accidentsByAgeByCompanyData
+          companies: memoizedChartData.accidentsByAgeByCompanyData,
+          darkMode: darkMode
         })
       )}
 
@@ -802,6 +812,7 @@ const menuItemStyle = {
         null,
         getRenderConfig('workerTypeByCompany', null, {
           title: "Accidents par type de travailleur et par entreprise",
+          darkMode: darkMode,
           companies: Object.entries(stats.accidentsByTypeTravailleurByCompany).map(([company, typeTravailleurData]) => ({
             company,
             data: Object.entries(typeTravailleurData).map(([typeTravailleur, NombreAT]) => ({
@@ -816,7 +827,8 @@ const menuItemStyle = {
         null,
         getRenderConfig('tfByCompany', null, {
           companies: detailedTfData,
-          selectedYears: selectedYears
+          selectedYears: selectedYears,
+          darkMode: darkMode
         })
       )}
 
