@@ -19,7 +19,6 @@ import showDeleteConfirm from '../../pageFormulaire/FileManagement/showDeleteCon
 import getUsers from './_actions/get-users';
 import deleteUser from './_actions/delete-user';
 import { blueGrey } from '@mui/material/colors';
-import {useUserConnected} from '../../Hook/userConnected';
 
 /**
  * Adminuser est un composant React qui permet de gérer les utilisateurs.
@@ -27,7 +26,6 @@ import {useUserConnected} from '../../Hook/userConnected';
  * ainsi que des boutons pour modifier et supprimer.
  */
 export default function Adminuser() {
-    const { isAdmin, isAdminOuConseiller, userInfo, isConseiller, isAdminOrDev,isDeveloppeur } = useUserConnected();
     const { darkMode } = useTheme(); 
     const [users, setUsers] = useState([]);
     const [usersIsPending, startGetUsers] = useTransition();

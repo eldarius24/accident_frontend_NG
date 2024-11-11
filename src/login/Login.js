@@ -25,7 +25,7 @@ const Login = () => {
   const { register, handleSubmit } = useForm();
   const [isPasswordValid, setIsPasswordValid] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
-  const { setDarkMode, darkMode } = useTheme(); // Ajout de darkMode
+  const {darkMode } = useTheme(); // Ajout de darkMode
 
   const onSubmit = async (data) => {
     const { email, password } = data;

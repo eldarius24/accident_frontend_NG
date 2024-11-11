@@ -7,7 +7,6 @@ import GetAppIcon from '@mui/icons-material/GetApp';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import CloseIcon from '@mui/icons-material/Close';
 import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutline';
-import { confirmAlert } from 'react-confirm-alert';
 import { saveAs } from 'file-saver';
 import CustomSnackbar from '../../_composants/CustomSnackbar';
 import FileViewer from './fileViewer';

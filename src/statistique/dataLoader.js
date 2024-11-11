@@ -1,4 +1,3 @@
-import recupererDonnees from './recupererDonnees';
 import axios from 'axios';
 
 /**
@@ -59,14 +58,14 @@ export default async function chargerDonnees({
         const anneesAccidents = donneesAccidents
             .map(accident => new Date(accident.DateHeureAccident).getFullYear())
             .filter(annee => !isNaN(annee));
-        const ensembleAnneesAccidents = new Set(anneesAccidents);
+        
 
         // Extraire les années des données TF
         const anneesTf = donneesTf
             .flatMap(questionnaire => questionnaire.annees || [])
             .map(annee => parseInt(annee))
             .filter(annee => !isNaN(annee));
-        const ensembleAnneesTf = new Set(anneesTf);
+      
 
         // Créer un tableau de toutes les années uniques avec leurs sources
         const toutesAnnees = [...new Set([...anneesAccidents, ...anneesTf])]

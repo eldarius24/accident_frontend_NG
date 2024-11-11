@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { Button, Tooltip, Typography, Box, Paper, Divider } from '@mui/material';
+import { Button, Tooltip, Typography, Box, Paper } from '@mui/material';
 import TextFieldP from '../_composants/textFieldP';
 import AutoCompleteP from '../_composants/autoCompleteP';
 import MultipleAutoCompleteCMQ from '../_composants/autoCompleteCMQ';

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import {
-    Card, CardContent, Typography, Grid, LinearProgress,
+    Card, CardContent, Typography, LinearProgress,
     Box, Divider, Button, Select, MenuItem, Modal,
     FormControl, Tooltip, InputLabel, Accordion, AccordionSummary, AccordionDetails,
 } from '@mui/material';
@@ -23,7 +23,6 @@ import CustomSnackbar from '../_composants/CustomSnackbar';
 import CloseIcon from '@mui/icons-material/Close';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
-import { confirmAlert } from 'react-confirm-alert';
 import GetAppIcon from '@mui/icons-material/GetApp';
 import handleFileDownload from './fileUtils';
 import showDeleteConfirm from '../pageFormulaire/FileManagement/showDeleteConfirm';
@@ -59,7 +58,7 @@ const EnterpriseDivers = () => {
     const { darkMode } = useTheme();
     const [enterprises, setEnterprises] = useState([]);
     const [loading, setLoading] = useState(true);
-    const { isAdmin, isConseiller, userInfo, isAdminOrDev } = useUserConnected();
+    const { isConseiller, userInfo, isAdminOrDev } = useUserConnected();
     const apiUrl = config.apiUrl;
     const [questionnaires, setQuestionnaires] = useState({});
     const [filteredEnterprises, setFilteredEnterprises] = useState([]);
