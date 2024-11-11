@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     Card,
     CardContent,
@@ -55,11 +55,11 @@ const MessSupport = () => {
             flexWrap: 'wrap',
             alignItems: 'center'
         }}>
-            <Typography variant="subtitle2" sx={{ mr: 2, color: darkMode ? '#ffffff' : '#000000' }}>Type de destination :</Typography>
+            <Typography variant="subtitle2" sx={{ mr: 2, color: darkMode ? '#ffffff' : '#000000' }}>Destinataire :</Typography>
             {[
                 { type: 'dev', label: 'Développeurs', color: darkMode ? '#2c3e50' : '#bb8a21' },
                 { type: 'admin', label: 'Administrateurs', color: darkMode ? '#433c51' : '#01aeac' },
-                { type: 'both', label: 'Les deux', color: darkMode ? '#424242' : '#ffff00' }
+                { type: 'both', label: 'Développeurs & Administrateurs', color: darkMode ? '#424242' : '#ffff00' }
             ].map(({ type, label, color }) => (
                 <Box key={type} sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                     <Box sx={{
