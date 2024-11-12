@@ -6,7 +6,6 @@ export default function ControlLabelAdminP({ id, label, onChange, checked }) {
     const { darkMode } = useTheme();
 
     const handleChange = (_, value) => {
-        console.log('checkBox change to "', value, '"');
         if (onChange) {
             onChange(value);
         }

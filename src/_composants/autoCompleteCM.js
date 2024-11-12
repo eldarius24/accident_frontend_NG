@@ -48,7 +48,6 @@ export default function MultipleAutoComplete({
     const handleChange = (_, newValue) => {
         // S'assurer que newValue est toujours un tableau
         const safeNewValue = Array.isArray(newValue) ? newValue : [];
-        console.log('Nouvelle valeur sélectionnée:', safeNewValue); // Debug log
         setValue(safeNewValue);
         setTouched(true);
         if (onChange) {

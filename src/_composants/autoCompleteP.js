@@ -14,7 +14,6 @@ export default function AutoCompleteP({
     const { darkMode } = useTheme();
 
     const handleChange = (_, value) => {
-        console.log('Autocomplet change to "', value, '"');
         if (onChange) {
             onChange(value);
         }

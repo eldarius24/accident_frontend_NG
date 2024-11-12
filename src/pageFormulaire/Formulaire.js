@@ -81,7 +81,7 @@ export default function Formulaire() {
 
         axios[method](url, formattedData)  // Utiliser formattedData au lieu de data
             .then(async response => {
-                console.log(`Réponse du serveur en ${accidentData ? 'modification' : 'création'} :`, response.data);
+               
 
                 // Création du log
                 try {

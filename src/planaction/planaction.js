@@ -572,7 +572,6 @@ export default function PlanAction({ accidentData }) {
                                                                 AddboolStatus: newStatus
                                                             })
                                                                 .then(response => {
-                                                                    console.log('Statut mis à jour avec succès:', response.data);
                                                                     refreshListAccidents();
                                                                 })
                                                                 .catch(error => {

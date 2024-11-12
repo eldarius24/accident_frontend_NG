@@ -61,10 +61,8 @@ const fetchLogs = async (params) => {
     urlParams.append('limit', logsPerPage);
 
     const url = `http://${apiUrl}:3100/api/logs?${urlParams}`;
-    console.log('URL de requête:', url);
 
     const response = await axios.get(url);
-    console.log('Réponse reçue:', response.data);
 
     if (response.data?.data) {
       setLogs(response.data.data);
@@ -74,7 +72,6 @@ const fetchLogs = async (params) => {
       setTotalPages(Math.ceil(totalLogs / logsPerPage));
       showSnackbar(`${response.data.data.length} logs chargés`, 'success');
     } else {
-      console.log('Format de réponse inattendu:', response.data);
       showSnackbar('Format de données incorrect', 'warning');
       setLogs([]);
       setFilteredLogs([]);

@@ -358,7 +358,7 @@ const EnterpriseDivers = () => {
             const enterpriseData = response.data;
 
             // Vérification des données reçues
-            console.log("Données reçues pour les entreprises:", enterpriseData);
+
 
             if (!Array.isArray(enterpriseData)) {
                 console.error("Données non conformes : tableau attendu, mais reçu :", enterpriseData);
@@ -367,8 +367,7 @@ const EnterpriseDivers = () => {
             }
 
             // Vérifiez les valeurs de `isAdmin` et `isConseiller`
-            console.log("Valeur de isAdminOrDev:", isAdminOrDev);
-            console.log("Valeur de isConseiller:", isConseiller);
+
 
             const filteredData = isAdminOrDev
                 ? enterpriseData

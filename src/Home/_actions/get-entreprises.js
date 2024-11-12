@@ -24,8 +24,6 @@ const getEntreprises = async () => {
         return [];
     }
     
-    // Affichage des entreprises dans la console
-    console.log("getEntreprises, entreprises : ", entreprises);
 
     // Retour des entreprises
     return entreprises;

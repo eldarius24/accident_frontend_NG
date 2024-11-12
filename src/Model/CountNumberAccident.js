@@ -36,10 +36,6 @@ export default function CountNumberAccidentGroupe(accidents) {
         accident.numeroEntreprise = `${accidentYear}-${entrepriseNumbers[entrepriseName]}`;
     });
 
-    // Affiche les accidents après le tri et l'attribution des numéros
-    /*accidents.forEach((accident) => {
-        console.log("accidents après le tri  => ", accident.numeroGroupe, "->", accident.numeroEntreprise, "->", accident.DateHeureAccident);
-    });*/
 
     return accidents;
 }

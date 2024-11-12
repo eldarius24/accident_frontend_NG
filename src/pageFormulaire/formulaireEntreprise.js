@@ -62,7 +62,7 @@ export default function FormulaireEntreprise({ setValue, accidentData, watch }) 
   }, []);
 
   useEffect(() => {
-    console.info("fomulaireEntreprise => formData : ", formData);
+   
     sessionStorage.setItem('accidentData', JSON.stringify(formData));
   }, [formData])
 

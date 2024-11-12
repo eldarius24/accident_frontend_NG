@@ -120,7 +120,6 @@ export default function Adminusern() {
             .then(response => {
                 if (response.status === 204 || response.status === 200) {
                     showSnackbar('Entreprise supprimée avec succès', 'success');
-                    console.log('Entreprise supprimée avec succès');
                     setEntreprises(prevEntreprises => prevEntreprises.filter(entreprise => entreprise._id !== entrepriseIdToDelete));
                 } else {
                     console.error('Erreur lors de la suppression de l\'entreprise, code d\'erreur :', response.status, response.statusText);

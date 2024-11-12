@@ -52,8 +52,6 @@ const getAccidents = async () => {
         });
     });
 
-    console.log("getAccidents, accidents : ", accidents);
-
     return accidents;
 };
 

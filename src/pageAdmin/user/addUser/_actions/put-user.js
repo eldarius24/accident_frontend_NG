@@ -4,7 +4,7 @@ import config from '../../../../config.json';
 
 const putUser = async (idUser, dataUser) => {
     const apiUrl = config.apiUrl;
-    console.log('putUser', idUser, dataUser);
+
 
     try {
         let result;

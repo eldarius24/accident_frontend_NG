@@ -86,11 +86,9 @@ export default function AddSecteur() {
      */
     const fetchSecteurs = async () => {
         try {
-            console.log('Fetching secteurs...');
+
             const response = await axios.get(`http://${apiUrl}:3100/api/secteurs`);
-            console.log('Fetched secteurs:', response.data);
             const filteredSecteurs = response.data.filter(secteur => secteur.entrepriseId === entreprise._id);
-            console.log('Filtered secteurs:', filteredSecteurs);
             setSecteurs(filteredSecteurs);
             showSnackbar('Secteurs chargés avec succès', 'success');
         } catch (error) {
@@ -190,7 +188,6 @@ export default function AddSecteur() {
                     value={secteurName} // Vérifiez que secteurName est bien défini
                     onChange={(e) => {
                         // Assurez-vous que 'e' est un événement valide
-                        console.log('Input change event:', e); // Log pour débogage
                         const value = e; // e contient la valeur ici, pas l'événement
                         setSecteurName(value); // Mettez à jour secteurName
                     }}

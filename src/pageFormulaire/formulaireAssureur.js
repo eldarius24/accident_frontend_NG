@@ -79,7 +79,6 @@ export default function FormulaireAssureur({ setValue, accidentData, watch }) {
 
           {/* *********************************** Date d'envoie de la déclaration d'accident **********************************/}
           <DatePickerP id="DateEnvoieDeclarationAccident" label="Date d'envoie de la déclaration d'accident" onChange={(DateEnvoieDeclarationAccidentChoose) => {
-            console.log(DateEnvoieDeclarationAccidentChoose);
             setDateEnvoieDeclarationAccident(DateEnvoieDeclarationAccidentChoose);
             setValue('DateEnvoieDeclarationAccident', DateEnvoieDeclarationAccidentChoose);
           }} defaultValue={DateEnvoieDeclarationAccident}></DatePickerP>

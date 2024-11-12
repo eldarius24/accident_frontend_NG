@@ -235,12 +235,6 @@ const MessSupport = () => {
                 return;
             }
 
-            console.log('Début de la mise à jour du statut:', {
-                messageId: selectedMessage._id,
-                newStatus: selectedStatus,
-                userInfo
-            });
-
             const response = await axios.put(
                 `http://${apiUrl}:3100/api/support/messages/${selectedMessage._id}/status`,
                 {

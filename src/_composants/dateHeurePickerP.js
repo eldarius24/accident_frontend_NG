@@ -12,7 +12,6 @@ export default function DateHeurePickerP({id, label, defaultValue, onChange}) {
     const { darkMode } = useTheme();
 
     const handleChange = (event, _) => {
-        console.log('DatePicker event "', event, '"');
         if (onChange) {
             const date = dayjs(event).format('YYYY-MM-DD:HH:mm');
             onChange(date);

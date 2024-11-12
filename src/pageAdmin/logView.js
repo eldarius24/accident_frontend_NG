@@ -105,7 +105,6 @@ const LogsViewer = () => {
 
   useEffect(() => {
     if (!isMounted.current) {
-      console.log('Chargement initial des logs...');
       fetchLogsWithState().catch(error => {
         console.error('Erreur dans useEffect:', error);
         showSnackbar('Erreur lors du chargement initial', 'error');

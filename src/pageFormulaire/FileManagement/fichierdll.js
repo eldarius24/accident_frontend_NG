@@ -84,7 +84,6 @@ export default function PageDownloadFile() {
                 entreprise: accidentDetails?.entreprise || null
             });
 
-            console.log('Réponse du serveur :', response.data);
             window.location.reload();
         } catch (error) {
             console.error('Erreur lors de l\'envoi d\'un fichier :', error);

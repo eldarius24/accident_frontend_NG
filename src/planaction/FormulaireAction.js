@@ -179,9 +179,6 @@ export default function FormulaireAction() {
             return; // Arrête la soumission du formulaire
         }
 
-        console.log('Data reçue:', data);
-        console.log('AddActionDange avant formatage:', AddActionDange, typeof AddActionDange);
-
         const formData = {
             ...data,
             AddActionEntreprise,
@@ -195,8 +192,6 @@ export default function FormulaireAction() {
             AddActoinmoi
         };
 
-        console.log('FormData final envoyé au serveur:', formData);
-
         const url = actionData
             ? `http://${apiUrl}:3100/api/planaction/${actionData._id}`
             : `http://${apiUrl}:3100/api/planaction`;
@@ -204,7 +199,6 @@ export default function FormulaireAction() {
 
         axios[method](url, formData)
             .then(async response => {
-                console.log(`Réponse du serveur en ${actionData ? 'modification' : 'création'} :`, response.data);
                 // Création du log
                 try {
                     await logAction({

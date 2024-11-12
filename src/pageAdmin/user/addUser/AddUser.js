@@ -84,8 +84,6 @@ export default function AddUser() {
                 setValue(key, value);
             });
 
-            // Log pour déboguer
-            console.log("Données utilisateur chargées:", formattedData);
 
         } catch (error) {
             console.error('Erreur lors de la récupération de l\'utilisateur:', error.message);
@@ -105,12 +103,7 @@ export default function AddUser() {
         }
     };
 
-    useEffect(() => {
-        console.log("État actuel:", {
-            boolAdministrateur: user.boolAdministrateur,
-            boolDeveloppeur: user.boolDeveloppeur
-        });
-    }, [user.boolAdministrateur, user.boolDeveloppeur]);
+
 
     useEffect(() => {
         getUserData();

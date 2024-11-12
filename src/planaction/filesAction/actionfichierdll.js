@@ -71,12 +71,6 @@ export default function PageDownloadFile() {
             const formData = new FormData();
             formData.append('file', file, name);
 
-            console.log('Sending file upload request:', {
-                actionId,
-                fileName: name,
-                fileSize: file.size
-            });
-
             const response = await axios.post(
                 `http://localhost:3100/api/stockFileAction/${actionId}`,
                 formData,
@@ -88,7 +82,6 @@ export default function PageDownloadFile() {
             );
 
             if (response.data) {
-                console.log('File upload successful:', response.data);
                 // Récupérer les détails de l'action pour le log
                 const actionDetails = await getactionDiversDetails(actionId);
 

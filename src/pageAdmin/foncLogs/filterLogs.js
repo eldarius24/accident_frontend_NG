@@ -15,12 +15,6 @@ const filterLogs = ({
     selectedType,
     setFilteredLogs
   }) => {
-    console.log('Filtrage des logs...', {
-      totalLogs: logs?.length,
-      searchTerm,
-      selectedDate,
-      selectedType
-    });
   
     if (!Array.isArray(logs)) {
       console.error('logs n\'est pas un tableau:', logs);
@@ -50,12 +44,7 @@ const filterLogs = ({
     if (selectedType !== 'all') {
       filtered = filtered.filter(log => log.actionType === selectedType);
     }
-  
-    console.log('Résultat du filtrage:', {
-      filteredCount: filtered.length,
-      firstItem: filtered[0]
-    });
-  
+    
     setFilteredLogs(filtered);
   };
   

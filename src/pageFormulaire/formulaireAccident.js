@@ -85,7 +85,6 @@ export default function FormulaireAccident({ setValue, accidentData, watch }) {
   }, []);
 
   useEffect(() => {
-    console.info("fomulaireAccident => formData : ", formData);
     sessionStorage.setItem('accidentData', JSON.stringify(formData));
   }, [formData])
 

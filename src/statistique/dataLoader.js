@@ -71,8 +71,6 @@ export default async function chargerDonnees({
         const toutesAnnees = [...new Set([...anneesAccidents, ...anneesTf])]
             .sort((a, b) => a - b);
 
-        console.log('Toutes les années chargées:', toutesAnnees); // Log pour debug
-
         setAllYears(toutesAnnees);
         
         // Définir l'année courante ou la plus récente

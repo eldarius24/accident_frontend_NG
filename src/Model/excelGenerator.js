@@ -30,7 +30,6 @@ function generateExcelFileAccidents(workbook) {
      */
 export function handleExportData(data) {
     const dataToExport = Array.isArray(data) ? data : [];
-    console.log("Données à exporter : ", dataToExport);
     if (dataToExport.length === 0) {
         console.warn("Aucune donnée à exporter.");
     }
@@ -157,7 +156,6 @@ function generateExcelFileAssurances(workbook) {
  */
 export function handleExportDataAss(data) {
     const dataToExport = Array.isArray(data) ? data : []; // Utilisez 'data' au lieu de 'filteredData'
-    console.log("Données à exporter : ", dataToExport);
     if (dataToExport.length === 0) {
         console.warn("Aucune donnée à exporter.");
     }
@@ -556,7 +554,6 @@ function generateExcelFileActions(workbook) {
  */
 export function handleExportDataAction(data) {
     const dataToExport = Array.isArray(data) ? data : []; // Utilisez 'data' au lieu de 'filteredData'
-    console.log("Données à exporter : ", dataToExport);
     if (dataToExport.length === 0) {
         console.warn("Aucune donnée à exporter.");
     }
