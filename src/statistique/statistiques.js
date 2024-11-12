@@ -763,7 +763,7 @@ const Statistiques = () => {
           xAxis: "month",
           darkMode: darkMode,
           series: Object.keys(stats.accidentsByMonthByCompany)
-          
+
         })
       )}
 
