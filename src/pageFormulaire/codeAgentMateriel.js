@@ -49,7 +49,7 @@ const AgentMateriel = () => {
           ))}
         </div>
         <div className="image-cortigroupe"></div>
-        <Tooltip title="Si vous rencontrez un souci avec le site, envoyer un mail à l'adresse suivante : bgillet.lecortil@cortigroupe.be et expliquer le soucis rencontré" arrow>
+        <Tooltip title="Développé par Remy et Benoit pour Le Cortigroupe." arrow>
           <h5 style={{ marginBottom: '40px', color: darkMode ? '#9ca3af' : '#4b5563' }}>
             Développé par Remy et Benoit pour Le Cortigroupe. Support: bgillet.lecortil@cortigroupe.be
           </h5>
