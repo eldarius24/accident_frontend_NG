@@ -972,8 +972,28 @@ const EnterpriseDivers = () => {
                 open={modalOpen}
                 onClose={handleCloseModal}
                 aria-labelledby="file-viewer-modal"
+                keepMounted={false}
+                disableEnforceFocus={false}
+                disableAutoFocus={false}
+                onKeyDown={(event) => {
+                    if (event.key === 'Escape') {
+                        handleCloseModal();
+                    }
+                }}
             >
-                <Box sx={modalStyles}>
+                <Box sx={modalStyles}
+                    role="dialog"
+                    aria-modal="true"
+                    aria-labelledby="file-preview-title"
+                    tabIndex={-1}
+                >
+                    <Typography
+                        id="file-preview-title"
+                        variant="h6"
+                        sx={{ position: 'absolute', left: -9999 }}
+                    >
+                        Prévisualisation du fichier: {selectedFile?.fileName}
+                    </Typography>
                     <Tooltip title="Fermer la fenêtre" arrow>
                         <Button
                             onClick={handleCloseModal}
@@ -988,12 +1008,15 @@ const EnterpriseDivers = () => {
                                     backgroundColor: 'rgba(0, 0, 0, 0.7)',
                                 }
                             }}
+                            aria-label="Fermer la fenêtre"
                         >
                             <CloseIcon />
                         </Button>
                     </Tooltip>
                     {selectedFile && (
-                        <Box sx={{ width: '100%', height: '100%', overflow: 'auto' }}>
+                        <Box sx={{ width: '100%', height: '100%', overflow: 'auto' }}
+                            tabIndex={-1}
+                        >
                             <pre>{JSON.stringify(selectedFile.fileName, null, 5)}</pre>
                             <FileViewer
                                 file={selectedFile.file}

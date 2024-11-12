@@ -25,11 +25,11 @@ const Login = () => {
   const { register, handleSubmit } = useForm();
   const [isPasswordValid, setIsPasswordValid] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
-  const {darkMode } = useTheme(); // Ajout de darkMode
+  const { darkMode } = useTheme(); // Ajout de darkMode
 
   const onSubmit = async (data) => {
     const { email, password } = data;
-  
+
     try {
       // Log de tentative de connexion
       await logAction({
@@ -39,16 +39,16 @@ const Login = () => {
         userName: email,
         userId: 'anonymous'
       });
-  
+
       const response = await axios.post('http://localhost:3100/api/login', { email, password }, {
         headers: { 'Content-Type': 'application/json' }
       });
-  
+
       const userData = response.data;
-  
+
       if (!userData || response.status !== 200) {
         setIsPasswordValid(false);
-        
+
         await logAction({
           actionType: 'error',
           details: `Échec de connexion pour l'utilisateur: ${email} - Données invalides`,
@@ -56,16 +56,16 @@ const Login = () => {
           userName: email,
           userId: 'anonymous'
         });
-        
+
         alert('Login failed');
         return;
       }
-  
+
       const tokenData = {
         data: userData
       };
       localStorage.setItem('token', JSON.stringify(tokenData));
-  
+
       await logAction({
         actionType: 'connexion',
         details: `Connexion réussie pour l'utilisateur: ${userData.userName}`,
@@ -74,14 +74,14 @@ const Login = () => {
         userId: userData._id,
         entreprise: userData.entreprisesConseillerPrevention?.[0]
       });
-  
+
       // Supprimé la ligne setDarkMode car maintenant géré uniquement par les cookies
       navigate('/');
-      
+
     } catch (error) {
       console.error('Erreur lors de la connexion:', error.response ? error.response.data : error.message);
       setIsPasswordValid(false);
-      
+
       await logAction({
         actionType: 'error',
         details: `Erreur de connexion pour l'utilisateur: ${email} - ${error.response ? error.response.data : error.message}`,
@@ -89,7 +89,7 @@ const Login = () => {
         userName: email,
         userId: 'anonymous'
       });
-      
+
       alert('Login failed: ' + (error.response ? error.response.data.message : 'Unknown error'));
     }
   };
@@ -136,7 +136,7 @@ const Login = () => {
   };
 
   return (
-    <div style={{ 
+    <div style={{
       backgroundColor: darkMode ? '#6e6e6e' : '#ffffff',
       color: darkMode ? '#ffffff' : '#000000',
       minHeight: '100vh'
@@ -156,13 +156,23 @@ const Login = () => {
           </Tooltip>
         </div>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col justify-center items-center min-h-20 space-y-4">
+        <form onSubmit={handleSubmit(onSubmit)}
+          className="flex flex-col justify-center items-center min-h-20 space-y-4"
+          role="form"
+          aria-label="Formulaire de connexion"
+        >
           <TextField
             {...register('email')}
             id="outlined-multiline-static"
             label="Email"
             className="w-1/2 shadow-md"
             sx={textFieldStyles}
+            aria-label="Adresse email"
+            required
+            autoComplete="email"
+            inputProps={{
+              'aria-required': 'true'
+            }}
           />
 
           <TextField
@@ -174,12 +184,16 @@ const Login = () => {
             type={showPassword ? 'text' : "password"}
             error={!isPasswordValid}
             helperText={!isPasswordValid && 'Mot de passe incorrect'}
+            aria-describedby={!isPasswordValid ? 'password-error-text' : undefined}
             InputProps={{
               endAdornment: (
                 <InputAdornment position="end">
                   <IconButton
                     aria-label="toggle password visibility"
                     onClick={() => setShowPassword(!showPassword)}
+                    edge="end"
+                    aria-pressed={showPassword}
+                    tabIndex={0}
                   >
                     {showPassword ? <Visibility /> : <VisibilityOff />}
                   </IconButton>
@@ -189,10 +203,12 @@ const Login = () => {
           />
 
           <Tooltip title="Rentrer votre Email et votre mot de passe pour vous connecter. Si vous n'en avez pas faite la demande au support via l'adresse suivante : bgillet.lecortil@cortigroupe.be" arrow>
-            <Button 
+            <Button
               sx={buttonStyle}
               type="submit"
               className="bg-[#00479871] hover:bg-green-950 w-1/2 shadow-md"
+              aria-label="Se connecter"
+              role="button"
             >
               Se connecter
             </Button>
@@ -204,10 +220,12 @@ const Login = () => {
 
         <div className="image-cortigroupe"></div>
         <Tooltip title="Développé par Remy et Benoit pour Le Cortigroupe." arrow>
-          <h5 style={{ 
-            marginBottom: '40px',
-            color: darkMode ? '#ffffff' : 'inherit'
-          }}>
+          <h5
+            role="note"
+            style={{
+              marginBottom: '40px',
+              color: darkMode ? '#ffffff' : 'inherit'
+            }}>
             Développé par Remy et Benoit pour Le Cortigroupe.
           </h5>
         </Tooltip>

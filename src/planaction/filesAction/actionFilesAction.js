@@ -53,6 +53,12 @@ export default function ListFilesInaction(actionId) {
         severity: 'info',
     });
 
+    const handleKeyDown = (event) => {
+        if (event.key === 'Escape') {
+            handleCloseModal();
+        }
+    };
+
     /**
      * Affiche un message dans une snackbar.
      * @param {string} message - Le message à afficher.
@@ -388,8 +394,15 @@ export default function ListFilesInaction(actionId) {
                 open={modalOpen}
                 onClose={handleCloseModal}
                 aria-labelledby="file-viewer-modal"
+                keepMounted={false}
+                disableEnforceFocus={false}
+                disableAutoFocus={false}
+                onKeyDown={handleKeyDown}
             >
-                <Box sx={modalStyle}>
+                <Box sx={modalStyle}
+                    role="dialog"
+                    aria-modal="true"
+                >
                     <Tooltip title="Fermer la fenêtre" arrow>
                         <Button
                             onClick={handleCloseModal}
@@ -404,12 +417,15 @@ export default function ListFilesInaction(actionId) {
                                     backgroundColor: 'rgba(0, 0, 0, 0.7)',
                                 }
                             }}
+                            aria-label="Fermer la fenêtre"
                         >
                             <CloseIcon />
                         </Button>
                     </Tooltip>
                     {selectedFile && (
-                        <Box sx={{ width: '100%', height: '100%', overflow: 'auto' }}>
+                        <Box sx={{ width: '100%', height: '100%', overflow: 'auto' }}
+                            tabIndex={-1}
+                        >
                             <FileViewer
                                 file={selectedFile}
                                 fileContent={previews[selectedFile.fileId]}

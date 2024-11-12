@@ -138,8 +138,12 @@ const SupportDialog = ({ open, onClose, isLoginPage = false }) => {
       aria-labelledby="support-dialog-title"
       keepMounted={false}
       disableEscapeKeyDown={isSubmitting}
+      disableEnforceFocus={false}
+      disableAutoFocus={false}
       PaperProps={{
-        style: dialogStyle
+        style: dialogStyle,
+        role: "dialog",
+        "aria-modal": true
       }}
     >
       <DialogTitle
@@ -169,6 +173,11 @@ const SupportDialog = ({ open, onClose, isLoginPage = false }) => {
                   mb: 2,
                   ...inputStyle
                 }}
+                aria-required="true"
+                aria-label="Votre nom"
+                inputProps={{
+                  'aria-describedby': 'userName-helper-text'
+                }}
               />
               <TextField
                 margin="dense"
@@ -183,6 +192,11 @@ const SupportDialog = ({ open, onClose, isLoginPage = false }) => {
                   mb: 2,
                   ...inputStyle
                 }}
+                aria-required="true"
+                aria-label="Votre email"
+                inputProps={{
+                  'aria-describedby': 'userEmail-helper-text'
+                }}
               />
             </>
           )}
@@ -195,6 +209,8 @@ const SupportDialog = ({ open, onClose, isLoginPage = false }) => {
             defaultValue={typeSupport}
             required={true}
             sx={{ width: '100%', mb: 2 }}
+            aria-required="true"
+            aria-label="Sélectionner le type de support"
           />
 
           <TextField
@@ -209,6 +225,11 @@ const SupportDialog = ({ open, onClose, isLoginPage = false }) => {
               mb: 2,
               ...inputStyle
             }}
+            aria-required="true"
+            aria-label="Sujet du message"
+            inputProps={{
+              'aria-describedby': 'subject-helper-text'
+            }}
           />
 
           <TextField
@@ -222,6 +243,11 @@ const SupportDialog = ({ open, onClose, isLoginPage = false }) => {
             onChange={(e) => setMessage(e.target.value)}
             disabled={isSubmitting}
             sx={inputStyle}
+            aria-required="true"
+            aria-label="Message"
+            inputProps={{
+              'aria-describedby': 'message-helper-text'
+            }}
           />
 
           {status.message && (
