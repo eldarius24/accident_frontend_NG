@@ -1,16 +1,17 @@
 {
-"typeFicher": [
-"Rapport Annuelle SIPPT",
-"Rapport Contrôle bien-être",
-"Rapport de visite des lieux de travail",
-"Rapport des visites de chantier",
-"Rapport d'exercice incendie",
-"Rapport psychosociale",
-"Analyse de risques",
-"PV CPPT",
-"Controle des instalations",
-"Contrat d'assurance",
-"Contrat SEPP",
-"Autres documents"
-]
+    "typeFicher": [
+        "Registre de premiers soins",
+        "Rapport Annuelle SIPPT",
+        "Rapport Contrôle bien-être",
+        "Rapport de visite des lieux de travail",
+        "Rapport des visites de chantier",
+        "Rapport d'exercice incendie",
+        "Rapport psychosociale",
+        "Analyse de risques",
+        "PV CPPT",
+        "Controle des instalations",
+        "Contrat d'assurance",
+        "Contrat SEPP",
+        "Autres documents"
+    ]
 }
