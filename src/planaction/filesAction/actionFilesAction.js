@@ -369,16 +369,17 @@ export default function ListFilesInaction(actionId) {
                             }}>
                                 <Typography sx={{ fontSize: 12, color: 'text.secondary', marginBottom: 1 }}>
                                     {file.fileName}
-                                </Typography>
+                                    </Typography>
                                 {previews[file.fileId] ? (
                                     previews[file.fileId].type === 'image' ? (
                                         <img src={previews[file.fileId].url} alt={file.fileName} style={{ width: '100%', height: 'auto' }} />
                                     ) : previews[file.fileId].type === 'pdf' ? (
                                         <img src={previews[file.fileId].url} alt={file.fileName} style={{ width: '100%', height: 'auto' }} />
-                                    ) : previews[file.fileId].type === 'txt' ? (
-                                        <Typography sx={{ fontSize: 14 }} color="text.primary" gutterBottom>
-                                            {previews[file.fileId].text}
-                                        </Typography>
+                                    ) : ['txt', 'docx', 'excel'].includes(previews[file.fileId].type) ? (
+                                        <div
+                                            style={{ fontSize: 14 }}
+                                            dangerouslySetInnerHTML={{ __html: previews[file.fileId].preview }}
+                                        />
                                     ) : null
                                 ) : (
                                     <Typography sx={{ fontSize: 14 }} color="text.primary" gutterBottom>

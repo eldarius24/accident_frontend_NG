@@ -369,10 +369,11 @@ export default function ListFilesInAccident(accidentId) {
                                         <img src={previews[file.fileId].url} alt={file.fileName} style={{ width: '100%', height: 'auto' }} />
                                     ) : previews[file.fileId].type === 'pdf' ? (
                                         <img src={previews[file.fileId].url} alt={file.fileName} style={{ width: '100%', height: 'auto' }} />
-                                    ) : previews[file.fileId].type === 'txt' ? (
-                                        <Typography sx={{ fontSize: 14 }} color="text.primary" gutterBottom>
-                                            {previews[file.fileId].text}
-                                        </Typography>
+                                    ) : ['txt', 'docx', 'excel'].includes(previews[file.fileId].type) ? (
+                                        <div
+                                            style={{ fontSize: 14 }}
+                                            dangerouslySetInnerHTML={{ __html: previews[file.fileId].preview }}
+                                        />
                                     ) : null
                                 ) : (
                                     <Typography sx={{ fontSize: 14 }} color="text.primary" gutterBottom>

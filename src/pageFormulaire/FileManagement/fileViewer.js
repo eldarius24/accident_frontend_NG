@@ -11,6 +11,8 @@ const FileViewer = ({ file, accidentId, isEntreprise = false }) => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const { logAction } = useLogger();
+    const [zoom, setZoom] = useState(1);
+    const [rotation, setRotation] = useState(0);
 
     const processExcelFile = async (blob) => {
         try {
@@ -219,12 +221,26 @@ const FileViewer = ({ file, accidentId, isEntreprise = false }) => {
     switch (fullContent.type) {
         case 'excel':
             return (
-                <div className="w-full h-[calc(100vh-140px)] overflow-auto bg-white p-4">
-                    <div
-                        className="excel-preview"
-                        dangerouslySetInnerHTML={{ __html: fullContent.content }}
-                    />
-                </div>
+                <Box className="w-full h-full flex flex-col bg-white">
+                    <Box className="flex justify-center gap-4 p-2 border-b">
+                        <button onClick={() => setZoom(z => z * 1.2)}>Zoom +</button>
+                        <button onClick={() => setZoom(z => z / 1.2)}>Zoom -</button>
+                        <button onClick={() => setZoom(1)}>Reset Zoom</button>
+                        <button onClick={() => setRotation(r => r - 90)}>Rotation ↶</button>
+                        <button onClick={() => setRotation(r => r + 90)}>Rotation ↷</button>
+                    </Box>
+                    <Box className="flex-1 overflow-auto">
+                        <div
+                            className="excel-preview"
+                            style={{
+                                transform: `scale(${zoom}) rotate(${rotation}deg)`,
+                                transition: 'transform 0.2s ease-in-out',
+                                transformOrigin: 'center center'
+                            }}
+                            dangerouslySetInnerHTML={{ __html: fullContent.content }}
+                        />
+                    </Box>
+                </Box>
             );
         case 'pdf':
             return (
@@ -247,29 +263,77 @@ const FileViewer = ({ file, accidentId, isEntreprise = false }) => {
 
         case 'docx':
             return (
-                <Box
-                    className="w-full h-full overflow-auto bg-white p-4"
-                    dangerouslySetInnerHTML={{ __html: fullContent.content }}
-                />
+                <Box className="w-full h-full flex flex-col bg-white">
+                    <Box className="flex justify-center gap-4 p-2 border-b">
+                        <button onClick={() => setZoom(z => z * 1.2)}>Zoom +</button>
+                        <button onClick={() => setZoom(z => z / 1.2)}>Zoom -</button>
+                        <button onClick={() => setZoom(1)}>Reset Zoom</button>
+                        <button onClick={() => setRotation(r => r - 90)}>Rotation ↶</button>
+                        <button onClick={() => setRotation(r => r + 90)}>Rotation ↷</button>
+                    </Box>
+                    <Box className="flex-1 flex justify-center items-center overflow-auto">
+                        <Box
+                            className="flex-1 flex justify-center items-center overflow-auto"
+                            style={{
+                                transform: `scale(${zoom}) rotate(${rotation}deg)`,
+                                transition: 'transform 0.2s ease-in-out',
+                                transformOrigin: 'center center'
+                            }}
+                            dangerouslySetInnerHTML={{ __html: fullContent.content }}
+                        />
+                    </Box>
+                </Box>
             );
-
         case 'txt':
             return (
-                <Box className="w-full h-full overflow-auto bg-white p-4">
-                    <pre className="whitespace-pre-wrap font-sans text-sm">
-                        {fullContent.content}
-                    </pre>
+                <Box className="w-full h-full flex flex-col bg-white">
+                    <Box className="flex justify-center gap-4 p-2 border-b">
+                        <button onClick={() => setZoom(z => z * 1.2)}>Zoom +</button>
+                        <button onClick={() => setZoom(z => z / 1.2)}>Zoom -</button>
+                        <button onClick={() => setZoom(1)}>Reset Zoom</button>
+                        <button onClick={() => setRotation(r => r - 90)}>Rotation ↶</button>
+                        <button onClick={() => setRotation(r => r + 90)}>Rotation ↷</button>
+                    </Box>
+                    <Box className="flex-1 flex justify-center items-center overflow-auto">
+                        <pre
+                            className="whitespace-pre-wrap font-sans text-sm"
+                            style={{
+                                transform: `scale(${zoom}) rotate(${rotation}deg)`,
+                                transition: 'transform 0.2s ease-in-out',
+                                maxWidth: '100%',
+                                maxHeight: '100%'
+                            }}
+                        >
+                            {fullContent.content}
+                        </pre>
+                    </Box>
                 </Box>
             );
 
         case 'image':
             return (
-                <Box className="w-full h-full flex justify-center items-center bg-white">
-                    <img
-                        src={fullContent.url}
-                        alt={file.fileName}
-                        className="max-w-full max-h-full object-contain"
-                    />
+                <Box className="w-full h-full flex flex-col bg-white">
+                    <Box className="flex justify-center gap-4 p-2 border-b">
+                        <button onClick={() => setZoom(z => z * 1.2)}>Zoom +</button>
+                        <button onClick={() => setZoom(z => z / 1.2)}>Zoom -</button>
+                        <button onClick={() => setZoom(1)}>Reset Zoom</button>
+                        <button onClick={() => setRotation(r => r - 90)}>Rotation ↶</button>
+                        <button onClick={() => setRotation(r => r + 90)}>Rotation ↷</button>
+                    </Box>
+                    <Box className="flex-1 flex justify-center items-center overflow-auto">
+                        <img
+                            src={fullContent.url}
+                            alt={file.fileName}
+                            className="max-w-full max-h-full object-contain"
+                            style={{
+                                transform: `scale(${zoom}) rotate(${rotation}deg)`,
+                                transition: 'transform 0.2s ease-in-out',
+                                maxWidth: '100%',
+                                maxHeight: '100%',
+                                objectFit: 'contain'
+                            }}
+                        />
+                    </Box>
                 </Box>
             );
 
