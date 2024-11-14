@@ -108,6 +108,7 @@ const FileViewer = ({ file, actionId, isEntreprise = false }) => {
                 switch (fileType) {
                     case 'xlsx':
                     case 'xls':
+                    case 'csv':
                         try {
                             const excelHtml = await processExcelFile(response.data);
                             setContent({ type: 'excel', content: excelHtml });

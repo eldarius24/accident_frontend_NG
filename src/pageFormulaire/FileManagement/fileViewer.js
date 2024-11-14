@@ -106,6 +106,7 @@ const FileViewer = ({ file, accidentId, isEntreprise = false }) => {
                     switch (fileType) {
                         case 'xlsx':
                         case 'xls':
+                        case 'csv':
                             try {
                                 const excelHtml = await processExcelFile(response.data);
                                 setFullContent({ type: 'excel', content: excelHtml });

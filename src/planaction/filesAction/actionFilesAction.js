@@ -375,7 +375,7 @@ export default function ListFilesInaction(actionId) {
                                         <img src={previews[file.fileId].url} alt={file.fileName} style={{ width: '100%', height: 'auto' }} />
                                     ) : previews[file.fileId].type === 'pdf' ? (
                                         <img src={previews[file.fileId].url} alt={file.fileName} style={{ width: '100%', height: 'auto' }} />
-                                    ) : ['txt', 'docx', 'excel'].includes(previews[file.fileId].type) ? (
+                                    ) : ['txt', 'docx', 'csv', 'xlsx', 'xls'].includes(previews[file.fileId].type) ? (
                                         <div
                                             style={{ fontSize: 14 }}
                                             dangerouslySetInnerHTML={{ __html: previews[file.fileId].preview }}
