@@ -31,6 +31,7 @@ import { blueGrey } from '@mui/material/colors';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Cookies from 'js-cookie';
 import NumbersIcon from '@mui/icons-material/Numbers';
+import handleRenameFile from './fileRenameEntre';
 
 const modalStyles = {
     position: 'absolute',
@@ -70,6 +71,33 @@ const EnterpriseDivers = () => {
         message: '',
         severity: 'info'
     });
+
+
+
+    const handleRename = useCallback((questionnaireId, fileId, newFileName) => {
+        const enterprise = filteredEnterprises.find(e =>
+            questionnaires[e._id]?.some(q => q._id === questionnaireId)
+        );
+
+        if (!enterprise) return;
+
+        setQuestionnaires(prev => ({
+            ...prev,
+            [enterprise._id]: prev[enterprise._id].map(q =>
+                q._id === questionnaireId
+                    ? {
+                        ...q,
+                        files: q.files.map(f =>
+                            f.fileId === fileId
+                                ? { ...f, fileName: newFileName }
+                                : f
+                        )
+                    }
+                    : q
+            )
+        }));
+    }, [filteredEnterprises, questionnaires]);
+
 
     const handleFilesAccordionChange = useCallback((questionnaireId) => (event, isExpanded) => {
         setExpandedFiles(prev => ({
@@ -902,6 +930,33 @@ const EnterpriseDivers = () => {
                                                                             color="primary"
                                                                         >
                                                                             <GetAppIcon sx={{ fontSize: 20 }} />
+                                                                        </Button>
+                                                                    </Tooltip>
+                                                                    <Tooltip title="Renommer le fichier" arrow>
+                                                                        <Button
+                                                                            sx={{
+                                                                                backgroundColor: blueGrey[500],
+                                                                                minWidth: '36px',
+                                                                                width: '36px',
+                                                                                height: '36px',
+                                                                                padding: 0,
+                                                                                '&:hover': {
+                                                                                    backgroundColor: blueGrey[700],
+                                                                                    transform: 'scale(1.08)'
+                                                                                }
+                                                                            }}
+                                                                            onClick={() => handleRenameFile(
+                                                                                file.fileId,
+                                                                                file.fileName,
+                                                                                q._id,
+                                                                                enterprise.AddEntreName,
+                                                                                (fileId, newFileName) => handleRename(q._id, fileId, newFileName),
+                                                                                logAction
+                                                                            )}
+                                                                            variant="contained"
+                                                                            color="info"
+                                                                        >
+                                                                            <EditIcon sx={{ fontSize: 20 }} />
                                                                         </Button>
                                                                     </Tooltip>
                                                                     <Tooltip title="Visualiser le fichier" arrow>
