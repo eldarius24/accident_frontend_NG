@@ -4,8 +4,10 @@ import mammoth from 'mammoth';
 import { Box, Typography, CircularProgress } from '@mui/material';
 import { useLogger } from '../../Hook/useLogger';
 import * as XLSX from 'xlsx';
+import { useTheme } from '../../pageAdmin/user/ThemeContext';
 
 const FileViewer = ({ file, actionId, isEntreprise = false }) => {
+    const { darkMode } = useTheme();
     const [content, setContent] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
     const [errorMessage, setErrorMessage] = useState(null);
@@ -27,29 +29,31 @@ const FileViewer = ({ file, actionId, isEntreprise = false }) => {
                         width: 100%;
                         font-family: Arial, sans-serif;
                         font-size: 14px;
+                        color: ${darkMode ? '#e5e7eb' : '#333'};
+                        background-color: ${darkMode ? '#424242' : '#ffffff'};
                     }
                     th, td {
-                        border: 1px solid #ddd;
+                        border: 1px solid ${darkMode ? '#4b5563' : '#ddd'};
                         padding: 8px;
                         text-align: left;
                     }
                     th {
-                        background-color: #f5f5f5;
+                        background-color: ${darkMode ? '#484848' : '#f5f5f5'};
                         font-weight: bold;
                     }
                     tr:nth-child(even) {
-                        background-color: #f9f9f9;
+                        background-color: ${darkMode ? '#515151' : '#f9f9f9'};
                     }
                     tr:hover {
-                        background-color: #f0f0f0;
+                        background-color: ${darkMode ? '#616161' : '#f0f0f0'};
                     }
                 </style>
                 ${html}
             `;
             return styledHtml;
         } catch (error) {
-            console.error('Error processing Excel file:', error);
-            throw new Error('Error processing Excel file');
+            console.error('Erreur lors du traitement du fichier Excel:', error);
+            throw new Error('Erreur lors du traitement du fichier Excel');
         }
     };
 
@@ -184,7 +188,7 @@ const FileViewer = ({ file, actionId, isEntreprise = false }) => {
 
     if (isLoading) {
         return (
-            <Box className="flex justify-center items-center h-full">
+            <Box className="flex justify-center items-center h-full" style={{ backgroundColor: darkMode ? '#424242' : '#ffffff' }}>
                 <CircularProgress />
             </Box>
         );
@@ -192,10 +196,10 @@ const FileViewer = ({ file, actionId, isEntreprise = false }) => {
 
     if (errorMessage) {
         return (
-            <Box className="flex justify-center items-center h-full flex-col">
-                <Typography color="error" className="mb-2">{errorMessage}</Typography>
-                <Typography color="textSecondary">
-                    You can still download the file to view it with an appropriate application.
+            <Box className="flex justify-center items-center h-full flex-col" style={{ backgroundColor: darkMode ? '#424242' : '#ffffff', color: darkMode ? '#ffffff' : '#333' }}>
+                <Typography style={{ color: 'error' }} className="mb-2">{errorMessage}</Typography>
+                <Typography style={{ color: darkMode ? '#9ca3af' : '#666' }}>
+                    Vous pouvez toujours télécharger le fichier pour le visualiser avec une application appropriée.
                 </Typography>
             </Box>
         );
@@ -203,39 +207,43 @@ const FileViewer = ({ file, actionId, isEntreprise = false }) => {
 
     if (!content) {
         return (
-            <Box className="flex justify-center items-center h-full">
-                <Typography color="textSecondary">No content to display</Typography>
+            <Box className="flex justify-center items-center h-full" style={{ backgroundColor: darkMode ? '#424242' : '#ffffff', color: darkMode ? '#ffffff' : '#333' }}>
+                <Typography style={{ color: 'inherit' }}>Aucun contenu à afficher</Typography>
             </Box>
         );
     }
 
     switch (content.type) {
         case 'excel':
+        case 'xlsx':
+        case 'xls':
+        case 'csv':
             return (
-                <Box className="w-full h-full flex flex-col bg-white">
-                    <Box className="flex justify-center gap-4 p-2 border-b">
-                        <button onClick={() => setZoom(z => z * 1.2)}>Zoom +</button>
-                        <button onClick={() => setZoom(z => z / 1.2)}>Zoom -</button>
-                        <button onClick={() => setZoom(1)}>Reset Zoom</button>
-                        <button onClick={() => setRotation(r => r - 90)}>Rotation ↶</button>
-                        <button onClick={() => setRotation(r => r + 90)}>Rotation ↷</button>
+                <Box className="w-full h-full flex flex-col" style={{ backgroundColor: darkMode ? '#424242' : '#ffffff' }}>
+                    <Box className="flex justify-center gap-4 p-2" style={{ borderBottom: `1px solid ${darkMode ? '#616161' : '#ddd'}` }}>
+                        <button onClick={() => setZoom(z => z * 1.2)} className="px-3 py-1 rounded" style={{ backgroundColor: darkMode ? '#515151' : '#f5f5f5', color: darkMode ? '#ffffff' : '#333' }}>Zoom +</button>
+                        <button onClick={() => setZoom(z => z / 1.2)} className="px-3 py-1 rounded" style={{ backgroundColor: darkMode ? '#515151' : '#f5f5f5', color: darkMode ? '#ffffff' : '#333' }}>Zoom -</button>
+                        <button onClick={() => setZoom(1)} className="px-3 py-1 rounded" style={{ backgroundColor: darkMode ? '#515151' : '#f5f5f5', color: darkMode ? '#ffffff' : '#333' }}>Réinitialiser</button>
+                        <button onClick={() => setRotation(r => r - 90)} className="px-3 py-1 rounded" style={{ backgroundColor: darkMode ? '#515151' : '#f5f5f5', color: darkMode ? '#ffffff' : '#333' }}>Rotation ↶</button>
+                        <button onClick={() => setRotation(r => r + 90)} className="px-3 py-1 rounded" style={{ backgroundColor: darkMode ? '#515151' : '#f5f5f5', color: darkMode ? '#ffffff' : '#333' }}>Rotation ↷</button>
                     </Box>
-                    <Box className="flex-1 overflow-auto">
+                    <Box className="flex-1 overflow-auto" style={{ backgroundColor: darkMode ? '#424242' : '#ffffff' }}>
                         <div
-                            className="excel-preview"
                             style={{
                                 transform: `scale(${zoom}) rotate(${rotation}deg)`,
                                 transition: 'transform 0.2s ease-in-out',
-                                transformOrigin: 'center center'
+                                transformOrigin: 'center center',
+                                padding: '1rem'
                             }}
                             dangerouslySetInnerHTML={{ __html: content.content }}
                         />
                     </Box>
                 </Box>
             );
+
         case 'pdf':
             return (
-                <Box className="w-full h-full relative">
+                <Box className="w-full h-full relative" style={{ backgroundColor: darkMode ? '#424242' : '#ffffff' }}>
                     <object
                         data={`${content.url}#toolbar=1&navpanes=0&scrollbar=1&view=FitH&zoom=page-fit`}
                         type="application/pdf"
@@ -246,53 +254,56 @@ const FileViewer = ({ file, actionId, isEntreprise = false }) => {
                             className="w-full h-full border-none"
                             title={file.fileName}
                         >
-                            <p>This browser does not support PDF viewing.</p>
+                            <p style={{ color: darkMode ? '#ffffff' : '#333' }}>Ce navigateur ne prend pas en charge l'affichage des PDF.</p>
                         </iframe>
                     </object>
                 </Box>
             );
 
-        case 'docx':
-            return (
-                <Box className="w-full h-full flex flex-col bg-white">
-                    <Box className="flex justify-center gap-4 p-2 border-b">
-                        <button onClick={() => setZoom(z => z * 1.2)}>Zoom +</button>
-                        <button onClick={() => setZoom(z => z / 1.2)}>Zoom -</button>
-                        <button onClick={() => setZoom(1)}>Reset Zoom</button>
-                        <button onClick={() => setRotation(r => r - 90)}>Rotation ↶</button>
-                        <button onClick={() => setRotation(r => r + 90)}>Rotation ↷</button>
+            case 'docx':
+                return (
+                    <Box className="w-full h-full flex flex-col" style={{ backgroundColor: darkMode ? '#424242' : '#ffffff' }}>
+                        <Box className="flex justify-center gap-4 p-2" style={{ borderBottom: `1px solid ${darkMode ? '#616161' : '#ddd'}` }}>
+                            <button onClick={() => setZoom(z => z * 1.2)} className="px-3 py-1 rounded" style={{ backgroundColor: darkMode ? '#515151' : '#f5f5f5', color: darkMode ? '#ffffff' : '#333' }}>Zoom +</button>
+                            <button onClick={() => setZoom(z => z / 1.2)} className="px-3 py-1 rounded" style={{ backgroundColor: darkMode ? '#515151' : '#f5f5f5', color: darkMode ? '#ffffff' : '#333' }}>Zoom -</button>
+                            <button onClick={() => setZoom(1)} className="px-3 py-1 rounded" style={{ backgroundColor: darkMode ? '#515151' : '#f5f5f5', color: darkMode ? '#ffffff' : '#333' }}>Réinitialiser</button>
+                            <button onClick={() => setRotation(r => r - 90)} className="px-3 py-1 rounded" style={{ backgroundColor: darkMode ? '#515151' : '#f5f5f5', color: darkMode ? '#ffffff' : '#333' }}>Rotation ↶</button>
+                            <button onClick={() => setRotation(r => r + 90)} className="px-3 py-1 rounded" style={{ backgroundColor: darkMode ? '#515151' : '#f5f5f5', color: darkMode ? '#ffffff' : '#333' }}>Rotation ↷</button>
+                        </Box>
+                        <Box className="flex-1 overflow-auto" style={{ backgroundColor: darkMode ? '#424242' : '#ffffff', color: darkMode ? '#ffffff' : '#333' }}>
+                            <div
+                                style={{
+                                    transform: `scale(${zoom}) rotate(${rotation}deg)`,
+                                    transition: 'transform 0.2s ease-in-out',
+                                    transformOrigin: 'center center',
+                                    padding: '1rem'
+                                }}
+                                dangerouslySetInnerHTML={{ __html: content.content }}
+                            />
+                        </Box>
                     </Box>
-                    <Box className="flex-1 flex justify-center items-center overflow-auto">
-                        <Box
-                            className="flex-1 flex justify-center items-center overflow-auto"
-                            style={{
-                                transform: `scale(${zoom}) rotate(${rotation}deg)`,
-                                transition: 'transform 0.2s ease-in-out',
-                                transformOrigin: 'center center'
-                            }}
-                            dangerouslySetInnerHTML={{ __html: content.content }}
-                        />
-                    </Box>
-                </Box>
-            );
+                );
+
         case 'txt':
             return (
-                <Box className="w-full h-full flex flex-col bg-white">
-                    <Box className="flex justify-center gap-4 p-2 border-b">
-                        <button onClick={() => setZoom(z => z * 1.2)}>Zoom +</button>
-                        <button onClick={() => setZoom(z => z / 1.2)}>Zoom -</button>
-                        <button onClick={() => setZoom(1)}>Reset Zoom</button>
-                        <button onClick={() => setRotation(r => r - 90)}>Rotation ↶</button>
-                        <button onClick={() => setRotation(r => r + 90)}>Rotation ↷</button>
+                <Box className="w-full h-full flex flex-col" style={{ backgroundColor: darkMode ? '#424242' : '#ffffff' }}>
+                    <Box className="flex justify-center gap-4 p-2" style={{ borderBottom: `1px solid ${darkMode ? '#616161' : '#ddd'}` }}>
+                        <button onClick={() => setZoom(z => z * 1.2)} className="px-3 py-1 rounded" style={{ backgroundColor: darkMode ? '#515151' : '#f5f5f5', color: darkMode ? '#ffffff' : '#333' }}>Zoom +</button>
+                        <button onClick={() => setZoom(z => z / 1.2)} className="px-3 py-1 rounded" style={{ backgroundColor: darkMode ? '#515151' : '#f5f5f5', color: darkMode ? '#ffffff' : '#333' }}>Zoom -</button>
+                        <button onClick={() => setZoom(1)} className="px-3 py-1 rounded" style={{ backgroundColor: darkMode ? '#515151' : '#f5f5f5', color: darkMode ? '#ffffff' : '#333' }}>Réinitialiser</button>
+                        <button onClick={() => setRotation(r => r - 90)} className="px-3 py-1 rounded" style={{ backgroundColor: darkMode ? '#515151' : '#f5f5f5', color: darkMode ? '#ffffff' : '#333' }}>Rotation ↶</button>
+                        <button onClick={() => setRotation(r => r + 90)} className="px-3 py-1 rounded" style={{ backgroundColor: darkMode ? '#515151' : '#f5f5f5', color: darkMode ? '#ffffff' : '#333' }}>Rotation ↷</button>
                     </Box>
-                    <Box className="flex-1 flex justify-center items-center overflow-auto">
+                    <Box className="flex-1 overflow-auto" style={{ backgroundColor: darkMode ? '#424242' : '#ffffff' }}>
                         <pre
-                            className="whitespace-pre-wrap font-sans text-sm"
                             style={{
                                 transform: `scale(${zoom}) rotate(${rotation}deg)`,
                                 transition: 'transform 0.2s ease-in-out',
-                                maxWidth: '100%',
-                                maxHeight: '100%'
+                                whiteSpace: 'pre-wrap',
+                                fontFamily: 'sans-serif',
+                                fontSize: '0.875rem',
+                                color: darkMode ? '#ffffff' : '#333',
+                                padding: '1rem'
                             }}
                         >
                             {content.content}
@@ -300,17 +311,18 @@ const FileViewer = ({ file, actionId, isEntreprise = false }) => {
                     </Box>
                 </Box>
             );
+
         case 'image':
             return (
-                <Box className="w-full h-full flex flex-col bg-white">
-                    <Box className="flex justify-center gap-4 p-2 border-b">
-                        <button onClick={() => setZoom(z => z * 1.2)}>Zoom +</button>
-                        <button onClick={() => setZoom(z => z / 1.2)}>Zoom -</button>
-                        <button onClick={() => setZoom(1)}>Reset Zoom</button>
-                        <button onClick={() => setRotation(r => r - 90)}>Rotation ↶</button>
-                        <button onClick={() => setRotation(r => r + 90)}>Rotation ↷</button>
+                <Box className="w-full h-full flex flex-col" style={{ backgroundColor: darkMode ? '#424242' : '#ffffff' }}>
+                    <Box className="flex justify-center gap-4 p-2" style={{ borderBottom: `1px solid ${darkMode ? '#616161' : '#ddd'}` }}>
+                        <button onClick={() => setZoom(z => z * 1.2)} className="px-3 py-1 rounded" style={{ backgroundColor: darkMode ? '#515151' : '#f5f5f5', color: darkMode ? '#ffffff' : '#333' }}>Zoom +</button>
+                        <button onClick={() => setZoom(z => z / 1.2)} className="px-3 py-1 rounded" style={{ backgroundColor: darkMode ? '#515151' : '#f5f5f5', color: darkMode ? '#ffffff' : '#333' }}>Zoom -</button>
+                        <button onClick={() => setZoom(1)} className="px-3 py-1 rounded" style={{ backgroundColor: darkMode ? '#515151' : '#f5f5f5', color: darkMode ? '#ffffff' : '#333' }}>Réinitialiser</button>
+                        <button onClick={() => setRotation(r => r - 90)} className="px-3 py-1 rounded" style={{ backgroundColor: darkMode ? '#515151' : '#f5f5f5', color: darkMode ? '#ffffff' : '#333' }}>Rotation ↶</button>
+                        <button onClick={() => setRotation(r => r + 90)} className="px-3 py-1 rounded" style={{ backgroundColor: darkMode ? '#515151' : '#f5f5f5', color: darkMode ? '#ffffff' : '#333' }}>Rotation ↷</button>
                     </Box>
-                    <Box className="flex-1 flex justify-center items-center overflow-auto">
+                    <Box className="flex-1 overflow-auto" style={{ backgroundColor: darkMode ? '#424242' : '#ffffff', padding: '1rem' }}>
                         <img
                             src={content.url}
                             alt={file.fileName}
@@ -325,6 +337,7 @@ const FileViewer = ({ file, actionId, isEntreprise = false }) => {
                     </Box>
                 </Box>
             );
+            
         default:
             return (
                 <Box className="flex justify-center items-center h-full">
