@@ -230,12 +230,12 @@ const FileViewer = ({ file, accidentId, isEntreprise = false }) => {
             return (
                 <Box className="w-full h-full relative">
                     <object
-                        data={`${fullContent.url}#toolbar=0&navpanes=0&scrollbar=1&view=FitH&zoom=page-fit`}
+                        data={`${fullContent.url}#toolbar=1&navpanes=0&scrollbar=1&view=FitH&zoom=page-fit`}
                         type="application/pdf"
                         className="w-full h-full"
                     >
                         <iframe
-                            src={`${fullContent.url}#toolbar=0&navpanes=0&scrollbar=1&view=FitH&zoom=page-fit`}
+                            src={`${fullContent.url}#toolbar=1&navpanes=0&scrollbar=1&view=FitH&zoom=page-fit`}
                             className="w-full h-full border-none"
                             title={file.fileName}
                         >
