@@ -271,29 +271,6 @@ const Statistiques = () => {
     }
   };
 
-  /**
-   * Met à jour les années sélectionnées en fonction de la nouvelle valeur reçue via l'événement de changement.
-   * Si la valeur inclut 'All', met à jour la sélection en fonction de la longueur de allYears.
-   * Sinon, met à jour la sélection en fonction de la valeur reçue.
-   * 
-   * @param {Event} event - L'événement de changement contenant la nouvelle valeur
-   */
-  const handleChangeYearsFilter = (event) => {
-    const value = event.target.value;
-    if (value.includes('All')) {
-      setSelectedYears(selectedYears.length === allYears.length ? [] : allYears.map(yearData => yearData.annee));
-    } else {
-      setSelectedYears(value);
-    }
-  };
-
-  /**
-   * Updates the visibility of graphs based on the selected values from a filter.
-   * If 'All' is included in the selected values, toggles the visibility of all graphs.
-   * Otherwise, sets the visibility of each graph according to whether it is included in the selected values.
-   * 
-   * @param {Event} event - The change event containing new filter values.
-   */
   const handleChangeGraphsFilter = (event) => {
     const value = event.target.value;
     if (value.includes('All')) {
@@ -312,13 +289,6 @@ const Statistiques = () => {
     }
   };
 
-  /**
-   * Met à jour les types de travailleurs sélectionnés en fonction de la nouvelle valeur reçue via l'événement de changement.
-   * Si la valeur inclut 'all', met à jour la sélection en fonction de la longueur de workerTypes.
-   * Sinon, met à jour la sélection en fonction de la valeur reçue.
-   * 
-   * @param {Event} event - L'événement de changement contenant la nouvelle valeur
-   */
   const handleChangeWorkerTypesFilter = (event) => {
     const value = event.target.value;
     if (value.includes('all')) {
@@ -328,11 +298,6 @@ const Statistiques = () => {
     }
   };
 
-  /**
-   * Met à jour les secteurs sélectionnés en fonction de la nouvelle valeur reçue via l'événement de changement.
-   * Si la valeur inclut 'all', met à jour la sélection en fonction de la longueur de sectors.
-   * Sinon, met à jour la sélection en fonction de la valeur reçue.
-   */
   const handleChangeSectorsFilter = (event) => {
     const value = event.target.value;
     if (value.includes('all')) {
@@ -342,13 +307,6 @@ const Statistiques = () => {
     }
   };
 
-  /**
-   * Updates the selected AssureurStatus based on the new value received from the change event.
-   * If the value includes 'all', it toggles the selection between all and none.
-   * Otherwise, it updates the selection to the specified value.
-   * 
-   * @param {Event} event - The change event containing the new values for AssureurStatus.
-   */
   const handleChangeAssureurStatus = (event) => {
     const value = event.target.value;
     if (value.includes('all')) {
@@ -358,13 +316,6 @@ const Statistiques = () => {
     }
   };
 
-  /**
-   * Updates the selected AccidentTypes based on the new value received from the change event.
-   * If the value includes 'all', it toggles the selection between all and none.
-   * Otherwise, it updates the selection to the specified value.
-   * 
-   * @param {Event} event - The change event containing the new values for AccidentTypes.
-   */
   const handleChangeAccidentTypesFilter = (event) => {
     const value = event.target.value;
     if (value.includes('all')) {
@@ -381,7 +332,7 @@ const Statistiques = () => {
 
   // Style commun pour tous les FormControl
   const formControlStyle = {
-    width: 'calc(33.33% - 7px)',
+    width: 'calc(14% - 7px)',
     minWidth: '200px',
     '& .MuiInputLabel-root': {
       color: darkMode ? '#fff' : 'inherit'
