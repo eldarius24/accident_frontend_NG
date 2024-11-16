@@ -81,7 +81,7 @@ export default function Formulaire() {
 
         axios[method](url, formattedData)  // Utiliser formattedData au lieu de data
             .then(async response => {
-               
+
 
                 // Création du log
                 try {
@@ -110,64 +110,73 @@ export default function Formulaire() {
         setActiveStep(prevStep => prevStep + direction);
     }, []);
 
-    const renderNavigationButtons = useCallback((position) => (
-        <div style={{ display: 'flex', justifyContent: 'center', marginTop: '1.5rem' }}>
-            {activeStep > 0 && (
-                <Tooltip title="Cliquez ici pour revenir au formulaire précédent" arrow>
-                    <Button
-                        onClick={() => handleStepChange(-1)}
-                        sx={{
-                            backgroundColor: darkMode ? '#424242' : '#ee752d60',
-                            color: darkMode ? '#ffffff' : 'black',
-                            transition: 'all 0.3s ease-in-out',
-                            '&:hover': {
-                                backgroundColor: darkMode ? '#7a8e1c' : '#95ad22',
-                                transform: 'scale(1.08)',
-                                boxShadow: darkMode ? '0 6px 12px rgba(255,255,255,0.2)' : 6
-                            },
-                            boxShadow: darkMode ? '0 3px 6px rgba(255,255,255,0.1)' : 3,
-                            border: darkMode ? '1px solid rgba(255,255,255,0.1)' : 'none',
-                            padding: '10px 20px',
-                            marginRight: '1rem',
-                            '& .MuiSvgIcon-root': {
-                                color: darkMode ? '#fff' : 'inherit'
-                            }
-                        }}
-                        startIcon={<ArrowBackIcon />}
-                    >
-                        Précédent
-                    </Button>
-                </Tooltip>
-            )}
-            {activeStep < forms.length - 1 && (
-                <Tooltip title="Cliquez ici pour passer au formulaire suivant" arrow>
-                    <Button
-                        onClick={() => handleStepChange(1)}
-                        sx={{
-                            backgroundColor: darkMode ? '#424242' : '#ee752d60',
-                            color: darkMode ? '#ffffff' : 'black',
-                            transition: 'all 0.3s ease-in-out',
-                            '&:hover': {
-                                backgroundColor: darkMode ? '#7a8e1c' : '#95ad22',
-                                transform: 'scale(1.08)',
-                                boxShadow: darkMode ? '0 6px 12px rgba(255,255,255,0.2)' : 6
-                            },
-                            boxShadow: darkMode ? '0 3px 6px rgba(255,255,255,0.1)' : 3,
-                            border: darkMode ? '1px solid rgba(255,255,255,0.1)' : 'none',
-                            padding: '10px 20px',
-                            marginRight: '1rem',
-                            '& .MuiSvgIcon-root': {
-                                color: darkMode ? '#fff' : 'inherit'
-                            }
-                        }}
-                        startIcon={<ArrowForwardIcon />}
-                    >
-                        Suivant
-                    </Button>
-                </Tooltip>
-            )}
-        </div>
-    ), [activeStep, handleStepChange]);
+    const renderNavigationButtons = useCallback((position) => {
+        const { darkMode } = useTheme(); // Ajout du hook useTheme
+
+        return (
+            <div style={{
+                display: 'flex',
+                justifyContent: 'center',
+                marginTop: '1.5rem',
+                
+            }}>
+                {activeStep > 0 && (
+                    <Tooltip title="Cliquez ici pour revenir au formulaire précédent" arrow>
+                        <Button
+                            onClick={() => handleStepChange(-1)}
+                            sx={{
+                                backgroundColor: darkMode ? '#424242' : '#ee752d60',
+                                color: darkMode ? '#ffffff' : 'black',
+                                transition: 'all 0.3s ease-in-out',
+                                '&:hover': {
+                                    backgroundColor: darkMode ? '#7a8e1c' : '#95ad22',
+                                    transform: 'scale(1.08)',
+                                    boxShadow: darkMode ? '0 6px 12px rgba(255,255,255,0.2)' : 6
+                                },
+                                boxShadow: darkMode ? '0 3px 6px rgba(255,255,255,0.1)' : 3,
+                                border: darkMode ? '1px solid rgba(255,255,255,0.1)' : 'none',
+                                padding: '10px 20px',
+                                marginRight: '1rem',
+                                '& .MuiSvgIcon-root': {
+                                    color: darkMode ? '#fff' : 'inherit'
+                                }
+                            }}
+                            startIcon={<ArrowBackIcon />}
+                        >
+                            Précédent
+                        </Button>
+                    </Tooltip>
+                )}
+                {activeStep < forms.length - 1 && (
+                    <Tooltip title="Cliquez ici pour passer au formulaire suivant" arrow>
+                        <Button
+                            onClick={() => handleStepChange(1)}
+                            sx={{
+                                backgroundColor: darkMode ? '#424242' : '#ee752d60',
+                                color: darkMode ? '#ffffff' : 'black',
+                                transition: 'all 0.3s ease-in-out',
+                                '&:hover': {
+                                    backgroundColor: darkMode ? '#7a8e1c' : '#95ad22',
+                                    transform: 'scale(1.08)',
+                                    boxShadow: darkMode ? '0 6px 12px rgba(255,255,255,0.2)' : 6
+                                },
+                                boxShadow: darkMode ? '0 3px 6px rgba(255,255,255,0.1)' : 3,
+                                border: darkMode ? '1px solid rgba(255,255,255,0.1)' : 'none',
+                                padding: '10px 20px',
+                                marginRight: '1rem',
+                                '& .MuiSvgIcon-root': {
+                                    color: darkMode ? '#fff' : 'inherit'
+                                }
+                            }}
+                            startIcon={<ArrowForwardIcon />}
+                        >
+                            Suivant
+                        </Button>
+                    </Tooltip>
+                )}
+            </div>
+        );
+    }, [activeStep, handleStepChange]);
 
     return (
         <form className="background-image" onSubmit={handleSubmit(onSubmit)} style={{ margin: '0 20px' }}>
@@ -219,11 +228,11 @@ export default function Formulaire() {
                             color: darkMode ? '#ffffff' : 'black',
                             backgroundColor: darkMode ? '#424242' : '#ee752d60',
                             transition: 'all 0.3s ease-in-out',
-                            '&:hover': { 
+                            '&:hover': {
                                 backgroundColor: darkMode ? '#7a8e1c' : '#95ad22',
                                 transform: 'scale(1.08)',
                                 boxShadow: darkMode ? '0 6px 12px rgba(255,255,255,0.2)' : 6
-                             },
+                            },
                             padding: '10px 20px',
                             width: '50%',
                             marginTop: '1cm',

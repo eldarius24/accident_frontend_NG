@@ -1,38 +1,78 @@
-/*IMPORT REACT */
 import { useState, useEffect } from 'react';
-/* IMPORT MUI */
-import { FormGroup, Grid, Tooltip } from '@mui/material';
+import {
+  FormGroup,
+  Grid,
+  Tooltip,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  IconButton,
+  DialogActions,
+  Button
+} from '@mui/material';
 import InfoIcon from '@mui/icons-material/Info';
+import CloseIcon from '@mui/icons-material/Close';
 import dayjs from 'dayjs';
 import 'dayjs/locale/fr';
 dayjs.locale('fr');
-/* IMPORT PERSO */
+
 import listAccident from '../liste/listAccident.json';
 import ControlLabelP from '../_composants/controlLabelP';
 import AutoCompleteP from '../_composants/autoCompleteP';
 import DatePickerP from '../_composants/datePickerP';
 import TextFieldMaskP from '../_composants/textFieldMaskP';
-import { Link } from 'react-router-dom';
 import { useTheme } from '../pageAdmin/user/ThemeContext';
+import CodeDeviation from './codeDeviation';
+import CodeAgentMateriel from './codeAgentMateriel';
+import CodeNatureLesion from './codeNatureLesion';
+import CodeSiegeLesion from './codeSiegeLesion';
 
-/**
- * Formulaire des informations sur l'accident de travail
- * 
- * @param {Object} props Les props du formulaire : 
- * - setValue : la fonction pour mettre à jour les valeurs du formulaire
- * - accidentData : les données de l'accident s'il existe
- * - watch : la fonction pour surveiller les mises à jour des données du formulaire
- * 
- * @returns {JSX.Element} Le formulaire
- */
+
 export default function FormulaireAccident({ setValue, accidentData, watch }) {
   const { darkMode } = useTheme();
   const [frameWidth, setFrameWidth] = useState(window.innerWidth * -0.5);
+  const [openPreview, setOpenPreview] = useState(false);
+  const [previewType, setPreviewType] = useState('');
+
+
+  const handleOpenPreview = (type) => {
+    setPreviewType(type);
+    setOpenPreview(true);
+  };
+
+  const handleClosePreview = () => {
+    setOpenPreview(false);
+    setPreviewType('');
+  };
+
+  const getPreviewContent = () => {
+    switch (previewType) {
+      case 'deviation':
+        return {
+          title: 'Codes Déviations',
+          content: <CodeDeviation />
+        };
+      case 'agentmateriel':
+        return {
+          title: 'Agents Matériel',
+          content: <CodeAgentMateriel />
+        };
+      case 'naturelesion':
+        return {
+          title: 'Natures de la lésion',
+          content: <CodeNatureLesion />
+        };
+      case 'siegelesion':
+        return {
+          title: 'Sièges de la lésion',
+          content: <CodeSiegeLesion />
+        };
+      default:
+        return { title: '', content: null };
+    }
+  };
 
   useEffect(() => {
-/**
- * Handle the resize event by adjusting the frame width based on the window width
- */
     const handleResize = () => {
       setFrameWidth(window.innerWidth * -0.5); // Adjust the coefficient as needed
     };
@@ -49,7 +89,7 @@ export default function FormulaireAccident({ setValue, accidentData, watch }) {
    * Etape 1 : stocker les données dans des variables locales et les initialiser avec les données de l'accident si elles existent
    * 
    */
-  
+
   const [circonstanceAccident, setCirconstanceAccident] = useState(watch('circonstanceAccident') ? watch('circonstanceAccident') : (accidentData && accidentData.circonstanceAccident ? accidentData.circonstanceAccident : ""));
   const [DateJourIncapDebut, setDateJourIncapDebut] = useState(watch('DateJourIncapDebut') ? watch('DateJourIncapDebut') : (accidentData && accidentData.DateJourIncapDebut ? accidentData.DateJourIncapDebut : null));
   const [DateJourIncapFin, setDateJourIncapFin] = useState(watch('DateJourIncapFin') ? watch('DateJourIncapFin') : (accidentData && accidentData.DateJourIncapFin ? accidentData.DateJourIncapFin : null));
@@ -92,7 +132,7 @@ export default function FormulaireAccident({ setValue, accidentData, watch }) {
    * Etape 2 : mettre à jour les données du formulaire à chaque modification d'un des champs
    */
   useEffect(() => {
-    
+
     setValue('DateJourIncapDebut', DateJourIncapDebut)
     setValue('DateJourIncapFin', DateJourIncapFin)
     setValue('indemnisationAccident', indemnisationAccident)
@@ -128,7 +168,7 @@ export default function FormulaireAccident({ setValue, accidentData, watch }) {
       <div>
         <div className="infoAccident">
           <h2>Infos Accident</h2>
-          <h3 style={{ color: darkMode ? '#ffffff' : 'inherit' }}>Rentrez les informations sur l'accident de travail.</h3>       
+          <h3 style={{ color: darkMode ? '#ffffff' : 'inherit' }}>Rentrez les informations sur l'accident de travail.</h3>
 
           <TextFieldMaskP id='horaireJourAccident' label='Horaire de la victime le jour de l accident' onChange={sethoraireJourAccident} defaultValue={horaireJourAccident} mask="de 00h00 à 00h00 et de 00h00 à 00h00" />
 
@@ -152,11 +192,11 @@ export default function FormulaireAccident({ setValue, accidentData, watch }) {
               <AutoCompleteP id='codeDeviation' option={listAccident.CodeDeviation} label='Code Déviation' onChange={setCodeDeviation} defaultValue={codeDeviation} />
             </Grid>
             <Grid item xs={0.00001} style={{ margin: '-24.5%' }}>
-              <Link to="/deviation" style={{ textDecoration: 'none', color: 'black' }} target="_blank" rel="noopener noreferrer">
-              <Tooltip title="Cliquez ici pour visualiser les Codes Déviations" arrow>
-                <InfoIcon style={{ color: 'black' }} />
-              </Tooltip>
-              </Link>
+              <IconButton onClick={() => handleOpenPreview('deviation')}>
+                <Tooltip title="Cliquez ici pour visualiser les Codes Déviations" arrow>
+                  <InfoIcon style={{ color: darkMode ? '#ffffff' : 'black' }} />
+                </Tooltip>
+              </IconButton>
             </Grid>
           </Grid>
 
@@ -165,11 +205,11 @@ export default function FormulaireAccident({ setValue, accidentData, watch }) {
               <AutoCompleteP id='codeAgentMateriel' option={listAccident.CodeAgentMateriel} label='Code Agent matériel' onChange={setCodeAgentMateriel} defaultValue={codeAgentMateriel} />
             </Grid>
             <Grid item xs={0.00001} style={{ margin: '-24.5%' }}>
-              <Link to="/agentmateriel" style={{ textDecoration: 'none', color: 'black' }} target="_blank" rel="noopener noreferrer">
-              <Tooltip title="Cliquez ici pour visualiser les Agents Matériel" arrow>
-                <InfoIcon style={{ color: 'black' }} />
+              <IconButton onClick={() => handleOpenPreview('agentmateriel')}>
+                <Tooltip title="Cliquez ici pour visualiser les Agents Matériel" arrow>
+                  <InfoIcon style={{ color: darkMode ? '#ffffff' : 'black' }} />
                 </Tooltip>
-              </Link>
+              </IconButton>
             </Grid>
           </Grid>
 
@@ -178,11 +218,11 @@ export default function FormulaireAccident({ setValue, accidentData, watch }) {
               <AutoCompleteP id='codeNatureLesion' option={listAccident.CodeNatureLésion} label='Code Nature de la lésion' onChange={setCodeNatureLesion} defaultValue={codeNatureLesion} />
             </Grid>
             <Grid item xs={0.00001} style={{ margin: '-24.5%' }}>
-              <Link to="/naturelesion" style={{ textDecoration: 'none', color: 'black' }} target="_blank" rel="noopener noreferrer">
-              <Tooltip title="Cliquez ici pour visualiser les Natures de la lésion" arrow>
-                <InfoIcon style={{ color: 'black' }} />
-              </Tooltip>
-              </Link>
+              <IconButton onClick={() => handleOpenPreview('naturelesion')}>
+                <Tooltip title="Cliquez ici pour visualiser les Natures de la lésion" arrow>
+                  <InfoIcon style={{ color: darkMode ? '#ffffff' : 'black' }} />
+                </Tooltip>
+              </IconButton>
             </Grid>
           </Grid>
 
@@ -190,16 +230,14 @@ export default function FormulaireAccident({ setValue, accidentData, watch }) {
             <Grid item xs={11.99999} >
               <AutoCompleteP id='codeSiegeLesion' option={listAccident.CodeSiegeLésion} label='Code siège lésion' onChange={setCodeSiegeLesion} defaultValue={codeSiegeLesion} />
             </Grid>
-            <Grid item xs={0.00001} style={{ margin: '-24.5%' }} >
-              <Link to="/siegelesion" style={{ textDecoration: 'none', color: 'black' }} target="_blank" rel="noopener noreferrer">
-              <Tooltip title="Cliquez ici pour visualiser les Sieges de la lésion" arrow>
-                <InfoIcon style={{ color: 'black' }} />
-              </Tooltip>
-              </Link>
+            <Grid item xs={0.00001} style={{ margin: '-24.5%' }}>
+              <IconButton onClick={() => handleOpenPreview('siegelesion')}>
+                <Tooltip title="Cliquez ici pour visualiser les Sièges de la lésion" arrow>
+                  <InfoIcon style={{ color: darkMode ? '#ffffff' : 'black' }} />
+                </Tooltip>
+              </IconButton>
             </Grid>
           </Grid>
-
-
 
           <div className="frameStyle-style1">
             <h5>De quels moyens de protection la victime était-elle équipée lors de l'accident ?</h5>
@@ -264,7 +302,57 @@ export default function FormulaireAccident({ setValue, accidentData, watch }) {
               }} defaultValue={boolAutre}></ControlLabelP>
             </FormGroup>
           </div>
-          
+          <Dialog
+            open={openPreview}
+            onClose={handleClosePreview}
+            maxWidth="xl" // Changé à xl pour avoir plus d'espace
+            fullWidth
+            PaperProps={{
+              style: {
+                backgroundColor: darkMode ? '#333' : '#fff',
+                color: darkMode ? '#fff' : '#000',
+                height: '90vh', // Hauteur fixe pour éviter que ça prenne tout l'écran
+              },
+            }}
+          >
+            <DialogActions
+              style={{
+                backgroundColor: darkMode ? '#424242' : '#f5f5f5',
+                padding: '10px',
+                margin: 0,
+                justifyContent: 'flex-end', // Aligne le bouton à droite
+                paddingRight: '20px' // Ajoute un peu d'espace à droite
+              }}
+            >
+              <Button
+                onClick={handleClosePreview}
+                variant="contained"
+                startIcon={<CloseIcon />}
+                style={{
+                  backgroundColor: darkMode ? '#666' : '#e0e0e0',
+                  color: darkMode ? '#fff' : '#000',
+                  minWidth: '120px' // Donne une largeur minimale au bouton
+                }}
+              >
+                Fermer
+              </Button>
+            </DialogActions>
+
+
+            <DialogContent
+              style={{
+                backgroundColor: darkMode ? '#333' : '#fff',
+                color: darkMode ? '#fff' : '#000',
+                padding: 0, // Retiré le padding pour que le composant prenne tout l'espace
+                overflow: 'auto'
+              }}
+            >
+              <div style={{ height: '100%', overflow: 'auto' }}>
+                {getPreviewContent().content}
+              </div>
+            </DialogContent>
+           
+          </Dialog>
         </div>
       </div>
     </div>
