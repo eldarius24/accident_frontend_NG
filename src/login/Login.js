@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { TextField, Tooltip } from '@mui/material';
 import { useForm } from 'react-hook-form';
@@ -10,6 +10,7 @@ import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import axios from 'axios';
 import { useTheme } from '../pageAdmin/user/ThemeContext';
+import config from '../config.json'; // Ajout de l'import de config
 
 // Fonction utilitaire pour les logs
 const logAction = async (action) => {
@@ -25,7 +26,174 @@ const Login = () => {
   const { register, handleSubmit } = useForm();
   const [isPasswordValid, setIsPasswordValid] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
-  const { darkMode } = useTheme(); // Ajout de darkMode
+  const { darkMode } = useTheme();
+  const [daysWithoutAccident, setDaysWithoutAccident] = useState(0);
+  const [lastAccidentDate, setLastAccidentDate] = useState(null);
+  const apiUrl = config.apiUrl;
+
+  useEffect(() => {
+    const fetchLastAccident = async () => {
+      try {
+        // Récupérer tous les accidents triés par date
+        const response = await axios.get('http://localhost:3100/api/accidents');
+        console.log('Tous les accidents:', response.data);
+
+        if (response.data && response.data.length > 0) {
+          // Trier les accidents par date décroissante
+          const sortedAccidents = response.data.sort((a, b) => {
+            const dateA = new Date(a.DateHeureAccident);
+            const dateB = new Date(b.DateHeureAccident);
+            return dateB - dateA;
+          });
+
+          console.log('Accidents triés:', sortedAccidents);
+
+          // Prendre le premier accident (le plus récent)
+          const lastAccident = sortedAccidents[0];
+          console.log('Dernier accident:', lastAccident);
+
+          if (lastAccident && lastAccident.DateHeureAccident) {
+            const accidentDate = new Date(lastAccident.DateHeureAccident);
+            const today = new Date();
+
+            console.log('Date brute du dernier accident:', lastAccident.DateHeureAccident);
+            console.log('Date parsée du dernier accident:', accidentDate);
+            console.log('Date actuelle:', today);
+
+            if (!isNaN(accidentDate.getTime())) {
+              const days = calculateDaysDifference(today, accidentDate);
+              console.log('Nombre de jours calculés:', days);
+
+              setDaysWithoutAccident(days);
+              setLastAccidentDate(accidentDate);
+            } else {
+              console.error('Date d\'accident invalide après conversion');
+              setDaysWithoutAccident(0);
+            }
+          } else {
+            console.log('Pas de DateHeureAccident dans le dernier accident');
+            setDaysWithoutAccident(0);
+          }
+        } else {
+          console.log('Aucun accident trouvé');
+          setDaysWithoutAccident(0);
+        }
+      } catch (error) {
+        console.error('Erreur lors de la récupération des accidents:', error);
+        setDaysWithoutAccident(0);
+      }
+    };
+
+    fetchLastAccident();
+  }, []);
+
+  const calculateDaysDifference = (date1, date2) => {
+    try {
+      console.log('Calcul de la différence entre:', date1, 'et', date2);
+
+      if (!date1 || !date2) {
+        console.log('Une des dates est manquante');
+        return 0;
+      }
+
+      const firstDate = new Date(date1);
+      const secondDate = new Date(date2);
+
+      // Vérification des dates
+      if (isNaN(firstDate.getTime()) || isNaN(secondDate.getTime())) {
+        console.log('Une des dates est invalide après conversion');
+        return 0;
+      }
+
+      // Reset des heures pour avoir des jours complets
+      firstDate.setHours(0, 0, 0, 0);
+      secondDate.setHours(0, 0, 0, 0);
+
+      const diffTime = firstDate.getTime() - secondDate.getTime();
+      const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+
+      console.log('Différence calculée en jours:', diffDays);
+
+      // S'assurer que nous retournons un nombre positif
+      return Math.abs(diffDays);
+    } catch (error) {
+      console.error('Erreur dans le calcul des jours:', error);
+      return 0;
+    }
+  };
+
+  // Style pour le compteur de jours
+  const counterStyle = {
+    textAlign: 'center',
+    padding: '20px',
+    margin: '20px auto',
+    maxWidth: '400px',
+    backgroundColor: darkMode ? '#424242' : '#ee752d60',
+    borderRadius: '8px',
+    boxShadow: darkMode ? '0 3px 6px rgba(255,255,255,0.1)' : '0 3px 6px rgba(0,0,0,0.1)',
+    border: darkMode ? '1px solid rgba(255,255,255,0.1)' : 'none',
+    transition: 'all 0.3s ease-in-out',
+  };
+
+  const numberStyle = {
+    fontSize: '48px',
+    fontWeight: 'bold',
+    color: darkMode ? '#ffffff' : '#000000',
+    margin: '10px 0',
+  };
+
+  const textStyle = {
+    fontSize: '18px',
+    color: darkMode ? '#ffffff' : '#000000',
+    marginBottom: '5px',
+  };
+
+  const dateStyle = {
+    fontSize: '14px',
+    color: darkMode ? '#cccccc' : '#666666',
+    marginTop: '5px',
+  };
+
+  // Style des champs texte adapté au mode sombre/clair
+  const textFieldStyles = {
+    '& .MuiOutlinedInput-root': {
+      backgroundColor: darkMode ? '#424242' : '#ee752d60',
+      '& fieldset': {
+        borderColor: darkMode ? '#535353' : '#ee752d',
+      },
+      '&:hover fieldset': {
+        borderColor: darkMode ? '#6e6e6e' : '#ee752d',
+      },
+      '&.Mui-focused fieldset': {
+        borderColor: darkMode ? '#535353' : '#ee752d',
+      },
+    },
+    '& .MuiInputBase-input': {
+      color: darkMode ? '#ffffff' : 'inherit',
+      '&:-webkit-autofill, &:-webkit-autofill:hover, &:-webkit-autofill:focus': {
+        WebkitBoxShadow: `0 0 0 100px ${darkMode ? '#424242' : '#ee752d60'} inset`,
+        WebkitTextFillColor: darkMode ? '#ffffff' : 'inherit',
+      },
+    },
+    '& .MuiInputLabel-root': {
+      color: darkMode ? '#ffffff' : 'inherit',
+    },
+    '& .MuiIconButton-root': {
+      color: darkMode ? '#ffffff' : 'inherit',
+    },
+  };
+
+  // Style du bouton adapté au mode sombre/clair
+  const buttonStyle = {
+    backgroundColor: darkMode ? '#424242' : '#ee752d60',
+    color: darkMode ? '#ffffff' : 'inherit',
+    transition: 'all 0.3s ease-in-out',
+    '&:hover': {
+      backgroundColor: '#95ad22',
+      transform: 'scale(1.08)',
+      boxShadow: 6
+    }
+  };
 
   const onSubmit = async (data) => {
     const { email, password } = data;
@@ -75,7 +243,6 @@ const Login = () => {
         entreprise: userData.entreprisesConseillerPrevention?.[0]
       });
 
-      // Supprimé la ligne setDarkMode car maintenant géré uniquement par les cookies
       navigate('/');
 
     } catch (error) {
@@ -91,47 +258,6 @@ const Login = () => {
       });
 
       alert('Login failed: ' + (error.response ? error.response.data.message : 'Unknown error'));
-    }
-  };
-
-  // Style des champs texte adapté au mode sombre/clair
-  const textFieldStyles = {
-    '& .MuiOutlinedInput-root': {
-      backgroundColor: darkMode ? '#424242' : '#ee752d60',
-      '& fieldset': {
-        borderColor: darkMode ? '#535353' : '#ee752d',
-      },
-      '&:hover fieldset': {
-        borderColor: darkMode ? '#6e6e6e' : '#ee752d',
-      },
-      '&.Mui-focused fieldset': {
-        borderColor: darkMode ? '#535353' : '#ee752d',
-      },
-    },
-    '& .MuiInputBase-input': {
-      color: darkMode ? '#ffffff' : 'inherit',
-      '&:-webkit-autofill, &:-webkit-autofill:hover, &:-webkit-autofill:focus': {
-        WebkitBoxShadow: `0 0 0 100px ${darkMode ? '#424242' : '#ee752d60'} inset`,
-        WebkitTextFillColor: darkMode ? '#ffffff' : 'inherit',
-      },
-    },
-    '& .MuiInputLabel-root': {
-      color: darkMode ? '#ffffff' : 'inherit',
-    },
-    '& .MuiIconButton-root': {
-      color: darkMode ? '#ffffff' : 'inherit',
-    },
-  };
-
-  // Style du bouton adapté au mode sombre/clair
-  const buttonStyle = {
-    backgroundColor: darkMode ? '#424242' : '#ee752d60',
-    color: darkMode ? '#ffffff' : 'inherit',
-    transition: 'all 0.3s ease-in-out',
-    '&:hover': {
-      backgroundColor: '#95ad22',
-      transform: 'scale(1.08)',
-      boxShadow: 6
     }
   };
 
@@ -217,7 +343,24 @@ const Login = () => {
             Pour avoir accès, veuillez le demander au support
           </h6>
         </form>
-
+        {/* Compteur de jours sans accident */}
+        <div style={counterStyle}>
+          <div style={textStyle}>Le Cortigroupe a passé</div>
+          <div style={numberStyle}>
+            {isNaN(daysWithoutAccident) ? '0' : daysWithoutAccident}
+          </div>
+          <div style={textStyle}>sans accident</div>
+          {lastAccidentDate && !isNaN(lastAccidentDate.getTime()) && (
+            <div style={dateStyle}>
+              Dernier accident le : {lastAccidentDate.toLocaleDateString('fr-FR', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+              })}
+            </div>
+          )}
+            
+        </div>
         <div className="image-cortigroupe"></div>
         <Tooltip title="Développé par Remy et Benoit pour Le Cortigroupe." arrow>
           <h5
