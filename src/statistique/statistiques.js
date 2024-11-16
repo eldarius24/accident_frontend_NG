@@ -85,6 +85,11 @@ const Statistiques = () => {
         if (validAccidentTypes.length > 0) setSelectedAccidentTypes(validAccidentTypes);
       }
 
+      if (savedFilters.selectedCompanies.length > 0) {
+        const validCompanies = savedFilters.selectedCompanies.filter(company => companies.includes(company));
+        if (validCompanies.length > 0) setSelectedCompanies(validCompanies);
+    }
+
       // Restaurer la visibilité des graphiques
       if (Object.keys(savedFilters.visibleGraphs).length > 0) {
         setGraphs(prev => ({
@@ -101,7 +106,7 @@ const Statistiques = () => {
         }));
       }
     }
-  }, [allYears, workerTypes, sectors, assureurStatus, accidentTypes]);
+  }, [allYears, workerTypes, sectors, assureurStatus, accidentTypes, companies]);
 
   // useEffect pour la sauvegarde
   useEffect(() => {
@@ -206,6 +211,7 @@ const Statistiques = () => {
     selectedSectors,
     selectedAssureurStatus,
     selectedAccidentTypes,
+    selectedCompanies,
     accidentTypes
   );
 
@@ -450,6 +456,32 @@ const Statistiques = () => {
   return (
     <div className="col-span-full" style={{ margin: '20px' }}>
       <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: '10px', marginBottom: '20px' }}>
+        <FormControl sx={formControlStyle}>
+          <InputLabel id="companies-label">Entreprises</InputLabel>
+          <Select
+            sx={selectStyle}
+            labelId="companies-label"
+            id="companies-select"
+            multiple
+            value={selectedCompanies}
+            onChange={handleChangeCompaniesFilter}
+            renderValue={(selected) => `${selected.length} entreprise(s)`}
+            MenuProps={{
+              PaperProps: { style: { maxHeight: 300, overflow: 'auto' } },
+            }}
+          >
+            <MenuItem value="all" sx={menuItemStyle}>
+              <Checkbox checked={selectedCompanies.length === companies.length} sx={checkboxStyles.all} />
+              <ListItemText primary="Sélectionner tout" />
+            </MenuItem>
+            {companies.map((company) => (
+              <MenuItem key={company} value={company} sx={menuItemStyle}>
+                <Checkbox checked={selectedCompanies.includes(company)} sx={checkboxStyles.default} />
+                <ListItemText primary={company} />
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
         <FormControl sx={formControlStyle}>
           <InputLabel id="accident-types-label">Type d'accident</InputLabel>
           <Select

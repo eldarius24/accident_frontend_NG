@@ -7,8 +7,9 @@ const COOKIE_NAMES = {
     SELECTED_SECTORS: 'selectedSectors',
     SELECTED_ASSUREUR_STATUS: 'selectedAssureurStatus',
     SELECTED_ACCIDENT_TYPES: 'selectedAccidentTypes',
-    VISIBLE_GRAPHS: 'visibleGraphs',
     SELECTED_COMPANIES: 'selectedCompanies',
+    VISIBLE_GRAPHS: 'visibleGraphs',
+    
 };
 
 // Durée de vie des cookies (365 jours)

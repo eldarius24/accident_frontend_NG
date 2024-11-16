@@ -41,6 +41,7 @@ export default function filter({
   selectedSectors,
   selectedAssureurStatus,
   selectedAccidentTypes,
+  selectedCompanies,
   accidentTypes
 }) {
   if (!data || data.length === 0) {
@@ -51,11 +52,13 @@ export default function filter({
   const filteredData = data.filter(accident => {
     const accidentYear = new Date(accident.DateHeureAccident).getFullYear();
     const accidentType = accident.typeAccident || 'Non spécifié';
+    const company = accident.entrepriseName || 'Non spécifié';
 
     return selectedYears.includes(accidentYear) &&
       selectedWorkerTypes.includes(accident.typeTravailleur) &&
       selectedSectors.includes(accident.secteur) &&
       selectedAssureurStatus.includes(accident.AssureurStatus) &&
+      selectedCompanies.includes(company) &&
       (selectedAccidentTypes.length === accidentTypes.length || selectedAccidentTypes.includes(accidentType));
   });
 
@@ -147,6 +150,7 @@ export const useAccidentStats = (
   selectedSectors,
   selectedAssureurStatus,
   selectedAccidentTypes,
+  selectedCompanies,
   accidentTypes
 ) => {
   const [stats, setStats] = useState(initializeStats());
@@ -159,10 +163,11 @@ export const useAccidentStats = (
       selectedSectors,
       selectedAssureurStatus,
       selectedAccidentTypes,
+      selectedCompanies,
       accidentTypes
     });
     setStats(newStats);
-  }, [data, selectedYears, selectedWorkerTypes, selectedSectors, selectedAssureurStatus, selectedAccidentTypes, accidentTypes]);
+  }, [data, selectedYears, selectedWorkerTypes, selectedSectors, selectedAssureurStatus, selectedAccidentTypes, selectedCompanies, accidentTypes]);
 
   return stats;
 };
