@@ -82,14 +82,14 @@ export default function filter({
     const month = date.getMonth();
     const year = date.getFullYear();
     const dayOfWeek = date.getDay();
-    const companyName = entrepriseName || 'Inconnue';
+    const companyName = entrepriseName || 'Non spécifié';
     const sector = secteur || 'Non spécifié';
 
 
     stats.accidentsBySexByCompany[companyName] = stats.accidentsBySexByCompany[companyName] || {
       'Masculin': 0,
       'Féminin': 0,
-      'Non spécifié': 0
+      /*'Non spécifié': 0*/
     };
     stats.accidentsBySexByCompany[companyName][sexe]++;
 

@@ -215,31 +215,15 @@ const MemoizedPieChart = memo(({ data, title, darkMode }) => (
                     outerRadius={80}
                     fill="#8884d8"
                     dataKey="value"
-                    label={(entry) => (
-                        <text
-                            x={entry.x}
-                            y={entry.y}
-                            fill={darkMode ? '#ffffff' : '#666666'}
-                            fontSize={12}
-                            textAnchor="middle"
-                            dominantBaseline="middle"
+                    label={({ name, value }) => `${name}: ${value}`}
                         >
-                            {`${entry.name}: ${entry.value}`}
-                        </text>
-                    )}
-                >
+                  
                     {data.map((entry, index) => (
                         <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                     ))}
                 </Pie>
                 <Tooltip content={props => <CustomPieChartTooltip {...props} darkMode={darkMode} />} />
-                <Legend
-                    formatter={(value) => (
-                        <span style={{ color: darkMode ? '#ffffff' : '#666666' }}>
-                            {value}
-                        </span>
-                    )}
-                />
+                <Legend />
             </PieChart>
         </ResponsiveContainer>
     </div>
