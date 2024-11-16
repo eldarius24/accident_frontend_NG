@@ -34,52 +34,35 @@ const Login = () => {
   useEffect(() => {
     const fetchLastAccident = async () => {
       try {
-        // Récupérer tous les accidents triés par date
         const response = await axios.get('http://localhost:3100/api/accidents');
-        console.log('Tous les accidents:', response.data);
 
         if (response.data && response.data.length > 0) {
-          // Trier les accidents par date décroissante
           const sortedAccidents = response.data.sort((a, b) => {
             const dateA = new Date(a.DateHeureAccident);
             const dateB = new Date(b.DateHeureAccident);
             return dateB - dateA;
           });
 
-          console.log('Accidents triés:', sortedAccidents);
-
-          // Prendre le premier accident (le plus récent)
           const lastAccident = sortedAccidents[0];
-          console.log('Dernier accident:', lastAccident);
 
           if (lastAccident && lastAccident.DateHeureAccident) {
             const accidentDate = new Date(lastAccident.DateHeureAccident);
             const today = new Date();
 
-            console.log('Date brute du dernier accident:', lastAccident.DateHeureAccident);
-            console.log('Date parsée du dernier accident:', accidentDate);
-            console.log('Date actuelle:', today);
-
             if (!isNaN(accidentDate.getTime())) {
               const days = calculateDaysDifference(today, accidentDate);
-              console.log('Nombre de jours calculés:', days);
-
               setDaysWithoutAccident(days);
               setLastAccidentDate(accidentDate);
             } else {
-              console.error('Date d\'accident invalide après conversion');
               setDaysWithoutAccident(0);
             }
           } else {
-            console.log('Pas de DateHeureAccident dans le dernier accident');
             setDaysWithoutAccident(0);
           }
         } else {
-          console.log('Aucun accident trouvé');
           setDaysWithoutAccident(0);
         }
       } catch (error) {
-        console.error('Erreur lors de la récupération des accidents:', error);
         setDaysWithoutAccident(0);
       }
     };
@@ -89,35 +72,21 @@ const Login = () => {
 
   const calculateDaysDifference = (date1, date2) => {
     try {
-      console.log('Calcul de la différence entre:', date1, 'et', date2);
-
-      if (!date1 || !date2) {
-        console.log('Une des dates est manquante');
-        return 0;
-      }
+      if (!date1 || !date2) return 0;
 
       const firstDate = new Date(date1);
       const secondDate = new Date(date2);
 
-      // Vérification des dates
-      if (isNaN(firstDate.getTime()) || isNaN(secondDate.getTime())) {
-        console.log('Une des dates est invalide après conversion');
-        return 0;
-      }
+      if (isNaN(firstDate.getTime()) || isNaN(secondDate.getTime())) return 0;
 
-      // Reset des heures pour avoir des jours complets
       firstDate.setHours(0, 0, 0, 0);
       secondDate.setHours(0, 0, 0, 0);
 
       const diffTime = firstDate.getTime() - secondDate.getTime();
       const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
 
-      console.log('Différence calculée en jours:', diffDays);
-
-      // S'assurer que nous retournons un nombre positif
       return Math.abs(diffDays);
     } catch (error) {
-      console.error('Erreur dans le calcul des jours:', error);
       return 0;
     }
   };
@@ -359,7 +328,7 @@ const Login = () => {
               })}
             </div>
           )}
-            
+
         </div>
         <div className="image-cortigroupe"></div>
         <Tooltip title="Développé par Remy et Benoit pour Le Cortigroupe." arrow>
