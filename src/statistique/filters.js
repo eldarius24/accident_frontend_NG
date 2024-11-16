@@ -30,6 +30,7 @@ const initializeStats = () => ({
   accidentsByTypeTravailleurByCompany: {},
   tfByYearAndCompany: {},
   tfByCompany: {},
+  accidentsBySexByCompany: {},
 });
 
 // Fonction principale de filtrage et calcul des statistiques
@@ -40,7 +41,7 @@ export default function filter({
   selectedSectors,
   selectedAssureurStatus,
   selectedAccidentTypes,
-  accidentTypes // Ajout du paramètre manquant
+  accidentTypes
 }) {
   if (!data || data.length === 0) {
     return initializeStats();
@@ -80,6 +81,14 @@ export default function filter({
     const dayOfWeek = date.getDay();
     const companyName = entrepriseName || 'Inconnue';
     const sector = secteur || 'Non spécifié';
+
+
+    stats.accidentsBySexByCompany[companyName] = stats.accidentsBySexByCompany[companyName] || {
+      'Masculin': 0,
+      'Féminin': 0,
+      'Non spécifié': 0
+    };
+    stats.accidentsBySexByCompany[companyName][sexe]++;
 
     // Calcul de l'âge si les dates sont disponibles
     if (dateNaissance && DateHeureAccident) {

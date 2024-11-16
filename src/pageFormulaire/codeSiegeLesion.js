@@ -30,7 +30,7 @@ const SiegeLesion = () => {
     return (
       <div className="max-w-7xl mx-auto p-6" style={darkModeStyles}>
         <h1 className="text-3xl font-bold text-center mb-8" style={{ color: darkMode ? '#60a5fa' : '#1e40af' }}>
-          Liste des Agents Matériels
+          Liste des codes siège lésion
         </h1>
         <div className="space-y-6">
           {categories.map((category) => (

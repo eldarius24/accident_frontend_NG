@@ -28,14 +28,16 @@ const Statistiques = () => {
     accidentsByTypeTravailleur: { visible: true, label: "TOTAL Accidents par type de travailleur" },
     accidentsByAge: { visible: true, label: "TOTAL Accidents par age" },
     accidentsBySector: { visible: true, label: "TOTAL Accidents par secteur" },
+    tfByYearAndCompany: { visible: true, label: "TOTAL des taux de fréquence par an et par entreprise" },
+    accidentsBySexByCompany: { visible: true, label: "Accidents par genre et par entreprise" },
     accidentsByYearAndCompany: { visible: true, label: "Accidents par an et par entreprise" },
     accidentsByMonthAndCompany: { visible: true, label: "Accidents par mois et par entreprise" },
     accidentsByCompanyAndSector: { visible: true, label: "Accidents par entreprise et secteur" },
     accidentsByDayOfWeekAndCompany: { visible: true, label: "Accidents par jour et par entreprise" },
     accidentsByAgeByCompany: { visible: true, label: "Accidents par age et par entreprise" },
     accidentsByTypeTravailleurByCompany: { visible: true, label: "Accidents par type de travailleur et par entreprise" },
-    tfByYearAndCompany: { visible: true, label: "Taux de fréquence par an et par entreprise" },
     tfByCompany: { visible: true, label: "Taux de fréquence par entreprise" },
+
   });
   const { darkMode } = useTheme();
   const [selectedYears, setSelectedYears] = useState([]);
@@ -49,6 +51,8 @@ const Statistiques = () => {
   const [accidentTypes, setAccidentTypes] = useState([]);
   const [selectedAccidentTypes, setSelectedAccidentTypes] = useState([]);
   const [detailedTfData, setDetailedTfData] = useState([]);
+  const [companies, setCompanies] = useState([]);
+  const [selectedCompanies, setSelectedCompanies] = useState([]);
 
   // Dans le composant Statistiques
   // Dans le composant Statistiques
@@ -108,6 +112,7 @@ const Statistiques = () => {
         selectedSectors,
         selectedAssureurStatus,
         selectedAccidentTypes,
+        selectedCompanies,
         graphs,
       });
     }
@@ -122,9 +127,9 @@ const Statistiques = () => {
     workerTypes,
     sectors,
     assureurStatus,
-    accidentTypes
+    accidentTypes,
+    selectedCompanies,
   ]);
-
 
   const loadDetailedTfData = async () => {
     try {
@@ -238,7 +243,9 @@ const Statistiques = () => {
           setAssureurStatus,
           setSelectedAssureurStatus,
           setAccidentTypes,
-          setSelectedAccidentTypes
+          setSelectedAccidentTypes,
+          setCompanies,
+          setSelectedCompanies
         });
       } catch (erreur) {
         console.error('Erreur lors de l\'initialisation:', erreur);
@@ -248,6 +255,15 @@ const Statistiques = () => {
 
     initialiserDonnees();
   }, []);
+
+  const handleChangeCompaniesFilter = (event) => {
+    const value = event.target.value;
+    if (value.includes('all')) {
+      setSelectedCompanies(selectedCompanies.length === companies.length ? [] : companies);
+    } else {
+      setSelectedCompanies(value);
+    }
+  };
 
   /**
    * Met à jour les années sélectionnées en fonction de la nouvelle valeur reçue via l'événement de changement.
@@ -429,7 +445,6 @@ const Statistiques = () => {
     }
   };
 
-
   const isAllSelected = selectedWorkerTypes.length === workerTypes.length;
   const isAllSectorsSelected = selectedSectors.length === sectors.length;
   return (
@@ -487,7 +502,6 @@ const Statistiques = () => {
             ))}
           </Select>
         </FormControl>
-
 
         <FormControl sx={formControlStyle}>
           <InputLabel id="years-label">Année</InputLabel>
@@ -773,6 +787,16 @@ const Statistiques = () => {
         getRenderConfig('tfYearCompany', null, {
           data: tfData,
           selectedYears: selectedYears,
+          darkMode: darkMode
+        })
+      )}
+
+
+      {graphs.accidentsBySexByCompany.visible && renderOptimizedChart(
+        'genderByCompany',
+        null,
+        getRenderConfig('genderByCompany', null, {
+          companies: memoizedChartData.accidentsBySexByCompanyData,
           darkMode: darkMode
         })
       )}

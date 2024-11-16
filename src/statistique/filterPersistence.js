@@ -8,6 +8,7 @@ const COOKIE_NAMES = {
     SELECTED_ASSUREUR_STATUS: 'selectedAssureurStatus',
     SELECTED_ACCIDENT_TYPES: 'selectedAccidentTypes',
     VISIBLE_GRAPHS: 'visibleGraphs',
+    SELECTED_COMPANIES: 'selectedCompanies',
 };
 
 // Durée de vie des cookies (365 jours)
@@ -19,6 +20,7 @@ export const saveFiltersToCookies = ({
     selectedSectors,
     selectedAssureurStatus,
     selectedAccidentTypes,
+    selectedCompanies,
     graphs,
 }) => {
     try {
@@ -28,6 +30,7 @@ export const saveFiltersToCookies = ({
         Cookies.set(COOKIE_NAMES.SELECTED_SECTORS, JSON.stringify(selectedSectors), { expires: COOKIE_EXPIRY });
         Cookies.set(COOKIE_NAMES.SELECTED_ASSUREUR_STATUS, JSON.stringify(selectedAssureurStatus), { expires: COOKIE_EXPIRY });
         Cookies.set(COOKIE_NAMES.SELECTED_ACCIDENT_TYPES, JSON.stringify(selectedAccidentTypes), { expires: COOKIE_EXPIRY });
+        Cookies.set(COOKIE_NAMES.SELECTED_COMPANIES, JSON.stringify(selectedCompanies), { expires: COOKIE_EXPIRY });
 
         // Sauvegarde des graphiques visibles
         const visibleGraphs = Object.fromEntries(
@@ -48,6 +51,7 @@ export const loadFiltersFromCookies = () => {
             selectedAssureurStatus: JSON.parse(Cookies.get(COOKIE_NAMES.SELECTED_ASSUREUR_STATUS) || '[]'),
             selectedAccidentTypes: JSON.parse(Cookies.get(COOKIE_NAMES.SELECTED_ACCIDENT_TYPES) || '[]'),
             visibleGraphs: JSON.parse(Cookies.get(COOKIE_NAMES.VISIBLE_GRAPHS) || '{}'),
+            selectedCompanies: JSON.parse(Cookies.get(COOKIE_NAMES.SELECTED_COMPANIES) || '[]'),
         };
         return filters;
     } catch (error) {

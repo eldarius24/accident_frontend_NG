@@ -35,7 +35,9 @@ export default async function chargerDonnees({
     setAssureurStatus,
     setSelectedAssureurStatus,
     setAccidentTypes,
-    setSelectedAccidentTypes
+    setSelectedAccidentTypes,
+    setCompanies,           
+    setSelectedCompanies    
 }) {
     try {
         // Charger les données d'accidents
@@ -105,6 +107,12 @@ export default async function chargerDonnees({
         setAccidentTypes(typesAccidents);
         setSelectedAccidentTypes(typesAccidents);
         
+        const entreprises = [...new Set(donneesAccidents.map(accident => 
+            accident.entrepriseName || 'Non spécifié'
+        ))].filter(Boolean);
+        setCompanies(entreprises);
+        setSelectedCompanies(entreprises);
+
     } catch (erreur) {
         console.error('Échec du chargement des données:', erreur);
         throw erreur;

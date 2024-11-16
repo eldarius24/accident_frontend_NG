@@ -88,7 +88,7 @@ const CustomPieChartTooltip = ({ active, payload, darkMode, company }) => {
                     </div>
                 )}
                 <div style={contentStyle.row}>
-                    <span style={{ 
+                    <span style={{
                         ...contentStyle.label,
                         color: data.payload.fill || data.color  // Utilise la couleur du secteur
                     }}>
@@ -160,6 +160,47 @@ const CustomTfTooltip = ({ active, payload, label, darkMode }) => {
     return null;
 };
 
+
+const MemoizedGenderByCompanyChart = memo(({ companies, darkMode }) => (
+    <div className="text-center">
+        <h2>Accidents par genre et par entreprise</h2>
+        <div className="flex flex-wrap justify-center">
+            {companies.map(({ company, data }) => (
+                <div key={company} className="my-4 w-full md:w-1/2 lg:w-1/3">
+                    <h3 style={{ color: darkMode ? '#ffffff' : 'inherit' }} className="text-xl font-bold text-center">{company}</h3>
+                    <ResponsiveContainer width="100%" height={300}>
+                        <PieChart>
+                            <Pie
+                                data={data}
+                                cx="50%"
+                                cy="50%"
+                                labelLine={false}
+                                outerRadius={80}
+                                fill="#8884d8"
+                                dataKey="value"
+                                label={({ name, value }) => `${name}: ${value}`}
+                            >
+                                {data.map((entry, index) => (
+                                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                                ))}
+                            </Pie>
+                            <Tooltip
+                                content={props =>
+                                    <CustomPieChartTooltip
+                                        {...props}
+                                        darkMode={darkMode}
+                                        company={company}
+                                    />
+                                }
+                            />
+                            <Legend />
+                        </PieChart>
+                    </ResponsiveContainer>
+                </div>
+            ))}
+        </div>
+    </div>
+));
 
 const MemoizedPieChart = memo(({ data, title, darkMode }) => (
     <div className="col-span-full">
@@ -573,7 +614,7 @@ const MemoizedAccidentSectorCompanyChart = memo(({ companies, title, darkMode })
                                     <CustomPieChartTooltip
                                         {...props}
                                         darkMode={darkMode}
-                                        company={company}  
+                                        company={company}
                                     />
                                 }
                             />
@@ -725,6 +766,14 @@ export const renderOptimizedChart = (type, data, config) => {
                 />
             );
 
+        case 'genderByCompany':
+            return (
+                <MemoizedGenderByCompanyChart
+                    companies={config.companies}
+                    darkMode={config.darkMode}
+                />
+            );
+
         default:
             return null;
     }
@@ -818,6 +867,12 @@ export const getRenderConfig = (type, data, options = {}) => {
                 data: options.data || [],
 
             };
+
+            case 'genderByCompany':
+                return {
+                  ...baseConfig,
+                  companies: options.companies || [],
+                };
 
         default:
             return baseConfig;

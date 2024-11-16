@@ -6,6 +6,16 @@ export default function genererDonneesGraphiques(stats) {
     if (!stats) return {};
     
     return {
+
+        accidentsBySexByCompanyData: Object.entries(stats.accidentsBySexByCompany || {}).map(([company, data]) => ({
+            company,
+            data: Object.entries(data).map(([sexe, NombreAT]) => ({
+              name: sexe,
+              value: NombreAT
+            }))
+          })),
+
+
         accidentsBySexData: Object.entries(stats.accidentsBySex || {})
             .map(([sexe, NombreAT]) => ({ 
                 name: sexe, 
