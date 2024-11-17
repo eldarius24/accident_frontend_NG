@@ -1,7 +1,6 @@
 import axios from "axios";
 import config from '../../config.json';
 
-
 /**
  * Récupère les entreprises depuis l'API
  * @async
@@ -17,13 +16,12 @@ const getEntreprises = async () => {
 
     // Stockage des entreprises dans une variable
     let entreprises = result.data;
-    
+
     // Vérification que la réponse n'est pas vide et qu'elle est un tableau
     if (entreprises === undefined || entreprises.length === 0 || !Array.isArray(entreprises)) {
         console.error("La réponse de l'API est vide.");
         return [];
     }
-    
 
     // Retour des entreprises
     return entreprises;

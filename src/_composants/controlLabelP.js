@@ -1,6 +1,6 @@
 import React from 'react';
 import { FormControlLabel, Checkbox } from '@mui/material';
-import { useTheme } from '../pageAdmin/user/ThemeContext'; // Assurez-vous que le chemin d'importation est correct
+import { useTheme } from '../pageAdmin/user/ThemeContext';
 
 export default function ControlLabelP({ 
     id, 

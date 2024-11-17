@@ -1,4 +1,3 @@
-// src/Home/_actions/handleDelete.js
 import { useCallback } from 'react';
 import axios from 'axios';
 import config from '../../config.json';
@@ -36,7 +35,7 @@ const useHandleDelete = ({ setAccidents, accidents, logAction, showSnackbar }) =
                 });
 
                 // Mettre à jour la liste des accidents
-                setAccidents(prevAccidents => 
+                setAccidents(prevAccidents =>
                     prevAccidents.filter(item => item._id !== accidentIdToDelete)
                 );
 

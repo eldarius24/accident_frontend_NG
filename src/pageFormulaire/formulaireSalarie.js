@@ -1,14 +1,12 @@
-/* IMPORT REACT */
 import * as React from 'react';
-/* IMPORT MUI */
 import { useState, useEffect } from 'react';
-/* IMPORT PERSO */
 import TextFieldP from '../_composants/textFieldP';
 import TextFieldMaskP from '../_composants/textFieldMaskP';
 import DatePickerP from '../_composants/datePickerP';
 import AutoCompleteP from '../_composants/autoCompleteP';
 import listeDeclarationAssBelfius from '../liste/listeDeclarationAssBelfius.json';
 import { useTheme } from '../pageAdmin/user/ThemeContext';
+
 /**
  * Formulaire pour la saisie des informations du salarié victime d'un accident de travail
  * 
@@ -23,9 +21,9 @@ export default function FormulaireSalarie({ setValue, accidentData, watch }) {
   // Mise en forme des cadres texte
   const [frameWidth, setFrameWidth] = useState(window.innerWidth * -0.5);
   useEffect(() => {
-/**
- * Handle the resize event by adjusting the frame width based on the window width
- */
+    /**
+     * Handle the resize event by adjusting the frame width based on the window width
+     */
     const handleResize = () => {
       setFrameWidth(window.innerWidth * -0.5); // Adjust the coefficient as needed
     };
@@ -35,13 +33,10 @@ export default function FormulaireSalarie({ setValue, accidentData, watch }) {
     };
   }, []);
 
-
-
   /**
    * Etape 1 : stocker les données dans des variables locales et les initialiser avec les données de l'accident si elles existent
    * 
    */
-  
   const [lieuxnaissance, setLieuxnaissance] = useState(watch('lieuxnaissance') ? watch('lieuxnaissance') : (accidentData && accidentData.lieuxnaissance ? accidentData.lieuxnaissance : null));
   const [niss, setNiss] = useState(watch('niss') ? watch('niss') : (accidentData && accidentData.niss ? accidentData.niss : null));
   const [nbHeuresSemaine, setNbHeuresSemaine] = useState(watch('nbHeuresSemaine') ? watch('nbHeuresSemaine') : (accidentData && accidentData.nbHeuresSemaine ? accidentData.nbHeuresSemaine : null));
@@ -81,7 +76,6 @@ export default function FormulaireSalarie({ setValue, accidentData, watch }) {
   const [VicInterimaireOui, setVicInterimaireOui] = useState(watch('VicInterimaireOui') ? watch('VicInterimaireOui') : (accidentData && accidentData.VicInterimaireOui ? accidentData.VicInterimaireOui : null));
   const [VicInterimaireOuiNom, setVicInterimaireOuiNom] = useState(watch('VicInterimaireOuiNom') ? watch('VicInterimaireOuiNom') : (accidentData && accidentData.VicInterimaireOuiNom ? accidentData.VicInterimaireOuiNom : null));
   const [VicInterimaireOuiAdresse, setVicInterimaireOuiAdresse] = useState(watch('VicInterimaireOuiAdresse') ? watch('VicInterimaireOuiAdresse') : (accidentData && accidentData.VicInterimaireOuiAdresse ? accidentData.VicInterimaireOuiAdresse : null));
-
 
   /**
    * Etape 2 : mettre à jour les données du formulaire à chaque modification d'un des champs
@@ -126,76 +120,73 @@ export default function FormulaireSalarie({ setValue, accidentData, watch }) {
     setValue('VicInterimaireOuiNom', VicInterimaireOuiNom)
     setValue('VicInterimaireOuiAdresse', VicInterimaireOuiAdresse)
     setValue('parentEmployeur', parentEmployeur)
-  }
-    , [parentEmployeur, ListeDurContra, dateSortie, profesEntreprise, citp, ListeDureeDsEntreprise, ListeVicInterimaire, VicInterimaireOui, VicInterimaireOuiNom, VicInterimaireOuiAdresse, numDimona, CodeMutuelle, nomMutuelle, adresseRueMutuelle, adresseCodepostalMutuelle, adresseCommuneMutuelle, numAffiliation, numCompteBancaire, etabliFinancier, lieuxnaissance, niss, nbHeuresSemaine, dateDebutArret, dateFinArret, dateEntrEntreprise, nationalité, etatCivil, adresseRue, adresseCodepostal, adresseCommune, adressePays, adresseMail, telephone, adresseRuecorrespondance, adresseCodecorrespondance, adresseCommunecorrespondance, ListeadressePaysCorrespondance, telephoneCorrespondance, ListeLangueCorr, setValue]);
+  }, [parentEmployeur, ListeDurContra, dateSortie, profesEntreprise, citp, ListeDureeDsEntreprise, ListeVicInterimaire, VicInterimaireOui, VicInterimaireOuiNom, VicInterimaireOuiAdresse, numDimona, CodeMutuelle, nomMutuelle, adresseRueMutuelle, adresseCodepostalMutuelle, adresseCommuneMutuelle, numAffiliation, numCompteBancaire, etabliFinancier, lieuxnaissance, niss, nbHeuresSemaine, dateDebutArret, dateFinArret, dateEntrEntreprise, nationalité, etatCivil, adresseRue, adresseCodepostal, adresseCommune, adressePays, adresseMail, telephone, adresseRuecorrespondance, adresseCodecorrespondance, adresseCommunecorrespondance, ListeadressePaysCorrespondance, telephoneCorrespondance, ListeLangueCorr, setValue]);
 
   /**
    * Etape 3 : retourner le formulaire (IHMs)
    */
   return (
-    
-      <div>
-        <h2>Infos du travailleur</h2>
-        <h3 style={{ color: darkMode ? '#ffffff' : 'inherit' }}>Rentrez les informations sur la victime de l'accident de travail.</h3>
-        <TextFieldP id='lieuxnaissance' label='Lieu de naissance' onChange={setLieuxnaissance} defaultValue={lieuxnaissance} />
-        <TextFieldMaskP id='niss' label='NISS du travailleur' onChange={setNiss} defaultValue={niss} mask="000000-000-00"/>
-        <TextFieldMaskP id="numCompteBancaire" label="Numéro de compte bancaire" onChange={setnumCompteBancaire} defaultValue={numCompteBancaire} mask="AA00-0000-0000-0000-0000-0000-0000-0000-00" />
-        <TextFieldMaskP id="etabliFinancier" label="Etablissement Financier BIC" onChange={setetabliFinancier} defaultValue={etabliFinancier} mask="####-##-#####" />
-        <TextFieldP id="numDimona" label="Numéro de la Dimona" onChange={setnumDimona} defaultValue={numDimona} />
-        <AutoCompleteP id='nationalité' label='Nationalité' onChange={setnationalité} option={listeDeclarationAssBelfius.ListeNationalite} defaultValue={nationalité} />
-        <AutoCompleteP id='etatCivil' label='Etat civil' onChange={setetatCivil} option={listeDeclarationAssBelfius.ListeEtatCivil} defaultValue={etatCivil} />
-        <TextFieldP id='adresseRue' label='Adresse du travailleur' onChange={setadresseRue} defaultValue={adresseRue} />
-        <TextFieldP id='adresseCodepostal' label='Code postal' onChange={setadresseCodepostal} defaultValue={adresseCodepostal} />
-        <TextFieldP id='adresseCommune' label='Commune' onChange={setadresseCommune} defaultValue={adresseCommune} />
-        <AutoCompleteP id='adressePays' label='Pays' onChange={setadressePays} defaultValue={adressePays} option={listeDeclarationAssBelfius.ListeadressePays} />
-        <TextFieldP id='adresseMail' label='Adresse mail' onChange={setadresseMail} defaultValue={adresseMail} />
-        <TextFieldP id='telephone' label='Téléphone' onChange={settelephone} defaultValue={telephone} />
 
-        {        /*<div className="frameStyle-style">
+    <div>
+      <h2>Infos du travailleur</h2>
+      <h3 style={{ color: darkMode ? '#ffffff' : 'inherit' }}>Rentrez les informations sur la victime de l'accident de travail.</h3>
+      <TextFieldP id='lieuxnaissance' label='Lieu de naissance' onChange={setLieuxnaissance} defaultValue={lieuxnaissance} />
+      <TextFieldMaskP id='niss' label='NISS du travailleur' onChange={setNiss} defaultValue={niss} mask="000000-000-00" />
+      <TextFieldMaskP id="numCompteBancaire" label="Numéro de compte bancaire" onChange={setnumCompteBancaire} defaultValue={numCompteBancaire} mask="AA00-0000-0000-0000-0000-0000-0000-0000-00" />
+      <TextFieldMaskP id="etabliFinancier" label="Etablissement Financier BIC" onChange={setetabliFinancier} defaultValue={etabliFinancier} mask="####-##-#####" />
+      <TextFieldP id="numDimona" label="Numéro de la Dimona" onChange={setnumDimona} defaultValue={numDimona} />
+      <AutoCompleteP id='nationalité' label='Nationalité' onChange={setnationalité} option={listeDeclarationAssBelfius.ListeNationalite} defaultValue={nationalité} />
+      <AutoCompleteP id='etatCivil' label='Etat civil' onChange={setetatCivil} option={listeDeclarationAssBelfius.ListeEtatCivil} defaultValue={etatCivil} />
+      <TextFieldP id='adresseRue' label='Adresse du travailleur' onChange={setadresseRue} defaultValue={adresseRue} />
+      <TextFieldP id='adresseCodepostal' label='Code postal' onChange={setadresseCodepostal} defaultValue={adresseCodepostal} />
+      <TextFieldP id='adresseCommune' label='Commune' onChange={setadresseCommune} defaultValue={adresseCommune} />
+      <AutoCompleteP id='adressePays' label='Pays' onChange={setadressePays} defaultValue={adressePays} option={listeDeclarationAssBelfius.ListeadressePays} />
+      <TextFieldP id='adresseMail' label='Adresse mail' onChange={setadresseMail} defaultValue={adresseMail} />
+      <TextFieldP id='telephone' label='Téléphone' onChange={settelephone} defaultValue={telephone} />
+
+      {        /*<div className="frameStyle-style">
           <h5> Adresse de correspondance (à mentionner si elle diffère de la résidence principale)</h5>
   </div>*/}
-        <TextFieldP id="adresseRuecorrespondance" label="Adresse de correspondance du travailleur (à mentionner si elle diffère de la résidence principale)" onChange={(value) => { setadresseRuecorrespondance(value); }} defaultValue={adresseRuecorrespondance} />
+      <TextFieldP id="adresseRuecorrespondance" label="Adresse de correspondance du travailleur (à mentionner si elle diffère de la résidence principale)" onChange={(value) => { setadresseRuecorrespondance(value); }} defaultValue={adresseRuecorrespondance} />
 
-        {adresseRuecorrespondance && (
-          [<TextFieldP id="adresseCodecorrespondance" label="Code postal" onChange={setadresseCodecorrespondance} defaultValue={adresseCodecorrespondance} />,
-          <TextFieldP id="adresseCommunecorrespondance" label="Commune" onChange={setadresseCommunecorrespondance} defaultValue={adresseCommunecorrespondance} />,
-          <AutoCompleteP id='ListeadressePaysCorrespondance' label='Pays' onChange={setListeadressePaysCorrespondance} defaultValue={ListeadressePaysCorrespondance} option={listeDeclarationAssBelfius.ListeadressePaysCorrespondance} />,
-          <TextFieldP id="telephoneCorrespondance" label="Téléphone" onChange={settelephoneCorrespondance} defaultValue={telephoneCorrespondance} />,
-          <AutoCompleteP id="ListeLangueCorr" option={listeDeclarationAssBelfius.ListeLangueCorr} label="Langue de correspondance avec la victime" onChange={setListeLangueCorr} defaultValue={ListeLangueCorr} />]
-        )}
-        <AutoCompleteP id="parentEmployeur" option={listeDeclarationAssBelfius.ListeParentEmployeur} label="Parent Employeur" onChange={setparentEmployeur} defaultValue={parentEmployeur} />
-        <TextFieldP id='nbHeuresSemaine' label="Nombre d'heures travaillées par semaine" onChange={setNbHeuresSemaine} defaultValue={nbHeuresSemaine} />
-        <DatePickerP id='dateDebutArret' label="Date de début du dernier arrêt de travail(>15j)" onChange={setDateDebutArret} defaultValue={dateDebutArret} />
-        <DatePickerP id='dateFinArret' label="Date de fin du denier arrêt de travail (>15j)" onChange={setDateFinArret} defaultValue={dateFinArret} />
-        <DatePickerP id='dateEntrEntreprise' label="Date d'entrée dans l'entreprise" onChange={setDateEntrEntreprise} defaultValue={dateEntrEntreprise} />
-        <AutoCompleteP id="ListeDurContra" option={listeDeclarationAssBelfius.ListeDurContra} label="Durée du contrat de travail" onChange={(value) => { setListeDurContra(value) }} defaultValue={ListeDurContra} />
+      {adresseRuecorrespondance && (
+        [<TextFieldP id="adresseCodecorrespondance" label="Code postal" onChange={setadresseCodecorrespondance} defaultValue={adresseCodecorrespondance} />,
+        <TextFieldP id="adresseCommunecorrespondance" label="Commune" onChange={setadresseCommunecorrespondance} defaultValue={adresseCommunecorrespondance} />,
+        <AutoCompleteP id='ListeadressePaysCorrespondance' label='Pays' onChange={setListeadressePaysCorrespondance} defaultValue={ListeadressePaysCorrespondance} option={listeDeclarationAssBelfius.ListeadressePaysCorrespondance} />,
+        <TextFieldP id="telephoneCorrespondance" label="Téléphone" onChange={settelephoneCorrespondance} defaultValue={telephoneCorrespondance} />,
+        <AutoCompleteP id="ListeLangueCorr" option={listeDeclarationAssBelfius.ListeLangueCorr} label="Langue de correspondance avec la victime" onChange={setListeLangueCorr} defaultValue={ListeLangueCorr} />]
+      )}
+      <AutoCompleteP id="parentEmployeur" option={listeDeclarationAssBelfius.ListeParentEmployeur} label="Parent Employeur" onChange={setparentEmployeur} defaultValue={parentEmployeur} />
+      <TextFieldP id='nbHeuresSemaine' label="Nombre d'heures travaillées par semaine" onChange={setNbHeuresSemaine} defaultValue={nbHeuresSemaine} />
+      <DatePickerP id='dateDebutArret' label="Date de début du dernier arrêt de travail(>15j)" onChange={setDateDebutArret} defaultValue={dateDebutArret} />
+      <DatePickerP id='dateFinArret' label="Date de fin du denier arrêt de travail (>15j)" onChange={setDateFinArret} defaultValue={dateFinArret} />
+      <DatePickerP id='dateEntrEntreprise' label="Date d'entrée dans l'entreprise" onChange={setDateEntrEntreprise} defaultValue={dateEntrEntreprise} />
+      <AutoCompleteP id="ListeDurContra" option={listeDeclarationAssBelfius.ListeDurContra} label="Durée du contrat de travail" onChange={(value) => { setListeDurContra(value) }} defaultValue={ListeDurContra} />
 
-        {(ListeDurContra === 'Déterminée') && (
-          <DatePickerP id="dateSortie" label="Date de sortie si elle est connue" onChange={setdateSortie} defaultValue={dateSortie} />
-        )}
+      {(ListeDurContra === 'Déterminée') && (
+        <DatePickerP id="dateSortie" label="Date de sortie si elle est connue" onChange={setdateSortie} defaultValue={dateSortie} />
+      )}
 
-        <TextFieldP id="profesEntreprise" label="Profession habituelle dans l’entreprise" onChange={setprofesEntreprise} defaultValue={profesEntreprise} />
-        <TextFieldP id="citp" label="Code CITP" onChange={setcitp} defaultValue={citp} />
-        <AutoCompleteP id="ListeDureeDsEntreprise" option={listeDeclarationAssBelfius.ListeDureeDsEntreprise} label="Durée d'exercice de cette profession par la victime dans l'entreprise" onChange={setListeDureeDsEntreprise} defaultValue={ListeDureeDsEntreprise} />
-        <AutoCompleteP id="ListeVicInterimaire" option={listeDeclarationAssBelfius.ListeVicInterimaire} label="La victime est-elle un(e) intérimaire" onChange={(value) => { setListeVicInterimaire(value); }} defaultValue={ListeVicInterimaire} />
+      <TextFieldP id="profesEntreprise" label="Profession habituelle dans l’entreprise" onChange={setprofesEntreprise} defaultValue={profesEntreprise} />
+      <TextFieldP id="citp" label="Code CITP" onChange={setcitp} defaultValue={citp} />
+      <AutoCompleteP id="ListeDureeDsEntreprise" option={listeDeclarationAssBelfius.ListeDureeDsEntreprise} label="Durée d'exercice de cette profession par la victime dans l'entreprise" onChange={setListeDureeDsEntreprise} defaultValue={ListeDureeDsEntreprise} />
+      <AutoCompleteP id="ListeVicInterimaire" option={listeDeclarationAssBelfius.ListeVicInterimaire} label="La victime est-elle un(e) intérimaire" onChange={(value) => { setListeVicInterimaire(value); }} defaultValue={ListeVicInterimaire} />
 
-        {(ListeVicInterimaire === 'Oui') && (
-          [<TextFieldP id="VicInterimaireOui" label="Numéro ONSS de l’entreprise utilisatrice" onChange={setVicInterimaireOui} defaultValue={VicInterimaireOui} />,
-          <TextFieldP id="VicInterimaireOuiNom" label="Nom" onChange={setVicInterimaireOuiNom} defaultValue={VicInterimaireOuiNom} />,
-          <TextFieldP id="VicInterimaireOuiAdresse" label="Adresse" onChange={setVicInterimaireOuiAdresse} defaultValue={VicInterimaireOuiAdresse} />]
-        )}
+      {(ListeVicInterimaire === 'Oui') && (
+        [<TextFieldP id="VicInterimaireOui" label="Numéro ONSS de l’entreprise utilisatrice" onChange={setVicInterimaireOui} defaultValue={VicInterimaireOui} />,
+        <TextFieldP id="VicInterimaireOuiNom" label="Nom" onChange={setVicInterimaireOuiNom} defaultValue={VicInterimaireOuiNom} />,
+        <TextFieldP id="VicInterimaireOuiAdresse" label="Adresse" onChange={setVicInterimaireOuiAdresse} defaultValue={VicInterimaireOuiAdresse} />]
+      )}
 
-        <div className="frameStyle-style1">
-          <h5> Informations sur la Mutuelle de la victime</h5>
-        </div>
-        <TextFieldP id="CodeMutuelle" label="Code mutuelle" onChange={setCodeMutuelle} defaultValue={CodeMutuelle} />
-        <TextFieldP id="nomMutuelle" label="Nom mutuelle" onChange={setnomMutuelle} defaultValue={nomMutuelle} />
-        <TextFieldP id="adresseRueMutuelle" label="Rue / numéro / boite" onChange={setadresseRueMutuelle} defaultValue={adresseRueMutuelle} />
-        <TextFieldP id="adresseCodepostalMutuelle" label="Code postal" onChange={setadresseCodepostalMutuelle} defaultValue={adresseCodepostalMutuelle} />
-        <TextFieldP id="adresseCommuneMutuelle" label="Commune" onChange={setadresseCommuneMutuelle} defaultValue={adresseCommuneMutuelle} />
-        <TextFieldP id="numAffiliation" label="Numéro d'affiliation" onChange={setnumAffiliation} defaultValue={numAffiliation} />
-
+      <div className="frameStyle-style1">
+        <h5> Informations sur la Mutuelle de la victime</h5>
       </div>
-    
+      <TextFieldP id="CodeMutuelle" label="Code mutuelle" onChange={setCodeMutuelle} defaultValue={CodeMutuelle} />
+      <TextFieldP id="nomMutuelle" label="Nom mutuelle" onChange={setnomMutuelle} defaultValue={nomMutuelle} />
+      <TextFieldP id="adresseRueMutuelle" label="Rue / numéro / boite" onChange={setadresseRueMutuelle} defaultValue={adresseRueMutuelle} />
+      <TextFieldP id="adresseCodepostalMutuelle" label="Code postal" onChange={setadresseCodepostalMutuelle} defaultValue={adresseCodepostalMutuelle} />
+      <TextFieldP id="adresseCommuneMutuelle" label="Commune" onChange={setadresseCommuneMutuelle} defaultValue={adresseCommuneMutuelle} />
+      <TextFieldP id="numAffiliation" label="Numéro d'affiliation" onChange={setnumAffiliation} defaultValue={numAffiliation} />
+    </div>
   );
 }

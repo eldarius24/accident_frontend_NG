@@ -1,6 +1,6 @@
 import React, { forwardRef } from 'react';
 import { TextField } from '@mui/material';
-import { useTheme } from '../pageAdmin/user/ThemeContext'; // Assurez-vous que le chemin d'importation est correct
+import { useTheme } from '../pageAdmin/user/ThemeContext';
 
 const TextFieldP = forwardRef(({ id, label, onChange, value, defaultValue, ...props }, ref) => {
     const { darkMode } = useTheme();

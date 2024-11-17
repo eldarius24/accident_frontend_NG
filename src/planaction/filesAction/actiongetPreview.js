@@ -14,42 +14,42 @@ const getPreview = async (fileId, fileName) => {
 
     switch (fileType) {
       case 'xlsx':
-        case 'xls':
-        case 'csv': {
-          const arrayBuffer = await fileBlob.arrayBuffer();
-          let workbook;
-          
-          if (fileType === 'csv') {
-            const text = await fileBlob.text();
-            workbook = XLSX.read(text, { type: 'string' });
-          } else {
-            workbook = XLSX.read(arrayBuffer, { type: 'array' });
+      case 'xls':
+      case 'csv': {
+        const arrayBuffer = await fileBlob.arrayBuffer();
+        let workbook;
+
+        if (fileType === 'csv') {
+          const text = await fileBlob.text();
+          workbook = XLSX.read(text, { type: 'string' });
+        } else {
+          workbook = XLSX.read(arrayBuffer, { type: 'array' });
+        }
+
+        const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+
+        // Generate thumbnail (first few lines)
+        const range = XLSX.utils.decode_range(worksheet['!ref']);
+        const previewRange = {
+          s: { r: range.s.r, c: range.s.c },
+          e: { r: Math.min(range.s.r + 5, range.e.r), c: Math.min(range.s.c + 4, range.e.c) } // Limit columns for better preview
+        };
+
+        // Create temporary worksheet for preview
+        const previewData = [];
+        for (let r = previewRange.s.r; r <= previewRange.e.r; r++) {
+          const row = [];
+          for (let c = previewRange.s.c; c <= previewRange.e.c; c++) {
+            const cell = worksheet[XLSX.utils.encode_cell({ r, c })];
+            row.push(cell ? cell.v : undefined);
           }
-          
-          const worksheet = workbook.Sheets[workbook.SheetNames[0]];
-  
-          // Generate thumbnail (first few lines)
-          const range = XLSX.utils.decode_range(worksheet['!ref']);
-          const previewRange = {
-            s: { r: range.s.r, c: range.s.c },
-            e: { r: Math.min(range.s.r + 5, range.e.r), c: Math.min(range.s.c + 4, range.e.c) } // Limit columns for better preview
-          };
-  
-          // Create temporary worksheet for preview
-          const previewData = [];
-          for (let r = previewRange.s.r; r <= previewRange.e.r; r++) {
-            const row = [];
-            for (let c = previewRange.s.c; c <= previewRange.e.c; c++) {
-              const cell = worksheet[XLSX.utils.encode_cell({ r, c })];
-              row.push(cell ? cell.v : undefined);
-            }
-            previewData.push(row);
-          }
-  
-          const previewSheet = XLSX.utils.aoa_to_sheet(previewData);
-          const previewHtml = XLSX.utils.sheet_to_html(previewSheet, {
-            editable: false,
-            header: `
+          previewData.push(row);
+        }
+
+        const previewSheet = XLSX.utils.aoa_to_sheet(previewData);
+        const previewHtml = XLSX.utils.sheet_to_html(previewSheet, {
+          editable: false,
+          header: `
               <style>
                 table { 
                   border-collapse: collapse; 
@@ -85,17 +85,17 @@ const getPreview = async (fileId, fileName) => {
                 }
               </style>
             `
-          });
-  
-          const hasMoreData = range.e.r > previewRange.e.r || range.e.c > previewRange.e.c;
-          const previewNote = hasMoreData ? 
-            '<div class="preview-note">Preview showing first 6 rows and 5 columns...</div>' : '';
-  
-          return { 
-            type: fileType,
-            preview: previewHtml + previewNote
-          };
-        }
+        });
+
+        const hasMoreData = range.e.r > previewRange.e.r || range.e.c > previewRange.e.c;
+        const previewNote = hasMoreData ?
+          '<div class="preview-note">Preview showing first 6 rows and 5 columns...</div>' : '';
+
+        return {
+          type: fileType,
+          preview: previewHtml + previewNote
+        };
+      }
 
       case 'pdf':
         const pdf = await pdfjsLib.getDocument(URL.createObjectURL(fileBlob)).promise;
@@ -112,7 +112,7 @@ const getPreview = async (fileId, fileName) => {
           url: canvas.toDataURL(),
         };
 
-      case 'docx': 
+      case 'docx':
         const arrayBuffer = await fileBlob.arrayBuffer();
         const result = await mammoth.convertToHtml({ arrayBuffer });
         return {

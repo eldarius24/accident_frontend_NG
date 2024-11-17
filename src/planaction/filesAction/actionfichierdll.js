@@ -2,7 +2,7 @@ import axios from 'axios';
 import React, { useCallback } from 'react';
 import { useLocation } from 'react-router-dom';
 import { confirmAlert } from 'react-confirm-alert';
-import 'react-confirm-alert/src/react-confirm-alert.css'; // Importez les styles pour la boîte de dialogue
+import 'react-confirm-alert/src/react-confirm-alert.css';
 import listFilesInaction from './actionFilesAction';
 import { Tooltip } from '@mui/material';
 import { useLogger } from '../../Hook/useLogger';
@@ -105,7 +105,7 @@ export default function PageDownloadFile() {
      * 
      * @param {*} file Fichier à envoyer
      */
-    const promptForFileName = (file) => { 
+    const promptForFileName = (file) => {
         confirmAlert({
             /**
              * Boîte de dialogue personnalisée pour demander le nom du fichier à uploader

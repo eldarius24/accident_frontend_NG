@@ -1,15 +1,6 @@
 import axios from 'axios';
 import { saveAs } from 'file-saver';
 
-/**
- * Fonction utilitaire pour télécharger un fichier
- * @param {Object} params Les paramètres de la fonction
- * @param {string} params.fileId - L'ID du fichier à télécharger
- * @param {string} params.fileName - Le nom du fichier
- * @param {string} params.entrepriseName - Le nom de l'entreprise
- * @param {Function} params.logAction - Fonction pour logger l'action
- * @param {Function} params.showMessage - Fonction pour afficher les messages
- */
 const handleFileDownload = async ({ fileId, fileName, entrepriseName, logAction, showMessage }) => {
     try {
         // Vérification des paramètres requis

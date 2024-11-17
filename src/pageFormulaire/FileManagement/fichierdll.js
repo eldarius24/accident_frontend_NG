@@ -2,10 +2,10 @@ import axios from 'axios';
 import React, { useCallback } from 'react';
 import { useLocation } from 'react-router-dom';
 import { confirmAlert } from 'react-confirm-alert';
-import 'react-confirm-alert/src/react-confirm-alert.css'; // Importez les styles pour la boîte de dialogue
+import 'react-confirm-alert/src/react-confirm-alert.css';
 import listFilesInAccident from './FilesActions';
 import { Tooltip } from '@mui/material';
-import { useLogger } from '../../Hook/useLogger'; 
+import { useLogger } from '../../Hook/useLogger';
 
 const dropZoneStyle = {
     display: 'flex',
@@ -69,7 +69,7 @@ export default function PageDownloadFile() {
             const accidentDetails = await getAccidentDetails(accidentId);
             const dataFile = new FormData();
             dataFile.append('file', file, name);
-            
+
             const response = await axios.post(`http://localhost:3100/api/stockFile/${accidentId}`, dataFile, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
@@ -96,18 +96,18 @@ export default function PageDownloadFile() {
      */
     const promptForFileName = (file) => {
         confirmAlert({
-        /**
-         * Boîte de dialogue personnalisée pour demander le nom du fichier à uploader
-         * 
-         * @param {{ onClose: () => void }} props - Fonction pour fermer la boîte de dialogue
-         * @returns Un JSX Element qui contient la boîte de dialogue personnalisée
-         * 
-         * La boîte de dialogue contient un champ de saisie pour renommer le fichier
-         * et deux boutons : "Envoyer" et "Annuler".
-         * Lorsque le bouton "Envoyer" est cliqué, la fonction handleFileUpload est appelée
-         * avec le fichier à envoyer et le nom du fichier renommé.
-         * Lorsque le bouton "Annuler" est cliqué, la fonction onClose est appelée pour fermer la boîte de dialogue.
-         */
+            /**
+             * Boîte de dialogue personnalisée pour demander le nom du fichier à uploader
+             * 
+             * @param {{ onClose: () => void }} props - Fonction pour fermer la boîte de dialogue
+             * @returns Un JSX Element qui contient la boîte de dialogue personnalisée
+             * 
+             * La boîte de dialogue contient un champ de saisie pour renommer le fichier
+             * et deux boutons : "Envoyer" et "Annuler".
+             * Lorsque le bouton "Envoyer" est cliqué, la fonction handleFileUpload est appelée
+             * avec le fichier à envoyer et le nom du fichier renommé.
+             * Lorsque le bouton "Annuler" est cliqué, la fonction onClose est appelée pour fermer la boîte de dialogue.
+             */
             customUI: ({ onClose }) => {
                 let fileName = file.name;
 

@@ -1,4 +1,3 @@
-// src/hooks/useSession.js
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -14,7 +13,7 @@ export const useSession = () => {
     if (!hasSession) {
       console.log('Nouvelle session de navigateur détectée');
       sessionStorage.setItem(SESSION_KEY, 'true');
-      
+
       if (token) {
         // Si on trouve un token d'une ancienne session, on le supprime
         localStorage.removeItem('token');

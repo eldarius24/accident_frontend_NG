@@ -9,7 +9,7 @@ const COOKIE_NAMES = {
     SELECTED_ACCIDENT_TYPES: 'selectedAccidentTypes',
     SELECTED_COMPANIES: 'selectedCompanies',
     VISIBLE_GRAPHS: 'visibleGraphs',
-    
+
 };
 
 // Durée de vie des cookies (365 jours)

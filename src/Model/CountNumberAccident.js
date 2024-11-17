@@ -36,6 +36,5 @@ export default function CountNumberAccidentGroupe(accidents) {
         accident.numeroEntreprise = `${accidentYear}-${entrepriseNumbers[entrepriseName]}`;
     });
 
-
     return accidents;
 }

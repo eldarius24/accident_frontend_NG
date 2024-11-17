@@ -1,20 +1,13 @@
 /**
- * importation des librairies pour la génération du pdf
- */
-const { PDFDocument, StandardFonts, rgb } = require('pdf-lib');
-import axios from 'axios';
-import config from '../config.json';
-
-
-/**
- * fonction qui permet d'editer un textfield dans un pdf
+ * fonction qui permet d'editer un champ de texte dans un pdf
  * @param {*} form formulaire du pdf
- * @param {*} textFielName nom du textfield
- * @param {*} data donnée à mettre dans le textfield
+ * @param {*} textFielName nom du champ de texte
+ * @param {*} data donnée à mettre dans le champ de texte
  */
 function EditPdfTextField(form, textFielName, data) {
     const textField = form.getTextField(textFielName);
     if (data !== null) {
+        // Si data est null, on ne fait rien
         textField.setText(data || "");
     }
 }
@@ -127,7 +120,6 @@ export default async function editPDF(data) {
                 break;
         }
 
-
         // EXEMPLE DE CODE POUR COCHER UNE CASE
         switch (data.etatCivil) {
             case "Célibataire":
@@ -178,7 +170,6 @@ export default async function editPDF(data) {
         }
 
         //date de sortie connue ?
-
         switch (data.ListeDureeDsEntreprise) {
             case "Moins d'une semaine":
                 EditPdfCheckBox(form, '64 checkbox  13', true);

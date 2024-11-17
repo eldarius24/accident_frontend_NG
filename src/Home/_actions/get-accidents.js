@@ -10,13 +10,9 @@ import config from '../../config.json';
  */
 const getAccidents = async () => {
     const apiUrl = config.apiUrl;
-
     const result = await axios.get(`http://${apiUrl}:3100/api/accidents`);
-
     let accidents = result.data;
-    
     accidents = CountNumberAccidentGroupe(accidents);
-    
 
     if (accidents === undefined || accidents.length === 0 || !Array.isArray(accidents)) {
         console.error("La réponse de l'API est vide.");

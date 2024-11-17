@@ -7,7 +7,6 @@ import GetAppIcon from '@mui/icons-material/GetApp';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import CloseIcon from '@mui/icons-material/Close';
 import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutline';
-import { confirmAlert } from 'react-confirm-alert';
 import { saveAs } from 'file-saver';
 import CustomSnackbar from '../../_composants/CustomSnackbar';
 import FileViewer from './actionfileViewer';
@@ -150,15 +149,10 @@ export default function ListFilesInaction(actionId) {
     };
 
     /**
-
      * Affiche une boîte de dialogue de confirmation de suppression
-
      * pour demander confirmation de suppression d'un fichier
-
      * @param {string} fileId - L'ID du fichier à supprimer
-
      */
-
     const handleFileDelete = (fileId) => {
         showDeleteConfirm({
             message: "Êtes-vous sûr de vouloir supprimer ce fichier ?",
@@ -369,7 +363,7 @@ export default function ListFilesInaction(actionId) {
                             }}>
                                 <Typography sx={{ fontSize: 12, color: 'text.secondary', marginBottom: 1 }}>
                                     {file.fileName}
-                                    </Typography>
+                                </Typography>
                                 {previews[file.fileId] ? (
                                     previews[file.fileId].type === 'image' ? (
                                         <img src={previews[file.fileId].url} alt={file.fileName} style={{ width: '100%', height: 'auto' }} />

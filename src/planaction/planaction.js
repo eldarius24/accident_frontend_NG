@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import axios from 'axios';
 import { useForm } from 'react-hook-form';
-import { useNavigate, useLocation, Link } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import {
     Table, TableBody, TableCell, TableContainer, TableHead, TableRow,
     Button, Checkbox, Grid, LinearProgress, TextField, Tooltip,
@@ -30,8 +30,7 @@ import { blueGrey } from '@mui/material/colors';
 import createUpdateUserSelectedYears from './updateUserSelecterYears';
 import {
     COOKIE_PREFIXES,
-    getSelectedYearsFromCookie,
-    saveYearSelections
+    getSelectedYearsFromCookie
 } from '../Home/_actions/cookieUtils';
 
 const apiUrl = config.apiUrl;
@@ -43,9 +42,7 @@ const apiUrl = config.apiUrl;
  */
 export default function PlanAction({ accidentData }) {
 
-
     // Créer la fonction de mise à jour
-
     const { logAction } = useLogger();
     const { darkMode } = useTheme();
     const [users, setAddactions] = useState([]);
@@ -62,7 +59,6 @@ export default function PlanAction({ accidentData }) {
     const [selectedYears, setSelectedYears] = useState(() =>
         getSelectedYearsFromCookie(COOKIE_PREFIXES.PLAN_ACTION)
     );
-
     const [availableYears, setAvailableYears] = useState([]);
     const [snackbar, setSnackbar] = useState({
         open: false,
@@ -712,7 +708,5 @@ export default function PlanAction({ accidentData }) {
                 </Tooltip>
             </form >
         </div>
-
-
     );
 }

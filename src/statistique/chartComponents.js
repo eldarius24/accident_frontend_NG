@@ -128,39 +128,6 @@ const CustomLineChartTooltip = ({ active, payload, label, darkMode }) => {
     return null;
 };
 
-const CustomTfTooltip = ({ active, payload, label, darkMode }) => {
-    if (active && payload && payload.length) {
-        const tooltipStyle = getTooltipStyle(darkMode);
-        const contentStyle = getTooltipContentStyle(darkMode);
-        const data = payload[0].payload;
-        return (
-            <div style={tooltipStyle}>
-                <div style={contentStyle.title}>Année: {label}</div>
-                <div style={contentStyle.row}>
-                    <span style={contentStyle.label}>Taux de fréquence:</span>
-                    <span style={contentStyle.value}>
-                        {data.tf.toFixed(2)}
-                    </span>
-                </div>
-                <div style={contentStyle.row}>
-                    <span style={contentStyle.label}>Heures prestées:</span>
-                    <span style={contentStyle.value}>
-                        {data.heuresPreste.toLocaleString()}
-                    </span>
-                </div>
-                <div style={contentStyle.row}>
-                    <span style={contentStyle.label}>Accidents:</span>
-                    <span style={contentStyle.value}>
-                        {data.accidents}
-                    </span>
-                </div>
-            </div>
-        );
-    }
-    return null;
-};
-
-
 const MemoizedGenderByCompanyChart = memo(({ companies, darkMode }) => (
     <div className="text-center">
         <h2>Accidents par genre et par entreprise</h2>
@@ -216,8 +183,8 @@ const MemoizedPieChart = memo(({ data, title, darkMode }) => (
                     fill="#8884d8"
                     dataKey="value"
                     label={({ name, value }) => `${name}: ${value}`}
-                        >
-                  
+                >
+
                     {data.map((entry, index) => (
                         <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                     ))}
@@ -334,7 +301,6 @@ const MemoizedCompanyChart = memo(({ title, companies, ChartType, renderData, da
         </div>
     </div>
 ));
-
 
 const MemoizedDetailedCompanyChart = memo(({ title, companies, darkMode }) => (
     <div className="text-center">
@@ -852,11 +818,11 @@ export const getRenderConfig = (type, data, options = {}) => {
 
             };
 
-            case 'genderByCompany':
-                return {
-                  ...baseConfig,
-                  companies: options.companies || [],
-                };
+        case 'genderByCompany':
+            return {
+                ...baseConfig,
+                companies: options.companies || [],
+            };
 
         default:
             return baseConfig;

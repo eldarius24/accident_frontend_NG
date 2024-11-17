@@ -13,7 +13,7 @@ const getAccidentDetails = async (accidentId) => {
                 nomTravailleur: response.data.nomTravailleur || '',
                 prenomTravailleur: response.data.prenomTravailleur || '',
                 entreprise: response.data.entrepriseName || '',
-                dateAccident: response.data.DateHeureAccident ? 
+                dateAccident: response.data.DateHeureAccident ?
                     new Date(response.data.DateHeureAccident).toLocaleDateString() : ''
             };
         }
@@ -25,7 +25,7 @@ const getAccidentDetails = async (accidentId) => {
 };
 
 const RenameDialog = ({ fileId, currentFileName, accidentId, files, setFiles, onClose }) => {
-    const { logAction } = useLogger(); // Hook useLogger à l'intérieur du composant
+    const { logAction } = useLogger();
     const [snackbar, setSnackbar] = useState({
         open: false,
         message: '',

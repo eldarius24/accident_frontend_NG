@@ -10,7 +10,7 @@ import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import axios from 'axios';
 import { useTheme } from '../pageAdmin/user/ThemeContext';
-import config from '../config.json'; // Ajout de l'import de config
+import config from '../config.json';
 
 // Fonction utilitaire pour les logs
 const logAction = async (action) => {
@@ -29,7 +29,6 @@ const Login = () => {
   const { darkMode } = useTheme();
   const [daysWithoutAccident, setDaysWithoutAccident] = useState(0);
   const [lastAccidentDate, setLastAccidentDate] = useState(null);
-  const apiUrl = config.apiUrl;
 
   useEffect(() => {
     const fetchLastAccident = async () => {

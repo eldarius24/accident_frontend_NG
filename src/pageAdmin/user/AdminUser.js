@@ -26,7 +26,7 @@ import { blueGrey } from '@mui/material/colors';
  * ainsi que des boutons pour modifier et supprimer.
  */
 export default function Adminuser() {
-    const { darkMode } = useTheme(); 
+    const { darkMode } = useTheme();
     const [users, setUsers] = useState([]);
     const [usersIsPending, startGetUsers] = useTransition();
     const [snackbar, setSnackbar] = useState({
@@ -103,7 +103,7 @@ export default function Adminuser() {
         }
         return 'Utilisateur';
     }, []);
-    
+
     const rowColors = useMemo(() =>
         darkMode
             ? ['#7a7a7a', '#979797']

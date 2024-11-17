@@ -22,7 +22,6 @@ const SupportDialog = ({ open, onClose, isLoginPage = false }) => {
   const { userInfo } = useUserConnected();
   const { darkMode } = useTheme();
   const apiUrl = config.apiUrl;
-
   const [subject, setSubject] = useState('');
   const [message, setMessage] = useState('');
   const [typeSupport, setTypeSupport] = useState('');
@@ -30,7 +29,6 @@ const SupportDialog = ({ open, onClose, isLoginPage = false }) => {
   const [status, setStatus] = useState({ type: '', message: '' });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [userName, setUserName] = useState('');
-
   const supportOptions = React.useMemo(() => {
     try {
       if (listetypeSupport && Array.isArray(listetypeSupport.AssureurStatus)) {

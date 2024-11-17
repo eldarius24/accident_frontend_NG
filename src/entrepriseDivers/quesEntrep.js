@@ -361,7 +361,6 @@ const QuesEntrep = () => {
         }
     };
 
-    // JSX du composant
     return (
         <form onSubmit={handleSubmit} style={{ margin: '0 20px' }} className="background-image">
             <Paper
@@ -442,9 +441,7 @@ const QuesEntrep = () => {
                                         color: darkMode ? '#ffffff' : 'inherit', 
                                        
                                     }
-                                }}
-                                
-                                
+                                }}                                                                
                             />
                         </Box>
                     </Paper>

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import {
-  FormControl, InputLabel, Select, MenuItem, Checkbox, ListItemText, Box, Divider, Paper
+  FormControl, InputLabel, Select, MenuItem, Checkbox, ListItemText, Box, Paper
 } from '@mui/material';
 import { useAccidentStats } from './filters';
 import chargerDonnees from './dataLoader';
@@ -216,26 +216,6 @@ const Statistiques = () => {
   );
 
   useEffect(() => {
-    /**
-     * Initialise les données nécessaires pour les statistiques d'accidents.
-     * 
-     * Cette fonction charge les données à l'aide de la fonction `chargerDonnees`
-     * et met à jour les états avec les données reçues, notamment:
-     * - `data`: les données des accidents
-     * - `allYears`: toutes les années disponibles dans les données
-     * - `selectedYears`: les années sélectionnées pour le filtrage
-     * - `workerTypes`: les types de travailleurs
-     * - `selectedWorkerTypes`: les types de travailleurs sélectionnés pour le filtrage
-     * - `sectors`: les secteurs d'activité
-     * - `selectedSectors`: les secteurs sélectionnés pour le filtrage
-     * - `assureurStatus`: les statuts assureur
-     * - `selectedAssureurStatus`: les statuts assureur sélectionnés pour le filtrage
-     * - `accidentTypes`: les types d'accidents
-     * - `selectedAccidentTypes`: les types d'accidents sélectionnés pour le filtrage
-     * 
-     * En cas d'erreur lors du chargement des données, elle est capturée et 
-     * affichée dans la console.
-     */
     const initialiserDonnees = async () => {
       try {
         await chargerDonnees({
@@ -255,7 +235,6 @@ const Statistiques = () => {
         });
       } catch (erreur) {
         console.error('Erreur lors de l\'initialisation:', erreur);
-        // Gérer l'erreur ici si nécessaire
       }
     };
 
@@ -672,20 +651,20 @@ const Statistiques = () => {
         </FormControl>
       </Box>
       <Paper
-          elevation={3}
-          sx={{
-            border: darkMode ? '1px solid #ffffff' : '1px solid #ee742d',
-            borderRadius: '8px',
-            padding: '20px',
-            margin: '20px 0',
-            color: darkMode ? '#e0e0e0' : '#333333',
-            backgroundColor: darkMode ? '#1a1a1a' : '#ffffff',
-            '&:hover': {
-              boxShadow: darkMode
-                ? '0 8px 16px rgba(255, 255, 255, 0.1)'
-                : '0 8px 16px rgba(238, 116, 45, 0.2)'
-            }
-          }}
+        elevation={3}
+        sx={{
+          border: darkMode ? '1px solid #ffffff' : '1px solid #ee742d',
+          borderRadius: '8px',
+          padding: '20px',
+          margin: '20px 0',
+          color: darkMode ? '#e0e0e0' : '#333333',
+          backgroundColor: darkMode ? '#1a1a1a' : '#ffffff',
+          '&:hover': {
+            boxShadow: darkMode
+              ? '0 8px 16px rgba(255, 255, 255, 0.1)'
+              : '0 8px 16px rgba(238, 116, 45, 0.2)'
+          }
+        }}
       >
         <div className="flex flex-col items-center justify-center h-full mb-8">
           <h2 className="text-center">Total des accidents</h2>

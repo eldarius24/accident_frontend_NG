@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState, useTransition, useMemo } from 
 import {
     Table, TableBody, TableCell, TableContainer, TableHead, TableRow,
     Button, LinearProgress, TextField, Grid, FormControl, InputLabel,
-    Select, MenuItem, Checkbox, ListItemText, Tooltip, Chip, Paper
+    Select, MenuItem, Checkbox, ListItemText, Tooltip, Chip
 } from '@mui/material';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
@@ -72,9 +72,9 @@ function Home() {
     const [accidents, setAccidents] = useState([]);
     const [accidentsIsPending, startGetAccidents] = useTransition();
     const [searchTerm, setSearchTerm] = useState('');
-    const { isAdmin, isAdminOuConseiller, userInfo, isConseiller, isAdminOrDev,isAdminOrDevOrConseiller } = useUserConnected();
+    const { isAdmin, isAdminOuConseiller, userInfo, isConseiller, isAdminOrDev, isAdminOrDevOrConseiller } = useUserConnected();
     const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'info' });
-    const { logAction } = useLogger();  // Ajout du hook useLogger
+    const { logAction } = useLogger();
     const showSnackbar = useCallback((message, severity = 'info') => {
         setSnackbar({ open: true, message, severity });
     }, []);
@@ -84,8 +84,6 @@ function Home() {
         logAction,
         showSnackbar
     });
-
-
 
     /**
         * Rafraichit la liste des accidents en appelant la fonction getAccidents.
@@ -220,7 +218,6 @@ function Home() {
         }
     }, [apiUrl, navigate, showSnackbar]);
 
-
     /**
      * Filtre les données des accidents en fonction des années sélectionnées et du terme de recherche.
      * Utilise useMemo pour optimiser le recalcul des données filtrées.
@@ -283,7 +280,7 @@ function Home() {
             filteredData,
             isAdminOrDev,
             userInfo,
-            logAction, // Ajout de la fonction logAction
+            logAction,
             onSuccess: (message) => showSnackbar(message, 'success'),
             onError: (message) => showSnackbar(message, 'error')
         });

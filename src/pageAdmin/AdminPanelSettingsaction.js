@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import '../pageFormulaire/formulaire.css';
 import { Box, Paper, Tooltip } from '@mui/material';
-import  Button from '@mui/material/Button';
+import Button from '@mui/material/Button';
 import { Link } from 'react-router-dom';
 import { useTheme } from '../pageAdmin/user/ThemeContext';
 /**
@@ -237,10 +237,6 @@ export default function AdminPanelSettingsaction() {
             <Tooltip title="Développé par Remy et Benoit pour Le Cortigroupe." arrow>
                 <h5 style={{ marginBottom: '40px' }}> Développé par Remy et Benoit pour Le Cortigroupe.</h5>
             </Tooltip>
-
         </div>
-
-
-
     );
 }

@@ -5,7 +5,6 @@ import config from '../../../../config.json';
 const putUser = async (idUser, dataUser) => {
     const apiUrl = config.apiUrl;
 
-
     try {
         let result;
         const userData = {

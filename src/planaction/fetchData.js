@@ -1,4 +1,3 @@
-// src/planaction/utils/fetchData.js
 import axios from 'axios';
 
 const createFetchData = (apiUrl) => (
@@ -20,7 +19,7 @@ const createFetchData = (apiUrl) => (
             ]);
 
             setAddactions(actionsResponse.data);
-            
+
             let entreprisesData = enterprisesResponse.data.map(e => ({
                 label: e.AddEntreName,
                 id: e._id
@@ -31,7 +30,7 @@ const createFetchData = (apiUrl) => (
                     userInfo.entreprisesConseillerPrevention?.includes(e.label)
                 );
             }
-            
+
             setEntreprises(entreprisesData);
             const secteursData = sectorsResponse.data;
             setAllSectors(secteursData);

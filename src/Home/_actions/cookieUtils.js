@@ -1,5 +1,3 @@
-// cookieUtils.js
-
 const COOKIE_EXPIRY_DAYS = 365;
 
 /**

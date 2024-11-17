@@ -1,25 +1,24 @@
-// src/planaction/utils/handleExport.js
 import { handleExportDataAction } from '../Model/excelGenerator.js';
 
 const createHandleExport = (users, isAdminOrDev, userInfo, selectedYears, searchTerm, showSnackbar, logAction) => {
     return async () => {
         try {
             let dataToExport = users;
-           
+
             // Filtre par entreprise si l'utilisateur n'est pas admin
             if (!isAdminOrDev) {
                 dataToExport = dataToExport.filter(action =>
                     userInfo.entreprisesConseillerPrevention?.includes(action.AddActionEntreprise)
                 );
             }
-           
+
             // Filtre par années sélectionnées
             if (selectedYears && selectedYears.length > 0) {
                 dataToExport = dataToExport.filter(action =>
                     selectedYears.includes(action.AddActionanne)
                 );
             }
-           
+
             // Filtre par terme de recherche
             if (searchTerm) {
                 const searchTermLower = searchTerm.toLowerCase();
@@ -32,7 +31,7 @@ const createHandleExport = (users, isAdminOrDev, userInfo, selectedYears, search
                         })
                 );
             }
-           
+
             await handleExportDataAction(dataToExport);
 
             // Ajout du log pour l'export

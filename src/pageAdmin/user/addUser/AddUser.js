@@ -84,7 +84,6 @@ export default function AddUser() {
                 setValue(key, value);
             });
 
-
         } catch (error) {
             console.error('Erreur lors de la récupération de l\'utilisateur:', error.message);
             showSnackbar('Erreur lors de la récupération de l\'utilisateur', 'error');
@@ -102,8 +101,6 @@ export default function AddUser() {
             showSnackbar('Erreur lors de la récupération des entreprises', 'error');
         }
     };
-
-
 
     useEffect(() => {
         getUserData();

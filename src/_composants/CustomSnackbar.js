@@ -5,7 +5,7 @@ const CustomSnackbar = ({ open, handleClose, message, severity }) => {
   return (
     <Snackbar
       anchorOrigin={{
-        vertical: 'bottom', // Changed from 'botton' to 'bottom'
+        vertical: 'bottom',
         horizontal: 'left',
       }}
       open={open}

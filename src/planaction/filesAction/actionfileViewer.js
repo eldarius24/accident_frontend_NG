@@ -21,7 +21,6 @@ const FileViewer = ({ file, actionId, isEntreprise = false }) => {
             const workbook = XLSX.read(buffer, { type: 'array' });
             const worksheet = workbook.Sheets[workbook.SheetNames[0]];
             const html = XLSX.utils.sheet_to_html(worksheet, { editable: false });
-
             const styledHtml = `
                 <style>
                     table {
@@ -75,7 +74,6 @@ const FileViewer = ({ file, actionId, isEntreprise = false }) => {
             return null;
         }
     };
-
 
     useEffect(() => {
         const loadContent = async () => {
@@ -260,29 +258,29 @@ const FileViewer = ({ file, actionId, isEntreprise = false }) => {
                 </Box>
             );
 
-            case 'docx':
-                return (
-                    <Box className="w-full h-full flex flex-col" style={{ backgroundColor: darkMode ? '#424242' : '#ffffff' }}>
-                        <Box className="flex justify-center gap-4 p-2" style={{ borderBottom: `1px solid ${darkMode ? '#616161' : '#ddd'}` }}>
-                            <button onClick={() => setZoom(z => z * 1.2)} className="px-3 py-1 rounded" style={{ backgroundColor: darkMode ? '#515151' : '#f5f5f5', color: darkMode ? '#ffffff' : '#333' }}>Zoom +</button>
-                            <button onClick={() => setZoom(z => z / 1.2)} className="px-3 py-1 rounded" style={{ backgroundColor: darkMode ? '#515151' : '#f5f5f5', color: darkMode ? '#ffffff' : '#333' }}>Zoom -</button>
-                            <button onClick={() => setZoom(1)} className="px-3 py-1 rounded" style={{ backgroundColor: darkMode ? '#515151' : '#f5f5f5', color: darkMode ? '#ffffff' : '#333' }}>Réinitialiser</button>
-                            <button onClick={() => setRotation(r => r - 90)} className="px-3 py-1 rounded" style={{ backgroundColor: darkMode ? '#515151' : '#f5f5f5', color: darkMode ? '#ffffff' : '#333' }}>Rotation ↶</button>
-                            <button onClick={() => setRotation(r => r + 90)} className="px-3 py-1 rounded" style={{ backgroundColor: darkMode ? '#515151' : '#f5f5f5', color: darkMode ? '#ffffff' : '#333' }}>Rotation ↷</button>
-                        </Box>
-                        <Box className="flex-1 overflow-auto" style={{ backgroundColor: darkMode ? '#424242' : '#ffffff', color: darkMode ? '#ffffff' : '#333' }}>
-                            <div
-                                style={{
-                                    transform: `scale(${zoom}) rotate(${rotation}deg)`,
-                                    transition: 'transform 0.2s ease-in-out',
-                                    transformOrigin: 'center center',
-                                    padding: '1rem'
-                                }}
-                                dangerouslySetInnerHTML={{ __html: content.content }}
-                            />
-                        </Box>
+        case 'docx':
+            return (
+                <Box className="w-full h-full flex flex-col" style={{ backgroundColor: darkMode ? '#424242' : '#ffffff' }}>
+                    <Box className="flex justify-center gap-4 p-2" style={{ borderBottom: `1px solid ${darkMode ? '#616161' : '#ddd'}` }}>
+                        <button onClick={() => setZoom(z => z * 1.2)} className="px-3 py-1 rounded" style={{ backgroundColor: darkMode ? '#515151' : '#f5f5f5', color: darkMode ? '#ffffff' : '#333' }}>Zoom +</button>
+                        <button onClick={() => setZoom(z => z / 1.2)} className="px-3 py-1 rounded" style={{ backgroundColor: darkMode ? '#515151' : '#f5f5f5', color: darkMode ? '#ffffff' : '#333' }}>Zoom -</button>
+                        <button onClick={() => setZoom(1)} className="px-3 py-1 rounded" style={{ backgroundColor: darkMode ? '#515151' : '#f5f5f5', color: darkMode ? '#ffffff' : '#333' }}>Réinitialiser</button>
+                        <button onClick={() => setRotation(r => r - 90)} className="px-3 py-1 rounded" style={{ backgroundColor: darkMode ? '#515151' : '#f5f5f5', color: darkMode ? '#ffffff' : '#333' }}>Rotation ↶</button>
+                        <button onClick={() => setRotation(r => r + 90)} className="px-3 py-1 rounded" style={{ backgroundColor: darkMode ? '#515151' : '#f5f5f5', color: darkMode ? '#ffffff' : '#333' }}>Rotation ↷</button>
                     </Box>
-                );
+                    <Box className="flex-1 overflow-auto" style={{ backgroundColor: darkMode ? '#424242' : '#ffffff', color: darkMode ? '#ffffff' : '#333' }}>
+                        <div
+                            style={{
+                                transform: `scale(${zoom}) rotate(${rotation}deg)`,
+                                transition: 'transform 0.2s ease-in-out',
+                                transformOrigin: 'center center',
+                                padding: '1rem'
+                            }}
+                            dangerouslySetInnerHTML={{ __html: content.content }}
+                        />
+                    </Box>
+                </Box>
+            );
 
         case 'txt':
             return (
@@ -337,7 +335,7 @@ const FileViewer = ({ file, actionId, isEntreprise = false }) => {
                     </Box>
                 </Box>
             );
-            
+
         default:
             return (
                 <Box className="flex justify-center items-center h-full">

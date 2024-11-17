@@ -67,7 +67,7 @@ const fetchLogs = async (params) => {
     if (response.data?.data) {
       setLogs(response.data.data);
       setFilteredLogs(response.data.data);
-      
+
       const totalLogs = response.data.total || 0;
       setTotalPages(Math.ceil(totalLogs / logsPerPage));
       showSnackbar(`${response.data.data.length} logs chargés`, 'success');

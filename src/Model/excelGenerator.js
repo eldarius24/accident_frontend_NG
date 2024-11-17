@@ -22,7 +22,6 @@ function generateExcelFileAccidents(workbook) {
     });
 }
 
-
 /**
      * Fonction pour exporter les données vers Excel
      * @returns {void}
@@ -117,7 +116,6 @@ export function handleExportData(data) {
     generateExcelFileAccidents(workbook);
 };
 
-
 /**
  * Génère un fichier Excel pour les données d'assurances et le télécharge.
  * 
@@ -147,7 +145,6 @@ function generateExcelFileAssurances(workbook) {
         }
     });
 }
-
 
 /**
  * Fonction pour exporter les données filtrées
@@ -513,8 +510,6 @@ export function handleExportDataAss(data) {
     generateExcelFileAssurances(workbook);
 };
 
-
-
 /**
  * Generates an Excel file for actions and triggers a download in the browser.
  * 
@@ -546,7 +541,6 @@ function generateExcelFileActions(workbook) {
         }
     });
 }
-
 
 /**
  * Exporte les données d'action vers un fichier Excel.
@@ -587,7 +581,7 @@ export function handleExportDataAction(data) {
                 item.AddActionDange,
                 item.AddActionDate,
                 item.AddActionQui,
-                
+
             ]);
         });
     } else {

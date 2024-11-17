@@ -1,11 +1,5 @@
 import { Autocomplete, TextField } from '@mui/material';
 
-/**
- * objet autocomplete désactivé
- * @param {*} id identifiant unique
- * @param {*} label nom de l'autocomplete
- * @returns 
- */
 export default function AutoCompleteDisableP({ id, label}) {
   const inputStyle = {
     backgroundColor: '#00479871',

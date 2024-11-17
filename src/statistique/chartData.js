@@ -4,34 +4,33 @@ const DAYS = ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Sa
 // Export par défaut au lieu d'un export nommé
 export default function genererDonneesGraphiques(stats) {
     if (!stats) return {};
-    
+
     return {
 
         accidentsBySexByCompanyData: Object.entries(stats.accidentsBySexByCompany || {}).map(([company, data]) => ({
             company,
             data: Object.entries(data).map(([sexe, NombreAT]) => ({
-              name: sexe,
-              value: NombreAT
+                name: sexe,
+                value: NombreAT
             }))
-          })),
-
+        })),
 
         accidentsBySexData: Object.entries(stats.accidentsBySex || {})
-            .map(([sexe, NombreAT]) => ({ 
-                name: sexe, 
-                value: NombreAT 
+            .map(([sexe, NombreAT]) => ({
+                name: sexe,
+                value: NombreAT
             })),
 
         accidentMonthData: Object.entries(stats.accidentsByMonth || {})
-            .map(([month, NombreAT]) => ({ 
-                month: MONTHS[parseInt(month)], 
-                NombreAT 
+            .map(([month, NombreAT]) => ({
+                month: MONTHS[parseInt(month)],
+                NombreAT
             })),
 
         accidentYearData: Object.entries(stats.accidentsByYear || {})
-            .map(([year, NombreAT]) => ({ 
-                year: year.toString(), 
-                NombreAT 
+            .map(([year, NombreAT]) => ({
+                year: year.toString(),
+                NombreAT
             })),
 
         accidentMonthByCompanyData: MONTHS.map((month, index) => ({
@@ -52,17 +51,17 @@ export default function genererDonneesGraphiques(stats) {
             })),
 
         accidentSectorData: Object.entries(stats.accidentsBySector || {})
-            .map(([sector, NombreAT]) => ({ 
-                name: sector, 
-                value: NombreAT 
+            .map(([sector, NombreAT]) => ({
+                name: sector,
+                value: NombreAT
             })),
 
         accidentsByDayOfWeekByCompanyData: Object.entries(stats.accidentsByDayOfWeekByCompany || {})
             .map(([company, data]) => ({
                 company,
-                data: Object.entries(data).map(([day, NombreAT]) => ({ 
-                    day: DAYS[parseInt(day)], 
-                    NombreAT 
+                data: Object.entries(data).map(([day, NombreAT]) => ({
+                    day: DAYS[parseInt(day)],
+                    NombreAT
                 }))
             })),
 
@@ -75,23 +74,23 @@ export default function genererDonneesGraphiques(stats) {
             .map(([company, ageData]) => ({
                 company,
                 data: Object.entries(ageData)
-                    .map(([age, NombreAT]) => ({ 
-                        age: parseInt(age), 
-                        NombreAT 
+                    .map(([age, NombreAT]) => ({
+                        age: parseInt(age),
+                        NombreAT
                     }))
                     .sort((a, b) => a.age - b.age)
             })),
 
         accidentsByTypeTravailleurData: Object.entries(stats.accidentsByTypeTravailleur || {})
             .map(([type, NombreAT]) => ({
-                type, 
+                type,
                 NombreAT
             })),
 
         accidentsByAgeData: Object.entries(stats.accidentsByAge || {})
-            .map(([age, NombreAT]) => ({ 
-                age: parseInt(age), 
-                NombreAT 
+            .map(([age, NombreAT]) => ({
+                age: parseInt(age),
+                NombreAT
             }))
             .sort((a, b) => a.age - b.age)
     };

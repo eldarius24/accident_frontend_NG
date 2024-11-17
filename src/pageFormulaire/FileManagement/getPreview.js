@@ -116,7 +116,6 @@ const getPreview = async (fileId, fileName) => {
                     preview: result.value.substring(0, 200) + "..."
                 };
 
-
             case 'txt': {
                 const text = await blob.text();
                 return {
@@ -133,7 +132,5 @@ const getPreview = async (fileId, fileName) => {
         return null;
     }
 };
-
-
 
 export default getPreview;

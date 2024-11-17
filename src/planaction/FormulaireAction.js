@@ -71,20 +71,6 @@ export default function FormulaireAction() {
     const [yearOptions] = useState(generateYearOptions());
 
     useEffect(() => {
-        /**
-         * Fetches actions, enterprises, and sectors data from APIs concurrently.
-         * 
-         * - Sets actions data in component state.
-         * - Transforms and filters enterprises data based on user role:
-         *   - Maps enterprises to include only their name and ID.
-         *   - If the user is not an admin, filters enterprises to those the user is a conseiller for.
-         * - Sets enterprises and sectors data in component state.
-         * - Initializes available sectors with sector names.
-         * - Displays an error message in a snackbar if the fetching fails.
-         * - Sets loading state to false after completion.
-         * 
-         * @async
-         */
         const fetchData = async () => {
             try {
                 const [actionsResponse, enterprisesResponse, sectorsResponse] = await Promise.all([
@@ -349,8 +335,6 @@ export default function FormulaireAction() {
             <Tooltip title="Si vous rencontrez un souci avec le site, envoyez un mail à l'adresse suivante : bgillet.lecortil@cortigroupe.be et expliquez le problème rencontré" arrow>
                 <h5 style={{ marginBottom: '40px' }}> Développé par Remy et Benoit pour Le Cortigroupe.</h5>
             </Tooltip>
-
         </form>
-
     );
 }

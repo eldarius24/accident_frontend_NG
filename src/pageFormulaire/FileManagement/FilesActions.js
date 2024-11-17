@@ -183,7 +183,6 @@ export default function ListFilesInAccident(accidentId) {
         }
     }
 
-
     /**
   * Télécharge un fichier et crée un log de l'action.
   * @param {Object} params Les paramètres de la fonction

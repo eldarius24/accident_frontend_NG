@@ -4,7 +4,6 @@ import {
   Grid,
   Tooltip,
   Dialog,
-  DialogTitle,
   DialogContent,
   IconButton,
   DialogActions,
@@ -15,7 +14,6 @@ import CloseIcon from '@mui/icons-material/Close';
 import dayjs from 'dayjs';
 import 'dayjs/locale/fr';
 dayjs.locale('fr');
-
 import listAccident from '../liste/listAccident.json';
 import ControlLabelP from '../_composants/controlLabelP';
 import AutoCompleteP from '../_composants/autoCompleteP';
@@ -27,13 +25,11 @@ import CodeAgentMateriel from './codeAgentMateriel';
 import CodeNatureLesion from './codeNatureLesion';
 import CodeSiegeLesion from './codeSiegeLesion';
 
-
 export default function FormulaireAccident({ setValue, accidentData, watch }) {
   const { darkMode } = useTheme();
   const [frameWidth, setFrameWidth] = useState(window.innerWidth * -0.5);
   const [openPreview, setOpenPreview] = useState(false);
   const [previewType, setPreviewType] = useState('');
-
 
   const handleOpenPreview = (type) => {
     setPreviewType(type);
@@ -84,13 +80,10 @@ export default function FormulaireAccident({ setValue, accidentData, watch }) {
     };
   }, []);
 
-
   /**
    * Etape 1 : stocker les données dans des variables locales et les initialiser avec les données de l'accident si elles existent
    * 
    */
-
-  const [circonstanceAccident, setCirconstanceAccident] = useState(watch('circonstanceAccident') ? watch('circonstanceAccident') : (accidentData && accidentData.circonstanceAccident ? accidentData.circonstanceAccident : ""));
   const [DateJourIncapDebut, setDateJourIncapDebut] = useState(watch('DateJourIncapDebut') ? watch('DateJourIncapDebut') : (accidentData && accidentData.DateJourIncapDebut ? accidentData.DateJourIncapDebut : null));
   const [DateJourIncapFin, setDateJourIncapFin] = useState(watch('DateJourIncapFin') ? watch('DateJourIncapFin') : (accidentData && accidentData.DateJourIncapFin ? accidentData.DateJourIncapFin : null));
   const [indemnisationAccident, setIndemnisationAccident] = useState(watch('indemnisationAccident') ? watch('indemnisationAccident') : (accidentData && accidentData.indemnisationAccident ? accidentData.indemnisationAccident : ""));
@@ -132,7 +125,6 @@ export default function FormulaireAccident({ setValue, accidentData, watch }) {
    * Etape 2 : mettre à jour les données du formulaire à chaque modification d'un des champs
    */
   useEffect(() => {
-
     setValue('DateJourIncapDebut', DateJourIncapDebut)
     setValue('DateJourIncapFin', DateJourIncapFin)
     setValue('indemnisationAccident', indemnisationAccident)
@@ -161,197 +153,192 @@ export default function FormulaireAccident({ setValue, accidentData, watch }) {
    * Etape 3 : retourner le formulaire (IHMs)
    */
   return (
-    
-      <div>
-        <div className="infoAccident">
-          <h2>Infos Accident</h2>
-          <h3 style={{ color: darkMode ? '#ffffff' : 'inherit' }}>Rentrez les informations sur l'accident de travail.</h3>
 
-          <TextFieldMaskP id='horaireJourAccident' label='Horaire de la victime le jour de l accident' onChange={sethoraireJourAccident} defaultValue={horaireJourAccident} mask="de 00h00 à 00h00 et de 00h00 à 00h00" />
+    <div>
+      <div className="infoAccident">
+        <h2>Infos Accident</h2>
+        <h3 style={{ color: darkMode ? '#ffffff' : 'inherit' }}>Rentrez les informations sur l'accident de travail.</h3>
 
-          <DatePickerP id="DateJourIncapDebut" label="Date 1er jours incapacité" onChange={(DateJourIncapDebutChoose) => {
-            setDateJourIncapDebut(DateJourIncapDebutChoose);
-            setValue('DateJourIncapDebut', DateJourIncapDebutChoose);
-          }} defaultValue={DateJourIncapDebut}></DatePickerP>
+        <TextFieldMaskP id='horaireJourAccident' label='Horaire de la victime le jour de l accident' onChange={sethoraireJourAccident} defaultValue={horaireJourAccident} mask="de 00h00 à 00h00 et de 00h00 à 00h00" />
 
-          <DatePickerP id="DateJourIncapFin" label="Date retour au travail" onChange={(DateJourIncapFinChoose) => {
-            setDateJourIncapFin(DateJourIncapFinChoose);
-            setValue('DateJourIncapFin', DateJourIncapFinChoose);
-          }} defaultValue={DateJourIncapFin}></DatePickerP>
-          {/*TextFieldP("indemnisationAccident", "Indemnisation")*/}
+        <DatePickerP id="DateJourIncapDebut" label="Date 1er jours incapacité" onChange={(DateJourIncapDebutChoose) => {
+          setDateJourIncapDebut(DateJourIncapDebutChoose);
+          setValue('DateJourIncapDebut', DateJourIncapDebutChoose);
+        }} defaultValue={DateJourIncapDebut}></DatePickerP>
 
+        <DatePickerP id="DateJourIncapFin" label="Date retour au travail" onChange={(DateJourIncapFinChoose) => {
+          setDateJourIncapFin(DateJourIncapFinChoose);
+          setValue('DateJourIncapFin', DateJourIncapFinChoose);
+        }} defaultValue={DateJourIncapFin}></DatePickerP>
+        {/*TextFieldP("indemnisationAccident", "Indemnisation")*/}
 
-
-          {/************** Lien vers les sites et autocomplete des codes***************************/}
-
-          <Grid container direction="row" alignItems="center">
-            <Grid item xs={11.99999} >
-              <AutoCompleteP id='codeDeviation' option={listAccident.CodeDeviation} label='Code Déviation' onChange={setCodeDeviation} defaultValue={codeDeviation} />
-            </Grid>
-            <Grid item xs={0.00001} style={{ margin: '-24.5%' }}>
-              <IconButton onClick={() => handleOpenPreview('deviation')}>
-                <Tooltip title="Cliquez ici pour visualiser les Codes Déviations" arrow>
-                  <InfoIcon style={{ color: darkMode ? '#ffffff' : 'black' }} />
-                </Tooltip>
-              </IconButton>
-            </Grid>
+        <Grid container direction="row" alignItems="center">
+          <Grid item xs={11.99999} >
+            <AutoCompleteP id='codeDeviation' option={listAccident.CodeDeviation} label='Code Déviation' onChange={setCodeDeviation} defaultValue={codeDeviation} />
           </Grid>
-
-          <Grid container direction="row" alignItems="center">
-            <Grid item xs={11.99999} >
-              <AutoCompleteP id='codeAgentMateriel' option={listAccident.CodeAgentMateriel} label='Code Agent matériel' onChange={setCodeAgentMateriel} defaultValue={codeAgentMateriel} />
-            </Grid>
-            <Grid item xs={0.00001} style={{ margin: '-24.5%' }}>
-              <IconButton onClick={() => handleOpenPreview('agentmateriel')}>
-                <Tooltip title="Cliquez ici pour visualiser les Agents Matériel" arrow>
-                  <InfoIcon style={{ color: darkMode ? '#ffffff' : 'black' }} />
-                </Tooltip>
-              </IconButton>
-            </Grid>
+          <Grid item xs={0.00001} style={{ margin: '-24.5%' }}>
+            <IconButton onClick={() => handleOpenPreview('deviation')}>
+              <Tooltip title="Cliquez ici pour visualiser les Codes Déviations" arrow>
+                <InfoIcon style={{ color: darkMode ? '#ffffff' : 'black' }} />
+              </Tooltip>
+            </IconButton>
           </Grid>
+        </Grid>
 
-          <Grid container direction="row" alignItems="center">
-            <Grid item xs={11.99999} >
-              <AutoCompleteP id='codeNatureLesion' option={listAccident.CodeNatureLésion} label='Code Nature de la lésion' onChange={setCodeNatureLesion} defaultValue={codeNatureLesion} />
-            </Grid>
-            <Grid item xs={0.00001} style={{ margin: '-24.5%' }}>
-              <IconButton onClick={() => handleOpenPreview('naturelesion')}>
-                <Tooltip title="Cliquez ici pour visualiser les Natures de la lésion" arrow>
-                  <InfoIcon style={{ color: darkMode ? '#ffffff' : 'black' }} />
-                </Tooltip>
-              </IconButton>
-            </Grid>
+        <Grid container direction="row" alignItems="center">
+          <Grid item xs={11.99999} >
+            <AutoCompleteP id='codeAgentMateriel' option={listAccident.CodeAgentMateriel} label='Code Agent matériel' onChange={setCodeAgentMateriel} defaultValue={codeAgentMateriel} />
           </Grid>
-
-          <Grid container direction="row" alignItems="center">
-            <Grid item xs={11.99999} >
-              <AutoCompleteP id='codeSiegeLesion' option={listAccident.CodeSiegeLésion} label='Code siège lésion' onChange={setCodeSiegeLesion} defaultValue={codeSiegeLesion} />
-            </Grid>
-            <Grid item xs={0.00001} style={{ margin: '-24.5%' }}>
-              <IconButton onClick={() => handleOpenPreview('siegelesion')}>
-                <Tooltip title="Cliquez ici pour visualiser les Sièges de la lésion" arrow>
-                  <InfoIcon style={{ color: darkMode ? '#ffffff' : 'black' }} />
-                </Tooltip>
-              </IconButton>
-            </Grid>
+          <Grid item xs={0.00001} style={{ margin: '-24.5%' }}>
+            <IconButton onClick={() => handleOpenPreview('agentmateriel')}>
+              <Tooltip title="Cliquez ici pour visualiser les Agents Matériel" arrow>
+                <InfoIcon style={{ color: darkMode ? '#ffffff' : 'black' }} />
+              </Tooltip>
+            </IconButton>
           </Grid>
+        </Grid>
 
-          <div className="frameStyle-style1">
-            <h5>De quels moyens de protection la victime était-elle équipée lors de l'accident ?</h5>
-          </div>
-          <div>
-            <FormGroup>
-              <ControlLabelP id="boolAucun" label="Aucun" onChange={(boolAucunCoche) => {
-                setBoolAucun(boolAucunCoche);
-                setValue('boolAucun', boolAucunCoche);
-              }} defaultValue={boolAucun}></ControlLabelP>
-              <ControlLabelP id="boolChausure" label="Chaussure de sécurité" onChange={(boolChausureCoche) => {
-                setBoolChausure(boolChausureCoche);
-                setValue('boolChausure', boolChausureCoche);
-              }} defaultValue={boolChausure}></ControlLabelP>
-              <ControlLabelP id="boolLunette" label="Lunettes de sécurité" onChange={(boolLunetteCoche) => {
-                setBoolLunette(boolLunetteCoche);
-                setValue('boolLunette', boolLunetteCoche);
-              }} defaultValue={boolLunette}></ControlLabelP>
-              <ControlLabelP id="boolGant" label="Gants" onChange={(boolGantCoche) => {
-                setBoolGant(boolGantCoche);
-                setValue('boolGant', boolGantCoche);
-              }} defaultValue={boolGant}></ControlLabelP>
-              <ControlLabelP id="boolCasque" label="Casque" onChange={(boolCasqueCoche) => {
-                setBoolCasque(boolCasqueCoche);
-                setValue('boolCasque', boolCasqueCoche);
-              }} defaultValue={boolCasque}></ControlLabelP>
-              <ControlLabelP id="boolAuditive" label="Protection de l'ouie" onChange={(boolAuditiveCoche) => {
-                setBoolAuditive(boolAuditiveCoche);
-                setValue('boolAuditive', boolAuditiveCoche);
-              }} defaultValue={boolAuditive}></ControlLabelP>
-              <ControlLabelP id="boolMasque" label="Masque antiseptique" onChange={(boolMasqueCoche) => {
-                setBoolMasque(boolMasqueCoche);
-                setValue('boolMasque', boolMasqueCoche);
-              }} defaultValue={boolMasque}></ControlLabelP>
-              <ControlLabelP id="boolEcran" label="Ecran facial" onChange={(boolEcranCoche) => {
-                setBoolEcran(boolEcranCoche);
-                setValue('boolEcran', boolEcranCoche);
-              }} defaultValue={boolEcran}></ControlLabelP>
-              <ControlLabelP id="boolTenue" label="Tenue de signalisation" onChange={(boolTenueCoche) => {
-                setBoolTenue(boolTenueCoche);
-                setValue('boolTenue', boolTenueCoche);
-              }} defaultValue={boolTenue}></ControlLabelP>
-              <ControlLabelP id="boolFiltre" label="Masque respiratoire à filtre" onChange={(boolFiltreCoche) => {
-                setBoolFiltre(boolFiltreCoche);
-                setValue('boolFiltre', boolFiltreCoche);
-              }} defaultValue={boolFiltre}></ControlLabelP>
-              <ControlLabelP id="boolVeste" label="Veste de protection" onChange={(boolVesteCoche) => {
-                setBoolVeste(boolVesteCoche);
-                setValue('boolVeste', boolVesteCoche);
-              }} defaultValue={boolVeste}></ControlLabelP>
-              <ControlLabelP id="boolMaire" label="Masque respiratoire avec apport d'air frais" onChange={(boolMaireCoche) => {
-                setBoolMaire(boolMaireCoche);
-                setValue('boolMaire', boolMaireCoche);
-              }} defaultValue={boolMaire}></ControlLabelP>
-              <ControlLabelP id="boolChute" label="Protection contre les chutes" onChange={(boolChuteCoche) => {
-                setBoolChute(boolChuteCoche);
-                setValue('boolChute', boolChuteCoche);
-              }} defaultValue={boolChute}></ControlLabelP>
-              <ControlLabelP id="boolAutre" label="Autre" onChange={(boolAutreCoche) => {
-                setBoolAutre(boolAutreCoche);
-                setValue('boolAutre', boolAutreCoche);
-              }} defaultValue={boolAutre}></ControlLabelP>
-            </FormGroup>
-          </div>
-          <Dialog
-            open={openPreview}
-            onClose={handleClosePreview}
-            maxWidth="xl" // Changé à xl pour avoir plus d'espace
-            fullWidth
-            PaperProps={{
-              style: {
-                backgroundColor: darkMode ? '#333' : '#fff',
-                color: darkMode ? '#fff' : '#000',
-                height: '90vh', // Hauteur fixe pour éviter que ça prenne tout l'écran
-              },
+        <Grid container direction="row" alignItems="center">
+          <Grid item xs={11.99999} >
+            <AutoCompleteP id='codeNatureLesion' option={listAccident.CodeNatureLésion} label='Code Nature de la lésion' onChange={setCodeNatureLesion} defaultValue={codeNatureLesion} />
+          </Grid>
+          <Grid item xs={0.00001} style={{ margin: '-24.5%' }}>
+            <IconButton onClick={() => handleOpenPreview('naturelesion')}>
+              <Tooltip title="Cliquez ici pour visualiser les Natures de la lésion" arrow>
+                <InfoIcon style={{ color: darkMode ? '#ffffff' : 'black' }} />
+              </Tooltip>
+            </IconButton>
+          </Grid>
+        </Grid>
+
+        <Grid container direction="row" alignItems="center">
+          <Grid item xs={11.99999} >
+            <AutoCompleteP id='codeSiegeLesion' option={listAccident.CodeSiegeLésion} label='Code siège lésion' onChange={setCodeSiegeLesion} defaultValue={codeSiegeLesion} />
+          </Grid>
+          <Grid item xs={0.00001} style={{ margin: '-24.5%' }}>
+            <IconButton onClick={() => handleOpenPreview('siegelesion')}>
+              <Tooltip title="Cliquez ici pour visualiser les Sièges de la lésion" arrow>
+                <InfoIcon style={{ color: darkMode ? '#ffffff' : 'black' }} />
+              </Tooltip>
+            </IconButton>
+          </Grid>
+        </Grid>
+
+        <div className="frameStyle-style1">
+          <h5>De quels moyens de protection la victime était-elle équipée lors de l'accident ?</h5>
+        </div>
+        <div>
+          <FormGroup>
+            <ControlLabelP id="boolAucun" label="Aucun" onChange={(boolAucunCoche) => {
+              setBoolAucun(boolAucunCoche);
+              setValue('boolAucun', boolAucunCoche);
+            }} defaultValue={boolAucun}></ControlLabelP>
+            <ControlLabelP id="boolChausure" label="Chaussure de sécurité" onChange={(boolChausureCoche) => {
+              setBoolChausure(boolChausureCoche);
+              setValue('boolChausure', boolChausureCoche);
+            }} defaultValue={boolChausure}></ControlLabelP>
+            <ControlLabelP id="boolLunette" label="Lunettes de sécurité" onChange={(boolLunetteCoche) => {
+              setBoolLunette(boolLunetteCoche);
+              setValue('boolLunette', boolLunetteCoche);
+            }} defaultValue={boolLunette}></ControlLabelP>
+            <ControlLabelP id="boolGant" label="Gants" onChange={(boolGantCoche) => {
+              setBoolGant(boolGantCoche);
+              setValue('boolGant', boolGantCoche);
+            }} defaultValue={boolGant}></ControlLabelP>
+            <ControlLabelP id="boolCasque" label="Casque" onChange={(boolCasqueCoche) => {
+              setBoolCasque(boolCasqueCoche);
+              setValue('boolCasque', boolCasqueCoche);
+            }} defaultValue={boolCasque}></ControlLabelP>
+            <ControlLabelP id="boolAuditive" label="Protection de l'ouie" onChange={(boolAuditiveCoche) => {
+              setBoolAuditive(boolAuditiveCoche);
+              setValue('boolAuditive', boolAuditiveCoche);
+            }} defaultValue={boolAuditive}></ControlLabelP>
+            <ControlLabelP id="boolMasque" label="Masque antiseptique" onChange={(boolMasqueCoche) => {
+              setBoolMasque(boolMasqueCoche);
+              setValue('boolMasque', boolMasqueCoche);
+            }} defaultValue={boolMasque}></ControlLabelP>
+            <ControlLabelP id="boolEcran" label="Ecran facial" onChange={(boolEcranCoche) => {
+              setBoolEcran(boolEcranCoche);
+              setValue('boolEcran', boolEcranCoche);
+            }} defaultValue={boolEcran}></ControlLabelP>
+            <ControlLabelP id="boolTenue" label="Tenue de signalisation" onChange={(boolTenueCoche) => {
+              setBoolTenue(boolTenueCoche);
+              setValue('boolTenue', boolTenueCoche);
+            }} defaultValue={boolTenue}></ControlLabelP>
+            <ControlLabelP id="boolFiltre" label="Masque respiratoire à filtre" onChange={(boolFiltreCoche) => {
+              setBoolFiltre(boolFiltreCoche);
+              setValue('boolFiltre', boolFiltreCoche);
+            }} defaultValue={boolFiltre}></ControlLabelP>
+            <ControlLabelP id="boolVeste" label="Veste de protection" onChange={(boolVesteCoche) => {
+              setBoolVeste(boolVesteCoche);
+              setValue('boolVeste', boolVesteCoche);
+            }} defaultValue={boolVeste}></ControlLabelP>
+            <ControlLabelP id="boolMaire" label="Masque respiratoire avec apport d'air frais" onChange={(boolMaireCoche) => {
+              setBoolMaire(boolMaireCoche);
+              setValue('boolMaire', boolMaireCoche);
+            }} defaultValue={boolMaire}></ControlLabelP>
+            <ControlLabelP id="boolChute" label="Protection contre les chutes" onChange={(boolChuteCoche) => {
+              setBoolChute(boolChuteCoche);
+              setValue('boolChute', boolChuteCoche);
+            }} defaultValue={boolChute}></ControlLabelP>
+            <ControlLabelP id="boolAutre" label="Autre" onChange={(boolAutreCoche) => {
+              setBoolAutre(boolAutreCoche);
+              setValue('boolAutre', boolAutreCoche);
+            }} defaultValue={boolAutre}></ControlLabelP>
+          </FormGroup>
+        </div>
+        <Dialog
+          open={openPreview}
+          onClose={handleClosePreview}
+          maxWidth="xl" // Changé à xl pour avoir plus d'espace
+          fullWidth
+          PaperProps={{
+            style: {
+              backgroundColor: darkMode ? '#333' : '#fff',
+              color: darkMode ? '#fff' : '#000',
+              height: '90vh', // Hauteur fixe pour éviter que ça prenne tout l'écran
+            },
+          }}
+        >
+          <DialogActions
+            style={{
+              backgroundColor: darkMode ? '#424242' : '#f5f5f5',
+              padding: '10px',
+              margin: 0,
+              justifyContent: 'flex-end', // Aligne le bouton à droite
+              paddingRight: '20px' // Ajoute un peu d'espace à droite
             }}
           >
-            <DialogActions
+            <Button
+              onClick={handleClosePreview}
+              variant="contained"
+              startIcon={<CloseIcon />}
               style={{
-                backgroundColor: darkMode ? '#424242' : '#f5f5f5',
-                padding: '10px',
-                margin: 0,
-                justifyContent: 'flex-end', // Aligne le bouton à droite
-                paddingRight: '20px' // Ajoute un peu d'espace à droite
-              }}
-            >
-              <Button
-                onClick={handleClosePreview}
-                variant="contained"
-                startIcon={<CloseIcon />}
-                style={{
-                  backgroundColor: darkMode ? '#666' : '#e0e0e0',
-                  color: darkMode ? '#fff' : '#000',
-                  minWidth: '120px' // Donne une largeur minimale au bouton
-                }}
-              >
-                Fermer
-              </Button>
-            </DialogActions>
-
-
-            <DialogContent
-              style={{
-                backgroundColor: darkMode ? '#333' : '#fff',
+                backgroundColor: darkMode ? '#666' : '#e0e0e0',
                 color: darkMode ? '#fff' : '#000',
-                padding: 0, // Retiré le padding pour que le composant prenne tout l'espace
-                overflow: 'auto'
+                minWidth: '120px' // Donne une largeur minimale au bouton
               }}
             >
-              <div style={{ height: '100%', overflow: 'auto' }}>
-                {getPreviewContent().content}
-              </div>
-            </DialogContent>
+              Fermer
+            </Button>
+          </DialogActions>
 
-          </Dialog>
-        </div>
+          <DialogContent
+            style={{
+              backgroundColor: darkMode ? '#333' : '#fff',
+              color: darkMode ? '#fff' : '#000',
+              padding: 0, // Retiré le padding pour que le composant prenne tout l'espace
+              overflow: 'auto'
+            }}
+          >
+            <div style={{ height: '100%', overflow: 'auto' }}>
+              {getPreviewContent().content}
+            </div>
+          </DialogContent>
+
+        </Dialog>
       </div>
-    
+    </div>
+
   );
 }

@@ -36,8 +36,8 @@ export default async function chargerDonnees({
     setSelectedAssureurStatus,
     setAccidentTypes,
     setSelectedAccidentTypes,
-    setCompanies,           
-    setSelectedCompanies    
+    setCompanies,
+    setSelectedCompanies
 }) {
     try {
         // Charger les données d'accidents
@@ -49,65 +49,65 @@ export default async function chargerDonnees({
 
         const donneesAccidents = accidentsResponse.data;
         const donneesTf = tfResponse.data;
-        
+
         if (!Array.isArray(donneesAccidents)) {
             throw new Error('Format de données invalide');
         }
 
         setData(donneesAccidents);
-        
+
         // Extraire les années des accidents
         const anneesAccidents = donneesAccidents
             .map(accident => new Date(accident.DateHeureAccident).getFullYear())
             .filter(annee => !isNaN(annee));
-        
+
 
         // Extraire les années des données TF
         const anneesTf = donneesTf
             .flatMap(questionnaire => questionnaire.annees || [])
             .map(annee => parseInt(annee))
             .filter(annee => !isNaN(annee));
-      
+
 
         // Créer un tableau de toutes les années uniques avec leurs sources
         const toutesAnnees = [...new Set([...anneesAccidents, ...anneesTf])]
             .sort((a, b) => a - b);
 
         setAllYears(toutesAnnees);
-        
+
         // Définir l'année courante ou la plus récente
         const anneeCourante = new Date().getFullYear();
-        const anneeParDefaut = toutesAnnees.find(a => a === anneeCourante) || 
+        const anneeParDefaut = toutesAnnees.find(a => a === anneeCourante) ||
             toutesAnnees[toutesAnnees.length - 1];
 
         setSelectedYears(anneeParDefaut ? [anneeParDefaut] : []);
-        
+
         // Reste du code inchangé pour les autres setters...
-        const types = [...new Set(donneesAccidents.map(accident => 
+        const types = [...new Set(donneesAccidents.map(accident =>
             accident.typeTravailleur || 'Non spécifié'
         ))].filter(Boolean);
         setWorkerTypes(types);
         setSelectedWorkerTypes(types);
-        
-        const secteursExtraits = [...new Set(donneesAccidents.map(accident => 
+
+        const secteursExtraits = [...new Set(donneesAccidents.map(accident =>
             accident.secteur || 'Non spécifié'
         ))].filter(Boolean);
         setSectors(secteursExtraits);
         setSelectedSectors(secteursExtraits);
-        
+
         const statutsAssureur = [...new Set(donneesAccidents.map(accident =>
             accident.AssureurStatus || 'Non spécifié'
         ))].filter(Boolean);
         setAssureurStatus(statutsAssureur);
         setSelectedAssureurStatus(statutsAssureur);
-        
+
         const typesAccidents = [...new Set(donneesAccidents.map(accident =>
             accident.typeAccident || 'Non spécifié'
         ))].filter(Boolean);
         setAccidentTypes(typesAccidents);
         setSelectedAccidentTypes(typesAccidents);
-        
-        const entreprises = [...new Set(donneesAccidents.map(accident => 
+
+        const entreprises = [...new Set(donneesAccidents.map(accident =>
             accident.entrepriseName || 'Non spécifié'
         ))].filter(Boolean);
         setCompanies(entreprises);

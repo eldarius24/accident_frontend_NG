@@ -23,7 +23,6 @@ const FileViewer = ({ file, accidentId, isEntreprise = false }) => {
             const firstSheetName = workbook.SheetNames[0];
             const worksheet = workbook.Sheets[firstSheetName];
             const html = XLSX.utils.sheet_to_html(worksheet, { editable: false });
-
             const styledHtml = `
                 <style>
                     table {
@@ -52,15 +51,12 @@ const FileViewer = ({ file, accidentId, isEntreprise = false }) => {
                 </style>
                 ${html}
             `;
-
             return styledHtml;
         } catch (error) {
             console.error('Erreur lors du traitement du fichier Excel:', error);
             throw new Error('Erreur lors du traitement du fichier Excel');
         }
     };
-
-
 
     useEffect(() => {
         const loadFullContent = async () => {
@@ -76,9 +72,6 @@ const FileViewer = ({ file, accidentId, isEntreprise = false }) => {
                         'Accept': '*/*'
                     }
                 });
-
-
-
 
                 // Log de l'action avec les détails de l'accident
                 if (!isEntreprise) {
@@ -98,8 +91,6 @@ const FileViewer = ({ file, accidentId, isEntreprise = false }) => {
 
                 const blob = response.data;
                 const fileType = file.fileName.split('.').pop().toLowerCase();
-
-
 
                 try {
                     switch (fileType) {
@@ -129,7 +120,6 @@ const FileViewer = ({ file, accidentId, isEntreprise = false }) => {
                                 }
                             });
                             break;
-
                         case 'docx':
                             const arrayBuffer = await blob.arrayBuffer();
                             const result = await mammoth.convertToHtml({ arrayBuffer });
@@ -151,7 +141,6 @@ const FileViewer = ({ file, accidentId, isEntreprise = false }) => {
                                 throw new Error('Erreur lors de la conversion du document DOCX');
                             }
                             break;
-
                         case 'txt':
                             const text = await blob.text();
                             setFullContent({ type: 'txt', content: text });
@@ -164,7 +153,6 @@ const FileViewer = ({ file, accidentId, isEntreprise = false }) => {
                             const imageUrl = URL.createObjectURL(blob);
                             setFullContent({ type: 'image', url: imageUrl });
                             break;
-
                         default:
                             throw new Error(`Le format de fichier "${fileType}" n'est pas pris en charge`);
                     }
@@ -179,7 +167,6 @@ const FileViewer = ({ file, accidentId, isEntreprise = false }) => {
                 setLoading(false);
             }
         };
-
         loadFullContent();
 
         return () => {
@@ -215,8 +202,6 @@ const FileViewer = ({ file, accidentId, isEntreprise = false }) => {
             </Box>
         );
     }
-
-
 
     switch (fullContent.type) {
         case 'excel':
@@ -278,24 +263,24 @@ const FileViewer = ({ file, accidentId, isEntreprise = false }) => {
                 </Box>
             );
 
-            case 'pdf':
-                return (
-                    <Box className="w-full h-full relative">
-                        <object
-                            data={`${fullContent.url}#toolbar=1&navpanes=0&scrollbar=1&view=FitH&zoom=page-fit`}
-                            type="application/pdf"
-                            className="w-full h-full"
+        case 'pdf':
+            return (
+                <Box className="w-full h-full relative">
+                    <object
+                        data={`${fullContent.url}#toolbar=1&navpanes=0&scrollbar=1&view=FitH&zoom=page-fit`}
+                        type="application/pdf"
+                        className="w-full h-full"
+                    >
+                        <iframe
+                            src={`${fullContent.url}#toolbar=1&navpanes=0&scrollbar=1&view=FitH&zoom=page-fit`}
+                            className="w-full h-full border-none"
+                            title={file.fileName}
                         >
-                            <iframe
-                                src={`${fullContent.url}#toolbar=1&navpanes=0&scrollbar=1&view=FitH&zoom=page-fit`}
-                                className="w-full h-full border-none"
-                                title={file.fileName}
-                            >
-                                <p>This browser does not support PDF viewing.</p>
-                            </iframe>
-                        </object>
-                    </Box>
-                );
+                            <p>This browser does not support PDF viewing.</p>
+                        </iframe>
+                    </object>
+                </Box>
+            );
 
         case 'docx':
             return (
@@ -349,7 +334,6 @@ const FileViewer = ({ file, accidentId, isEntreprise = false }) => {
                     </Box>
                 </Box>
             );
-
 
         case 'image':
             return (

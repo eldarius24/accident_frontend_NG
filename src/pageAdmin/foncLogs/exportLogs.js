@@ -1,4 +1,3 @@
-// exportLogs.js
 import axios from 'axios';
 
 /**

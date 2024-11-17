@@ -15,7 +15,6 @@ import {
     LinearProgress,
     Tooltip
 } from '@mui/material';
-import EditIcon from '@mui/icons-material/Edit';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import { confirmAlert } from 'react-confirm-alert';
 import config from '../config.json';
@@ -122,14 +121,14 @@ export default function AddSecteur() {
                 showSnackbar('Le nom du secteur est requis', 'error');
                 return;
             }
-    
+
             const sectorData = {
                 secteurName: data.secteurName,
                 entrepriseId: entreprise._id
             };
-    
+
             const response = await axios.post(`http://${apiUrl}:3100/api/secteurs`, sectorData);
-            
+
             if (response.status === 201) {
                 await fetchSecteurs();
                 setSecteurName('');
@@ -152,7 +151,7 @@ export default function AddSecteur() {
     const handleDelete = async (secteurId) => {
         try {
             const response = await axios.delete(`http://${apiUrl}:3100/api/secteurs/${secteurId}`);
-    
+
             if (response.status === 200 || response.status === 204) {
                 await fetchSecteurs();
                 showSnackbar('Secteur supprimé avec succès', 'success');

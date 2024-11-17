@@ -69,12 +69,8 @@ const LogsViewer = () => {
    * @param {object} event L'événement qui a déclenché la modification de page.
    * @param {number} value La nouvelle page.
    */
-  const handlePageChange = (event, value) => {
-    setPage(value);
-  };
-
+  const handlePageChange = (event, value) => { setPage(value); };
   const isMounted = useRef(false);
-
   const fetchLogsWithState = useCallback(() => {
     return fetchLogs({
       selectedDate: dateEnabled ? selectedDate : null,

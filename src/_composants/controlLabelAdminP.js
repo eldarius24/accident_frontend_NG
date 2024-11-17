@@ -27,7 +27,7 @@ export default function ControlLabelAdminP({ id, label, onChange, checked }) {
             id={id}
             control={
                 <Checkbox
-                    checked={checked} // Utiliser checked au lieu de defaultValue
+                    checked={checked}
                     onChange={handleChange}
                 />
             }

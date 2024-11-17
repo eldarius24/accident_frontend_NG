@@ -1,7 +1,6 @@
-import React, { useState, useEffect, useCallback,useMemo } from 'react';
-import axios from 'axios';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useTheme } from '../pageAdmin/user/ThemeContext';
-import {Grid,Card, CardContent, Typography} from '@mui/material';
+import { Grid, Card, CardContent, Typography } from '@mui/material';
 
 const EnterpriseStats = React.memo(({ actions }) => {
     const { darkMode } = useTheme();
@@ -42,7 +41,7 @@ const EnterpriseStats = React.memo(({ actions }) => {
             color: darkMode ? '#ffffff' : 'inherit',
             boxShadow: darkMode ? '0 4px 8px 0 rgba(0,0,0,0.2)' : 3,
             transition: 'all 0.3s ease-in-out',
-            
+
             '&:hover': {
                 transform: 'scale(1.02)',
                 boxShadow: darkMode ? '0 8px 16px 0 rgba(0,0,0,0.3)' : 6,

@@ -79,9 +79,8 @@ export default function Formulaire() {
 
         const method = accidentData ? 'put' : 'post';
 
-        axios[method](url, formattedData)  // Utiliser formattedData au lieu de data
+        axios[method](url, formattedData)
             .then(async response => {
-
 
                 // Création du log
                 try {
@@ -111,7 +110,7 @@ export default function Formulaire() {
     }, []);
 
     const renderNavigationButtons = useCallback((position) => {
-        const { darkMode } = useTheme(); // Ajout du hook useTheme
+        const { darkMode } = useTheme();
 
         return (
             <div style={{

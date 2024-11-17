@@ -1,7 +1,6 @@
 import React from 'react';
 import { Autocomplete, TextField, Paper } from '@mui/material';
-import { styled } from '@mui/material/styles';
-import { useTheme } from '../pageAdmin/user/ThemeContext'; // Assurez-vous que le chemin d'importation est correct
+import { useTheme } from '../pageAdmin/user/ThemeContext';
 
 export default function AutoCompleteP({
     id,

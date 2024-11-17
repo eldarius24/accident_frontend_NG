@@ -9,7 +9,6 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import CustomSnackbar from '../_composants/CustomSnackbar';
 import { useTheme } from '../pageAdmin/user/ThemeContext';
 
-
 /**
  * AdminPanelSettings est un composant qui permet de créer une nouvelle entreprise
  * via un formulaire.
@@ -301,7 +300,6 @@ export default function AdminPanelSettings({ accidentData }) {
         const pattern = /^[A-Z]{4}-[A-Z]{2}-[A-Z]{2}$/;
         return pattern.test(value) || "Le format doit être AAAA-AA-AA";
     };
-
 
     /**************************************************************************
      * METHODE ON SUBMIT

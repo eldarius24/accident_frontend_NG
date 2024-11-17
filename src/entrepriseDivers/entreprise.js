@@ -3,7 +3,7 @@ import axios from 'axios';
 import {
     Card, CardContent, Typography, LinearProgress,
     Box, Divider, Button, Select, MenuItem, Modal,
-    FormControl, Tooltip, InputLabel, Accordion, AccordionSummary, AccordionDetails,
+    FormControl, Tooltip, InputLabel, Accordion, AccordionSummary, AccordionDetails
 } from '@mui/material';
 import PhoneIcon from '@mui/icons-material/Phone';
 import EmailIcon from '@mui/icons-material/Email';
@@ -72,8 +72,6 @@ const EnterpriseDivers = () => {
         severity: 'info'
     });
 
-
-
     const handleRename = useCallback((questionnaireId, fileId, newFileName) => {
         const enterprise = filteredEnterprises.find(e =>
             questionnaires[e._id]?.some(q => q._id === questionnaireId)
@@ -97,7 +95,6 @@ const EnterpriseDivers = () => {
             )
         }));
     }, [filteredEnterprises, questionnaires]);
-
 
     const handleFilesAccordionChange = useCallback((questionnaireId) => (event, isExpanded) => {
         setExpandedFiles(prev => ({
@@ -187,7 +184,6 @@ const EnterpriseDivers = () => {
         });
     }, [questionnaires]);
 
-
     const AccordionControls = useCallback(({ enterprise }) => {
         const questionnairesForEnterprise = questionnaires[enterprise._id] || [];
         const enterpriseYears = new Set();
@@ -248,7 +244,6 @@ const EnterpriseDivers = () => {
         }
     }), []);
 
-
     const renderConditionalValue = (label, value) => {
         if (!value || value === 'Non renseigné') return null;
         return (
@@ -291,7 +286,6 @@ const EnterpriseDivers = () => {
             }));
     }, []);
 
-
     const handleEdit = useCallback(async (questionnaireId, enterpriseId) => {
         try {
             // Récupérer le questionnaire complet via l'API
@@ -300,10 +294,6 @@ const EnterpriseDivers = () => {
             const entrepriseName = enterprises.find(e => e._id === enterpriseId)?.AddEntreName;
 
             if (questionnaire) {
-                // Log de l'action d'édition
-
-
-                // Navigation vers le formulaire avec les données existantes
                 navigate("/quesEntrep", {
                     state: {
                         enterprise: enterprises.find(e => e._id === enterpriseId),
@@ -328,9 +318,6 @@ const EnterpriseDivers = () => {
         whiteSpace: 'nowrap',
     };
 
-    // Fonction utilitaire pour gérer les messages
-
-
     const handleCloseSnackbar = (event, reason) => {
         // If the reason is 'clickaway', do not close the snackbar
         if (reason === 'clickaway') return;
@@ -350,7 +337,7 @@ const EnterpriseDivers = () => {
         setSelectedFile({
             fileId,
             fileName,
-            file: { fileId, fileName }  // Ajout de cette structure
+            file: { fileId, fileName }
         });
         setModalOpen(true);
 
@@ -385,17 +372,11 @@ const EnterpriseDivers = () => {
             const response = await axios.get(`http://${apiUrl}:3100/api/entreprises`);
             const enterpriseData = response.data;
 
-            // Vérification des données reçues
-
-
             if (!Array.isArray(enterpriseData)) {
                 console.error("Données non conformes : tableau attendu, mais reçu :", enterpriseData);
-                setEnterprises([]);  // Définit `enterprises` à un tableau vide en cas d'erreur
+                setEnterprises([]);
                 return;
             }
-
-            // Vérifiez les valeurs de `isAdmin` et `isConseiller`
-
 
             const filteredData = isAdminOrDev
                 ? enterpriseData
@@ -406,7 +387,7 @@ const EnterpriseDivers = () => {
             setEnterprises(filteredData);
         } catch (error) {
             console.error("Erreur lors de la récupération des entreprises:", error);
-            setEnterprises([]);  // Par défaut à un tableau vide en cas d'erreur
+            setEnterprises([]);
         } finally {
             setLoading(false);
         }
@@ -480,7 +461,7 @@ const EnterpriseDivers = () => {
 
             } catch (error) {
                 if (error.name === 'AbortError') {
-                    return; // Ignorer les erreurs d'abort
+                    return;
                 }
                 console.error('Error fetching data:', error);
                 if (isSubscribed) {
@@ -601,7 +582,6 @@ const EnterpriseDivers = () => {
         }
     }), [darkMode]);
 
-
     const IconWrapper = ({ icon: Icon, text }) => (
         <Box display="flex" alignItems="center" gap={1} mb={1}>
             <Icon fontSize="small" sx={{ color: darkMode ? '#90caf9' : '#1976d2' }} />
@@ -631,7 +611,6 @@ const EnterpriseDivers = () => {
             }
         });
     };
-
 
     return (
         <Box sx={{ p: 3 }}>
@@ -687,7 +666,6 @@ const EnterpriseDivers = () => {
                 </Box>
             )}
 
-
             {filteredEnterprises.map((enterprise) => (
 
                 <Card
@@ -740,7 +718,6 @@ const EnterpriseDivers = () => {
                             icon={NumbersIcon}
                             text={<><strong>N° Affiliation:</strong> {enterprise.AddEntrNumaffi}</>}
                         />
-
 
                         <Divider sx={{ my: 2, backgroundColor: darkMode ? '#ffffff' : '#000000' }} />
                         <Tooltip title="Ajouter un nouveau document lié a l'entreprise" arrow>

@@ -37,9 +37,8 @@ export default function FormulaireEntreprise({ setValue, accidentData, watch }) 
   const [typeTravailleur, setTypeTravailleur] = useState(watch('typeTravailleur') || (accidentData && accidentData.typeTravailleur) || '');
   const [loading, setLoading] = useState(true);
   const apiUrl = config.apiUrl;
-  const { isAdmin, isAdminOuConseiller, userInfo, isConseiller,isAdminOrDev } = useUserConnected();
+  const { isAdmin, isAdminOuConseiller, userInfo, isConseiller, isAdminOrDev } = useUserConnected();
   const [formData, setFormData] = useState(accidentData);
-  const { darkMode } = useTheme();
 
   const [nomTravailleur, setNomTravailleur] = useState(watch('nomTravailleur') ? watch('nomTravailleur') : (accidentData && accidentData.nomTravailleur ? accidentData.nomTravailleur : null));
   const [prenomTravailleur, setPrenomTravailleur] = useState(watch('prenomTravailleur') ? watch('prenomTravailleur') : (accidentData && accidentData.prenomTravailleur ? accidentData.prenomTravailleur : null));
@@ -52,7 +51,6 @@ export default function FormulaireEntreprise({ setValue, accidentData, watch }) 
   const [boolAsCloture, setboolAsCloture] = useState(() => { const watchValue = Boolean(watch('boolAsCloture')); const accidentDataValue = accidentData ? Boolean(accidentData.boolAsCloture) : false; return watchValue || accidentDataValue; });
   const [circonstanceAccident, setCirconstanceAccident] = useState(watch('circonstanceAccident') ? watch('circonstanceAccident') : (accidentData && accidentData.circonstanceAccident ? accidentData.circonstanceAccident : ""));
 
-
   useEffect(() => {
     const data = sessionStorage.getItem('accidentData');
     if (data) {
@@ -62,7 +60,7 @@ export default function FormulaireEntreprise({ setValue, accidentData, watch }) 
   }, []);
 
   useEffect(() => {
-   
+
     sessionStorage.setItem('accidentData', JSON.stringify(formData));
   }, [formData])
 
@@ -118,7 +116,6 @@ export default function FormulaireEntreprise({ setValue, accidentData, watch }) 
     setValue('AssureurStatus', assureurStatus)
     setValue('boolAsCloture', Boolean(boolAsCloture));
     setValue('circonstanceAccident', circonstanceAccident)
-
   }, [circonstanceAccident, boolAsCloture, assureurStatus, blessures, DateHeureAccident, typeAccident, sexe, entreprise, secteur, typeTravailleur, nomTravailleur, prenomTravailleur, dateNaissance, setValue]);
 
   /**
@@ -159,164 +156,162 @@ export default function FormulaireEntreprise({ setValue, accidentData, watch }) 
   }
 
   return (
-   
+
+    <div>
       <div>
         <div>
+          <h2>Formulaire Pris en compte pour les statistiques</h2>
+
+        </div>
+        <div className="autocomplete">
+          {/* *********************************** Autocomplete AssureurStatus **********************************/}
+          <AutoCompleteQ
+            id='AssureurStatus'
+            option={listAssureur.AssureurStatus}
+            label='Status'
+            onChange={(AssureurStatusSelect) => {
+              setAssureurStatus(AssureurStatusSelect);
+              setValue('AssureurStatus', AssureurStatusSelect);
+            }}
+            defaultValue={assureurStatus}
+            required={true}
+          />
+
+          {/* Entreprise */}
+          <AutoCompleteQ
+            id='entreprise'
+            option={entreprises.map(e => e.label)}
+            label='Entreprise'
+            onChange={handleEntrepriseSelect}
+            defaultValue={entreprise}
+            required={true}
+          />
+
+          {/* Secteur */}
+          <AutoCompleteQ
+            id='secteur'
+            option={getLinkedSecteurs()}
+            label='Secteur'
+            onChange={setSecteur}
+            defaultValue={secteur}
+            required={true}
+          />
+
+          {/* Type Travailleur */}
+          <AutoCompleteQ
+            id='typeTravailleur'
+            option={listEntreprises.typeTravailleur}
+            label="Type de travailleur"
+            onChange={setTypeTravailleur}
+            defaultValue={typeTravailleur}
+            required={true}
+          />
+
+          {/* Nom Travailleur */}
+          <TextFieldQ
+            id='nomTravailleur'
+            label='Nom du travailleur'
+            onChange={setNomTravailleur}
+            defaultValue={nomTravailleur}
+            required={true}
+          />
+
+          {/* Prénom Travailleur */}
+          <TextFieldQ
+            id='prenomTravailleur'
+            label='Prénom du travailleur'
+            onChange={setPrenomTravailleur}
+            defaultValue={prenomTravailleur}
+            required={true}
+          />
+
+          {/* Date Naissance */}
+          <DatePickerQ
+            id='dateNaissance'
+            label='Date de naissance'
+            onChange={setDateNaissance}
+            defaultValue={dateNaissance}
+            required={true}
+          />
+
+          {/* Sexe */}
+          <AutoCompleteQ
+            id='sexe'
+            label='Sexe'
+            onChange={setsexe}
+            option={listeDeclarationAssBelfius.ListeSexe}
+            defaultValue={sexe}
+            required={true}
+          />
+
+          {/* Type Accident */}
+          <AutoCompleteQ
+            id='typeAccident'
+            option={listAccident.typeAccident}
+            label='Type d accident'
+            required={true}
+            onChange={setTypeAccident}
+            defaultValue={typeAccident}
+          />
+
+          {/* Date et Heure Accident */}
+          <DateHeurePickerQ
+            id="DateHeureAccident"
+            label="Date et heure de l'accident"
+            required={true}
+            onChange={(DateHeureAccidentChoose) => {
+              setDateHeureAccident(DateHeureAccidentChoose);
+              setValue('DateHeureAccident', DateHeureAccidentChoose);
+            }}
+            defaultValue={DateHeureAccident}
+          />
+          <TextFieldQ
+            id="circonstanceAccident"
+            label="Circonstance de l'accident"
+            required={true}
+            onChange={(circonstanceAccidentText) => {
+              setCirconstanceAccident(circonstanceAccidentText);
+              setValue('circonstanceAccident', circonstanceAccidentText);
+            }}
+            defaultValue={circonstanceAccident}
+          />
+          {/* Blessures */}
+          <TextFieldQ
+            id="blessures"
+            label="Blessures"
+            required={true}
+            onChange={(blessuresText) => {
+              setBlessures(blessuresText);
+              setValue('blessures', blessuresText);
+            }}
+            defaultValue={blessures}
+          />
+
+          {/* Case à cocher Clôturé */}
           <div>
-            <h2>Formulaire Pris en compte pour les statistiques</h2>
-
-          </div>
-          <div className="autocomplete">
-            {/* *********************************** Autocomplete AssureurStatus **********************************/}
-            <AutoCompleteQ
-              id='AssureurStatus'
-              option={listAssureur.AssureurStatus}
-              label='Status'
-              onChange={(AssureurStatusSelect) => {
-                setAssureurStatus(AssureurStatusSelect);
-                setValue('AssureurStatus', AssureurStatusSelect);
-              }}
-              defaultValue={assureurStatus}
-              required={true}
-            />
-
-            {/* Entreprise */}
-            <AutoCompleteQ
-              id='entreprise'
-              option={entreprises.map(e => e.label)}
-              label='Entreprise'
-              onChange={handleEntrepriseSelect}
-              defaultValue={entreprise}
-              required={true}
-            />
-
-            {/* Secteur */}
-            <AutoCompleteQ
-              id='secteur'
-              option={getLinkedSecteurs()}
-              label='Secteur'
-              onChange={setSecteur}
-              defaultValue={secteur}
-              required={true}
-            />
-
-            {/* Type Travailleur */}
-            <AutoCompleteQ
-              id='typeTravailleur'
-              option={listEntreprises.typeTravailleur}
-              label="Type de travailleur"
-              onChange={setTypeTravailleur}
-              defaultValue={typeTravailleur}
-              required={true}
-            />
-
-            {/* Nom Travailleur */}
-            <TextFieldQ
-              id='nomTravailleur'
-              label='Nom du travailleur'
-              onChange={setNomTravailleur}
-              defaultValue={nomTravailleur}
-              required={true}
-            />
-
-            {/* Prénom Travailleur */}
-            <TextFieldQ
-              id='prenomTravailleur'
-              label='Prénom du travailleur'
-              onChange={setPrenomTravailleur}
-              defaultValue={prenomTravailleur}
-              required={true}
-            />
-
-            {/* Date Naissance */}
-            <DatePickerQ
-              id='dateNaissance'
-              label='Date de naissance'
-              onChange={setDateNaissance}
-              defaultValue={dateNaissance}
-              required={true}
-            />
-
-            {/* Sexe */}
-            <AutoCompleteQ
-              id='sexe'
-              label='Sexe'
-              onChange={setsexe}
-              option={listeDeclarationAssBelfius.ListeSexe}
-              defaultValue={sexe}
-              required={true}
-            />
-
-            {/* Type Accident */}
-            <AutoCompleteQ
-              id='typeAccident'
-              option={listAccident.typeAccident}
-              label='Type d accident'
-              required={true}
-              onChange={setTypeAccident}
-              defaultValue={typeAccident}
-            />
-
-            {/* Date et Heure Accident */}
-            <DateHeurePickerQ
-              id="DateHeureAccident"
-              label="Date et heure de l'accident"
-              required={true}
-              onChange={(DateHeureAccidentChoose) => {
-                setDateHeureAccident(DateHeureAccidentChoose);
-                setValue('DateHeureAccident', DateHeureAccidentChoose);
-              }}
-              defaultValue={DateHeureAccident}
-            />
-            <TextFieldQ
-              id="circonstanceAccident"
-              label="Circonstance de l'accident"
-              required={true}
-              onChange={(circonstanceAccidentText) => {
-                setCirconstanceAccident(circonstanceAccidentText);
-                setValue('circonstanceAccident', circonstanceAccidentText);
-              }}
-              defaultValue={circonstanceAccident}
-            />
-            {/* Blessures */}
-            <TextFieldQ
-              id="blessures"
-              label="Blessures"
-              required={true}
-              onChange={(blessuresText) => {
-                setBlessures(blessuresText);
-                setValue('blessures', blessuresText);
-              }}
-              defaultValue={blessures}
-            />
-
-            {/* Case à cocher Clôturé */}
-            <div>
-              <FormGroup>
-                <ControlLabelP
-                  id="boolAsCloture"
-                  label="Clôturé"
-                  onChange={(boolAsClotureCoche) => {
-                    // Assurez-vous que la valeur est bien un booléen
-                    const value = Boolean(boolAsClotureCoche);
-                    setboolAsCloture(value);
-                    // Mettre à jour la valeur dans le formulaire parent
-                    setValue('boolAsCloture', value);
-                    // Mettre à jour formData également
-                    setFormData(prev => ({
-                      ...prev,
-                      boolAsCloture: value
-                    }));
-                  }}
-                  defaultValue={Boolean(boolAsCloture)}
-                />
-              </FormGroup>
-            </div>
-
-
+            <FormGroup>
+              <ControlLabelP
+                id="boolAsCloture"
+                label="Clôturé"
+                onChange={(boolAsClotureCoche) => {
+                  // Assurez-vous que la valeur est bien un booléen
+                  const value = Boolean(boolAsClotureCoche);
+                  setboolAsCloture(value);
+                  // Mettre à jour la valeur dans le formulaire parent
+                  setValue('boolAsCloture', value);
+                  // Mettre à jour formData également
+                  setFormData(prev => ({
+                    ...prev,
+                    boolAsCloture: value
+                  }));
+                }}
+                defaultValue={Boolean(boolAsCloture)}
+              />
+            </FormGroup>
           </div>
         </div>
       </div>
-    
+    </div>
+
   );
 }
