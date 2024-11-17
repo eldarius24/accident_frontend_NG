@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import {
-  FormControl, InputLabel, Select, MenuItem, Checkbox, ListItemText, Box
+  FormControl, InputLabel, Select, MenuItem, Checkbox, ListItemText, Box, Divider, Paper
 } from '@mui/material';
 import { useAccidentStats } from './filters';
 import chargerDonnees from './dataLoader';
@@ -22,7 +22,7 @@ const Statistiques = () => {
   const [tfData, setTfData] = useState([]);
   const [graphs, setGraphs] = useState({
     accidentsBySex: { visible: true, label: "TOTAL Accidents par sexe" },
-    accidentsByDayOfWeek: { visible: true, label: "TOTAL Accidents par jour de la semaine" }, // Nouvelle entrée
+    accidentsByDayOfWeek: { visible: true, label: "TOTAL Accidents par jour de la semaine" },
     accidentsByMonth: { visible: true, label: "TOTAL Accidents par mois" },
     accidentsByYear: { visible: true, label: "TOTAL Accidents par an" },
     accidentsByTypeTravailleur: { visible: true, label: "TOTAL Accidents par type de travailleur" },
@@ -88,7 +88,7 @@ const Statistiques = () => {
       if (savedFilters.selectedCompanies.length > 0) {
         const validCompanies = savedFilters.selectedCompanies.filter(company => companies.includes(company));
         if (validCompanies.length > 0) setSelectedCompanies(validCompanies);
-    }
+      }
 
       // Restaurer la visibilité des graphiques
       if (Object.keys(savedFilters.visibleGraphs).length > 0) {
@@ -671,172 +671,476 @@ const Statistiques = () => {
           </Select>
         </FormControl>
       </Box>
-      <div className="flex flex-col items-center justify-center h-full mb-8">
-        <h2 className="text-center">Total des accidents</h2>
-        <p className="text-3xl font-bold text-center">{stats.totalAccidents}</p>
-      </div>
+      <Paper
+          elevation={3}
+          sx={{
+            border: darkMode ? '1px solid #ffffff' : '1px solid #ee742d',
+            borderRadius: '8px',
+            padding: '20px',
+            margin: '20px 0',
+            color: darkMode ? '#e0e0e0' : '#333333',
+            backgroundColor: darkMode ? '#1a1a1a' : '#ffffff',
+            '&:hover': {
+              boxShadow: darkMode
+                ? '0 8px 16px rgba(255, 255, 255, 0.1)'
+                : '0 8px 16px rgba(238, 116, 45, 0.2)'
+            }
+          }}
+      >
+        <div className="flex flex-col items-center justify-center h-full mb-8">
+          <h2 className="text-center">Total des accidents</h2>
+          <p className="text-3xl font-bold text-center">{stats.totalAccidents}</p>
+        </div>
+      </Paper>
 
       {/* Partie graphiques */}
-      {graphs.accidentsBySex.visible && renderOptimizedChart('pie',
-        memoizedChartData.accidentsBySexData,
-        getRenderConfig('pie', memoizedChartData.accidentsBySexData, {
-          title: "Accidents par sexe",
-          darkMode: darkMode
-        })
+      {graphs.accidentsBySex.visible && (
+        <Paper
+          elevation={3}
+          sx={{
+            border: darkMode ? '1px solid #ffffff' : '1px solid #ee742d',
+            borderRadius: '8px',
+            padding: '20px',
+            margin: '20px 0',
+            backgroundColor: darkMode ? '#1a1a1a' : '#ffffff',
+            '&:hover': {
+              boxShadow: darkMode
+                ? '0 8px 16px rgba(255, 255, 255, 0.1)'
+                : '0 8px 16px rgba(238, 116, 45, 0.2)'
+            }
+          }}
+        >
+          {renderOptimizedChart('pie',
+            memoizedChartData.accidentsBySexData,
+            getRenderConfig('pie', memoizedChartData.accidentsBySexData, {
+              title: "Accidents par sexe",
+              darkMode: darkMode
+            })
+          )}
+        </Paper>
       )}
 
-      {graphs.accidentsByTypeTravailleur.visible && renderOptimizedChart('bar',
-        memoizedChartData.accidentsByTypeTravailleurData,
-        getRenderConfig('bar', memoizedChartData.accidentsByTypeTravailleurData, {
-          title: "Nombre d'accidents par type de travailleur",
-          xAxis: "type",
-          fill: "#82ca9d",
-          darkMode: darkMode
-        })
+      {graphs.accidentsByTypeTravailleur.visible && (
+        <Paper
+          elevation={3}
+          sx={{
+            border: darkMode ? '1px solid #ffffff' : '1px solid #ee742d',
+            borderRadius: '8px',
+            padding: '20px',
+            margin: '20px 0',
+            backgroundColor: darkMode ? '#1a1a1a' : '#ffffff',
+            '&:hover': {
+              boxShadow: darkMode
+                ? '0 8px 16px rgba(255, 255, 255, 0.1)'
+                : '0 8px 16px rgba(238, 116, 45, 0.2)'
+            }
+          }}
+        >
+          {renderOptimizedChart('bar',
+            memoizedChartData.accidentsByTypeTravailleurData,
+            getRenderConfig('bar', memoizedChartData.accidentsByTypeTravailleurData, {
+              title: "Nombre d'accidents par type de travailleur",
+              xAxis: "type",
+              fill: "#82ca9d",
+              darkMode: darkMode
+            })
+          )}
+        </Paper>
       )}
 
-      {graphs.accidentsByAge.visible && renderOptimizedChart('bar',
-        memoizedChartData.accidentsByAgeData,
-        getRenderConfig('bar', memoizedChartData.accidentsByAgeData, {
-          title: "Nombre d'accidents par âge du travailleur",
-          xAxis: "age",
-          fill: "#8884d8",
-          darkMode: darkMode
-        })
+      {graphs.accidentsByAge.visible && (
+        <Paper
+          elevation={3}
+          sx={{
+            border: darkMode ? '1px solid #ffffff' : '1px solid #ee742d',
+            borderRadius: '8px',
+            padding: '20px',
+            margin: '20px 0',
+            backgroundColor: darkMode ? '#1a1a1a' : '#ffffff',
+            '&:hover': {
+              boxShadow: darkMode
+                ? '0 8px 16px rgba(255, 255, 255, 0.1)'
+                : '0 8px 16px rgba(238, 116, 45, 0.2)'
+            }
+          }}
+        >
+          {renderOptimizedChart('bar',
+            memoizedChartData.accidentsByAgeData,
+            getRenderConfig('bar', memoizedChartData.accidentsByAgeData, {
+              title: "Nombre d'accidents par âge du travailleur",
+              xAxis: "age",
+              fill: "#8884d8",
+              darkMode: darkMode
+            })
+          )}
+        </Paper>
       )}
 
-      {graphs.accidentsByDayOfWeek.visible && renderOptimizedChart('bar',
-        memoizedChartData.accidentDayOfWeekData,
-        getRenderConfig('bar', memoizedChartData.accidentDayOfWeekData, {
-          title: "Accidents par jour de la semaine",
-          xAxis: "day",
-          fill: "#FFBB28",
-          darkMode: darkMode
-        })
+      {graphs.accidentsByDayOfWeek.visible && (
+        <Paper
+          elevation={3}
+          sx={{
+            border: darkMode ? '1px solid #ffffff' : '1px solid #ee742d',
+            borderRadius: '8px',
+            padding: '20px',
+            margin: '20px 0',
+            backgroundColor: darkMode ? '#1a1a1a' : '#ffffff',
+            '&:hover': {
+              boxShadow: darkMode
+                ? '0 8px 16px rgba(255, 255, 255, 0.1)'
+                : '0 8px 16px rgba(238, 116, 45, 0.2)'
+            }
+          }}
+        >
+          {renderOptimizedChart('bar',
+            memoizedChartData.accidentDayOfWeekData,
+            getRenderConfig('bar', memoizedChartData.accidentDayOfWeekData, {
+              title: "Accidents par jour de la semaine",
+              xAxis: "day",
+              fill: "#FFBB28",
+              darkMode: darkMode
+            })
+          )}
+        </Paper>
       )}
 
-      {graphs.accidentsByMonth.visible && renderOptimizedChart('bar',
-        memoizedChartData.accidentMonthData,
-        getRenderConfig('bar', memoizedChartData.accidentMonthData, {
-          title: "Nombre total d'accidents par mois",
-          xAxis: "month",
-          fill: "#82ca9d",
-          darkMode: darkMode
-        })
+      {graphs.accidentsByMonth.visible && (
+        <Paper
+          elevation={3}
+          sx={{
+            border: darkMode ? '1px solid #ffffff' : '1px solid #ee742d',
+            borderRadius: '8px',
+            padding: '20px',
+            margin: '20px 0',
+            backgroundColor: darkMode ? '#1a1a1a' : '#ffffff',
+            '&:hover': {
+              boxShadow: darkMode
+                ? '0 8px 16px rgba(255, 255, 255, 0.1)'
+                : '0 8px 16px rgba(238, 116, 45, 0.2)'
+            }
+          }}
+        >
+          {renderOptimizedChart('bar',
+            memoizedChartData.accidentMonthData,
+            getRenderConfig('bar', memoizedChartData.accidentMonthData, {
+              title: "Nombre total d'accidents par mois",
+              xAxis: "month",
+              fill: "#82ca9d",
+              darkMode: darkMode
+            })
+          )}
+        </Paper>
       )}
 
-      {graphs.accidentsByYear.visible && renderOptimizedChart('bar',
-        memoizedChartData.accidentYearData,
-        getRenderConfig('bar', memoizedChartData.accidentYearData, {
-          title: "Nombre total d'accidents par an",
-          xAxis: "year",
-          fill: "#ffc658",
-          darkMode: darkMode
-        })
+      {graphs.accidentsByYear.visible && (
+        <Paper
+          elevation={3}
+          sx={{
+            border: darkMode ? '1px solid #ffffff' : '1px solid #ee742d',
+            borderRadius: '8px',
+            padding: '20px',
+            margin: '20px 0',
+            backgroundColor: darkMode ? '#1a1a1a' : '#ffffff',
+            '&:hover': {
+              boxShadow: darkMode
+                ? '0 8px 16px rgba(255, 255, 255, 0.1)'
+                : '0 8px 16px rgba(238, 116, 45, 0.2)'
+            }
+          }}
+        >
+          {renderOptimizedChart('bar',
+            memoizedChartData.accidentYearData,
+            getRenderConfig('bar', memoizedChartData.accidentYearData, {
+              title: "Nombre total d'accidents par an",
+              xAxis: "year",
+              fill: "#ffc658",
+              darkMode: darkMode
+            })
+          )}
+        </Paper>
       )}
 
-      {graphs.accidentsBySector.visible && renderOptimizedChart('pie',
-        memoizedChartData.accidentSectorData,
-        getRenderConfig('pie', memoizedChartData.accidentSectorData, {
-          title: "Accidents par secteur",
-          darkMode: darkMode
-        })
+      {graphs.accidentsBySector.visible && (
+        <Paper
+          elevation={3}
+          sx={{
+            border: darkMode ? '1px solid #ffffff' : '1px solid #ee742d',
+            borderRadius: '8px',
+            padding: '20px',
+            margin: '20px 0',
+            backgroundColor: darkMode ? '#1a1a1a' : '#ffffff',
+            '&:hover': {
+              boxShadow: darkMode
+                ? '0 8px 16px rgba(255, 255, 255, 0.1)'
+                : '0 8px 16px rgba(238, 116, 45, 0.2)'
+            }
+          }}
+        >
+          {renderOptimizedChart('pie',
+            memoizedChartData.accidentSectorData,
+            getRenderConfig('pie', memoizedChartData.accidentSectorData, {
+              title: "Accidents par secteur",
+              darkMode: darkMode
+            })
+          )}
+        </Paper>
       )}
 
-      {graphs.accidentsByYearAndCompany.visible && renderOptimizedChart('line',
-        memoizedChartData.accidentYearByCompanyData,
-        getRenderConfig('line', memoizedChartData.accidentYearByCompanyData, {
-          title: "Accidents par an et par entreprise",
-          xAxis: "year",
-          darkMode: darkMode,
-          series: Object.keys(stats.accidentsByYearByCompany)
-        })
+      {graphs.accidentsByYearAndCompany.visible && (
+        <Paper
+          elevation={3}
+          sx={{
+            border: darkMode ? '1px solid #ffffff' : '1px solid #ee742d',
+            borderRadius: '8px',
+            padding: '20px',
+            margin: '20px 0',
+            backgroundColor: darkMode ? '#1a1a1a' : '#ffffff',
+            '&:hover': {
+              boxShadow: darkMode
+                ? '0 8px 16px rgba(255, 255, 255, 0.1)'
+                : '0 8px 16px rgba(238, 116, 45, 0.2)'
+            }
+          }}
+        >
+          {renderOptimizedChart('line',
+            memoizedChartData.accidentYearByCompanyData,
+            getRenderConfig('line', memoizedChartData.accidentYearByCompanyData, {
+              title: "Accidents par an et par entreprise",
+              xAxis: "year",
+              darkMode: darkMode,
+              series: Object.keys(stats.accidentsByYearByCompany)
+            })
+          )}
+        </Paper>
       )}
 
-      {graphs.accidentsByMonthAndCompany.visible && renderOptimizedChart('line',
-        memoizedChartData.accidentMonthByCompanyData,
-        getRenderConfig('line', memoizedChartData.accidentMonthByCompanyData, {
-          title: "Accidents par mois et par entreprise",
-          xAxis: "month",
-          darkMode: darkMode,
-          series: Object.keys(stats.accidentsByMonthByCompany)
+      {graphs.accidentsByMonthAndCompany.visible && (
+        <Paper
+          elevation={3}
+          sx={{
+            border: darkMode ? '1px solid #ffffff' : '1px solid #ee742d',
+            borderRadius: '8px',
+            padding: '20px',
+            margin: '20px 0',
+            backgroundColor: darkMode ? '#1a1a1a' : '#ffffff',
+            '&:hover': {
+              boxShadow: darkMode
+                ? '0 8px 16px rgba(255, 255, 255, 0.1)'
+                : '0 8px 16px rgba(238, 116, 45, 0.2)'
+            }
+          }}
+        >
+          {renderOptimizedChart('line',
+            memoizedChartData.accidentMonthByCompanyData,
+            getRenderConfig('line', memoizedChartData.accidentMonthByCompanyData, {
+              title: "Accidents par mois et par entreprise",
+              xAxis: "month",
+              darkMode: darkMode,
+              series: Object.keys(stats.accidentsByMonthByCompany)
 
-        })
+            })
+          )}
+        </Paper>
       )}
 
-      {graphs.tfByYearAndCompany.visible && tfData.length > 0 && renderOptimizedChart(
-        'tfYearCompany',
-        null,
-        getRenderConfig('tfYearCompany', null, {
-          data: tfData,
-          selectedYears: selectedYears,
-          darkMode: darkMode
-        })
+      {graphs.tfByYearAndCompany.visible && tfData.length > 0 && (
+        <Paper
+          elevation={3}
+          sx={{
+            border: darkMode ? '1px solid #ffffff' : '1px solid #ee742d',
+            borderRadius: '8px',
+            padding: '20px',
+            margin: '20px 0',
+            backgroundColor: darkMode ? '#1a1a1a' : '#ffffff',
+            '&:hover': {
+              boxShadow: darkMode
+                ? '0 8px 16px rgba(255, 255, 255, 0.1)'
+                : '0 8px 16px rgba(238, 116, 45, 0.2)'
+            }
+          }}
+        >
+          {renderOptimizedChart(
+            'tfYearCompany',
+            null,
+            getRenderConfig('tfYearCompany', null, {
+              data: tfData.filter(item => selectedCompanies.includes(item.company)),
+              selectedYears: selectedYears,
+              darkMode: darkMode
+            })
+          )}
+        </Paper>
       )}
 
-
-      {graphs.accidentsBySexByCompany.visible && renderOptimizedChart(
-        'genderByCompany',
-        null,
-        getRenderConfig('genderByCompany', null, {
-          companies: memoizedChartData.accidentsBySexByCompanyData,
-          darkMode: darkMode
-        })
+      {graphs.accidentsBySexByCompany.visible && (
+        <Paper
+          elevation={3}
+          sx={{
+            border: darkMode ? '1px solid #ffffff' : '1px solid #ee742d',
+            borderRadius: '8px',
+            padding: '20px',
+            margin: '20px 0',
+            backgroundColor: darkMode ? '#1a1a1a' : '#ffffff',
+            '&:hover': {
+              boxShadow: darkMode
+                ? '0 8px 16px rgba(255, 255, 255, 0.1)'
+                : '0 8px 16px rgba(238, 116, 45, 0.2)'
+            }
+          }}
+        >
+          {renderOptimizedChart(
+            'genderByCompany',
+            null,
+            getRenderConfig('genderByCompany', null, {
+              companies: memoizedChartData.accidentsBySexByCompanyData,
+              darkMode: darkMode
+            })
+          )}
+        </Paper>
       )}
 
-      {graphs.accidentsByCompanyAndSector.visible && renderOptimizedChart(
-        'accidentSectorCompany',
-        null,
-        getRenderConfig('accidentSectorCompany', null, {
-          title: "Accidents par entreprise par secteur",
-          darkMode: darkMode,
-          companies: Object.keys(stats.accidentsByCompany).map(companyName => ({
-            company: companyName,
-            data: stats.accidentsByCompany[companyName],
-          }))
-        })
+      {graphs.accidentsByCompanyAndSector.visible && (
+        <Paper
+          elevation={3}
+          sx={{
+            border: darkMode ? '1px solid #ffffff' : '1px solid #ee742d',
+            borderRadius: '8px',
+            padding: '20px',
+            margin: '20px 0',
+            backgroundColor: darkMode ? '#1a1a1a' : '#ffffff',
+            '&:hover': {
+              boxShadow: darkMode
+                ? '0 8px 16px rgba(255, 255, 255, 0.1)'
+                : '0 8px 16px rgba(238, 116, 45, 0.2)'
+            }
+          }}
+        >
+          {renderOptimizedChart(
+            'accidentSectorCompany',
+            null,
+            getRenderConfig('accidentSectorCompany', null, {
+              title: "Accidents par entreprise par secteur",
+              darkMode: darkMode,
+              companies: Object.keys(stats.accidentsByCompany).map(companyName => ({
+                company: companyName,
+                data: stats.accidentsByCompany[companyName],
+              }))
+            })
+          )}
+        </Paper>
       )}
 
-      {graphs.accidentsByDayOfWeekAndCompany.visible && renderOptimizedChart(
-        'dayOfWeekCompany',
-        null,
-        getRenderConfig('dayOfWeekCompany', null, {
-          data: memoizedChartData.accidentsByDayOfWeekByCompanyData,
-          darkMode: darkMode
-        })
+      {graphs.accidentsByDayOfWeekAndCompany.visible && (
+        <Paper
+          elevation={3}
+          sx={{
+            border: darkMode ? '1px solid #ffffff' : '1px solid #ee742d',
+            borderRadius: '8px',
+            padding: '20px',
+            margin: '20px 0',
+            backgroundColor: darkMode ? '#1a1a1a' : '#ffffff',
+            '&:hover': {
+              boxShadow: darkMode
+                ? '0 8px 16px rgba(255, 255, 255, 0.1)'
+                : '0 8px 16px rgba(238, 116, 45, 0.2)'
+            }
+          }}
+        >
+          {renderOptimizedChart(
+            'dayOfWeekCompany',
+            null,
+            getRenderConfig('dayOfWeekCompany', null, {
+              data: memoizedChartData.accidentsByDayOfWeekByCompanyData,
+              darkMode: darkMode
+            })
+          )}
+        </Paper>
       )}
 
-      {graphs.accidentsByAgeByCompany.visible && renderOptimizedChart('ageByCompany',
-        null,
-        getRenderConfig('ageByCompany', null, {
-          title: "Accidents par âge du travailleur et par entreprise",
-          companies: memoizedChartData.accidentsByAgeByCompanyData,
-          darkMode: darkMode
-        })
+      {graphs.accidentsByAgeByCompany.visible && (
+        <Paper
+          elevation={3}
+          sx={{
+            border: darkMode ? '1px solid #ffffff' : '1px solid #ee742d',
+            borderRadius: '8px',
+            padding: '20px',
+            margin: '20px 0',
+            backgroundColor: darkMode ? '#1a1a1a' : '#ffffff',
+            '&:hover': {
+              boxShadow: darkMode
+                ? '0 8px 16px rgba(255, 255, 255, 0.1)'
+                : '0 8px 16px rgba(238, 116, 45, 0.2)'
+            }
+          }}
+        >
+          {renderOptimizedChart('ageByCompany',
+            null,
+            getRenderConfig('ageByCompany', null, {
+              title: "Accidents par âge du travailleur et par entreprise",
+              companies: memoizedChartData.accidentsByAgeByCompanyData,
+              darkMode: darkMode
+            })
+          )}
+        </Paper>
       )}
 
-      {graphs.accidentsByTypeTravailleurByCompany.visible && renderOptimizedChart('workerTypeByCompany',
-        null,
-        getRenderConfig('workerTypeByCompany', null, {
-          title: "Accidents par type de travailleur et par entreprise",
-          darkMode: darkMode,
-          companies: Object.entries(stats.accidentsByTypeTravailleurByCompany).map(([company, typeTravailleurData]) => ({
-            company,
-            data: Object.entries(typeTravailleurData).map(([typeTravailleur, NombreAT]) => ({
-              typeTravailleur,
-              NombreAT
-            }))
-          }))
-        })
+      {graphs.accidentsByTypeTravailleurByCompany.visible && (
+        <Paper
+          elevation={3}
+          sx={{
+            border: darkMode ? '1px solid #ffffff' : '1px solid #ee742d',
+            borderRadius: '8px',
+            padding: '20px',
+            margin: '20px 0',
+            backgroundColor: darkMode ? '#1a1a1a' : '#ffffff',
+            '&:hover': {
+              boxShadow: darkMode
+                ? '0 8px 16px rgba(255, 255, 255, 0.1)'
+                : '0 8px 16px rgba(238, 116, 45, 0.2)'
+            }
+          }}
+        >
+          {renderOptimizedChart('workerTypeByCompany',
+            null,
+            getRenderConfig('workerTypeByCompany', null, {
+              title: "Accidents par type de travailleur et par entreprise",
+              darkMode: darkMode,
+              companies: Object.entries(stats.accidentsByTypeTravailleurByCompany).map(([company, typeTravailleurData]) => ({
+                company,
+                data: Object.entries(typeTravailleurData).map(([typeTravailleur, NombreAT]) => ({
+                  typeTravailleur,
+                  NombreAT
+                }))
+              }))
+            })
+          )}
+        </Paper>
       )}
 
-      {graphs.tfByCompany.visible && renderOptimizedChart('tfByCompany',
-        null,
-        getRenderConfig('tfByCompany', null, {
-          companies: detailedTfData,
-          selectedYears: selectedYears,
-          darkMode: darkMode
-        })
+      {graphs.tfByCompany.visible && (
+        <Paper
+          elevation={3}
+          sx={{
+            border: darkMode ? '1px solid #ffffff' : '1px solid #ee742d',
+            borderRadius: '8px',
+            padding: '20px',
+            margin: '20px 0',
+            backgroundColor: darkMode ? '#1a1a1a' : '#ffffff',
+            '&:hover': {
+              boxShadow: darkMode
+                ? '0 8px 16px rgba(255, 255, 255, 0.1)'
+                : '0 8px 16px rgba(238, 116, 45, 0.2)'
+            }
+          }}
+        >
+          {renderOptimizedChart('tfByCompany',
+            null,
+            getRenderConfig('tfByCompany', null, {
+              companies: detailedTfData.filter(item => selectedCompanies.includes(item.company)),
+              selectedYears: selectedYears,
+              darkMode: darkMode
+            })
+          )}
+        </Paper>
       )}
 
       <div className="image-cortigroupe"></div>
