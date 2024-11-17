@@ -27,13 +27,19 @@ const TextFieldP = forwardRef(({ id, label, onChange, value, defaultValue, ...pr
         },
     };
 
+    // Détermine les props de valeur à utiliser
+    const valueProps = value !== undefined 
+        ? { value } 
+        : defaultValue !== undefined 
+            ? { defaultValue }
+            : { value: '' };
+
     return (
         <div style={{ display: 'flex', justifyContent: 'center', margin: '0 auto 1rem' }}>
             <TextField
                 ref={ref}
                 id={id}
                 label={label}
-                {...(value !== undefined ? { value } : { defaultValue })}
                 onChange={handleChange}
                 sx={{
                     ...darkModeStyles,
@@ -41,10 +47,14 @@ const TextFieldP = forwardRef(({ id, label, onChange, value, defaultValue, ...pr
                     boxShadow: 3,
                 }}
                 multiline
+                {...valueProps}
                 {...props}
             />
         </div>
     );
 });
+
+// Ajout du displayName pour une meilleure débogage
+TextFieldP.displayName = 'TextFieldP';
 
 export default TextFieldP;
