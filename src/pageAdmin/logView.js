@@ -408,6 +408,7 @@ const LogsViewer = () => {
             </Tooltip>
           </Grid>
           <Grid item xs={12}>
+          <h1 className="text-2xl font-bold text-center mb-4" style={{ color: darkMode ? '#ffffff' : '#6e6e6e' }}>⚠️⚠️Les logs sont supprimers automatiquement apres 30 jours⚠️⚠️</h1>
             <Pagination style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }} count={totalPages} page={page} onChange={handlePageChange} color="primary" />
             <TableContainer className="frameStyle-style"
               style={{

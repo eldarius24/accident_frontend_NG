@@ -13,7 +13,8 @@ import {
     TableRow,
     Button,
     LinearProgress,
-    Tooltip
+    Tooltip,
+    Paper
 } from '@mui/material';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import { confirmAlert } from 'react-confirm-alert';
@@ -172,12 +173,22 @@ export default function AddSecteur() {
     }
 
     return (
-        <form onSubmit={handleSubmit(onSubmit)}>
-            <div style={{
-                backgroundColor: darkMode ? '#6e6e6e' : '#ffffff',
-                color: darkMode ? '#ffffff' : '#000000',
-                margin: '0 20px'
-            }}>
+        <form style={{ margin: '0 20px' }} onSubmit={handleSubmit(onSubmit)}>
+            <Paper
+                elevation={3}
+                sx={{
+                    border: darkMode ? '1px solid #ffffff' : '1px solid #ee742d',
+                    borderRadius: '8px',
+                    padding: '20px',
+                    margin: '20px 0',
+                    backgroundColor: darkMode ? '#1a1a1a' : '#ffffff',
+                    '&:hover': {
+                        boxShadow: darkMode
+                            ? '0 8px 16px rgba(255, 255, 255, 0.1)'
+                            : '0 8px 16px rgba(238, 116, 45, 0.2)'
+                    }
+                }}
+            >
                 <h2>Créer un nouveau secteur pour {entreprise.AddEntreName}</h2>
 
                 <TextFieldP
@@ -226,7 +237,7 @@ export default function AddSecteur() {
                         </Button>
                     </Tooltip>
                 </div>
-
+</Paper>
                 <div>
                     <h2>Secteurs de l'entreprise</h2>
                     <TableContainer
@@ -345,7 +356,7 @@ export default function AddSecteur() {
                         </Table>
                     </TableContainer>
                 </div>
-            </div>
+           
             <CustomSnackbar
                 open={snackbar.open}
                 handleClose={handleCloseSnackbar}
