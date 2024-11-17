@@ -161,10 +161,7 @@ export default function FormulaireAccident({ setValue, accidentData, watch }) {
    * Etape 3 : retourner le formulaire (IHMs)
    */
   return (
-    <div className="frameStyle-style" style={{
-      backgroundColor: darkMode ? '#6e6e6e' : '#ffffff',
-      color: darkMode ? '#ffffff' : '#000000',
-    }}>
+    
       <div>
         <div className="infoAccident">
           <h2>Infos Accident</h2>
@@ -351,10 +348,10 @@ export default function FormulaireAccident({ setValue, accidentData, watch }) {
                 {getPreviewContent().content}
               </div>
             </DialogContent>
-           
+
           </Dialog>
         </div>
       </div>
-    </div>
+    
   );
 }

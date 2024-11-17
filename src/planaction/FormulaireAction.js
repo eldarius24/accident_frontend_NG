@@ -10,6 +10,7 @@ import config from '../config.json';
 import {
     Button,
     LinearProgress,
+    Paper,
     Tooltip
 } from '@mui/material';
 import TextFieldP from '../_composants/textFieldP';
@@ -70,20 +71,20 @@ export default function FormulaireAction() {
     const [yearOptions] = useState(generateYearOptions());
 
     useEffect(() => {
-/**
- * Fetches actions, enterprises, and sectors data from APIs concurrently.
- * 
- * - Sets actions data in component state.
- * - Transforms and filters enterprises data based on user role:
- *   - Maps enterprises to include only their name and ID.
- *   - If the user is not an admin, filters enterprises to those the user is a conseiller for.
- * - Sets enterprises and sectors data in component state.
- * - Initializes available sectors with sector names.
- * - Displays an error message in a snackbar if the fetching fails.
- * - Sets loading state to false after completion.
- * 
- * @async
- */
+        /**
+         * Fetches actions, enterprises, and sectors data from APIs concurrently.
+         * 
+         * - Sets actions data in component state.
+         * - Transforms and filters enterprises data based on user role:
+         *   - Maps enterprises to include only their name and ID.
+         *   - If the user is not an admin, filters enterprises to those the user is a conseiller for.
+         * - Sets enterprises and sectors data in component state.
+         * - Initializes available sectors with sector names.
+         * - Displays an error message in a snackbar if the fetching fails.
+         * - Sets loading state to false after completion.
+         * 
+         * @async
+         */
         const fetchData = async () => {
             try {
                 const [actionsResponse, enterprisesResponse, sectorsResponse] = await Promise.all([
@@ -229,62 +230,79 @@ export default function FormulaireAction() {
     }
 
     return (
-        <form className="background-image" onSubmit={handleSubmit(onSubmit)}>
-            <h3 style={{ color: darkMode ? '#ffffff' : 'inherit' }}>{actionData ? 'Modifier une action' : 'Ajouter une action'}</h3>
-            <AutoCompleteQ
-                id='AddActionanne'
-                option={yearOptions}
-                label="L'action est pour le plan d'actions de l'année"
-                onChange={(yearSelect) => {
-                    setAddActionanne(yearSelect);
-                    setValue('AddActionanne', yearSelect);
-                }}
-                defaultValue={AddActionanne}
-                required={true}
-            />
-            <AutoCompleteP id='AddActoinmoi' option={listeaddaction.AddActoinmoi} label="L'action doit être réalisée au plus tard pour" onChange={(AddActoinmoiSelect) => {
-                setAddActoinmoi(AddActoinmoiSelect);
-                setValue('AddActoinmoi', AddActoinmoiSelect);
-            }} defaultValue={AddActoinmoi} />
-            <AutoCompleteQ
-                id='AddActionEntreprise'
-                option={enterprises.map(e => e.label)}
-                label="L'action vise l'entreprise"
-                onChange={handleEnterpriseSelect}
-                defaultValue={AddActionEntreprise}
-                required={true}
-            />
-            <AutoCompleteQ
-                id='AddActionSecteur'
-                option={AddActionEntreprise ? availableSectors : ['No options']}
-                label="L'action vise le secteur"
-                onChange={(sector) => {
-                    if (sector !== 'No options') {
-                        setAddActionSecteur(sector);
-                        setValue('AddActionSecteur', sector);
+
+        <form className="background-image" style={{ margin: '0 20px' }} onSubmit={handleSubmit(onSubmit)}>
+            <Paper
+                elevation={3}
+                sx={{
+                    border: darkMode ? '1px solid #ffffff' : '1px solid #ee742d',
+                    borderRadius: '8px',
+                    padding: '20px',
+                    margin: '20px 0',
+                    backgroundColor: darkMode ? '#1a1a1a' : '#ffffff',
+                    '&:hover': {
+                        boxShadow: darkMode
+                            ? '0 8px 16px rgba(255, 255, 255, 0.1)'
+                            : '0 8px 16px rgba(238, 116, 45, 0.2)'
                     }
                 }}
-                defaultValue={AddActionSecteur}
-                disabled={!AddActionEntreprise}
-                required={true}
-            />
-            <TextFieldQ id='AddAction' label="Quelle action ajouter" onChange={setAddAction} defaultValue={AddAction} required={true} />
-            <DatePickerQ id='AddActionDate' label="Date de l'ajout de l'action" onChange={setAddActionDate} defaultValue={AddActionDate} required={true} />
-            <TextFieldP id='AddActionQui' label="Qui doit s'occuper de l'action" onChange={setAddActionQui} defaultValue={AddActionQui} />
-            <AutoCompleteCM
-                id='AddActionDange'
-                option={listeaddaction.AddActionDange}
-                label="Type de risque"
-                onChange={(AddActionDangeSelect) => {
-                    if (!Array.isArray(AddActionDangeSelect) || AddActionDangeSelect.length === 0) {
-                        showSnackbar('Au moins un type de risque doit être sélectionné', 'warning');
-                    }
-                    setAddActionDange(AddActionDangeSelect);
-                    setValue('AddActionDange', AddActionDangeSelect);
-                }}
-                defaultValue={AddActionDange}
-                required={true}
-            />
+            >
+                <h3 style={{ color: darkMode ? '#ffffff' : 'inherit' }}>{actionData ? 'Modifier une action' : 'Ajouter une action'}</h3>
+                <AutoCompleteQ
+                    id='AddActionanne'
+                    option={yearOptions}
+                    label="L'action est pour le plan d'actions de l'année"
+                    onChange={(yearSelect) => {
+                        setAddActionanne(yearSelect);
+                        setValue('AddActionanne', yearSelect);
+                    }}
+                    defaultValue={AddActionanne}
+                    required={true}
+                />
+                <AutoCompleteP id='AddActoinmoi' option={listeaddaction.AddActoinmoi} label="L'action doit être réalisée au plus tard pour" onChange={(AddActoinmoiSelect) => {
+                    setAddActoinmoi(AddActoinmoiSelect);
+                    setValue('AddActoinmoi', AddActoinmoiSelect);
+                }} defaultValue={AddActoinmoi} />
+                <AutoCompleteQ
+                    id='AddActionEntreprise'
+                    option={enterprises.map(e => e.label)}
+                    label="L'action vise l'entreprise"
+                    onChange={handleEnterpriseSelect}
+                    defaultValue={AddActionEntreprise}
+                    required={true}
+                />
+                <AutoCompleteQ
+                    id='AddActionSecteur'
+                    option={AddActionEntreprise ? availableSectors : ['No options']}
+                    label="L'action vise le secteur"
+                    onChange={(sector) => {
+                        if (sector !== 'No options') {
+                            setAddActionSecteur(sector);
+                            setValue('AddActionSecteur', sector);
+                        }
+                    }}
+                    defaultValue={AddActionSecteur}
+                    disabled={!AddActionEntreprise}
+                    required={true}
+                />
+                <TextFieldQ id='AddAction' label="Quelle action ajouter" onChange={setAddAction} defaultValue={AddAction} required={true} />
+                <DatePickerQ id='AddActionDate' label="Date de l'ajout de l'action" onChange={setAddActionDate} defaultValue={AddActionDate} required={true} />
+                <TextFieldP id='AddActionQui' label="Qui doit s'occuper de l'action" onChange={setAddActionQui} defaultValue={AddActionQui} />
+                <AutoCompleteCM
+                    id='AddActionDange'
+                    option={listeaddaction.AddActionDange}
+                    label="Type de risque"
+                    onChange={(AddActionDangeSelect) => {
+                        if (!Array.isArray(AddActionDangeSelect) || AddActionDangeSelect.length === 0) {
+                            showSnackbar('Au moins un type de risque doit être sélectionné', 'warning');
+                        }
+                        setAddActionDange(AddActionDangeSelect);
+                        setValue('AddActionDange', AddActionDangeSelect);
+                    }}
+                    defaultValue={AddActionDange}
+                    required={true}
+                />
+            </Paper>
             <div style={{ display: 'flex', justifyContent: 'center' }}>
                 <Tooltip title={`Cliquez ici pour ${actionData ? 'modifier' : 'créer'} l'action (certains champs doivent être obligatoirement remplis)`} arrow>
                     <Button
@@ -293,7 +311,7 @@ export default function FormulaireAction() {
                             backgroundColor: darkMode ? '#424242' : '#ee752d60',
                             color: darkMode ? '#ffffff' : 'black',
                             transition: 'all 0.3s ease-in-out',
-                            '&:hover': { 
+                            '&:hover': {
                                 backgroundColor: darkMode ? '#7a8e1c' : '#95ad22',
                                 transform: 'scale(1.08)',
                                 boxShadow: darkMode ? '0 6px 12px rgba(255,255,255,0.2)' : 6
@@ -314,7 +332,7 @@ export default function FormulaireAction() {
                             '@media (max-width: 550px)': {
                                 fontSize: '1.5rem',
                             },
-                         }}
+                        }}
                         variant="contained"
                     >
                         {actionData ? 'Modifier l\'action' : 'Créer l\'action'}
@@ -331,6 +349,8 @@ export default function FormulaireAction() {
             <Tooltip title="Si vous rencontrez un souci avec le site, envoyez un mail à l'adresse suivante : bgillet.lecortil@cortigroupe.be et expliquez le problème rencontré" arrow>
                 <h5 style={{ marginBottom: '40px' }}> Développé par Remy et Benoit pour Le Cortigroupe.</h5>
             </Tooltip>
+
         </form>
+
     );
 }

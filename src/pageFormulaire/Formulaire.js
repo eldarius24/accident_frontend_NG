@@ -13,7 +13,7 @@ import FormulaireSalarie from './formulaireSalarie';
 import FormulaireDeclarationASSBelfius from './formulaireDeclarationAssBelfius';
 import config from '../config.json';
 import CustomSnackbar from '../_composants/CustomSnackbar';
-import { Tooltip, Button } from '@mui/material';
+import { Tooltip, Button, Paper } from '@mui/material';
 import { useLogger } from '../Hook/useLogger';
 import { useTheme } from '../pageAdmin/user/ThemeContext';
 
@@ -118,7 +118,7 @@ export default function Formulaire() {
                 display: 'flex',
                 justifyContent: 'center',
                 marginTop: '1.5rem',
-                
+
             }}>
                 {activeStep > 0 && (
                     <Tooltip title="Cliquez ici pour revenir au formulaire précédent" arrow>
@@ -181,7 +181,23 @@ export default function Formulaire() {
     return (
         <form className="background-image" onSubmit={handleSubmit(onSubmit)} style={{ margin: '0 20px' }}>
             {renderNavigationButtons('top')}
-            {React.createElement(forms[activeStep].component, { setValue, accidentData, watch })}
+            <Paper
+                elevation={3}
+                sx={{
+                    border: darkMode ? '1px solid #ffffff' : '1px solid #ee742d',
+                    borderRadius: '8px',
+                    padding: '20px',
+                    margin: '20px 0',
+                    backgroundColor: darkMode ? '#1a1a1a' : '#ffffff',
+                    '&:hover': {
+                        boxShadow: darkMode
+                            ? '0 8px 16px rgba(255, 255, 255, 0.1)'
+                            : '0 8px 16px rgba(238, 116, 45, 0.2)'
+                    }
+                }}
+            >
+                {React.createElement(forms[activeStep].component, { setValue, accidentData, watch })}
+            </Paper>
             {renderNavigationButtons('bottom')}
 
             <h3 style={{ color: darkMode ? '#ffffff' : 'inherit' }}>Pour savoir s'il s'agit d'un accident grave, rendez-vous sur le site Fedris via le lien ci-dessous</h3>

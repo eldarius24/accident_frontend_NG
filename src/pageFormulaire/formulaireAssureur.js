@@ -56,10 +56,7 @@ export default function FormulaireAssureur({ setValue, accidentData, watch }) {
    * Etape 3 : retourner le formulaire (IHMs)
    */
   return (
-    <div className="frameStyle-style" style={{
-      backgroundColor: darkMode ? '#6e6e6e' : '#ffffff',
-      color: darkMode ? '#ffffff' : '#000000',
-    }}>
+    
       <div>
         <div className="infoAssureur">
           <h2>Infos Assureur</h2>
@@ -104,7 +101,7 @@ export default function FormulaireAssureur({ setValue, accidentData, watch }) {
           
         </div>
       </div>
-    </div>
+    
   );
 }
 

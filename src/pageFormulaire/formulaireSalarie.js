@@ -133,10 +133,7 @@ export default function FormulaireSalarie({ setValue, accidentData, watch }) {
    * Etape 3 : retourner le formulaire (IHMs)
    */
   return (
-    <div className="frameStyle-style" style={{
-      backgroundColor: darkMode ? '#6e6e6e' : '#ffffff',
-      color: darkMode ? '#ffffff' : '#000000',
-    }}>
+    
       <div>
         <h2>Infos du travailleur</h2>
         <h3 style={{ color: darkMode ? '#ffffff' : 'inherit' }}>Rentrez les informations sur la victime de l'accident de travail.</h3>
@@ -199,6 +196,6 @@ export default function FormulaireSalarie({ setValue, accidentData, watch }) {
         <TextFieldP id="numAffiliation" label="Numéro d'affiliation" onChange={setnumAffiliation} defaultValue={numAffiliation} />
 
       </div>
-    </div>
+    
   );
 }

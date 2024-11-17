@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import '../pageFormulaire/formulaire.css';
-import { Box, Tooltip } from '@mui/material';
-import Button from '@mui/material/Button';
+import { Box, Paper, Tooltip } from '@mui/material';
+import  Button from '@mui/material/Button';
 import { Link } from 'react-router-dom';
 import { useTheme } from '../pageAdmin/user/ThemeContext';
 /**
@@ -38,12 +38,22 @@ export default function AdminPanelSettingsaction() {
     );
 
     return (
-        <div>
-            <div className="frameStyle-style" style={{
-                backgroundColor: darkMode ? '#6e6e6e' : '#ffffff',
-                color: darkMode ? '#ffffff' : '#000000',
-                margin: '0 20px'
-            }}>
+        <div style={{ margin: '0 20px' }}>
+            <Paper
+                elevation={3}
+                sx={{
+                    border: darkMode ? '1px solid #ffffff' : '1px solid #ee742d',
+                    borderRadius: '8px',
+                    padding: '20px',
+                    margin: '20px 0',
+                    backgroundColor: darkMode ? '#1a1a1a' : '#ffffff',
+                    '&:hover': {
+                        boxShadow: darkMode
+                            ? '0 8px 16px rgba(255, 255, 255, 0.1)'
+                            : '0 8px 16px rgba(238, 116, 45, 0.2)'
+                    }
+                }}
+            >
                 <h3 style={{ color: darkMode ? '#ffffff' : 'inherit' }}>Administration des droits</h3>
 
                 <Box sx={{
@@ -222,7 +232,7 @@ export default function AdminPanelSettingsaction() {
                         </Button>
                     </Tooltip>
                 </Box>
-            </div>
+            </Paper>
             <div className="image-cortigroupe"></div>
             <Tooltip title="Développé par Remy et Benoit pour Le Cortigroupe." arrow>
                 <h5 style={{ marginBottom: '40px' }}> Développé par Remy et Benoit pour Le Cortigroupe.</h5>

@@ -363,11 +363,22 @@ const QuesEntrep = () => {
 
     // JSX du composant
     return (
-        <form onSubmit={handleSubmit} className="background-image">
-            <div className="frameStyle-style" style={{
-                backgroundColor: darkMode ? '#6e6e6e' : '#ffffff',
-                color: darkMode ? '#ffffff' : '#000000',
-            }}>
+        <form onSubmit={handleSubmit} style={{ margin: '0 20px' }} className="background-image">
+            <Paper
+                elevation={3}
+                sx={{
+                    border: darkMode ? '1px solid #ffffff' : '1px solid #ee742d',
+                    borderRadius: '8px',
+                    padding: '20px',
+                    margin: '20px 0',
+                    backgroundColor: darkMode ? '#1a1a1a' : '#ffffff',
+                    '&:hover': {
+                        boxShadow: darkMode
+                            ? '0 8px 16px rgba(255, 255, 255, 0.1)'
+                            : '0 8px 16px rgba(238, 116, 45, 0.2)'
+                    }
+                }}
+            >
                 <Typography variant="h4" component="h1" align="center" gutterBottom style={{ color: darkMode ? '#ffffff' : 'inherit' }}>
                     Questionnaire {enterprise?.AddEntreName}
                 </Typography>
@@ -583,7 +594,7 @@ const QuesEntrep = () => {
                         </Button>
                     </Tooltip>
                 </div>
-            </div>
+            </Paper>
             <CustomSnackbar
                 open={formState.snackbar.open}
                 handleClose={handleCloseSnackbar}

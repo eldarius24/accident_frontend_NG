@@ -159,10 +159,7 @@ export default function FormulaireEntreprise({ setValue, accidentData, watch }) 
   }
 
   return (
-    <div className="frameStyle-style" style={{
-      backgroundColor: darkMode ? '#6e6e6e' : '#ffffff',
-      color: darkMode ? '#ffffff' : '#000000',
-    }}>
+   
       <div>
         <div>
           <div>
@@ -320,6 +317,6 @@ export default function FormulaireEntreprise({ setValue, accidentData, watch }) 
           </div>
         </div>
       </div>
-    </div>
+    
   );
 }

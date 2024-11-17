@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import TextFieldP from '../_composants/textFieldP';
 import '../pageFormulaire/formulaire.css';
-import { Button, Tooltip } from '@mui/material/';
+import { Button, Tooltip, Paper } from '@mui/material/';
 import config from '../config.json';
 import { useNavigate, useLocation } from 'react-router-dom';
 import CustomSnackbar from '../_composants/CustomSnackbar';
@@ -331,11 +331,22 @@ export default function AdminPanelSettings({ accidentData }) {
     };
 
     return (
-        <form className="background-image" onSubmit={handleSubmit(onSubmit)}>
-            <div className="frameStyle-style" style={{
-                backgroundColor: darkMode ? '#2a2a2a' : '#ffffff',
-                color: darkMode ? '#ffffff' : '#000000',
-            }}>
+        <form className="background-image" style={{ margin: '0 20px' }} onSubmit={handleSubmit(onSubmit)}>
+            <Paper
+                elevation={3}
+                sx={{
+                    border: darkMode ? '1px solid #ffffff' : '1px solid #ee742d',
+                    borderRadius: '8px',
+                    padding: '20px',
+                    margin: '20px 0',
+                    backgroundColor: darkMode ? '#1a1a1a' : '#ffffff',
+                    '&:hover': {
+                        boxShadow: darkMode
+                            ? '0 8px 16px rgba(255, 255, 255, 0.1)'
+                            : '0 8px 16px rgba(238, 116, 45, 0.2)'
+                    }
+                }}
+            >
                 <h2>Créer une nouvelle entreprise</h2>
                 <h3 style={{ color: darkMode ? '#ffffff' : 'inherit' }}>Toutes les champs doivent êtres obligatoirement remplie</h3>
                 <TextFieldP id='AddEntreName' label="Nom de la nouvelle entreprise" onChange={setAddEntreName} defaultValue={AddEntreName}></TextFieldP>
@@ -511,7 +522,7 @@ export default function AdminPanelSettings({ accidentData }) {
 
                 <div style={{ marginTop: '30px' }}></div>
 
-            </div>
+            </Paper>
             <div className="image-cortigroupe"></div>
             <h5 style={{ marginBottom: '40px' }}> Développé par Remy et Benoit pour Le Cortigroupe.</h5>
             <CustomSnackbar

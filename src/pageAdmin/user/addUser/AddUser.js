@@ -158,11 +158,22 @@ export default function AddUser() {
     );
 
     return (
-        <form className="background-image" onSubmit={handleSubmit(onSubmit)}>
-            <div className="frameStyle-style" style={{
-                backgroundColor: darkMode ? '#2a2a2a' : '#ffffff',
-                color: darkMode ? '#ffffff' : '#000000',
-            }}>
+        <form className="background-image" style={{ margin: '0 20px' }} onSubmit={handleSubmit(onSubmit)}>
+            <Paper
+                elevation={3}
+                sx={{
+                    border: darkMode ? '1px solid #ffffff' : '1px solid #ee742d',
+                    borderRadius: '8px',
+                    padding: '20px',
+                    margin: '20px 0',
+                    backgroundColor: darkMode ? '#1a1a1a' : '#ffffff',
+                    '&:hover': {
+                        boxShadow: darkMode
+                            ? '0 8px 16px rgba(255, 255, 255, 0.1)'
+                            : '0 8px 16px rgba(238, 116, 45, 0.2)'
+                    }
+                }}
+            >
                 <h2>Administration des droits</h2>
 
                 <h3 style={{ color: darkMode ? '#ffffff' : 'inherit' }}>Créer un nouvel utilisateur</h3>
@@ -410,7 +421,7 @@ export default function AddUser() {
                         severity={snackbar.severity}
                     />
                 </div>
-            </div>
+            </Paper>
             <div className="image-cortigroupe"></div>
             <Tooltip title="Développé par Remy et Benoit pour Le Cortigroupe." arrow>
                 <h5 style={{ marginBottom: '40px' }}>

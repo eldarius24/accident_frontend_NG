@@ -224,10 +224,7 @@ export default function FormulaireDeclarationASSBelfius({ setValue, accidentData
    * Etape 3 : retourner le formulaire (IHMs)
    */
     return (
-        <div className="frameStyle-style" style={{
-            backgroundColor: darkMode ? '#6e6e6e' : '#ffffff',
-            color: darkMode ? '#ffffff' : '#000000',
-          }}>
+        
             <div className="infoDeclarationAss">
                 <h2>Infos Déclaration</h2>
                 <h3 style={{ color: darkMode ? '#ffffff' : 'inherit' }}>Rentrez les informations relative a la déclaration.</h3>
@@ -457,6 +454,6 @@ export default function FormulaireDeclarationASSBelfius({ setValue, accidentData
                 <TextFieldP id="heureTravaillePerdu" label="Nombre d’heures de travail perdues le jour de l’accident" onChange={setheureTravaillePerdu} defaultValue={heureTravaillePerdu} />
                 <TextFieldP id="salaireTravaillePerdu" label="Perte salariale pour les heures de travail perdues" onChange={setsalaireTravaillePerdu} defaultValue={salaireTravaillePerdu} />
             </div>
-        </div>
+        
     );
 }
