@@ -6,11 +6,9 @@ const EnterpriseStats = React.memo(({ actions }) => {
     const { darkMode } = useTheme();
     const [, forceUpdate] = useState();
 
-
     useEffect(() => {
         forceUpdate({});
     }, [darkMode]);
-
 
     const stats = {};
     actions.forEach(action => {
@@ -36,8 +34,6 @@ const EnterpriseStats = React.memo(({ actions }) => {
             stats[enterprise].priorities.basse += 1;  // Défaut à basse si non défini
         }
     });
-
-
 
     const getCardStyle = useCallback((completed, total) => {
         const completionRate = (completed / total) * 100;
@@ -86,24 +82,6 @@ const EnterpriseStats = React.memo(({ actions }) => {
         if (completionRate > 25) return '#FFA726';
         return '#FF5722';
     }, []);
-
-    const getEnterpriseStats = useMemo(() => {
-        const stats = {};
-        actions.forEach(action => {
-            const enterprise = action.AddActionEntreprise;
-            if (!stats[enterprise]) {
-                stats[enterprise] = {
-                    total: 0,
-                    completed: 0
-                };
-            }
-            stats[enterprise].total += 1;
-            if (action.AddboolStatus) {
-                stats[enterprise].completed += 1;
-            }
-        });
-        return stats;
-    }, [actions]);
 
     return (
         <Grid container spacing={2}>

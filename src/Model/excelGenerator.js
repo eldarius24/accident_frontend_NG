@@ -556,6 +556,7 @@ export function handleExportDataAction(data) {
 
     // Ajouter l'en-tête
     worksheet.addRow([
+        'Priorité',
         'Status',
         'Année ou l\'action est prévue',
         'L\'action doit être réaliser en',
@@ -572,6 +573,7 @@ export function handleExportDataAction(data) {
         dataToExport.forEach(item => {
             worksheet.addRow([
                 //infos entreprise
+                item.priority,
                 item.AddboolStatus,
                 item.AddActionanne,
                 item.AddActoinmoi,
@@ -581,7 +583,6 @@ export function handleExportDataAction(data) {
                 item.AddActionDange,
                 item.AddActionDate,
                 item.AddActionQui,
-
             ]);
         });
     } else {
