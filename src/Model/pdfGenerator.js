@@ -1,3 +1,7 @@
+
+import axios from 'axios';
+import config from '../config.json';
+import { PDFDocument } from 'pdf-lib';
 /**
  * fonction qui permet d'editer un champ de texte dans un pdf
  * @param {*} form formulaire du pdf
