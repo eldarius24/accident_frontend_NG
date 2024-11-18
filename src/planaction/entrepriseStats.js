@@ -6,9 +6,38 @@ const EnterpriseStats = React.memo(({ actions }) => {
     const { darkMode } = useTheme();
     const [, forceUpdate] = useState();
 
+
     useEffect(() => {
         forceUpdate({});
     }, [darkMode]);
+
+
+    const stats = {};
+    actions.forEach(action => {
+        const enterprise = action.AddActionEntreprise;
+        if (!stats[enterprise]) {
+            stats[enterprise] = {
+                total: 0,
+                completed: 0,
+                priorities: {
+                    basse: 0,
+                    moyenne: 0,
+                    haute: 0
+                }
+            };
+        }
+        stats[enterprise].total += 1;
+        if (action.AddboolStatus) {
+            stats[enterprise].completed += 1;
+        }
+        if (action.priority) {
+            stats[enterprise].priorities[action.priority] += 1;
+        } else {
+            stats[enterprise].priorities.basse += 1;  // Défaut à basse si non défini
+        }
+    });
+
+
 
     const getCardStyle = useCallback((completed, total) => {
         const completionRate = (completed / total) * 100;
@@ -77,87 +106,103 @@ const EnterpriseStats = React.memo(({ actions }) => {
     }, [actions]);
 
     return (
-        <div>
-            <Grid container spacing={2}>
-                {Object.entries(getEnterpriseStats).map(([enterprise, { total, completed }]) => {
-                    const completionRate = (completed / total) * 100;
-                    return (
-                        <Grid item xs={12} sm={6} md={4} key={enterprise}>
-                            <Card
-                                sx={{
-                                    ...getCardStyle(completed, total),
-                                    '&:hover': {
-                                        boxShadow: 6, // augmente l'ombre au survol
-                                        transform: 'scale(1.02)', // agrandit légèrement la carte
-                                        transition: 'all 0.3s ease-in-out'
+        <Grid container spacing={2}>
+            {Object.entries(stats).map(([enterprise, { total, completed, priorities }]) => {
+                const completionRate = (completed / total) * 100;
+                return (
+                    <Grid item xs={12} sm={6} md={4} key={enterprise}>
+                        <Card
+                            sx={{
+                                ...getCardStyle(completed, total),
+                                '&:hover': {
+                                    boxShadow: 6, // augmente l'ombre au survol
+                                    transform: 'scale(1.02)', // agrandit légèrement la carte
+                                    transition: 'all 0.3s ease-in-out'
+                                }
+                            }}
+                        >
+                            <CardContent>
+                                <Typography
+                                    variant="h6"
+                                    component="div"
+                                    sx={{
+                                        fontWeight: completionRate === 100 ? 'bold' : 'normal',
+                                        color: completionRate === 100 ? '#006400' : 'inherit'
+                                    }}
+                                >
+                                    {enterprise}
+                                    {completionRate === 100 &&
+                                        <span style={{ marginLeft: '10px', fontSize: '0.8em' }}>✓</span>
                                     }
-                                }}
-                            >
-                                <CardContent>
-                                    <Typography
-                                        variant="h6"
-                                        component="div"
-                                        sx={{
-                                            fontWeight: completionRate === 100 ? 'bold' : 'normal',
-                                            color: completionRate === 100 ? '#006400' : 'inherit'
-                                        }}
-                                    >
-                                        {enterprise}
-                                        {completionRate === 100 &&
-                                            <span style={{ marginLeft: '10px', fontSize: '0.8em' }}>✓</span>
-                                        }
-                                    </Typography>
-                                    <Typography color="text.secondary">
-                                        Actions totales: {total}
-                                    </Typography>
-                                    <Typography
-                                        color="text.secondary"
-                                        sx={{
-                                            color: completionRate === 100 ? '#006400' : 'inherit'
-                                        }}
-                                    >
-                                        Actions terminées: {completed}
-                                    </Typography>
-                                    <Typography color="text.secondary">
-                                        Actions restantes: {total - completed}
-                                    </Typography>
+                                </Typography>
+                                <Typography color="text.secondary"
+                                    sx={{
+                                        color: completionRate === 100 ? '#006400' : 'inherit'
+                                    }}
+                                >
+                                    Actions totales: {total}
+                                </Typography>
+                                <Typography
+                                    color="text.secondary"
+                                    sx={{
+                                        color: completionRate === 100 ? '#006400' : 'inherit'
+                                    }}
+                                >
+                                    Actions terminées: {completed}
+                                </Typography>
+                                <Typography color="text.secondary"
+                                    sx={{
+                                        color: completionRate === 100 ? '#006400' : 'inherit'
+                                    }}
+                                >
+                                    Actions restantes: {total - completed}
+                                </Typography>
+                                <Typography color="text.secondary"
+                                    sx={{
+                                        color: completionRate === 100 ? '#006400' : 'inherit'
+                                    }}
+                                >
+                                    Priorités:
+                                    <span style={{ color: darkMode ? '#312b6e' : '#1900fd' }}> Basse ({priorities.basse})</span> |
+                                    <span style={{ color: darkMode ? '#8d6026' : '#ff9100' }}> Moyenne ({priorities.moyenne})</span> |
+                                    <span style={{ color: darkMode ? '#702727' : '#d32f2f' }}> Haute ({priorities.haute})</span>
+                                </Typography>
+                                <div
+                                    style={{
+                                        width: '100%',
+                                        height: '4px',
+                                        backgroundColor: '#e0e0e0',
+                                        marginTop: '8px',
+                                        borderRadius: '2px'
+                                    }}
+                                >
                                     <div
                                         style={{
-                                            width: '100%',
-                                            height: '4px',
-                                            backgroundColor: '#e0e0e0',
-                                            marginTop: '8px',
+                                            width: `${(completed / total) * 100}%`,
+                                            height: '100%',
+                                            backgroundColor: getProgressBarColor(completed, total),
+                                            transition: 'width 0.3s ease-in-out, background-color 0.3s ease-in-out',
                                             borderRadius: '2px'
                                         }}
-                                    >
-                                        <div
-                                            style={{
-                                                width: `${(completed / total) * 100}%`,
-                                                height: '100%',
-                                                backgroundColor: getProgressBarColor(completed, total),
-                                                transition: 'width 0.3s ease-in-out, background-color 0.3s ease-in-out',
-                                                borderRadius: '2px'
-                                            }}
-                                        />
-                                    </div>
-                                    <Typography
-                                        variant="body2"
-                                        sx={{
-                                            mt: 1,
-                                            textAlign: 'right',
-                                            fontWeight: completionRate === 100 ? 'bold' : 'normal',
-                                            color: completionRate === 100 ? '#006400' : 'inherit'
-                                        }}
-                                    >
-                                        {Math.round(completionRate)}% complété
-                                    </Typography>
-                                </CardContent>
-                            </Card>
-                        </Grid>
-                    );
-                })}
-            </Grid>
-        </div>
+                                    />
+                                </div>
+                                <Typography
+                                    variant="body2"
+                                    sx={{
+                                        mt: 1,
+                                        textAlign: 'right',
+                                        fontWeight: completionRate === 100 ? 'bold' : 'normal',
+                                        color: completionRate === 100 ? '#006400' : 'inherit'
+                                    }}
+                                >
+                                    {Math.round(completionRate)}% complété
+                                </Typography>
+                            </CardContent>
+                        </Card>
+                    </Grid>
+                );
+            })}
+        </Grid>
     );
 });
 

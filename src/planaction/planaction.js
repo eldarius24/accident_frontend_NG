@@ -35,6 +35,78 @@ import {
 
 const apiUrl = config.apiUrl;
 
+const PrioritySelect = React.memo(({ value, onChangeWrapper, darkMode }) => {
+    const priorities = [
+        { value: 'basse', label: 'Basse',color: darkMode ? '#312b6e' : '#1900fd' },
+        { value: 'moyenne', label: 'Moyenne',color: darkMode ? '#8d6026' : '#ff9100' },
+        { value: 'haute', label: 'Haute',color: darkMode ? '#702727' : '#d32f2f' }
+    ];
+
+    const handleChange = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        onChangeWrapper(e.target.value);
+    };
+
+    const handleMenuItemClick = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+    };
+
+    return (
+        <FormControl variant="outlined" size="small" onClick={(e) => e.stopPropagation()}>
+            <Select
+                value={value || 'basse'}
+                onChange={handleChange}
+                onClose={(e) => e.stopPropagation()}
+                onClick={(e) => e.stopPropagation()}
+                MenuProps={{
+                    PopoverClasses: {
+                        root: 'z-9999'
+                    },
+                    PaperProps: {
+                        onClick: (e) => e.stopPropagation(),
+                        sx: {
+                            zIndex: 9999,
+                            backgroundColor: darkMode ? '#424242' : '#ffffff'
+                        }
+                    }
+                }}
+                sx={{
+                    minWidth: 120,
+                    backgroundColor: value ? priorities.find(p => p.value === value)?.color : '#2196f3',
+                    color: '#fff'
+                }}
+            >
+                {priorities.map((priority) => (
+                    <MenuItem
+                        key={priority.value}
+                        value={priority.value}
+                        onClick={handleMenuItemClick}
+                        sx={{
+                            backgroundColor: priority.color,
+                            color: '#fff',
+                            '&:hover': {
+                                backgroundColor: priority.color,
+                                opacity: 0.9
+                            },
+                            '&.Mui-selected': {
+                                backgroundColor: priority.color
+                            },
+                            '&.Mui-selected:hover': {
+                                backgroundColor: priority.color,
+                                opacity: 0.9
+                            }
+                        }}
+                    >
+                        {priority.label}
+                    </MenuItem>
+                ))}
+            </Select>
+        </FormControl>
+    );
+});
+
 /**
  * Page qui affiche le plan d'action
  * @param {object} accidentData Données de l'accident
@@ -343,6 +415,7 @@ export default function PlanAction({ accidentData }) {
         }
     };
 
+
     return (
         <div style={{ margin: '0 20px' }}>
             <form className="background-image" onSubmit={handleSubmit(onSubmit)}>
@@ -526,6 +599,7 @@ export default function PlanAction({ accidentData }) {
                                     style={{
                                         backgroundColor: darkMode ? '#535353' : '#0098f950',
                                     }}>
+                                    <TableCell style={{ fontWeight: 'bold' }}>Priorité</TableCell>
                                     <TableCell style={{ fontWeight: 'bold' }}>Status</TableCell>
                                     <TableCell style={{ fontWeight: 'bold' }}>Année</TableCell>
                                     <TableCell style={{ fontWeight: 'bold' }}>Mois</TableCell>
@@ -554,6 +628,31 @@ export default function PlanAction({ accidentData }) {
                                             }}
                                         >
                                             <TableCell>
+                                                <PrioritySelect
+                                                    value={addaction.priority}
+                                                    onChangeWrapper={async (newPriority) => {
+                                                        try {
+                                                            await axios.put(`http://${apiUrl}:3100/api/planaction/${addaction._id}`, {
+                                                                priority: newPriority
+                                                            });
+                                                            // Mettre à jour uniquement l'action modifiée dans le state
+                                                            setAddactions(prev =>
+                                                                prev.map(action =>
+                                                                    action._id === addaction._id
+                                                                        ? { ...action, priority: newPriority }
+                                                                        : action
+                                                                )
+                                                            );
+                                                            showSnackbar('Priorité mise à jour avec succès', 'success');
+                                                        } catch (error) {
+                                                            console.error('Priority update error:', error);
+                                                            showSnackbar('Erreur lors de la mise à jour de la priorité', 'error');
+                                                        }
+                                                    }}
+                                                    darkMode={darkMode}
+                                                />
+                                            </TableCell>
+                                            <TableCell>
                                                 <Tooltip title="Sélectionnez quand l'action est réalisée" arrow>
                                                     <Checkbox
                                                         sx={{
@@ -562,18 +661,24 @@ export default function PlanAction({ accidentData }) {
                                                         }}
                                                         color="success"
                                                         checked={addaction.AddboolStatus}
-                                                        onChange={() => {
+                                                        onChange={async () => {
                                                             const newStatus = !addaction.AddboolStatus;
-                                                            axios.put(`http://${apiUrl}:3100/api/planaction/${addaction._id}`, {
-                                                                AddboolStatus: newStatus
-                                                            })
-                                                                .then(response => {
-                                                                    refreshListAccidents();
-                                                                })
-                                                                .catch(error => {
-                                                                    console.error('Erreur lors de la mise à jour du statut:', error.message);
-                                                                    showSnackbar('Erreur lors de la mise à jour du statut', 'error');
+                                                            try {
+                                                                await axios.put(`http://${apiUrl}:3100/api/planaction/${addaction._id}`, {
+                                                                    AddboolStatus: newStatus
                                                                 });
+                                                                setAddactions(prev =>
+                                                                    prev.map(action =>
+                                                                        action._id === addaction._id
+                                                                            ? { ...action, AddboolStatus: newStatus }
+                                                                            : action
+                                                                    )
+                                                                );
+                                                                showSnackbar('Status mise à jour avec succès', 'success');
+                                                            } catch (error) {
+                                                                console.error('Erreur lors de la mise à jour du statut:', error.message);
+                                                                showSnackbar('Erreur lors de la mise à jour du statut', 'error');
+                                                            }
                                                         }}
                                                     />
                                                 </Tooltip>
