@@ -96,7 +96,7 @@ const FileViewer = ({ file, actionId, isEntreprise = false }) => {
                     await logAction({
                         actionType: 'consultation',
                         details: `Prévisualisation du fichier - Nom: ${file.fileName} - Action: ${actionDetails?.action || 'Non spécifiée'} - La personne qui doit gerer le travail: ${actionDetails?.nomTravailleur || 'Non spécifié'} - Date action: ${actionDetails?.dateAction || 'Non spécifiée'}`,
-                        entity: 'Action',
+                        entity: 'Plan Action',
                         entityId: file.fileId,
                         entreprise: actionDetails?.entreprise || null
                     });

@@ -88,7 +88,7 @@ export default function PageDownloadFile() {
                 await logAction({
                     actionType: 'import',
                     details: `Upload de fichier - Nom: ${name} - Taille: ${(file.size / 1024).toFixed(2)}KB - Type: ${file.type} - Action: ${actionDetails?.AddAction}`,
-                    entity: 'action',
+                    entity: 'Plan Action',
                     entityId: actionId,
                     entreprise: actionDetails?.entreprise || null
                 });

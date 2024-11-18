@@ -131,7 +131,7 @@ export default function ListFilesInaction(actionId) {
                     await logAction({
                         actionType: 'suppression',
                         details: `Suppression du fichier - Nom: ${fileToDelete.fileName} - Action: ${details.nomTravailleur} - Date action: ${details.dateAction}`,
-                        entity: 'action',
+                        entity: 'Plan Action',
                         entityId: fileId,
                         entreprise: details.entreprise || null
                     });
@@ -207,7 +207,7 @@ export default function ListFilesInaction(actionId) {
             await logAction({
                 actionType: 'export',
                 details: `Téléchargement du fichier - Nom: ${fileName} - Travailleur: ${actionDetails?.nomTravailleur} ${actionDetails?.prenomTravailleur} - Date action: ${actionDetails?.dateaction}`,
-                entity: 'action',
+                entity: 'Plan Action',
                 entityId: fileId,
                 entreprise: actionDetails?.entreprise || null
             });

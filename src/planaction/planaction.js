@@ -635,6 +635,13 @@ export default function PlanAction({ accidentData }) {
                                                             await axios.put(`http://${apiUrl}:3100/api/planaction/${addaction._id}`, {
                                                                 priority: newPriority
                                                             });
+                                                            await logAction({
+                                                                actionType: 'modification',
+                                                                details: `Modification de la priorité - Action: ${addaction.AddAction} - Entreprise: ${addaction.AddActionEntreprise} - Année: ${addaction.AddActionanne} - Nouvelle priorité: ${newPriority}`,
+                                                                entity: 'Plan Action',
+                                                                entityId: addaction._id,
+                                                                entreprise: addaction.AddActionEntreprise
+                                                            });
                                                             // Mettre à jour uniquement l'action modifiée dans le state
                                                             setAddactions(prev =>
                                                                 prev.map(action =>
