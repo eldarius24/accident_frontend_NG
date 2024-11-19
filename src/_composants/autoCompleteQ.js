@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Autocomplete, TextField, Paper } from '@mui/material';
+import { Autocomplete, TextField, Paper, Typography } from '@mui/material';
 import { useTheme } from '../pageAdmin/user/ThemeContext';
+import listeaddaction from '../liste/listeaddaction.json';
 
 export default function AutoCompleteQ({
     id,
@@ -66,8 +67,16 @@ export default function AutoCompleteQ({
                 onChange={handleChange}
                 renderOption={(props, option) => {
                     const { key, ...otherProps } = props;
-                    return <li key={key} {...otherProps}>{option}</li>;
-                }}
+                    return (
+                        <li {...otherProps}>
+                            <Typography style={{
+                                color: id === 'priority' ? listeaddaction.priority[option] : 'inherit'
+                            }}>
+                                {option}
+                            </Typography>
+                        </li>
+                    );
+                 }}
                 renderInput={(params) => (
                     <TextField
                         {...params}

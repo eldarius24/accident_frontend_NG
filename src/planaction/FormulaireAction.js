@@ -47,7 +47,7 @@ export default function FormulaireAction() {
     const [AddActionanne, setAddActionanne] = useState(watch('AddActionanne') ? watch('AddActionanne') : (actionData && actionData.AddActionanne ? actionData.AddActionanne : null));
     const [AddActoinmoi, setAddActoinmoi] = useState(watch('AddActoinmoi') ? watch('AddActoinmoi') : (actionData && actionData.AddActoinmoi ? actionData.AddActoinmoi : null));
     const [AddActionDange, setAddActionDange] = useState(watch('AddActionDange') ? Array.isArray(watch('AddActionDange')) ? watch('AddActionDange') : [watch('AddActionDange')] : (actionData && actionData.AddActionDange ? Array.isArray(actionData.AddActionDange) ? actionData.AddActionDange : [actionData.AddActionDange] : []));
-    const [priority, setpriority] = useState(watch('priority') ? Array.isArray(watch('priority')) ? watch('priority') : [watch('priority')] : (actionData && actionData.priority ? Array.isArray(actionData.priority) ? actionData.priority : [actionData.priority] : []));
+    const [priority, setPriority] = useState(watch('priority') ? watch('priority') : (actionData && actionData.priority ? actionData.priority : null));
 
     const [snackbar, setSnackbar] = useState({
         open: false,
@@ -291,15 +291,16 @@ export default function FormulaireAction() {
                     defaultValue={AddActionDange}
                     required={true}
                 />
-                <AutoCompleteP
+                <AutoCompleteQ
                     id='priority'
-                    option={Object.keys(listeaddaction.priority)}  // On passe uniquement les clés
+                    option={Object.keys(listeaddaction.priority)}
                     label="Priorité de l'action"
                     onChange={(prioritySelect) => {
-                        setpriority(prioritySelect);
+                        setPriority(prioritySelect); // S'assurer que cette ligne existe
                         setValue('priority', prioritySelect);
                     }}
                     defaultValue={priority}
+                    required={true}
                 />
 
             </Paper>
