@@ -47,6 +47,7 @@ export default function FormulaireAction() {
     const [AddActionanne, setAddActionanne] = useState(watch('AddActionanne') ? watch('AddActionanne') : (actionData && actionData.AddActionanne ? actionData.AddActionanne : null));
     const [AddActoinmoi, setAddActoinmoi] = useState(watch('AddActoinmoi') ? watch('AddActoinmoi') : (actionData && actionData.AddActoinmoi ? actionData.AddActoinmoi : null));
     const [AddActionDange, setAddActionDange] = useState(watch('AddActionDange') ? Array.isArray(watch('AddActionDange')) ? watch('AddActionDange') : [watch('AddActionDange')] : (actionData && actionData.AddActionDange ? Array.isArray(actionData.AddActionDange) ? actionData.AddActionDange : [actionData.AddActionDange] : []));
+    const [priority, setpriority] = useState(watch('priority') ? Array.isArray(watch('priority')) ? watch('priority') : [watch('priority')] : (actionData && actionData.priority ? Array.isArray(actionData.priority) ? actionData.priority : [actionData.priority] : []));
 
     const [snackbar, setSnackbar] = useState({
         open: false,
@@ -106,6 +107,7 @@ export default function FormulaireAction() {
 
     useEffect(() => {
         if (actionData) {
+            setpriority(actionData.priority || '');
             setAddAction(actionData.AddAction || '');
             setAddActionDate(actionData.AddActionDate || null);
             setAddActionQui(actionData.AddActionQui || '');
@@ -176,7 +178,8 @@ export default function FormulaireAction() {
             AddboolStatus,
             AddActionDange: Array.isArray(AddActionDange) ? AddActionDange : [AddActionDange],
             AddActionanne,
-            AddActoinmoi
+            AddActoinmoi,
+            priority
         };
 
         const url = actionData
@@ -209,7 +212,7 @@ export default function FormulaireAction() {
                 console.error('Headers de l\'erreur:', error.response?.headers);
                 showSnackbar(`Erreur lors de la ${actionData ? 'modification' : 'création'} de l'action`, 'error');
             });
-    }, [logAction, actionData, apiUrl, navigate, showSnackbar, AddActionEntreprise, AddActionSecteur, AddActionDate, AddActionQui, AddAction, AddboolStatus, AddActionDange, AddActionanne, AddActoinmoi]);
+    }, [logAction, actionData, apiUrl, navigate, showSnackbar, AddActionEntreprise, AddActionSecteur, AddActionDate, AddActionQui, AddAction, AddboolStatus, AddActionDange, AddActionanne, AddActoinmoi, priority]);
 
     if (loading) {
         return <LinearProgress color="success" />;
@@ -288,7 +291,19 @@ export default function FormulaireAction() {
                     defaultValue={AddActionDange}
                     required={true}
                 />
+                <AutoCompleteP
+                    id='priority'
+                    option={Object.keys(listeaddaction.priority)}  // On passe uniquement les clés
+                    label="Priorité de l'action"
+                    onChange={(prioritySelect) => {
+                        setpriority(prioritySelect);
+                        setValue('priority', prioritySelect);
+                    }}
+                    defaultValue={priority}
+                />
+
             </Paper>
+
             <div style={{ display: 'flex', justifyContent: 'center' }}>
                 <Tooltip title={`Cliquez ici pour ${actionData ? 'modifier' : 'créer'} l'action (certains champs doivent être obligatoirement remplis)`} arrow>
                     <Button

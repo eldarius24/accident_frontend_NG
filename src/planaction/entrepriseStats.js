@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useTheme } from '../pageAdmin/user/ThemeContext';
 import { Grid, Card, CardContent, Typography } from '@mui/material';
+import listeaddaction from '../liste/listeaddaction.json';
 
 const EnterpriseStats = React.memo(({ actions }) => {
     const { darkMode } = useTheme();
@@ -18,9 +19,10 @@ const EnterpriseStats = React.memo(({ actions }) => {
                 total: 0,
                 completed: 0,
                 priorities: {
-                    basse: 0,
-                    moyenne: 0,
-                    haute: 0
+                    "Basse": 0,
+                    "Moyenne": 0,
+                    "Haute": 0,
+                    "A définir": 0
                 }
             };
         }
@@ -31,7 +33,7 @@ const EnterpriseStats = React.memo(({ actions }) => {
         if (action.priority) {
             stats[enterprise].priorities[action.priority] += 1;
         } else {
-            stats[enterprise].priorities.basse += 1;  // Défaut à basse si non défini
+            stats[enterprise].priorities["A définir"] += 1;
         }
     });
 
@@ -141,9 +143,15 @@ const EnterpriseStats = React.memo(({ actions }) => {
                                     }}
                                 >
                                     Priorités:
-                                    <span style={{ color: darkMode ? '#312b6e' : '#1900fd' }}> Basse ({priorities.basse})</span> |
-                                    <span style={{ color: darkMode ? '#8d6026' : '#ff9100' }}> Moyenne ({priorities.moyenne})</span> |
-                                    <span style={{ color: darkMode ? '#702727' : '#d32f2f' }}> Haute ({priorities.haute})</span>
+                                    {Object.entries(listeaddaction.priority).map(([priority, color], index) => (
+                                        <span key={priority} style={{
+                                            color: color,
+                                            marginLeft: index > 0 ? '8px' : 0
+                                        }}>
+                                            {index > 0 && ' | '}
+                                            {priority} ({priorities[priority] || 0})
+                                        </span>
+                                    ))}
                                 </Typography>
                                 <div
                                     style={{

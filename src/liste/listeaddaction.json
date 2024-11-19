@@ -13,7 +13,6 @@
         "Novembre",
         "Décembre"
     ],
-
     "AddActionDange": [
         "Incendie",
         "Bien-être",
@@ -25,6 +24,12 @@
         "Prévention",
         "Formation",
         "Environement"
-        
-    ]
+    ],
+    
+    "priority": {
+        "Basse": "#1c1eaa",
+        "Moyenne": "#ff9307",
+        "Haute": "#dc3545",
+        "A définir": "#6c757d"
+    }
 }

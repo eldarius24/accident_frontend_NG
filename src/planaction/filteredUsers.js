@@ -24,7 +24,7 @@ const createFilteredUsers = () => (users, searchTerm, selectedYears, isAdminOrDe
         const searchTermLower = searchTerm.toLowerCase();
         filtered = filtered.filter(addaction =>
             ['AddActionEntreprise', 'AddActionDate', 'AddActionSecteur', 'AddAction',
-                'AddActionQui', 'AddActoinmoi', 'AddActionDange', 'AddActionanne']
+                'AddActionQui', 'AddActoinmoi', 'AddActionDange', 'AddActionanne', 'priority']
                 .some(field => {
                     const value = addaction[field];
                     return value && String(value).toLowerCase().includes(searchTermLower);

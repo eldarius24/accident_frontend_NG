@@ -5,7 +5,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import {
     Table, TableBody, TableCell, TableContainer, TableHead, TableRow,
     Button, Checkbox, Grid, LinearProgress, TextField, Tooltip,
-    FormControl, InputLabel, Select, MenuItem, ListItemText, OutlinedInput
+    FormControl, InputLabel, Select, MenuItem, ListItemText, OutlinedInput, Typography
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
@@ -32,80 +32,10 @@ import {
     COOKIE_PREFIXES,
     getSelectedYearsFromCookie
 } from '../Home/_actions/cookieUtils';
-
+import listeaddaction from '../liste/listeaddaction.json';
 const apiUrl = config.apiUrl;
 
-const PrioritySelect = React.memo(({ value, onChangeWrapper, darkMode }) => {
-    const priorities = [
-        { value: 'basse', label: 'Basse',color: darkMode ? '#312b6e' : '#1900fd' },
-        { value: 'moyenne', label: 'Moyenne',color: darkMode ? '#8d6026' : '#ff9100' },
-        { value: 'haute', label: 'Haute',color: darkMode ? '#702727' : '#d32f2f' }
-    ];
 
-    const handleChange = (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        onChangeWrapper(e.target.value);
-    };
-
-    const handleMenuItemClick = (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-    };
-
-    return (
-        <FormControl variant="outlined" size="small" onClick={(e) => e.stopPropagation()}>
-            <Select
-                value={value || 'basse'}
-                onChange={handleChange}
-                onClose={(e) => e.stopPropagation()}
-                onClick={(e) => e.stopPropagation()}
-                MenuProps={{
-                    PopoverClasses: {
-                        root: 'z-9999'
-                    },
-                    PaperProps: {
-                        onClick: (e) => e.stopPropagation(),
-                        sx: {
-                            zIndex: 9999,
-                            backgroundColor: darkMode ? '#424242' : '#ffffff'
-                        }
-                    }
-                }}
-                sx={{
-                    minWidth: 120,
-                    backgroundColor: value ? priorities.find(p => p.value === value)?.color : '#2196f3',
-                    color: '#fff'
-                }}
-            >
-                {priorities.map((priority) => (
-                    <MenuItem
-                        key={priority.value}
-                        value={priority.value}
-                        onClick={handleMenuItemClick}
-                        sx={{
-                            backgroundColor: priority.color,
-                            color: '#fff',
-                            '&:hover': {
-                                backgroundColor: priority.color,
-                                opacity: 0.9
-                            },
-                            '&.Mui-selected': {
-                                backgroundColor: priority.color
-                            },
-                            '&.Mui-selected:hover': {
-                                backgroundColor: priority.color,
-                                opacity: 0.9
-                            }
-                        }}
-                    >
-                        {priority.label}
-                    </MenuItem>
-                ))}
-            </Select>
-        </FormControl>
-    );
-});
 
 /**
  * Page qui affiche le plan d'action
@@ -628,36 +558,11 @@ export default function PlanAction({ accidentData }) {
                                             }}
                                         >
                                             <TableCell>
-                                                <PrioritySelect
-                                                    value={addaction.priority}
-                                                    onChangeWrapper={async (newPriority) => {
-                                                        try {
-                                                            await axios.put(`http://${apiUrl}:3100/api/planaction/${addaction._id}`, {
-                                                                priority: newPriority
-                                                            });
-                                                            await logAction({
-                                                                actionType: 'modification',
-                                                                details: `Modification de la priorité - Action: ${addaction.AddAction} - Entreprise: ${addaction.AddActionEntreprise} - Année: ${addaction.AddActionanne} - Nouvelle priorité: ${newPriority}`,
-                                                                entity: 'Plan Action',
-                                                                entityId: addaction._id,
-                                                                entreprise: addaction.AddActionEntreprise
-                                                            });
-                                                            // Mettre à jour uniquement l'action modifiée dans le state
-                                                            setAddactions(prev =>
-                                                                prev.map(action =>
-                                                                    action._id === addaction._id
-                                                                        ? { ...action, priority: newPriority }
-                                                                        : action
-                                                                )
-                                                            );
-                                                            showSnackbar('Priorité mise à jour avec succès', 'success');
-                                                        } catch (error) {
-                                                            console.error('Priority update error:', error);
-                                                            showSnackbar('Erreur lors de la mise à jour de la priorité', 'error');
-                                                        }
-                                                    }}
-                                                    darkMode={darkMode}
-                                                />
+                                                <Typography style={{
+                                                    color: listeaddaction.priority[addaction.priority]
+                                                }}>
+                                                    {addaction.priority}
+                                                </Typography>
                                             </TableCell>
                                             <TableCell>
                                                 <Tooltip title="Sélectionnez quand l'action est réalisée" arrow>
