@@ -350,7 +350,7 @@ const QuesEntrep = () => {
 
             showSnackbar(`Questionnaire ${editMode ? 'modifié' : 'créé'} avec succès`, 'success');
 
-            setTimeout(() => navigate('/entreprise'), 2000);
+            setTimeout(() => navigate('/entreprise'), 500);
         } catch (error) {
             console.error('Erreur lors de la sauvegarde:', error);
             showSnackbar(

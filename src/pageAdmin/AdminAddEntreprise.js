@@ -321,7 +321,7 @@ export default function AdminPanelSettings({ accidentData }) {
 
             const response = await axios[method](url, data);
             showSnackbar(`Entreprise ${entrepriseToEdit ? 'modifiée' : 'créée'} avec succès`, 'success');
-            setTimeout(() => navigate('/adminEntreprises'), 2000);
+            setTimeout(() => navigate('/adminEntreprises'), 500);
         } catch (error) {
             console.error('Erreur de requête:', error.message);
             showSnackbar(`Erreur lors de la ${entrepriseToEdit ? 'modification' : 'création'} de l'entreprise`, 'error');

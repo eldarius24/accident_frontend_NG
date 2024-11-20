@@ -95,9 +95,8 @@ export default function Formulaire() {
                     console.error('Erreur lors de la création du log:', logError);
                 }
 
-                showSnackbar(`Accident en cours de ${accidentData ? 'édition' : 'création'}`, 'success');
-                setTimeout(() => showSnackbar(`Accident ${accidentData ? 'édité' : 'créé'} avec succès`, 'success'), 1000);
-                setTimeout(() => navigate('/'), 2000);
+                showSnackbar(`Accident ${accidentData ? 'édité' : 'créé'} avec succès`, 'success');
+                setTimeout(() => navigate('/'), 500);
             })
             .catch(error => {
                 console.error('Erreur de requête:', error.message);

@@ -201,9 +201,8 @@ export default function FormulaireAction() {
                 } catch (logError) {
                     console.error('Erreur lors de la création du log:', logError);
                 }
-                showSnackbar(`Action en cours de ${actionData ? 'édition' : 'création'}`, 'success');
-                setTimeout(() => showSnackbar(`Action ${actionData ? 'éditée' : 'créée'} avec succès`, 'success'), 1000);
-                setTimeout(() => navigate('/planAction'), 2000);
+                showSnackbar(`Action ${actionData ? 'éditée' : 'créée'} avec succès`, 'success');
+                setTimeout(() => navigate('/planAction'), 500);
             })
             .catch(error => {
                 console.error('Erreur complète:', error);
