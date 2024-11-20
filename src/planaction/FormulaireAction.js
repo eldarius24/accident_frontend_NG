@@ -193,7 +193,7 @@ export default function FormulaireAction() {
                 try {
                     await logAction({
                         actionType: actionData ? 'modification' : 'creation',
-                        details: `${actionData ? 'Modification' : 'Création'} d'un plan d'action - pour l'année: ${data.AddActionanne} Risque: ${AddActionDange.join(', ')} - Date: ${new Date(AddActionDate).toLocaleDateString()} - Entreprise: ${AddActionEntreprise}`,
+                        details: `${actionData ? 'Modification' : 'Création'} d'un plan d'action: ${data.AddAction} - pour l'année: ${data.AddActionanne} Risque: ${AddActionDange.join(', ')} - Date: ${new Date(AddActionDate).toLocaleDateString()} - Entreprise: ${AddActionEntreprise}`,
                         entity: 'Plan Action',
                         entityId: actionData?._id || response.data._id,
                         entreprise: AddActionEntreprise

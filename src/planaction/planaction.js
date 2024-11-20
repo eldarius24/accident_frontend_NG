@@ -172,8 +172,8 @@ export default function PlanAction({ accidentData }) {
             }
 
             await logAction({
-                actionType: 'modification',
-                details: `Début de modification de l'action - Action: ${actionToEdit.AddAction} - Entreprise: ${actionToEdit.AddActionEntreprise} - Année: ${actionToEdit.AddActionanne}`,
+                actionType: 'consultation',
+                details: `Consultation de l'action - Action: ${actionToEdit.AddAction} Risque: ${actionToEdit.AddActionDange.join(', ')} - Entreprise: ${actionToEdit.AddActionEntreprise} - Année: ${actionToEdit.AddActionanne}`,
                 entity: 'Plan Action',
                 entityId: actionIdToModify,
                 entreprise: actionToEdit.AddActionEntreprise
