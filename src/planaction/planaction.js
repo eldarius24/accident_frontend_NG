@@ -5,7 +5,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import {
     Table, TableBody, TableCell, TableContainer, TableHead, TableRow,
     Button, Checkbox, Grid, LinearProgress, TextField, Tooltip,
-    FormControl, InputLabel, Select, MenuItem, ListItemText, OutlinedInput, Typography
+    FormControl, InputLabel, Select, MenuItem, ListItemText, OutlinedInput, Typography, Chip
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
@@ -109,10 +109,10 @@ export default function PlanAction({ accidentData }) {
      * @param {object} event - L'événement qui a déclenché la fermeture de la snackbar.
      * @param {string} reason - La raison pour laquelle la snackbar se ferme. Si elle vaut 'clickaway', cela signifie que l'utilisateur a cliqué en dehors de la snackbar.
      */
-    const handleCloseSnackbar = (event, reason) => {
+    const handleCloseSnackbar = useCallback((event, reason) => {
         if (reason === 'clickaway') return;
         setSnackbar(prev => ({ ...prev, open: false }));
-    };
+    }, []);
 
     const rowColors = useMemo(() => ({
         dark: {
@@ -134,11 +134,11 @@ export default function PlanAction({ accidentData }) {
         return rowColors[theme].rows[index % 2];
     }, [darkMode, rowColors]);
 
-    const handleYearsChange = (event) => {
+    const handleYearsChange = useCallback((event) => {
         const newSelectedYears = event.target.value;
         setSelectedYears(newSelectedYears);
         updateUserSelectedYears(newSelectedYears);
-    };
+    }, [updateUserSelectedYears]);
 
     const checkboxStyle = useMemo(
         () => ({
@@ -166,27 +166,26 @@ export default function PlanAction({ accidentData }) {
     const handleEdit = useCallback(async (actionIdToModify) => {
         try {
             const actionToEdit = users.find(action => action._id === actionIdToModify);
-            if (actionToEdit) {
-                // Crée un log pour l'édition
-                await logAction({
-                    actionType: 'modification',
-                    details: `Début de modification de l'action - Action: ${actionToEdit.AddAction} - Entreprise: ${actionToEdit.AddActionEntreprise} - Année: ${actionToEdit.AddActionanne}`,
-                    entity: 'Plan Action',
-                    entityId: actionIdToModify,
-                    entreprise: actionToEdit.AddActionEntreprise
-                });
-
-                // Redirige vers le formulaire d'édition
-                navigate("/formulaireAction", { state: actionToEdit });
-                showSnackbar('Modification de l\'action initiée', 'info');
-            } else {
+            if (!actionToEdit) {
                 showSnackbar('Erreur : Action non trouvée', 'error');
+                return;
             }
+
+            await logAction({
+                actionType: 'modification',
+                details: `Début de modification de l'action - Action: ${actionToEdit.AddAction} - Entreprise: ${actionToEdit.AddActionEntreprise} - Année: ${actionToEdit.AddActionanne}`,
+                entity: 'Plan Action',
+                entityId: actionIdToModify,
+                entreprise: actionToEdit.AddActionEntreprise
+            });
+
+            navigate("/formulaireAction", { state: actionToEdit });
+            showSnackbar('Modification de l\'action initiée', 'info');
         } catch (error) {
             console.error('Erreur lors de l\'initialisation de la modification:', error);
             showSnackbar('Erreur lors de l\'initialisation de la modification', 'error');
         }
-    }, [navigate, users, showSnackbar, logAction]);
+    }, [users, showSnackbar, logAction, navigate]);
 
     const fetchData = useCallback(
         createFetchData(apiUrl)(
@@ -248,7 +247,6 @@ export default function PlanAction({ accidentData }) {
 
     const handleDelete = useCallback(async (userIdToDelete) => {
         try {
-            // Récupère les informations de l'action avant la suppression
             const actionToDelete = users.find(action => action._id === userIdToDelete);
             if (!actionToDelete) {
                 showSnackbar('Erreur : Action non trouvée', 'error');
@@ -258,10 +256,10 @@ export default function PlanAction({ accidentData }) {
             const response = await axios.delete(`http://${apiUrl}:3100/api/planaction/${userIdToDelete}`);
 
             if (response.status === 204 || response.status === 200) {
-                // Met à jour la liste des actions localement
-                setAddactions(prevAddactions => prevAddactions.filter(addaction => addaction._id !== userIdToDelete));
+                setAddactions(prevAddactions =>
+                    prevAddactions.filter(addaction => addaction._id !== userIdToDelete)
+                );
 
-                // Crée un log pour la suppression
                 await logAction({
                     actionType: 'suppression',
                     details: `Suppression de l'action - Action: ${actionToDelete.AddAction} - Entreprise: ${actionToDelete.AddActionEntreprise} - Année: ${actionToDelete.AddActionanne}`,
@@ -271,14 +269,12 @@ export default function PlanAction({ accidentData }) {
                 });
 
                 showSnackbar('Action supprimée avec succès', 'success');
-            } else {
-                showSnackbar(`Erreur lors de la suppression de l'action: ${response.status} ${response.statusText}`, 'error');
             }
         } catch (error) {
             console.error(error);
             showSnackbar('Erreur lors de la suppression de l\'action', 'error');
         }
-    }, [apiUrl, users, logAction, showSnackbar]);
+    }, [users, apiUrl, logAction, showSnackbar, setAddactions]);
 
     const refreshListAccidents = useCallback(() => {
         setLoading(true);
@@ -294,7 +290,7 @@ export default function PlanAction({ accidentData }) {
             .finally(() => {
                 setLoading(false);
             });
-    }, [showSnackbar]);
+    }, [apiUrl, showSnackbar, setAddactions]);
 
     const onSubmit = useCallback((data) => {
         axios.put(`http://${apiUrl}:3100/api/planaction`, data)
@@ -307,16 +303,13 @@ export default function PlanAction({ accidentData }) {
                 console.error('Erreur de requête:', error.message);
                 showSnackbar('Erreur lors de la création de l\'action', 'error');
             });
-    }, [showSnackbar]);
+    }, [apiUrl, showSnackbar]);
 
     const userEnterprise = userInfo?.entreprisesConseillerPrevention || [];
 
     const canViewAction = useCallback((action) => {
-        if (isAdminOrDev) {
-            return true;
-        } else {
-            return userEnterprise.includes(action.AddActionEntreprise);
-        }
+        if (isAdminOrDev) return true;
+        return userEnterprise.includes(action.AddActionEntreprise);
     }, [isAdminOrDev, userEnterprise]);
 
     const sortByYear = useCallback((a, b) => {
@@ -558,11 +551,20 @@ export default function PlanAction({ accidentData }) {
                                             }}
                                         >
                                             <TableCell>
-                                                <Typography style={{
-                                                    color: listeaddaction.priority[addaction.priority]
-                                                }}>
-                                                    {addaction.priority}
-                                                </Typography>
+                                                <Chip
+                                                    label={addaction.priority}
+                                                    size="small"
+                                                    sx={{
+                                                        backgroundColor: `${listeaddaction.priority[addaction.priority]}99`, // 60% opacity for background
+                                                        border: '1px solid',
+                                                        borderColor: listeaddaction.priority[addaction.priority],
+                                                        color: 'white',
+                                                        '& .MuiChip-label': {
+                                                            fontWeight: 500,
+                                                            color: 'white'
+                                                        }
+                                                    }}
+                                                />
                                             </TableCell>
                                             <TableCell>
                                                 <Tooltip title="Sélectionnez quand l'action est réalisée" arrow>
