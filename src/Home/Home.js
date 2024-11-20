@@ -348,7 +348,15 @@ function Home() {
             margin: '0 20px'
         }}>
             <div style={{ display: 'flex', justifyContent: 'center', margin: '20px 0rem' }}>
-                <Grid container spacing={2}>
+                <Grid
+                    container
+                    spacing={2}
+                    sx={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center'
+                    }}
+                >
                     <Grid item xs={12} sm={6} md={1.5}>
                         <Tooltip title="Filtrer par état" arrow>
                             <FormControl sx={{
