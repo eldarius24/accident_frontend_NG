@@ -60,6 +60,23 @@ function Home() {
             return [];
         }
     };
+    const [statusFilters, setStatusFilters] = useState(() => {
+        const savedFilters = localStorage.getItem('statusFilters');
+        return savedFilters ? JSON.parse(savedFilters) : [];
+    });
+
+    const handleStatusFilterChange = (event) => {
+        const value = event.target.value;
+        if (!Array.isArray(value)) {
+            setStatusFilters([value]);
+            localStorage.setItem('statusFilters', JSON.stringify([value]));
+            return;
+        }
+        const newFilters = value;
+        setStatusFilters(newFilters);
+        localStorage.setItem('statusFilters', JSON.stringify(newFilters));
+    };
+
 
     const [yearsFromData, setYearsFromData] = useState([]);
     const [yearsChecked, setYearsChecked] = useState(() =>
@@ -234,13 +251,19 @@ function Home() {
             if (!item.DateHeureAccident) return false;
 
             const date = new Date(item.DateHeureAccident).getFullYear();
+            const matchesStatus = statusFilters.length === 0 ||
+                (statusFilters.includes('closed') && item.boolAsCloture) ||
+                (statusFilters.includes('pending') && !item.boolAsCloture);
+
+
             return years.includes(date) &&
+                matchesStatus &&
                 ['AssureurStatus', 'DateHeureAccident', 'entrepriseName', 'secteur',
                     'nomTravailleur', 'prenomTravailleur', 'typeAccident'].some(property =>
                         item[property]?.toString().toLowerCase().includes(searchTermLower)
                     );
         });
-    }, [accidents, yearsChecked, searchTerm]);
+    }, [accidents, yearsChecked, searchTerm, statusFilters]);
 
     /**
      * Exporte les données d'accidents vers un fichier Excel.
@@ -326,7 +349,78 @@ function Home() {
         }}>
             <div style={{ display: 'flex', justifyContent: 'center', margin: '20px 0rem' }}>
                 <Grid container spacing={2}>
-                    <Grid item xs={6} md={2}>
+                    <Grid item xs={12} sm={6} md={1.5}>
+                        <Tooltip title="Filtrer par état" arrow>
+                            <FormControl sx={{
+                                boxShadow: darkMode ? '0 3px 6px rgba(255,255,255,0.1)' : 3,
+                                width: '100%',
+                                backgroundColor: darkMode ? '#424242' : '#ee752d60',
+                                border: darkMode ? '1px solid rgba(255,255,255,0.1)' : 'none',
+                                '& .MuiInputLabel-root': {
+                                    color: darkMode ? '#fff' : 'inherit'
+                                },
+                                '& .MuiSelect-select': {
+                                    color: darkMode ? '#fff' : 'inherit'
+                                },
+                                '& .MuiOutlinedInput-notchedOutline': {
+                                    borderColor: darkMode ? 'rgba(255,255,255,0.3)' : 'rgba(0,0,0,0.23)'
+                                }
+                            }}>
+                                <InputLabel>État</InputLabel>
+                                <Select
+                                    multiple
+                                    value={statusFilters}
+                                    onChange={handleStatusFilterChange}
+                                    renderValue={(selected) => selected.map(s =>
+                                        s === 'closed' ? 'Clôturé' : 'En attente'
+                                    ).join(', ')}
+                                    MenuProps={{
+                                        PaperProps: {
+                                            style: {
+                                                backgroundColor: darkMode ? '#424242' : '#fff',
+                                                maxHeight: 48 * 4.5 + 8,
+                                                width: 250
+                                            }
+                                        }
+                                    }}
+                                >
+                                    {['closed', 'pending'].map(status => (
+                                        <MenuItem
+                                            key={status}
+                                            value={status}
+                                            sx={{
+                                                backgroundColor: darkMode ? '#424242' : '#ee742d59',
+                                                color: darkMode ? '#fff' : 'inherit',
+                                                '&:hover': {
+                                                    backgroundColor: darkMode ? '#505050' : '#ee742d80'
+                                                },
+                                                '&.Mui-selected': {
+                                                    backgroundColor: 'transparent !important'
+                                                },
+                                                '&.Mui-selected:hover': {
+                                                    backgroundColor: darkMode ? '#505050' : '#ee742d80'
+                                                }
+                                            }}
+                                        >
+                                            <Checkbox
+                                                checked={statusFilters.includes(status)}
+                                                sx={{
+                                                    color: darkMode ? '#4CAF50' : '#257525',
+                                                    '&.Mui-checked': {
+                                                        color: darkMode ? '#81C784' : '#257525'
+                                                    }
+                                                }}
+                                            />
+                                            <ListItemText
+                                                primary={status === 'closed' ? 'Clôturé' : 'En attente'}
+                                            />
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
+                        </Tooltip>
+                    </Grid>
+                    <Grid item xs={12} sm={6} md={1.5}>
                         <Tooltip title="Cliquez ici pour actualiser le tableau des accidents du travails" arrow>
                             <Button
                                 sx={{
@@ -353,7 +447,7 @@ function Home() {
                             </Button>
                         </Tooltip>
                     </Grid>
-                    <Grid item xs={6} md={2}>
+                    <Grid item xs={12} sm={6} md={1.5}>
                         <Tooltip title="Cliquez ici pour filtrer les accidents par années" arrow placement="top">
                             <FormControl sx={{
                                 boxShadow: darkMode ? '0 3px 6px rgba(255,255,255,0.1)' : 3,
@@ -460,7 +554,7 @@ function Home() {
                             </FormControl>
                         </Tooltip>
                     </Grid>
-                    <Grid item xs={6} md={2}>
+                    <Grid item xs={12} sm={6} md={1.5}>
                         <Tooltip title="Filtrer les accidents par mots clés" arrow>
                             <TextField
                                 value={searchTerm}
@@ -503,7 +597,7 @@ function Home() {
                     </Grid>
                     {isAdminOrDevOrConseiller && (
                         <>
-                            <Grid item xs={6} md={3}>
+                            <Grid item xs={12} sm={6} md={1.5}>
                                 <Tooltip title="Cliquez ici pour exporter les données Accident en fonction des filtres sélèctionnes en excel" arrow>
                                     <Button
                                         sx={{
@@ -533,7 +627,7 @@ function Home() {
                                     </Button>
                                 </Tooltip>
                             </Grid>
-                            <Grid item xs={6} md={3}>
+                            <Grid item xs={12} sm={6} md={1.5}>
                                 <Tooltip title="Cliquez ici pour exporter les données Assurance en fonction des filtres sélèctionnes en excel" arrow>
                                     <Button
                                         sx={{
