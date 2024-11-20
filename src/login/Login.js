@@ -317,7 +317,7 @@ const Login = () => {
           <div style={numberStyle}>
             {isNaN(daysWithoutAccident) ? '0' : daysWithoutAccident}
           </div>
-          <div style={textStyle}>sans accident</div>
+          <div style={textStyle}>Jours sans accident</div>
           {lastAccidentDate && !isNaN(lastAccidentDate.getTime()) && (
             <div style={dateStyle}>
               Dernier accident le : {lastAccidentDate.toLocaleDateString('fr-FR', {

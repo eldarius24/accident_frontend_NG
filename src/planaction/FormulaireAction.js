@@ -107,7 +107,7 @@ export default function FormulaireAction() {
 
     useEffect(() => {
         if (actionData) {
-            setpriority(actionData.priority || '');
+            setPriority(actionData.priority || '');
             setAddAction(actionData.AddAction || '');
             setAddActionDate(actionData.AddActionDate || null);
             setAddActionQui(actionData.AddActionQui || '');
