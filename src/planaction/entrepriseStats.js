@@ -97,7 +97,7 @@ const EnterpriseStats = React.memo(({ actions }) => {
                                 '&:hover': {
                                     boxShadow: 6, // augmente l'ombre au survol
                                     transform: 'scale(1.02)', // agrandit légèrement la carte
-                                    transition: 'all 0.3s ease-in-out'
+                                    transition: 'all 0.1s ease-in-out'
                                 }
                             }}
                         >
