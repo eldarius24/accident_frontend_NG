@@ -4,22 +4,25 @@ const COOKIE_EXPIRY_DAYS = 365;
  * Préfixes pour distinguer les cookies de chaque composant
  */
 export const COOKIE_PREFIXES = {
-  HOME: 'home',
-  PLAN_ACTION: 'plan_action'
+    HOME: 'home',
+    PLAN_ACTION: 'plan_action'
 };
 
 /**
  * Noms des cookies avec préfixes
  */
 export const COOKIE_NAMES = {
-  SELECTED_YEARS: {
-    [COOKIE_PREFIXES.HOME]: 'home_selected_years',
-    [COOKIE_PREFIXES.PLAN_ACTION]: 'plan_action_selected_years'
-  },
-  SELECT_ALL: {
-    [COOKIE_PREFIXES.HOME]: 'home_select_all_years',
-    [COOKIE_PREFIXES.PLAN_ACTION]: 'plan_action_select_all_years'
-  }
+    SELECTED_YEARS: {
+        [COOKIE_PREFIXES.HOME]: 'home_selected_years',
+        [COOKIE_PREFIXES.PLAN_ACTION]: 'plan_action_selected_years'
+    },
+    SELECT_ALL: {
+        [COOKIE_PREFIXES.HOME]: 'home_select_all_years',
+        [COOKIE_PREFIXES.PLAN_ACTION]: 'plan_action_select_all_years'
+    },
+    SELECTED_ENTERPRISE: {
+        [COOKIE_PREFIXES.PLAN_ACTION]: 'plan_action_selected_enterprise'
+    }
 };
 
 /**
@@ -74,12 +77,23 @@ export const ensureArray = (value) => {
 
 /**
  * Obtient les années sélectionnées pour un composant spécifique
- * @param {string} prefix - Préfixe du composant (COOKIE_PREFIXES.HOME ou COOKIE_PREFIXES.PLAN_ACTION)
+ * @param {string} prefix - Préfixe du composant
  * @returns {Array} - Tableau des années sélectionnées
  */
 export const getSelectedYearsFromCookie = (prefix) => {
     const cookieName = COOKIE_NAMES.SELECTED_YEARS[prefix];
     return ensureArray(getCookie(cookieName));
+};
+
+/**
+ * Obtient l'entreprise sélectionnée pour un composant spécifique
+ * @param {string} prefix - Préfixe du composant
+ * @returns {string} - Entreprise sélectionnée ou chaîne vide si non trouvée
+ */
+export const getSelectedEnterpriseFromCookie = (prefix) => {
+    const cookieName = COOKIE_NAMES.SELECTED_ENTERPRISE[prefix];
+    const value = getCookie(cookieName);
+    return value || '';
 };
 
 /**
@@ -101,4 +115,13 @@ export const getSelectAllFromCookie = (prefix) => {
 export const saveYearSelections = (prefix, selectedYears, selectAll) => {
     setCookie(COOKIE_NAMES.SELECTED_YEARS[prefix], selectedYears);
     setCookie(COOKIE_NAMES.SELECT_ALL[prefix], selectAll);
+};
+
+/**
+ * Sauvegarde l'entreprise sélectionnée pour un composant
+ * @param {string} prefix - Préfixe du composant
+ * @param {string} enterprise - Entreprise sélectionnée
+ */
+export const saveEnterpriseSelection = (prefix, enterprise) => {
+    setCookie(COOKIE_NAMES.SELECTED_ENTERPRISE[prefix], enterprise);
 };

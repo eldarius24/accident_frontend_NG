@@ -5,7 +5,8 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import {
     Table, TableBody, TableCell, TableContainer, TableHead, TableRow,
     Button, Checkbox, Grid, TextField, Tooltip,
-    FormControl, InputLabel, Select, MenuItem, ListItemText, OutlinedInput, Typography, Chip
+    FormControl, InputLabel, Select, MenuItem, ListItemText, OutlinedInput, Typography, Chip,
+    Box
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
@@ -28,10 +29,12 @@ import createHandleExport from './handleExport';
 import { useLogger } from '../Hook/useLogger';
 import { blueGrey } from '@mui/material/colors';
 import createUpdateUserSelectedYears from './updateUserSelecterYears';
+import createUpdateUserSelectedEnterprise from './updateUserSelectedEnterprise';
 import BoutonArchiver from '../Archives/BoutonArchiver';
 import {
     COOKIE_PREFIXES,
-    getSelectedYearsFromCookie
+    getSelectedYearsFromCookie,
+    getSelectedEnterpriseFromCookie
 } from '../Home/_actions/cookieUtils';
 import listeaddaction from '../liste/listeaddaction.json';
 const apiUrl = config.apiUrl;
@@ -50,12 +53,16 @@ export default function PlanAction({ accidentData }) {
     const location = useLocation();
     const isFileUploadIcon = location.pathname === '/actionfichierdll';
     const [searchTerm, setSearchTerm] = useState('');
-    const [enterprises, setEntreprises] = useState([]);
     const [allSectors, setAllSectors] = useState([]);
     const [availableSectors, setAvailableSectors] = useState([]);
     const { isAdmin, userInfo, isAdminOrDev } = useUserConnected();
     const currentYear = new Date().getFullYear().toString();
     const [isLoading, setLoading] = useState(true);
+    const [isInitialized, setIsInitialized] = useState(false);
+    const [selectedEnterprise, setSelectedEnterprise] = useState(() =>
+        getSelectedEnterpriseFromCookie(COOKIE_PREFIXES.PLAN_ACTION)
+    );
+    const [enterprises, setEntreprises] = useState([]);
     const [selectedYears, setSelectedYears] = useState(() =>
         getSelectedYearsFromCookie(COOKIE_PREFIXES.PLAN_ACTION)
     );
@@ -79,9 +86,21 @@ export default function PlanAction({ accidentData }) {
             selectedYears,
             searchTerm,
             showSnackbar,
-            logAction 
+            logAction
         ),
         [users, isAdminOrDev, userInfo, selectedYears, searchTerm, showSnackbar, logAction]
+    );
+
+    const updateUserSelectedEnterprise = useCallback(
+        (newValue) => {
+            // Pas besoin de vérifier si l'entreprise existe dans la liste filtrée
+            // car elle peut exister dans les actions même si elle n'est pas dans la table entreprises
+            createUpdateUserSelectedEnterprise(showSnackbar)(
+                { isAdminOrDev, entreprisesConseillerPrevention: userInfo?.entreprisesConseillerPrevention },
+                setSelectedEnterprise
+            )(newValue);
+        },
+        [showSnackbar, userInfo, isAdminOrDev]
     );
 
     const updateUserSelectedYears = useCallback(
@@ -95,8 +114,8 @@ export default function PlanAction({ accidentData }) {
     );
 
     const filteredUsers = useMemo(
-        () => getFilteredUsers(users, searchTerm, selectedYears, isAdminOrDev, userInfo),
-        [getFilteredUsers, users, searchTerm, selectedYears, isAdminOrDev, userInfo]
+        () => getFilteredUsers(users, searchTerm, selectedYears, selectedEnterprise, isAdminOrDev, userInfo),
+        [getFilteredUsers, users, searchTerm, selectedYears, selectedEnterprise, isAdminOrDev, userInfo]
     );
     /**
      * Ferme la snackbar si l'utilisateur clique sur le bouton "Fermer" ou en dehors de la snackbar.
@@ -183,15 +202,18 @@ export default function PlanAction({ accidentData }) {
         }
     }, [users, showSnackbar, logAction, navigate]);
 
-    const fetchData = createFetchData(apiUrl)(
-        setAddactions,
-        setEntreprises,
-        setAllSectors,
-        setAvailableSectors,
-        setLoading,
-        showSnackbar,
-        isAdminOrDev,
-        userInfo
+    const fetchData = useCallback(
+        createFetchData(apiUrl)(
+            setAddactions,
+            setEntreprises,
+            setAllSectors,
+            setAvailableSectors,
+            setLoading,
+            showSnackbar,
+            isAdminOrDev,
+            userInfo
+        ),
+        [apiUrl, isAdminOrDev, userInfo]
     );
 
     useEffect(() => {
@@ -209,6 +231,7 @@ export default function PlanAction({ accidentData }) {
     // Modifiez d'abord les useEffects pour la gestion des années disponibles et sélectionnées
     useEffect(() => {
         if (!users?.length) return;
+
         const getAvailableYearsForUser = () => {
             let filteredActions = isAdminOrDev
                 ? users
@@ -231,10 +254,10 @@ export default function PlanAction({ accidentData }) {
         // Filtrer les années valides
         const validYears = savedYears.filter(year => availableYrs.includes(year));
 
-        // Mettre à jour uniquement si nécessaire
-        if (JSON.stringify(validYears) !== JSON.stringify(selectedYears)) {
-            setSelectedYears(validYears);
-        }
+        // Mettre à jour les années sélectionnées si elles diffèrent
+        setSelectedYears(prevSelected =>
+            JSON.stringify(prevSelected) !== JSON.stringify(validYears) ? validYears : prevSelected
+        );
     }, [users, isAdminOrDev, userInfo?.entreprisesConseillerPrevention]);
 
     const handleDelete = useCallback(async (userIdToDelete) => {
@@ -264,6 +287,7 @@ export default function PlanAction({ accidentData }) {
             showSnackbar('Erreur lors de la suppression de l\'action', 'error');
         }
     }, [users, apiUrl, logAction, showSnackbar]);
+
     const refreshListAccidents = useCallback(() => {
         setLoading(true);
         fetchData();
@@ -315,7 +339,72 @@ export default function PlanAction({ accidentData }) {
             <form className="background-image" onSubmit={handleSubmit(onSubmit)}>
                 <h2>Plan d'actions</h2>
                 <EnterpriseStats actions={filteredUsers.filter(action => canViewAction(action))} />
-                <div style={{ display: 'flex', justifyContent: 'center', margin: '20px 0rem' }}>
+                <Box style={{ display: 'flex', justifyContent: 'center', margin: '20px 0rem' }}>
+                    <Grid item xs={6}>
+                        <Tooltip title="Filtrer par entreprise" arrow>
+                            <FormControl sx={{
+                                boxShadow: darkMode ? '0 3px 6px rgba(255,255,255,0.1)' : 3,
+                                minWidth: 120,
+                                backgroundColor: darkMode ? '#424242' : '#ee752d60',
+                                '& .MuiInputLabel-root': {
+                                    color: darkMode ? '#fff' : 'inherit'
+                                },
+                                '& .MuiOutlinedInput-root': {
+                                    color: darkMode ? '#fff' : 'inherit',
+                                    '& fieldset': {
+                                        borderColor: darkMode ? 'rgba(255,255,255,0.3)' : 'rgba(0,0,0,0.23)'
+                                    },
+                                    '&:hover fieldset': {
+                                        borderColor: darkMode ? 'rgba(255,255,255,0.5)' : 'rgba(0,0,0,0.5)'
+                                    }
+                                }
+                            }}>
+                                <InputLabel id="enterprise-select-label">Entreprise</InputLabel>
+                                <Select
+                                    labelId="enterprise-select-label"
+                                    value={selectedEnterprise}
+                                    onChange={(e) => {
+                                        const newValue = e.target.value;
+                                        updateUserSelectedEnterprise(newValue);
+                                    }}
+                                    input={<OutlinedInput label="Entreprise" />}
+                                    MenuProps={{
+                                        PaperProps: {
+                                            style: {
+                                                maxHeight: 48 * 4.5 + 8,
+                                                width: 250,
+                                                backgroundColor: darkMode ? '#424242' : '#fff'
+                                            },
+                                        },
+                                    }}
+                                >
+                                    <MenuItem value="">
+                                        <em>Toutes les entreprises</em>
+                                    </MenuItem>
+                                    {enterprises
+                                        .filter(enterprise =>
+                                            isAdminOrDev ||
+                                            userInfo?.entreprisesConseillerPrevention?.includes(enterprise.label)
+                                        )
+                                        .map((enterprise) => (
+                                            <MenuItem
+                                                key={enterprise.label}
+                                                value={enterprise.label}
+                                                sx={{
+                                                    backgroundColor: darkMode ? '#424242' : '#ee742d59',
+                                                    color: darkMode ? '#fff' : 'inherit',
+                                                    '&:hover': {
+                                                        backgroundColor: darkMode ? '#505050' : '#ee742d80'
+                                                    }
+                                                }}
+                                            >
+                                                {enterprise.label}
+                                            </MenuItem>
+                                        ))}
+                                </Select>
+                            </FormControl>
+                        </Tooltip>
+                    </Grid>
                     <Grid item xs={6} style={{ marginRight: '20px' }}>
                         <Tooltip title="Cliquez ici pour actualiser le tableau des actions" arrow>
                             <Button
@@ -475,7 +564,7 @@ export default function PlanAction({ accidentData }) {
                             </Button>
                         </Tooltip>
                     </Grid>
-                </div>
+                </Box>
                 <TableContainer
                     className="frameStyle-style"
                     style={{

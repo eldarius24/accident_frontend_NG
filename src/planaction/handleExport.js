@@ -1,12 +1,14 @@
-import { handleExportDataAction } from '../Model/excelGenerator.js';
-
-const createHandleExport = (users, isAdminOrDev, userInfo, selectedYears, searchTerm, showSnackbar, logAction) => {
+const createHandleExport = (users, isAdminOrDev, userInfo, selectedYears, selectedEnterprise, searchTerm, showSnackbar, logAction) => {
     return async () => {
         try {
             let dataToExport = users;
 
+            // Filtre par entreprise sélectionnée
+            if (selectedEnterprise) {
+                dataToExport = dataToExport.filter(action => action.AddActionEntreprise === selectedEnterprise);
+            }
             // Filtre par entreprise si l'utilisateur n'est pas admin
-            if (!isAdminOrDev) {
+            else if (!isAdminOrDev) {
                 dataToExport = dataToExport.filter(action =>
                     userInfo.entreprisesConseillerPrevention?.includes(action.AddActionEntreprise)
                 );
@@ -34,13 +36,12 @@ const createHandleExport = (users, isAdminOrDev, userInfo, selectedYears, search
 
             await handleExportDataAction(dataToExport);
 
-            // Ajout du log pour l'export
             await logAction({
                 actionType: 'export',
-                details: `Export Excel des actions - ${dataToExport.length} actions exportées - Années: ${selectedYears.join(', ') || 'Toutes'} - Filtre: ${searchTerm || 'Aucun'}`,
+                details: `Export Excel des actions - ${dataToExport.length} actions exportées - Années: ${selectedYears.join(', ') || 'Toutes'} - Entreprise: ${selectedEnterprise || 'Toutes'} - Filtre: ${searchTerm || 'Aucun'}`,
                 entity: 'Plan Action',
                 entityId: null,
-                entreprise: isAdminOrDev ? 'Toutes' : userInfo.entreprisesConseillerPrevention?.[0]
+                entreprise: selectedEnterprise || (isAdminOrDev ? 'Toutes' : userInfo.entreprisesConseillerPrevention?.[0])
             });
 
             showSnackbar('Exportation des données réussie', 'success');

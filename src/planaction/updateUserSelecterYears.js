@@ -1,5 +1,6 @@
 import { COOKIE_PREFIXES, saveYearSelections } from '../Home/_actions/cookieUtils';
 
+// Ajout du mot-clé export devant la déclaration de la fonction
 const createUpdateUserSelectedYears = (apiUrl, showSnackbar) => (userInfo, setSelectedYears) => {
     return async (newSelectedYears) => {
         try {
@@ -43,4 +44,5 @@ const createUpdateUserSelectedYears = (apiUrl, showSnackbar) => (userInfo, setSe
     };
 };
 
+// Exportation par défaut de la fonction
 export default createUpdateUserSelectedYears;
