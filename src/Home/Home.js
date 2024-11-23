@@ -731,7 +731,9 @@ function Home() {
                             <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>Fichier</TableCell>
                             <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>PDF</TableCell>
                             <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>Supprimer</TableCell>
-                            <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>Archivage</TableCell>
+                            {(isAdminOrDev) ? (
+                                <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>Archivage</TableCell>
+                            ) : null}
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -892,19 +894,21 @@ function Home() {
                                                 </Tooltip>
                                             ) : null}
                                         </TableCell>
-
                                         {/* Autres cellules */}
-                                       <TableCell style={{ padding: 0, width: '70px' }}>
-                                            <BoutonArchiver
-                                                donnee={item}
-                                                type="accident"
-                                                onSuccess={() => {
-                                                    refreshListAccidents();
-                                                    showSnackbar('Accident archivé avec succès', 'success');
-                                                }}
-                                            />
-                                        </TableCell>
-                                        
+                                        {(isAdminOrDev) ? (
+                                            <TableCell style={{ padding: 0, width: '70px' }}>
+
+                                                <BoutonArchiver
+                                                    donnee={item}
+                                                    type="accident"
+                                                    onSuccess={() => {
+                                                        refreshListAccidents();
+                                                        showSnackbar('Accident archivé avec succès', 'success');
+                                                    }}
+                                                />
+
+                                            </TableCell>
+                                        ) : null}
                                     </>
                                 </TableRow>
                             </React.Fragment>

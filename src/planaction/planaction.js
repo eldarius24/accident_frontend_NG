@@ -218,6 +218,7 @@ export default function PlanAction({ accidentData }) {
 
     useEffect(() => {
         fetchData();
+
     }, []);
 
     useEffect(() => {
@@ -340,71 +341,73 @@ export default function PlanAction({ accidentData }) {
                 <h2>Plan d'actions</h2>
                 <EnterpriseStats actions={filteredUsers.filter(action => canViewAction(action))} />
                 <Box style={{ display: 'flex', justifyContent: 'center', margin: '20px 0rem' }}>
-                    <Grid item xs={6}>
-                        <Tooltip title="Filtrer par entreprise" arrow>
-                            <FormControl sx={{
-                                boxShadow: darkMode ? '0 3px 6px rgba(255,255,255,0.1)' : 3,
-                                minWidth: 120,
-                                backgroundColor: darkMode ? '#424242' : '#ee752d60',
-                                '& .MuiInputLabel-root': {
-                                    color: darkMode ? '#fff' : 'inherit'
-                                },
-                                '& .MuiOutlinedInput-root': {
-                                    color: darkMode ? '#fff' : 'inherit',
-                                    '& fieldset': {
-                                        borderColor: darkMode ? 'rgba(255,255,255,0.3)' : 'rgba(0,0,0,0.23)'
+                    {(isAdminOrDev) ? (
+                        <Grid item xs={6}>
+                            <Tooltip title="Filtrer par entreprise" arrow>
+                                <FormControl sx={{
+                                    boxShadow: darkMode ? '0 3px 6px rgba(255,255,255,0.1)' : 3,
+                                    minWidth: 120,
+                                    backgroundColor: darkMode ? '#424242' : '#ee752d60',
+                                    '& .MuiInputLabel-root': {
+                                        color: darkMode ? '#fff' : 'inherit'
                                     },
-                                    '&:hover fieldset': {
-                                        borderColor: darkMode ? 'rgba(255,255,255,0.5)' : 'rgba(0,0,0,0.5)'
-                                    }
-                                }
-                            }}>
-                                <InputLabel id="enterprise-select-label">Entreprise</InputLabel>
-                                <Select
-                                    labelId="enterprise-select-label"
-                                    value={selectedEnterprise}
-                                    onChange={(e) => {
-                                        const newValue = e.target.value;
-                                        updateUserSelectedEnterprise(newValue);
-                                    }}
-                                    input={<OutlinedInput label="Entreprise" />}
-                                    MenuProps={{
-                                        PaperProps: {
-                                            style: {
-                                                maxHeight: 48 * 4.5 + 8,
-                                                width: 250,
-                                                backgroundColor: darkMode ? '#424242' : '#fff'
-                                            },
+                                    '& .MuiOutlinedInput-root': {
+                                        color: darkMode ? '#fff' : 'inherit',
+                                        '& fieldset': {
+                                            borderColor: darkMode ? 'rgba(255,255,255,0.3)' : 'rgba(0,0,0,0.23)'
                                         },
-                                    }}
-                                >
-                                    <MenuItem value="">
-                                        <em>Toutes les entreprises</em>
-                                    </MenuItem>
-                                    {enterprises
-                                        .filter(enterprise =>
-                                            isAdminOrDev ||
-                                            userInfo?.entreprisesConseillerPrevention?.includes(enterprise.label)
-                                        )
-                                        .map((enterprise) => (
-                                            <MenuItem
-                                                key={enterprise.label}
-                                                value={enterprise.label}
-                                                sx={{
-                                                    backgroundColor: darkMode ? '#424242' : '#ee742d59',
-                                                    color: darkMode ? '#fff' : 'inherit',
-                                                    '&:hover': {
-                                                        backgroundColor: darkMode ? '#505050' : '#ee742d80'
-                                                    }
-                                                }}
-                                            >
-                                                {enterprise.label}
-                                            </MenuItem>
-                                        ))}
-                                </Select>
-                            </FormControl>
-                        </Tooltip>
-                    </Grid>
+                                        '&:hover fieldset': {
+                                            borderColor: darkMode ? 'rgba(255,255,255,0.5)' : 'rgba(0,0,0,0.5)'
+                                        }
+                                    }
+                                }}>
+                                    <InputLabel id="enterprise-select-label">Entreprise</InputLabel>
+                                    <Select
+                                        labelId="enterprise-select-label"
+                                        value={selectedEnterprise}
+                                        onChange={(e) => {
+                                            const newValue = e.target.value;
+                                            updateUserSelectedEnterprise(newValue);
+                                        }}
+                                        input={<OutlinedInput label="Entreprise" />}
+                                        MenuProps={{
+                                            PaperProps: {
+                                                style: {
+                                                    maxHeight: 48 * 4.5 + 8,
+                                                    width: 250,
+                                                    backgroundColor: darkMode ? '#424242' : '#fff'
+                                                },
+                                            },
+                                        }}
+                                    >
+                                        <MenuItem value="">
+                                            <em>Toutes les entreprises</em>
+                                        </MenuItem>
+                                        {enterprises
+                                            .filter(enterprise =>
+                                                isAdminOrDev ||
+                                                userInfo?.entreprisesConseillerPrevention?.includes(enterprise.label)
+                                            )
+                                            .map((enterprise) => (
+                                                <MenuItem
+                                                    key={enterprise.label}
+                                                    value={enterprise.label}
+                                                    sx={{
+                                                        backgroundColor: darkMode ? '#424242' : '#ee742d59',
+                                                        color: darkMode ? '#fff' : 'inherit',
+                                                        '&:hover': {
+                                                            backgroundColor: darkMode ? '#505050' : '#ee742d80'
+                                                        }
+                                                    }}
+                                                >
+                                                    {enterprise.label}
+                                                </MenuItem>
+                                            ))}
+                                    </Select>
+                                </FormControl>
+                            </Tooltip>
+                        </Grid>
+                    ) : null}
                     <Grid item xs={6} style={{ marginRight: '20px' }}>
                         <Tooltip title="Cliquez ici pour actualiser le tableau des actions" arrow>
                             <Button
@@ -593,7 +596,9 @@ export default function PlanAction({ accidentData }) {
                                     <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>Edit</TableCell>
                                     <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>Download</TableCell>
                                     <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>Delete</TableCell>
-                                    <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>Archiver</TableCell>
+                                    {(isAdminOrDev) ? (
+                                        <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>Archiver</TableCell>
+                                    ) : null}
                                 </TableRow>
                             </React.Fragment>
                         </TableHead>
@@ -767,16 +772,20 @@ export default function PlanAction({ accidentData }) {
                                                     </Button>
                                                 </Tooltip>
                                             </TableCell>
-                                            <TableCell style={{ padding: 0, width: '70px' }}>
-                                                <BoutonArchiver
-                                                    donnee={addaction}
-                                                    type="planaction"
-                                                    onSuccess={() => {
-                                                        refreshListAccidents();
-                                                        showSnackbar('Action archivée avec succès', 'success');
-                                                    }}
-                                                />
-                                            </TableCell>
+                                            {(isAdminOrDev) ? (
+                                                <TableCell style={{ padding: 0, width: '70px' }}>
+
+                                                    <BoutonArchiver
+                                                        donnee={addaction}
+                                                        type="planaction"
+                                                        onSuccess={() => {
+                                                            refreshListAccidents();
+                                                            showSnackbar('Action archivée avec succès', 'success');
+                                                        }}
+                                                    />
+
+                                                </TableCell>
+                                            ) : null}
                                         </TableRow>
                                     )
                                 ))}
