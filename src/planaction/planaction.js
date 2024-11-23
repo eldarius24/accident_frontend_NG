@@ -198,8 +198,7 @@ export default function PlanAction({ accidentData }) {
             isAdminOrDev,
             userInfo
         ),
-        [apiUrl, setAddactions, setEntreprises, setAllSectors, setAvailableSectors,
-            setLoading, showSnackbar, isAdminOrDev, userInfo]
+        []
     );
 
     useEffect(() => {

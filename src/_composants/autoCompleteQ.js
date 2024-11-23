@@ -68,7 +68,7 @@ export default function AutoCompleteQ({
                 renderOption={(props, option) => {
                     const { key, ...otherProps } = props;
                     return (
-                        <li {...otherProps}>
+                        <li key={key} {...otherProps}>
                             <Typography style={{
                                 color: id === 'priority' ? listeaddaction.priority[option] : 'inherit'
                             }}>
@@ -76,7 +76,7 @@ export default function AutoCompleteQ({
                             </Typography>
                         </li>
                     );
-                 }}
+                }}
                 renderInput={(params) => (
                     <TextField
                         {...params}
@@ -92,10 +92,12 @@ export default function AutoCompleteQ({
                 )}
                 fullWidth={true}
                 PaperComponent={(props) => (
-                    <Paper {...props} sx={{
-                        backgroundColor: darkMode ? '#4a4a4a' : '#bed7f6',
-                        color: darkMode ? '#ffffff' : 'inherit',
-                    }} />
+                    <Paper
+                        {...props}
+                        sx={{
+                            backgroundColor: darkMode ? '#4a4a4a' : '#bed7f6',
+                            color: darkMode ? '#ffffff' : 'inherit',
+                        }} />
                 )}
             />
         </div>

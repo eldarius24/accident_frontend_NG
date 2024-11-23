@@ -44,15 +44,18 @@ export default function AutoCompleteP({
                 value={defaultValue}
                 sx={{ ...sx, ...darkModeStyles }}
                 onChange={handleChange}
-                renderOption={(props, option) => (
-                    <li {...props}>
+                renderOption={(props, option) => {
+                    const { key, ...otherProps } = props;
+                    return (
+                    <li key={key} {...otherProps}>
                         <Typography style={{ 
                             color: id === 'priority' ? listeaddaction.priority[option] : 'inherit'
                         }}>
                             {option}
                         </Typography>
                     </li>
-                )}
+                    );
+                }}
                 renderInput={(params) => <TextField {...params} label={label} />}
                 fullWidth={true}
                 PaperComponent={(props) => (
