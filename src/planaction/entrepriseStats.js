@@ -99,9 +99,9 @@ const EnterpriseStats = React.memo(({ actions }) => {
                                 <Typography color="text.secondary">
                                     Nombre d'actions: {total}
                                 </Typography>
-                                <Typography color="text.secondary">
+                                {/*<Typography color="text.secondary">
                                     Nombre d'actions terminées: {completed}
-                                </Typography>
+                                </Typography>*/}
                                 <Typography color="text.secondary">
                                     Nombre d'actions restantes: {remaining}
                                 </Typography>

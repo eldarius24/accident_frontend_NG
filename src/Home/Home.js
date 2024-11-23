@@ -894,7 +894,7 @@ function Home() {
                                         </TableCell>
 
                                         {/* Autres cellules */}
-                                       
+                                       <TableCell style={{ padding: 0, width: '70px' }}>
                                             <BoutonArchiver
                                                 donnee={item}
                                                 type="accident"
@@ -903,6 +903,7 @@ function Home() {
                                                     showSnackbar('Accident archivé avec succès', 'success');
                                                 }}
                                             />
+                                        </TableCell>
                                         
                                     </>
                                 </TableRow>
