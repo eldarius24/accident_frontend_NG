@@ -1,9 +1,12 @@
-import React, { useMemo } from 'react';
-import '../pageFormulaire/formulaire.css';
-import { Box, Paper, Tooltip } from '@mui/material';
-import Button from '@mui/material/Button';
+import React, { useState, useCallback, useEffect, useMemo } from 'react';
+import { Box, Paper, Tooltip, Button, } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { useTheme } from '../pageAdmin/user/ThemeContext';
+import SystemeArchivage from '../Archives/archivages';
+import axios from 'axios';
+import CustomSnackbar from '../_composants/CustomSnackbar'
+import HelpIcon from '@mui/icons-material/Help';
+import History from '@mui/icons-material/History';
 /**
  * Component React qui permet d'afficher le panel d'administration des droits
  * 
@@ -17,7 +20,42 @@ import { useTheme } from '../pageAdmin/user/ThemeContext';
  * @returns Un component React qui affiche le panel d'administration des droits
  */
 export default function AdminPanelSettingsaction() {
+    const [archiveOuverte, setArchiveOuverte] = useState(false);
+    const [users, setUsers] = useState([]);
     const { darkMode } = useTheme();
+    const [snackbar, setSnackbar] = useState({
+        open: false,
+        message: '',
+        severity: 'info',
+    });
+
+    // Fonction pour afficher les messages snackbar
+    const showSnackbar = useCallback((message, severity = 'info') => {
+        setSnackbar({ open: true, message, severity });
+    }, []);
+
+    // Fonction pour fermer le snackbar
+    const handleCloseSnackbar = useCallback((event, reason) => {
+        if (reason === 'clickaway') return;
+        setSnackbar(prev => ({ ...prev, open: false }));
+    }, []);
+
+    const refreshListAccidents = useCallback(() => {
+        axios.get('http://localhost:3100/api/planaction')
+            .then(response => {
+                setUsers(response.data);
+                showSnackbar('Liste actualisée', 'success');
+            })
+            .catch(error => {
+                console.error('Error fetching data:', error);
+                showSnackbar('Erreur lors de l\'actualisation', 'error');
+            });
+    }, [showSnackbar]);
+
+    useEffect(() => {
+        refreshListAccidents();
+    }, []);
+
     const defaultStyle = {
         margin: '10px', backgroundColor: '#0098f9', '&:hover': { backgroundColor: '#95ad22' },
         fontSize: '1rem', // Taille de police de base
@@ -173,7 +211,7 @@ export default function AdminPanelSettingsaction() {
                 </Box>
 
                 {/* Titre adapté au mode sombre */}
-                <h3 style={{ color: darkMode ? '#ffffff' : 'inherit' }}>Visualisation des logs et des messages de support</h3>
+                <h3 style={{ color: darkMode ? '#ffffff' : 'inherit' }}>Administration des logs et des messages de support</h3>
 
                 {/* Box pour le bouton des logs */}
                 <Box sx={{
@@ -204,6 +242,7 @@ export default function AdminPanelSettingsaction() {
                             }}
                             variant="contained"
                         >
+                            <History/>
                             Visualisation des logs
                         </Button>
                     </Tooltip>
@@ -228,15 +267,68 @@ export default function AdminPanelSettingsaction() {
                             }}
                             variant="contained"
                         >
+                            <HelpIcon/>
                             Visualisation des supports
+                            
                         </Button>
                     </Tooltip>
+                </Box>
+                <h3 style={{ color: darkMode ? '#ffffff' : 'inherit' }}>Administration des archives</h3>
+                <Box sx={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    marginLeft: '120px',
+                    marginRight: '120px',
+                    gap: '20px'
+                }}>
+                   
+                    <SystemeArchivage
+                        typeArchive="planaction"
+                        donnees={users}
+                        onArchiver={async (archiveData) => {
+                            try {
+                                await axios.post('http://localhost:3100/api/archives', archiveData);
+                                refreshListAccidents();
+                                showSnackbar('Action archivée avec succès', 'success');
+                            } catch (error) {
+                                console.error("Erreur lors de l'archivage:", error);
+                                showSnackbar('Erreur lors de l\'archivage', 'error');
+                            }
+                        }}
+                        darkMode={darkMode}
+                    />
+                    
+
+                    {/* Deuxième système d'archivage pour les accidents */}
+                  
+                    <SystemeArchivage
+                        typeArchive="accident"
+                        donnees={users}
+                        onArchiver={async (archiveData) => {
+                            try {
+                                await axios.post('http://localhost:3100/api/archives', archiveData);
+                                refreshListAccidents();
+                                showSnackbar('Accident archivé avec succès', 'success');
+                            } catch (error) {
+                                console.error("Erreur lors de l'archivage:", error);
+                                showSnackbar('Erreur lors de l\'archivage', 'error');
+                            }
+                        }}
+                        darkMode={darkMode}
+                    />
+                   
                 </Box>
             </Paper>
             <div className="image-cortigroupe"></div>
             <Tooltip title="Développé par Remy et Benoit pour Le Cortigroupe." arrow>
                 <h5 style={{ marginBottom: '40px' }}> Développé par Remy et Benoit pour Le Cortigroupe.</h5>
             </Tooltip>
-        </div>
+            <CustomSnackbar
+                open={snackbar.open}
+                handleClose={handleCloseSnackbar}
+                message={snackbar.message}
+                severity={snackbar.severity}
+            />
+        </div >
     );
 }

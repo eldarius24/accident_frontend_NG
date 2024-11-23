@@ -27,6 +27,9 @@ import LogView from './pageAdmin/logView';
 import Entreprise from './entrepriseDivers/entreprise';
 import QuesEntrep from './entrepriseDivers/quesEntrep';
 import MessSupport from './Dialog/messSupport';
+import Archivage from './Archives/archivages';
+import Archives from './Archives/archives';
+
 /**
  * App est le composant principal de l'application. Il contient les routes 
  * ainsi que la barre de navigation.
@@ -61,6 +64,8 @@ const App = () => {
             <Route path="/adminEntreprises" element={<ProtectedRouteAdmin><AdminEntreprises /></ProtectedRouteAdmin>} />
             <Route path="/addUser" element={<ProtectedRouteAdmin><AddUser /></ProtectedRouteAdmin>} />
             <Route path="/messSupport" element={<ProtectedRouteAdmin><MessSupport /></ProtectedRouteAdmin>} />
+            <Route path="/archivages" element={<ProtectedRouteAdmin><Archivage /></ProtectedRouteAdmin>} />
+            <Route path="/archives" element={ <ProtectedRouteAdmin> <Archives /></ProtectedRouteAdmin>} />
 
             {/* Routes accessibles par isAdmin ou Conseiller */}
             <Route path="/quesEntrep" element={<ProtectedRouteAdminOrConseiller><QuesEntrep /></ProtectedRouteAdminOrConseiller>} />

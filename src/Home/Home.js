@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState, useTransition, useMemo } from 
 import {
     Table, TableBody, TableCell, TableContainer, TableHead, TableRow,
     Button, LinearProgress, TextField, Grid, FormControl, InputLabel,
-    Select, MenuItem, Checkbox, ListItemText, Tooltip, Chip
+    Select, MenuItem, Checkbox, ListItemText, Tooltip, Chip, IconButton
 } from '@mui/material';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
@@ -28,12 +28,15 @@ import { handleExportDataAssurance } from './_actions/exportAss';
 import { useLogger } from '../Hook/useLogger';
 import useHandleDelete from './_actions/handleDelete.js';
 import { blueGrey } from '@mui/material/colors';
+import ArchiveIcon from '@mui/icons-material/Archive';
+import BoutonArchiver from '../Archives/BoutonArchiver';
 import {
     COOKIE_PREFIXES,
     getSelectedYearsFromCookie,
     getSelectAllFromCookie,
     saveYearSelections
 } from './_actions/cookieUtils';
+
 
 const apiUrl = config.apiUrl;
 
@@ -77,6 +80,27 @@ function Home() {
         localStorage.setItem('statusFilters', JSON.stringify(newFilters));
     };
 
+    const archiverAccident = async (accident) => {
+        try {
+            const archiveData = {
+                type: 'accident', // ou 'action' selon le type
+                donnees: accident,
+                titre: `${accident.entrepriseName} - ${accident.typeAccident}`,
+            };
+
+            // Archiver la donnée
+            await axios.post('/api/archives', archiveData);
+
+            // Supprimer la donnée originale
+            await axios.delete(`/api/accidents/${accident._id}`);
+
+            // Rafraîchir la liste
+            fetchAccidents();
+
+        } catch (error) {
+            console.error("Erreur lors de l'archivage:", error);
+        }
+    };
 
     const [yearsFromData, setYearsFromData] = useState([]);
     const [yearsChecked, setYearsChecked] = useState(() =>
@@ -264,6 +288,14 @@ function Home() {
                     );
         });
     }, [accidents, yearsChecked, searchTerm, statusFilters]);
+
+    useEffect(() => {
+        const loadAccidents = async () => {
+            const accidents = await getAccidents();
+            setAccidents(accidents);
+        };
+        loadAccidents();
+    }, []);
 
     /**
      * Exporte les données d'accidents vers un fichier Excel.
@@ -699,6 +731,7 @@ function Home() {
                             <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>Fichier</TableCell>
                             <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>PDF</TableCell>
                             <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>Supprimer</TableCell>
+                            <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>Archivage</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -859,6 +892,18 @@ function Home() {
                                                 </Tooltip>
                                             ) : null}
                                         </TableCell>
+
+                                        {/* Autres cellules */}
+                                       
+                                            <BoutonArchiver
+                                                donnee={item}
+                                                type="accident"
+                                                onSuccess={() => {
+                                                    refreshListAccidents();
+                                                    showSnackbar('Accident archivé avec succès', 'success');
+                                                }}
+                                            />
+                                        
                                     </>
                                 </TableRow>
                             </React.Fragment>
