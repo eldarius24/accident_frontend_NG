@@ -28,13 +28,14 @@ import { handleExportDataAssurance } from './_actions/exportAss';
 import { useLogger } from '../Hook/useLogger';
 import useHandleDelete from './_actions/handleDelete.js';
 import { blueGrey } from '@mui/material/colors';
-import ArchiveIcon from '@mui/icons-material/Archive';
 import BoutonArchiver from '../Archives/BoutonArchiver';
+import createUpdateUserSelectedStatus from './_actions/updateUserSelectedStatus';
 import {
     COOKIE_PREFIXES,
     getSelectedYearsFromCookie,
     getSelectAllFromCookie,
-    saveYearSelections
+    saveYearSelections,
+    getSelectedStatusFromCookie
 } from './_actions/cookieUtils';
 
 
@@ -64,21 +65,10 @@ function Home() {
         }
     };
     const [statusFilters, setStatusFilters] = useState(() => {
-        const savedFilters = localStorage.getItem('statusFilters');
-        return savedFilters ? JSON.parse(savedFilters) : [];
+        return getSelectedStatusFromCookie(COOKIE_PREFIXES.HOME);
     });
 
-    const handleStatusFilterChange = (event) => {
-        const value = event.target.value;
-        if (!Array.isArray(value)) {
-            setStatusFilters([value]);
-            localStorage.setItem('statusFilters', JSON.stringify([value]));
-            return;
-        }
-        const newFilters = value;
-        setStatusFilters(newFilters);
-        localStorage.setItem('statusFilters', JSON.stringify(newFilters));
-    };
+
 
     const archiverAccident = async (accident) => {
         try {
@@ -125,6 +115,28 @@ function Home() {
         logAction,
         showSnackbar
     });
+
+    const updateUserSelectedStatus = useCallback(
+        createUpdateUserSelectedStatus(showSnackbar)(setStatusFilters),
+        [showSnackbar]
+    );
+
+    const handleStatusFilterChange = (event) => {
+        const newValues = event.target.value;
+        try {
+            if (Array.isArray(newValues) && newValues.includes('')) {
+                // Cas "Tous les états"
+                updateUserSelectedStatus([]);
+            } else {
+                // Sélection normale
+                const validValues = Array.isArray(newValues) ? newValues : [];
+                updateUserSelectedStatus(validValues);
+            }
+        } catch (error) {
+            console.error('Erreur lors de la mise à jour des états:', error);
+            showSnackbar('Erreur lors de la sauvegarde des états', 'error');
+        }
+    };
 
     /**
         * Rafraichit la liste des accidents en appelant la fonction getAccidents.
@@ -267,19 +279,22 @@ function Home() {
      */
     const filteredData = useMemo(() => {
         if (!accidents || !Array.isArray(yearsChecked)) return [];
-
+    
         const years = yearsChecked.map(Number);
         const searchTermLower = searchTerm.toLowerCase();
-
+    
         return accidents.filter(item => {
             if (!item.DateHeureAccident) return false;
-
+    
             const date = new Date(item.DateHeureAccident).getFullYear();
-            const matchesStatus = statusFilters.length === 0 ||
-                (statusFilters.includes('closed') && item.boolAsCloture) ||
-                (statusFilters.includes('pending') && !item.boolAsCloture);
-
-
+            
+            // Si aucun filtre d'état n'est sélectionné, on ne retourne aucun élément
+            if (statusFilters.length === 0) return false;
+    
+            // Vérifie si l'élément correspond aux filtres d'état sélectionnés
+            const matchesStatus = statusFilters.includes('closed') && item.boolAsCloture ||
+                                statusFilters.includes('pending') && !item.boolAsCloture;
+    
             return years.includes(date) &&
                 matchesStatus &&
                 ['AssureurStatus', 'DateHeureAccident', 'entrepriseName', 'secteur',
@@ -407,26 +422,59 @@ function Home() {
                                 },
                                 '& .MuiOutlinedInput-notchedOutline': {
                                     borderColor: darkMode ? 'rgba(255,255,255,0.3)' : 'rgba(0,0,0,0.23)'
+                                },
+                                '&:hover .MuiOutlinedInput-notchedOutline': {
+                                    borderColor: darkMode ? 'rgba(255,255,255,0.5)' : 'rgba(0,0,0,0.5)'
                                 }
                             }}>
-                                <InputLabel>État</InputLabel>
+                                <InputLabel id="etat-label" sx={{ color: darkMode ? '#fff' : 'inherit' }}>État</InputLabel>
                                 <Select
+                                    labelId="etat-label"
+                                    id="etat-select"
                                     multiple
                                     value={statusFilters}
                                     onChange={handleStatusFilterChange}
-                                    renderValue={(selected) => selected.map(s =>
-                                        s === 'closed' ? 'Clôturé' : 'En attente'
-                                    ).join(', ')}
-                                    MenuProps={{
-                                        PaperProps: {
-                                            style: {
-                                                backgroundColor: darkMode ? '#424242' : '#fff',
-                                                maxHeight: 48 * 4.5 + 8,
-                                                width: 250
-                                            }
+                                    renderValue={(selected) => {
+                                        if (!selected || !Array.isArray(selected) || selected.length === 0) {
+                                            return "Tous les états";
+                                        }
+                                        return selected.map(s => s === 'closed' ? 'Clôturé' : 'En attente').join(', ');
+                                    }}
+                                    sx={{
+                                        '& .MuiSelect-icon': {
+                                            color: darkMode ? '#fff' : 'inherit'
                                         }
                                     }}
                                 >
+                                    <MenuItem
+                                        value=""
+                                        sx={{
+                                            backgroundColor: darkMode ? '#424242' : '#ee742d59',
+                                            color: darkMode ? '#fff' : 'inherit',
+                                            '&:hover': {
+                                                backgroundColor: darkMode ? '#505050' : '#ee742d80'
+                                            }
+                                        }}
+                                    >
+                                        <Checkbox
+                                            checked={statusFilters?.length === 2}
+                                            onChange={(event) => {
+                                                // Si la case est cochée, on sélectionne tout, sinon on déselectionne tout
+                                                const newValue = event.target.checked ? ['closed', 'pending'] : [];
+                                                handleStatusFilterChange({ target: { value: newValue } });
+                                            }}
+                                            sx={{
+                                                color: darkMode ? '#ff6b6b' : 'red',
+                                                '&.Mui-checked': {
+                                                    color: darkMode ? '#ff8080' : 'red'
+                                                }
+                                            }}
+                                        />
+                                        <ListItemText
+                                            primary="Tous les états"
+                                            sx={{ color: darkMode ? '#fff' : 'inherit' }}
+                                        />
+                                    </MenuItem>
                                     {['closed', 'pending'].map(status => (
                                         <MenuItem
                                             key={status}
@@ -436,17 +484,11 @@ function Home() {
                                                 color: darkMode ? '#fff' : 'inherit',
                                                 '&:hover': {
                                                     backgroundColor: darkMode ? '#505050' : '#ee742d80'
-                                                },
-                                                '&.Mui-selected': {
-                                                    backgroundColor: 'transparent !important'
-                                                },
-                                                '&.Mui-selected:hover': {
-                                                    backgroundColor: darkMode ? '#505050' : '#ee742d80'
                                                 }
                                             }}
                                         >
                                             <Checkbox
-                                                checked={statusFilters.includes(status)}
+                                                checked={statusFilters?.includes(status)}
                                                 sx={{
                                                     color: darkMode ? '#4CAF50' : '#257525',
                                                     '&.Mui-checked': {
@@ -454,9 +496,7 @@ function Home() {
                                                     }
                                                 }}
                                             />
-                                            <ListItemText
-                                                primary={status === 'closed' ? 'Clôturé' : 'En attente'}
-                                            />
+                                            <ListItemText primary={status === 'closed' ? 'Clôturé' : 'En attente'} />
                                         </MenuItem>
                                     ))}
                                 </Select>

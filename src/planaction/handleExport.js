@@ -1,5 +1,5 @@
-
 import { handleExportDataAction } from '../Model/excelGenerator.js';
+
 const createHandleExport = (users, isAdminOrDev, userInfo, selectedYears, selectedEnterprises, searchTerm, showSnackbar, logAction) => {
     return async () => {
         try {
@@ -10,9 +10,9 @@ const createHandleExport = (users, isAdminOrDev, userInfo, selectedYears, select
                 dataToExport = dataToExport.filter(action => 
                     selectedEnterprises.includes(action.AddActionEntreprise)
                 );
-            }
+            } 
             // Filtre par entreprise si l'utilisateur n'est pas admin
-            else if (!isAdminOrDev && userInfo?.entreprisesConseillerPrevention) {
+            if (!isAdminOrDev && userInfo?.entreprisesConseillerPrevention) {
                 dataToExport = dataToExport.filter(action =>
                     userInfo.entreprisesConseillerPrevention.includes(action.AddActionEntreprise)
                 );

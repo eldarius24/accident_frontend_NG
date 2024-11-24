@@ -22,8 +22,28 @@ export const COOKIE_NAMES = {
     },
     SELECTED_ENTERPRISES: {  
         [COOKIE_PREFIXES.PLAN_ACTION]: 'plan_action_selected_enterprises'  
+    },
+    SELECTED_STATUS: {
+        [COOKIE_PREFIXES.HOME]: 'home_selected_status'
     }
 };
+
+
+
+// Nouvelle fonction pour obtenir l'état sélectionné
+export const getSelectedStatusFromCookie = (prefix) => {
+    const cookieName = COOKIE_NAMES.SELECTED_STATUS[prefix];
+    return ensureArray(getCookie(cookieName));
+};
+
+// Nouvelle fonction pour sauvegarder la sélection d'état
+export const saveStatusSelection = (prefix, status) => {
+    if (!Array.isArray(status)) {
+        status = [];
+    }
+    setCookie(COOKIE_NAMES.SELECTED_STATUS[prefix], status);
+};
+
 
 /**
  * Récupère la valeur d'un cookie

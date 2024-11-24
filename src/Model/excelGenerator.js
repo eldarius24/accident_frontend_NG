@@ -27,7 +27,7 @@ function generateExcelFileAccidents(workbook) {
      * @returns {void}
      * @param {void} filteredData Données filtrées à exporter
      */
-export function handleExportData(data) {
+function handleExportData(data) {
     const dataToExport = Array.isArray(data) ? data : [];
     if (dataToExport.length === 0) {
         console.warn("Aucune donnée à exporter.");
@@ -168,7 +168,7 @@ function generateExcelFileAssurances(workbook) {
  * @returns {void} null
  * @param {void} filteredData Données filtrées à exporter
  */
-export function handleExportDataAss(data) {
+function handleExportDataAss(data) {
     const dataToExport = Array.isArray(data) ? data : []; // Utilisez 'data' au lieu de 'filteredData'
     if (dataToExport.length === 0) {
         console.warn("Aucune donnée à exporter.");
@@ -561,7 +561,7 @@ function generateExcelFileActions(workbook) {
     });
 }
 
-export function handleExportDataAction(data) {
+function handleExportDataAction(data) {
     if (!Array.isArray(data) || data.length === 0) {
         console.warn("Aucune donnée à exporter.");
         return;
@@ -624,3 +624,5 @@ export function handleExportDataAction(data) {
     // Générer le fichier Excel
     generateExcelFileActions(workbook);
 }
+
+export { handleExportDataAction, handleExportData, handleExportDataAss };
