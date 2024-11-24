@@ -8,7 +8,7 @@ const EnterpriseStats = React.memo(({ actions }) => {
 
     const stats = useMemo(() => {
         if (!actions || !Array.isArray(actions)) return {};
-        
+
         const statsObj = {};
         actions.forEach(action => {
             const enterprise = action.AddActionEntreprise;

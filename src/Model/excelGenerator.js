@@ -113,6 +113,22 @@ export function handleExportData(data) {
     } else {
         console.warn("Les données ne sont pas correctement formatées pour l'exportation.");
     }
+    // Styliser l'en-tête
+    worksheet.getRow(1).font = { bold: true };
+    worksheet.getRow(1).alignment = { vertical: 'middle', horizontal: 'center' };
+
+    // Appliquer des bordures et un alignement à toutes les cellules
+    worksheet.eachRow((row, rowNumber) => {
+        row.eachCell((cell) => {
+            cell.border = {
+                top: { style: 'thin' },
+                left: { style: 'thin' },
+                bottom: { style: 'thin' },
+                right: { style: 'thin' }
+            };
+            cell.alignment = { vertical: 'middle', wrapText: true };
+        });
+    });
     generateExcelFileAccidents(workbook);
 };
 
@@ -144,6 +160,7 @@ function generateExcelFileAssurances(workbook) {
             URL.revokeObjectURL(url); // Libérer l'URL
         }
     });
+    
 }
 
 /**
@@ -507,86 +524,103 @@ export function handleExportDataAss(data) {
     } else {
         console.warn("Les données ne sont pas correctement formatées pour l'exportation.");
     }
+    // Styliser l'en-tête
+    worksheet.getRow(1).font = { bold: true };
+    worksheet.getRow(1).alignment = { vertical: 'middle', horizontal: 'center' };
+
+    // Appliquer des bordures et un alignement à toutes les cellules
+    worksheet.eachRow((row, rowNumber) => {
+        row.eachCell((cell) => {
+            cell.border = {
+                top: { style: 'thin' },
+                left: { style: 'thin' },
+                bottom: { style: 'thin' },
+                right: { style: 'thin' }
+            };
+            cell.alignment = { vertical: 'middle', wrapText: true };
+        });
+    });
     generateExcelFileAssurances(workbook);
 };
 
-/**
- * Generates an Excel file for actions and triggers a download in the browser.
- * 
- * @param {ExcelJS.Workbook} workbook - The workbook object containing the data to be exported.
- * 
- * The function creates an Excel file named 'Actions.xlsx' from the provided workbook. It
- * handles browser compatibility for downloading the file, including support for Internet
- * Explorer. The file is generated and downloaded as a Blob with the appropriate MIME type
- * for Excel files. The URL object is used to create a downloadable link for browsers
- * other than Internet Explorer.
- */
 function generateExcelFileActions(workbook) {
     workbook.xlsx.writeBuffer().then(buffer => {
         const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-
         const fileName = 'Actions.xlsx';
 
         if (window.navigator && window.navigator.msSaveOrOpenBlob) {
-            // Pour Internet Explorer
             window.navigator.msSaveOrOpenBlob(blob, fileName);
         } else {
-            // Pour les autres navigateurs
             const url = URL.createObjectURL(blob);
             const link = document.createElement('a');
             link.href = url;
             link.download = fileName;
             link.click();
-            URL.revokeObjectURL(url); // Libérer l'URL
+            URL.revokeObjectURL(url);
         }
     });
 }
 
-/**
- * Exporte les données d'action vers un fichier Excel.
- * @param {object[]} data Données à exporter
- */
 export function handleExportDataAction(data) {
-    const dataToExport = Array.isArray(data) ? data : []; // Utilisez 'data' au lieu de 'filteredData'
-    if (dataToExport.length === 0) {
+    if (!Array.isArray(data) || data.length === 0) {
         console.warn("Aucune donnée à exporter.");
+        return;
     }
+
     const workbook = new ExcelJS.Workbook();
     const worksheet = workbook.addWorksheet('Actions');
 
-    // Ajouter l'en-tête
-    worksheet.addRow([
-        'Priorité',
-        'Status',
-        'Année ou l\'action est prévue',
-        'L\'action doit être réaliser en',
-        'Nom de l\'entreprise',
-        'Nom du secteur',
-        'Action a réaliser',
-        'Catégorie du risque',
-        'Date d\'ajout de l\'action',
-        'La personne charger de l\'action',
-    ]);
+    // Définir les colonnes avec leur largeur
+    worksheet.columns = [
+        { header: 'Priorité', key: 'priority', width: 15 },
+        { header: 'Status', key: 'status', width: 10 },
+        { header: 'Année', key: 'year', width: 10 },
+        { header: 'Mois', key: 'month', width: 15 },
+        { header: 'Entreprise', key: 'enterprise', width: 20 },
+        { header: 'Secteur', key: 'sector', width: 20 },
+        { header: 'Action', key: 'action', width: 40 },
+        { header: 'Catégorie du risque', key: 'risk', width: 30 },
+        { header: 'Date d\'ajout', key: 'date', width: 15 },
+        { header: 'Responsable', key: 'responsible', width: 20 }
+    ];
 
-    // Ajouter les données filtrées
-    if (dataToExport.length > 0 && typeof dataToExport[0] === 'object') {
-        dataToExport.forEach(item => {
-            worksheet.addRow([
-                //infos entreprise
-                item.priority,
-                item.AddboolStatus,
-                item.AddActionanne,
-                item.AddActoinmoi,
-                item.AddActionEntreprise,
-                item.AddActionSecteur,
-                item.AddAction,
-                item.AddActionDange,
-                item.AddActionDate,
-                item.AddActionQui,
-            ]);
+    // Ajouter les données
+    data.forEach(item => {
+        worksheet.addRow({
+            priority: item.priority || '',
+            status: item.AddboolStatus ? 'Terminé' : 'En cours',
+            year: item.AddActionanne || '',
+            month: item.AddActoinmoi || '',
+            enterprise: item.AddActionEntreprise || '',
+            sector: item.AddActionSecteur || '',
+            action: item.AddAction || '',
+            risk: Array.isArray(item.AddActionDange)
+                ? item.AddActionDange.join(', ')
+                : (item.AddActionDange || ''),
+            date: item.AddActionDate
+                ? new Date(item.AddActionDate).toLocaleDateString()
+                : '',
+            responsible: item.AddActionQui || ''
         });
-    } else {
-        console.warn("Les données ne sont pas correctement formatées pour l'exportation.");
-    }
+    });
+
+    // Styliser l'en-tête
+    worksheet.getRow(1).font = { bold: true };
+    worksheet.getRow(1).alignment = { vertical: 'middle', horizontal: 'center' };
+
+    // Appliquer des bordures et un alignement à toutes les cellules
+    worksheet.eachRow((row, rowNumber) => {
+        row.eachCell((cell) => {
+            cell.border = {
+                top: { style: 'thin' },
+                left: { style: 'thin' },
+                bottom: { style: 'thin' },
+                right: { style: 'thin' }
+            };
+            cell.alignment = { vertical: 'middle', wrapText: true };
+        });
+    });
+
+    // Générer le fichier Excel
     generateExcelFileActions(workbook);
-};
+}

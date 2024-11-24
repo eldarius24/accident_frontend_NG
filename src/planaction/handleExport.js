@@ -1,18 +1,20 @@
-import { handleExportDataAction } from '../Model/excelGenerator.js';
 
-const createHandleExport = (users, isAdminOrDev, userInfo, selectedYears, selectedEnterprise, searchTerm, showSnackbar, logAction) => {
+import { handleExportDataAction } from '../Model/excelGenerator.js';
+const createHandleExport = (users, isAdminOrDev, userInfo, selectedYears, selectedEnterprises, searchTerm, showSnackbar, logAction) => {
     return async () => {
         try {
-            let dataToExport = users;
+            let dataToExport = [...users]; // Create a copy of the original data
 
-            // Filtre par entreprise sélectionnée
-            if (selectedEnterprise) {
-                dataToExport = dataToExport.filter(action => action.AddActionEntreprise === selectedEnterprise);
+            // Filtre par entreprises sélectionnées
+            if (selectedEnterprises && selectedEnterprises.length > 0) {
+                dataToExport = dataToExport.filter(action => 
+                    selectedEnterprises.includes(action.AddActionEntreprise)
+                );
             }
             // Filtre par entreprise si l'utilisateur n'est pas admin
-            else if (!isAdminOrDev) {
+            else if (!isAdminOrDev && userInfo?.entreprisesConseillerPrevention) {
                 dataToExport = dataToExport.filter(action =>
-                    userInfo.entreprisesConseillerPrevention?.includes(action.AddActionEntreprise)
+                    userInfo.entreprisesConseillerPrevention.includes(action.AddActionEntreprise)
                 );
             }
 
@@ -26,24 +28,27 @@ const createHandleExport = (users, isAdminOrDev, userInfo, selectedYears, select
             // Filtre par terme de recherche
             if (searchTerm) {
                 const searchTermLower = searchTerm.toLowerCase();
-                dataToExport = dataToExport.filter(addaction =>
-                    ['AddActionEntreprise', 'AddActionDate', 'AddActionSecteur', 'AddAction',
-                        'AddActionQui', 'AddActoinmoi', 'AddActionDange', 'AddActionanne']
-                        .some(field => {
-                            const value = addaction[field];
-                            return value != null && String(value).toLowerCase().includes(searchTermLower);
-                        })
+                dataToExport = dataToExport.filter(action =>
+                    Object.entries(action).some(([key, value]) => {
+                        if (value === null || value === undefined) return false;
+                        return String(value).toLowerCase().includes(searchTermLower);
+                    })
                 );
+            }
+
+            if (dataToExport.length === 0) {
+                showSnackbar('Aucune donnée à exporter avec les filtres sélectionnés', 'warning');
+                return;
             }
 
             await handleExportDataAction(dataToExport);
 
             await logAction({
                 actionType: 'export',
-                details: `Export Excel des actions - ${dataToExport.length} actions exportées - Années: ${selectedYears.join(', ') || 'Toutes'} - Entreprise: ${selectedEnterprise || 'Toutes'} - Filtre: ${searchTerm || 'Aucun'}`,
+                details: `Export Excel des actions - ${dataToExport.length} actions exportées - Années: ${selectedYears.join(', ') || 'Toutes'} - Entreprises: ${selectedEnterprises.join(', ') || 'Toutes'} - Filtre: ${searchTerm || 'Aucun'}`,
                 entity: 'Plan Action',
                 entityId: null,
-                entreprise: selectedEnterprise || (isAdminOrDev ? 'Toutes' : userInfo.entreprisesConseillerPrevention?.[0])
+                entreprise: selectedEnterprises?.[0] || (isAdminOrDev ? 'Toutes' : userInfo?.entreprisesConseillerPrevention?.[0])
             });
 
             showSnackbar('Exportation des données réussie', 'success');

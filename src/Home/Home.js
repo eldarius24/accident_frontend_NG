@@ -310,7 +310,7 @@ function Home() {
      */
     const handleExportAccidentClick = useCallback(() => {
         const cleanSearchTerm = searchTerm || ''; // S'assure que searchTerm n'est jamais undefined
-    
+
         handleExportDataAccident({
             filteredData,
             isAdminOrDev,
@@ -370,7 +370,7 @@ function Home() {
 
     useEffect(() => {
         refreshListAccidents();
-    }, [refreshListAccidents]);
+    }, []);
 
     if (accidentsIsPending) {
         return <LinearProgress color="success" />;

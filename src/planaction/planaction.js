@@ -81,18 +81,17 @@ export default function PlanAction({ accidentData }) {
     }, []);
 
     const handleExport = useCallback(
-
         createHandleExport(
             users,
             isAdminOrDev,
             userInfo,
-            selectedEnterprises,
             selectedYears,
+            selectedEnterprises,
             searchTerm,
             showSnackbar,
             logAction
         ),
-        [users, isAdminOrDev, userInfo, selectedYears, searchTerm,selectedEnterprises, showSnackbar, logAction]
+        [users, isAdminOrDev, userInfo, selectedYears, selectedEnterprises, searchTerm, showSnackbar, logAction]
     );
 
 
@@ -177,7 +176,7 @@ export default function PlanAction({ accidentData }) {
     }, [darkMode, rowColors]);
 
 
-    
+
     const handleYearsChange = useCallback((event) => {
         const newSelectedYears = event.target.value;
         setSelectedYears(newSelectedYears);
