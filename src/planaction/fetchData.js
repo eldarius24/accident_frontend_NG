@@ -2,7 +2,7 @@ import axios from 'axios';
 
 const createFetchData = (apiUrl) => (
     setAddactions,
-    setEntreprises,
+    setEnterprises,
     setAllSectors,
     setAvailableSectors,
     setLoading,
@@ -55,7 +55,7 @@ const createFetchData = (apiUrl) => (
 
             // Mettre à jour les états dans un ordre spécifique
             setAddactions(actionsData);
-            setEntreprises(entreprisesData);
+            setEnterprises(entreprisesData);
             
             const secteursData = sectorsResponse.data || [];
             setAllSectors(secteursData);

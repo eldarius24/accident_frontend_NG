@@ -20,8 +20,8 @@ export const COOKIE_NAMES = {
         [COOKIE_PREFIXES.HOME]: 'home_select_all_years',
         [COOKIE_PREFIXES.PLAN_ACTION]: 'plan_action_select_all_years'
     },
-    SELECTED_ENTERPRISE: {
-        [COOKIE_PREFIXES.PLAN_ACTION]: 'plan_action_selected_enterprise'
+    SELECTED_ENTERPRISES: {  
+        [COOKIE_PREFIXES.PLAN_ACTION]: 'plan_action_selected_enterprises'  
     }
 };
 
@@ -91,9 +91,8 @@ export const getSelectedYearsFromCookie = (prefix) => {
  * @returns {string} - Entreprise sélectionnée ou chaîne vide si non trouvée
  */
 export const getSelectedEnterpriseFromCookie = (prefix) => {
-    const cookieName = COOKIE_NAMES.SELECTED_ENTERPRISE[prefix];
-    const value = getCookie(cookieName);
-    return value || '';
+    const cookieName = COOKIE_NAMES.SELECTED_ENTERPRISES[prefix];
+    return ensureArray(getCookie(cookieName));
 };
 
 /**
@@ -118,10 +117,13 @@ export const saveYearSelections = (prefix, selectedYears, selectAll) => {
 };
 
 /**
- * Sauvegarde l'entreprise sélectionnée pour un composant
+ * Sauvegarde les entreprises sélectionnées pour un composant
  * @param {string} prefix - Préfixe du composant
- * @param {string} enterprise - Entreprise sélectionnée
+ * @param {Array} enterprises - Tableau des entreprises sélectionnées
  */
-export const saveEnterpriseSelection = (prefix, enterprise) => {
-    setCookie(COOKIE_NAMES.SELECTED_ENTERPRISE[prefix], enterprise);
+export const saveEnterpriseSelection = (prefix, enterprises) => {
+    if (!Array.isArray(enterprises)) {
+        enterprises = [];
+    }
+    setCookie(COOKIE_NAMES.SELECTED_ENTERPRISES[prefix], enterprises);
 };

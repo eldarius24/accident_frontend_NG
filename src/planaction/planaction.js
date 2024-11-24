@@ -34,7 +34,8 @@ import BoutonArchiver from '../Archives/BoutonArchiver';
 import {
     COOKIE_PREFIXES,
     getSelectedYearsFromCookie,
-    getSelectedEnterpriseFromCookie
+    getSelectedEnterpriseFromCookie,
+    saveEnterpriseSelection
 } from '../Home/_actions/cookieUtils';
 import listeaddaction from '../liste/listeaddaction.json';
 const apiUrl = config.apiUrl;
@@ -45,6 +46,7 @@ const apiUrl = config.apiUrl;
  * @returns {JSX.Element} La page du plan d'action
  */
 export default function PlanAction({ accidentData }) {
+    const [enterprises, setEnterprises] = useState([]);
     const [archiveOuverte, setArchiveOuverte] = useState(false);
     const { logAction } = useLogger();
     const { darkMode } = useTheme();
@@ -59,10 +61,10 @@ export default function PlanAction({ accidentData }) {
     const currentYear = new Date().getFullYear().toString();
     const [isLoading, setLoading] = useState(true);
     const [isInitialized, setIsInitialized] = useState(false);
-    const [selectedEnterprise, setSelectedEnterprise] = useState(() =>
-        getSelectedEnterpriseFromCookie(COOKIE_PREFIXES.PLAN_ACTION)
-    );
-    const [enterprises, setEntreprises] = useState([]);
+    const [selectedEnterprises, setSelectedEnterprises] = useState(() => {
+        const savedEnterprises = getSelectedEnterpriseFromCookie(COOKIE_PREFIXES.PLAN_ACTION);
+        return Array.isArray(savedEnterprises) ? savedEnterprises : [];
+    });
     const [selectedYears, setSelectedYears] = useState(() =>
         getSelectedYearsFromCookie(COOKIE_PREFIXES.PLAN_ACTION)
     );
@@ -93,11 +95,9 @@ export default function PlanAction({ accidentData }) {
 
     const updateUserSelectedEnterprise = useCallback(
         (newValue) => {
-            // Pas besoin de vérifier si l'entreprise existe dans la liste filtrée
-            // car elle peut exister dans les actions même si elle n'est pas dans la table entreprises
             createUpdateUserSelectedEnterprise(showSnackbar)(
                 { isAdminOrDev, entreprisesConseillerPrevention: userInfo?.entreprisesConseillerPrevention },
-                setSelectedEnterprise
+                setSelectedEnterprises  // Changé de setSelectedEnterprise à setSelectedEnterprises
             )(newValue);
         },
         [showSnackbar, userInfo, isAdminOrDev]
@@ -108,15 +108,39 @@ export default function PlanAction({ accidentData }) {
         [apiUrl, showSnackbar, userInfo]
     );
 
-    const getFilteredUsers = useMemo(
-        () => createFilteredUsers(),
-        []
-    );
+    const getFilteredUsers = useMemo(() => createFilteredUsers(), []);
 
     const filteredUsers = useMemo(
-        () => getFilteredUsers(users, searchTerm, selectedYears, selectedEnterprise, isAdminOrDev, userInfo),
-        [getFilteredUsers, users, searchTerm, selectedYears, selectedEnterprise, isAdminOrDev, userInfo]
+        () => getFilteredUsers(
+            users,
+            searchTerm,
+            selectedYears,
+            selectedEnterprises,
+            isAdminOrDev,
+            userInfo
+        ),
+        [getFilteredUsers, users, searchTerm, selectedYears, selectedEnterprises, isAdminOrDev, userInfo]
     );
+
+    const handleEnterpriseChange = useCallback((event) => {
+        const newValues = event.target.value;
+        try {
+            if (Array.isArray(newValues) && newValues.includes('')) {
+                // Cas "Toutes les entreprises"
+                setSelectedEnterprises([]);
+                saveEnterpriseSelection(COOKIE_PREFIXES.PLAN_ACTION, []);
+            } else {
+                // Sélection normale
+                const validValues = Array.isArray(newValues) ? newValues : [];
+                setSelectedEnterprises(validValues);
+                saveEnterpriseSelection(COOKIE_PREFIXES.PLAN_ACTION, validValues);
+            }
+        } catch (error) {
+            console.error('Erreur lors de la mise à jour des entreprises:', error);
+            showSnackbar('Erreur lors de la sauvegarde des entreprises', 'error');
+        }
+    }, [showSnackbar]);
+
     /**
      * Ferme la snackbar si l'utilisateur clique sur le bouton "Fermer" ou en dehors de la snackbar.
      * Si l'utilisateur clique sur la snackbar elle-même (et non sur le bouton "Fermer"), la snackbar ne se ferme pas.
@@ -205,7 +229,7 @@ export default function PlanAction({ accidentData }) {
     const fetchData = useCallback(
         createFetchData(apiUrl)(
             setAddactions,
-            setEntreprises,
+            setEnterprises,
             setAllSectors,
             setAvailableSectors,
             setLoading,
@@ -219,6 +243,13 @@ export default function PlanAction({ accidentData }) {
     useEffect(() => {
         fetchData();
 
+    }, []);
+
+    useEffect(() => {
+        const savedEnterprises = getSelectedEnterpriseFromCookie(COOKIE_PREFIXES.PLAN_ACTION);
+        if (Array.isArray(savedEnterprises) && savedEnterprises.length > 0) {
+            setSelectedEnterprises(savedEnterprises);
+        }
     }, []);
 
     useEffect(() => {
@@ -361,15 +392,23 @@ export default function PlanAction({ accidentData }) {
                                         }
                                     }
                                 }}>
-                                    <InputLabel id="enterprise-select-label">Entreprise</InputLabel>
+                                    <InputLabel id="enterprise-select-label">Filtrer par entreprise(s)</InputLabel>
                                     <Select
                                         labelId="enterprise-select-label"
-                                        value={selectedEnterprise}
-                                        onChange={(e) => {
-                                            const newValue = e.target.value;
-                                            updateUserSelectedEnterprise(newValue);
+                                        multiple
+                                        value={selectedEnterprises || []} // Assurez-vous qu'il y a toujours un tableau
+                                        onChange={handleEnterpriseChange}
+                                        input={<OutlinedInput label="Filtrer par entreprise(s)" />}
+                                        renderValue={(selected) => {
+                                            // Vérification et protection contre les valeurs non valides
+                                            if (!selected || !Array.isArray(selected) || selected.length === 0) {
+                                                return "Toutes les entreprises";
+                                            }
+                                            if (selected.length === enterprises.length) {
+                                                return "Toutes les entreprises";
+                                            }
+                                            return Array.isArray(selected) ? selected.join(', ') : '';
                                         }}
-                                        input={<OutlinedInput label="Entreprise" />}
                                         MenuProps={{
                                             PaperProps: {
                                                 style: {
@@ -381,7 +420,20 @@ export default function PlanAction({ accidentData }) {
                                         }}
                                     >
                                         <MenuItem value="">
-                                            <em>Toutes les entreprises</em>
+                                            <Checkbox
+                                                checked={!selectedEnterprises?.length ||
+                                                    selectedEnterprises.length === enterprises.length}
+                                                indeterminate={selectedEnterprises?.length > 0 &&
+                                                    selectedEnterprises.length < enterprises.length}
+                                                sx={{
+                                                    marginRight: 8,
+                                                    color: darkMode ? '#4CAF50' : '#257525',
+                                                    '&.Mui-checked': {
+                                                        color: darkMode ? '#81C784' : '#257525'
+                                                    }
+                                                }}
+                                            />
+                                            <ListItemText primary="Toutes les entreprises" />
                                         </MenuItem>
                                         {enterprises
                                             .filter(enterprise =>
@@ -400,7 +452,17 @@ export default function PlanAction({ accidentData }) {
                                                         }
                                                     }}
                                                 >
-                                                    {enterprise.label}
+                                                    <Checkbox
+                                                        checked={selectedEnterprises?.includes(enterprise.label)}
+                                                        sx={{
+                                                            marginRight: 8,
+                                                            color: darkMode ? '#4CAF50' : '#257525',
+                                                            '&.Mui-checked': {
+                                                                color: darkMode ? '#81C784' : '#257525'
+                                                            }
+                                                        }}
+                                                    />
+                                                    <ListItemText primary={enterprise.label} />
                                                 </MenuItem>
                                             ))}
                                     </Select>

@@ -7,6 +7,7 @@ import axios from 'axios';
 import CustomSnackbar from '../_composants/CustomSnackbar'
 import HelpIcon from '@mui/icons-material/Help';
 import History from '@mui/icons-material/History';
+import BulkArchiveManager from '../Archives/BulkArchiveManager';
 /**
  * Component React qui permet d'afficher le panel d'administration des droits
  * 
@@ -66,7 +67,8 @@ export default function AdminPanelSettingsaction() {
         '@media (max-width: 550px)': {
             fontSize: '0.5rem', // Taille de police plus petite pour les écrans plus étroits
         },
-    }
+        padding: '15px 60px',
+    };
 
     const rowColors = useMemo(() =>
         darkMode
@@ -242,7 +244,7 @@ export default function AdminPanelSettingsaction() {
                             }}
                             variant="contained"
                         >
-                            <History/>
+                            <History />
                             Visualisation des logs
                         </Button>
                     </Tooltip>
@@ -267,13 +269,17 @@ export default function AdminPanelSettingsaction() {
                             }}
                             variant="contained"
                         >
-                            <HelpIcon/>
+                            <HelpIcon />
                             Visualisation des supports
-                            
+
                         </Button>
                     </Tooltip>
                 </Box>
                 <h3 style={{ color: darkMode ? '#ffffff' : 'inherit' }}>Administration des archives</h3>
+                <BulkArchiveManager
+                    darkMode={darkMode}
+                    onSuccess={(message) => showSnackbar(message, 'success')}
+                />
                 <Box sx={{
                     display: 'flex',
                     justifyContent: 'center',
@@ -281,7 +287,7 @@ export default function AdminPanelSettingsaction() {
                     marginRight: '120px',
                     gap: '20px'
                 }}>
-                   
+
                     <SystemeArchivage
                         typeArchive="planaction"
                         donnees={users}
@@ -297,10 +303,10 @@ export default function AdminPanelSettingsaction() {
                         }}
                         darkMode={darkMode}
                     />
-                    
+
 
                     {/* Deuxième système d'archivage pour les accidents */}
-                  
+
                     <SystemeArchivage
                         typeArchive="accident"
                         donnees={users}
@@ -316,7 +322,7 @@ export default function AdminPanelSettingsaction() {
                         }}
                         darkMode={darkMode}
                     />
-                   
+
                 </Box>
             </Paper>
             <div className="image-cortigroupe"></div>

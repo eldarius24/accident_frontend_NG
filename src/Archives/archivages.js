@@ -119,6 +119,7 @@ const SystemeArchivage = ({
     '@media (max-width: 550px)': {
       fontSize: '0.5rem',
     },
+    padding: '15px 60px',
   };
 
   const handleRestore = async (archiveId) => {

@@ -7,9 +7,13 @@ const EnterpriseStats = React.memo(({ actions }) => {
     const { darkMode } = useTheme();
 
     const stats = useMemo(() => {
+        if (!actions || !Array.isArray(actions)) return {};
+        
         const statsObj = {};
         actions.forEach(action => {
             const enterprise = action.AddActionEntreprise;
+            if (!enterprise) return; // Skip if no enterprise
+
             if (!statsObj[enterprise]) {
                 statsObj[enterprise] = {
                     total: 0,
@@ -99,9 +103,9 @@ const EnterpriseStats = React.memo(({ actions }) => {
                                 <Typography color="text.secondary">
                                     Nombre d'actions: {total}
                                 </Typography>
-                                {/*<Typography color="text.secondary">
+                                <Typography color="text.secondary">
                                     Nombre d'actions terminées: {completed}
-                                </Typography>*/}
+                                </Typography>
                                 <Typography color="text.secondary">
                                     Nombre d'actions restantes: {remaining}
                                 </Typography>
