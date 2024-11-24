@@ -569,7 +569,7 @@ function Home() {
                                     padding: '15px',
                                     width: '100%',
                                     backgroundColor: darkMode ? '#424242' : '#ee752d60',
-                                    transition: 'all 0.3s ease-in-out',
+                                    transition: 'all 0.1s ease-in-out',
                                     '&:hover': {
                                         backgroundColor: darkMode ? '#7a8e1c' : '#95ad22',
                                         transform: 'scale(1.08)',
@@ -746,7 +746,7 @@ function Home() {
                                             padding: '15px',
                                             width: '100%',
                                             backgroundColor: darkMode ? '#424242' : '#ee752d60',
-                                            transition: 'all 0.3s ease-in-out',
+                                            transition: 'all 0.1s ease-in-out',
                                             '&:hover': {
                                                 backgroundColor: darkMode ? '#7a8e1c' : '#95ad22',
                                                 transform: 'scale(1.08)',
@@ -776,7 +776,7 @@ function Home() {
                                             padding: '15px',
                                             width: '100%',
                                             backgroundColor: darkMode ? '#424242' : '#ee752d60',
-                                            transition: 'all 0.3s ease-in-out',
+                                            transition: 'all 0.1s ease-in-out',
                                             '&:hover': {
                                                 backgroundColor: darkMode ? '#7a8e1c' : '#95ad22',
                                                 transform: 'scale(1.08)',
@@ -874,7 +874,7 @@ function Home() {
                                                 <Tooltip title="Cliquez ici pour éditer les données de l'accident" arrow>
                                                     <Button sx={{
                                                         backgroundColor: darkMode ? blueGrey[700] : blueGrey[500],
-                                                        transition: 'all 0.3s ease-in-out',
+                                                        transition: 'all 0.1s ease-in-out',
                                                         '&:hover': {
                                                             backgroundColor: darkMode ? blueGrey[900] : blueGrey[700],
                                                             transform: 'scale(1.08)',
@@ -898,7 +898,7 @@ function Home() {
                                                 <Tooltip title="Cliquez ici pour ajouter des fichiers a l'accident" arrow>
                                                     <Button sx={{
                                                         backgroundColor: darkMode ? '#7b1fa2' : '#9c27b0',
-                                                        transition: 'all 0.3s ease-in-out',
+                                                        transition: 'all 0.1s ease-in-out',
                                                         '&:hover': {
                                                             backgroundColor: darkMode ? '#4a0072' : '#7b1fa2',
                                                             transform: 'scale(1.08)',
@@ -922,7 +922,7 @@ function Home() {
                                                 <Tooltip title="Cliquez ici pour générer la déclaration d'accident Belfius si vous avez remplis tous les champs du formulaire" arrow>
                                                     <Button sx={{
                                                         backgroundColor: darkMode ? '#1b5e20' : '#2e7d32',
-                                                        transition: 'all 0.3s ease-in-out',
+                                                        transition: 'all 0.1s ease-in-out',
                                                         '&:hover': {
                                                             backgroundColor: darkMode ? '#2e7d32' : '#1b5e20',
                                                             transform: 'scale(1.08)',
@@ -946,7 +946,7 @@ function Home() {
                                                 <Tooltip title="Cliquez ici pour supprimer l'accident" arrow>
                                                     <Button sx={{
                                                         backgroundColor: darkMode ? '#b71c1c' : '#d32f2f',
-                                                        transition: 'all 0.3s ease-in-out',
+                                                        transition: 'all 0.1s ease-in-out',
                                                         '&:hover': {
                                                             backgroundColor: darkMode ? '#d32f2f' : '#b71c1c',
                                                             transform: 'scale(1.08)',

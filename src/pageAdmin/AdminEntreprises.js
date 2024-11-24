@@ -216,7 +216,7 @@ export default function Adminusern() {
                                         <Tooltip title="Cliquez ici pour créer un nouveaux secteur pour cette entreprise" arrow>
                                             <Button sx={{
                                                 backgroundColor: darkMode ? '#7b1fa2' : '#9c27b0',
-                                                transition: 'all 0.3s ease-in-out',
+                                                transition: 'all 0.1s ease-in-out',
                                                 '&:hover': {
                                                     backgroundColor: darkMode ? '#4a0072' : '#7b1fa2',
                                                     transform: 'scale(1.08)',
@@ -239,7 +239,7 @@ export default function Adminusern() {
                                         <Tooltip title="Cliquez ici pour éditer cette entreprise" arrow>
                                             <Button sx={{
                                                 backgroundColor: darkMode ? '#424242' : '#1976d2',
-                                                transition: 'all 0.3s ease-in-out',
+                                                transition: 'all 0.1s ease-in-out',
                                                 '&:hover': {
                                                     backgroundColor: darkMode ? '#505050' : '#1565c0',
                                                     transform: 'scale(1.08)',
@@ -262,7 +262,7 @@ export default function Adminusern() {
                                         <Tooltip title="Cliquez ici pour supprimer cette entreprise" arrow>
                                             <Button sx={{
                                                 backgroundColor: darkMode ? '#b71c1c' : '#d32f2f',
-                                                transition: 'all 0.3s ease-in-out',
+                                                transition: 'all 0.1s ease-in-out',
                                                 '&:hover': {
                                                     backgroundColor: darkMode ? '#d32f2f' : '#b71c1c',
                                                     transform: 'scale(1.08)',

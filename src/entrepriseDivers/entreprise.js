@@ -574,7 +574,7 @@ const EnterpriseDivers = () => {
         height: '100%',
         backgroundColor: darkMode ? '#2a2a2a' : '#ebebeb',
         color: darkMode ? '#fff' : 'inherit',
-        transition: 'all 0.3s ease-in-out',
+        transition: 'all 0.1s ease-in-out',
         border: `2px solid ${darkMode ? '#4a4a4a' : '#01aeac'}`,
         borderRadius: '12px',
         '&:hover': {
@@ -761,7 +761,7 @@ const EnterpriseDivers = () => {
                                 onClick={() => handleStartQuestionnaire(enterprise)}
                                 sx={{
                                     ...buttonStyle,
-                                    transition: 'all 0.3s ease-in-out',
+                                    transition: 'all 0.1s ease-in-out',
                                     '&:hover': {
                                         backgroundColor: '#95ad22',
                                         transform: 'scale(1.08)',

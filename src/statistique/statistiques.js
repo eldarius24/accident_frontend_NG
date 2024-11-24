@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import {
-  FormControl, InputLabel, Select, MenuItem, Checkbox, ListItemText, Box, Paper
+  FormControl, InputLabel, Select, MenuItem, Checkbox, ListItemText, Box, Paper, Typography
 } from '@mui/material';
 import { useAccidentStats } from './filters';
 import chargerDonnees from './dataLoader';
@@ -10,6 +10,7 @@ import axios from 'axios';
 import config from '../config.json';
 import { saveFiltersToCookies, loadFiltersFromCookies } from './filterPersistence';
 import { useTheme } from '../pageAdmin/user/ThemeContext';
+import StyledChart from '../_composants/styledTitle';
 /**
  * Affiche les graphiques des accidents de travail par type de travailleur, âge, jour de la semaine, mois, an, secteur et par entreprise.
  * 
@@ -385,6 +386,49 @@ const Statistiques = () => {
   const isAllSectorsSelected = selectedSectors.length === sectors.length;
   return (
     <div className="col-span-full" style={{ margin: '20px' }}>
+                  <Box sx={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                margin: '2rem 0',
+                position: 'relative',
+                '&::after': {
+                    content: '""',
+                    position: 'absolute',
+                    bottom: '-10px',
+                    left: '50%',
+                    transform: 'translateX(-50%)',
+                    width: '150px',
+                    height: '4px',
+                    background: darkMode
+                        ? 'linear-gradient(90deg, rgba(122,142,28,0.2) 0%, rgba(122,142,28,1) 50%, rgba(122,142,28,0.2) 100%)'
+                        : 'linear-gradient(90deg, rgba(238,117,45,0.2) 0%, rgba(238,117,45,1) 50%, rgba(238,117,45,0.2) 100%)',
+                    borderRadius: '2px'
+                }
+            }}>
+                <Typography
+                    variant="h2"
+                    sx={{
+                        fontSize: { xs: '2rem', sm: '2.5rem', md: '3rem' },
+                        fontWeight: 700,
+                        color: darkMode ? '#ffffff' : '#2D3748',
+                        textTransform: 'uppercase',
+                        letterSpacing: '2px',
+                        textAlign: 'center',
+                        textShadow: darkMode
+                            ? '2px 2px 4px rgba(0,0,0,0.3)'
+                            : '2px 2px 4px rgba(0,0,0,0.1)',
+                        '&::first-letter': {
+                            color: darkMode ? '#7a8e1c' : '#ee752d',
+                            fontSize: '120%'
+                        },
+                        position: 'relative',
+                        padding: '0 20px'
+                    }}
+                >
+                    Statistiques
+                </Typography>
+            </Box>
       <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: '10px', marginBottom: '20px' }}>
         <FormControl sx={formControlStyle}>
           <InputLabel id="companies-label">Entreprises</InputLabel>
@@ -667,7 +711,82 @@ const Statistiques = () => {
         }}
       >
         <div className="flex flex-col items-center justify-center h-full mb-8">
-          <h2 className="text-center">Total des accidents</h2>
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              position: 'relative',
+              margin: '1.5rem 0',
+              '&::before': {
+                content: '""',
+                position: 'absolute',
+                top: '50%',
+                left: '50%',
+                transform: 'translate(-50%, -50%)',
+                width: '200px',
+                height: '45px',
+                background: darkMode
+                  ? 'rgba(122,142,28,0.1)'
+                  : 'rgba(238,117,45,0.1)',
+                filter: 'blur(10px)',
+                borderRadius: '10px',
+                zIndex: 0
+              }
+            }}
+          >
+            <Typography
+              variant="h2"
+              sx={{
+                fontSize: { xs: '1.5rem', sm: '1.8rem', md: '2.2rem' },
+                fontWeight: 600,
+                background: darkMode
+                  ? 'linear-gradient(45deg, #7a8e1c, #a4bd24)'
+                  : 'linear-gradient(45deg, #ee752d, #f4a261)',
+                backgroundClip: 'text',
+                WebkitBackgroundClip: 'text',
+                color: 'transparent',
+                textTransform: 'uppercase',
+                letterSpacing: '3px',
+                position: 'relative',
+                padding: '0.5rem 1.5rem',
+                zIndex: 1,
+                '&::after': {
+                  content: '""',
+                  position: 'absolute',
+                  bottom: 0,
+                  left: 0,
+                  width: '100%',
+                  height: '2px',
+                  background: darkMode
+                    ? 'linear-gradient(90deg, transparent, #7a8e1c, transparent)'
+                    : 'linear-gradient(90deg, transparent, #ee752d, transparent)'
+                }
+              }}
+            >
+              Tolat des accidents
+            </Typography>
+            <Box
+              sx={{
+                position: 'absolute',
+                width: '100%',
+                height: '100%',
+                opacity: 0.5,
+                pointerEvents: 'none',
+                '&::before': {
+                  content: '""',
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  width: '100%',
+                  height: '1px',
+                  background: darkMode
+                    ? 'linear-gradient(90deg, transparent, rgba(122,142,28,0.3), transparent)'
+                    : 'linear-gradient(90deg, transparent, rgba(238,117,45,0.3), transparent)'
+                }
+              }}
+            />
+          </Box>
           <p className="text-3xl font-bold text-center">{stats.totalAccidents}</p>
         </div>
       </Paper>
@@ -689,13 +808,16 @@ const Statistiques = () => {
             }
           }}
         >
-          {renderOptimizedChart('pie',
-            memoizedChartData.accidentsBySexData,
-            getRenderConfig('pie', memoizedChartData.accidentsBySexData, {
-              title: "Accidents par sexe",
-              darkMode: darkMode
-            })
-          )}
+          <StyledChart
+            chartType="pie"
+            data={memoizedChartData.accidentsBySexData}
+            title="Accidents par sexe"
+            darkMode={darkMode}
+            renderOptimizedChart={renderOptimizedChart}
+            getRenderConfig={getRenderConfig}
+            showStyledTitle={true}
+            showChartTitle={false}
+          />
         </Paper>
       )}
 
@@ -715,15 +837,18 @@ const Statistiques = () => {
             }
           }}
         >
-          {renderOptimizedChart('bar',
-            memoizedChartData.accidentsByTypeTravailleurData,
-            getRenderConfig('bar', memoizedChartData.accidentsByTypeTravailleurData, {
-              title: "Nombre d'accidents par type de travailleur",
-              xAxis: "type",
-              fill: "#82ca9d",
-              darkMode: darkMode
-            })
-          )}
+          <StyledChart
+            chartType="bar"
+            data={memoizedChartData.accidentsByTypeTravailleurData}
+            title="Nombre d'accidents par type de travailleur"
+            xAxis="type"
+            fill="#82ca9d"
+            darkMode={darkMode}
+            renderOptimizedChart={renderOptimizedChart}
+            getRenderConfig={getRenderConfig}
+            showStyledTitle={true}
+            showChartTitle={false}
+          />
         </Paper>
       )}
 
@@ -743,15 +868,18 @@ const Statistiques = () => {
             }
           }}
         >
-          {renderOptimizedChart('bar',
-            memoizedChartData.accidentsByAgeData,
-            getRenderConfig('bar', memoizedChartData.accidentsByAgeData, {
-              title: "Nombre d'accidents par âge du travailleur",
-              xAxis: "age",
-              fill: "#8884d8",
-              darkMode: darkMode
-            })
-          )}
+          <StyledChart
+            chartType="bar"
+            data={memoizedChartData.accidentsByAgeData}
+            title="Nombre d'accidents par âge du travailleur"
+            xAxis="age"
+            fill="#8884d8"
+            darkMode={darkMode}
+            renderOptimizedChart={renderOptimizedChart}
+            getRenderConfig={getRenderConfig}
+            showStyledTitle={true}
+            showChartTitle={false}
+          />
         </Paper>
       )}
 
@@ -771,15 +899,18 @@ const Statistiques = () => {
             }
           }}
         >
-          {renderOptimizedChart('bar',
-            memoizedChartData.accidentDayOfWeekData,
-            getRenderConfig('bar', memoizedChartData.accidentDayOfWeekData, {
-              title: "Accidents par jour de la semaine",
-              xAxis: "day",
-              fill: "#FFBB28",
-              darkMode: darkMode
-            })
-          )}
+          <StyledChart
+            chartType="bar"
+            data={memoizedChartData.accidentDayOfWeekData}
+            title="Accidents par jour de la semaine"
+            xAxis="day"
+            fill="#FFBB28"
+            darkMode={darkMode}
+            renderOptimizedChart={renderOptimizedChart}
+            getRenderConfig={getRenderConfig}
+            showStyledTitle={true}
+            showChartTitle={false}
+          />
         </Paper>
       )}
 
@@ -799,15 +930,18 @@ const Statistiques = () => {
             }
           }}
         >
-          {renderOptimizedChart('bar',
-            memoizedChartData.accidentMonthData,
-            getRenderConfig('bar', memoizedChartData.accidentMonthData, {
-              title: "Nombre total d'accidents par mois",
-              xAxis: "month",
-              fill: "#82ca9d",
-              darkMode: darkMode
-            })
-          )}
+          <StyledChart
+            chartType="bar"
+            data={memoizedChartData.accidentMonthData}
+            title="Nombre total d'accidents par mois"
+            xAxis="month"
+            fill="#82ca9d"
+            darkMode={darkMode}
+            renderOptimizedChart={renderOptimizedChart}
+            getRenderConfig={getRenderConfig}
+            showStyledTitle={true}
+            showChartTitle={false}
+          />
         </Paper>
       )}
 
@@ -827,15 +961,18 @@ const Statistiques = () => {
             }
           }}
         >
-          {renderOptimizedChart('bar',
-            memoizedChartData.accidentYearData,
-            getRenderConfig('bar', memoizedChartData.accidentYearData, {
-              title: "Nombre total d'accidents par an",
-              xAxis: "year",
-              fill: "#ffc658",
-              darkMode: darkMode
-            })
-          )}
+          <StyledChart
+            chartType="bar"
+            data={memoizedChartData.accidentYearData}
+            title="Nombre total d'accidents par an"
+            xAxis="year"
+            fill="#ffc658"
+            darkMode={darkMode}
+            renderOptimizedChart={renderOptimizedChart}
+            getRenderConfig={getRenderConfig}
+            showStyledTitle={true}
+            showChartTitle={false}
+          />
         </Paper>
       )}
 
@@ -855,13 +992,17 @@ const Statistiques = () => {
             }
           }}
         >
-          {renderOptimizedChart('pie',
-            memoizedChartData.accidentSectorData,
-            getRenderConfig('pie', memoizedChartData.accidentSectorData, {
-              title: "Accidents par secteur",
-              darkMode: darkMode
-            })
-          )}
+
+          <StyledChart
+            chartType="pie"
+            data={memoizedChartData.accidentSectorData}
+            title="Accidents par secteur"
+            darkMode={darkMode}
+            renderOptimizedChart={renderOptimizedChart}
+            getRenderConfig={getRenderConfig}
+            showStyledTitle={true}
+            showChartTitle={false}
+          />
         </Paper>
       )}
 
@@ -881,15 +1022,22 @@ const Statistiques = () => {
             }
           }}
         >
-          {renderOptimizedChart('line',
-            memoizedChartData.accidentYearByCompanyData,
-            getRenderConfig('line', memoizedChartData.accidentYearByCompanyData, {
-              title: "Accidents par an et par entreprise",
-              xAxis: "year",
-              darkMode: darkMode,
-              series: Object.keys(stats.accidentsByYearByCompany)
-            })
-          )}
+          <StyledChart
+            chartType="line"
+            data={memoizedChartData.accidentYearByCompanyData}
+            title="Accidents par an et par entreprise"
+            darkMode={darkMode}
+            renderOptimizedChart={renderOptimizedChart}
+            getRenderConfig={(chartType, data) =>
+              getRenderConfig(chartType, data, {
+                xAxis: "year",
+                darkMode: darkMode,
+                series: Object.keys(stats.accidentsByYearByCompany),
+              })
+            }
+            showStyledTitle={true}
+            showChartTitle={false}
+          />
         </Paper>
       )}
 
@@ -909,16 +1057,23 @@ const Statistiques = () => {
             }
           }}
         >
-          {renderOptimizedChart('line',
-            memoizedChartData.accidentMonthByCompanyData,
-            getRenderConfig('line', memoizedChartData.accidentMonthByCompanyData, {
-              title: "Accidents par mois et par entreprise",
-              xAxis: "month",
-              darkMode: darkMode,
-              series: Object.keys(stats.accidentsByMonthByCompany)
 
-            })
-          )}
+          <StyledChart
+            chartType="line"
+            data={memoizedChartData.accidentMonthByCompanyData}
+            title="Accidents par mois et par entreprise"
+            darkMode={darkMode}
+            renderOptimizedChart={renderOptimizedChart}
+            getRenderConfig={(chartType, data) =>
+              getRenderConfig(chartType, data, {
+                xAxis: "year",
+                darkMode: darkMode,
+                series: Object.keys(stats.accidentsByYearByCompany),
+              })
+            }
+            showStyledTitle={true}
+            showChartTitle={false}
+          />
         </Paper>
       )}
 
@@ -938,6 +1093,8 @@ const Statistiques = () => {
             }
           }}
         >
+
+
           {renderOptimizedChart(
             'tfYearCompany',
             null,
@@ -993,18 +1150,25 @@ const Statistiques = () => {
             }
           }}
         >
-          {renderOptimizedChart(
-            'accidentSectorCompany',
-            null,
-            getRenderConfig('accidentSectorCompany', null, {
-              title: "Accidents par entreprise par secteur",
-              darkMode: darkMode,
-              companies: Object.keys(stats.accidentsByCompany).map(companyName => ({
-                company: companyName,
-                data: stats.accidentsByCompany[companyName],
-              }))
-            })
-          )}
+          <StyledChart
+            chartType="accidentSectorCompany" // Type spécifique pour ce graphique
+            data={null} // Pas de données directement passées ici
+            title="Accidents par entreprise par secteur"
+            darkMode={darkMode}
+            renderOptimizedChart={renderOptimizedChart}
+            getRenderConfig={(chartType, data) =>
+              getRenderConfig(chartType, data, {
+                darkMode: darkMode,
+                companies: Object.keys(stats.accidentsByCompany).map(companyName => ({
+                  company: companyName,
+                  data: stats.accidentsByCompany[companyName],
+                })),
+              })
+            }
+            showStyledTitle={true} // Activer l'affichage du titre stylisé
+            showChartTitle={false} // Désactiver l'affichage du titre dans le graphique
+          />
+
         </Paper>
       )}
 

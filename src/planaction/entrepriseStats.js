@@ -61,7 +61,7 @@ const EnterpriseStats = React.memo(({ actions }) => {
             backgroundColor: getColorByCompletion(completionRate),
             color: darkMode ? '#ffffff' : 'inherit',
             boxShadow: darkMode ? '0 4px 8px 0 rgba(0,0,0,0.2)' : 3,
-            transition: 'all 0.3s ease-in-out',
+            transition: 'all 0.1s ease-in-out',
             '&:hover': {
                 transform: 'scale(1.02)',
                 boxShadow: darkMode ? '0 8px 16px 0 rgba(0,0,0,0.3)' : 6,

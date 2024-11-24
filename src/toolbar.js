@@ -61,7 +61,7 @@ function ResponsiveAppBar() {
           variant="contained"
           sx={{
             ...buttonStyle,
-            transition: 'all 0.3s ease-in-out',
+            transition: 'all 0.1s ease-in-out',
             '&:hover': {
               backgroundColor: '#95ad22',
               transform: 'scale(1.08)',
@@ -126,7 +126,7 @@ function ResponsiveAppBar() {
     minWidth: showText ? 'auto' : '40px',
     padding: showText ? 'auto' : '6px',
     fontSize: windowWidth > 1650 ? '1.2rem' : windowWidth > 1220 ? '1rem' : '0.8rem',
-    transition: 'all 0.3s ease-in-out',
+    transition: 'all 0.1s ease-in-out',
     height: windowWidth > 1850 ? '50px' : windowWidth > 1220 ? '40px' : '32px',
     px: windowWidth > 1850 ? 4 : windowWidth > 1220 ? 2 : 1,
     border: darkMode ? '1px solid rgba(255,255,255,0.1)' : 'none',
@@ -141,7 +141,7 @@ function ResponsiveAppBar() {
     flexGrow: 1,
     fontSize: windowWidth > 1350 ? '2rem' : windowWidth > 530 ? '1.5rem' : '0.6rem',
     letterSpacing: windowWidth > 1350 ? '.3rem' : windowWidth > 530 ? '.1rem' : '.01rem',
-    transition: 'all 0.3s ease-in-out',
+    transition: 'all 0.1s ease-in-out',
     '&:hover': {
       transform: 'scale(1.1)',
       textShadow: darkMode
@@ -170,7 +170,7 @@ function ResponsiveAppBar() {
         variant="contained"
         sx={{
           ...buttonStyle,
-          transition: 'all 0.3s ease-in-out',
+          transition: 'all 0.1s ease-in-out',
           '&:hover': {
             backgroundColor: '#95ad22',
             transform: 'scale(1.08)',
@@ -288,7 +288,7 @@ function ResponsiveAppBar() {
               onClick={() => setSupportDialogOpen(true)}
               sx={{
                 ...buttonStyle,
-                transition: 'all 0.3s ease-in-out',
+                transition: 'all 0.1s ease-in-out',
                 '&:hover': {
                   backgroundColor: darkMode ? '#790a0a' : '#ff0000',
                   transform: 'scale(1.08)',

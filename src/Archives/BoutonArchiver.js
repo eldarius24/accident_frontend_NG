@@ -12,7 +12,7 @@ const BoutonArchivage = forwardRef(({ onClick, darkMode }, ref) => (
       variant="contained"
       sx={{
         backgroundColor: darkMode ? '#947729' : '#ffbc03',
-        transition: 'all 0.3s ease-in-out',
+        transition: 'all 0.1s ease-in-out',
         '&:hover': {
           backgroundColor: darkMode ? '#b8982f' : '#cc9900',
           transform: 'scale(1.08)',

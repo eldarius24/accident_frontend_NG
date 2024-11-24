@@ -174,7 +174,7 @@ export default function Adminuser() {
                                                 to={`/addUser?userId=${user._id}`}
                                                 sx={{
                                                     backgroundColor: darkMode ? blueGrey[700] : blueGrey[500],
-                                                    transition: 'all 0.3s ease-in-out',
+                                                    transition: 'all 0.1s ease-in-out',
                                                     '&:hover': {
                                                         backgroundColor: darkMode ? blueGrey[900] : blueGrey[700],
                                                         transform: 'scale(1.08)',
@@ -197,7 +197,7 @@ export default function Adminuser() {
                                                 onClick={() => handleUserDelete(user._id)}
                                                 sx={{
                                                     backgroundColor: darkMode ? '#b71c1c' : '#d32f2f',
-                                                    transition: 'all 0.3s ease-in-out',
+                                                    transition: 'all 0.1s ease-in-out',
                                                     '&:hover': {
                                                         backgroundColor: darkMode ? '#d32f2f' : '#b71c1c',
                                                         transform: 'scale(1.08)',

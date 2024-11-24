@@ -352,7 +352,7 @@ const LogsViewer = () => {
                   height: '100%',
                   backgroundColor: darkMode ? '#424242' : '#ee752d60',
                   color: darkMode ? '#ffffff' : 'black',
-                  transition: 'all 0.3s ease-in-out',
+                  transition: 'all 0.1s ease-in-out',
                   '&:hover': {
                     backgroundColor: darkMode ? '#7a8e1c' : '#95ad22',
                     transform: 'scale(1.08)',
@@ -390,7 +390,7 @@ const LogsViewer = () => {
                   height: '100%',
                   backgroundColor: darkMode ? '#424242' : '#ee752d60',
                   color: darkMode ? '#ffffff' : 'black',
-                  transition: 'all 0.3s ease-in-out',
+                  transition: 'all 0.1s ease-in-out',
                   '&:hover': {
                     backgroundColor: darkMode ? '#7a8e1c' : '#95ad22',
                     transform: 'scale(1.08)',

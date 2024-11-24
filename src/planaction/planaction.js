@@ -575,7 +575,7 @@ export default function PlanAction({ accidentData }) {
                                     color: darkMode ? '#ffffff' : 'black',
                                     padding: '15px 60px',
                                     backgroundColor: darkMode ? '#424242' : '#ee742d59',
-                                    transition: 'all 0.3s ease-in-out',
+                                    transition: 'all 0.1s ease-in-out',
                                     '&:hover': {
                                         backgroundColor: darkMode ? '#7a8e1c' : '#95ad22',
                                         transform: 'scale(1.08)',
@@ -751,7 +751,7 @@ export default function PlanAction({ accidentData }) {
                                     color: darkMode ? '#ffffff' : 'black',
                                     padding: '15px 60px',
                                     backgroundColor: darkMode ? '#424242' : '#ee742d59',
-                                    transition: 'all 0.3s ease-in-out',
+                                    transition: 'all 0.1s ease-in-out',
                                     '&:hover': {
                                         backgroundColor: darkMode ? '#7a8e1c' : '#95ad22',
                                         transform: 'scale(1.08)',
@@ -878,7 +878,7 @@ export default function PlanAction({ accidentData }) {
                                                 <Tooltip title="Cliquez ici pour éditer les données de l'action" arrow>
                                                     <Button sx={{
                                                         backgroundColor: darkMode ? blueGrey[700] : blueGrey[500],
-                                                        transition: 'all 0.3s ease-in-out',
+                                                        transition: 'all 0.1s ease-in-out',
                                                         '&:hover': {
                                                             backgroundColor: darkMode ? blueGrey[900] : blueGrey[700],
                                                             transform: 'scale(1.08)',
@@ -901,7 +901,7 @@ export default function PlanAction({ accidentData }) {
                                                 <Tooltip title="Cliquez ici pour ajouter des fichiers a l'action" arrow>
                                                     <Button sx={{
                                                         backgroundColor: darkMode ? '#7b1fa2' : '#9c27b0',
-                                                        transition: 'all 0.3s ease-in-out',
+                                                        transition: 'all 0.1s ease-in-out',
                                                         '&:hover': {
                                                             backgroundColor: darkMode ? '#4a0072' : '#7b1fa2',
                                                             transform: 'scale(1.08)',
@@ -930,7 +930,7 @@ export default function PlanAction({ accidentData }) {
                                                 <Tooltip title="Cliquez ici pour supprimer l'action" arrow>
                                                     <Button sx={{
                                                         backgroundColor: darkMode ? '#b71c1c' : '#d32f2f',
-                                                        transition: 'all 0.3s ease-in-out',
+                                                        transition: 'all 0.1s ease-in-out',
                                                         '&:hover': {
                                                             backgroundColor: darkMode ? '#d32f2f' : '#b71c1c',
                                                             transform: 'scale(1.08)',

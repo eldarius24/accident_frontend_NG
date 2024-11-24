@@ -149,7 +149,7 @@ const MessSupport = () => {
         backgroundColor: getCardBackgroundColor(typeSupport),
         color: darkMode ? '#ffffff' : '#000000',
         marginBottom: 2,
-        transition: 'all 0.3s ease',
+        transition: 'all 0.1s ease',
         '&:hover': {
             transform: 'scale(1.02)',
             transition: 'transform 0.2s ease-in-out'

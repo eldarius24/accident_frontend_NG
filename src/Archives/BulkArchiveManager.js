@@ -402,7 +402,7 @@ const BulkArchiveManager = ({ darkMode, onSuccess }) => {
                                         ...defaultStyle,
                                         color: darkMode ? '#ffffff !important' : 'black',
                                         backgroundColor: darkMode ? '#424242' : '#ee742d59',
-                                        transition: 'all 0.3s ease-in-out',
+                                        transition: 'all 0.1s ease-in-out',
                                         '&:hover': {
                                             backgroundColor: darkMode ? '#7a8e1c' : '#95ad22',
                                             transform: 'scale(1.08)',
@@ -499,7 +499,7 @@ const BulkArchiveManager = ({ darkMode, onSuccess }) => {
                                         ...defaultStyle,
                                         color: darkMode ? '#ffffff !important' : 'black',
                                         backgroundColor: darkMode ? '#424242' : '#ee742d59',
-                                        transition: 'all 0.3s ease-in-out',
+                                        transition: 'all 0.1s ease-in-out',
                                         '&:hover': {
                                             backgroundColor: darkMode ? '#7a8e1c' : '#95ad22',
                                             transform: 'scale(1.08)',

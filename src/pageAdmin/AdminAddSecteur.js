@@ -210,7 +210,7 @@ export default function AddSecteur() {
                             sx={{
                                 backgroundColor: darkMode ? '#424242' : '#ee742d59',
                                 color: darkMode ? '#ffffff' : 'black',
-                                transition: 'all 0.3s ease-in-out',
+                                transition: 'all 0.1s ease-in-out',
                                 '&:hover': {
                                     backgroundColor: darkMode ? '#7a8e1c' : '#95ad22',
                                     transform: 'scale(1.08)',
@@ -271,7 +271,7 @@ export default function AddSecteur() {
                                                 <Button
                                                     sx={{
                                                         backgroundColor: darkMode ? '#b71c1c' : '#d32f2f',
-                                                        transition: 'all 0.3s ease-in-out',
+                                                        transition: 'all 0.1s ease-in-out',
                                                         '&:hover': {
                                                             backgroundColor: darkMode ? '#d32f2f' : '#b71c1c',
                                                             transform: 'scale(1.08)',

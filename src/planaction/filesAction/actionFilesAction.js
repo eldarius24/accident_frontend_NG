@@ -274,7 +274,7 @@ export default function ListFilesInaction(actionId) {
                                             width: '36px',
                                             height: '36px',
                                             padding: 0,
-                                            transition: 'all 0.3s ease-in-out',
+                                            transition: 'all 0.1s ease-in-out',
                                             '&:hover': {
                                                 backgroundColor: blueGrey[700], // Couleur plus foncée au survol
                                                 transform: 'scale(1.08)',
@@ -301,7 +301,7 @@ export default function ListFilesInaction(actionId) {
                                             width: '36px',
                                             height: '36px',
                                             padding: 0,
-                                            transition: 'all 0.3s ease-in-out',
+                                            transition: 'all 0.1s ease-in-out',
                                             '&:hover': {
                                                 transform: 'scale(1.08)',
                                                 boxShadow: 6
@@ -321,7 +321,7 @@ export default function ListFilesInaction(actionId) {
                                             width: '36px',
                                             height: '36px',
                                             padding: 0,
-                                            transition: 'all 0.3s ease-in-out',
+                                            transition: 'all 0.1s ease-in-out',
                                             '&:hover': {
                                                 transform: 'scale(1.08)',
                                                 boxShadow: 6
@@ -341,7 +341,7 @@ export default function ListFilesInaction(actionId) {
                                             width: '36px',
                                             height: '36px',
                                             padding: 0,
-                                            transition: 'all 0.3s ease-in-out',
+                                            transition: 'all 0.1s ease-in-out',
                                             '&:hover': {
                                                 transform: 'scale(1.08)',
                                                 boxShadow: 6
