@@ -11,7 +11,9 @@ import {
     Button,
     LinearProgress,
     Paper,
-    Tooltip
+    Tooltip,
+    Box,
+    Typography
 } from '@mui/material';
 import TextFieldP from '../_composants/textFieldP';
 import TextFieldQ from '../_composants/textFieldQ';
@@ -235,7 +237,92 @@ export default function FormulaireAction() {
                     }
                 }}
             >
-                <h3 style={{ color: darkMode ? '#ffffff' : 'inherit' }}>{actionData ? 'Modifier une action' : 'Ajouter une action'}</h3>
+                <Box
+                    sx={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        position: 'relative',
+                        margin: '1.5rem 0',
+                        gap: '1rem',
+                        '&::before': {
+                            content: '""',
+                            position: 'absolute',
+                            top: '50%',
+                            left: '50%',
+                            transform: 'translate(-50%, -50%)',
+                            width: '100%',
+                            height: '100%',
+                            background: darkMode
+                                ? 'rgba(122,142,28,0.1)'
+                                : 'rgba(238,117,45,0.1)',
+                            filter: 'blur(10px)',
+                            borderRadius: '10px',
+                            zIndex: 0
+                        }
+                    }}
+                >
+                    <Typography
+                        variant="h1"
+                        sx={{
+                            fontSize: { xs: '1.8rem', sm: '2rem', md: '2.4rem' },
+                            fontWeight: 700,
+                            background: darkMode
+                                ? 'linear-gradient(45deg, #7a8e1c, #a4bd24)'
+                                : 'linear-gradient(45deg, #ee752d, #f4a261)',
+                            backgroundClip: 'text',
+                            WebkitBackgroundClip: 'text',
+                            color: 'transparent',
+                            textTransform: 'uppercase',
+                            letterSpacing: '2px',
+                            position: 'relative',
+                            padding: '0.5rem 1.5rem',
+                            textAlign: 'center',
+                            zIndex: 1,
+                            '&::after': {
+                                content: '""',
+                                position: 'absolute',
+                                bottom: '-5px',
+                                left: '50%',
+                                transform: 'translateX(-50%)',
+                                width: '80%',
+                                height: '2px',
+                                background: darkMode
+                                    ? 'linear-gradient(90deg, transparent, #7a8e1c, transparent)'
+                                    : 'linear-gradient(90deg, transparent, #ee752d, transparent)'
+                            }
+                        }}
+                    >
+                        {actionData ? 'Modifier une action' : 'Ajouter une action'}
+                    </Typography>
+
+                    <Typography
+                        variant="h2"
+                        sx={{
+                            fontSize: { xs: '1.2rem', sm: '1.4rem', md: '1.6rem' },
+                            fontWeight: 500,
+                            color: darkMode ? 'rgba(255,255,255,0.9)' : 'rgba(0,0,0,0.8)',
+                            textAlign: 'center',
+                            position: 'relative',
+                            zIndex: 1,
+                            padding: '0 1rem',
+                            '&::before': {
+                                content: '""',
+                                position: 'absolute',
+                                top: '50%',
+                                left: '0',
+                                width: '100%',
+                                height: '1px',
+                                background: darkMode
+                                    ? 'linear-gradient(90deg, transparent, rgba(122,142,28,0.3), transparent)'
+                                    : 'linear-gradient(90deg, transparent, rgba(238,117,45,0.3), transparent)',
+                                zIndex: -1
+                            }
+                        }}
+                    >
+                        Formulaire Pris en compte pour les statistiques
+                    </Typography>
+                </Box>
                 <AutoCompleteQ
                     id='AddActionanne'
                     option={yearOptions}

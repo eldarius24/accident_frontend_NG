@@ -215,8 +215,9 @@ function ResponsiveAppBar() {
             />
           </Tooltip>
           {renderLogoutButton()}
-          {isAdminOrDev && ['/logView', '/', '/messSupport', '/addSecteur', '/adminaction', '/adminUser', "/adminEntreprises", "/addEntreprise", "/addUser"].includes(location.pathname) &&
+          {isAdminOrDev && ['/logView', '/', '/messSupport', '/addSecteur', '/adminUser', "/adminEntreprises", "/addEntreprise", "/addUser"].includes(location.pathname) &&
             renderButton("/adminaction", "Cliquez ici accèder à l'espace d'administration", <AdminPanelSettingsIcon />, "Admin")}
+
         </Box>
 
         {/* Logo au centre */}
@@ -227,13 +228,37 @@ function ResponsiveAppBar() {
           pointerEvents: 'none' // Empêche le logo de interférer avec les clics
         }}>
         </Box>
-        <Box>
-          <Tooltip title="Traitement Informatisé de Gestion des Risques et des Emergences">
-            <Typography variant="h5" noWrap sx={textStyle}>
-              T.I.G.R.E
-            </Typography>
-          </Tooltip>
-        </Box>
+        {!isLoginPage && (
+          <Box>
+            <Tooltip title="Traitement Informatisé de Gestion des Risques et des Emergences">
+              <Box
+                component="span" // Utilisation de span au lieu de div
+                sx={{
+                  fontSize: '2.5rem',
+                  fontWeight: 700,
+                  background: darkMode
+                    ? 'linear-gradient(45deg, #7a8e1c 0%, #a4bd24 25%, #d4e157 50%, #a4bd24 75%, #7a8e1c 100%)'
+                    : 'linear-gradient(45deg, #ee752d 0%, #f4a261 25%, #ffb74d 50%, #f4a261 75%, #ee752d 100%)',
+                  backgroundSize: '200% auto',
+                  backgroundClip: 'text',
+                  WebkitBackgroundClip: 'text',
+                  color: 'transparent',
+                  animation: 'gradient 3s linear infinite',
+                  '@keyframes gradient': {
+                    '0%': { backgroundPosition: '0% center' },
+                    '100%': { backgroundPosition: '200% center' }
+                  },
+                  letterSpacing: '0.1em',
+                  textShadow: darkMode
+                    ? '0 0 6px rgba(122,142,28,0.3)'
+                    : '0 0 6px rgba(238,117,45,0.3)'
+                }}
+              >
+                T.I.G.R.E
+              </Box>
+            </Tooltip>
+          </Box>
+        )}
 
         {/* Groupe de boutons à droite */}
         <Box sx={{
@@ -277,6 +302,7 @@ function ResponsiveAppBar() {
 
               {!['/messSupport', '/actionfichierdll', "/", '/addSecteur', '/addEntreprise', '/quesEntrep', '/adminaction', '/entreprise', '/logView', '/fichierdll', '/fichierdllaction', '/addUser', '/adminUser', '/adminEntreprises', '/planAction', '/formulaireAction', '/formulaire', '/statistiques'].includes(location.pathname) &&
                 renderButton("/messSupport", "Cliquez ici pour gérer les entreprises", <ViewListIcon />, "Msg Support")}
+
             </>
           )}
           {!['/login', '/messSupport', '/actionfichierdll', '/quesEntrep', '/entreprise', '/logView', '/fichierdll', '/fichierdllaction', '/addSecteur', '/addUser', '/adminUser', '/addEntreprise', '/adminEntreprises', '/adminaction', '/formulaireAction', '/planAction', '/formulaire', '/statistiques'].includes(location.pathname) &&

@@ -13,7 +13,7 @@ import FormulaireSalarie from './formulaireSalarie';
 import FormulaireDeclarationASSBelfius from './formulaireDeclarationAssBelfius';
 import config from '../config.json';
 import CustomSnackbar from '../_composants/CustomSnackbar';
-import { Tooltip, Button, Paper } from '@mui/material';
+import { Tooltip, Button, Paper, Box, Typography } from '@mui/material';
 import { useLogger } from '../Hook/useLogger';
 import { useTheme } from '../pageAdmin/user/ThemeContext';
 
