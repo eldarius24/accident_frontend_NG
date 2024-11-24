@@ -215,22 +215,22 @@ const BulkArchiveManager = ({ darkMode, onSuccess }) => {
                 maxWidth: '1200px'
             }}>
                 <FormControl sx={{
-                                    boxShadow: darkMode ? '0 3px 6px rgba(255,255,255,0.1)' : 3,
-                                    minWidth: 120,
-                                    backgroundColor: darkMode ? '#424242' : '#ee752d60',
-                                    '& .MuiInputLabel-root': {
-                                        color: darkMode ? '#fff' : 'inherit'
-                                    },
-                                    '& .MuiOutlinedInput-root': {
-                                        color: darkMode ? '#fff' : 'inherit',
-                                        '& fieldset': {
-                                            borderColor: darkMode ? 'rgba(255,255,255,0.3)' : 'rgba(0,0,0,0.23)'
-                                        },
-                                        '&:hover fieldset': {
-                                            borderColor: darkMode ? 'rgba(255,255,255,0.5)' : 'rgba(0,0,0,0.5)'
-                                        }
-                                    }
-                                }}>
+                    boxShadow: darkMode ? '0 3px 6px rgba(255,255,255,0.1)' : 3,
+                    minWidth: 120,
+                    backgroundColor: darkMode ? '#424242' : '#ee752d60',
+                    '& .MuiInputLabel-root': {
+                        color: darkMode ? '#fff' : 'inherit'
+                    },
+                    '& .MuiOutlinedInput-root': {
+                        color: darkMode ? '#fff' : 'inherit',
+                        '& fieldset': {
+                            borderColor: darkMode ? 'rgba(255,255,255,0.3)' : 'rgba(0,0,0,0.23)'
+                        },
+                        '&:hover fieldset': {
+                            borderColor: darkMode ? 'rgba(255,255,255,0.5)' : 'rgba(0,0,0,0.5)'
+                        }
+                    }
+                }}>
                     <InputLabel sx={{ color: darkMode ? '#fff' : 'inherit' }}>Type</InputLabel>
                     <Select
                         value={type}
@@ -267,22 +267,22 @@ const BulkArchiveManager = ({ darkMode, onSuccess }) => {
                         justifyContent: 'center'
                     }}>
                         <FormControl sx={{
-                                    boxShadow: darkMode ? '0 3px 6px rgba(255,255,255,0.1)' : 3,
-                                    minWidth: 120,
-                                    backgroundColor: darkMode ? '#424242' : '#ee752d60',
-                                    '& .MuiInputLabel-root': {
-                                        color: darkMode ? '#fff' : 'inherit'
-                                    },
-                                    '& .MuiOutlinedInput-root': {
-                                        color: darkMode ? '#fff' : 'inherit',
-                                        '& fieldset': {
-                                            borderColor: darkMode ? 'rgba(255,255,255,0.3)' : 'rgba(0,0,0,0.23)'
-                                        },
-                                        '&:hover fieldset': {
-                                            borderColor: darkMode ? 'rgba(255,255,255,0.5)' : 'rgba(0,0,0,0.5)'
-                                        }
-                                    }
-                                }}>
+                            boxShadow: darkMode ? '0 3px 6px rgba(255,255,255,0.1)' : 3,
+                            minWidth: 120,
+                            backgroundColor: darkMode ? '#424242' : '#ee752d60',
+                            '& .MuiInputLabel-root': {
+                                color: darkMode ? '#fff' : 'inherit'
+                            },
+                            '& .MuiOutlinedInput-root': {
+                                color: darkMode ? '#fff' : 'inherit',
+                                '& fieldset': {
+                                    borderColor: darkMode ? 'rgba(255,255,255,0.3)' : 'rgba(0,0,0,0.23)'
+                                },
+                                '&:hover fieldset': {
+                                    borderColor: darkMode ? 'rgba(255,255,255,0.5)' : 'rgba(0,0,0,0.5)'
+                                }
+                            }
+                        }}>
                             <InputLabel sx={{ color: darkMode ? '#fff' : 'inherit' }}>Année à archiver</InputLabel>
                             <Select
                                 value={selectedYearArchive}
@@ -310,7 +310,7 @@ const BulkArchiveManager = ({ darkMode, onSuccess }) => {
                                     startIcon={<ArchiveIcon />}
                                     sx={{
                                         ...defaultStyle,
-                                        color: darkMode ? '#ffffff' : 'black',
+                                        color: darkMode ? '#ffffff !important' : 'black',
                                         backgroundColor: darkMode ? '#424242' : '#ee742d59',
                                         transition: 'all 0.3s ease-in-out',
                                         '&:hover': {
@@ -318,9 +318,18 @@ const BulkArchiveManager = ({ darkMode, onSuccess }) => {
                                             transform: 'scale(1.08)',
                                             boxShadow: darkMode ? '0 6px 12px rgba(255,255,255,0.2)' : 6
                                         },
+                                        '&.Mui-disabled': {
+                                            color: darkMode ? '#ffffff81 !important' : 'rgba(0, 0, 0, 0.26)',
+                                            '& .MuiSvgIcon-root': {
+                                                color: darkMode ? '#ffffff81 !important' : 'rgba(0, 0, 0, 0.26)'
+                                            }
+                                        },
                                         boxShadow: darkMode ? '0 3px 6px rgba(255,255,255,0.1)' : 3,
                                         textTransform: 'none',
-                                        border: darkMode ? '1px solid rgba(255,255,255,0.1)' : 'none'
+                                        border: darkMode ? '1px solid rgba(255,255,255,0.1)' : 'none',
+                                        '& .MuiSvgIcon-root': {
+                                            color: darkMode ? '#ffffff' : 'inherit'
+                                        }
                                     }}
                                 >
                                     Archiver l'année
@@ -328,8 +337,8 @@ const BulkArchiveManager = ({ darkMode, onSuccess }) => {
                             </span>
                         </Tooltip>
                     </Box>
-                    </Box>
-                    <Box>
+                </Box>
+                <Box>
 
                     <Box sx={{
                         display: 'flex',
@@ -339,22 +348,22 @@ const BulkArchiveManager = ({ darkMode, onSuccess }) => {
                         justifyContent: 'center'
                     }}>
                         <FormControl sx={{
-                                    boxShadow: darkMode ? '0 3px 6px rgba(255,255,255,0.1)' : 3,
-                                    minWidth: 120,
-                                    backgroundColor: darkMode ? '#424242' : '#ee752d60',
-                                    '& .MuiInputLabel-root': {
-                                        color: darkMode ? '#fff' : 'inherit'
-                                    },
-                                    '& .MuiOutlinedInput-root': {
-                                        color: darkMode ? '#fff' : 'inherit',
-                                        '& fieldset': {
-                                            borderColor: darkMode ? 'rgba(255,255,255,0.3)' : 'rgba(0,0,0,0.23)'
-                                        },
-                                        '&:hover fieldset': {
-                                            borderColor: darkMode ? 'rgba(255,255,255,0.5)' : 'rgba(0,0,0,0.5)'
-                                        }
-                                    }
-                                }}>
+                            boxShadow: darkMode ? '0 3px 6px rgba(255,255,255,0.1)' : 3,
+                            minWidth: 120,
+                            backgroundColor: darkMode ? '#424242' : '#ee752d60',
+                            '& .MuiInputLabel-root': {
+                                color: darkMode ? '#fff' : 'inherit'
+                            },
+                            '& .MuiOutlinedInput-root': {
+                                color: darkMode ? '#fff' : 'inherit',
+                                '& fieldset': {
+                                    borderColor: darkMode ? 'rgba(255,255,255,0.3)' : 'rgba(0,0,0,0.23)'
+                                },
+                                '&:hover fieldset': {
+                                    borderColor: darkMode ? 'rgba(255,255,255,0.5)' : 'rgba(0,0,0,0.5)'
+                                }
+                            }
+                        }}>
                             <InputLabel sx={{ color: darkMode ? '#fff' : 'inherit' }}>Année à restaurer</InputLabel>
                             <Select
                                 value={selectedYearRestore}
@@ -382,7 +391,7 @@ const BulkArchiveManager = ({ darkMode, onSuccess }) => {
                                     startIcon={<UnarchiveIcon />}
                                     sx={{
                                         ...defaultStyle,
-                                        color: darkMode ? '#ffffff' : 'black',
+                                        color: darkMode ? '#ffffff !important' : 'black',
                                         backgroundColor: darkMode ? '#424242' : '#ee742d59',
                                         transition: 'all 0.3s ease-in-out',
                                         '&:hover': {
@@ -390,9 +399,18 @@ const BulkArchiveManager = ({ darkMode, onSuccess }) => {
                                             transform: 'scale(1.08)',
                                             boxShadow: darkMode ? '0 6px 12px rgba(255,255,255,0.2)' : 6
                                         },
+                                        '&.Mui-disabled': {
+                                            color: darkMode ? '#ffffff81 !important' : 'rgba(0, 0, 0, 0.26)',
+                                            '& .MuiSvgIcon-root': {
+                                                color: darkMode ? '#ffffff81 !important' : 'rgba(0, 0, 0, 0.26)'
+                                            }
+                                        },
                                         boxShadow: darkMode ? '0 3px 6px rgba(255,255,255,0.1)' : 3,
                                         textTransform: 'none',
-                                        border: darkMode ? '1px solid rgba(255,255,255,0.1)' : 'none'
+                                        border: darkMode ? '1px solid rgba(255,255,255,0.1)' : 'none',
+                                        '& .MuiSvgIcon-root': {
+                                            color: darkMode ? '#ffffff' : 'inherit'
+                                        }
                                     }}
                                 >
                                     Restaurer l'année
