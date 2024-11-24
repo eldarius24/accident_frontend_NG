@@ -309,15 +309,18 @@ function Home() {
      * @param {function} [params.onError] - La fonction à appeler en cas d'erreur
      */
     const handleExportAccidentClick = useCallback(() => {
+        const cleanSearchTerm = searchTerm || ''; // S'assure que searchTerm n'est jamais undefined
+    
         handleExportDataAccident({
             filteredData,
             isAdminOrDev,
             userInfo,
-            logAction, // Ajout de la fonction logAction
+            logAction,
+            searchTerm: cleanSearchTerm, // Passe la version nettoyée
             onSuccess: (message) => showSnackbar(message, 'success'),
             onError: (message) => showSnackbar(message, 'error')
         });
-    }, [filteredData, isAdminOrDev, userInfo, logAction, showSnackbar]);
+    }, [filteredData, isAdminOrDev, userInfo, logAction, searchTerm, showSnackbar]);
 
     /**
      * Exporte les données d'assurance vers un fichier Excel.

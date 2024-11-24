@@ -81,17 +81,20 @@ export default function PlanAction({ accidentData }) {
     }, []);
 
     const handleExport = useCallback(
+
         createHandleExport(
             users,
             isAdminOrDev,
             userInfo,
+            selectedEnterprises,
             selectedYears,
             searchTerm,
             showSnackbar,
             logAction
         ),
-        [users, isAdminOrDev, userInfo, selectedYears, searchTerm, showSnackbar, logAction]
+        [users, isAdminOrDev, userInfo, selectedYears, searchTerm,selectedEnterprises, showSnackbar, logAction]
     );
+
 
     const updateUserSelectedEnterprise = useCallback(
         (newValue) => {
@@ -173,6 +176,8 @@ export default function PlanAction({ accidentData }) {
         return rowColors[theme].rows[index % 2];
     }, [darkMode, rowColors]);
 
+
+    
     const handleYearsChange = useCallback((event) => {
         const newSelectedYears = event.target.value;
         setSelectedYears(newSelectedYears);
@@ -290,7 +295,7 @@ export default function PlanAction({ accidentData }) {
         setSelectedYears(prevSelected =>
             JSON.stringify(prevSelected) !== JSON.stringify(validYears) ? validYears : prevSelected
         );
-    }, [users, isAdminOrDev, userInfo?.entreprisesConseillerPrevention]);
+    }, []);
 
     const handleDelete = useCallback(async (userIdToDelete) => {
         try {
