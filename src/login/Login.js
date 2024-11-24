@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { TextField, Tooltip } from '@mui/material';
+import { TextField, Tooltip, Box, Typography } from '@mui/material';
 import { useForm } from 'react-hook-form';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
@@ -236,7 +236,201 @@ const Login = () => {
       minHeight: '100vh'
     }}>
       <div className="max-h-screen">
-        <div className="image-tigre"></div>
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
+            margin: '2rem 0',
+            position: 'relative',
+            padding: '30px 0',
+            overflow: 'hidden',
+            '&::before': {
+              content: '""',
+              position: 'absolute',
+              top: '0',
+              left: '-100%',
+              width: '300%',
+              height: '100%',
+              background: darkMode
+                ? 'linear-gradient(90deg, transparent 0%, rgba(122,142,28,0.1) 45%, rgba(122,142,28,0.3) 50%, rgba(122,142,28,0.1) 55%, transparent 100%)'
+                : 'linear-gradient(90deg, transparent 0%, rgba(238,117,45,0.1) 45%, rgba(238,117,45,0.3) 50%, rgba(238,117,45,0.1) 55%, transparent 100%)',
+              animation: 'shine 3s infinite linear',
+            },
+            '@keyframes shine': {
+              to: {
+                transform: 'translateX(50%)',
+              },
+            },
+            '&::after': {
+              content: '""',
+              position: 'absolute',
+              inset: '-2px',
+              padding: '3px',
+              background: darkMode
+                ? 'linear-gradient(45deg, #7a8e1c, transparent, #a4bd24, transparent, #7a8e1c)'
+                : 'linear-gradient(45deg, #ee752d, transparent, #f4a261, transparent, #ee752d)',
+              borderRadius: '16px',
+              WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
+              WebkitMaskComposite: 'xor',
+              maskComposite: 'exclude',
+              animation: 'borderRotate 4s linear infinite',
+            },
+            '@keyframes borderRotate': {
+              from: {
+                transform: 'rotate(0deg)',
+              },
+              to: {
+                transform: 'rotate(360deg)',
+              },
+            },
+          }}
+        >
+          <Box
+            sx={{
+              position: 'relative',
+              padding: '20px 40px',
+              borderRadius: '15px',
+              background: darkMode
+                ? 'rgba(0,0,0,0.3)'
+                : 'rgba(255,255,255,0.3)',
+              backdropFilter: 'blur(10px)',
+              boxShadow: darkMode
+                ? '0 8px 32px 0 rgba(0,0,0, 0.37)'
+                : '0 8px 32px 0 rgba(238,117,45, 0.37)',
+              zIndex: 1,
+            }}
+          >
+            <Typography
+              variant="h1"
+              sx={{
+                fontSize: { xs: '2.5rem', sm: '3.5rem', md: '4.5rem' },
+                fontWeight: 900,
+                background: darkMode
+                  ? 'linear-gradient(45deg, #7a8e1c 0%, #a4bd24 25%, #d4e157 50%, #a4bd24 75%, #7a8e1c 100%)'
+                  : 'linear-gradient(45deg, #ee752d 0%, #f4a261 25%, #ffb74d 50%, #f4a261 75%, #ee752d 100%)',
+                backgroundSize: '200% auto',
+                backgroundClip: 'text',
+                WebkitBackgroundClip: 'text',
+                color: 'transparent',
+                textTransform: 'uppercase',
+                letterSpacing: '0.15em',
+                textAlign: 'center',
+                animation: 'gradient 3s linear infinite',
+                '@keyframes gradient': {
+                  '0%': {
+                    backgroundPosition: '0% center',
+                  },
+                  '100%': {
+                    backgroundPosition: '200% center',
+                  },
+                },
+                textShadow: darkMode
+                  ? '0 0 20px rgba(122,142,28,0.5)'
+                  : '0 0 20px rgba(238,117,45,0.5)',
+                position: 'relative',
+                '&::before': {
+                  content: 'attr(data-text)',
+                  position: 'absolute',
+                  left: '2px',
+                  top: '2px',
+                  width: '100%',
+                  height: '100%',
+                  backgroundImage: darkMode
+                    ? 'linear-gradient(45deg, #7a8e1c 0%, transparent 100%)'
+                    : 'linear-gradient(45deg, #ee752d 0%, transparent 100%)',
+                  backgroundClip: 'text',
+                  WebkitBackgroundClip: 'text',
+                  color: 'transparent',
+                  zIndex: -1,
+                  filter: 'blur(1px)',
+                },
+              }}
+              data-text="T.I.G.R.E"
+            >
+              T.I.G.R.E
+            </Typography>
+
+            <Typography
+              variant="subtitle1"
+              sx={{
+                fontSize: { xs: '0.9rem', sm: '1.1rem', md: '1.3rem' },
+                fontWeight: 500,
+                background: darkMode
+                  ? 'linear-gradient(45deg, #7a8e1c, #a4bd24)'
+                  : 'linear-gradient(45deg, #ee752d, #f4a261)',
+                backgroundClip: 'text',
+                WebkitBackgroundClip: 'text',
+                color: 'transparent',
+                textAlign: 'center',
+                letterSpacing: '0.2em',
+                marginTop: '15px',
+                position: 'relative',
+                textTransform: 'uppercase',
+                animation: 'fadeIn 0.5s ease-in-out',
+                '@keyframes fadeIn': {
+                  from: { opacity: 0, transform: 'translateY(10px)' },
+                  to: { opacity: 1, transform: 'translateY(0)' },
+                },
+                '&::after': {
+                  content: '""',
+                  position: 'absolute',
+                  bottom: '-10px',
+                  left: '50%',
+                  transform: 'translateX(-50%)',
+                  width: '50%',
+                  height: '2px',
+                  background: darkMode
+                    ? 'linear-gradient(90deg, transparent, #7a8e1c, transparent)'
+                    : 'linear-gradient(90deg, transparent, #ee752d, transparent)',
+                },
+              }}
+            >
+              Traitement Informatisé de la Gestion des Risques en Entreprise
+            </Typography>
+          </Box>
+
+          {/* Particules décoratives */}
+          <Box
+            sx={{
+              position: 'absolute',
+              width: '100%',
+              height: '100%',
+              overflow: 'hidden',
+              zIndex: 0,
+              opacity: 0.5,
+              '& .particle': {
+                position: 'absolute',
+                width: '3px',
+                height: '3px',
+                background: darkMode ? '#7a8e1c' : '#ee752d',
+                borderRadius: '50%',
+                animation: 'float 3s infinite ease-in-out',
+              },
+              '@keyframes float': {
+                '0%, 100%': {
+                  transform: 'translateY(0)',
+                },
+                '50%': {
+                  transform: 'translateY(-20px)',
+                },
+              },
+            }}
+          >
+            {[...Array(20)].map((_, i) => (
+              <Box
+                key={i}
+                className="particle"
+                sx={{
+                  left: `${Math.random() * 100}%`,
+                  top: `${Math.random() * 100}%`,
+                  animationDelay: `${Math.random() * 2}s`,
+                }}
+              />
+            ))}
+          </Box>
+        </Box>
         <div className="flex justify-center max-h-96">
           <Tooltip title="Attention aux chocs et aux vibrations !!!" arrow>
             <Grid className="max-w-lg" container>
@@ -263,9 +457,9 @@ const Login = () => {
             sx={textFieldStyles}
             aria-label="Adresse email"
             required
-            autoComplete="email"
+            autoComplete="email" // déjà présent
             inputProps={{
-              'aria-required': 'true'
+              'aria-required': 'true',
             }}
           />
 
@@ -279,6 +473,10 @@ const Login = () => {
             error={!isPasswordValid}
             helperText={!isPasswordValid && 'Mot de passe incorrect'}
             aria-describedby={!isPasswordValid ? 'password-error-text' : undefined}
+            autoComplete="current-password" // Ajout de cette ligne
+            inputProps={{
+              'aria-required': 'true'
+            }}
             InputProps={{
               endAdornment: (
                 <InputAdornment position="end">

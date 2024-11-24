@@ -614,15 +614,49 @@ const EnterpriseDivers = () => {
 
     return (
         <Box sx={{ p: 3 }}>
-            <Typography
-                variant="h4"
-                component="h1"
-                align="center"
-                gutterBottom
-                sx={{ color: darkMode ? '#fff' : 'inherit' }}
-            >
-                Liste des Entreprises
-            </Typography>
+            <Box sx={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                margin: '2rem 0',
+                position: 'relative',
+                '&::after': {
+                    content: '""',
+                    position: 'absolute',
+                    bottom: '-10px',
+                    left: '50%',
+                    transform: 'translateX(-50%)',
+                    width: '150px',
+                    height: '4px',
+                    background: darkMode
+                        ? 'linear-gradient(90deg, rgba(122,142,28,0.2) 0%, rgba(122,142,28,1) 50%, rgba(122,142,28,0.2) 100%)'
+                        : 'linear-gradient(90deg, rgba(238,117,45,0.2) 0%, rgba(238,117,45,1) 50%, rgba(238,117,45,0.2) 100%)',
+                    borderRadius: '2px'
+                }
+            }}>
+                <Typography
+                    variant="h2"
+                    sx={{
+                        fontSize: { xs: '2rem', sm: '2.5rem', md: '3rem' },
+                        fontWeight: 700,
+                        color: darkMode ? '#ffffff' : '#2D3748',
+                        textTransform: 'uppercase',
+                        letterSpacing: '2px',
+                        textAlign: 'center',
+                        textShadow: darkMode
+                            ? '2px 2px 4px rgba(0,0,0,0.3)'
+                            : '2px 2px 4px rgba(0,0,0,0.1)',
+                        '&::first-letter': {
+                            color: darkMode ? '#7a8e1c' : '#ee752d',
+                            fontSize: '120%'
+                        },
+                        position: 'relative',
+                        padding: '0 20px'
+                    }}
+                >
+                    Document Divers
+                </Typography>
+            </Box>
             {isAdminOrDev && (
                 <Box sx={{ mb: 3, width: '100%', maxWidth: 500, mx: 'auto' }}>
                     <FormControl fullWidth>

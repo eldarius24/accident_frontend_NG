@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState, useTransition, useMemo } from 
 import {
     Table, TableBody, TableCell, TableContainer, TableHead, TableRow,
     Button, LinearProgress, TextField, Grid, FormControl, InputLabel,
-    Select, MenuItem, Checkbox, ListItemText, Tooltip, Chip, IconButton
+    Select, MenuItem, Checkbox, ListItemText, Tooltip, Chip, Box, Typography
 } from '@mui/material';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
@@ -279,22 +279,22 @@ function Home() {
      */
     const filteredData = useMemo(() => {
         if (!accidents || !Array.isArray(yearsChecked)) return [];
-    
+
         const years = yearsChecked.map(Number);
         const searchTermLower = searchTerm.toLowerCase();
-    
+
         return accidents.filter(item => {
             if (!item.DateHeureAccident) return false;
-    
+
             const date = new Date(item.DateHeureAccident).getFullYear();
-            
+
             // Si aucun filtre d'état n'est sélectionné, on ne retourne aucun élément
             if (statusFilters.length === 0) return false;
-    
+
             // Vérifie si l'élément correspond aux filtres d'état sélectionnés
             const matchesStatus = statusFilters.includes('closed') && item.boolAsCloture ||
-                                statusFilters.includes('pending') && !item.boolAsCloture;
-    
+                statusFilters.includes('pending') && !item.boolAsCloture;
+
             return years.includes(date) &&
                 matchesStatus &&
                 ['AssureurStatus', 'DateHeureAccident', 'entrepriseName', 'secteur',
@@ -397,6 +397,49 @@ function Home() {
             color: darkMode ? '#ffffff' : '#000000',
             margin: '0 20px'
         }}>
+            <Box sx={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                margin: '2rem 0',
+                position: 'relative',
+                '&::after': {
+                    content: '""',
+                    position: 'absolute',
+                    bottom: '-10px',
+                    left: '50%',
+                    transform: 'translateX(-50%)',
+                    width: '150px',
+                    height: '4px',
+                    background: darkMode
+                        ? 'linear-gradient(90deg, rgba(122,142,28,0.2) 0%, rgba(122,142,28,1) 50%, rgba(122,142,28,0.2) 100%)'
+                        : 'linear-gradient(90deg, rgba(238,117,45,0.2) 0%, rgba(238,117,45,1) 50%, rgba(238,117,45,0.2) 100%)',
+                    borderRadius: '2px'
+                }
+            }}>
+                <Typography
+                    variant="h2"
+                    sx={{
+                        fontSize: { xs: '2rem', sm: '2.5rem', md: '3rem' },
+                        fontWeight: 700,
+                        color: darkMode ? '#ffffff' : '#2D3748',
+                        textTransform: 'uppercase',
+                        letterSpacing: '2px',
+                        textAlign: 'center',
+                        textShadow: darkMode
+                            ? '2px 2px 4px rgba(0,0,0,0.3)'
+                            : '2px 2px 4px rgba(0,0,0,0.1)',
+                        '&::first-letter': {
+                            color: darkMode ? '#7a8e1c' : '#ee752d',
+                            fontSize: '120%'
+                        },
+                        position: 'relative',
+                        padding: '0 20px'
+                    }}
+                >
+                    Gesion des Accidents
+                </Typography>
+            </Box>
             <div style={{ display: 'flex', justifyContent: 'center', margin: '20px 0rem' }}>
                 <Grid
                     container
@@ -508,9 +551,9 @@ function Home() {
                                                     }
                                                 }}
                                             />
-                                            <ListItemText 
-                                            primary={status === 'closed' ? 'Clôturé' : 'En attente'} 
-                                            sx={{ color: darkMode ? '#fff' : 'inherit' }}
+                                            <ListItemText
+                                                primary={status === 'closed' ? 'Clôturé' : 'En attente'}
+                                                sx={{ color: darkMode ? '#fff' : 'inherit' }}
                                             />
                                         </MenuItem>
                                     ))}
