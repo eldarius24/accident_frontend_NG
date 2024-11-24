@@ -386,49 +386,49 @@ const Statistiques = () => {
   const isAllSectorsSelected = selectedSectors.length === sectors.length;
   return (
     <div className="col-span-full" style={{ margin: '20px' }}>
-                  <Box sx={{
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                margin: '2rem 0',
-                position: 'relative',
-                '&::after': {
-                    content: '""',
-                    position: 'absolute',
-                    bottom: '-10px',
-                    left: '50%',
-                    transform: 'translateX(-50%)',
-                    width: '150px',
-                    height: '4px',
-                    background: darkMode
-                        ? 'linear-gradient(90deg, rgba(122,142,28,0.2) 0%, rgba(122,142,28,1) 50%, rgba(122,142,28,0.2) 100%)'
-                        : 'linear-gradient(90deg, rgba(238,117,45,0.2) 0%, rgba(238,117,45,1) 50%, rgba(238,117,45,0.2) 100%)',
-                    borderRadius: '2px'
-                }
-            }}>
-                <Typography
-                    variant="h2"
-                    sx={{
-                        fontSize: { xs: '2rem', sm: '2.5rem', md: '3rem' },
-                        fontWeight: 700,
-                        color: darkMode ? '#ffffff' : '#2D3748',
-                        textTransform: 'uppercase',
-                        letterSpacing: '2px',
-                        textAlign: 'center',
-                        textShadow: darkMode
-                            ? '2px 2px 4px rgba(0,0,0,0.3)'
-                            : '2px 2px 4px rgba(0,0,0,0.1)',
-                        '&::first-letter': {
-                            color: darkMode ? '#7a8e1c' : '#ee752d',
-                            fontSize: '120%'
-                        },
-                        position: 'relative',
-                        padding: '0 20px'
-                    }}
-                >
-                    Statistiques
-                </Typography>
-            </Box>
+      <Box sx={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        margin: '2rem 0',
+        position: 'relative',
+        '&::after': {
+          content: '""',
+          position: 'absolute',
+          bottom: '-10px',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          width: '150px',
+          height: '4px',
+          background: darkMode
+            ? 'linear-gradient(90deg, rgba(122,142,28,0.2) 0%, rgba(122,142,28,1) 50%, rgba(122,142,28,0.2) 100%)'
+            : 'linear-gradient(90deg, rgba(238,117,45,0.2) 0%, rgba(238,117,45,1) 50%, rgba(238,117,45,0.2) 100%)',
+          borderRadius: '2px'
+        }
+      }}>
+        <Typography
+          variant="h2"
+          sx={{
+            fontSize: { xs: '2rem', sm: '2.5rem', md: '3rem' },
+            fontWeight: 700,
+            color: darkMode ? '#ffffff' : '#2D3748',
+            textTransform: 'uppercase',
+            letterSpacing: '2px',
+            textAlign: 'center',
+            textShadow: darkMode
+              ? '2px 2px 4px rgba(0,0,0,0.3)'
+              : '2px 2px 4px rgba(0,0,0,0.1)',
+            '&::first-letter': {
+              color: darkMode ? '#7a8e1c' : '#ee752d',
+              fontSize: '120%'
+            },
+            position: 'relative',
+            padding: '0 20px'
+          }}
+        >
+          Statistiques
+        </Typography>
+      </Box>
       <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: '10px', marginBottom: '20px' }}>
         <FormControl sx={formControlStyle}>
           <InputLabel id="companies-label">Entreprises</InputLabel>
@@ -1287,7 +1287,109 @@ const Statistiques = () => {
       )}
 
       <div className="image-cortigroupe"></div>
-      <h5 style={{ marginBottom: '40px' }}> Développé par Remy et Benoit pour Le Cortigroupe.</h5>
+      <h5 style={{ marginBottom: '40px' }}> <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          padding: '1rem',
+          marginBottom: '2rem',
+          position: 'relative',
+          overflow: 'hidden',
+          '&::before': {
+            content: '""',
+            position: 'absolute',
+            top: 0,
+            left: '-100%',
+            width: '300%',
+            height: '100%',
+            background: darkMode
+              ? 'linear-gradient(90deg, transparent, rgba(122,142,28,0.1), transparent)'
+              : 'linear-gradient(90deg, transparent, rgba(238,117,45,0.1), transparent)',
+            animation: 'shine 3s infinite linear',
+            '@keyframes shine': {
+              to: {
+                transform: 'translateX(50%)'
+              }
+            }
+          }
+        }}
+      >
+        <Typography
+          sx={{
+            fontSize: { xs: '0.8rem', sm: '0.9rem', md: '1rem' },
+            fontWeight: 500,
+            letterSpacing: '0.1em',
+            padding: '0.5rem 1.5rem',
+            borderRadius: '50px',
+            background: darkMode
+              ? 'linear-gradient(145deg, rgba(122,142,28,0.1), rgba(122,142,28,0.05))'
+              : 'linear-gradient(145deg, rgba(238,117,45,0.1), rgba(238,117,45,0.05))',
+            backdropFilter: 'blur(5px)',
+            border: darkMode
+              ? '1px solid rgba(122,142,28,0.2)'
+              : '1px solid rgba(238,117,45,0.2)',
+            color: darkMode ? '#ffffff' : '#2D3748',
+            boxShadow: darkMode
+              ? '0 4px 6px rgba(0,0,0,0.1)'
+              : '0 4px 6px rgba(238,117,45,0.1)',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.5rem',
+            position: 'relative',
+            transform: 'translateY(0)',
+            transition: 'all 0.3s ease',
+            '&:hover': {
+              transform: 'translateY(-2px)',
+              boxShadow: darkMode
+                ? '0 6px 12px rgba(0,0,0,0.2)'
+                : '0 6px 12px rgba(238,117,45,0.2)',
+              '& .highlight': {
+                color: darkMode ? '#7a8e1c' : '#ee752d'
+              }
+            }
+          }}
+        >
+          <span>Développé par </span>
+          <span className="highlight" style={{
+            transition: 'color 0.3s ease',
+            fontWeight: 700
+          }}>
+            Remy
+          </span>
+          <span> & </span>
+          <span className="highlight" style={{
+            transition: 'color 0.3s ease',
+            fontWeight: 700
+          }}>
+            Benoit
+          </span>
+          <span> pour </span>
+          <span style={{
+            background: darkMode
+              ? 'linear-gradient(45deg, #7a8e1c, #a4bd24)'
+              : 'linear-gradient(45deg, #ee752d, #f4a261)',
+            WebkitBackgroundClip: 'text',
+            backgroundClip: 'text',
+            color: 'transparent',
+            fontWeight: 700
+          }}>
+            Le Cortigroupe
+          </span>
+          <span style={{
+            fontSize: '1.2em',
+            marginLeft: '4px',
+            background: darkMode
+              ? 'linear-gradient(45deg, #7a8e1c, #a4bd24)'
+              : 'linear-gradient(45deg, #ee752d, #f4a261)',
+            WebkitBackgroundClip: 'text',
+            backgroundClip: 'text',
+            color: 'transparent'
+          }}>
+            ®
+          </span>
+        </Typography>
+      </Box></h5>
     </div>
   );
 };

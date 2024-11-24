@@ -14,7 +14,9 @@ import {
     Button,
     LinearProgress,
     Tooltip,
-    Paper
+    Paper,
+    Box,
+    Typography
 } from '@mui/material';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import { confirmAlert } from 'react-confirm-alert';
@@ -189,8 +191,82 @@ export default function AddSecteur() {
                     }
                 }}
             >
-                <h2>Créer un nouveau secteur pour {entreprise.AddEntreName}</h2>
-
+                <Box
+                    sx={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        position: 'relative',
+                        margin: '1.5rem 0',
+                        '&::before': {
+                            content: '""',
+                            position: 'absolute',
+                            top: '50%',
+                            left: '50%',
+                            transform: 'translate(-50%, -50%)',
+                            width: '200px',
+                            height: '45px',
+                            background: darkMode
+                                ? 'rgba(122,142,28,0.1)'
+                                : 'rgba(238,117,45,0.1)',
+                            filter: 'blur(10px)',
+                            borderRadius: '10px',
+                            zIndex: 0
+                        }
+                    }}
+                >
+                    <Typography
+                        variant="h2"
+                        sx={{
+                            fontSize: { xs: '1.5rem', sm: '1.8rem', md: '2.2rem' },
+                            fontWeight: 600,
+                            background: darkMode
+                                ? 'linear-gradient(45deg, #7a8e1c, #a4bd24)'
+                                : 'linear-gradient(45deg, #ee752d, #f4a261)',
+                            backgroundClip: 'text',
+                            WebkitBackgroundClip: 'text',
+                            color: 'transparent',
+                            textTransform: 'uppercase',
+                            letterSpacing: '3px',
+                            position: 'relative',
+                            padding: '0.5rem 1.5rem',
+                            zIndex: 1,
+                            '&::after': {
+                                content: '""',
+                                position: 'absolute',
+                                bottom: 0,
+                                left: 0,
+                                width: '100%',
+                                height: '2px',
+                                background: darkMode
+                                    ? 'linear-gradient(90deg, transparent, #7a8e1c, transparent)'
+                                    : 'linear-gradient(90deg, transparent, #ee752d, transparent)'
+                            }
+                        }}
+                    >
+                        Créer un nouveau secteur pour {entreprise.AddEntreName}
+                    </Typography>
+                    <Box
+                        sx={{
+                            position: 'absolute',
+                            width: '100%',
+                            height: '100%',
+                            opacity: 0.5,
+                            pointerEvents: 'none',
+                            '&::before': {
+                                content: '""',
+                                position: 'absolute',
+                                top: 0,
+                                left: 0,
+                                width: '100%',
+                                height: '1px',
+                                background: darkMode
+                                    ? 'linear-gradient(90deg, transparent, rgba(122,142,28,0.3), transparent)'
+                                    : 'linear-gradient(90deg, transparent, rgba(238,117,45,0.3), transparent)'
+                            }
+                        }}
+                    />
+                </Box>
                 <TextFieldP
                     id='secteurName'
                     label="Nom du secteur"
@@ -237,126 +313,201 @@ export default function AddSecteur() {
                         </Button>
                     </Tooltip>
                 </div>
-</Paper>
-                <div>
-                    <h2>Secteurs de l'entreprise</h2>
-                    <TableContainer
-                        className="frameStyle-style"
-                        style={{
-                            maxHeight: '600px',
-                            overflowY: 'auto',
-                            backgroundColor: darkMode ? '#6e6e6e' : '#ffffff',
+            </Paper>
+            <div>
+                <Box
+                    sx={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        position: 'relative',
+                        margin: '1.5rem 0',
+                        '&::before': {
+                            content: '""',
+                            position: 'absolute',
+                            top: '50%',
+                            left: '50%',
+                            transform: 'translate(-50%, -50%)',
+                            width: '200px',
+                            height: '45px',
+                            background: darkMode
+                                ? 'rgba(122,142,28,0.1)'
+                                : 'rgba(238,117,45,0.1)',
+                            filter: 'blur(10px)',
+                            borderRadius: '10px',
+                            zIndex: 0
+                        }
+                    }}
+                >
+                    <Typography
+                        variant="h2"
+                        sx={{
+                            fontSize: { xs: '1.5rem', sm: '1.8rem', md: '2.2rem' },
+                            fontWeight: 600,
+                            background: darkMode
+                                ? 'linear-gradient(45deg, #7a8e1c, #a4bd24)'
+                                : 'linear-gradient(45deg, #ee752d, #f4a261)',
+                            backgroundClip: 'text',
+                            WebkitBackgroundClip: 'text',
+                            color: 'transparent',
+                            textTransform: 'uppercase',
+                            letterSpacing: '3px',
+                            position: 'relative',
+                            padding: '0.5rem 1.5rem',
+                            zIndex: 1,
+                            '&::after': {
+                                content: '""',
+                                position: 'absolute',
+                                bottom: 0,
+                                left: 0,
+                                width: '100%',
+                                height: '2px',
+                                background: darkMode
+                                    ? 'linear-gradient(90deg, transparent, #7a8e1c, transparent)'
+                                    : 'linear-gradient(90deg, transparent, #ee752d, transparent)'
+                            }
                         }}
                     >
-                        <Table>
-                            <TableHead>
+                        Secteurs de l'entreprise
+                    </Typography>
+                    <Box
+                        sx={{
+                            position: 'absolute',
+                            width: '100%',
+                            height: '100%',
+                            opacity: 0.5,
+                            pointerEvents: 'none',
+                            '&::before': {
+                                content: '""',
+                                position: 'absolute',
+                                top: 0,
+                                left: 0,
+                                width: '100%',
+                                height: '1px',
+                                background: darkMode
+                                    ? 'linear-gradient(90deg, transparent, rgba(122,142,28,0.3), transparent)'
+                                    : 'linear-gradient(90deg, transparent, rgba(238,117,45,0.3), transparent)'
+                            }
+                        }}
+                    />
+                </Box>
+                <TableContainer
+                    className="frameStyle-style"
+                    style={{
+                        maxHeight: '600px',
+                        overflowY: 'auto',
+                        backgroundColor: darkMode ? '#6e6e6e' : '#ffffff',
+                    }}
+                >
+                    <Table>
+                        <TableHead>
+                            <TableRow className={`table-row-separatormenu ${darkMode ? 'dark-separator' : ''}`}
+                                style={{
+                                    backgroundColor: darkMode ? '#535353' : '#0098f950',
+                                }}>
+                                <TableCell style={{ fontWeight: 'bold' }}>Nom du secteur</TableCell>
+                                <TableCell style={{ fontWeight: 'bold' }}>Actions</TableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {secteurs.map((secteur, index) => (
                                 <TableRow className={`table-row-separatormenu ${darkMode ? 'dark-separator' : ''}`}
+                                    key={secteur._id}
                                     style={{
-                                        backgroundColor: darkMode ? '#535353' : '#0098f950',
+                                        backgroundColor: rowColors[index % rowColors.length],
                                     }}>
-                                    <TableCell style={{ fontWeight: 'bold' }}>Nom du secteur</TableCell>
-                                    <TableCell style={{ fontWeight: 'bold' }}>Actions</TableCell>
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
-                                {secteurs.map((secteur, index) => (
-                                    <TableRow className={`table-row-separatormenu ${darkMode ? 'dark-separator' : ''}`}
-                                        key={secteur._id}
-                                        style={{
-                                            backgroundColor: rowColors[index % rowColors.length],
-                                        }}>
-                                        <TableCell>{secteur.secteurName}</TableCell>
-                                        <TableCell>
-                                            <Tooltip title="Cliquez ici pour supprimer cette entreprise" arrow>
-                                                <Button
-                                                    sx={{
-                                                        backgroundColor: darkMode ? '#b71c1c' : '#d32f2f',
-                                                        transition: 'all 0.1s ease-in-out',
-                                                        '&:hover': {
-                                                            backgroundColor: darkMode ? '#d32f2f' : '#b71c1c',
-                                                            transform: 'scale(1.08)',
-                                                            boxShadow: darkMode ? '0 6px 12px rgba(255,255,255,0.2)' : 6
-                                                        },
-                                                        '& .MuiSvgIcon-root': {
-                                                            color: darkMode ? '#fff' : 'inherit'
-                                                        },
-                                                        boxShadow: darkMode ? '0 3px 6px rgba(255,255,255,0.1)' : 3,
-                                                        border: darkMode ? '1px solid rgba(255,255,255,0.1)' : 'none',
-                                                    }}
-                                                    variant="contained"
-                                                    color="error"
-                                                    onClick={() => {
-                                                        confirmAlert({
-                                                            customUI: ({ onClose }) => {
-                                                                return (
-                                                                    <div
-                                                                        className="custom-confirm-dialog"
-                                                                        style={{
-                                                                            backgroundColor: darkMode ? '#424242' : '#fff',
-                                                                            color: darkMode ? '#fff' : 'inherit',
-                                                                            border: darkMode ? '1px solid rgba(255,255,255,0.1)' : '1px solid rgba(0,0,0,0.1)'
-                                                                        }}
+                                    <TableCell>{secteur.secteurName}</TableCell>
+                                    <TableCell>
+                                        <Tooltip title="Cliquez ici pour supprimer cette entreprise" arrow>
+                                            <Button
+                                                sx={{
+                                                    backgroundColor: darkMode ? '#b71c1c' : '#d32f2f',
+                                                    transition: 'all 0.1s ease-in-out',
+                                                    '&:hover': {
+                                                        backgroundColor: darkMode ? '#d32f2f' : '#b71c1c',
+                                                        transform: 'scale(1.08)',
+                                                        boxShadow: darkMode ? '0 6px 12px rgba(255,255,255,0.2)' : 6
+                                                    },
+                                                    '& .MuiSvgIcon-root': {
+                                                        color: darkMode ? '#fff' : 'inherit'
+                                                    },
+                                                    boxShadow: darkMode ? '0 3px 6px rgba(255,255,255,0.1)' : 3,
+                                                    border: darkMode ? '1px solid rgba(255,255,255,0.1)' : 'none',
+                                                }}
+                                                variant="contained"
+                                                color="error"
+                                                onClick={() => {
+                                                    confirmAlert({
+                                                        customUI: ({ onClose }) => {
+                                                            return (
+                                                                <div
+                                                                    className="custom-confirm-dialog"
+                                                                    style={{
+                                                                        backgroundColor: darkMode ? '#424242' : '#fff',
+                                                                        color: darkMode ? '#fff' : 'inherit',
+                                                                        border: darkMode ? '1px solid rgba(255,255,255,0.1)' : '1px solid rgba(0,0,0,0.1)'
+                                                                    }}
+                                                                >
+                                                                    <h1
+                                                                        className="custom-confirm-title"
+                                                                        style={{ color: darkMode ? '#fff' : 'inherit' }}
                                                                     >
-                                                                        <h1
-                                                                            className="custom-confirm-title"
-                                                                            style={{ color: darkMode ? '#fff' : 'inherit' }}
-                                                                        >
-                                                                            Supprimer
-                                                                        </h1>
-                                                                        <p
-                                                                            className="custom-confirm-message"
-                                                                            style={{ color: darkMode ? '#fff' : 'inherit' }}
-                                                                        >
-                                                                            Êtes-vous sûr de vouloir supprimer ce secteur ?
-                                                                        </p>
-                                                                        <div className="custom-confirm-buttons">
-                                                                            <Tooltip title="Cliquez sur OUI pour supprimer" arrow>
-                                                                                <button
-                                                                                    className="custom-confirm-button"
-                                                                                    onClick={() => {
-                                                                                        handleDelete(secteur._id);
-                                                                                        onClose();
-                                                                                    }}
-                                                                                    style={{
-                                                                                        backgroundColor: darkMode ? '#b71c1c' : '#d32f2f',
-                                                                                        color: '#fff',
-                                                                                        border: darkMode ? '1px solid rgba(255,255,255,0.1)' : 'none'
-                                                                                    }}
-                                                                                >
-                                                                                    Oui
-                                                                                </button>
-                                                                            </Tooltip>
-                                                                            <Tooltip title="Cliquez sur NON pour annuler la suppression" arrow>
-                                                                                <button
-                                                                                    className="custom-confirm-button custom-confirm-no"
-                                                                                    onClick={onClose}
-                                                                                    style={{
-                                                                                        backgroundColor: darkMode ? '#424242' : '#f5f5f5',
-                                                                                        color: darkMode ? '#fff' : 'inherit',
-                                                                                        border: darkMode ? '1px solid rgba(255,255,255,0.1)' : 'none'
-                                                                                    }}
-                                                                                >
-                                                                                    Non
-                                                                                </button>
-                                                                            </Tooltip>
-                                                                        </div>
+                                                                        Supprimer
+                                                                    </h1>
+                                                                    <p
+                                                                        className="custom-confirm-message"
+                                                                        style={{ color: darkMode ? '#fff' : 'inherit' }}
+                                                                    >
+                                                                        Êtes-vous sûr de vouloir supprimer ce secteur ?
+                                                                    </p>
+                                                                    <div className="custom-confirm-buttons">
+                                                                        <Tooltip title="Cliquez sur OUI pour supprimer" arrow>
+                                                                            <button
+                                                                                className="custom-confirm-button"
+                                                                                onClick={() => {
+                                                                                    handleDelete(secteur._id);
+                                                                                    onClose();
+                                                                                }}
+                                                                                style={{
+                                                                                    backgroundColor: darkMode ? '#b71c1c' : '#d32f2f',
+                                                                                    color: '#fff',
+                                                                                    border: darkMode ? '1px solid rgba(255,255,255,0.1)' : 'none'
+                                                                                }}
+                                                                            >
+                                                                                Oui
+                                                                            </button>
+                                                                        </Tooltip>
+                                                                        <Tooltip title="Cliquez sur NON pour annuler la suppression" arrow>
+                                                                            <button
+                                                                                className="custom-confirm-button custom-confirm-no"
+                                                                                onClick={onClose}
+                                                                                style={{
+                                                                                    backgroundColor: darkMode ? '#424242' : '#f5f5f5',
+                                                                                    color: darkMode ? '#fff' : 'inherit',
+                                                                                    border: darkMode ? '1px solid rgba(255,255,255,0.1)' : 'none'
+                                                                                }}
+                                                                            >
+                                                                                Non
+                                                                            </button>
+                                                                        </Tooltip>
                                                                     </div>
-                                                                );
-                                                            }
-                                                        });
-                                                    }}
-                                                >
-                                                    <DeleteForeverIcon />
-                                                </Button>
-                                            </Tooltip>
-                                        </TableCell>
-                                    </TableRow>
-                                ))}
-                            </TableBody>
-                        </Table>
-                    </TableContainer>
-                </div>
-           
+                                                                </div>
+                                                            );
+                                                        }
+                                                    });
+                                                }}
+                                            >
+                                                <DeleteForeverIcon />
+                                            </Button>
+                                        </Tooltip>
+                                    </TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+            </div>
+
             <CustomSnackbar
                 open={snackbar.open}
                 handleClose={handleCloseSnackbar}

@@ -10,6 +10,7 @@ import DatePickerP from '../_composants/datePickerP';
 import DateHeurePickerP from '../_composants/dateHeurePickerP';
 import TextFieldMaskP from '../_composants/textFieldMaskP';
 import { useTheme } from '../pageAdmin/user/ThemeContext';
+import {Box, Typography} from '@mui/material';
 
 export default function FormulaireDeclarationASSBelfius({ setValue, accidentData, watch }) {
     const { darkMode } = useTheme();
@@ -218,7 +219,82 @@ export default function FormulaireDeclarationASSBelfius({ setValue, accidentData
     return (
 
         <div className="infoDeclarationAss">
-            <h2>Infos Déclaration</h2>
+            <Box
+                sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    position: 'relative',
+                    margin: '1.5rem 0',
+                    '&::before': {
+                        content: '""',
+                        position: 'absolute',
+                        top: '50%',
+                        left: '50%',
+                        transform: 'translate(-50%, -50%)',
+                        width: '200px',
+                        height: '45px',
+                        background: darkMode
+                            ? 'rgba(122,142,28,0.1)'
+                            : 'rgba(238,117,45,0.1)',
+                        filter: 'blur(10px)',
+                        borderRadius: '10px',
+                        zIndex: 0
+                    }
+                }}
+            >
+                <Typography
+                    variant="h2"
+                    sx={{
+                        fontSize: { xs: '1.5rem', sm: '1.8rem', md: '2.2rem' },
+                        fontWeight: 600,
+                        background: darkMode
+                            ? 'linear-gradient(45deg, #7a8e1c, #a4bd24)'
+                            : 'linear-gradient(45deg, #ee752d, #f4a261)',
+                        backgroundClip: 'text',
+                        WebkitBackgroundClip: 'text',
+                        color: 'transparent',
+                        textTransform: 'uppercase',
+                        letterSpacing: '3px',
+                        position: 'relative',
+                        padding: '0.5rem 1.5rem',
+                        zIndex: 1,
+                        '&::after': {
+                            content: '""',
+                            position: 'absolute',
+                            bottom: 0,
+                            left: 0,
+                            width: '100%',
+                            height: '2px',
+                            background: darkMode
+                                ? 'linear-gradient(90deg, transparent, #7a8e1c, transparent)'
+                                : 'linear-gradient(90deg, transparent, #ee752d, transparent)'
+                        }
+                    }}
+                >
+                    Infos Déclaration
+                </Typography>
+                <Box
+                    sx={{
+                        position: 'absolute',
+                        width: '100%',
+                        height: '100%',
+                        opacity: 0.5,
+                        pointerEvents: 'none',
+                        '&::before': {
+                            content: '""',
+                            position: 'absolute',
+                            top: 0,
+                            left: 0,
+                            width: '100%',
+                            height: '1px',
+                            background: darkMode
+                                ? 'linear-gradient(90deg, transparent, rgba(122,142,28,0.3), transparent)'
+                                : 'linear-gradient(90deg, transparent, rgba(238,117,45,0.3), transparent)'
+                        }
+                    }}
+                />
+            </Box>
             <h3 style={{ color: darkMode ? '#ffffff' : 'inherit' }}>Rentrez les informations relative a la déclaration.</h3>
 
             <AutoCompleteP id="ListeVicTravailExt" option={listeDeclarationAss.ListeVicTravailExt} label="Au moment de l'accident, la victime travaillait-elle dans l'établissement d'un autre employeur dans le cadre de travaux effectuées par une entreprise extérieure" onChange={(value) => { setListeVicTravailExt(value); }} defaultValue={ListeVicTravailExt} />

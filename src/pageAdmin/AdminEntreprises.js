@@ -9,7 +9,9 @@ import {
     TableRow,
     Button,
     LinearProgress,
-    Tooltip
+    Tooltip,
+    Box,
+    Typography
 } from '@mui/material';
 import AddRoundedIcon from '@mui/icons-material/AddRounded';
 import EditIcon from '@mui/icons-material/Edit';
@@ -170,7 +172,83 @@ export default function Adminusern() {
                 color: darkMode ? '#ffffff' : '#000000',
                 margin: '0 20px'
             }}>
-                <h2>Gestion des entreprises</h2>
+                <Box
+                    sx={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        position: 'relative',
+                        margin: '1.5rem 0',
+                        '&::before': {
+                            content: '""',
+                            position: 'absolute',
+                            top: '50%',
+                            left: '50%',
+                            transform: 'translate(-50%, -50%)',
+                            width: '200px',
+                            height: '45px',
+                            background: darkMode
+                                ? 'rgba(122,142,28,0.1)'
+                                : 'rgba(238,117,45,0.1)',
+                            filter: 'blur(10px)',
+                            borderRadius: '10px',
+                            zIndex: 0
+                        }
+                    }}
+                >
+                    <Typography
+                        variant="h2"
+                        sx={{
+                            fontSize: { xs: '1.5rem', sm: '1.8rem', md: '2.2rem' },
+                            fontWeight: 600,
+                            background: darkMode
+                                ? 'linear-gradient(45deg, #7a8e1c, #a4bd24)'
+                                : 'linear-gradient(45deg, #ee752d, #f4a261)',
+                            backgroundClip: 'text',
+                            WebkitBackgroundClip: 'text',
+                            color: 'transparent',
+                            textTransform: 'uppercase',
+                            letterSpacing: '3px',
+                            position: 'relative',
+                            padding: '0.5rem 1.5rem',
+                            zIndex: 1,
+                            '&::after': {
+                                content: '""',
+                                position: 'absolute',
+                                bottom: 0,
+                                left: 0,
+                                width: '100%',
+                                height: '2px',
+                                background: darkMode
+                                    ? 'linear-gradient(90deg, transparent, #7a8e1c, transparent)'
+                                    : 'linear-gradient(90deg, transparent, #ee752d, transparent)'
+                            }
+                        }}
+                    >
+                        Gestion des entreprises
+                    </Typography>
+                    <Box
+                        sx={{
+                            position: 'absolute',
+                            width: '100%',
+                            height: '100%',
+                            opacity: 0.5,
+                            pointerEvents: 'none',
+                            '&::before': {
+                                content: '""',
+                                position: 'absolute',
+                                top: 0,
+                                left: 0,
+                                width: '100%',
+                                height: '1px',
+                                background: darkMode
+                                    ? 'linear-gradient(90deg, transparent, rgba(122,142,28,0.3), transparent)'
+                                    : 'linear-gradient(90deg, transparent, rgba(238,117,45,0.3), transparent)'
+                            }
+                        }}
+                    />
+                </Box>
+
                 <TableContainer className="frameStyle-style"
                     style={{
                         maxHeight: '600px',
@@ -327,7 +405,109 @@ export default function Adminusern() {
             </div>
             <div className="image-cortigroupe"></div>
             <Tooltip title="Développé par Remy et Benoit pour Le Cortigroupe." arrow>
-                <h5 style={{ marginBottom: '40px' }}> Développé par Remy et Benoit pour Le Cortigroupe.</h5>
+                <h5 style={{ marginBottom: '40px' }}> <Box
+                    sx={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        padding: '1rem',
+                        marginBottom: '2rem',
+                        position: 'relative',
+                        overflow: 'hidden',
+                        '&::before': {
+                            content: '""',
+                            position: 'absolute',
+                            top: 0,
+                            left: '-100%',
+                            width: '300%',
+                            height: '100%',
+                            background: darkMode
+                                ? 'linear-gradient(90deg, transparent, rgba(122,142,28,0.1), transparent)'
+                                : 'linear-gradient(90deg, transparent, rgba(238,117,45,0.1), transparent)',
+                            animation: 'shine 3s infinite linear',
+                            '@keyframes shine': {
+                                to: {
+                                    transform: 'translateX(50%)'
+                                }
+                            }
+                        }
+                    }}
+                >
+                    <Typography
+                        sx={{
+                            fontSize: { xs: '0.8rem', sm: '0.9rem', md: '1rem' },
+                            fontWeight: 500,
+                            letterSpacing: '0.1em',
+                            padding: '0.5rem 1.5rem',
+                            borderRadius: '50px',
+                            background: darkMode
+                                ? 'linear-gradient(145deg, rgba(122,142,28,0.1), rgba(122,142,28,0.05))'
+                                : 'linear-gradient(145deg, rgba(238,117,45,0.1), rgba(238,117,45,0.05))',
+                            backdropFilter: 'blur(5px)',
+                            border: darkMode
+                                ? '1px solid rgba(122,142,28,0.2)'
+                                : '1px solid rgba(238,117,45,0.2)',
+                            color: darkMode ? '#ffffff' : '#2D3748',
+                            boxShadow: darkMode
+                                ? '0 4px 6px rgba(0,0,0,0.1)'
+                                : '0 4px 6px rgba(238,117,45,0.1)',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '0.5rem',
+                            position: 'relative',
+                            transform: 'translateY(0)',
+                            transition: 'all 0.3s ease',
+                            '&:hover': {
+                                transform: 'translateY(-2px)',
+                                boxShadow: darkMode
+                                    ? '0 6px 12px rgba(0,0,0,0.2)'
+                                    : '0 6px 12px rgba(238,117,45,0.2)',
+                                '& .highlight': {
+                                    color: darkMode ? '#7a8e1c' : '#ee752d'
+                                }
+                            }
+                        }}
+                    >
+                        <span>Développé par </span>
+                        <span className="highlight" style={{
+                            transition: 'color 0.3s ease',
+                            fontWeight: 700
+                        }}>
+                            Remy
+                        </span>
+                        <span> & </span>
+                        <span className="highlight" style={{
+                            transition: 'color 0.3s ease',
+                            fontWeight: 700
+                        }}>
+                            Benoit
+                        </span>
+                        <span> pour </span>
+                        <span style={{
+                            background: darkMode
+                                ? 'linear-gradient(45deg, #7a8e1c, #a4bd24)'
+                                : 'linear-gradient(45deg, #ee752d, #f4a261)',
+                            WebkitBackgroundClip: 'text',
+                            backgroundClip: 'text',
+                            color: 'transparent',
+                            fontWeight: 700
+                        }}>
+                            Le Cortigroupe
+                        </span>
+                        <span style={{
+                            fontSize: '1.2em',
+                            marginLeft: '4px',
+                            background: darkMode
+                                ? 'linear-gradient(45deg, #7a8e1c, #a4bd24)'
+                                : 'linear-gradient(45deg, #ee752d, #f4a261)',
+                            WebkitBackgroundClip: 'text',
+                            backgroundClip: 'text',
+                            color: 'transparent'
+                        }}>
+                            ®
+                        </span>
+                    </Typography>
+                </Box></h5>
             </Tooltip>
         </form>
     );
