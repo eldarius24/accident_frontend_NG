@@ -8,6 +8,11 @@ const createFilteredUsers = () => {
         // Filtre par années
         filtered = filtered.filter(action => selectedYears.includes(action.AddActionanne));
 
+        // Si aucune entreprise n'est sélectionnée, retourner un tableau vide
+        if (!selectedEnterprises || selectedEnterprises.length === 0) {
+            return [];
+        }
+        
         // Filtre par entreprises sélectionnées
         if (selectedEnterprises && selectedEnterprises.length > 0) {
             filtered = filtered.filter(action => 

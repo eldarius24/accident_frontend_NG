@@ -453,6 +453,12 @@ function Home() {
                                             color: darkMode ? '#fff' : 'inherit',
                                             '&:hover': {
                                                 backgroundColor: darkMode ? '#505050' : '#ee742d80'
+                                            },
+                                            '&.Mui-selected': {
+                                                backgroundColor: darkMode ? '#424242 !important' : '#ee742d59 !important'
+                                            },
+                                            '&.Mui-selected:hover': {
+                                                backgroundColor: darkMode ? '#505050 !important' : '#ee742d80 !important'
                                             }
                                         }}
                                     >
@@ -484,6 +490,12 @@ function Home() {
                                                 color: darkMode ? '#fff' : 'inherit',
                                                 '&:hover': {
                                                     backgroundColor: darkMode ? '#505050' : '#ee742d80'
+                                                },
+                                                '&.Mui-selected': {
+                                                    backgroundColor: darkMode ? '#424242 !important' : '#ee742d59 !important'
+                                                },
+                                                '&.Mui-selected:hover': {
+                                                    backgroundColor: darkMode ? '#505050 !important' : '#ee742d80 !important'
                                                 }
                                             }}
                                         >
@@ -496,7 +508,10 @@ function Home() {
                                                     }
                                                 }}
                                             />
-                                            <ListItemText primary={status === 'closed' ? 'Clôturé' : 'En attente'} />
+                                            <ListItemText 
+                                            primary={status === 'closed' ? 'Clôturé' : 'En attente'} 
+                                            sx={{ color: darkMode ? '#fff' : 'inherit' }}
+                                            />
                                         </MenuItem>
                                     ))}
                                 </Select>

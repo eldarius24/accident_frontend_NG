@@ -292,8 +292,37 @@ const BulkArchiveManager = ({ darkMode, onSuccess }) => {
                             }
                         }}
                     >
-                        <MenuItem value="accident">Accidents</MenuItem>
-                        <MenuItem value="planaction">Actions</MenuItem>
+                        <MenuItem value="accident"
+                            sx={{
+                                backgroundColor: darkMode ? '#424242' : '#ee742d59',
+                                color: darkMode ? '#fff' : 'inherit',
+                                '&:hover': {
+                                    backgroundColor: darkMode ? '#505050' : '#ee742d80'
+                                },
+                                '&.Mui-selected': {
+                                    backgroundColor: darkMode ? '#424242 !important' : '#ee742d59 !important'
+                                },
+                                '&.Mui-selected:hover': {
+                                    backgroundColor: darkMode ? '#505050 !important' : '#ee742d80 !important'
+                                }
+                            }}
+                        >Accidents</MenuItem>
+                        <MenuItem
+                            value="planaction"
+                            sx={{
+                                backgroundColor: darkMode ? '#424242' : '#ee742d59',
+                                color: darkMode ? '#fff' : 'inherit',
+                                '&:hover': {
+                                    backgroundColor: darkMode ? '#505050' : '#ee742d80'
+                                },
+                                '&.Mui-selected': {
+                                    backgroundColor: darkMode ? '#424242 !important' : '#ee742d59 !important'
+                                },
+                                '&.Mui-selected:hover': {
+                                    backgroundColor: darkMode ? '#505050 !important' : '#ee742d80 !important'
+                                }
+                            }}
+                        >Actions</MenuItem>
                     </Select>
                 </FormControl>
 
@@ -342,7 +371,23 @@ const BulkArchiveManager = ({ darkMode, onSuccess }) => {
                                 }}
                             >
                                 {availableYearsArchive.map(year => (
-                                    <MenuItem key={year} value={year.toString()}>{year}</MenuItem>
+                                    <MenuItem
+                                        key={year}
+                                        value={year.toString()}
+                                        sx={{
+                                            backgroundColor: darkMode ? '#424242' : '#ee742d59',
+                                            color: darkMode ? '#fff' : 'inherit',
+                                            '&:hover': {
+                                                backgroundColor: darkMode ? '#505050' : '#ee742d80'
+                                            },
+                                            '&.Mui-selected': {
+                                                backgroundColor: darkMode ? '#424242 !important' : '#ee742d59 !important'
+                                            },
+                                            '&.Mui-selected:hover': {
+                                                backgroundColor: darkMode ? '#505050 !important' : '#ee742d80 !important'
+                                            }
+                                        }}
+                                    >{year}</MenuItem>
                                 ))}
                             </Select>
                         </FormControl>
@@ -423,7 +468,23 @@ const BulkArchiveManager = ({ darkMode, onSuccess }) => {
                                 }}
                             >
                                 {availableYearsRestore.map(year => (
-                                    <MenuItem key={year} value={year.toString()}>{year}</MenuItem>
+                                    <MenuItem
+                                        key={year}
+                                        value={year.toString()}
+                                        sx={{
+                                            backgroundColor: darkMode ? '#424242' : '#ee742d59',
+                                            color: darkMode ? '#fff' : 'inherit',
+                                            '&:hover': {
+                                                backgroundColor: darkMode ? '#505050' : '#ee742d80'
+                                            },
+                                            '&.Mui-selected': {
+                                                backgroundColor: darkMode ? '#424242 !important' : '#ee742d59 !important'
+                                            },
+                                            '&.Mui-selected:hover': {
+                                                backgroundColor: darkMode ? '#505050 !important' : '#ee742d80 !important'
+                                            }
+                                        }}
+                                    >{year}</MenuItem>
                                 ))}
                             </Select>
                         </FormControl>

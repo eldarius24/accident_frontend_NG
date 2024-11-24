@@ -124,11 +124,12 @@ export default function PlanAction({ accidentData }) {
         [getFilteredUsers, users, searchTerm, selectedYears, selectedEnterprises, isAdminOrDev, userInfo]
     );
 
-    const handleEnterpriseChange = useCallback((event) => {
+    const handleEnterpriseChange = (event) => {
         const newValues = event.target.value;
         try {
+            // Cas où on sélectionne ou désélectionne depuis "Toutes les entreprises"
             if (Array.isArray(newValues) && newValues.includes('')) {
-                // Cas "Toutes les entreprises"
+                // Si on sélectionne "Toutes les entreprises", on vide la sélection
                 setSelectedEnterprises([]);
                 saveEnterpriseSelection(COOKIE_PREFIXES.PLAN_ACTION, []);
             } else {
@@ -141,7 +142,7 @@ export default function PlanAction({ accidentData }) {
             console.error('Erreur lors de la mise à jour des entreprises:', error);
             showSnackbar('Erreur lors de la sauvegarde des entreprises', 'error');
         }
-    }, [showSnackbar]);
+    };
 
     /**
      * Ferme la snackbar si l'utilisateur clique sur le bouton "Fermer" ou en dehors de la snackbar.
@@ -381,30 +382,43 @@ export default function PlanAction({ accidentData }) {
                             <Tooltip title="Filtrer par entreprise" arrow>
                                 <FormControl sx={{
                                     boxShadow: darkMode ? '0 3px 6px rgba(255,255,255,0.1)' : 3,
-                                    minWidth: 120,
+                                    width: '250px',
                                     backgroundColor: darkMode ? '#424242' : '#ee752d60',
+                                    border: darkMode ? '1px solid rgba(255,255,255,0.1)' : 'none',
                                     '& .MuiInputLabel-root': {
                                         color: darkMode ? '#fff' : 'inherit'
                                     },
-                                    '& .MuiOutlinedInput-root': {
-                                        color: darkMode ? '#fff' : 'inherit',
-                                        '& fieldset': {
-                                            borderColor: darkMode ? 'rgba(255,255,255,0.3)' : 'rgba(0,0,0,0.23)'
-                                        },
-                                        '&:hover fieldset': {
-                                            borderColor: darkMode ? 'rgba(255,255,255,0.5)' : 'rgba(0,0,0,0.5)'
-                                        }
+                                    '& .MuiSelect-select': {
+                                        color: darkMode ? '#fff' : 'inherit'
+                                    },
+                                    '& .MuiOutlinedInput-notchedOutline': {
+                                        borderColor: darkMode ? 'rgba(255,255,255,0.3)' : 'rgba(0,0,0,0.23)'
+                                    },
+                                    '&:hover .MuiOutlinedInput-notchedOutline': {
+                                        borderColor: darkMode ? 'rgba(255,255,255,0.5)' : 'rgba(0,0,0,0.5)'
                                     }
                                 }}>
                                     <InputLabel id="enterprise-select-label">Filtrer par entreprise(s)</InputLabel>
                                     <Select
                                         labelId="enterprise-select-label"
                                         multiple
-                                        value={selectedEnterprises || []} // Assurez-vous qu'il y a toujours un tableau
-                                        onChange={handleEnterpriseChange}
+                                        value={selectedEnterprises || []}
+                                        onChange={(event) => {
+                                            const { value } = event.target;
+                                            const availableEnterprises = enterprises
+                                                .filter(enterprise =>
+                                                    isAdminOrDev ||
+                                                    userInfo?.entreprisesConseillerPrevention?.includes(enterprise.label)
+                                                )
+                                                .map(enterprise => enterprise.label);
+
+                                            // Si on clique sur une entreprise individuelle
+                                            if (Array.isArray(value)) {
+                                                handleEnterpriseChange(event);
+                                            }
+                                        }}
                                         input={<OutlinedInput label="Filtrer par entreprise(s)" />}
                                         renderValue={(selected) => {
-                                            // Vérification et protection contre les valeurs non valides
                                             if (!selected || !Array.isArray(selected) || selected.length === 0) {
                                                 return "Toutes les entreprises";
                                             }
@@ -412,6 +426,11 @@ export default function PlanAction({ accidentData }) {
                                                 return "Toutes les entreprises";
                                             }
                                             return Array.isArray(selected) ? selected.join(', ') : '';
+                                        }}
+                                        sx={{
+                                            '& .MuiSelect-icon': {
+                                                color: darkMode ? '#fff' : 'inherit'
+                                            }
                                         }}
                                         MenuProps={{
                                             PaperProps: {
@@ -423,21 +442,51 @@ export default function PlanAction({ accidentData }) {
                                             },
                                         }}
                                     >
-                                        <MenuItem value="">
+                                        <MenuItem
+                                            value=""
+                                            sx={{
+                                                backgroundColor: darkMode ? '#424242' : '#ee742d59',
+                                                color: darkMode ? '#fff' : 'inherit',
+                                                '&:hover': {
+                                                    backgroundColor: darkMode ? '#505050' : '#ee742d80'
+                                                }
+                                            }}
+                                        >
                                             <Checkbox
-                                                checked={!selectedEnterprises?.length ||
-                                                    selectedEnterprises.length === enterprises.length}
+                                                checked={selectedEnterprises?.length === enterprises.filter(enterprise =>
+                                                    isAdminOrDev ||
+                                                    userInfo?.entreprisesConseillerPrevention?.includes(enterprise.label)
+                                                ).length && selectedEnterprises.length > 0}
                                                 indeterminate={selectedEnterprises?.length > 0 &&
-                                                    selectedEnterprises.length < enterprises.length}
+                                                    selectedEnterprises?.length < enterprises.filter(enterprise =>
+                                                        isAdminOrDev ||
+                                                        userInfo?.entreprisesConseillerPrevention?.includes(enterprise.label)
+                                                    ).length}
+                                                onChange={(event) => {
+                                                    const availableEnterprises = enterprises
+                                                        .filter(enterprise =>
+                                                            isAdminOrDev ||
+                                                            userInfo?.entreprisesConseillerPrevention?.includes(enterprise.label)
+                                                        )
+                                                        .map(enterprise => enterprise.label);
+
+                                                    handleEnterpriseChange({
+                                                        target: {
+                                                            value: event.target.checked ? availableEnterprises : []
+                                                        }
+                                                    });
+                                                }}
                                                 sx={{
-                                                    marginRight: 8,
-                                                    color: darkMode ? '#4CAF50' : '#257525',
+                                                    color: darkMode ? '#ff6b6b' : 'red',
                                                     '&.Mui-checked': {
-                                                        color: darkMode ? '#81C784' : '#257525'
+                                                        color: darkMode ? '#ff8080' : 'red'
                                                     }
                                                 }}
                                             />
-                                            <ListItemText primary="Toutes les entreprises" />
+                                            <ListItemText
+                                                primary="Toutes les entreprises"
+                                                sx={{ color: darkMode ? '#fff' : 'inherit' }}
+                                            />
                                         </MenuItem>
                                         {enterprises
                                             .filter(enterprise =>
@@ -459,14 +508,16 @@ export default function PlanAction({ accidentData }) {
                                                     <Checkbox
                                                         checked={selectedEnterprises?.includes(enterprise.label)}
                                                         sx={{
-                                                            marginRight: 8,
                                                             color: darkMode ? '#4CAF50' : '#257525',
                                                             '&.Mui-checked': {
                                                                 color: darkMode ? '#81C784' : '#257525'
                                                             }
                                                         }}
                                                     />
-                                                    <ListItemText primary={enterprise.label} />
+                                                    <ListItemText
+                                                        primary={enterprise.label}
+                                                        sx={{ color: darkMode ? '#fff' : 'inherit' }}
+                                                    />
                                                 </MenuItem>
                                             ))}
                                     </Select>
@@ -508,39 +559,77 @@ export default function PlanAction({ accidentData }) {
                         <Tooltip title="Filtrer par année" arrow>
                             <FormControl sx={{
                                 boxShadow: darkMode ? '0 3px 6px rgba(255,255,255,0.1)' : 3,
-                                minWidth: 120,
+                                width: '200px',
                                 backgroundColor: darkMode ? '#424242' : '#ee752d60',
+                                border: darkMode ? '1px solid rgba(255,255,255,0.1)' : 'none',
                                 '& .MuiInputLabel-root': {
                                     color: darkMode ? '#fff' : 'inherit'
                                 },
-                                '& .MuiOutlinedInput-root': {
-                                    color: darkMode ? '#fff' : 'inherit',
-                                    '& fieldset': {
-                                        borderColor: darkMode ? 'rgba(255,255,255,0.3)' : 'rgba(0,0,0,0.23)'
-                                    },
-                                    '&:hover fieldset': {
-                                        borderColor: darkMode ? 'rgba(255,255,255,0.5)' : 'rgba(0,0,0,0.5)'
-                                    }
+                                '& .MuiSelect-select': {
+                                    color: darkMode ? '#fff' : 'inherit'
+                                },
+                                '& .MuiOutlinedInput-notchedOutline': {
+                                    borderColor: darkMode ? 'rgba(255,255,255,0.3)' : 'rgba(0,0,0,0.23)'
+                                },
+                                '&:hover .MuiOutlinedInput-notchedOutline': {
+                                    borderColor: darkMode ? 'rgba(255,255,255,0.5)' : 'rgba(0,0,0,0.5)'
                                 }
                             }}>
-                                <InputLabel id="years-select-label">Filtrer par année(s)</InputLabel>
+                                <InputLabel id="years-select-label" sx={{ color: darkMode ? '#fff' : 'inherit' }}>
+                                    Année
+                                </InputLabel>
                                 <Select
                                     labelId="years-select-label"
+                                    id="years-select"
                                     multiple
                                     value={selectedYears}
                                     onChange={handleYearsChange}
-                                    input={<OutlinedInput label="Filtrer par année(s)" />}
-                                    renderValue={(selected) => selected.join(', ')}
-                                    MenuProps={{
-                                        PaperProps: {
-                                            style: {
-                                                maxHeight: 48 * 4.5 + 8,
-                                                width: 250,
-                                                backgroundColor: darkMode ? '#424242' : '#fff'
-                                            },
-                                        },
+                                    renderValue={(selected) => {
+                                        if (!selected || !Array.isArray(selected) || selected.length === 0) {
+                                            return "Toutes les années";
+                                        }
+                                        return selected.join(', ');
+                                    }}
+                                    sx={{
+                                        '& .MuiSelect-icon': {
+                                            color: darkMode ? '#fff' : 'inherit'
+                                        }
                                     }}
                                 >
+                                    <MenuItem
+                                        value=""
+                                        sx={{
+                                            backgroundColor: darkMode ? '#424242' : '#ee742d59',
+                                            color: darkMode ? '#fff' : 'inherit',
+                                            '&:hover': {
+                                                backgroundColor: darkMode ? '#505050' : '#ee742d80'
+                                            },
+                                            '&.Mui-selected': {
+                                                backgroundColor: darkMode ? '#424242 !important' : '#ee742d59 !important'
+                                            },
+                                            '&.Mui-selected:hover': {
+                                                backgroundColor: darkMode ? '#505050 !important' : '#ee742d80 !important'
+                                            }
+                                        }}
+                                    >
+                                        <Checkbox
+                                            checked={selectedYears?.length === availableYears.length}
+                                            onChange={(event) => {
+                                                const newValue = event.target.checked ? availableYears : [];
+                                                handleYearsChange({ target: { value: newValue } });
+                                            }}
+                                            sx={{
+                                                color: darkMode ? '#ff6b6b' : 'red',
+                                                '&.Mui-checked': {
+                                                    color: darkMode ? '#ff8080' : 'red'
+                                                }
+                                            }}
+                                        />
+                                        <ListItemText
+                                            primary="Toutes les années"
+                                            sx={{ color: darkMode ? '#fff' : 'inherit' }}
+                                        />
+                                    </MenuItem>
                                     {availableYears.map((year) => (
                                         <MenuItem
                                             key={year}
@@ -550,20 +639,28 @@ export default function PlanAction({ accidentData }) {
                                                 color: darkMode ? '#fff' : 'inherit',
                                                 '&:hover': {
                                                     backgroundColor: darkMode ? '#505050' : '#ee742d80'
+                                                },
+                                                '&.Mui-selected': {
+                                                    backgroundColor: darkMode ? '#424242 !important' : '#ee742d59 !important'
+                                                },
+                                                '&.Mui-selected:hover': {
+                                                    backgroundColor: darkMode ? '#505050 !important' : '#ee742d80 !important'
                                                 }
                                             }}
                                         >
                                             <Checkbox
-                                                checked={selectedYears.indexOf(year) > -1}
+                                                checked={selectedYears.includes(year)}
                                                 sx={{
-                                                    marginRight: 8,
                                                     color: darkMode ? '#4CAF50' : '#257525',
                                                     '&.Mui-checked': {
                                                         color: darkMode ? '#81C784' : '#257525'
                                                     }
                                                 }}
                                             />
-                                            <ListItemText primary={year} />
+                                            <ListItemText
+                                                primary={year}
+                                                sx={{ color: darkMode ? '#fff' : 'inherit' }}
+                                            />
                                         </MenuItem>
                                     ))}
                                 </Select>
