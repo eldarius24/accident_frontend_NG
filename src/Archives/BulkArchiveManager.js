@@ -123,6 +123,7 @@ const BulkArchiveManager = ({ darkMode, onSuccess }) => {
         setLoading(true);
         try {
             if (dialogContent.type === 'archive') {
+                // Code pour l'archivage
                 const endpoint = type === 'accident' ? 'accidents' : 'planaction';
                 const response = await axios.get(`http://localhost:3100/api/${endpoint}`);
                 const itemsToArchive = response.data.filter(item => {
@@ -146,6 +147,7 @@ const BulkArchiveManager = ({ darkMode, onSuccess }) => {
                     await axios.delete(`http://localhost:3100/api/${endpoint}/${item._id}`);
                 }
             } else {
+                // Code pour la restauration
                 const response = await axios.get(`http://localhost:3100/api/archives/${type}`);
                 const itemsToRestore = response.data.filter(item => {
                     const itemYear = type === 'accident'
@@ -154,8 +156,45 @@ const BulkArchiveManager = ({ darkMode, onSuccess }) => {
                     return itemYear === selectedYearRestore;
                 });
 
+                let successCount = 0;
                 for (const item of itemsToRestore) {
-                    await axios.post(`http://localhost:3100/api/archives/${item._id}/restore`);
+                    try {
+                        console.log('Tentative de restauration pour:', {
+                            id: item._id,
+                            type: type,
+                            donnees: item.donnees
+                        });
+
+                        const response = await axios.post(
+                            `http://localhost:3100/api/archives/${item._id}/restore`,
+                            {
+                                type: type,
+                                donnees: item.donnees
+                            },
+                            {
+                                validateStatus: false
+                            }
+                        );
+
+                        if (response.status === 500) {
+                            console.error('Réponse du serveur:', response.data);
+                            throw new Error(`Erreur serveur: ${response.data.message || 'Erreur inconnue'}`);
+                        }
+
+                        successCount++;
+                        console.log(`Item ${item._id} restauré avec succès`);
+                    } catch (restoreError) {
+                        console.error(`Erreur détaillée pour l'item ${item._id}:`, {
+                            message: restoreError.message,
+                            response: restoreError.response?.data,
+                            status: restoreError.response?.status,
+                            config: restoreError.config
+                        });
+                    }
+                }
+
+                if (successCount === 0) {
+                    throw new Error('Aucune restauration n\'a réussi');
                 }
             }
 
@@ -163,9 +202,11 @@ const BulkArchiveManager = ({ darkMode, onSuccess }) => {
             if (onSuccess) {
                 onSuccess(`${dialogContent.type === 'archive' ? 'Archivage' : 'Restauration'} en masse effectué avec succès`);
             }
+
             // Rafraîchir les listes d'années après l'opération
             await fetchActiveYears();
             await fetchArchivedYears();
+
             // Réinitialiser les sélections
             if (dialogContent.type === 'archive') {
                 setSelectedYearArchive('');
@@ -174,10 +215,14 @@ const BulkArchiveManager = ({ darkMode, onSuccess }) => {
             }
         } catch (error) {
             console.error(`Erreur lors de l'${dialogContent.type === 'archive' ? 'archivage' : 'restauration'}:`, error);
+            if (onSuccess) {
+                onSuccess(`Erreur lors de l'${dialogContent.type === 'archive' ? 'archivage' : 'restauration'}: ${error.message}`, 'error');
+            }
         } finally {
             setLoading(false);
         }
     };
+
 
     const defaultStyle = {
         margin: '10px', backgroundColor: '#0098f9', '&:hover': { backgroundColor: '#95ad22' },
@@ -421,20 +466,66 @@ const BulkArchiveManager = ({ darkMode, onSuccess }) => {
                 </Box>
             </Box>
 
-            <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)}>
-                <DialogTitle>
+            <Dialog
+                open={dialogOpen}
+                onClose={() => setDialogOpen(false)}
+                PaperProps={{
+                    sx: {
+                        backgroundColor: darkMode ? '#1a1a1a' : '#ffffff',
+                        color: darkMode ? '#ffffff' : 'inherit',
+                        border: darkMode ? '1px solid rgba(255,255,255,0.1)' : 'none'
+                    }
+                }}
+            >
+                <DialogTitle sx={{
+                    color: darkMode ? '#ffffff' : 'inherit',
+                    backgroundColor: darkMode ? '#333333' : '#f5f5f5'
+                }}>
                     Confirmation
                 </DialogTitle>
                 <DialogContent>
-                    <Typography>
+                    <Typography sx={{
+                        color: darkMode ? '#ffffff' : 'inherit',
+                        mt: 2
+                    }}>
                         Voulez-vous vraiment {dialogContent.type === 'archive' ? 'archiver' : 'restaurer'} {dialogContent.count} {type === 'accident' ? 'accident(s)' : 'action(s)'} de l'année {dialogContent.type === 'archive' ? selectedYearArchive : selectedYearRestore} ?
                     </Typography>
                 </DialogContent>
-                <DialogActions>
-                    <Button onClick={() => setDialogOpen(false)} disabled={loading}>
+                <DialogActions sx={{
+                    backgroundColor: darkMode ? '#333333' : '#f5f5f5',
+                    padding: 2
+                }}>
+                    <Button
+                        onClick={() => setDialogOpen(false)}
+                        disabled={loading}
+                        sx={{
+                            color: darkMode ? '#ffffff' : 'inherit',
+                            backgroundColor: darkMode ? '#424242' : '#ee742d59',
+                            '&:hover': {
+                                backgroundColor: darkMode ? '#7a8e1c' : '#95ad22',
+                            },
+                            '&.Mui-disabled': {
+                                color: darkMode ? '#ffffff !important' : 'rgba(0, 0, 0, 0.26)'
+                            }
+                        }}
+                    >
                         Annuler
                     </Button>
-                    <Button onClick={executeAction} disabled={loading} autoFocus>
+                    <Button
+                        onClick={executeAction}
+                        disabled={loading}
+                        autoFocus
+                        sx={{
+                            color: darkMode ? '#ffffff' : 'inherit',
+                            backgroundColor: darkMode ? '#424242' : '#ee742d59',
+                            '&:hover': {
+                                backgroundColor: darkMode ? '#7a8e1c' : '#95ad22',
+                            },
+                            '&.Mui-disabled': {
+                                color: darkMode ? '#ffffff !important' : 'rgba(0, 0, 0, 0.26)'
+                            }
+                        }}
+                    >
                         Confirmer
                     </Button>
                 </DialogActions>
