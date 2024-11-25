@@ -208,7 +208,7 @@ export default function Navigation() {
 
     return (
         <div style={{
-            backgroundColor: darkMode ? '#6e6e6e' : '#ffffff',
+            backgroundColor: darkMode ? '#6e6e6e' : '#ffffff', 
             color: darkMode ? '#ffffff' : '#000000'
         }}>
             <Box
@@ -366,7 +366,7 @@ export default function Navigation() {
                     </Typography>
                 </Box>
             </Box>
-
+            <form style={{ margin: '0 20px' }}>
             <Paper
                 elevation={24}
                 sx={{
@@ -374,7 +374,7 @@ export default function Navigation() {
                     padding: '40px',
                     margin: '40px 0',
                     background: darkMode
-                        ? 'linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%)'
+                        ? 'linear-gradient(135deg, #6e6e6e 0%, #2a2a2a 100%)'
                         : 'linear-gradient(135deg, #ffffff 0%, #f8f8f8 100%)',
                     boxShadow: darkMode
                         ? '0 20px 40px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.1)'
@@ -449,7 +449,7 @@ export default function Navigation() {
                         </Button>
                     </Tooltip>
 
-                    <Tooltip title="Voir les statistiques" arrow>
+                    <Tooltip title="Consulter les statistiques" arrow>
                         <Button
                             component={Link}
                             to="/statistiques"
@@ -481,7 +481,7 @@ export default function Navigation() {
                         </Button>
                     </Tooltip>
                     {isAdminOrDevOrConseiller && (
-                    <Tooltip title="Gérer les entreprises" arrow>
+                    <Tooltip title="Gérer les documents divers" arrow>
                         <Button
                             component={Link}
                             to="/entreprise"
@@ -499,6 +499,7 @@ export default function Navigation() {
                     )}
                 </Box>
             </Paper>
+            </form>
             <div className="image-cortigroupe"></div>
             <Tooltip title="Développé par Remy et Benoit pour Le Cortigroupe." arrow>
                 <Box

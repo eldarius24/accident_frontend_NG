@@ -68,30 +68,6 @@ function Accident() {
         return getSelectedStatusFromCookie(COOKIE_PREFIXES.HOME);
     });
 
-
-
-    const archiverAccident = async (accident) => {
-        try {
-            const archiveData = {
-                type: 'accident', // ou 'action' selon le type
-                donnees: accident,
-                titre: `${accident.entrepriseName} - ${accident.typeAccident}`,
-            };
-
-            // Archiver la donnée
-            await axios.post('/api/archives', archiveData);
-
-            // Supprimer la donnée originale
-            await axios.delete(`/api/accidents/${accident._id}`);
-
-            // Rafraîchir la liste
-            fetchAccidents();
-
-        } catch (error) {
-            console.error("Erreur lors de l'archivage:", error);
-        }
-    };
-
     const [yearsFromData, setYearsFromData] = useState([]);
     const [yearsChecked, setYearsChecked] = useState(() =>
         getSelectedYearsFromCookie(COOKIE_PREFIXES.HOME)
