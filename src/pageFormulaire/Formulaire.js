@@ -96,7 +96,7 @@ export default function Formulaire() {
                 }
 
                 showSnackbar(`Accident ${accidentData ? 'édité' : 'créé'} avec succès`, 'success');
-                setTimeout(() => navigate('/'), 500);
+                setTimeout(() => navigate('/Accident'), 500);
             })
             .catch(error => {
                 console.error('Erreur de requête:', error.message);

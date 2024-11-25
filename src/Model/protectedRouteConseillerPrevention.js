@@ -19,7 +19,7 @@ const ProtectedRouteAdminOrConseiller = ({ children }) => {
     if (!isAuthenticated) {
       navigate('/login');
     } else if (!isAdminOrDev && !isConseiller) {
-      navigate('/'); // Rediriger vers la page d'accueil si l'utilisateur n'est ni admin ni conseiller
+      navigate('/Accident'); // Rediriger vers la page d'accueil si l'utilisateur n'est ni admin ni conseiller
     }
   }, [isAuthenticated, isAdminOrDev, isConseiller, navigate]);
 

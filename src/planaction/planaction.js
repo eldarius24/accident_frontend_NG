@@ -917,7 +917,7 @@ export default function PlanAction({ accidentData }) {
                                                             if (!isFileUploadIcon) {
                                                                 navigate('/actionfichierdll', { state: addaction._id });
                                                             } else {
-                                                                navigate('/');
+                                                                navigate('/Accident');
                                                             }
                                                         }}
                                                     >

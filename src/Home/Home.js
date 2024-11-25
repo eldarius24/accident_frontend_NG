@@ -1,1031 +1,507 @@
-import React, { useCallback, useEffect, useState, useTransition, useMemo } from 'react';
-import {
-    Table, TableBody, TableCell, TableContainer, TableHead, TableRow,
-    Button, LinearProgress, TextField, Grid, FormControl, InputLabel,
-    Select, MenuItem, Checkbox, ListItemText, Tooltip, Chip, Box, Typography
-} from '@mui/material';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
-import { confirmAlert } from 'react-confirm-alert';
-import 'react-confirm-alert/src/react-confirm-alert.css';
-import '../pageFormulaire/formulaire.css';
-import RefreshIcon from '@mui/icons-material/Refresh';
-import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
-import EditIcon from '@mui/icons-material/Edit';
-import SearchIcon from '@mui/icons-material/Search';
-import GetAppIcon from '@mui/icons-material/GetApp';
-import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
-import FileUploadIcon from '@mui/icons-material/FileUpload';
-import InputAdornment from '@mui/material/InputAdornment';
-import config from '../config.json';
-import editPDF from '../Model/pdfGenerator.js';
-import getAccidents from './_actions/get-accidents.js';
+import React, { useState } from 'react';
+import { Box, Paper, Tooltip, Button, Typography } from '@mui/material';
+import { Link } from 'react-router-dom';
+import ViewListIcon from '@mui/icons-material/ViewList';
+import BarChartIcon from '@mui/icons-material/BarChart';
+import ListAltIcon from '@mui/icons-material/ListAlt';
+import FolderIcon from '@mui/icons-material/Folder';
+import { keyframes } from '@mui/system';
+import { LineChart, Line } from 'recharts';
+import { useTheme } from '../pageAdmin/user/ThemeContext'; // Add this import
 import { useUserConnected } from '../Hook/userConnected.js';
-import CustomSnackbar from '../_composants/CustomSnackbar';
-import { useTheme } from '../pageAdmin/user/ThemeContext';
-import { handleExportDataAccident } from './_actions/exportAcci';
-import { handleExportDataAssurance } from './_actions/exportAss';
-import { useLogger } from '../Hook/useLogger';
-import useHandleDelete from './_actions/handleDelete.js';
-import { blueGrey } from '@mui/material/colors';
-import BoutonArchiver from '../Archives/BoutonArchiver';
-import createUpdateUserSelectedStatus from './_actions/updateUserSelectedStatus';
-import {
-    COOKIE_PREFIXES,
-    getSelectedYearsFromCookie,
-    getSelectAllFromCookie,
-    saveYearSelections,
-    getSelectedStatusFromCookie
-} from './_actions/cookieUtils';
 
-
-const apiUrl = config.apiUrl;
-
-/**
- * Page principale de l'application, cette page contient une table avec 
- * les accidents du travail, les boutons pour exporter les données, 
- * filtrer les accidents et les boutons pour modifier, générer un pdf, 
- * supprimer les accidents
- * @returns {React.ReactElement} 
- */
-function Home() {
-
-    const { darkMode } = useTheme();
-    const navigate = useNavigate();
-
-    const ensureArray = (value) => {
-        if (!value) return [];
-        if (Array.isArray(value)) return value;
-        try {
-            // Si c'est une chaîne JSON, essayer de la parser
-            const parsed = JSON.parse(value);
-            return Array.isArray(parsed) ? parsed : [];
-        } catch {
-            return [];
-        }
-    };
-    const [statusFilters, setStatusFilters] = useState(() => {
-        return getSelectedStatusFromCookie(COOKIE_PREFIXES.HOME);
-    });
-
-
-
-    const archiverAccident = async (accident) => {
-        try {
-            const archiveData = {
-                type: 'accident', // ou 'action' selon le type
-                donnees: accident,
-                titre: `${accident.entrepriseName} - ${accident.typeAccident}`,
-            };
-
-            // Archiver la donnée
-            await axios.post('/api/archives', archiveData);
-
-            // Supprimer la donnée originale
-            await axios.delete(`/api/accidents/${accident._id}`);
-
-            // Rafraîchir la liste
-            fetchAccidents();
-
-        } catch (error) {
-            console.error("Erreur lors de l'archivage:", error);
-        }
-    };
-
-    const [yearsFromData, setYearsFromData] = useState([]);
-    const [yearsChecked, setYearsChecked] = useState(() =>
-        getSelectedYearsFromCookie(COOKIE_PREFIXES.HOME)
-    );
-
-    const [selectAllYears, setSelectAllYears] = useState(() =>
-        getSelectAllFromCookie(COOKIE_PREFIXES.HOME)
-    );
-    const [accidents, setAccidents] = useState([]);
-    const [accidentsIsPending, startGetAccidents] = useTransition();
-    const [searchTerm, setSearchTerm] = useState('');
+export default function Navigation() {
     const { isAdmin, isAdminOuConseiller, userInfo, isConseiller, isAdminOrDev, isAdminOrDevOrConseiller } = useUserConnected();
-    const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'info' });
-    const { logAction } = useLogger();
-    const showSnackbar = useCallback((message, severity = 'info') => {
-        setSnackbar({ open: true, message, severity });
-    }, []);
-    const handleDelete = useHandleDelete({
-        setAccidents,
-        accidents,
-        logAction,
-        showSnackbar
+    const { darkMode } = useTheme(); // Add this hook
+    const [hoverStates, setHoverStates] = useState({
+        accident: false,
+        stats: false,
+        plan: false,
+        business: false
     });
 
-    const updateUserSelectedStatus = useCallback(
-        createUpdateUserSelectedStatus(showSnackbar)(setStatusFilters),
-        [showSnackbar]
+    // Données simulées pour le graphique
+    const data = [
+        { value: 30 }, { value: 10 }, { value: 45 }, { value: 25 },
+        { value: 35 }, { value: 20 }, { value: 40 }
+    ];
+
+    // Animations keyframes
+    const pulse = keyframes`
+        0% { transform: scale(1); }
+        50% { transform: scale(1.1); }
+        100% { transform: scale(1); }
+    `;
+
+    const float = keyframes`
+        0%, 100% { transform: translateY(0) rotate(0deg); }
+        25% { transform: translateY(-10px) rotate(-3deg); }
+        75% { transform: translateY(10px) rotate(3deg); }
+    `;
+
+    const sparkle = keyframes`
+        0%, 100% { opacity: 0; transform: scale(0); }
+        50% { opacity: 1; transform: scale(1); }
+    `;
+
+    const slideIn = keyframes`
+        from { transform: translateX(-100%); opacity: 0; }
+        to { transform: translateX(0); opacity: 1; }
+    `;
+
+    const rotateIn = keyframes`
+        from { transform: rotate(-180deg) scale(0); opacity: 0; }
+        to { transform: rotate(0) scale(1); opacity: 1; }
+    `;
+
+    // Style de base des boutons avec animations avancées et darkMode
+    const buttonStyle = (index) => ({
+        minHeight: '220px',
+        width: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        gap: '20px',
+        padding: '30px',
+        borderRadius: '25px',
+        position: 'relative',
+        overflow: 'hidden',
+        transition: 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
+        animation: `${slideIn} 0.5s cubic-bezier(0.4, 0, 0.2, 1) ${index * 0.1}s forwards`,
+        background: darkMode
+            ? 'linear-gradient(135deg, rgba(122,142,28,0.1) 0%, rgba(66,66,66,0.95) 50%, rgba(122,142,28,0.2) 100%)'
+            : 'linear-gradient(135deg, rgba(238,117,45,0.1) 0%, rgba(255,255,255,0.95) 50%, rgba(238,117,45,0.2) 100%)',
+        color: darkMode ? '#ffffff' : '#000000',
+        '&::before': {
+            content: '""',
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            width: '200%',
+            height: '200%',
+            backgroundColor: darkMode ? 'rgba(122,142,28,0.1)' : 'rgba(238,117,45,0.1)',
+            transform: 'translate(-50%, -50%) rotate(0deg)',
+            transition: 'all 0.8s ease',
+        },
+        '&:hover': {
+            transform: 'scale(1.05)',
+            '&::before': {
+                transform: 'translate(-50%, -50%) rotate(180deg)',
+            },
+            '& .button-content': {
+                animation: `${float} 3s ease infinite`,
+            },
+            '& .sparkle': {
+                animation: `${sparkle} 1.5s ease infinite`,
+            },
+        },
+        '@media (max-width: 768px)': {
+            minHeight: '180px',
+        },
+    });
+
+    // Update animations with darkMode colors
+    const AccidentAnimation = ({ isHovered }) => (
+        <Box sx={{
+            position: 'absolute',
+            top: '10px',
+            right: '10px',
+            width: '60px',
+            height: '60px',
+            opacity: isHovered ? 1 : 0.3,
+            transition: 'all 0.3s ease'
+        }}>
+            {[0, 1, 2].map((i) => (
+                <Box
+                    key={i}
+                    sx={{
+                        position: 'absolute',
+                        width: '20px',
+                        height: '20px',
+                        borderRadius: '50%',
+                        backgroundColor: darkMode ? '#7a8e1c' : '#ee752d',
+                        animation: isHovered ? `${pulse} ${1 + i * 0.2}s infinite` : 'none',
+                    }}
+                />
+            ))}
+        </Box>
     );
 
-    const handleStatusFilterChange = (event) => {
-        const newValues = event.target.value;
-        try {
-            if (Array.isArray(newValues) && newValues.includes('')) {
-                // Cas "Tous les états"
-                updateUserSelectedStatus([]);
-            } else {
-                // Sélection normale
-                const validValues = Array.isArray(newValues) ? newValues : [];
-                updateUserSelectedStatus(validValues);
-            }
-        } catch (error) {
-            console.error('Erreur lors de la mise à jour des états:', error);
-            showSnackbar('Erreur lors de la sauvegarde des états', 'error');
-        }
-    };
-
-    /**
-        * Rafraichit la liste des accidents en appelant la fonction getAccidents.
-        * Met à jour l'état de la liste des accidents et des années.
-        * Affiche un message de réussite ou d'erreur en fonction du résultat.
-        */
-    const refreshListAccidents = useCallback(() => {
-        startGetAccidents(async () => {
-            try {
-                const fetchedAccidents = await getAccidents();
-                setAccidents(fetchedAccidents);
-                const years = [...new Set(fetchedAccidents.map(accident =>
-                    new Date(accident.DateHeureAccident).getFullYear()
-                ))].sort((a, b) => b - a);
-                setYearsFromData(years);
-                showSnackbar('Liste des accidents actualisée', 'success');
-            } catch (error) {
-                console.error("Erreur lors de la récupération des accidents:", error);
-                showSnackbar('Erreur lors de l actualisation de la liste des accidents', 'error');
-            }
-        });
-    }, [showSnackbar]);
-
-    /**
-     * Renvoie un tableau de deux couleurs pour le background des lignes de la table.
-     * Si le thème est sombre, les couleurs sont #7a7a7a et #979797.
-     * Si le thème est clair, les couleurs sont #e62a5625 et #95519b25.
-     * @returns {Array<string>} Un tableau de deux couleurs.
-     */
-    const rowColors = useMemo(() =>
-        darkMode
-            ? ['#7a7a7a', '#979797']  // Couleurs pour le thème sombre
-            : ['#e62a5625', '#95519b25'],  // Couleurs pour le thème clair
-        [darkMode]
+    // Update StatsAnimation with darkMode colors
+    const StatsAnimation = ({ isHovered }) => (
+        <Box sx={{
+            position: 'absolute',
+            top: '10px',
+            right: '10px',
+            width: '80px',
+            height: '40px',
+            opacity: isHovered ? 1 : 0.3,
+            transition: 'all 0.3s ease'
+        }}>
+            <LineChart width={80} height={40} data={data}>
+                <Line
+                    type="monotone"
+                    dataKey="value"
+                    stroke={darkMode ? "#7a8e1c" : "#ee752d"}
+                    strokeWidth={2}
+                    dot={false}
+                    animationDuration={isHovered ? 1500 : 0}
+                />
+            </LineChart>
+        </Box>
     );
 
-    /**
-     * Formatte une date en string au format "DD/MM/YYYY HH:mm:ss".
-     * La date est attendue au format "YYYY-MM-DDTHH:mm:ss.sssZ".
-     * Si la date est nulle ou vide, la fonction renvoie une chaîne vide.
-     * 
-     * @param {string} dateString - La date à formater.
-     * @returns {string} La date formatée.
-     */
-    const formatDate = useCallback((dateString) => {
-        if (!dateString) return '';
-        const date = new Date(dateString);
-        return date.toLocaleString('fr-FR', {
-            day: '2-digit', month: '2-digit', year: 'numeric',
-            hour: '2-digit', minute: '2-digit', second: '2-digit'
-        });
-    }, []);
+    // Update PlanAnimation with darkMode colors
+    const PlanAnimation = ({ isHovered }) => (
+        <Box sx={{
+            position: 'absolute',
+            top: '10px',
+            right: '10px',
+            width: '60px',
+            height: '60px',
+            opacity: isHovered ? 1 : 0.3,
+            transition: 'all 0.3s ease'
+        }}>
+            {[0, 1, 2].map((i) => (
+                <Box
+                    key={i}
+                    sx={{
+                        position: 'absolute',
+                        top: i * 20,
+                        width: '40px',
+                        height: '4px',
+                        backgroundColor: darkMode ? '#7a8e1c' : '#ee752d',
+                        animation: isHovered ? `${slideIn} ${0.3 + i * 0.1}s ease` : 'none',
+                    }}
+                />
+            ))}
+        </Box>
+    );
 
-    /**
-     * Ferme la snackbar si l'utilisateur clique sur le bouton "Fermer" ou en dehors de la snackbar.
-     * Si l'utilisateur clique sur la snackbar elle-même (et non sur le bouton "Fermer"), la snackbar ne se ferme pas.
-     * 
-     * @param {object} event - L'événement qui a déclenché la fermeture de la snackbar.
-     * @param {string} reason - La raison pour laquelle la snackbar se ferme. Si elle vaut 'clickaway', cela signifie que l'utilisateur a cliqué en dehors de la snackbar.
-     */
-    const handleCloseSnackbar = (event, reason) => {
-        // If the reason is 'clickaway', do not close the snackbar
-        if (reason === 'clickaway') return;
-        // Close the snackbar by setting its 'open' state to false
-        setSnackbar(prev => ({ ...prev, open: false }));
-    };
-
-    /**
-     * Vérifie si l'utilisateur est un conseiller de prévention pour une entreprise.
-     * La fonction prend en paramètre le nom de l'entreprise.
-     * La fonction renvoie true si l'utilisateur est un conseiller de prévention pour l'entreprise, false sinon.
-     * La fonction utilise l'information stockée dans userInfo pour faire la vérification.
-     * @param {string} entrepriseName - Le nom de l'entreprise.
-     * @returns {boolean} - True si l'utilisateur est un conseiller de prévention pour l'entreprise, false sinon.
-     */
-    const isConseillerPrevention = useCallback((entrepriseName) => {
-        return userInfo?.entreprisesConseillerPrevention?.includes(entrepriseName) || false;
-    }, [userInfo]);
-
-    /**
-     * Génère un PDF pour l'accident passé en paramètre
-     * L'accident est recherché dans la liste des accidents enregistrés
-     * Si l'accident est trouvé, la fonction editPDF est appelée pour générer le PDF
-     * Si l'accident n'est pas trouvé, une erreur est affichée
-     * 
-     * @param {string} accidentIdToGenerate L'ID de l'accident pour lequel le PDF doit être généré
-     */
-    const handleGeneratePDF = useCallback(async (accidentIdToGenerate) => {
-        const accident = accidents.find(item => item._id === accidentIdToGenerate);
-        if (accident) {
-            try {
-                // Génère le PDF avec les données de l'accident
-                await editPDF(accident);
-
-                // Crée un log pour le téléchargement en utilisant les données de l'accident trouvé
-                await logAction({
-                    actionType: 'export',
-                    details: `Téléchargement de la déclaration PDF - Travailleur: ${accident.nomTravailleur} ${accident.prenomTravailleur} - Date: ${new Date(accident.DateHeureAccident).toLocaleDateString()}`,
-                    entity: 'Accident',
-                    entityId: accidentIdToGenerate,
-                    entreprise: accident.entrepriseName
-                });
-
-                // Affiche une snackbar pour indiquer que l'opération a réussi
-                showSnackbar('PDF généré avec succès', 'success');
-            } catch (error) {
-                console.error(error);
-                // Affiche une erreur si la génération du PDF a échoué
-                showSnackbar('Erreur lors de la génération du PDF', 'error');
-            }
-        } else {
-            // Affiche une erreur si l'accident n'a pas été trouvé
-            showSnackbar('Accident non trouvé', 'error');
-        }
-    }, [accidents, showSnackbar, logAction]); // Ajout de logAction dans les dépendances
-
-    /**
-     * Redirige l'utilisateur vers la page de modification d'un accident de travail
-     * en passant en paramètre l'ID de l'accident.
-     * 
-     * @param {string} accidentIdToModify L'ID de l'accident à modifier.
-     */
-
-    const handleEdit = useCallback(async (accidentIdToModify) => {
-        try {
-            const { data } = await axios.get(`http://${apiUrl}:3100/api/accidents/${accidentIdToModify}`);
-            navigate("/formulaire", { state: data });
-            showSnackbar('Modification de l accident initiée', 'info');
-        } catch (error) {
-            console.error(error);
-            showSnackbar('Erreur lors de la récupération des données de l accident', 'error');
-        }
-    }, [apiUrl, navigate, showSnackbar]);
-
-    /**
-     * Filtre les données des accidents en fonction des années sélectionnées et du terme de recherche.
-     * Utilise useMemo pour optimiser le recalcul des données filtrées.
-     * 
-     * @returns {Array} - Un tableau des accidents filtrés.
-     */
-    const filteredData = useMemo(() => {
-        if (!accidents || !Array.isArray(yearsChecked)) return [];
-
-        const years = yearsChecked.map(Number);
-        const searchTermLower = searchTerm.toLowerCase();
-
-        return accidents.filter(item => {
-            if (!item.DateHeureAccident) return false;
-
-            const date = new Date(item.DateHeureAccident).getFullYear();
-
-            // Si aucun filtre d'état n'est sélectionné, on ne retourne aucun élément
-            if (statusFilters.length === 0) return false;
-
-            // Vérifie si l'élément correspond aux filtres d'état sélectionnés
-            const matchesStatus = statusFilters.includes('closed') && item.boolAsCloture ||
-                statusFilters.includes('pending') && !item.boolAsCloture;
-
-            return years.includes(date) &&
-                matchesStatus &&
-                ['AssureurStatus', 'DateHeureAccident', 'entrepriseName', 'secteur',
-                    'nomTravailleur', 'prenomTravailleur', 'typeAccident'].some(property =>
-                        item[property]?.toString().toLowerCase().includes(searchTermLower)
-                    );
-        });
-    }, [accidents, yearsChecked, searchTerm, statusFilters]);
-
-    useEffect(() => {
-        const loadAccidents = async () => {
-            const accidents = await getAccidents();
-            setAccidents(accidents);
-        };
-        loadAccidents();
-    }, []);
-
-    /**
-     * Exporte les données d'accidents vers un fichier Excel.
-     * 
-     * @param {object} params - Les paramètres d'exportation
-     * @param {object[]} params.filteredData - Les données filtrées à exporter
-     * @param {boolean} params.isAdmin - Si l'utilisateur est administrateur
-     * @param {object} params.userInfo - Les informations de l'utilisateur
-     * @param {function} params.logAction - La fonction pour créer des logs
-     * @param {function} [params.onSuccess] - La fonction à appeler en cas de succès
-     * @param {function} [params.onError] - La fonction à appeler en cas d'erreur
-     */
-    const handleExportAccidentClick = useCallback(() => {
-        const cleanSearchTerm = searchTerm || ''; // S'assure que searchTerm n'est jamais undefined
-
-        handleExportDataAccident({
-            filteredData,
-            isAdminOrDev,
-            userInfo,
-            logAction,
-            searchTerm: cleanSearchTerm, // Passe la version nettoyée
-            onSuccess: (message) => showSnackbar(message, 'success'),
-            onError: (message) => showSnackbar(message, 'error')
-        });
-    }, [filteredData, isAdminOrDev, userInfo, logAction, searchTerm, showSnackbar]);
-
-    /**
-     * Exporte les données d'assurance vers un fichier Excel.
-     * 
-     * @param {object} params - Les paramètres d'exportation
-     * @param {object[]} params.filteredData - Les données filtrées à exporter
-     * @param {boolean} params.isAdminOrDev - Si l'utilisateur est administrateur
-     * @param {object} params.userInfo - Les informations de l'utilisateur
-     * @param {function} params.logAction - La fonction pour créer des logs
-     * @param {function} [params.onSuccess] - La fonction à appeler en cas de succès
-     * @param {function} [params.onError] - La fonction à appeler en cas d'erreur
-     */
-    const handleExportAssuranceClick = useCallback(() => {
-        handleExportDataAssurance({
-            filteredData,
-            isAdminOrDev,
-            userInfo,
-            logAction,
-            onSuccess: (message) => showSnackbar(message, 'success'),
-            onError: (message) => showSnackbar(message, 'error')
-        });
-    }, [filteredData, isAdminOrDev, userInfo, logAction, showSnackbar]);
-
-
-    const handleChangeYearsFilter = (event) => {
-        const value = event.target.value;
-        if (value === 'All') {
-            const allYears = [...yearsFromData];
-            setSelectAllYears(true);
-            setYearsChecked(allYears);
-            saveYearSelections(COOKIE_PREFIXES.HOME, allYears, true);
-        } else {
-            const newYears = ensureArray(value);
-            setSelectAllYears(false);
-            setYearsChecked(newYears);
-            saveYearSelections(COOKIE_PREFIXES.HOME, newYears, false);
-        }
-    };
-
-    const handleSelectAllYears = (event) => {
-        const checked = event.target.checked;
-        const years = checked ? [...yearsFromData] : [];
-        setSelectAllYears(checked);
-        setYearsChecked(years);
-        saveYearSelections(COOKIE_PREFIXES.HOME, years, checked);
-    };
-
-    useEffect(() => {
-        refreshListAccidents();
-    }, []);
-
-    if (accidentsIsPending) {
-        return <LinearProgress color="success" />;
-    }
+    // Update BusinessAnimation with darkMode colors
+    const BusinessAnimation = ({ isHovered }) => (
+        <Box sx={{
+            position: 'absolute',
+            top: '10px',
+            right: '10px',
+            width: '60px',
+            height: '60px',
+            opacity: isHovered ? 1 : 0.3,
+            transition: 'all 0.3s ease'
+        }}>
+            {[0, 1, 2].map((i) => (
+                <Box
+                    key={i}
+                    sx={{
+                        position: 'absolute',
+                        bottom: i * 20,
+                        width: '20px',
+                        height: (i + 1) * 15,
+                        backgroundColor: darkMode ? '#7a8e1c' : '#ee752d',
+                        animation: isHovered ? `${rotateIn} ${0.3 + i * 0.1}s ease` : 'none',
+                    }}
+                />
+            ))}
+        </Box>
+    );
 
     return (
         <div style={{
             backgroundColor: darkMode ? '#6e6e6e' : '#ffffff',
-            color: darkMode ? '#ffffff' : '#000000',
-            margin: '0 20px'
+            color: darkMode ? '#ffffff' : '#000000'
         }}>
-            <Box sx={{
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                margin: '2rem 0',
-                position: 'relative',
-                '&::after': {
-                    content: '""',
-                    position: 'absolute',
-                    bottom: '-10px',
-                    left: '50%',
-                    transform: 'translateX(-50%)',
-                    width: '150px',
-                    height: '4px',
-                    background: darkMode
-                        ? 'linear-gradient(90deg, rgba(122,142,28,0.2) 0%, rgba(122,142,28,1) 50%, rgba(122,142,28,0.2) 100%)'
-                        : 'linear-gradient(90deg, rgba(238,117,45,0.2) 0%, rgba(238,117,45,1) 50%, rgba(238,117,45,0.2) 100%)',
-                    borderRadius: '2px'
-                }
-            }}>
-                <Typography
-                    variant="h2"
-                    sx={{
-                        fontSize: { xs: '2rem', sm: '2.5rem', md: '3rem' },
-                        fontWeight: 700,
-                        color: darkMode ? '#ffffff' : '#2D3748',
-                        textTransform: 'uppercase',
-                        letterSpacing: '2px',
-                        textAlign: 'center',
-                        textShadow: darkMode
-                            ? '2px 2px 4px rgba(0,0,0,0.3)'
-                            : '2px 2px 4px rgba(0,0,0,0.1)',
-                        '&::first-letter': {
-                            color: darkMode ? '#7a8e1c' : '#ee752d',
-                            fontSize: '120%'
+            <Box
+                sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    margin: '2rem 0',
+                    position: 'relative',
+                    padding: '30px 0',
+                    overflow: 'hidden',
+                    '&::before': {
+                        content: '""',
+                        position: 'absolute',
+                        top: '0',
+                        left: '-100%',
+                        width: '300%',
+                        height: '100%',
+                        background: darkMode
+                            ? 'linear-gradient(90deg, transparent 0%, rgba(122,142,28,0.1) 45%, rgba(122,142,28,0.3) 50%, rgba(122,142,28,0.1) 55%, transparent 100%)'
+                            : 'linear-gradient(90deg, transparent 0%, rgba(238,117,45,0.1) 45%, rgba(238,117,45,0.3) 50%, rgba(238,117,45,0.1) 55%, transparent 100%)',
+                        animation: 'shine 3s infinite linear',
+                    },
+                    '@keyframes shine': {
+                        to: {
+                            transform: 'translateX(50%)',
                         },
-                        position: 'relative',
-                        padding: '0 20px'
-                    }}
-                >
-                    Gesion des Accidents
-                </Typography>
-            </Box>
-            <div style={{ display: 'flex', justifyContent: 'center', margin: '20px 0rem' }}>
-                <Grid
-                    container
-                    spacing={2}
-                    sx={{
-                        display: 'flex',
-                        justifyContent: 'center',
-                        alignItems: 'center'
-                    }}
-                >
-                    <Grid item xs={12} sm={6} md={1.5}>
-                        <Tooltip title="Filtrer par état" arrow>
-                            <FormControl sx={{
-                                boxShadow: darkMode ? '0 3px 6px rgba(255,255,255,0.1)' : 3,
-                                width: '100%',
-                                backgroundColor: darkMode ? '#424242' : '#ee752d60',
-                                border: darkMode ? '1px solid rgba(255,255,255,0.1)' : 'none',
-                                '& .MuiInputLabel-root': {
-                                    color: darkMode ? '#fff' : 'inherit'
-                                },
-                                '& .MuiSelect-select': {
-                                    color: darkMode ? '#fff' : 'inherit'
-                                },
-                                '& .MuiOutlinedInput-notchedOutline': {
-                                    borderColor: darkMode ? 'rgba(255,255,255,0.3)' : 'rgba(0,0,0,0.23)'
-                                },
-                                '&:hover .MuiOutlinedInput-notchedOutline': {
-                                    borderColor: darkMode ? 'rgba(255,255,255,0.5)' : 'rgba(0,0,0,0.5)'
-                                }
-                            }}>
-                                <InputLabel id="etat-label" sx={{ color: darkMode ? '#fff' : 'inherit' }}>État</InputLabel>
-                                <Select
-                                    labelId="etat-label"
-                                    id="etat-select"
-                                    multiple
-                                    value={statusFilters}
-                                    onChange={handleStatusFilterChange}
-                                    renderValue={(selected) => {
-                                        if (!selected || !Array.isArray(selected) || selected.length === 0) {
-                                            return "Tous les états";
-                                        }
-                                        return selected.map(s => s === 'closed' ? 'Clôturé' : 'En attente').join(', ');
-                                    }}
-                                    sx={{
-                                        '& .MuiSelect-icon': {
-                                            color: darkMode ? '#fff' : 'inherit'
-                                        }
-                                    }}
-                                >
-                                    <MenuItem
-                                        value=""
-                                        sx={{
-                                            backgroundColor: darkMode ? '#424242' : '#ee742d59',
-                                            color: darkMode ? '#fff' : 'inherit',
-                                            '&:hover': {
-                                                backgroundColor: darkMode ? '#505050' : '#ee742d80'
-                                            },
-                                            '&.Mui-selected': {
-                                                backgroundColor: darkMode ? '#424242 !important' : '#ee742d59 !important'
-                                            },
-                                            '&.Mui-selected:hover': {
-                                                backgroundColor: darkMode ? '#505050 !important' : '#ee742d80 !important'
-                                            }
-                                        }}
-                                    >
-                                        <Checkbox
-                                            checked={statusFilters?.length === 2}
-                                            onChange={(event) => {
-                                                // Si la case est cochée, on sélectionne tout, sinon on déselectionne tout
-                                                const newValue = event.target.checked ? ['closed', 'pending'] : [];
-                                                handleStatusFilterChange({ target: { value: newValue } });
-                                            }}
-                                            sx={{
-                                                color: darkMode ? '#ff6b6b' : 'red',
-                                                '&.Mui-checked': {
-                                                    color: darkMode ? '#ff8080' : 'red'
-                                                }
-                                            }}
-                                        />
-                                        <ListItemText
-                                            primary="Tous les états"
-                                            sx={{ color: darkMode ? '#fff' : 'inherit' }}
-                                        />
-                                    </MenuItem>
-                                    {['closed', 'pending'].map(status => (
-                                        <MenuItem
-                                            key={status}
-                                            value={status}
-                                            sx={{
-                                                backgroundColor: darkMode ? '#424242' : '#ee742d59',
-                                                color: darkMode ? '#fff' : 'inherit',
-                                                '&:hover': {
-                                                    backgroundColor: darkMode ? '#505050' : '#ee742d80'
-                                                },
-                                                '&.Mui-selected': {
-                                                    backgroundColor: darkMode ? '#424242 !important' : '#ee742d59 !important'
-                                                },
-                                                '&.Mui-selected:hover': {
-                                                    backgroundColor: darkMode ? '#505050 !important' : '#ee742d80 !important'
-                                                }
-                                            }}
-                                        >
-                                            <Checkbox
-                                                checked={statusFilters?.includes(status)}
-                                                sx={{
-                                                    color: darkMode ? '#4CAF50' : '#257525',
-                                                    '&.Mui-checked': {
-                                                        color: darkMode ? '#81C784' : '#257525'
-                                                    }
-                                                }}
-                                            />
-                                            <ListItemText
-                                                primary={status === 'closed' ? 'Clôturé' : 'En attente'}
-                                                sx={{ color: darkMode ? '#fff' : 'inherit' }}
-                                            />
-                                        </MenuItem>
-                                    ))}
-                                </Select>
-                            </FormControl>
-                        </Tooltip>
-                    </Grid>
-                    <Grid item xs={12} sm={6} md={1.5}>
-                        <Tooltip title="Cliquez ici pour actualiser le tableau des accidents du travails" arrow>
-                            <Button
-                                sx={{
-                                    color: darkMode ? '#ffffff' : 'black',
-                                    padding: '15px',
-                                    width: '100%',
-                                    backgroundColor: darkMode ? '#424242' : '#ee752d60',
-                                    transition: 'all 0.1s ease-in-out',
-                                    '&:hover': {
-                                        backgroundColor: darkMode ? '#7a8e1c' : '#95ad22',
-                                        transform: 'scale(1.08)',
-                                        boxShadow: darkMode ? '0 6px 12px rgba(255,255,255,0.2)' : 6
-                                    },
-                                    boxShadow: darkMode ? '0 3px 6px rgba(255,255,255,0.1)' : 3,
-                                    textTransform: 'none',
-                                    border: darkMode ? '1px solid rgba(255,255,255,0.1)' : 'none'
-                                }}
-                                variant="contained"
-                                color="secondary"
-                                onClick={refreshListAccidents}
-                                startIcon={<RefreshIcon />}
-                            >
-                                Actualiser
-                            </Button>
-                        </Tooltip>
-                    </Grid>
-                    <Grid item xs={12} sm={6} md={1.5}>
-                        <Tooltip title="Cliquez ici pour filtrer les accidents par années" arrow placement="top">
-                            <FormControl sx={{
-                                boxShadow: darkMode ? '0 3px 6px rgba(255,255,255,0.1)' : 3,
-                                width: '100%',
-                                backgroundColor: darkMode ? '#424242' : '#ee752d60',
-                                border: darkMode ? '1px solid rgba(255,255,255,0.1)' : 'none',
-                                '& .MuiInputLabel-root': {
-                                    color: darkMode ? '#fff' : 'inherit'
-                                },
-                                '& .MuiSelect-select': {
-                                    color: darkMode ? '#fff' : 'inherit'
-                                },
-                                '& .MuiOutlinedInput-notchedOutline': {
-                                    borderColor: darkMode ? 'rgba(255,255,255,0.3)' : 'rgba(0,0,0,0.23)'
-                                },
-                                '&:hover .MuiOutlinedInput-notchedOutline': {
-                                    borderColor: darkMode ? 'rgba(255,255,255,0.5)' : 'rgba(0,0,0,0.5)'
-                                }
-                            }}>
-                                <InputLabel id="sort-label" sx={{ color: darkMode ? '#fff' : 'inherit' }}>
-                                    Année
-                                </InputLabel>
-                                <Select
-                                    labelId="sort-label"
-                                    id="sort-select"
-                                    multiple
-                                    value={yearsChecked || []}
-                                    onChange={handleChangeYearsFilter}
-                                    renderValue={(selected) => {
-                                        return Array.isArray(selected) ? selected.join(', ') : '';
-                                    }}
-                                    sx={{
-                                        '& .MuiSelect-icon': {
-                                            color: darkMode ? '#fff' : 'inherit'
-                                        }
-                                    }}
-                                >
-                                    <MenuItem
-                                        key="All"
-                                        value="All"
-                                        sx={{
-                                            backgroundColor: darkMode ? '#424242' : '#ee742d59',
-                                            color: darkMode ? '#fff' : 'inherit',
-                                            '&:hover': {
-                                                backgroundColor: darkMode ? '#505050' : '#ee742d80'
-                                            },
-                                            '&.Mui-selected': {
-                                                backgroundColor: darkMode ? '#424242 !important' : '#ee742d59 !important'
-                                            },
-                                            '&.Mui-selected:hover': {
-                                                backgroundColor: darkMode ? '#505050 !important' : '#ee742d80 !important'
-                                            }
-                                        }}
-                                    >
-                                        <Checkbox
-                                            checked={selectAllYears}
-                                            onChange={handleSelectAllYears}
-                                            sx={{
-                                                color: darkMode ? '#ff6b6b' : 'red',
-                                                '&.Mui-checked': {
-                                                    color: darkMode ? '#ff8080' : 'red'
-                                                }
-                                            }}
-                                        />
-                                        <ListItemText
-                                            primary="Toutes les années"
-                                            sx={{ color: darkMode ? '#fff' : 'inherit' }}
-                                        />
-                                    </MenuItem>
-                                    {yearsFromData.map(year => (
-                                        <MenuItem
-                                            key={year}
-                                            value={year}
-                                            sx={{
-                                                backgroundColor: darkMode ? '#424242' : '#ee742d59',
-                                                color: darkMode ? '#fff' : 'inherit',
-                                                '&:hover': {
-                                                    backgroundColor: darkMode ? '#505050' : '#ee742d80'
-                                                },
-                                                '&.Mui-selected': {
-                                                    backgroundColor: darkMode ? '#424242 !important' : '#ee742d59 !important'
-                                                },
-                                                '&.Mui-selected:hover': {
-                                                    backgroundColor: darkMode ? '#505050 !important' : '#ee742d80 !important'
-                                                }
-                                            }}
-                                        >
-                                            <Checkbox
-                                                checked={Array.isArray(yearsChecked) && yearsChecked.includes(year)}
-                                                sx={{
-                                                    color: darkMode ? '#4CAF50' : '#257525',
-                                                    '&.Mui-checked': {
-                                                        color: darkMode ? '#81C784' : '#257525'
-                                                    }
-                                                }}
-                                            />
-                                            <ListItemText
-                                                primary={year}
-                                                sx={{ color: darkMode ? '#fff' : 'inherit' }}
-                                            />
-                                        </MenuItem>
-                                    ))}
-                                </Select>
-                            </FormControl>
-                        </Tooltip>
-                    </Grid>
-                    <Grid item xs={12} sm={6} md={1.5}>
-                        <Tooltip title="Filtrer les accidents par mots clés" arrow>
-                            <TextField
-                                value={searchTerm}
-                                onChange={event => setSearchTerm(event.target.value)}
-                                variant="outlined"
-                                sx={{
-                                    boxShadow: darkMode ? '0 3px 6px rgba(255,255,255,0.1)' : 3,
-                                    backgroundColor: darkMode ? '#424242' : '#ee752d60',
-                                    width: '100%',
-                                    '& .MuiOutlinedInput-root': {
-                                        color: darkMode ? '#fff' : 'inherit',
-                                        '& fieldset': {
-                                            borderColor: darkMode ? 'rgba(255,255,255,0.3)' : 'rgba(0,0,0,0.23)'
-                                        },
-                                        '&:hover fieldset': {
-                                            borderColor: darkMode ? 'rgba(255,255,255,0.5)' : 'rgba(0,0,0,0.5)'
-                                        },
-                                        '&.Mui-focused fieldset': {
-                                            borderColor: darkMode ? 'rgba(255,255,255,0.7)' : '#1976d2'
-                                        }
-                                    },
-                                    '& .MuiInputLabel-root': {
-                                        color: darkMode ? '#fff' : 'inherit'
-                                    }
-                                }}
-                                InputProps={{
-                                    startAdornment: (
-                                        <InputAdornment position="start">
-                                            <SearchIcon sx={{ color: darkMode ? '#fff' : 'inherit' }} />
-                                        </InputAdornment>
-                                    ),
-                                    sx: {
-                                        '&::placeholder': {
-                                            color: darkMode ? 'rgba(255,255,255,0.7)' : 'inherit'
-                                        }
-                                    }
-                                }}
-                            />
-                        </Tooltip>
-                    </Grid>
-                    {isAdminOrDevOrConseiller && (
-                        <>
-                            <Grid item xs={12} sm={6} md={1.5}>
-                                <Tooltip title="Cliquez ici pour exporter les données Accident en fonction des filtres sélèctionnes en excel" arrow>
-                                    <Button
-                                        sx={{
-                                            color: darkMode ? '#ffffff' : 'black',
-                                            padding: '15px',
-                                            width: '100%',
-                                            backgroundColor: darkMode ? '#424242' : '#ee752d60',
-                                            transition: 'all 0.1s ease-in-out',
-                                            '&:hover': {
-                                                backgroundColor: darkMode ? '#7a8e1c' : '#95ad22',
-                                                transform: 'scale(1.08)',
-                                                boxShadow: darkMode ? '0 6px 12px rgba(255,255,255,0.2)' : 6
-                                            },
-                                            boxShadow: darkMode ? '0 3px 6px rgba(255,255,255,0.1)' : 3,
-                                            textTransform: 'none',
-                                            border: darkMode ? '1px solid rgba(255,255,255,0.1)' : 'none',
-                                            '& .MuiSvgIcon-root': {
-                                                color: darkMode ? '#fff' : 'inherit'
-                                            }
-                                        }}
-                                        variant="contained"
-                                        color="primary"
-                                        onClick={handleExportAccidentClick}
-                                        startIcon={<FileUploadIcon />}
-                                    >
-                                        Accident
-                                    </Button>
-                                </Tooltip>
-                            </Grid>
-                            <Grid item xs={12} sm={6} md={1.5}>
-                                <Tooltip title="Cliquez ici pour exporter les données Assurance en fonction des filtres sélèctionnes en excel" arrow>
-                                    <Button
-                                        sx={{
-                                            color: darkMode ? '#ffffff' : 'black',
-                                            padding: '15px',
-                                            width: '100%',
-                                            backgroundColor: darkMode ? '#424242' : '#ee752d60',
-                                            transition: 'all 0.1s ease-in-out',
-                                            '&:hover': {
-                                                backgroundColor: darkMode ? '#7a8e1c' : '#95ad22',
-                                                transform: 'scale(1.08)',
-                                                boxShadow: darkMode ? '0 6px 12px rgba(255,255,255,0.2)' : 6
-                                            },
-                                            boxShadow: darkMode ? '0 3px 6px rgba(255,255,255,0.1)' : 3,
-                                            textTransform: 'none',
-                                            border: darkMode ? '1px solid rgba(255,255,255,0.1)' : 'none',
-                                            '& .MuiSvgIcon-root': {
-                                                color: darkMode ? '#fff' : 'inherit'
-                                            }
-                                        }}
-                                        variant="contained"
-                                        color="primary"
-                                        onClick={handleExportAssuranceClick}
-                                        startIcon={<FileUploadIcon />}
-                                    >
-                                        Assurance
-                                    </Button>
-                                </Tooltip>
-                            </Grid>
-                        </>
-                    )}
-                </Grid>
-            </div>
-            <TableContainer
-                className="frameStyle-style"
-                style={{
-                    maxHeight: '600px',
-                    overflowY: 'auto',
-                    backgroundColor: darkMode ? '#6e6e6e' : '#ffffff',
+                    },
+                    '&::after': {
+                        content: '""',
+                        position: 'absolute',
+                        inset: '-2px',
+                        padding: '3px',
+                        background: darkMode
+                            ? 'linear-gradient(45deg, #7a8e1c, transparent, #a4bd24, transparent, #7a8e1c)'
+                            : 'linear-gradient(45deg, #ee752d, transparent, #f4a261, transparent, #ee752d)',
+                        borderRadius: '16px',
+                        WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
+                        WebkitMaskComposite: 'xor',
+                        maskComposite: 'exclude',
+                        animation: 'borderRotate 4s linear infinite',
+                    },
+                    '@keyframes borderRotate': {
+                        from: {
+                            transform: 'rotate(0deg)',
+                        },
+                        to: {
+                            transform: 'rotate(360deg)',
+                        },
+                    },
                 }}
             >
-                <Table>
-                    <TableHead>
-                        <TableRow
-                            className={`table-row-separatormenu ${darkMode ? 'dark-separator' : ''}`}
-                            style={{
-                                backgroundColor: darkMode ? '#535353' : '#0098f950'
-                            }}
+                <Box
+                    sx={{
+                        position: 'relative',
+                        padding: '20px 40px',
+                        borderRadius: '15px',
+                        background: darkMode
+                            ? 'rgba(0,0,0,0.3)'
+                            : 'rgba(255,255,255,0.3)',
+                        backdropFilter: 'blur(10px)',
+                        boxShadow: darkMode
+                            ? '0 8px 32px 0 rgba(0,0,0, 0.37)'
+                            : '0 8px 32px 0 rgba(238,117,45, 0.37)',
+                        zIndex: 1,
+                    }}
+                >
+                    <Typography
+                        variant="h1"
+                        sx={{
+                            fontSize: { xs: '2.5rem', sm: '3.5rem', md: '4.5rem' },
+                            fontWeight: 900,
+                            background: darkMode
+                                ? 'linear-gradient(45deg, #7a8e1c 0%, #a4bd24 25%, #d4e157 50%, #a4bd24 75%, #7a8e1c 100%)'
+                                : 'linear-gradient(45deg, #ee752d 0%, #f4a261 25%, #ffb74d 50%, #f4a261 75%, #ee752d 100%)',
+                            backgroundSize: '200% auto',
+                            backgroundClip: 'text',
+                            WebkitBackgroundClip: 'text',
+                            color: 'transparent',
+                            textTransform: 'uppercase',
+                            letterSpacing: '0.15em',
+                            textAlign: 'center',
+                            animation: 'gradient 3s linear infinite',
+                            '@keyframes gradient': {
+                                '0%': {
+                                    backgroundPosition: '0% center',
+                                },
+                                '100%': {
+                                    backgroundPosition: '200% center',
+                                },
+                            },
+                            textShadow: darkMode
+                                ? '0 0 20px rgba(122,142,28,0.5)'
+                                : '0 0 20px rgba(238,117,45,0.5)',
+                            position: 'relative',
+                            '&::before': {
+                                content: 'attr(data-text)',
+                                position: 'absolute',
+                                left: '2px',
+                                top: '2px',
+                                width: '100%',
+                                height: '100%',
+                                backgroundImage: darkMode
+                                    ? 'linear-gradient(45deg, #7a8e1c 0%, transparent 100%)'
+                                    : 'linear-gradient(45deg, #ee752d 0%, transparent 100%)',
+                                backgroundClip: 'text',
+                                WebkitBackgroundClip: 'text',
+                                color: 'transparent',
+                                zIndex: -1,
+                                filter: 'blur(1px)',
+                            },
+                        }}
+                        data-text="T.I.G.R.E"
+                    >
+                        T.I.G.R.E
+                    </Typography>
+
+                    <Typography
+                        variant="subtitle1"
+                        sx={{
+                            fontSize: { xs: '0.9rem', sm: '1.1rem', md: '1.3rem' },
+                            fontWeight: 500,
+                            background: darkMode
+                                ? 'linear-gradient(45deg, #7a8e1c, #a4bd24)'
+                                : 'linear-gradient(45deg, #ee752d, #f4a261)',
+                            backgroundClip: 'text',
+                            WebkitBackgroundClip: 'text',
+                            color: 'transparent',
+                            textAlign: 'center',
+                            letterSpacing: '0.2em',
+                            marginTop: '15px',
+                            position: 'relative',
+                            textTransform: 'uppercase',
+                            animation: 'fadeIn 0.5s ease-in-out',
+                            '@keyframes fadeIn': {
+                                from: { opacity: 0, transform: 'translateY(10px)' },
+                                to: { opacity: 1, transform: 'translateY(0)' },
+                            },
+                            '&::after': {
+                                content: '""',
+                                position: 'absolute',
+                                bottom: '-10px',
+                                left: '50%',
+                                transform: 'translateX(-50%)',
+                                width: '50%',
+                                height: '2px',
+                                background: darkMode
+                                    ? 'linear-gradient(90deg, transparent, #7a8e1c, transparent)'
+                                    : 'linear-gradient(90deg, transparent, #ee752d, transparent)',
+                            },
+                        }}
+                    >
+                        Traitement Informatisé de la Gestion des Risques en Entreprise
+                    </Typography>
+                </Box>
+            </Box>
+
+            <Paper
+                elevation={24}
+                sx={{
+                    borderRadius: '30px',
+                    padding: '40px',
+                    margin: '40px 0',
+                    background: darkMode
+                        ? 'linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%)'
+                        : 'linear-gradient(135deg, #ffffff 0%, #f8f8f8 100%)',
+                    boxShadow: darkMode
+                        ? '0 20px 40px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.1)'
+                        : '0 20px 40px rgba(238,117,45,0.2), inset 0 1px 0 rgba(255,255,255,0.5)',
+                }}
+            >
+                <Box sx={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    margin: '2rem 0',
+                    position: 'relative',
+                    '&::after': {
+                        content: '""',
+                        position: 'absolute',
+                        bottom: '-10px',
+                        left: '50%',
+                        transform: 'translateX(-50%)',
+                        width: '150px',
+                        height: '4px',
+                        background: darkMode
+                            ? 'linear-gradient(90deg, rgba(122,142,28,0.2) 0%, rgba(122,142,28,1) 50%, rgba(122,142,28,0.2) 100%)'
+                            : 'linear-gradient(90deg, rgba(238,117,45,0.2) 0%, rgba(238,117,45,1) 50%, rgba(238,117,45,0.2) 100%)',
+                        borderRadius: '2px'
+                    }
+                }}>
+                    <Typography
+                        variant="h2"
+                        sx={{
+                            fontSize: { xs: '2rem', sm: '2.5rem', md: '3rem' },
+                            fontWeight: 700,
+                            color: darkMode ? '#ffffff' : '#2D3748',
+                            textTransform: 'uppercase',
+                            letterSpacing: '2px',
+                            textAlign: 'center',
+                            textShadow: darkMode
+                                ? '2px 2px 4px rgba(0,0,0,0.3)'
+                                : '2px 2px 4px rgba(0,0,0,0.1)',
+                            '&::first-letter': {
+                                color: darkMode ? '#7a8e1c' : '#ee752d',
+                                fontSize: '120%'
+                            },
+                            position: 'relative',
+                            padding: '0 20px'
+                        }}
+                    >
+                        Navigation Principale
+                    </Typography>
+                </Box>
+
+                <Box
+                    sx={{
+                        display: 'grid',
+                        gridTemplateColumns: { xs: '1fr', md: 'repeat(2, 1fr)' },
+                        gap: '40px',
+                        padding: '20px',
+                    }}
+                >
+                    <Tooltip title="Gérer les accidents" arrow>
+                        <Button
+                            component={Link}
+                            to="/Accident"
+                            sx={buttonStyle(0)}
+                            onMouseEnter={() => setHoverStates(prev => ({ ...prev, accident: true }))}
+                            onMouseLeave={() => setHoverStates(prev => ({ ...prev, accident: false }))}
                         >
-                            <TableCell style={{ fontWeight: 'bold' }}>Etat</TableCell>
-                            <TableCell style={{ fontWeight: 'bold' }}>N° Groupe</TableCell>
-                            <TableCell style={{ fontWeight: 'bold' }}>N° Entreprise</TableCell>
-                            <TableCell style={{ fontWeight: 'bold' }}>Status</TableCell>
-                            <TableCell style={{ fontWeight: 'bold' }}>Date accident</TableCell>
-                            <TableCell style={{ fontWeight: 'bold' }}>Entreprise</TableCell>
-                            <TableCell style={{ fontWeight: 'bold' }}>Secteur</TableCell>
-                            <TableCell style={{ fontWeight: 'bold' }}>Nom du travailleur</TableCell>
-                            <TableCell style={{ fontWeight: 'bold' }}>Prénom du travailleur</TableCell>
-                            <TableCell style={{ fontWeight: 'bold' }}>Type accident</TableCell>
-                            <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>Editer</TableCell>
-                            <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>Fichier</TableCell>
-                            <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>PDF</TableCell>
-                            <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>Supprimer</TableCell>
-                            {(isAdminOrDev) ? (
-                                <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>Archivage</TableCell>
-                            ) : null}
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {filteredData.map((item, index) => (
-                            <React.Fragment key={item._id}>
-                                <TableRow
-                                    className={`table-row-separatormenu ${darkMode ? 'dark-separator' : ''}`}
-                                    style={{
-                                        backgroundColor: rowColors[index % rowColors.length]
-                                    }}
-                                >
-                                    <TableCell>
-                                        <Chip
-                                            label={item.boolAsCloture ? "Clôturé" : "En attente"}
-                                            color={item.boolAsCloture ? "error" : "success"}
-                                            size="small"
-                                            sx={{
-                                                opacity: 0.6,  // Ajuste la transparence (0 = invisible, 1 = opaque)
-                                                '& .MuiChip-label': {
-                                                    opacity: 1  // Garde le texte complètement visible
-                                                }
-                                            }}
-                                        />
-                                    </TableCell>
-                                    <TableCell>{item.numeroGroupe}</TableCell>
-                                    <TableCell>{item.numeroEntreprise}</TableCell>
-                                    <TableCell>{item.AssureurStatus}</TableCell>
-                                    <TableCell>{formatDate(item.DateHeureAccident)}</TableCell>
-                                    <TableCell>{item.entrepriseName}</TableCell>
-                                    <TableCell>{item.secteur}</TableCell>
-                                    <TableCell>{item.nomTravailleur}</TableCell>
-                                    <TableCell>{item.prenomTravailleur}</TableCell>
-                                    <TableCell>{item.typeAccident}</TableCell>
-                                    <>
-                                        <TableCell style={{ padding: 0, width: '70px' }}>
-                                            {(isAdminOrDev || (isConseiller && isConseillerPrevention(item.entrepriseName))) ? (
-                                                <Tooltip title="Cliquez ici pour éditer les données de l'accident" arrow>
-                                                    <Button sx={{
-                                                        backgroundColor: darkMode ? blueGrey[700] : blueGrey[500],
-                                                        transition: 'all 0.1s ease-in-out',
-                                                        '&:hover': {
-                                                            backgroundColor: darkMode ? blueGrey[900] : blueGrey[700],
-                                                            transform: 'scale(1.08)',
-                                                            boxShadow: darkMode ? '0 6px 12px rgba(255,255,255,0.2)' : 6
-                                                        },
-                                                        '& .MuiSvgIcon-root': {
-                                                            color: darkMode ? '#fff' : 'inherit'
-                                                        }
-                                                    }}
-                                                        variant="contained"
-                                                        color="primary"
-                                                        onClick={() => handleEdit(item._id)}>
-                                                        <EditIcon />
-                                                    </Button>
-                                                </Tooltip>
-                                            ) : null}
-                                        </TableCell>
+                            <AccidentAnimation isHovered={hoverStates.accident} />
+                            <Box className="button-content" sx={{ zIndex: 1 }}>
+                                <ViewListIcon sx={{ fontSize: '3rem', mb: 2 }} />
+                                <Typography variant="h5">Accidents</Typography>
+                            </Box>
+                        </Button>
+                    </Tooltip>
 
-                                        <TableCell style={{ padding: 0, width: '70px' }}>
-                                            {(isAdminOrDev || (isConseiller && isConseillerPrevention(item.entrepriseName))) ? (
-                                                <Tooltip title="Cliquez ici pour ajouter des fichiers a l'accident" arrow>
-                                                    <Button sx={{
-                                                        backgroundColor: darkMode ? '#7b1fa2' : '#9c27b0',
-                                                        transition: 'all 0.1s ease-in-out',
-                                                        '&:hover': {
-                                                            backgroundColor: darkMode ? '#4a0072' : '#7b1fa2',
-                                                            transform: 'scale(1.08)',
-                                                            boxShadow: darkMode ? '0 6px 12px rgba(255,255,255,0.2)' : 6
-                                                        },
-                                                        '& .MuiSvgIcon-root': {
-                                                            color: darkMode ? '#fff' : 'inherit'
-                                                        }
-                                                    }}
-                                                        variant="contained"
-                                                        color="secondary"
-                                                        onClick={() => navigate("/fichierdll", { state: item._id })}>
-                                                        <GetAppIcon />
-                                                    </Button>
-                                                </Tooltip>
-                                            ) : null}
-                                        </TableCell>
+                    <Tooltip title="Voir les statistiques" arrow>
+                        <Button
+                            component={Link}
+                            to="/statistiques"
+                            sx={buttonStyle(1)}
+                            onMouseEnter={() => setHoverStates(prev => ({ ...prev, stats: true }))}
+                            onMouseLeave={() => setHoverStates(prev => ({ ...prev, stats: false }))}
+                        >
+                            <StatsAnimation isHovered={hoverStates.stats} />
+                            <Box className="button-content" sx={{ zIndex: 1 }}>
+                                <BarChartIcon sx={{ fontSize: '3rem', mb: 2 }} />
+                                <Typography variant="h5">Statistiques</Typography>
+                            </Box>
+                        </Button>
+                    </Tooltip>
 
-                                        <TableCell style={{ padding: 0, width: '70px' }}>
-                                            {(isAdminOrDev || (isConseiller && isConseillerPrevention(item.entrepriseName))) ? (
-                                                <Tooltip title="Cliquez ici pour générer la déclaration d'accident Belfius si vous avez remplis tous les champs du formulaire" arrow>
-                                                    <Button sx={{
-                                                        backgroundColor: darkMode ? '#1b5e20' : '#2e7d32',
-                                                        transition: 'all 0.1s ease-in-out',
-                                                        '&:hover': {
-                                                            backgroundColor: darkMode ? '#2e7d32' : '#1b5e20',
-                                                            transform: 'scale(1.08)',
-                                                            boxShadow: darkMode ? '0 6px 12px rgba(255,255,255,0.2)' : 6
-                                                        },
-                                                        '& .MuiSvgIcon-root': {
-                                                            color: darkMode ? '#fff' : 'inherit'
-                                                        }
-                                                    }}
-                                                        variant="contained"
-                                                        color="success"
-                                                        onClick={() => handleGeneratePDF(item._id)}>
-                                                        <PictureAsPdfIcon />
-                                                    </Button>
-                                                </Tooltip>
-                                            ) : null}
-                                        </TableCell>
-
-                                        <TableCell style={{ padding: 0, width: '70px' }}>
-                                            {(isAdminOrDev || (isConseiller && isConseillerPrevention(item.entrepriseName))) ? (
-                                                <Tooltip title="Cliquez ici pour supprimer l'accident" arrow>
-                                                    <Button sx={{
-                                                        backgroundColor: darkMode ? '#b71c1c' : '#d32f2f',
-                                                        transition: 'all 0.1s ease-in-out',
-                                                        '&:hover': {
-                                                            backgroundColor: darkMode ? '#d32f2f' : '#b71c1c',
-                                                            transform: 'scale(1.08)',
-                                                            boxShadow: darkMode ? '0 6px 12px rgba(255,255,255,0.2)' : 6
-                                                        },
-                                                        '& .MuiSvgIcon-root': {
-                                                            color: darkMode ? '#fff' : 'inherit'
-                                                        }
-                                                    }}
-                                                        variant="contained"
-                                                        color="error"
-                                                        onClick={() => {
-                                                            confirmAlert({
-                                                                customUI: ({ onClose }) => (
-                                                                    <div className="custom-confirm-dialog">
-                                                                        <h1 className="custom-confirm-title">Supprimer</h1>
-                                                                        <p className="custom-confirm-message">Êtes-vous sûr de vouloir supprimer cet accident?</p>
-                                                                        <div className="custom-confirm-buttons">
-                                                                            <Tooltip title="Cliquez sur OUI pour supprimer" arrow>
-                                                                                <button
-                                                                                    className="custom-confirm-button"
-                                                                                    onClick={() => {
-                                                                                        handleDelete(item._id);
-                                                                                        onClose();
-                                                                                    }}
-                                                                                >
-                                                                                    Oui
-                                                                                </button>
-                                                                            </Tooltip>
-                                                                            <Tooltip title="Cliquez sur NON pour annuler la suppression" arrow>
-                                                                                <button
-                                                                                    className="custom-confirm-button custom-confirm-no"
-                                                                                    onClick={onClose}
-                                                                                >
-                                                                                    Non
-                                                                                </button>
-                                                                            </Tooltip>
-                                                                        </div>
-                                                                    </div>
-                                                                )
-                                                            });
-                                                        }}
-                                                    >
-                                                        <DeleteForeverIcon />
-                                                    </Button>
-                                                </Tooltip>
-                                            ) : null}
-                                        </TableCell>
-                                        {/* Autres cellules */}
-                                        {(isAdminOrDev) ? (
-                                            <TableCell style={{ padding: 0, width: '70px' }}>
-
-                                                <BoutonArchiver
-                                                    donnee={item}
-                                                    type="accident"
-                                                    onSuccess={() => {
-                                                        refreshListAccidents();
-                                                        showSnackbar('Accident archivé avec succès', 'success');
-                                                    }}
-                                                />
-
-                                            </TableCell>
-                                        ) : null}
-                                    </>
-                                </TableRow>
-                            </React.Fragment>
-                        ))}
-                    </TableBody>
-                </Table>
-            </TableContainer>
-            <CustomSnackbar
-                open={snackbar.open}
-                handleClose={handleCloseSnackbar}
-                message={snackbar.message}
-                severity={snackbar.severity}
-            />
+                    <Tooltip title="Gérer le plan d'action" arrow>
+                        <Button
+                            component={Link}
+                            to="/planAction"
+                            sx={buttonStyle(2)}
+                            onMouseEnter={() => setHoverStates(prev => ({ ...prev, plan: true }))}
+                            onMouseLeave={() => setHoverStates(prev => ({ ...prev, plan: false }))}
+                        >
+                            <PlanAnimation isHovered={hoverStates.plan} />
+                            <Box className="button-content" sx={{ zIndex: 1 }}>
+                                <ListAltIcon sx={{ fontSize: '3rem', mb: 2 }} />
+                                <Typography variant="h5">Plan d'action</Typography>
+                            </Box>
+                        </Button>
+                    </Tooltip>
+                    {isAdminOrDevOrConseiller && (
+                    <Tooltip title="Gérer les entreprises" arrow>
+                        <Button
+                            component={Link}
+                            to="/entreprise"
+                            sx={buttonStyle(3)}
+                            onMouseEnter={() => setHoverStates(prev => ({ ...prev, business: true }))}
+                            onMouseLeave={() => setHoverStates(prev => ({ ...prev, business: false }))}
+                        >
+                            <BusinessAnimation isHovered={hoverStates.business} />
+                            <Box className="button-content" sx={{ zIndex: 1 }}>
+                                <FolderIcon sx={{ fontSize: '3rem', mb: 2 }} />
+                                <Typography variant="h5"> Documents Divers</Typography>
+                            </Box>
+                        </Button>
+                    </Tooltip>
+                    )}
+                </Box>
+            </Paper>
             <div className="image-cortigroupe"></div>
             <Tooltip title="Développé par Remy et Benoit pour Le Cortigroupe." arrow>
-                <h5 style={{ marginBottom: '40px' }}> <Box
+                <Box
                     sx={{
                         display: 'flex',
                         justifyContent: 'center',
@@ -1089,48 +565,54 @@ function Home() {
                         }}
                     >
                         <span>Développé par </span>
-                        <span className="highlight" style={{
+                        <span className="highlight" sx={{
                             transition: 'color 0.3s ease',
                             fontWeight: 700
                         }}>
                             Remy
                         </span>
                         <span> & </span>
-                        <span className="highlight" style={{
+                        <span className="highlight" sx={{
                             transition: 'color 0.3s ease',
                             fontWeight: 700
                         }}>
                             Benoit
                         </span>
                         <span> pour </span>
-                        <span style={{
-                            background: darkMode
-                                ? 'linear-gradient(45deg, #7a8e1c, #a4bd24)'
-                                : 'linear-gradient(45deg, #ee752d, #f4a261)',
-                            WebkitBackgroundClip: 'text',
-                            backgroundClip: 'text',
-                            color: 'transparent',
-                            fontWeight: 700
-                        }}>
+                        <Box
+                            component="span"
+                            sx={{
+                                fontWeight: 700,
+                                background: darkMode
+                                    ? 'linear-gradient(45deg, #7a8e1c, #a4bd24)'
+                                    : 'linear-gradient(45deg, #ee752d, #f4a261)',
+                                backgroundClip: 'text',
+                                WebkitBackgroundClip: 'text',
+                                color: 'transparent',
+                                transition: 'all 0.3s ease'
+                            }}
+                        >
                             Le Cortigroupe
-                        </span>
-                        <span style={{
-                            fontSize: '1.2em',
-                            marginLeft: '4px',
-                            background: darkMode
-                                ? 'linear-gradient(45deg, #7a8e1c, #a4bd24)'
-                                : 'linear-gradient(45deg, #ee752d, #f4a261)',
-                            WebkitBackgroundClip: 'text',
-                            backgroundClip: 'text',
-                            color: 'transparent'
-                        }}>
+                        </Box>
+                        <Box
+                            component="span"
+                            sx={{
+                                fontSize: '1.2em',
+                                marginLeft: '4px',
+                                background: darkMode
+                                    ? 'linear-gradient(45deg, #7a8e1c, #a4bd24)'
+                                    : 'linear-gradient(45deg, #ee752d, #f4a261)',
+                                backgroundClip: 'text',
+                                WebkitBackgroundClip: 'text',
+                                color: 'transparent',
+                                transition: 'all 0.3s ease'
+                            }}
+                        >
                             ®
-                        </span>
+                        </Box>
                     </Typography>
-                </Box></h5>
+                </Box>
             </Tooltip>
         </div>
     );
 }
-
-export default Home;

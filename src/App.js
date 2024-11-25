@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Login from './login/Login';
-import Home from './Home/Home';
+import Accidents from './Home/Accident';
 import Formulaire from './pageFormulaire/Formulaire';
 import Statistiques from './statistique/statistiques';
 import AdminPanelSettingsAction from './pageAdmin/AdminPanelSettingsaction';
@@ -29,6 +29,7 @@ import QuesEntrep from './entrepriseDivers/quesEntrep';
 import MessSupport from './Dialog/messSupport';
 import Archivage from './Archives/archivages';
 import Archives from './Archives/archives';
+import Home from './Home/Home';
 
 /**
  * App est le composant principal de l'application. Il contient les routes 
@@ -51,8 +52,9 @@ const App = () => {
           <ResponsiveAppBar />
           <Routes>
             {/* Routes accessibles uniquement par usernormal */}
+            <Route path="/" element={<ProtectedRoute><Home/></ProtectedRoute>} />
             <Route path="/login" element={<Login />} />
-            <Route path="/" element={<ProtectedRoute><Home /></ProtectedRoute>} />
+            <Route path="/Accident" element={<ProtectedRoute><Accidents/></ProtectedRoute>} />
             <Route path="/statistiques" element={<ProtectedRoute><Statistiques /></ProtectedRoute>} />
 
             {/* Routes accessibles uniquement par isAdmin */}
