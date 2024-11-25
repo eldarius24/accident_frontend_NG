@@ -1,6 +1,8 @@
 import axios from 'axios';
 import { saveAs } from 'file-saver';
+import config from '../config.json';
 
+const apiUrl = config.apiUrl;
 const handleFileDownload = async ({ fileId, fileName, entrepriseName, logAction, showMessage }) => {
     try {
         // Vérification des paramètres requis
@@ -9,7 +11,7 @@ const handleFileDownload = async ({ fileId, fileName, entrepriseName, logAction,
         }
 
         // Téléchargement du fichier
-        const response = await axios.get(`http://localhost:3100/api/getFile/${fileId}`, {
+        const response = await axios.get(`http://${apiUrl}3100/api/getFile/${fileId}`, {
             responseType: 'blob'
         });
 
