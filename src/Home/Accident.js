@@ -37,7 +37,7 @@ import {
     saveYearSelections,
     getSelectedStatusFromCookie
 } from './_actions/cookieUtils.js';
-
+import { usePageReload } from './_actions/UsePageReload.js';
 
 const apiUrl = config.apiUrl;
 
@@ -48,8 +48,8 @@ const apiUrl = config.apiUrl;
  * supprimer les accidents
  * @returns {React.ReactElement} 
  */
-function Home() {
-
+function Accident() {
+    usePageReload();
     const { darkMode } = useTheme();
     const navigate = useNavigate();
 
@@ -397,6 +397,7 @@ function Home() {
             color: darkMode ? '#ffffff' : '#000000',
             margin: '0 20px'
         }}>
+            
             <Box sx={{
                 display: 'flex',
                 justifyContent: 'center',
@@ -1002,9 +1003,14 @@ function Home() {
                                                 <BoutonArchiver
                                                     donnee={item}
                                                     type="accident"
-                                                    onSuccess={() => {
-                                                        refreshListAccidents();
-                                                        showSnackbar('Accident archivé avec succès', 'success');
+                                                    onSuccess={async () => {
+                                                        try {
+                                                            window.location.reload();
+                                                            showSnackbar('Accident archivé avec succès', 'success');
+                                                        } catch (error) {
+                                                            console.error('Erreur lors du rafraîchissement:', error);
+                                                            showSnackbar('Erreur lors de l\'actualisation', 'error');
+                                                        }
                                                     }}
                                                 />
 
@@ -1133,4 +1139,4 @@ function Home() {
     );
 }
 
-export default Home;
+export default Accident;
