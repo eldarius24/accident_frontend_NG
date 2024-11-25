@@ -293,6 +293,7 @@ const SupportDialog = ({ open, onClose, isLoginPage = false }) => {
         </DialogActions>
       </form>
     </Dialog>
+    
   );
 };
 

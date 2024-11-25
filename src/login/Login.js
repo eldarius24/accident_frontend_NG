@@ -10,7 +10,7 @@ import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import axios from 'axios';
 import { useTheme } from '../pageAdmin/user/ThemeContext';
-import config from '../config.json';
+import AccidentCounter from './accidentCounter';
 
 // Fonction utilitaire pour les logs
 const logAction = async (action) => {
@@ -510,23 +510,11 @@ const Login = () => {
           </h6>
         </form>
         {/* Compteur de jours sans accident */}
-        <div style={counterStyle}>
-          <div style={textStyle}>Le Cortigroupe a passé</div>
-          <div style={numberStyle}>
-            {isNaN(daysWithoutAccident) ? '0' : daysWithoutAccident}
-          </div>
-          <div style={textStyle}>Jours sans accident</div>
-          {lastAccidentDate && !isNaN(lastAccidentDate.getTime()) && (
-            <div style={dateStyle}>
-              Dernier accident le : {lastAccidentDate.toLocaleDateString('fr-FR', {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric'
-              })}
-            </div>
-          )}
-
-        </div>
+        <AccidentCounter
+          days={isNaN(daysWithoutAccident) ? 0 : daysWithoutAccident}
+          lastDate={lastAccidentDate}
+          darkMode={darkMode}
+        />
         <div className="image-cortigroupe"></div>
         <Tooltip title="Développé par Remy et Benoit pour Le Cortigroupe." arrow>
           <h5
