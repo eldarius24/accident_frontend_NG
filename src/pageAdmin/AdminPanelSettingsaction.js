@@ -514,7 +514,7 @@ export default function AdminPanelSettingsaction() {
                         </span>
                         <span> pour </span>
                         <span style={{
-                            background: darkMode
+                            backgroundImage: darkMode
                                 ? 'linear-gradient(45deg, #7a8e1c, #a4bd24)'
                                 : 'linear-gradient(45deg, #ee752d, #f4a261)',
                             WebkitBackgroundClip: 'text',
@@ -527,7 +527,7 @@ export default function AdminPanelSettingsaction() {
                         <span style={{
                             fontSize: '1.2em',
                             marginLeft: '4px',
-                            background: darkMode
+                            backgroundImage: darkMode
                                 ? 'linear-gradient(45deg, #7a8e1c, #a4bd24)'
                                 : 'linear-gradient(45deg, #ee752d, #f4a261)',
                             WebkitBackgroundClip: 'text',
