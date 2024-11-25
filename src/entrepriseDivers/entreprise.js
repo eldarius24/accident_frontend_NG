@@ -368,32 +368,6 @@ const EnterpriseDivers = () => {
         setModalOpen(false);
     };
 
-    const fetchEnterprises = useCallback(async () => {
-        try {
-            const response = await axios.get(`http://${apiUrl}:3100/api/entreprises`);
-            const enterpriseData = response.data;
-
-            if (!Array.isArray(enterpriseData)) {
-                console.error("Données non conformes : tableau attendu, mais reçu :", enterpriseData);
-                setEnterprises([]);
-                return;
-            }
-
-            const filteredData = isAdminOrDev
-                ? enterpriseData
-                : enterpriseData.filter(enterprise =>
-                    isConseiller && isConseillerPrevention(enterprise.AddEntreName)
-                );
-
-            setEnterprises(filteredData);
-        } catch (error) {
-            console.error("Erreur lors de la récupération des entreprises:", error);
-            setEnterprises([]);
-        } finally {
-            setLoading(false);
-        }
-    }, [apiUrl, isAdminOrDev, isConseiller, isConseillerPrevention]);
-
     const fetchQuestionnaires = useCallback(async () => {
         try {
             const response = await axios.get(`http://${apiUrl}:3100/api/questionnaires`);
