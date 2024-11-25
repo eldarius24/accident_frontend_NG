@@ -476,7 +476,7 @@ export default function Navigation() {
                             <PlanAnimation isHovered={hoverStates.plan} />
                             <Box className="button-content" sx={{ zIndex: 1 }}>
                                 <ListAltIcon sx={{ fontSize: '3rem', mb: 2 }} />
-                                <Typography variant="h5">Plan d'action</Typography>
+                                <Typography variant="h5">Plan d'actions</Typography>
                             </Box>
                         </Button>
                     </Tooltip>

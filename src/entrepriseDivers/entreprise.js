@@ -655,7 +655,7 @@ const EnterpriseDivers = () => {
                         padding: '0 20px'
                     }}
                 >
-                    Document Divers
+                    Documents Divers
                 </Typography>
             </Box>
             {isAdminOrDev && (
