@@ -3,7 +3,8 @@ import axios from 'axios';
 import {
     Card, CardContent, Typography, LinearProgress,
     Box, Divider, Button, Select, MenuItem, Modal,
-    FormControl, Tooltip, InputLabel, Accordion, AccordionSummary, AccordionDetails
+    FormControl, Tooltip, InputLabel, Accordion, AccordionSummary, AccordionDetails,
+    Grid
 } from '@mui/material';
 import PhoneIcon from '@mui/icons-material/Phone';
 import EmailIcon from '@mui/icons-material/Email';
@@ -658,374 +659,429 @@ const EnterpriseDivers = () => {
                 </Typography>
             </Box>
             {isAdminOrDev && (
-                <Box sx={{ mb: 3, width: '100%', maxWidth: 500, mx: 'auto' }}>
-                    <FormControl fullWidth>
-                        <InputLabel>Filtrer les entreprises</InputLabel>
-                        <Box sx={{ display: 'flex', gap: 2, alignItems: 'start' }}>
+                <Grid
+                    container
+                    spacing={2}
+                    sx={{
+                        mb: 3,
+                        width: '100%',
+                        maxWidth: 800,
+                        mx: 'auto'
+                    }}
+                >
+                    <Grid item xs={5}>
+                        <FormControl fullWidth
+                            sx={{
+                                boxShadow: darkMode ? '0 3px 6px rgba(255,255,255,0.1)' : 3,
+                                width: '100%',
+                                backgroundColor: darkMode ? '#424242' : '#ee752d60',
+                                border: darkMode ? '1px solid rgba(255,255,255,0.1)' : 'none',
+                                '& .MuiInputLabel-root': {
+                                    color: darkMode ? '#fff' : 'inherit'
+                                },
+                                '& .MuiSelect-select': {
+                                    color: darkMode ? '#fff' : 'inherit'
+                                },
+                                '& .MuiOutlinedInput-notchedOutline': {
+                                    borderColor: darkMode ? 'rgba(255,255,255,0.3)' : 'rgba(0,0,0,0.23)'
+                                },
+                                '&:hover .MuiOutlinedInput-notchedOutline': {
+                                    borderColor: darkMode ? 'rgba(255,255,255,0.5)' : 'rgba(0,0,0,0.5)'
+                                }
+                            }}>
+                            <InputLabel>Filtrer les entreprises</InputLabel>
                             <Select
                                 fullWidth
                                 multiple
                                 value={selectedEnterprises}
                                 onChange={handleFilterChange}
                                 renderValue={(selected) => selected.join(', ')}
-                                style={{ minHeight: '48px' }}
+                                sx={{
+                                    '& .MuiSelect-icon': {
+                                        color: darkMode ? '#fff' : 'inherit'
+                                    }
+                                }}
                             >
                                 {enterprises.sort((a, b) =>
                                     a.AddEntreName.localeCompare(b.AddEntreName)
                                 ).map((enterprise) => (
-                                    <MenuItem key={enterprise._id} value={enterprise.AddEntreName}>
+                                    <MenuItem
+                                        key={enterprise._id}
+                                        value={enterprise.AddEntreName}
+                                        sx={{
+                                            backgroundColor: darkMode ? '#424242' : '#ee742d59',
+                                            color: darkMode ? '#fff' : 'inherit',
+                                            '&:hover': {
+                                                backgroundColor: darkMode ? '#505050' : '#ee742d80'
+                                            },
+                                            '&.Mui-selected': {
+                                                backgroundColor: darkMode ? '#424242 !important' : '#ee742d59 !important'
+                                            },
+                                            '&.Mui-selected:hover': {
+                                                backgroundColor: darkMode ? '#505050 !important' : '#ee742d80 !important'
+                                            }
+                                        }}
+                                    >
                                         {enterprise.AddEntreName}
                                     </MenuItem>
                                 ))}
                             </Select>
-                            {selectedEnterprises.length > 0 && (
+                        </FormControl>
+                    </Grid>
+                    <Grid item xs={3}>
+                        <Button
+                            variant="outlined"
+                            onClick={clearFilter}
+                            sx={{
+                                color: darkMode ? '#ffffff' : 'black',
+                                padding: '15px',
+                                width: '100%',
+                                backgroundColor: darkMode ? '#424242' : '#ee752d60',
+                                transition: 'all 0.1s ease-in-out',
+                                '&:hover': {
+                                    backgroundColor: darkMode ? '#7a8e1c' : '#95ad22',
+                                    transform: 'scale(1.08)',
+                                    boxShadow: darkMode ? '0 6px 12px rgba(255,255,255,0.2)' : 6
+                                },
+                                boxShadow: darkMode ? '0 3px 6px rgba(255,255,255,0.1)' : 3,
+                                textTransform: 'none',
+                                border: darkMode ? '1px solid rgba(255,255,255,0.1)' : 'none'
+                            }}
+                        >
+                            Effacer le filtre
+                        </Button>
+                    </Grid>
+                </Grid>
+            )}
+
+            {
+                filteredEnterprises.map((enterprise) => (
+
+                    <Card
+                        key={enterprise._id}
+                        sx={{
+                            ...getCardStyle(),
+                            mb: '10px',
+                            backgroundColor: darkMode ? '#2a2a2a' : '#ebebeb',
+                        }}>
+                        <CardContent>
+
+                            <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+                                <Typography
+                                    variant="h5"
+                                    component="h2"
+                                    sx={{ color: darkMode ? '#fff' : 'inherit' }}
+                                >
+                                    <strong>Entreprise: </strong>{enterprise.AddEntreName}
+                                </Typography>
+                            </Box>
+                            <IconWrapper
+                                icon={LocationOnIcon}
+                                text={<><strong>Adresse:</strong> {`${enterprise.AddEntrRue}, ${enterprise.AddEntrCodpost} ${enterprise.AddEntrLocalite}`}</>}
+                            />
+                            <IconWrapper
+                                icon={PhoneIcon}
+                                text={<><strong>Téléphone:</strong> {enterprise.AddEntrTel}</>}
+                            />
+                            <IconWrapper
+                                icon={EmailIcon}
+                                text={<><strong>Email:</strong> {enterprise.AddEntrEmail}</>}
+                            />
+                            <IconWrapper
+                                icon={BusinessIcon}
+                                text={<><strong>N° Entreprise:</strong> {enterprise.AddEntrNumentr}</>}
+                            />
+                            <IconWrapper
+                                icon={AccountBalanceIcon}
+                                text={<><strong>IBAN:</strong> {enterprise.AddEntrIban}</>}
+                            />
+                            <IconWrapper
+                                icon={WorkIcon}
+                                text={<><strong>Activité:</strong> {enterprise.AddEntreActiventre}</>}
+                            />
+                            <IconWrapper
+                                icon={GroupIcon}
+                                text={<><strong>Secrétariat Social:</strong> {enterprise.AddEntrSecsoci}</>}
+                            />
+                            <IconWrapper
+                                icon={NumbersIcon}
+                                text={<><strong>N° Affiliation:</strong> {enterprise.AddEntrNumaffi}</>}
+                            />
+
+                            <Divider sx={{ my: 2, backgroundColor: darkMode ? '#ffffff' : '#000000' }} />
+                            <Tooltip title="Ajouter un nouveau document lié a l'entreprise" arrow>
                                 <Button
-                                    variant="outlined"
-                                    onClick={clearFilter}
+                                    variant="contained"
+                                    startIcon={<GetAppIcon />}
+                                    onClick={() => handleStartQuestionnaire(enterprise)}
                                     sx={{
-                                        minWidth: '120px',
-                                        height: '48px',
-                                        backgroundColor: darkMode ? '#2a2a2a' : '#fff',
-                                        color: darkMode ? '#fff' : '#000',
+                                        ...buttonStyle,
+                                        transition: 'all 0.1s ease-in-out',
                                         '&:hover': {
-                                            backgroundColor: darkMode ? '#3a3a3a' : '#f5f5f5',
+                                            backgroundColor: '#95ad22',
+                                            transform: 'scale(1.08)',
+                                            boxShadow: 6
                                         }
                                     }}
                                 >
-                                    Effacer le filtre
+                                    Ajouter un pièce
                                 </Button>
-                            )}
-                        </Box>
-                    </FormControl>
-                </Box>
-            )}
-
-            {filteredEnterprises.map((enterprise) => (
-
-                <Card
-                    key={enterprise._id}
-                    sx={{
-                        ...getCardStyle(),
-                        mb: '10px',
-                        backgroundColor: darkMode ? '#2a2a2a' : '#ebebeb',
-                    }}>
-                    <CardContent>
-
-                        <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
-                            <Typography
-                                variant="h5"
-                                component="h2"
-                                sx={{ color: darkMode ? '#fff' : 'inherit' }}
-                            >
-                                <strong>Entreprise: </strong>{enterprise.AddEntreName}
-                            </Typography>
-                        </Box>
-                        <IconWrapper
-                            icon={LocationOnIcon}
-                            text={<><strong>Adresse:</strong> {`${enterprise.AddEntrRue}, ${enterprise.AddEntrCodpost} ${enterprise.AddEntrLocalite}`}</>}
-                        />
-                        <IconWrapper
-                            icon={PhoneIcon}
-                            text={<><strong>Téléphone:</strong> {enterprise.AddEntrTel}</>}
-                        />
-                        <IconWrapper
-                            icon={EmailIcon}
-                            text={<><strong>Email:</strong> {enterprise.AddEntrEmail}</>}
-                        />
-                        <IconWrapper
-                            icon={BusinessIcon}
-                            text={<><strong>N° Entreprise:</strong> {enterprise.AddEntrNumentr}</>}
-                        />
-                        <IconWrapper
-                            icon={AccountBalanceIcon}
-                            text={<><strong>IBAN:</strong> {enterprise.AddEntrIban}</>}
-                        />
-                        <IconWrapper
-                            icon={WorkIcon}
-                            text={<><strong>Activité:</strong> {enterprise.AddEntreActiventre}</>}
-                        />
-                        <IconWrapper
-                            icon={GroupIcon}
-                            text={<><strong>Secrétariat Social:</strong> {enterprise.AddEntrSecsoci}</>}
-                        />
-                        <IconWrapper
-                            icon={NumbersIcon}
-                            text={<><strong>N° Affiliation:</strong> {enterprise.AddEntrNumaffi}</>}
-                        />
-
-                        <Divider sx={{ my: 2, backgroundColor: darkMode ? '#ffffff' : '#000000' }} />
-                        <Tooltip title="Ajouter un nouveau document lié a l'entreprise" arrow>
-                            <Button
-                                variant="contained"
-                                startIcon={<GetAppIcon />}
-                                onClick={() => handleStartQuestionnaire(enterprise)}
-                                sx={{
-                                    ...buttonStyle,
-                                    transition: 'all 0.1s ease-in-out',
-                                    '&:hover': {
-                                        backgroundColor: '#95ad22',
-                                        transform: 'scale(1.08)',
-                                        boxShadow: 6
-                                    }
-                                }}
-                            >
-                                Ajouter un pièce
-                            </Button>
-                        </Tooltip>
-                        <AccordionControls enterprise={enterprise} />
-                        {organizeQuestionnaires(questionnaires[enterprise._id])?.map(({ year, questionnaires }) => (
-                            <Accordion
-                                key={year}
-                                expanded={!!(expandedYears[enterprise._id]?.[year])}
-                                onChange={handleAccordionChange(enterprise._id, year)}
-                                sx={getAccordionStyle(darkMode)}
-                            >
-                                <AccordionSummary
-                                    expandIcon={<ExpandMoreIcon sx={{ color: darkMode ? '#90caf9' : '#1976d2' }} />}
-                                    sx={getAccordionSummaryStyle(darkMode)}
+                            </Tooltip>
+                            <AccordionControls enterprise={enterprise} />
+                            {organizeQuestionnaires(questionnaires[enterprise._id])?.map(({ year, questionnaires }) => (
+                                <Accordion
+                                    key={year}
+                                    expanded={!!(expandedYears[enterprise._id]?.[year])}
+                                    onChange={handleAccordionChange(enterprise._id, year)}
+                                    sx={getAccordionStyle(darkMode)}
                                 >
-                                    <Box sx={{
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        gap: 2,
-                                        width: '100%'
+                                    <AccordionSummary
+                                        expandIcon={<ExpandMoreIcon sx={{ color: darkMode ? '#90caf9' : '#1976d2' }} />}
+                                        sx={getAccordionSummaryStyle(darkMode)}
+                                    >
+                                        <Box sx={{
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            gap: 2,
+                                            width: '100%'
+                                        }}>
+                                            <Typography
+                                                variant="h6"
+                                                sx={{
+                                                    color: darkMode ? '#90caf9' : '#1976d2',
+                                                    fontWeight: 'bold'
+                                                }}
+                                            >
+                                                Année {year}
+                                            </Typography>
+                                            <Typography
+                                                variant="body2"
+                                                sx={{
+                                                    color: darkMode ? '#bbb' : '#666',
+                                                }}
+                                            >
+                                                ({questionnaires.length} document{questionnaires.length > 1 ? 's' : ''})
+                                            </Typography>
+                                        </Box>
+                                    </AccordionSummary>
+                                    <AccordionDetails sx={{
+                                        backgroundColor: darkMode ? '#2a2a2a' : '#fff',
+                                        padding: 2
                                     }}>
-                                        <Typography
-                                            variant="h6"
-                                            sx={{
-                                                color: darkMode ? '#90caf9' : '#1976d2',
-                                                fontWeight: 'bold'
-                                            }}
-                                        >
-                                            Année {year}
-                                        </Typography>
-                                        <Typography
-                                            variant="body2"
-                                            sx={{
-                                                color: darkMode ? '#bbb' : '#666',
-                                            }}
-                                        >
-                                            ({questionnaires.length} document{questionnaires.length > 1 ? 's' : ''})
-                                        </Typography>
-                                    </Box>
-                                </AccordionSummary>
-                                <AccordionDetails sx={{
-                                    backgroundColor: darkMode ? '#2a2a2a' : '#fff',
-                                    padding: 2
-                                }}>
-                                    {questionnaires.map((q, qIndex) => (
-                                        <Box key={q._id} sx={{ mb: 2 }}>
-                                            <Box display="flex" alignItems="center" gap={1}>
-                                                <Box flex="1">
-                                                    <Typography variant="body2" sx={{ color: darkMode ? '#fff' : 'text.secondary' }}>
-                                                        {renderConditionalValue('Type', q.typeFichier)}
-                                                        {renderConditionalValue('Années', q.annees.join(', '))}
-                                                        {renderConditionalValue('Commentaires', q.commentaire)}
-                                                        {renderConditionalValue('Entreprise', q.entrepriseName)}
-                                                        {renderConditionalValue('Files', q.files.length)}
-                                                        {renderConditionalValue('Valeur A (Heures prestées)', q.valueATf)}
-                                                        {renderConditionalValue('Valeur B (Accidents)', q.valueBTf)}
-                                                        {renderConditionalValue('Tf', q.resultTf)}
-                                                    </Typography>
-                                                </Box>
-                                                <Box display="flex" gap={1}>
-                                                    <Tooltip title="Modifier le questionnaire" arrow>
-                                                        <Button
-                                                            sx={{
-                                                                backgroundColor: blueGrey[500],
-                                                                minWidth: '36px',
-                                                                width: '36px',
-                                                                height: '36px',
-                                                                padding: 0,
-                                                                '&:hover': {
-                                                                    backgroundColor: blueGrey[700],
-                                                                    transform: 'scale(1.08)'
-                                                                }
-                                                            }}
-                                                            onClick={() => handleEdit(q._id, enterprise._id)}
-                                                            variant="contained"
-                                                        >
-                                                            <EditIcon sx={{ fontSize: 20 }} />
-                                                        </Button>
-                                                    </Tooltip>
-                                                    <Tooltip title="Supprimer le questionnaire" arrow>
-                                                        <Button
-                                                            sx={{
-                                                                minWidth: '36px',
-                                                                width: '36px',
-                                                                height: '36px',
-                                                                padding: 0,
-                                                                '&:hover': {
-                                                                    transform: 'scale(1.08)'
-                                                                }
-                                                            }}
-                                                            onClick={() => handleDelete(q._id, null, enterprise._id, 'questionnaire')}
-                                                            variant="contained"
-                                                            color="error"
-                                                        >
-                                                            <DeleteForeverIcon sx={{ fontSize: 20 }} />
-                                                        </Button>
-                                                    </Tooltip>
-                                                </Box>
-                                            </Box>
-
-                                            {/* Fichiers du questionnaire */}
-                                            {q.files && q.files.length > 0 && (
-                                                <Accordion
-                                                    expanded={!!expandedFiles[q._id]}
-                                                    onChange={handleFilesAccordionChange(q._id)}
-                                                    sx={{
-                                                        backgroundColor: darkMode ? '#333' : '#f5f5f5',
-                                                        mt: 2,
-                                                        '&:before': { display: 'none' },
-                                                        boxShadow: 'none',
-                                                        border: `1px solid ${darkMode ? '#444' : '#ddd'}`
-                                                    }}
-                                                >
-                                                    <AccordionSummary
-                                                        expandIcon={<ExpandMoreIcon sx={{ color: darkMode ? '#90caf9' : '#1976d2' }} />}
-                                                        sx={{
-                                                            backgroundColor: darkMode ? '#3a3a3a' : '#efefef',
-                                                            '&:hover': {
-                                                                backgroundColor: darkMode ? '#444' : '#e5e5e5'
-                                                            }
-                                                        }}
-                                                    >
-                                                        <Typography sx={{ color: darkMode ? '#bbb' : '#666' }}>
-                                                            Pièces jointes ({q.files.length})
+                                        {questionnaires.map((q, qIndex) => (
+                                            <Box key={q._id} sx={{ mb: 2 }}>
+                                                <Box display="flex" alignItems="center" gap={1}>
+                                                    <Box flex="1">
+                                                        <Typography variant="body2" sx={{ color: darkMode ? '#fff' : 'text.secondary' }}>
+                                                            {renderConditionalValue('Type', q.typeFichier)}
+                                                            {renderConditionalValue('Années', q.annees.join(', '))}
+                                                            {renderConditionalValue('Commentaires', q.commentaire)}
+                                                            {renderConditionalValue('Entreprise', q.entrepriseName)}
+                                                            {renderConditionalValue('Files', q.files.length)}
+                                                            {renderConditionalValue('Valeur A (Heures prestées)', q.valueATf)}
+                                                            {renderConditionalValue('Valeur B (Accidents)', q.valueBTf)}
+                                                            {renderConditionalValue('Tf', q.resultTf)}
                                                         </Typography>
-                                                    </AccordionSummary>
-                                                    <AccordionDetails sx={{ backgroundColor: darkMode ? '#333' : '#fff' }}>
-                                                        {q.files.map(file => (
-                                                            <Box
-                                                                key={file.fileId}
-                                                                display="flex"
-                                                                alignItems="center"
-                                                                gap={2}
+                                                    </Box>
+                                                    <Box display="flex" gap={1}>
+                                                        <Tooltip title="Modifier le questionnaire" arrow>
+                                                            <Button
                                                                 sx={{
-                                                                    p: 2,
-                                                                    mb: 1,
-                                                                    backgroundColor: darkMode ? '#2a2a2a' : '#f8f8f8',
-                                                                    borderRadius: '4px',
+                                                                    backgroundColor: blueGrey[500],
+                                                                    minWidth: '36px',
+                                                                    width: '36px',
+                                                                    height: '36px',
+                                                                    padding: 0,
                                                                     '&:hover': {
-                                                                        backgroundColor: darkMode ? '#3a3a3a' : '#f0f0f0'
+                                                                        backgroundColor: blueGrey[700],
+                                                                        transform: 'scale(1.08)'
                                                                     }
                                                                 }}
+                                                                onClick={() => handleEdit(q._id, enterprise._id)}
+                                                                variant="contained"
                                                             >
-                                                                <Typography
-                                                                    variant="body2"
+                                                                <EditIcon sx={{ fontSize: 20 }} />
+                                                            </Button>
+                                                        </Tooltip>
+                                                        <Tooltip title="Supprimer le questionnaire" arrow>
+                                                            <Button
+                                                                sx={{
+                                                                    minWidth: '36px',
+                                                                    width: '36px',
+                                                                    height: '36px',
+                                                                    padding: 0,
+                                                                    '&:hover': {
+                                                                        transform: 'scale(1.08)'
+                                                                    }
+                                                                }}
+                                                                onClick={() => handleDelete(q._id, null, enterprise._id, 'questionnaire')}
+                                                                variant="contained"
+                                                                color="error"
+                                                            >
+                                                                <DeleteForeverIcon sx={{ fontSize: 20 }} />
+                                                            </Button>
+                                                        </Tooltip>
+                                                    </Box>
+                                                </Box>
+
+                                                {/* Fichiers du questionnaire */}
+                                                {q.files && q.files.length > 0 && (
+                                                    <Accordion
+                                                        expanded={!!expandedFiles[q._id]}
+                                                        onChange={handleFilesAccordionChange(q._id)}
+                                                        sx={{
+                                                            backgroundColor: darkMode ? '#333' : '#f5f5f5',
+                                                            mt: 2,
+                                                            '&:before': { display: 'none' },
+                                                            boxShadow: 'none',
+                                                            border: `1px solid ${darkMode ? '#444' : '#ddd'}`
+                                                        }}
+                                                    >
+                                                        <AccordionSummary
+                                                            expandIcon={<ExpandMoreIcon sx={{ color: darkMode ? '#90caf9' : '#1976d2' }} />}
+                                                            sx={{
+                                                                backgroundColor: darkMode ? '#3a3a3a' : '#efefef',
+                                                                '&:hover': {
+                                                                    backgroundColor: darkMode ? '#444' : '#e5e5e5'
+                                                                }
+                                                            }}
+                                                        >
+                                                            <Typography sx={{ color: darkMode ? '#bbb' : '#666' }}>
+                                                                Pièces jointes ({q.files.length})
+                                                            </Typography>
+                                                        </AccordionSummary>
+                                                        <AccordionDetails sx={{ backgroundColor: darkMode ? '#333' : '#fff' }}>
+                                                            {q.files.map(file => (
+                                                                <Box
+                                                                    key={file.fileId}
+                                                                    display="flex"
+                                                                    alignItems="center"
+                                                                    gap={2}
                                                                     sx={{
-                                                                        flex: 1,
-                                                                        color: darkMode ? '#bbb' : '#666'
+                                                                        p: 2,
+                                                                        mb: 1,
+                                                                        backgroundColor: darkMode ? '#2a2a2a' : '#f8f8f8',
+                                                                        borderRadius: '4px',
+                                                                        '&:hover': {
+                                                                            backgroundColor: darkMode ? '#3a3a3a' : '#f0f0f0'
+                                                                        }
                                                                     }}
                                                                 >
-                                                                    {file.fileName}
-                                                                </Typography>
-                                                                <Box display="flex" gap={1}>
-                                                                    <Tooltip title="Télécharger le fichier" arrow>
-                                                                        <Button
-                                                                            sx={{
-                                                                                minWidth: '36px',
-                                                                                width: '36px',
-                                                                                height: '36px',
-                                                                                padding: 0
-                                                                            }}
-                                                                            onClick={() => handleFileDownload({
-                                                                                fileId: file.fileId,
-                                                                                fileName: file.fileName,
-                                                                                entrepriseName: enterprise.AddEntreName,
-                                                                                logAction,
-                                                                                showMessage
-                                                                            })}
-                                                                            variant="contained"
-                                                                            color="primary"
-                                                                        >
-                                                                            <GetAppIcon sx={{ fontSize: 20 }} />
-                                                                        </Button>
-                                                                    </Tooltip>
-                                                                    <Tooltip title="Renommer le fichier" arrow>
-                                                                        <Button
-                                                                            sx={{
-                                                                                backgroundColor: blueGrey[500],
-                                                                                minWidth: '36px',
-                                                                                width: '36px',
-                                                                                height: '36px',
-                                                                                padding: 0,
-                                                                                '&:hover': {
-                                                                                    backgroundColor: blueGrey[700],
-                                                                                    transform: 'scale(1.08)'
-                                                                                }
-                                                                            }}
-                                                                            onClick={() => handleRenameFile(
-                                                                                file.fileId,
-                                                                                file.fileName,
-                                                                                q._id,
-                                                                                enterprise.AddEntreName,
-                                                                                (fileId, newFileName) => handleRename(q._id, fileId, newFileName),
-                                                                                logAction
-                                                                            )}
-                                                                            variant="contained"
-                                                                            color="info"
-                                                                        >
-                                                                            <EditIcon sx={{ fontSize: 20 }} />
-                                                                        </Button>
-                                                                    </Tooltip>
-                                                                    <Tooltip title="Visualiser le fichier" arrow>
-                                                                        <Button
-                                                                            sx={{
-                                                                                minWidth: '36px',
-                                                                                width: '36px',
-                                                                                height: '36px',
-                                                                                padding: 0
-                                                                            }}
-                                                                            onClick={() => handleOpenPreview(file.fileId, file.fileName)}
-                                                                            variant="contained"
-                                                                            color="secondary"
-                                                                        >
-                                                                            <VisibilityIcon sx={{ fontSize: 20 }} />
-                                                                        </Button>
-                                                                    </Tooltip>
-                                                                    <Tooltip title="Supprimer le fichier" arrow>
-                                                                        <Button
-                                                                            sx={{
-                                                                                minWidth: '36px',
-                                                                                width: '36px',
-                                                                                height: '36px',
-                                                                                padding: 0
-                                                                            }}
-                                                                            onClick={() => handleDelete(q._id, file.fileId, enterprise._id, 'file')}
-                                                                            variant="contained"
-                                                                            color="error"
-                                                                        >
-                                                                            <DeleteForeverIcon sx={{ fontSize: 20 }} />
-                                                                        </Button>
-                                                                    </Tooltip>
+                                                                    <Typography
+                                                                        variant="body2"
+                                                                        sx={{
+                                                                            flex: 1,
+                                                                            color: darkMode ? '#bbb' : '#666'
+                                                                        }}
+                                                                    >
+                                                                        {file.fileName}
+                                                                    </Typography>
+                                                                    <Box display="flex" gap={1}>
+                                                                        <Tooltip title="Télécharger le fichier" arrow>
+                                                                            <Button
+                                                                                sx={{
+                                                                                    minWidth: '36px',
+                                                                                    width: '36px',
+                                                                                    height: '36px',
+                                                                                    padding: 0
+                                                                                }}
+                                                                                onClick={() => handleFileDownload({
+                                                                                    fileId: file.fileId,
+                                                                                    fileName: file.fileName,
+                                                                                    entrepriseName: enterprise.AddEntreName,
+                                                                                    logAction,
+                                                                                    showMessage
+                                                                                })}
+                                                                                variant="contained"
+                                                                                color="primary"
+                                                                            >
+                                                                                <GetAppIcon sx={{ fontSize: 20 }} />
+                                                                            </Button>
+                                                                        </Tooltip>
+                                                                        <Tooltip title="Renommer le fichier" arrow>
+                                                                            <Button
+                                                                                sx={{
+                                                                                    backgroundColor: blueGrey[500],
+                                                                                    minWidth: '36px',
+                                                                                    width: '36px',
+                                                                                    height: '36px',
+                                                                                    padding: 0,
+                                                                                    '&:hover': {
+                                                                                        backgroundColor: blueGrey[700],
+                                                                                        transform: 'scale(1.08)'
+                                                                                    }
+                                                                                }}
+                                                                                onClick={() => handleRenameFile(
+                                                                                    file.fileId,
+                                                                                    file.fileName,
+                                                                                    q._id,
+                                                                                    enterprise.AddEntreName,
+                                                                                    (fileId, newFileName) => handleRename(q._id, fileId, newFileName),
+                                                                                    logAction
+                                                                                )}
+                                                                                variant="contained"
+                                                                                color="info"
+                                                                            >
+                                                                                <EditIcon sx={{ fontSize: 20 }} />
+                                                                            </Button>
+                                                                        </Tooltip>
+                                                                        <Tooltip title="Visualiser le fichier" arrow>
+                                                                            <Button
+                                                                                sx={{
+                                                                                    minWidth: '36px',
+                                                                                    width: '36px',
+                                                                                    height: '36px',
+                                                                                    padding: 0
+                                                                                }}
+                                                                                onClick={() => handleOpenPreview(file.fileId, file.fileName)}
+                                                                                variant="contained"
+                                                                                color="secondary"
+                                                                            >
+                                                                                <VisibilityIcon sx={{ fontSize: 20 }} />
+                                                                            </Button>
+                                                                        </Tooltip>
+                                                                        <Tooltip title="Supprimer le fichier" arrow>
+                                                                            <Button
+                                                                                sx={{
+                                                                                    minWidth: '36px',
+                                                                                    width: '36px',
+                                                                                    height: '36px',
+                                                                                    padding: 0
+                                                                                }}
+                                                                                onClick={() => handleDelete(q._id, file.fileId, enterprise._id, 'file')}
+                                                                                variant="contained"
+                                                                                color="error"
+                                                                            >
+                                                                                <DeleteForeverIcon sx={{ fontSize: 20 }} />
+                                                                            </Button>
+                                                                        </Tooltip>
+                                                                    </Box>
                                                                 </Box>
-                                                            </Box>
-                                                        ))}
-                                                    </AccordionDetails>
-                                                </Accordion>
-                                            )}
+                                                            ))}
+                                                        </AccordionDetails>
+                                                    </Accordion>
+                                                )}
 
-                                            {qIndex < questionnaires.length - 1 && (
-                                                <Divider
-                                                    sx={{
-                                                        my: 2,
-                                                        backgroundColor: darkMode ? '#0b5a59' : '#01aeac',
-                                                        opacity: 0.7,
-                                                        height: '2px'
-                                                    }}
-                                                />
-                                            )}
-                                        </Box>
-                                    ))}
-                                </AccordionDetails>
-                            </Accordion>
-                        ))}
-                    </CardContent>
-                </Card>
+                                                {qIndex < questionnaires.length - 1 && (
+                                                    <Divider
+                                                        sx={{
+                                                            my: 2,
+                                                            backgroundColor: darkMode ? '#0b5a59' : '#01aeac',
+                                                            opacity: 0.7,
+                                                            height: '2px'
+                                                        }}
+                                                    />
+                                                )}
+                                            </Box>
+                                        ))}
+                                    </AccordionDetails>
+                                </Accordion>
+                            ))}
+                        </CardContent>
+                    </Card>
 
-            ))}
+                ))
+            }
 
             <div className="image-cortigroupe"></div>
             <Tooltip title="Développé par Remy et Benoit pour Le Cortigroupe." arrow>
@@ -1200,7 +1256,7 @@ const EnterpriseDivers = () => {
                 message={snackbar.message}
                 severity={snackbar.severity}
             />
-        </Box>
+        </Box >
     );
 };
 

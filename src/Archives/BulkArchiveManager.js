@@ -261,7 +261,7 @@ const BulkArchiveManager = ({ darkMode, onSuccess }) => {
             }}>
                 <FormControl sx={{
                     boxShadow: darkMode ? '0 3px 6px rgba(255,255,255,0.1)' : 3,
-                    minWidth: 120,
+                    minWidth: 220,
                     backgroundColor: darkMode ? '#424242' : '#ee752d60',
                     '& .MuiInputLabel-root': {
                         color: darkMode ? '#fff' : 'inherit'
@@ -325,14 +325,6 @@ const BulkArchiveManager = ({ darkMode, onSuccess }) => {
                         >Actions</MenuItem>
                     </Select>
                 </FormControl>
-
-                <Box sx={{
-                    display: 'flex',
-                    gap: 4,
-                    alignItems: 'center',
-                    flexWrap: 'wrap',
-                    justifyContent: 'center'
-                }}>
                     <Box sx={{
                         display: 'flex',
                         gap: 2,
@@ -342,7 +334,7 @@ const BulkArchiveManager = ({ darkMode, onSuccess }) => {
                     }}>
                         <FormControl sx={{
                             boxShadow: darkMode ? '0 3px 6px rgba(255,255,255,0.1)' : 3,
-                            minWidth: 120,
+                            minWidth: 220,
                             backgroundColor: darkMode ? '#424242' : '#ee752d60',
                             '& .MuiInputLabel-root': {
                                 color: darkMode ? '#fff' : 'inherit'
@@ -427,7 +419,7 @@ const BulkArchiveManager = ({ darkMode, onSuccess }) => {
                             </span>
                         </Tooltip>
                     </Box>
-                </Box>
+                
                 <Box>
 
                     <Box sx={{
@@ -439,7 +431,7 @@ const BulkArchiveManager = ({ darkMode, onSuccess }) => {
                     }}>
                         <FormControl sx={{
                             boxShadow: darkMode ? '0 3px 6px rgba(255,255,255,0.1)' : 3,
-                            minWidth: 120,
+                            minWidth: 220,
                             backgroundColor: darkMode ? '#424242' : '#ee752d60',
                             '& .MuiInputLabel-root': {
                                 color: darkMode ? '#fff' : 'inherit'
