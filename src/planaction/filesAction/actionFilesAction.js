@@ -16,7 +16,9 @@ import { blueGrey } from '@mui/material/colors';
 import { useLogger } from '../../Hook/useLogger';
 import deleteFile, { getactionDiversDetails } from "./actiondeleteFile";
 import showDeleteConfirm from './actionshowDeleteConfirm';
+import config from '../../config.json';
 
+const apiUrl = config.apiUrl;
 const modalStyle = {
     position: 'absolute',
     top: '50%',
@@ -85,7 +87,7 @@ export default function ListFilesInaction(actionId) {
             if (!actionId) return;
 
             try {
-                const response = await axios.get(`http://localhost:3100/api/planaction/${actionId}`);
+                const response = await axios.get(`http://${apiUrl}:3100/api/planaction/${actionId}`);
                 if (!response || !response.data.files) throw new Error('Pas de fichiers trouvés');
                 setFiles(response.data.files);
                 const previewPromises = response.data.files.map(file => getPreview(file.fileId, file.fileName));
@@ -175,7 +177,7 @@ export default function ListFilesInaction(actionId) {
         if (!fileId) throw new Error('Pas de fileId indiqué');
 
         try {
-            const response = await axios.get(`http://localhost:3100/api/getFileAction/${fileId}`, {
+            const response = await axios.get(`http://${apiUrl}:3100/api/getFileAction/${fileId}`, {
                 responseType: 'blob',
             });
             if (response.status !== 200) throw new Error(`Erreur de récupération du fichier : ${response.status}`);

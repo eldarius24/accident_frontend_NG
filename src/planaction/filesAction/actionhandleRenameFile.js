@@ -3,11 +3,13 @@ import axios from 'axios';
 import { confirmAlert } from 'react-confirm-alert';
 import { Tooltip, Snackbar, Alert } from '@mui/material';
 import { useLogger } from '../../Hook/useLogger';
+import config from '../../config.json';
 
+const apiUrl = config.apiUrl;
 // Function to fetch action details
 const fetchActionDetails = async (actionId) => {
   try {
-    const response = await axios.get(`http://localhost:3100/api/planaction/${actionId}`);
+    const response = await axios.get(`http://${apiUrl}:3100/api/planaction/${actionId}`);
     if (response.data) {
       return {
         workerFirstName: response.data.prenomTravailleur || '',
@@ -43,7 +45,7 @@ const RenameDialog = ({ fileId, currentFileName, actionId, files, setFiles, onCl
         throw new Error('Unable to fetch action details');
       }
 
-      await axios.put(`http://localhost:3100/api/planaction/${actionId}`, {
+      await axios.put(`http://${apiUrl}:3100/api/planaction/${actionId}`, {
         files: files.map(file => file.fileId === fileId ? { ...file, fileName: newFileName } : file)
       });
 

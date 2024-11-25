@@ -10,6 +10,9 @@ import History from '@mui/icons-material/History';
 import BulkArchiveManager from '../Archives/BulkArchiveManager';
 import ViewListIcon from '@mui/icons-material/ViewList';
 import AddIcon from '@mui/icons-material/Add';
+import config from '../config.json';
+
+const apiUrl = config.apiUrl;
 /**
  * Component React qui permet d'afficher le panel d'administration des droits
  * 
@@ -44,7 +47,7 @@ export default function AdminPanelSettingsaction() {
     }, []);
 
     const refreshListAccidents = useCallback(() => {
-        axios.get('http://localhost:3100/api/planaction')
+        axios.get(`http://${apiUrl}:3100/api/planaction`)
             .then(response => {
                 setUsers(response.data);
                 showSnackbar('Liste actualisée', 'success');
@@ -403,7 +406,7 @@ export default function AdminPanelSettingsaction() {
                             donnees={users}
                             onArchiver={async (archiveData) => {
                                 try {
-                                    await axios.post('http://localhost:3100/api/archives', archiveData);
+                                    await axios.post(`http://${apiUrl}:3100/api/archives`, archiveData);
                                     refreshListAccidents();
                                     showSnackbar('Action archivée avec succès', 'success');
                                 } catch (error) {
@@ -419,7 +422,7 @@ export default function AdminPanelSettingsaction() {
                             donnees={users}
                             onArchiver={async (archiveData) => {
                                 try {
-                                    await axios.post('http://localhost:3100/api/archives', archiveData);
+                                    await axios.post(`http://${apiUrl}:3100/api/archives`, archiveData);
                                     refreshListAccidents();
                                     showSnackbar('Accident archivé avec succès', 'success');
                                 } catch (error) {

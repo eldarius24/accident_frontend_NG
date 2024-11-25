@@ -5,7 +5,9 @@ import { Box, Typography, CircularProgress } from '@mui/material';
 import { useLogger } from '../../Hook/useLogger';
 import * as XLSX from 'xlsx';
 import { useTheme } from '../../pageAdmin/user/ThemeContext';
+import config from '../../config.json';
 
+const apiUrl = config.apiUrl;
 const FileViewer = ({ file, actionId, isEntreprise = false }) => {
     const { darkMode } = useTheme();
     const [content, setContent] = useState(null);
@@ -58,7 +60,7 @@ const FileViewer = ({ file, actionId, isEntreprise = false }) => {
 
     const getactionDiversDetails = async (actionId) => {
         try {
-            const response = await axios.get(`http://localhost:3100/api/planaction/${actionId}`);
+            const response = await axios.get(`http://${apiUrl}:3100/api/planaction/${actionId}`);
             if (response.data) {
                 return {
                     nomTravailleur: response.data.AddActionQui,
@@ -85,7 +87,7 @@ const FileViewer = ({ file, actionId, isEntreprise = false }) => {
             try {
 
                 const actionDetails = await getactionDiversDetails(actionId);
-                const response = await axios.get(`http://localhost:3100/api/getFileAction/${file.fileId}`, {
+                const response = await axios.get(`http://${apiUrl}:3100/api/getFileAction/${file.fileId}`, {
                     responseType: 'blob',
                     headers: {
                         'Accept': '*/*'

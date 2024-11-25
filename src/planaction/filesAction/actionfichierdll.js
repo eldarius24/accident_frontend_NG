@@ -6,7 +6,9 @@ import 'react-confirm-alert/src/react-confirm-alert.css';
 import listFilesInaction from './actionFilesAction';
 import { Tooltip } from '@mui/material';
 import { useLogger } from '../../Hook/useLogger';
+import config from '../../config.json';
 
+const apiUrl = config.apiUrl;
 const dropZoneStyle = {
     display: 'flex',
     justifyContent: 'center',
@@ -31,7 +33,7 @@ const labelStyle = {
 
 const getactionDiversDetails = async (actionId) => {
     try {
-        const response = await axios.get(`http://localhost:3100/api/planaction/${actionId}`);
+        const response = await axios.get(`http://${apiUrl}:3100/api/planaction/${actionId}`);
         if (response.data) {
             return {
                 nomTravailleur: response.data.nomTravailleur,
@@ -72,7 +74,7 @@ export default function PageDownloadFile() {
             formData.append('file', file, name);
 
             const response = await axios.post(
-                `http://localhost:3100/api/stockFileAction/${actionId}`,
+                `http://${apiUrl}:3100/api/stockFileAction/${actionId}`,
                 formData,
                 {
                     headers: {

@@ -6,6 +6,9 @@ import 'react-confirm-alert/src/react-confirm-alert.css';
 import listFilesInAccident from './FilesActions';
 import { Tooltip } from '@mui/material';
 import { useLogger } from '../../Hook/useLogger';
+import config from '../../config.json';
+
+const apiUrl = config.apiUrl;
 
 const dropZoneStyle = {
     display: 'flex',
@@ -31,7 +34,7 @@ const labelStyle = {
 
 const getAccidentDetails = async (accidentId) => {
     try {
-        const response = await axios.get(`http://localhost:3100/api/accidents/${accidentId}`);
+        const response = await axios.get(`http://${apiUrl}:3100/api/accidents/${accidentId}`);
         if (response.data) {
             return {
                 nomTravailleur: response.data.nomTravailleur,
@@ -70,7 +73,7 @@ export default function PageDownloadFile() {
             const dataFile = new FormData();
             dataFile.append('file', file, name);
 
-            const response = await axios.post(`http://localhost:3100/api/stockFile/${accidentId}`, dataFile, {
+            const response = await axios.post(`http://${apiUrl}:3100/api/stockFile/${accidentId}`, dataFile, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }

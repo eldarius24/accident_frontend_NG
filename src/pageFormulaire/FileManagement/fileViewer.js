@@ -6,7 +6,9 @@ import { useLogger } from '../../Hook/useLogger';
 import * as XLSX from 'xlsx';
 import { getAccidentDetails } from "./deleteFile";
 import { useTheme } from '../../pageAdmin/user/ThemeContext';
+import config from '../../config.json';
 
+const apiUrl = config.apiUrl;
 const FileViewer = ({ file, accidentId, isEntreprise = false }) => {
     const { darkMode } = useTheme();
     const [fullContent, setFullContent] = useState(null);
@@ -66,7 +68,7 @@ const FileViewer = ({ file, accidentId, isEntreprise = false }) => {
             setError(null);
 
             try {
-                const response = await axios.get(`http://localhost:3100/api/getFile/${file.fileId}`, {
+                const response = await axios.get(`http://${apiUrl}:3100/api/getFile/${file.fileId}`, {
                     responseType: 'blob',
                     headers: {
                         'Accept': '*/*'

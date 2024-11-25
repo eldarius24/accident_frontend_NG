@@ -18,6 +18,9 @@ import {
 import ArchiveIcon from '@mui/icons-material/Archive';
 import UnarchiveIcon from '@mui/icons-material/Unarchive';
 import axios from 'axios';
+import config from '../config.json';
+
+const apiUrl = config.apiUrl;
 
 const BulkArchiveManager = ({ darkMode, onSuccess }) => {
     const [type, setType] = useState('');
@@ -34,7 +37,7 @@ const BulkArchiveManager = ({ darkMode, onSuccess }) => {
         if (!type) return;
         try {
             const endpoint = type === 'accident' ? 'accidents' : 'planaction';
-            const response = await axios.get(`http://localhost:3100/api/${endpoint}`);
+            const response = await axios.get(`http://${apiUrl}:3100/api/${endpoint}`);
             const years = [...new Set(response.data.map(item =>
                 type === 'accident'
                     ? new Date(item.DateHeureAccident).getFullYear()
@@ -50,7 +53,7 @@ const BulkArchiveManager = ({ darkMode, onSuccess }) => {
     const fetchArchivedYears = async () => {
         if (!type) return;
         try {
-            const response = await axios.get(`http://localhost:3100/api/archives/${type}`);
+            const response = await axios.get(`http://${apiUrl}:3100/api/archives/${type}`);
             const years = [...new Set(response.data.map(item => {
                 const donnees = item.donnees;
                 return type === 'accident'
@@ -75,7 +78,7 @@ const BulkArchiveManager = ({ darkMode, onSuccess }) => {
         setLoading(true);
         try {
             const endpoint = type === 'accident' ? 'accidents' : 'planaction';
-            const response = await axios.get(`http://localhost:3100/api/${endpoint}`);
+            const response = await axios.get(`http://${apiUrl}:3100/api/${endpoint}`);
             const itemsToArchive = response.data.filter(item => {
                 const itemYear = type === 'accident'
                     ? new Date(item.DateHeureAccident).getFullYear().toString()
@@ -99,7 +102,7 @@ const BulkArchiveManager = ({ darkMode, onSuccess }) => {
         if (!type || !selectedYearRestore) return;
         setLoading(true);
         try {
-            const response = await axios.get(`http://localhost:3100/api/archives/${type}`);
+            const response = await axios.get(`http://${apiUrl}:3100/api/archives/${type}`);
             const itemsToRestore = response.data.filter(item => {
                 const itemYear = type === 'accident'
                     ? new Date(item.donnees.DateHeureAccident).getFullYear().toString()
@@ -125,7 +128,7 @@ const BulkArchiveManager = ({ darkMode, onSuccess }) => {
             if (dialogContent.type === 'archive') {
                 // Code pour l'archivage
                 const endpoint = type === 'accident' ? 'accidents' : 'planaction';
-                const response = await axios.get(`http://localhost:3100/api/${endpoint}`);
+                const response = await axios.get(`http://${apiUrl}:3100/api/${endpoint}`);
                 const itemsToArchive = response.data.filter(item => {
                     const itemYear = type === 'accident'
                         ? new Date(item.DateHeureAccident).getFullYear().toString()
@@ -143,12 +146,12 @@ const BulkArchiveManager = ({ darkMode, onSuccess }) => {
                         taille: JSON.stringify(item).length
                     };
 
-                    await axios.post('http://localhost:3100/api/archives', archiveData);
-                    await axios.delete(`http://localhost:3100/api/${endpoint}/${item._id}`);
+                    await axios.post(`http://${apiUrl}:3100/api/archives`, archiveData);
+                    await axios.delete(`http://${apiUrl}:3100/api/${endpoint}/${item._id}`);
                 }
             } else {
                 // Code pour la restauration
-                const response = await axios.get(`http://localhost:3100/api/archives/${type}`);
+                const response = await axios.get(`http://${apiUrl}:3100/api/archives/${type}`);
                 const itemsToRestore = response.data.filter(item => {
                     const itemYear = type === 'accident'
                         ? new Date(item.donnees.DateHeureAccident).getFullYear().toString()
@@ -166,7 +169,7 @@ const BulkArchiveManager = ({ darkMode, onSuccess }) => {
                         });
 
                         const response = await axios.post(
-                            `http://localhost:3100/api/archives/${item._id}/restore`,
+                            `http://${apiUrl}:3100/api/archives/${item._id}/restore`,
                             {
                                 type: type,
                                 donnees: item.donnees

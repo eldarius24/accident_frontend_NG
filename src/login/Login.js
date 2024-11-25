@@ -11,11 +11,14 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import axios from 'axios';
 import { useTheme } from '../pageAdmin/user/ThemeContext';
 import AccidentCounter from './accidentCounter';
+import config from '../config.json';
+
+const apiUrl = config.apiUrl;
 
 // Fonction utilitaire pour les logs
 const logAction = async (action) => {
   try {
-    await axios.post('http://localhost:3100/api/logs', action);
+    await axios.post(`http://${apiUrl}:3100/api/logs`, action);
   } catch (error) {
     console.error('Erreur lors de l\'enregistrement du log:', error);
   }
@@ -33,7 +36,7 @@ const Login = () => {
   useEffect(() => {
     const fetchLastAccident = async () => {
       try {
-        const response = await axios.get('http://localhost:3100/api/accidents');
+        const response = await axios.get(`http://${apiUrl}:3100/api/accidents`);
 
         if (response.data && response.data.length > 0) {
           const sortedAccidents = response.data.sort((a, b) => {
@@ -176,7 +179,7 @@ const Login = () => {
         userId: 'anonymous'
       });
 
-      const response = await axios.post('http://localhost:3100/api/login', { email, password }, {
+      const response = await axios.post(`http://${apiUrl}:3100/api/login`, { email, password }, {
         headers: { 'Content-Type': 'application/json' }
       });
 

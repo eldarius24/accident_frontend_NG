@@ -9,6 +9,9 @@ import ArchiveIcon from '@mui/icons-material/Archive';
 import UnarchiveIcon from '@mui/icons-material/Unarchive';
 import SearchIcon from '@mui/icons-material/Search';
 import axios from 'axios';
+import config from '../config.json';
+
+const apiUrl = config.apiUrl;
 
 const onRestaurer = async (id, type, onSuccess) => {
   try {
@@ -17,7 +20,7 @@ const onRestaurer = async (id, type, onSuccess) => {
       return;
     }
 
-    await axios.post(`http://localhost:3100/api/archives/${id}/restore`);
+    await axios.post(`http://${apiUrl}:3100/api/archives/${id}/restore`);
     console.log("Archive restaurée avec succès");
     
     // Appeler la fonction de rappel si elle existe
@@ -68,7 +71,7 @@ const SystemeArchivage = ({
 
   const refreshArchives = async () => {
     try {
-      const response = await axios.get(`http://localhost:3100/api/archives/${typeArchive}`);
+      const response = await axios.get(`http://${apiUrl}:3100/api/archives/${typeArchive}`);
       setDonneesArchivees(response.data);
       calculerStatistiques(response.data);
     } catch (error) {

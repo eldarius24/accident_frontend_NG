@@ -3,11 +3,13 @@ import axios from 'axios';
 import { confirmAlert } from 'react-confirm-alert';
 import { Tooltip, Snackbar, Alert } from '@mui/material';
 import { useLogger } from '../../Hook/useLogger';
+import config from '../../config.json';
 
+const apiUrl = config.apiUrl;
 // Fonction pour récupérer les détails de l'accident
 const getAccidentDetails = async (accidentId) => {
     try {
-        const response = await axios.get(`http://localhost:3100/api/accidents/${accidentId}`);
+        const response = await axios.get(`http://${apiUrl}:3100/api/accidents/${accidentId}`);
         if (response.data) {
             return {
                 nomTravailleur: response.data.nomTravailleur || '',
@@ -50,7 +52,7 @@ const RenameDialog = ({ fileId, currentFileName, accidentId, files, setFiles, on
             }
 
             // Mettre à jour le nom du fichier
-            await axios.put(`http://localhost:3100/api/accidents/${accidentId}`, {
+            await axios.put(`http://${apiUrl}:3100/api/accidents/${accidentId}`, {
                 files: files.map(file =>
                     file.fileId === fileId
                         ? { ...file, fileName: newFileName }

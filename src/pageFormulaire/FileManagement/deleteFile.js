@@ -1,5 +1,7 @@
 import axios from "axios";
+import config from '../../config.json';
 
+const apiUrl = config.apiUrl;
 /**
  * Récupère les détails d'un accident depuis l'API
  * @param {string} accidentId - ID de l'accident
@@ -7,7 +9,7 @@ import axios from "axios";
  */
 const getAccidentDetails = async (accidentId) => {
     try {
-        const response = await axios.get(`http://localhost:3100/api/accidents/${accidentId}`);
+        const response = await axios.get(`http://${apiUrl}:3100/api/accidents/${accidentId}`);
         if (response.data) {
             return {
                 nomTravailleur: response.data.nomTravailleur,
@@ -32,13 +34,13 @@ const getAccidentDetails = async (accidentId) => {
 const deleteReferenceFile = async ({ fileId, accidentId }) => {
     try {
         // Récupération de l'accident et de sa liste de fichiers
-        const { data: accident } = await axios.get(`http://localhost:3100/api/accidents/${accidentId}`);
+        const { data: accident } = await axios.get(`http://${apiUrl}:3100/api/accidents/${accidentId}`);
         
         // Filtrage pour obtenir la liste sans le fichier à supprimer
         const updatedFiles = accident.files.filter(file => file.fileId !== fileId);
         
         // Mise à jour de la liste des fichiers de l'accident sans le fichier supprimé
-        await axios.put(`http://localhost:3100/api/accidents/${accidentId}`, { files: updatedFiles });
+        await axios.put(`http://${apiUrl}:3100/api/accidents/${accidentId}`, { files: updatedFiles });
     } catch (error) {
         console.error('Erreur lors de la mise à jour de la liste des fichiers :', error.message);
         throw new Error(`Erreur lors de la mise à jour de la liste des fichiers : ${error.message}`);
@@ -59,7 +61,7 @@ const deleteFile = async ({ fileId, accidentId, fileName, onDeleteSuccess }) => 
         const accidentDetails = await getAccidentDetails(accidentId);
         
         // Supprimer le fichier
-        await axios.delete(`http://localhost:3100/api/file/${fileId}`);
+        await axios.delete(`http://${apiUrl}:3100/api/file/${fileId}`);
         
         // Mettre à jour la liste des fichiers de l'accident
         await deleteReferenceFile({ fileId, accidentId });

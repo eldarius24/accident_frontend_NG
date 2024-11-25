@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import SystemeArchivage from './archivages'; 
 import axios from 'axios';
+import config from '../config.json';
+
+
+const apiUrl = config.apiUrl;
 
 const Archivage = ({ darkMode }) => {
   const [donneesArchivees, setDonneesArchivees] = useState([]);
@@ -10,7 +14,7 @@ const Archivage = ({ darkMode }) => {
   const chargerArchives = async () => {
     setIsLoading(true);
     try {
-      const response = await axios.get('http://localhost:3100/api/archives/accident');
+      const response = await axios.get(`http://${apiUrl}:3100/api/archives/accident`);
       setDonneesArchivees(response.data);
     } catch (error) {
       console.error('Erreur lors du chargement des archives :', error);

@@ -1,5 +1,7 @@
 import axios from "axios";
+import config from '../../config.json';
 
+const apiUrl = config.apiUrl;
 /**
  * Récupère les détails d'un action depuis l'API
  * @param {string} actionId - ID de l'action
@@ -7,7 +9,7 @@ import axios from "axios";
  */
 const getactionDiversDetails = async (actionId) => {
     try {
-        const response = await axios.get(`http://localhost:3100/api/planaction/${actionId}`);
+        const response = await axios.get(`http://${apiUrl}:3100/api/planaction/${actionId}`);
         if (response.data) {
             return {
                 nomTravailleur: response.data.AddActionQui,
@@ -36,15 +38,15 @@ const deleteFile = async ({ fileId, actionId, fileName, onDeleteSuccess }) => {
         const actionDetails = await getactionDiversDetails(actionId);
 
         // Supprimer le fichier
-        await axios.delete(`http://localhost:3100/api/fileAction/${fileId}`);
+        await axios.delete(`http://${apiUrl}:3100/api/fileAction/${fileId}`);
 
         // Mettre à jour la liste des fichiers de l'action
-        await axios.get(`http://localhost:3100/api/planaction/${actionId}`)
+        await axios.get(`http://${apiUrl}:3100/api/planaction/${actionId}`)
             .then(async (response) => {
                 const action = response.data;
                 if (action && action.files) {
                     const updatedFiles = action.files.filter(file => file.fileId !== fileId);
-                    await axios.put(`http://localhost:3100/api/planaction/${actionId}`, { files: updatedFiles });
+                    await axios.put(`http://${apiUrl}:3100/api/planaction/${actionId}`, { files: updatedFiles });
                 }
             });
 

@@ -3,6 +3,9 @@ import ArchiveIcon from '@mui/icons-material/Archive';
 import axios from 'axios';
 import { Tooltip, Button } from '@mui/material';
 import { useTheme } from '../pageAdmin/user/ThemeContext';
+import config from '../config.json';
+
+const apiUrl = config.apiUrl;
 
 const BoutonArchivage = forwardRef(({ onClick, darkMode }, ref) => (
   <Tooltip title="Cliquez ici pour archiver l'action" arrow>
@@ -44,12 +47,12 @@ const BoutonArchiver = ({ donnee, type, onSuccess }) => {
         taille: JSON.stringify(donnee).length
       };
 
-      await axios.post('http://localhost:3100/api/archives', archiveData);
+      await axios.post(`http://${apiUrl}:3100/api/archives`, archiveData);
       
       // Adapter l'URL selon le type
       const deleteUrl = type === 'planaction' 
-        ? `http://localhost:3100/api/planaction/${donnee._id}`
-        : `http://localhost:3100/api/accidents/${donnee._id}`;
+        ? `http://${apiUrl}:3100/api/planaction/${donnee._id}`
+        : `http://${apiUrl}:3100/api/accidents/${donnee._id}`;
             
       await axios.delete(deleteUrl);
 

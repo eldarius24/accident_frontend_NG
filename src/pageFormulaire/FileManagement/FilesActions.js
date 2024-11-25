@@ -16,6 +16,9 @@ import { blueGrey } from '@mui/material/colors';
 import { useLogger } from '../../Hook/useLogger';
 import deleteFile, { getAccidentDetails } from "./deleteFile";
 import showDeleteConfirm from './showDeleteConfirm';
+import config from '../../config.json';
+
+const apiUrl = config.apiUrl;
 
 const modalStyle = {
     position: 'absolute',
@@ -88,7 +91,7 @@ export default function ListFilesInAccident(accidentId) {
          */
         async function fetchData() {
             try {
-                const response = await axios.get(`http://localhost:3100/api/accidents/${accidentId}`);
+                const response = await axios.get(`http://${apiUrl}:3100/api/accidents/${accidentId}`);
                 if (!response || !response.data.files) throw new Error('Pas de fichiers trouvés');
                 setFiles(response.data.files);
 
@@ -172,7 +175,7 @@ export default function ListFilesInAccident(accidentId) {
         if (!fileId) throw new Error('Pas de fileId indiqué');
 
         try {
-            const response = await axios.get(`http://localhost:3100/api/getFile/${fileId}`, {
+            const response = await axios.get(`http://${apiUrl}:3100/api/getFile/${fileId}`, {
                 responseType: 'blob',
             });
             if (response.status !== 200) throw new Error(`Erreur de récupération du fichier : ${response.status}`);

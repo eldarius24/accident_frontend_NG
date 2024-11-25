@@ -2,10 +2,12 @@ import axios from 'axios';
 import mammoth from 'mammoth';
 import * as pdfjsLib from 'pdfjs-dist/webpack';
 import * as XLSX from 'xlsx';
+import config from '../../config.json';
 
+const apiUrl = config.apiUrl;
 const getPreview = async (fileId, fileName) => {
   try {
-    const response = await axios.get(`http://localhost:3100/api/getFileAction/${fileId}`, {
+    const response = await axios.get(`http://${apiUrl}:3100/api/getFileAction/${fileId}`, {
       responseType: 'blob',
     });
 
