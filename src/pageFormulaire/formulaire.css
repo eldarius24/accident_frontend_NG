@@ -33,24 +33,6 @@ body {
   background-size: contain;
 }
 
-.image-cortigroupe {
-  flex: 1;
-  height: 250px;
-  background-image: url('../../public/logo animé.gif');
-  background-position: center center;
-  background-repeat: no-repeat;
-  background-size: contain;
-}
-
-.image-tigre {
-  flex: 1;
-  height: 200px;
-  background-image: url('../../public/TIGRE.gif');
-  background-position: center center;
-  background-repeat: no-repeat;
-  background-size: contain;
-
-}
 
 .image-container1:hover {
   animation: vibration 0.1s infinite;
