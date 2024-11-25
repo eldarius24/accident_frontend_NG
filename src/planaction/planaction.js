@@ -60,7 +60,6 @@ export default function PlanAction({ accidentData }) {
     const { isAdmin, userInfo, isAdminOrDev } = useUserConnected();
     const currentYear = new Date().getFullYear().toString();
     const [isLoading, setLoading] = useState(true);
-    const [isInitialized, setIsInitialized] = useState(false);
     const [selectedEnterprises, setSelectedEnterprises] = useState(() => {
         const savedEnterprises = getSelectedEnterpriseFromCookie(COOKIE_PREFIXES.PLAN_ACTION);
         return Array.isArray(savedEnterprises) ? savedEnterprises : [];
@@ -92,17 +91,6 @@ export default function PlanAction({ accidentData }) {
             logAction
         ),
         [users, isAdminOrDev, userInfo, selectedYears, selectedEnterprises, searchTerm, showSnackbar, logAction]
-    );
-
-
-    const updateUserSelectedEnterprise = useCallback(
-        (newValue) => {
-            createUpdateUserSelectedEnterprise(showSnackbar)(
-                { isAdminOrDev, entreprisesConseillerPrevention: userInfo?.entreprisesConseillerPrevention },
-                setSelectedEnterprises  // Changé de setSelectedEnterprise à setSelectedEnterprises
-            )(newValue);
-        },
-        [showSnackbar, userInfo, isAdminOrDev]
     );
 
     const updateUserSelectedYears = useCallback(
@@ -175,8 +163,6 @@ export default function PlanAction({ accidentData }) {
         }
         return rowColors[theme].rows[index % 2];
     }, [darkMode, rowColors]);
-
-
 
     const handleYearsChange = useCallback((event) => {
         const newSelectedYears = event.target.value;
