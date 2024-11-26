@@ -11,6 +11,7 @@ import config from '../config.json';
 import { saveFiltersToCookies, loadFiltersFromCookies } from './filterPersistence';
 import { useTheme } from '../pageAdmin/user/ThemeContext';
 import StyledChart from '../_composants/styledTitle';
+import useYearFilter from '../Hook/useYearFilter';
 /**
  * Affiche les graphiques des accidents de travail par type de travailleur, âge, jour de la semaine, mois, an, secteur et par entreprise.
  * 
@@ -19,6 +20,8 @@ import StyledChart from '../_composants/styledTitle';
  * @returns {React.ReactElement} - Le composant react qui affiche les graphiques.
  */
 const Statistiques = () => {
+  const [allYears, setAllYears] = useState([]);
+  const { selectedYears, setSelectedYears, handleYearChange } = useYearFilter('statistics');
   const [data, setData] = useState([]);
   const [tfData, setTfData] = useState([]);
   const [graphs, setGraphs] = useState({
@@ -41,8 +44,6 @@ const Statistiques = () => {
 
   });
   const { darkMode } = useTheme();
-  const [selectedYears, setSelectedYears] = useState([]);
-  const [allYears, setAllYears] = useState([]);
   const [workerTypes, setWorkerTypes] = useState([]);
   const [selectedWorkerTypes, setSelectedWorkerTypes] = useState([]);
   const [sectors, setSectors] = useState([]);
@@ -517,34 +518,17 @@ const Statistiques = () => {
             id="years-select"
             multiple
             value={selectedYears}
-            onChange={(event) => {
-              const value = event.target.value;
-              const lastSelected = value[value.length - 1];
-
-              // Fonction pour obtenir les années avec accidents
-              const getAccidentYears = () => allYears.filter(year =>
-                data.some(accident => new Date(accident.DateHeureAccident).getFullYear() === year)
-              );
-
-              // Fonction pour obtenir les années avec TF
-              const getTfYears = () => allYears.filter(year =>
-                tfData.some(tf => Object.keys(tf).some(key => key !== 'company' && parseInt(key) === year))
-              );
-
-              if (lastSelected === 'All') {
-                // Sélectionner/désélectionner toutes les années
-                setSelectedYears(selectedYears.length === allYears.length ? [] : allYears);
-              } else if (lastSelected === 'AllAccidents') {
-                const accidentYears = getAccidentYears();
-                setSelectedYears(accidentYears); // Remplacer la sélection actuelle par les années d'accidents
-              } else if (lastSelected === 'AllTF') {
-                const tfYears = getTfYears();
-                setSelectedYears(tfYears); // Remplacer la sélection actuelle par les années TF
-              } else {
-                // Sélection normale d'années individuelles
-                setSelectedYears(value.filter(v => v !== 'All' && v !== 'AllAccidents' && v !== 'AllTF'));
+            onChange={(event) => handleYearChange(event, {
+              allYears,
+              customHandlers: {
+                getAccidentYears: () => allYears.filter(year =>
+                  data.some(accident => new Date(accident.DateHeureAccident).getFullYear() === year)
+                ),
+                getTfYears: () => allYears.filter(year =>
+                  tfData.some(tf => Object.keys(tf).some(key => key !== 'company' && parseInt(key) === year))
+                )
               }
-            }}
+            })}
             renderValue={(selected) => `${selected.length} année(s)`}
             MenuProps={{
               PaperProps: { style: { maxHeight: 300, overflow: 'auto' } },

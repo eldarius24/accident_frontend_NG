@@ -38,6 +38,7 @@ import {
     getSelectedStatusFromCookie
 } from './_actions/cookieUtils.js';
 import createFetchData from './_actions/fetch-accidents-data';
+import useYearFilter from '../Hook/useYearFilter';
 
 const apiUrl = config.apiUrl;
 
@@ -49,6 +50,24 @@ const apiUrl = config.apiUrl;
  * @returns {React.ReactElement} 
  */
 function Accident() {
+    const [yearsFromData, setYearsFromData] = useState([]);
+    useEffect(() => {
+        const fetchYears = async () => {
+            try {
+                // Utilisez votre fonction pour récupérer les années
+                const years = await fetchAvailableYears(); // À implémenter
+                setYearsFromData(years);
+            } catch (error) {
+                console.error('Erreur lors de la récupération des années', error);
+            }
+        };
+
+        fetchYears();
+    }, []);
+    const { selectedYears, handleYearChange } = useYearFilter(
+  COOKIE_PREFIXES.HOME,  
+  yearsFromData 
+);
     const { darkMode } = useTheme();
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
@@ -67,7 +86,6 @@ function Accident() {
         return getSelectedStatusFromCookie(COOKIE_PREFIXES.HOME);
     });
 
-    const [yearsFromData, setYearsFromData] = useState([]);
     const [yearsChecked, setYearsChecked] = useState(() =>
         getSelectedYearsFromCookie(COOKIE_PREFIXES.HOME)
     );
@@ -249,9 +267,9 @@ function Accident() {
      * @returns {Array} - Un tableau des accidents filtrés.
      */
     const filteredData = useMemo(() => {
-        if (!accidents || !Array.isArray(yearsChecked)) return [];
+        if (!accidents || !Array.isArray(selectedYears)) return []; // Changé yearsChecked à selectedYears
 
-        const years = yearsChecked.map(Number);
+        const years = selectedYears.map(Number); // Changé yearsChecked à selectedYears
         const searchTermLower = searchTerm.toLowerCase();
 
         return accidents.filter(item => {
@@ -273,15 +291,8 @@ function Accident() {
                         item[property]?.toString().toLowerCase().includes(searchTermLower)
                     );
         });
-    }, [accidents, yearsChecked, searchTerm, statusFilters]);
+    }, [accidents, selectedYears, searchTerm, statusFilters]);
 
-    useEffect(() => {
-        const loadAccidents = async () => {
-            const accidents = await getAccidents();
-            setAccidents(accidents);
-        };
-        loadAccidents();
-    }, []);
 
     /**
      * Exporte les données d'accidents vers un fichier Excel.
@@ -592,23 +603,15 @@ function Accident() {
                                     Année
                                 </InputLabel>
                                 <Select
-                                    labelId="sort-label"
-                                    id="sort-select"
+                                    labelId="years-label"
+                                    id="years-select"
                                     multiple
-                                    value={yearsChecked || []}
-                                    onChange={handleChangeYearsFilter}
-                                    renderValue={(selected) => {
-                                        return Array.isArray(selected) ? selected.join(', ') : '';
-                                    }}
-                                    sx={{
-                                        '& .MuiSelect-icon': {
-                                            color: darkMode ? '#fff' : 'inherit'
-                                        }
-                                    }}
+                                    value={selectedYears}
+                                    onChange={handleYearChange}
+                                    renderValue={(selected) => `${selected.length} année(s)`}
                                 >
                                     <MenuItem
-                                        key="All"
-                                        value="All"
+                                        value="all"
                                         sx={{
                                             backgroundColor: darkMode ? '#424242' : '#ee742d59',
                                             color: darkMode ? '#fff' : 'inherit',
@@ -624,8 +627,8 @@ function Accident() {
                                         }}
                                     >
                                         <Checkbox
-                                            checked={selectAllYears}
-                                            onChange={handleSelectAllYears}
+                                            checked={selectedYears.length === yearsFromData.length}
+                                            indeterminate={selectedYears.length > 0 && selectedYears.length < yearsFromData.length}
                                             sx={{
                                                 color: darkMode ? '#ff6b6b' : 'red',
                                                 '&.Mui-checked': {
@@ -633,12 +636,9 @@ function Accident() {
                                                 }
                                             }}
                                         />
-                                        <ListItemText
-                                            primary="Toutes les années"
-                                            sx={{ color: darkMode ? '#fff' : 'inherit' }}
-                                        />
+                                        <ListItemText primary="Tout sélectionner" />
                                     </MenuItem>
-                                    {yearsFromData.map(year => (
+                                    {yearsFromData.map((year) => (
                                         <MenuItem
                                             key={year}
                                             value={year}
@@ -647,28 +647,11 @@ function Accident() {
                                                 color: darkMode ? '#fff' : 'inherit',
                                                 '&:hover': {
                                                     backgroundColor: darkMode ? '#505050' : '#ee742d80'
-                                                },
-                                                '&.Mui-selected': {
-                                                    backgroundColor: darkMode ? '#424242 !important' : '#ee742d59 !important'
-                                                },
-                                                '&.Mui-selected:hover': {
-                                                    backgroundColor: darkMode ? '#505050 !important' : '#ee742d80 !important'
                                                 }
                                             }}
                                         >
-                                            <Checkbox
-                                                checked={Array.isArray(yearsChecked) && yearsChecked.includes(year)}
-                                                sx={{
-                                                    color: darkMode ? '#4CAF50' : '#257525',
-                                                    '&.Mui-checked': {
-                                                        color: darkMode ? '#81C784' : '#257525'
-                                                    }
-                                                }}
-                                            />
-                                            <ListItemText
-                                                primary={year}
-                                                sx={{ color: darkMode ? '#fff' : 'inherit' }}
-                                            />
+                                            <Checkbox checked={selectedYears.includes(year)} />
+                                            <ListItemText primary={year} />
                                         </MenuItem>
                                     ))}
                                 </Select>

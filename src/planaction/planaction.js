@@ -38,6 +38,8 @@ import {
     saveEnterpriseSelection
 } from '../Home/_actions/cookieUtils';
 import listeaddaction from '../liste/listeaddaction.json';
+import useYearFilter from '../Hook/useYearFilter';
+
 const apiUrl = config.apiUrl;
 
 /**
@@ -46,6 +48,8 @@ const apiUrl = config.apiUrl;
  * @returns {JSX.Element} La page du plan d'action
  */
 export default function PlanAction({ accidentData }) {
+    const [availableYears, setAvailableYears] = useState([]);
+    const { selectedYears, setSelectedYears, handleYearChange } = useYearFilter('planaction', availableYears);
     const [enterprises, setEnterprises] = useState([]);
     const [archiveOuverte, setArchiveOuverte] = useState(false);
     const { logAction } = useLogger();
@@ -64,10 +68,6 @@ export default function PlanAction({ accidentData }) {
         const savedEnterprises = getSelectedEnterpriseFromCookie(COOKIE_PREFIXES.PLAN_ACTION);
         return Array.isArray(savedEnterprises) ? savedEnterprises : [];
     });
-    const [selectedYears, setSelectedYears] = useState(() =>
-        getSelectedYearsFromCookie(COOKIE_PREFIXES.PLAN_ACTION)
-    );
-    const [availableYears, setAvailableYears] = useState([]);
     const [snackbar, setSnackbar] = useState({
         open: false,
         message: '',
@@ -610,21 +610,11 @@ export default function PlanAction({ accidentData }) {
                                     id="years-select"
                                     multiple
                                     value={selectedYears}
-                                    onChange={handleYearsChange}
-                                    renderValue={(selected) => {
-                                        if (!selected || !Array.isArray(selected) || selected.length === 0) {
-                                            return "Toutes les années";
-                                        }
-                                        return selected.join(', ');
-                                    }}
-                                    sx={{
-                                        '& .MuiSelect-icon': {
-                                            color: darkMode ? '#fff' : 'inherit'
-                                        }
-                                    }}
+                                    onChange={handleYearChange}
+                                    renderValue={(selected) => `${selected.length} année(s)`}
                                 >
                                     <MenuItem
-                                        value=""
+                                        value="all"
                                         sx={{
                                             backgroundColor: darkMode ? '#424242' : '#ee742d59',
                                             color: darkMode ? '#fff' : 'inherit',
@@ -640,11 +630,8 @@ export default function PlanAction({ accidentData }) {
                                         }}
                                     >
                                         <Checkbox
-                                            checked={selectedYears?.length === availableYears.length}
-                                            onChange={(event) => {
-                                                const newValue = event.target.checked ? availableYears : [];
-                                                handleYearsChange({ target: { value: newValue } });
-                                            }}
+                                            checked={selectedYears.length === availableYears.length}
+                                            indeterminate={selectedYears.length > 0 && selectedYears.length < availableYears.length}
                                             sx={{
                                                 color: darkMode ? '#ff6b6b' : 'red',
                                                 '&.Mui-checked': {
@@ -652,10 +639,7 @@ export default function PlanAction({ accidentData }) {
                                                 }
                                             }}
                                         />
-                                        <ListItemText
-                                            primary="Toutes les années"
-                                            sx={{ color: darkMode ? '#fff' : 'inherit' }}
-                                        />
+                                        <ListItemText primary="Tout sélectionner" />
                                     </MenuItem>
                                     {availableYears.map((year) => (
                                         <MenuItem
@@ -666,12 +650,6 @@ export default function PlanAction({ accidentData }) {
                                                 color: darkMode ? '#fff' : 'inherit',
                                                 '&:hover': {
                                                     backgroundColor: darkMode ? '#505050' : '#ee742d80'
-                                                },
-                                                '&.Mui-selected': {
-                                                    backgroundColor: darkMode ? '#424242 !important' : '#ee742d59 !important'
-                                                },
-                                                '&.Mui-selected:hover': {
-                                                    backgroundColor: darkMode ? '#505050 !important' : '#ee742d80 !important'
                                                 }
                                             }}
                                         >
@@ -684,10 +662,7 @@ export default function PlanAction({ accidentData }) {
                                                     }
                                                 }}
                                             />
-                                            <ListItemText
-                                                primary={year}
-                                                sx={{ color: darkMode ? '#fff' : 'inherit' }}
-                                            />
+                                            <ListItemText primary={year} />
                                         </MenuItem>
                                     ))}
                                 </Select>
