@@ -208,7 +208,7 @@ export default function Navigation() {
 
     return (
         <div style={{
-            backgroundColor: darkMode ? '#6e6e6e' : '#ffffff', 
+            backgroundColor: darkMode ? '#6e6e6e' : '#ffffff',
             color: darkMode ? '#ffffff' : '#000000'
         }}>
             <Box
@@ -332,12 +332,7 @@ export default function Navigation() {
                         sx={{
                             fontSize: { xs: '0.9rem', sm: '1.1rem', md: '1.3rem' },
                             fontWeight: 500,
-                            background: darkMode
-                                ? 'linear-gradient(45deg, #7a8e1c, #a4bd24)'
-                                : 'linear-gradient(45deg, #ee752d, #f4a261)',
-                            backgroundClip: 'text',
-                            WebkitBackgroundClip: 'text',
-                            color: 'transparent',
+                            color: darkMode ? 'rgba(255, 255, 255, 0.6)' : 'rgba(128, 128, 128, 0.8)', // Ajout de la couleur grise
                             textAlign: 'center',
                             letterSpacing: '0.2em',
                             marginTop: '15px',
@@ -362,143 +357,143 @@ export default function Navigation() {
                             },
                         }}
                     >
-                        Traitement Informatisé de la Gestion des Risques en Entreprise
+                        Traitement Informatisé pour la Gestion des Risques en Entreprise
                     </Typography>
                 </Box>
             </Box>
             <form style={{ margin: '0 20px' }}>
-            <Paper
-                elevation={24}
-                sx={{
-                    borderRadius: '30px',
-                    padding: '40px',
-                    margin: '40px 0',
-                    background: darkMode
-                        ? 'linear-gradient(135deg, #6e6e6e 0%, #2a2a2a 100%)'
-                        : 'linear-gradient(135deg, #ffffff 0%, #f8f8f8 100%)',
-                    boxShadow: darkMode
-                        ? '0 20px 40px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.1)'
-                        : '0 20px 40px rgba(238,117,45,0.2), inset 0 1px 0 rgba(255,255,255,0.5)',
-                }}
-            >
-                <Box sx={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    margin: '2rem 0',
-                    position: 'relative',
-                    '&::after': {
-                        content: '""',
-                        position: 'absolute',
-                        bottom: '-10px',
-                        left: '50%',
-                        transform: 'translateX(-50%)',
-                        width: '150px',
-                        height: '4px',
-                        background: darkMode
-                            ? 'linear-gradient(90deg, rgba(122,142,28,0.2) 0%, rgba(122,142,28,1) 50%, rgba(122,142,28,0.2) 100%)'
-                            : 'linear-gradient(90deg, rgba(238,117,45,0.2) 0%, rgba(238,117,45,1) 50%, rgba(238,117,45,0.2) 100%)',
-                        borderRadius: '2px'
-                    }
-                }}>
-                    <Typography
-                        variant="h2"
-                        sx={{
-                            fontSize: { xs: '2rem', sm: '2.5rem', md: '3rem' },
-                            fontWeight: 700,
-                            color: darkMode ? '#ffffff' : '#2D3748',
-                            textTransform: 'uppercase',
-                            letterSpacing: '2px',
-                            textAlign: 'center',
-                            textShadow: darkMode
-                                ? '2px 2px 4px rgba(0,0,0,0.3)'
-                                : '2px 2px 4px rgba(0,0,0,0.1)',
-                            '&::first-letter': {
-                                color: darkMode ? '#7a8e1c' : '#ee752d',
-                                fontSize: '120%'
-                            },
-                            position: 'relative',
-                            padding: '0 20px'
-                        }}
-                    >
-                        Navigation Principale
-                    </Typography>
-                </Box>
-
-                <Box
+                <Paper
+                    elevation={24}
                     sx={{
-                        display: 'grid',
-                        gridTemplateColumns: { xs: '1fr', md: 'repeat(2, 1fr)' },
-                        gap: '40px',
-                        padding: '20px',
+                        borderRadius: '30px',
+                        padding: '40px',
+                        margin: '40px 0',
+                        background: darkMode
+                            ? 'linear-gradient(135deg, #6e6e6e 0%, #2a2a2a 100%)'
+                            : 'linear-gradient(135deg, #ffffff 0%, #f8f8f8 100%)',
+                        boxShadow: darkMode
+                            ? '0 20px 40px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.1)'
+                            : '0 20px 40px rgba(238,117,45,0.2), inset 0 1px 0 rgba(255,255,255,0.5)',
                     }}
                 >
-                    <Tooltip title="Gérer les accidents" arrow>
-                        <Button
-                            component={Link}
-                            to="/Accident"
-                            sx={buttonStyle(0)}
-                            onMouseEnter={() => setHoverStates(prev => ({ ...prev, accident: true }))}
-                            onMouseLeave={() => setHoverStates(prev => ({ ...prev, accident: false }))}
+                    <Box sx={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        margin: '2rem 0',
+                        position: 'relative',
+                        '&::after': {
+                            content: '""',
+                            position: 'absolute',
+                            bottom: '-10px',
+                            left: '50%',
+                            transform: 'translateX(-50%)',
+                            width: '150px',
+                            height: '4px',
+                            background: darkMode
+                                ? 'linear-gradient(90deg, rgba(122,142,28,0.2) 0%, rgba(122,142,28,1) 50%, rgba(122,142,28,0.2) 100%)'
+                                : 'linear-gradient(90deg, rgba(238,117,45,0.2) 0%, rgba(238,117,45,1) 50%, rgba(238,117,45,0.2) 100%)',
+                            borderRadius: '2px'
+                        }
+                    }}>
+                        <Typography
+                            variant="h2"
+                            sx={{
+                                fontSize: { xs: '2rem', sm: '2.5rem', md: '3rem' },
+                                fontWeight: 700,
+                                color: darkMode ? '#ffffff' : '#2D3748',
+                                textTransform: 'uppercase',
+                                letterSpacing: '2px',
+                                textAlign: 'center',
+                                textShadow: darkMode
+                                    ? '2px 2px 4px rgba(0,0,0,0.3)'
+                                    : '2px 2px 4px rgba(0,0,0,0.1)',
+                                '&::first-letter': {
+                                    color: darkMode ? '#7a8e1c' : '#ee752d',
+                                    fontSize: '120%'
+                                },
+                                position: 'relative',
+                                padding: '0 20px'
+                            }}
                         >
-                            <AccidentAnimation isHovered={hoverStates.accident} />
-                            <Box className="button-content" sx={{ zIndex: 1 }}>
-                                <ViewListIcon sx={{ fontSize: '3rem', mb: 2 }} />
-                                <Typography variant="h5">Accidents</Typography>
-                            </Box>
-                        </Button>
-                    </Tooltip>
+                            Navigation Principale
+                        </Typography>
+                    </Box>
 
-                    <Tooltip title="Consulter les statistiques" arrow>
-                        <Button
-                            component={Link}
-                            to="/statistiques"
-                            sx={buttonStyle(1)}
-                            onMouseEnter={() => setHoverStates(prev => ({ ...prev, stats: true }))}
-                            onMouseLeave={() => setHoverStates(prev => ({ ...prev, stats: false }))}
-                        >
-                            <StatsAnimation isHovered={hoverStates.stats} />
-                            <Box className="button-content" sx={{ zIndex: 1 }}>
-                                <BarChartIcon sx={{ fontSize: '3rem', mb: 2 }} />
-                                <Typography variant="h5">Statistiques</Typography>
-                            </Box>
-                        </Button>
-                    </Tooltip>
+                    <Box
+                        sx={{
+                            display: 'grid',
+                            gridTemplateColumns: { xs: '1fr', md: 'repeat(2, 1fr)' },
+                            gap: '40px',
+                            padding: '20px',
+                        }}
+                    >
+                        <Tooltip title="Gérer les accidents" arrow>
+                            <Button
+                                component={Link}
+                                to="/Accident"
+                                sx={buttonStyle(0)}
+                                onMouseEnter={() => setHoverStates(prev => ({ ...prev, accident: true }))}
+                                onMouseLeave={() => setHoverStates(prev => ({ ...prev, accident: false }))}
+                            >
+                                <AccidentAnimation isHovered={hoverStates.accident} />
+                                <Box className="button-content" sx={{ zIndex: 1 }}>
+                                    <ViewListIcon sx={{ fontSize: '3rem', mb: 2 }} />
+                                    <Typography variant="h5">Accidents</Typography>
+                                </Box>
+                            </Button>
+                        </Tooltip>
 
-                    <Tooltip title="Gérer le plan d'action" arrow>
-                        <Button
-                            component={Link}
-                            to="/planAction"
-                            sx={buttonStyle(2)}
-                            onMouseEnter={() => setHoverStates(prev => ({ ...prev, plan: true }))}
-                            onMouseLeave={() => setHoverStates(prev => ({ ...prev, plan: false }))}
-                        >
-                            <PlanAnimation isHovered={hoverStates.plan} />
-                            <Box className="button-content" sx={{ zIndex: 1 }}>
-                                <ListAltIcon sx={{ fontSize: '3rem', mb: 2 }} />
-                                <Typography variant="h5">Plan d'actions</Typography>
-                            </Box>
-                        </Button>
-                    </Tooltip>
-                    {isAdminOrDevOrConseiller && (
-                    <Tooltip title="Gérer les documents divers" arrow>
-                        <Button
-                            component={Link}
-                            to="/entreprise"
-                            sx={buttonStyle(3)}
-                            onMouseEnter={() => setHoverStates(prev => ({ ...prev, business: true }))}
-                            onMouseLeave={() => setHoverStates(prev => ({ ...prev, business: false }))}
-                        >
-                            <BusinessAnimation isHovered={hoverStates.business} />
-                            <Box className="button-content" sx={{ zIndex: 1 }}>
-                                <FolderIcon sx={{ fontSize: '3rem', mb: 2 }} />
-                                <Typography variant="h5"> Documents Divers</Typography>
-                            </Box>
-                        </Button>
-                    </Tooltip>
-                    )}
-                </Box>
-            </Paper>
+                        <Tooltip title="Consulter les statistiques" arrow>
+                            <Button
+                                component={Link}
+                                to="/statistiques"
+                                sx={buttonStyle(1)}
+                                onMouseEnter={() => setHoverStates(prev => ({ ...prev, stats: true }))}
+                                onMouseLeave={() => setHoverStates(prev => ({ ...prev, stats: false }))}
+                            >
+                                <StatsAnimation isHovered={hoverStates.stats} />
+                                <Box className="button-content" sx={{ zIndex: 1 }}>
+                                    <BarChartIcon sx={{ fontSize: '3rem', mb: 2 }} />
+                                    <Typography variant="h5">Statistiques</Typography>
+                                </Box>
+                            </Button>
+                        </Tooltip>
+
+                        <Tooltip title="Gérer le plan d'action" arrow>
+                            <Button
+                                component={Link}
+                                to="/planAction"
+                                sx={buttonStyle(2)}
+                                onMouseEnter={() => setHoverStates(prev => ({ ...prev, plan: true }))}
+                                onMouseLeave={() => setHoverStates(prev => ({ ...prev, plan: false }))}
+                            >
+                                <PlanAnimation isHovered={hoverStates.plan} />
+                                <Box className="button-content" sx={{ zIndex: 1 }}>
+                                    <ListAltIcon sx={{ fontSize: '3rem', mb: 2 }} />
+                                    <Typography variant="h5">Plan d'actions</Typography>
+                                </Box>
+                            </Button>
+                        </Tooltip>
+                        {isAdminOrDevOrConseiller && (
+                            <Tooltip title="Gérer les documents divers" arrow>
+                                <Button
+                                    component={Link}
+                                    to="/entreprise"
+                                    sx={buttonStyle(3)}
+                                    onMouseEnter={() => setHoverStates(prev => ({ ...prev, business: true }))}
+                                    onMouseLeave={() => setHoverStates(prev => ({ ...prev, business: false }))}
+                                >
+                                    <BusinessAnimation isHovered={hoverStates.business} />
+                                    <Box className="button-content" sx={{ zIndex: 1 }}>
+                                        <FolderIcon sx={{ fontSize: '3rem', mb: 2 }} />
+                                        <Typography variant="h5"> Documents Divers</Typography>
+                                    </Box>
+                                </Button>
+                            </Tooltip>
+                        )}
+                    </Box>
+                </Paper>
             </form>
             <div className="image-cortigroupe"></div>
             <Tooltip title="Développé par Remy et Benoit pour Le Cortigroupe." arrow>

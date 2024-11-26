@@ -360,12 +360,7 @@ const Login = () => {
               sx={{
                 fontSize: { xs: '0.9rem', sm: '1.1rem', md: '1.3rem' },
                 fontWeight: 500,
-                background: darkMode
-                  ? 'linear-gradient(45deg, #7a8e1c, #a4bd24)'
-                  : 'linear-gradient(45deg, #ee752d, #f4a261)',
-                backgroundClip: 'text',
-                WebkitBackgroundClip: 'text',
-                color: 'transparent',
+                color: darkMode ? 'rgba(255, 255, 255, 0.6)' : 'rgba(128, 128, 128, 0.8)', // Ajout de la couleur grise
                 textAlign: 'center',
                 letterSpacing: '0.2em',
                 marginTop: '15px',
@@ -390,7 +385,7 @@ const Login = () => {
                 },
               }}
             >
-              Traitement Informatisé de la Gestion des Risques en Entreprise
+              Traitement Informatisé pour la Gestion des Risques en Entreprise
             </Typography>
           </Box>
 

@@ -1,6 +1,6 @@
 Licence d'Utilisation Non Commerciale avec Autorisation d'Usage Interne
 
-Nom du Projet T.I.G.R.E (Traitement Informatiser de la Gesion des Risques d'Entreprise) partie 1/2 FRONTEND - Licence d'Utilisation Non Commerciale et Interne
+Nom du Projet T.I.G.R.E (Traitement Informatisé pour la Gestion des Risques en Entreprise) partie 1/2 FRONTEND - Licence d'Utilisation Non Commerciale et Interne
 
 1. Attribution
 

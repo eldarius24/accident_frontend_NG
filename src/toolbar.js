@@ -232,7 +232,7 @@ function ResponsiveAppBar() {
         </Box>
         {!isLoginPage && !isHome && (
           <Box>
-            <Tooltip title="Traitement Informatisé de Gestion des Risques et des Emergences">
+            <Tooltip title="Traitement Informatisé pour la Gestion des Risques en Entreprise">
               <Box
                 component="span" // Utilisation de span au lieu de div
                 sx={{
