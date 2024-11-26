@@ -233,7 +233,6 @@ export default function PlanAction({ accidentData }) {
 
     useEffect(() => {
         fetchData();
-
     }, []);
 
     useEffect(() => {
@@ -311,7 +310,7 @@ export default function PlanAction({ accidentData }) {
         }
     }, [users, apiUrl, logAction, showSnackbar]);
 
-    const refreshListAccidents = useCallback(() => {
+    const refreshListActions = useCallback(() => {
         setLoading(true);
         fetchData();
     }, []);
@@ -575,7 +574,7 @@ export default function PlanAction({ accidentData }) {
                                 }}
                                 variant="contained"
                                 color="secondary"
-                                onClick={refreshListAccidents}
+                                onClick={refreshListActions}
                                 startIcon={<RefreshIcon />}
                             >
                                 Actualiser
@@ -965,16 +964,14 @@ export default function PlanAction({ accidentData }) {
                                             </TableCell>
                                             {(isAdminOrDev) ? (
                                                 <TableCell style={{ padding: 0, width: '70px' }}>
-
                                                     <BoutonArchiver
                                                         donnee={addaction}
                                                         type="planaction"
                                                         onSuccess={() => {
-                                                            refreshListAccidents();
+                                                            refreshListActions();
                                                             showSnackbar('Action archivée avec succès', 'success');
                                                         }}
                                                     />
-
                                                 </TableCell>
                                             ) : null}
                                         </TableRow>

@@ -37,7 +37,7 @@ import {
     saveYearSelections,
     getSelectedStatusFromCookie
 } from './_actions/cookieUtils.js';
-import { usePageReload } from './_actions/UsePageReload.js';
+import createFetchData from './_actions/fetch-accidents-data';
 
 const apiUrl = config.apiUrl;
 
@@ -49,10 +49,9 @@ const apiUrl = config.apiUrl;
  * @returns {React.ReactElement} 
  */
 function Accident() {
-    usePageReload();
     const { darkMode } = useTheme();
     const navigate = useNavigate();
-
+    const [loading, setLoading] = useState(false);
     const ensureArray = (value) => {
         if (!value) return [];
         if (Array.isArray(value)) return value;
@@ -119,22 +118,18 @@ function Accident() {
         * Met à jour l'état de la liste des accidents et des années.
         * Affiche un message de réussite ou d'erreur en fonction du résultat.
         */
-    const refreshListAccidents = useCallback(() => {
-        startGetAccidents(async () => {
-            try {
-                const fetchedAccidents = await getAccidents();
-                setAccidents(fetchedAccidents);
-                const years = [...new Set(fetchedAccidents.map(accident =>
-                    new Date(accident.DateHeureAccident).getFullYear()
-                ))].sort((a, b) => b - a);
-                setYearsFromData(years);
-                showSnackbar('Liste des accidents actualisée', 'success');
-            } catch (error) {
-                console.error("Erreur lors de la récupération des accidents:", error);
-                showSnackbar('Erreur lors de l actualisation de la liste des accidents', 'error');
-            }
-        });
-    }, [showSnackbar]);
+    const fetchData = useCallback(
+        createFetchData(apiUrl)(
+            setAccidents,
+            setYearsFromData,
+            setLoading,
+            showSnackbar,
+            isAdminOrDev,
+            userInfo
+        ),
+        [apiUrl, isAdminOrDev, userInfo]
+    );
+
 
     /**
      * Renvoie un tableau de deux couleurs pour le background des lignes de la table.
@@ -360,13 +355,21 @@ function Accident() {
     };
 
     useEffect(() => {
-        refreshListAccidents();
+        fetchData();
+    }, []);
+
+    const refreshListAccidents = useCallback(() => {
+        setLoading(true);
+        fetchData();
     }, []);
 
     if (accidentsIsPending) {
         return <LinearProgress color="success" />;
     }
 
+    if (loading) {
+        return <LinearProgress color="success" />;
+    }
     return (
         <div style={{
             backgroundColor: darkMode ? '#6e6e6e' : '#ffffff',
@@ -975,21 +978,14 @@ function Accident() {
                                         {/* Autres cellules */}
                                         {(isAdminOrDev) ? (
                                             <TableCell style={{ padding: 0, width: '70px' }}>
-
                                                 <BoutonArchiver
                                                     donnee={item}
                                                     type="accident"
-                                                    onSuccess={async () => {
-                                                        try {
-                                                            window.location.reload();
-                                                            showSnackbar('Accident archivé avec succès', 'success');
-                                                        } catch (error) {
-                                                            console.error('Erreur lors du rafraîchissement:', error);
-                                                            showSnackbar('Erreur lors de l\'actualisation', 'error');
-                                                        }
+                                                    onSuccess={() => {
+                                                        refreshListAccidents();
+                                                        showSnackbar('Action archivée avec succès', 'success');
                                                     }}
                                                 />
-
                                             </TableCell>
                                         ) : null}
                                     </>

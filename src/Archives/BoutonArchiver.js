@@ -33,7 +33,7 @@ const BoutonArchivage = forwardRef(({ onClick, darkMode }, ref) => (
 
 BoutonArchivage.displayName = 'BoutonArchivage';
 
-const BoutonArchiver = ({ donnee, type, onSuccess }) => {
+const BoutonArchiver = ({ donnee, type, onSuccess, updateList }) => {
   const { darkMode } = useTheme();
 
   const archiver = async () => {
@@ -47,24 +47,33 @@ const BoutonArchiver = ({ donnee, type, onSuccess }) => {
         taille: JSON.stringify(donnee).length
       };
 
-      await axios.post(`http://${apiUrl}:3100/api/archives`, archiveData);
+      // Créer l'archive
+      const archiveResponse = await axios.post(`http://${apiUrl}:3100/api/archives`, archiveData);
       
-      // Adapter l'URL selon le type
-      const deleteUrl = type === 'planaction' 
+      if (!archiveResponse.data) {
+        throw new Error("Échec de la création de l'archive");
+      }
+     
+      // Supprimer la donnée originale
+      const deleteUrl = type === 'planaction'
         ? `http://${apiUrl}:3100/api/planaction/${donnee._id}`
         : `http://${apiUrl}:3100/api/accidents/${donnee._id}`;
-            
-      await axios.delete(deleteUrl);
+           
+      const deleteResponse = await axios.delete(deleteUrl);
 
-      if (onSuccess) {
-        onSuccess();
+      if (deleteResponse.status === 200 || deleteResponse.status === 204) {
+        // Mettre à jour la liste localement et appeler les callbacks
+        if (onSuccess) {
+          onSuccess();
+        }
+      } else {
+        throw new Error('Échec de la suppression');
       }
     } catch (error) {
       console.error("Erreur lors de l'archivage:", error);
     }
   };
 
-  // Ne plus retourner le TableCell ici
   return (
     <BoutonArchivage onClick={archiver} darkMode={darkMode} />
   );
