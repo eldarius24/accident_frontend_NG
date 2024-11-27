@@ -17,6 +17,7 @@
     "dayjs": "^1.11.10",
     "emailjs-mime-parser": "^2.0.7",
     "exceljs": "^4.4.0",
+    "express": "^4.21.1",
     "file-saver": "^2.0.5",
     "js-cookie": "^3.0.5",
     "mammoth": "^1.8.0",

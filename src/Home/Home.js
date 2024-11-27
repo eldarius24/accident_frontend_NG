@@ -73,6 +73,14 @@ export default function Navigation() {
             ? 'linear-gradient(135deg, rgba(122,142,28,0.1) 0%, rgba(66,66,66,0.95) 50%, rgba(122,142,28,0.2) 100%)'
             : 'linear-gradient(135deg, rgba(238,117,45,0.1) 0%, rgba(255,255,255,0.95) 50%, rgba(238,117,45,0.2) 100%)',
         color: darkMode ? '#ffffff' : '#000000',
+        border: darkMode 
+            ? '2px solid #a5d6a7'  // Light orange for dark mode
+            : '2px solid #f57c00', // Darker orange for light mode
+        '&:hover': {
+            border: darkMode
+                ? '2px solid #ffd54f'  // Brighter orange for dark mode hover
+                : '2px solid #ff9800', // Lighter orange for light mode hover
+        },
         '&::before': {
             content: '""',
             position: 'absolute',

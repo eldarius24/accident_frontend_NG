@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState, useTransition, useMemo } from 'react';
 import {
     Table, TableBody, TableCell, TableContainer, TableHead, TableRow,
-    Button, LinearProgress, TextField, Grid, FormControl, InputLabel,
+    Button, TextField, Grid, FormControl, InputLabel,
     Select, MenuItem, Checkbox, ListItemText, Tooltip, Chip, Box, Typography
 } from '@mui/material';
 import axios from 'axios';
@@ -19,7 +19,6 @@ import FileUploadIcon from '@mui/icons-material/FileUpload';
 import InputAdornment from '@mui/material/InputAdornment';
 import config from '../config.json';
 import editPDF from '../Model/pdfGenerator.js';
-import getAccidents from './_actions/get-accidents.js';
 import { useUserConnected } from '../Hook/userConnected.js';
 import CustomSnackbar from '../_composants/CustomSnackbar.js';
 import { useTheme } from '../pageAdmin/user/ThemeContext.js';
@@ -33,8 +32,6 @@ import createUpdateUserSelectedStatus from './_actions/updateUserSelectedStatus.
 import {
     COOKIE_PREFIXES,
     getSelectedYearsFromCookie,
-    getSelectAllFromCookie,
-    saveYearSelections,
     getSelectedStatusFromCookie
 } from './_actions/cookieUtils.js';
 import createFetchData from './_actions/fetch-accidents-data';
@@ -51,23 +48,21 @@ const apiUrl = config.apiUrl;
  */
 function Accident() {
     const [yearsFromData, setYearsFromData] = useState([]);
-    useEffect(() => {
-        const fetchYears = async () => {
-            try {
-                // Utilisez votre fonction pour récupérer les années
-                const years = await fetchAvailableYears(); // À implémenter
-                setYearsFromData(years);
-            } catch (error) {
-                console.error('Erreur lors de la récupération des années', error);
-            }
-        };
 
-        fetchYears();
-    }, []);
+    // Utiliser useYearFilter avec les années récupérées
     const { selectedYears, handleYearChange } = useYearFilter(
-  COOKIE_PREFIXES.HOME,  
-  yearsFromData 
-);
+        COOKIE_PREFIXES.HOME,
+        yearsFromData
+    );
+
+    const [yearsChecked, setYearsChecked] = useState(() =>
+        getSelectedYearsFromCookie(COOKIE_PREFIXES.HOME)
+    );
+
+    useEffect(() => {
+        setYearsChecked(getSelectedYearsFromCookie(COOKIE_PREFIXES.HOME));
+    }, []);
+
     const { darkMode } = useTheme();
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
@@ -86,17 +81,10 @@ function Accident() {
         return getSelectedStatusFromCookie(COOKIE_PREFIXES.HOME);
     });
 
-    const [yearsChecked, setYearsChecked] = useState(() =>
-        getSelectedYearsFromCookie(COOKIE_PREFIXES.HOME)
-    );
 
-    const [selectAllYears, setSelectAllYears] = useState(() =>
-        getSelectAllFromCookie(COOKIE_PREFIXES.HOME)
-    );
-    const [accidents, setAccidents] = useState([]);
-    const [accidentsIsPending, startGetAccidents] = useTransition();
+    const [accidents, setAccidents] = useState([]);;
     const [searchTerm, setSearchTerm] = useState('');
-    const { isAdmin, isAdminOuConseiller, userInfo, isConseiller, isAdminOrDev, isAdminOrDevOrConseiller } = useUserConnected();
+    const { userInfo, isConseiller, isAdminOrDev, isAdminOrDevOrConseiller } = useUserConnected();
     const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'info' });
     const { logAction } = useLogger();
     const showSnackbar = useCallback((message, severity = 'info') => {
@@ -293,7 +281,6 @@ function Accident() {
         });
     }, [accidents, selectedYears, searchTerm, statusFilters]);
 
-
     /**
      * Exporte les données d'accidents vers un fichier Excel.
      * 
@@ -341,30 +328,6 @@ function Accident() {
         });
     }, [filteredData, isAdminOrDev, userInfo, logAction, showSnackbar]);
 
-
-    const handleChangeYearsFilter = (event) => {
-        const value = event.target.value;
-        if (value === 'All') {
-            const allYears = [...yearsFromData];
-            setSelectAllYears(true);
-            setYearsChecked(allYears);
-            saveYearSelections(COOKIE_PREFIXES.HOME, allYears, true);
-        } else {
-            const newYears = ensureArray(value);
-            setSelectAllYears(false);
-            setYearsChecked(newYears);
-            saveYearSelections(COOKIE_PREFIXES.HOME, newYears, false);
-        }
-    };
-
-    const handleSelectAllYears = (event) => {
-        const checked = event.target.checked;
-        const years = checked ? [...yearsFromData] : [];
-        setSelectAllYears(checked);
-        setYearsChecked(years);
-        saveYearSelections(COOKIE_PREFIXES.HOME, years, checked);
-    };
-
     useEffect(() => {
         fetchData();
     }, []);
@@ -374,13 +337,6 @@ function Accident() {
         fetchData();
     }, []);
 
-    if (accidentsIsPending) {
-        return <LinearProgress color="success" />;
-    }
-
-    if (loading) {
-        return <LinearProgress color="success" />;
-    }
     return (
         <div style={{
             backgroundColor: darkMode ? '#6e6e6e' : '#ffffff',
@@ -461,7 +417,9 @@ function Accident() {
                                     borderColor: darkMode ? 'rgba(255,255,255,0.5)' : 'rgba(0,0,0,0.5)'
                                 }
                             }}>
-                                <InputLabel id="etat-label" sx={{ color: darkMode ? '#fff' : 'inherit' }}>État</InputLabel>
+                                <InputLabel id="etat-label" sx={{ color: darkMode ? '#fff' : 'inherit' }}>
+                                    État
+                                </InputLabel>
                                 <Select
                                     labelId="etat-label"
                                     id="etat-select"
@@ -647,11 +605,28 @@ function Accident() {
                                                 color: darkMode ? '#fff' : 'inherit',
                                                 '&:hover': {
                                                     backgroundColor: darkMode ? '#505050' : '#ee742d80'
+                                                },
+                                                '&.Mui-selected': {
+                                                    backgroundColor: darkMode ? '#424242 !important' : '#ee742d59 !important'
+                                                },
+                                                '&.Mui-selected:hover': {
+                                                    backgroundColor: darkMode ? '#505050 !important' : '#ee742d80 !important'
                                                 }
                                             }}
                                         >
-                                            <Checkbox checked={selectedYears.includes(year)} />
-                                            <ListItemText primary={year} />
+                                            <Checkbox
+                                                checked={selectedYears.includes(year)}
+                                                sx={{
+                                                    color: darkMode ? '#4CAF50' : '#257525',
+                                                    '&.Mui-checked': {
+                                                        color: darkMode ? '#81C784' : '#257525'
+                                                    }
+                                                }}
+                                            />
+                                            <ListItemText
+                                                primary={year}
+                                                sx={{ color: darkMode ? '#fff' : 'inherit' }}
+                                            />
                                         </MenuItem>
                                     ))}
                                 </Select>

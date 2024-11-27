@@ -29,11 +29,9 @@ import createHandleExport from './handleExport';
 import { useLogger } from '../Hook/useLogger';
 import { blueGrey } from '@mui/material/colors';
 import createUpdateUserSelectedYears from './updateUserSelecterYears';
-import createUpdateUserSelectedEnterprise from './updateUserSelectedEnterprise';
 import BoutonArchiver from '../Archives/BoutonArchiver';
 import {
     COOKIE_PREFIXES,
-    getSelectedYearsFromCookie,
     getSelectedEnterpriseFromCookie,
     saveEnterpriseSelection
 } from '../Home/_actions/cookieUtils';
@@ -49,9 +47,11 @@ const apiUrl = config.apiUrl;
  */
 export default function PlanAction({ accidentData }) {
     const [availableYears, setAvailableYears] = useState([]);
-    const { selectedYears, setSelectedYears, handleYearChange } = useYearFilter('planaction', availableYears);
+    const { selectedYears, setSelectedYears, handleYearChange } = useYearFilter(
+        COOKIE_PREFIXES.PLAN_ACTION,
+        availableYears
+    );
     const [enterprises, setEnterprises] = useState([]);
-    const [archiveOuverte, setArchiveOuverte] = useState(false);
     const { logAction } = useLogger();
     const { darkMode } = useTheme();
     const [users, setAddactions] = useState([]);
@@ -61,7 +61,7 @@ export default function PlanAction({ accidentData }) {
     const [searchTerm, setSearchTerm] = useState('');
     const [allSectors, setAllSectors] = useState([]);
     const [availableSectors, setAvailableSectors] = useState([]);
-    const { isAdmin, userInfo, isAdminOrDev } = useUserConnected();
+    const { userInfo, isAdminOrDev } = useUserConnected();
     const currentYear = new Date().getFullYear().toString();
     const [isLoading, setLoading] = useState(true);
     const [selectedEnterprises, setSelectedEnterprises] = useState(() => {
@@ -163,12 +163,6 @@ export default function PlanAction({ accidentData }) {
         }
         return rowColors[theme].rows[index % 2];
     }, [darkMode, rowColors]);
-
-    const handleYearsChange = useCallback((event) => {
-        const newSelectedYears = event.target.value;
-        setSelectedYears(newSelectedYears);
-        updateUserSelectedYears(newSelectedYears);
-    }, [updateUserSelectedYears]);
 
     const checkboxStyle = useMemo(
         () => ({
@@ -639,7 +633,10 @@ export default function PlanAction({ accidentData }) {
                                                 }
                                             }}
                                         />
-                                        <ListItemText primary="Tout sélectionner" />
+                                        <ListItemText
+                                            primary="Tout sélectionner"
+                                            sx={{ color: darkMode ? '#fff' : 'inherit' }}
+                                        />
                                     </MenuItem>
                                     {availableYears.map((year) => (
                                         <MenuItem
@@ -650,6 +647,12 @@ export default function PlanAction({ accidentData }) {
                                                 color: darkMode ? '#fff' : 'inherit',
                                                 '&:hover': {
                                                     backgroundColor: darkMode ? '#505050' : '#ee742d80'
+                                                },
+                                                '&.Mui-selected': {
+                                                    backgroundColor: darkMode ? '#424242 !important' : '#ee742d59 !important'
+                                                },
+                                                '&.Mui-selected:hover': {
+                                                    backgroundColor: darkMode ? '#505050 !important' : '#ee742d80 !important'
                                                 }
                                             }}
                                         >
@@ -662,7 +665,10 @@ export default function PlanAction({ accidentData }) {
                                                     }
                                                 }}
                                             />
-                                            <ListItemText primary={year} />
+                                            <ListItemText
+                                                primary={year}
+                                                sx={{ color: darkMode ? '#fff' : 'inherit' }}
+                                            />
                                         </MenuItem>
                                     ))}
                                 </Select>
