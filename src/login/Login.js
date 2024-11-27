@@ -245,7 +245,7 @@ const Login = () => {
             flexDirection: 'column',
             justifyContent: 'center',
             alignItems: 'center',
-            margin: '2rem 0',
+            margin: '0rem 0',
             position: 'relative',
             padding: '30px 0',
             overflow: 'hidden',
@@ -289,6 +289,7 @@ const Login = () => {
               },
             },
           }}
+
         >
           <Box
             sx={{
@@ -429,19 +430,11 @@ const Login = () => {
             ))}
           </Box>
         </Box>
-        <div className="flex justify-center max-h-96">
-          <Tooltip title="Attention aux chocs et aux vibrations !!!" arrow>
-            <Grid className="max-w-lg" container>
-              <Grid item xs={6}>
-                <div className="image-container1"></div>
-              </Grid>
-              <Grid item xs={6}>
-                <div className="image-container2"></div>
-              </Grid>
-            </Grid>
-          </Tooltip>
-        </div>
-
+        <AccidentCounter
+          days={isNaN(daysWithoutAccident) ? 0 : daysWithoutAccident}
+          lastDate={lastAccidentDate}
+          darkMode={darkMode}
+        />
         <form onSubmit={handleSubmit(onSubmit)}
           className="flex flex-col justify-center items-center min-h-20 space-y-4"
           role="form"
@@ -508,11 +501,7 @@ const Login = () => {
           </h6>
         </form>
         {/* Compteur de jours sans accident */}
-        <AccidentCounter
-          days={isNaN(daysWithoutAccident) ? 0 : daysWithoutAccident}
-          lastDate={lastAccidentDate}
-          darkMode={darkMode}
-        />
+        
         <div className="image-cortigroupe"></div>
         <Tooltip title="Développé par Remy et Benoit pour Le Cortigroupe." arrow>
           <h5

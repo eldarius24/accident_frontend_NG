@@ -225,7 +225,7 @@ export default function Navigation() {
                     flexDirection: 'column',
                     justifyContent: 'center',
                     alignItems: 'center',
-                    margin: '2rem 0',
+                    margin: '0rem 0',
                     position: 'relative',
                     padding: '30px 0',
                     overflow: 'hidden',
@@ -374,8 +374,8 @@ export default function Navigation() {
                     elevation={24}
                     sx={{
                         borderRadius: '30px',
-                        padding: '40px',
-                        margin: '40px 0',
+                        padding: '0',
+                        margin: '0',
                         background: darkMode
                             ? 'linear-gradient(135deg, #6e6e6e 0%, #2a2a2a 100%)'
                             : 'linear-gradient(135deg, #ffffff 0%, #f8f8f8 100%)',
