@@ -499,7 +499,6 @@ const Login = () => {
             Pour avoir accès, veuillez le demander au support
           </h6>
         </form>
-        {/* Compteur de jours sans accident */}
         <Footer />
       </div>
     </div>

@@ -1,10 +1,9 @@
 import React, { useMemo } from 'react';
 import { Box, Typography, Paper } from '@mui/material';
-import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
+import TrafficLightIcon from './TrafficLightIcon';
 
 const AccidentCounter = ({ days = 0, lastDate, darkMode }) => {
-    // Fonction pour déterminer la couleur en fonction du nombre de jours
     const { color, gradient, message } = useMemo(() => {
         if (days <= 5) {
             return {
@@ -56,7 +55,6 @@ const AccidentCounter = ({ days = 0, lastDate, darkMode }) => {
                 position: 'relative',
             }}
         >
-            {/* Conteneur principal */}
             <Box
                 sx={{
                     display: 'grid',
@@ -65,7 +63,6 @@ const AccidentCounter = ({ days = 0, lastDate, darkMode }) => {
                     padding: '1rem',
                 }}
             >
-                {/* Section compteur principal */}
                 <Box
                     sx={{
                         position: 'relative',
@@ -94,11 +91,10 @@ const AccidentCounter = ({ days = 0, lastDate, darkMode }) => {
                         }
                     }}
                 >
-                    {/* Icône trophée */}
-                    <EmojiEventsIcon
+                    <TrafficLightIcon
+                        color={color}
                         sx={{
                             fontSize: '3rem',
-                            color: color,
                             opacity: 0.9,
                             mb: 2,
                             transition: 'color 0.3s ease',
