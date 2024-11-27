@@ -22,46 +22,6 @@ body {
   align-items: center;
 }
 
-.image-container1 {
-  flex-shrink: 0;
-  flex: 1;
-  height: 450px;
-  background-image: url('../../public/accident_travail1.png');
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: contain;
-}
-
-.image-container2 {
-  flex-shrink: 0;
-  flex: 1;
-  height: 450px;
-  background-image: url('../../public/accident_travail2.png');
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: contain;
-}
-
-
-.image-container1:hover {
-  animation: vibration 0.1s infinite;
-
-}
-
-@keyframes vibration {
-  0% {
-    transform: rotate(25deg);
-  }
-
-  50% {
-    transform: rotate(-25deg);
-  }
-
-  100% {
-    transform: rotate(25deg);
-  }
-}
-
 #text-container {
   font-size: 5em;
   text-align: center;
