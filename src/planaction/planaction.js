@@ -40,6 +40,8 @@ import useYearFilter from '../Hook/useYearFilter';
 
 const apiUrl = config.apiUrl;
 
+
+
 /**
  * Page qui affiche le plan d'action
  * @param {object} accidentData Données de l'accident
@@ -79,6 +81,124 @@ export default function PlanAction({ accidentData }) {
         setSnackbar({ open: true, message, severity });
     }, []);
 
+    const FORM_CONTROL_STYLES = {
+        DARK: {
+            bg: '#424242',
+            border: 'rgba(255,255,255,0.3)',
+            hoverBorder: 'rgba(255,255,255,0.5)',
+            text: '#fff',
+            shadow: '0 3px 6px rgba(255,255,255,0.1)',
+            hoverShadow: '0 6px 12px rgba(255,255,255,0.2)'
+        },
+        LIGHT: {
+            bg: '#ee742d59',
+            border: 'rgba(0,0,0,0.23)',
+            hoverBorder: 'rgba(0,0,0,0.5)',
+            text: 'inherit',
+            shadow: 3,
+            hoverShadow: 6
+        }
+    };
+
+    // Memoized style generator
+    const getFormControlStyles = useMemo(() => (isDark) => ({
+        width: '100%',
+        mb: 2,
+        transition: 'all 0.2s ease-in-out',
+        backgroundColor: isDark ? FORM_CONTROL_STYLES.DARK.bg : FORM_CONTROL_STYLES.LIGHT.bg,
+        boxShadow: isDark ? FORM_CONTROL_STYLES.DARK.shadow : FORM_CONTROL_STYLES.LIGHT.shadow,
+        '&:hover': {
+            boxShadow: isDark ? FORM_CONTROL_STYLES.DARK.hoverShadow : FORM_CONTROL_STYLES.LIGHT.hoverShadow,
+            transform: 'translateY(-2px)'
+        },
+        '& .MuiOutlinedInput-root': {
+            color: isDark ? FORM_CONTROL_STYLES.DARK.text : FORM_CONTROL_STYLES.LIGHT.text,
+            '& fieldset': {
+                borderColor: isDark ? FORM_CONTROL_STYLES.DARK.border : FORM_CONTROL_STYLES.LIGHT.border,
+                transition: 'border-color 0.2s ease-in-out'
+            },
+            '&:hover fieldset': {
+                borderColor: isDark ? FORM_CONTROL_STYLES.DARK.hoverBorder : FORM_CONTROL_STYLES.LIGHT.hoverBorder
+            }
+        },
+        '& .MuiInputLabel-root, & .MuiSvgIcon-root': {
+            color: isDark ? FORM_CONTROL_STYLES.DARK.text : FORM_CONTROL_STYLES.LIGHT.text
+        }
+    }), []);
+
+    const ITEM_MARGIN = '20px';
+    const BUTTON_STYLES = {
+        DARK: {
+            color: '#ffffff',
+            backgroundColor: '#424242',
+            hoverBg: '#7a8e1c',
+            boxShadow: '0 3px 6px rgba(255,255,255,0.1)',
+            hoverShadow: '0 6px 12px rgba(255,255,255,0.2)'
+        },
+        LIGHT: {
+            color: 'black',
+            backgroundColor: '#ee742d59',
+            hoverBg: '#95ad22',
+            boxShadow: 3,
+            hoverShadow: 6
+        }
+    };
+
+    const getButtonStyles = useMemo(() => (isDark) => ({
+        color: isDark ? BUTTON_STYLES.DARK.color : BUTTON_STYLES.LIGHT.color,
+        padding: '15px 60px',
+        backgroundColor: isDark ? BUTTON_STYLES.DARK.backgroundColor : BUTTON_STYLES.LIGHT.backgroundColor,
+        transition: 'all 0.1s ease-in-out',
+        boxShadow: isDark ? BUTTON_STYLES.DARK.boxShadow : BUTTON_STYLES.LIGHT.boxShadow,
+        textTransform: 'none',
+        '&:hover': {
+            backgroundColor: isDark ? BUTTON_STYLES.DARK.hoverBg : BUTTON_STYLES.LIGHT.hoverBg,
+            transform: 'scale(1.08)',
+            boxShadow: isDark ? BUTTON_STYLES.DARK.hoverShadow : BUTTON_STYLES.LIGHT.hoverShadow
+        },
+        '& .MuiSvgIcon-root': {
+            color: isDark ? '#fff' : 'inherit'
+        }
+    }), []);
+
+    const COLORS = {
+        DARK: {
+            BG: '#424242',
+            BG_HOVER: '#505050',
+            TEXT: '#fff',
+            CHECKBOX: '#4CAF50',
+            CHECKBOX_CHECKED: '#81C784'
+        },
+        LIGHT: {
+            BG: '#ee742d59',
+            BG_HOVER: '#ee742d80',
+            TEXT: 'inherit',
+            CHECKBOX: '#257525',
+            CHECKBOX_CHECKED: '#257525'
+        }
+    };
+
+    const getMenuItemStyles = useMemo(() => (isDark) => ({
+        backgroundColor: isDark ? COLORS.DARK.BG : COLORS.LIGHT.BG,
+        color: isDark ? COLORS.DARK.TEXT : COLORS.LIGHT.TEXT,
+        '&:hover': {
+            backgroundColor: isDark ? COLORS.DARK.BG_HOVER : COLORS.LIGHT.BG_HOVER
+        },
+        '&.Mui-selected': {
+            backgroundColor: `${isDark ? COLORS.DARK.BG : COLORS.LIGHT.BG} !important`
+        },
+        '&.Mui-selected:hover': {
+            backgroundColor: `${isDark ? COLORS.DARK.BG_HOVER : COLORS.LIGHT.BG_HOVER} !important`
+        }
+    }), []);
+
+    const getCheckboxStyles = useMemo(() => (isDark) => ({
+        color: isDark ? COLORS.DARK.CHECKBOX : COLORS.LIGHT.CHECKBOX,
+        '&.Mui-checked': {
+            color: isDark ? COLORS.DARK.CHECKBOX_CHECKED : COLORS.LIGHT.CHECKBOX_CHECKED
+        }
+    }), []);
+
     const handleExport = useCallback(
         createHandleExport(
             users,
@@ -91,11 +211,6 @@ export default function PlanAction({ accidentData }) {
             logAction
         ),
         [users, isAdminOrDev, userInfo, selectedYears, selectedEnterprises, searchTerm, showSnackbar, logAction]
-    );
-
-    const updateUserSelectedYears = useCallback(
-        createUpdateUserSelectedYears(apiUrl, showSnackbar)(userInfo, setSelectedYears),
-        [apiUrl, showSnackbar, userInfo]
     );
 
     const getFilteredUsers = useMemo(() => createFilteredUsers(), []);
@@ -132,13 +247,6 @@ export default function PlanAction({ accidentData }) {
         }
     };
 
-    /**
-     * Ferme la snackbar si l'utilisateur clique sur le bouton "Fermer" ou en dehors de la snackbar.
-     * Si l'utilisateur clique sur la snackbar elle-même (et non sur le bouton "Fermer"), la snackbar ne se ferme pas.
-     * 
-     * @param {object} event - L'événement qui a déclenché la fermeture de la snackbar.
-     * @param {string} reason - La raison pour laquelle la snackbar se ferme. Si elle vaut 'clickaway', cela signifie que l'utilisateur a cliqué en dehors de la snackbar.
-     */
     const handleCloseSnackbar = useCallback((event, reason) => {
         if (reason === 'clickaway') return;
         setSnackbar(prev => ({ ...prev, open: false }));
@@ -155,7 +263,6 @@ export default function PlanAction({ accidentData }) {
         }
     }), []);
 
-    // Fonction pour obtenir la couleur de la ligne
     const getRowColor = useCallback((isChecked, index) => {
         const theme = darkMode ? 'dark' : 'light';
         if (isChecked) {
@@ -167,17 +274,12 @@ export default function PlanAction({ accidentData }) {
     const checkboxStyle = useMemo(
         () => ({
             '&.Mui-checked': {
-                color: darkMode ? '#70f775' : '#2e7d32', // Couleur de la checkbox cochée
+                color: darkMode ? '#70f775' : '#2e7d32',
             },
         }),
         [darkMode]
     );
 
-    /**
-        * Formatte une date en string au format jj-mm-aaaa
-        * @param {string} dateString - La date à formatter
-        * @returns {string} La date formatée
-        */
     const formatDate = (dateString) => {
         if (!dateString) return '';
         const date = new Date(dateString);
@@ -194,7 +296,6 @@ export default function PlanAction({ accidentData }) {
                 showSnackbar('Erreur : Action non trouvée', 'error');
                 return;
             }
-
             await logAction({
                 actionType: 'consultation',
                 details: `Consultation de l'action - Action: ${actionToEdit.AddAction} Risque: ${actionToEdit.AddActionDange.join(', ')} - Entreprise: ${actionToEdit.AddActionEntreprise} - Année: ${actionToEdit.AddActionanne}`,
@@ -244,7 +345,7 @@ export default function PlanAction({ accidentData }) {
             setAvailableYears(years);
         }
     }, [users]);
-    // Modifiez d'abord les useEffects pour la gestion des années disponibles et sélectionnées
+
     useEffect(() => {
         if (!users?.length) return;
 
@@ -254,23 +355,15 @@ export default function PlanAction({ accidentData }) {
                 : users.filter(action =>
                     userInfo?.entreprisesConseillerPrevention?.includes(action.AddActionEntreprise)
                 );
-
             return [...new Set(filteredActions.map(action => action.AddActionanne))]
                 .filter(Boolean)
                 .sort();
         };
-
         const availableYrs = getAvailableYearsForUser();
         setAvailableYears(availableYrs);
-
-        // Récupérer les années sauvegardées
         const token = JSON.parse(localStorage.getItem('token'));
         const savedYears = token?.data?.selectedYears || [];
-
-        // Filtrer les années valides
         const validYears = savedYears.filter(year => availableYrs.includes(year));
-
-        // Mettre à jour les années sélectionnées si elles diffèrent
         setSelectedYears(prevSelected =>
             JSON.stringify(prevSelected) !== JSON.stringify(validYears) ? validYears : prevSelected
         );
@@ -283,12 +376,9 @@ export default function PlanAction({ accidentData }) {
                 showSnackbar('Erreur : Action non trouvée', 'error');
                 return;
             }
-
             const response = await axios.delete(`http://${apiUrl}:3100/api/planaction/${userIdToDelete}`);
-
             if (response.status === 204 || response.status === 200) {
-                fetchData(); // Utiliser fetchData au lieu de setAddactions
-
+                fetchData();
                 await logAction({
                     actionType: 'suppression',
                     details: `Suppression de l'action - Action: ${actionToDelete.AddAction} - Entreprise: ${actionToDelete.AddActionEntreprise} - Année: ${actionToDelete.AddActionanne}`,
@@ -333,13 +423,6 @@ export default function PlanAction({ accidentData }) {
         return parseInt(a.AddActionanne) - parseInt(b.AddActionanne);
     }, []);
 
-    //format d'affichage AddActionDange
-    /**
-     * Formatte une chaîne de catégories de dangers pour en faire une chaîne lisible.
-     * Exemple : "DangerChuteDeHauteur" devient "Danger chute de hauteur"
-     * @param {string|undefined} dangers - La chaîne de catégories de dangers à formatter
-     * @returns {string} - La chaîne formatée
-     */
     const formatDangerCategories = (dangers) => {
         try {
             if (!dangers) return '';
@@ -399,26 +482,10 @@ export default function PlanAction({ accidentData }) {
                 <EnterpriseStats actions={filteredUsers.filter(action => canViewAction(action))} />
                 <Box style={{ display: 'flex', justifyContent: 'center', margin: '20px 0rem' }}>
                     {(isAdminOrDev) ? (
-                        <Grid item xs={6}>
+                        <Grid item xs={6} sx={{ pr: ITEM_MARGIN }}>
                             <Tooltip title="Filtrer par entreprise" arrow>
-                                <FormControl sx={{
-                                    boxShadow: darkMode ? '0 3px 6px rgba(255,255,255,0.1)' : 3,
-                                    width: '250px',
-                                    backgroundColor: darkMode ? '#424242' : '#ee752d60',
-                                    border: darkMode ? '1px solid rgba(255,255,255,0.1)' : 'none',
-                                    '& .MuiInputLabel-root': {
-                                        color: darkMode ? '#fff' : 'inherit'
-                                    },
-                                    '& .MuiSelect-select': {
-                                        color: darkMode ? '#fff' : 'inherit'
-                                    },
-                                    '& .MuiOutlinedInput-notchedOutline': {
-                                        borderColor: darkMode ? 'rgba(255,255,255,0.3)' : 'rgba(0,0,0,0.23)'
-                                    },
-                                    '&:hover .MuiOutlinedInput-notchedOutline': {
-                                        borderColor: darkMode ? 'rgba(255,255,255,0.5)' : 'rgba(0,0,0,0.5)'
-                                    }
-                                }}>
+                                <FormControl
+                                    sx={getFormControlStyles(darkMode)}>
                                     <InputLabel id="enterprise-select-label">Filtrer par entreprise(s)</InputLabel>
                                     <Select
                                         labelId="enterprise-select-label"
@@ -432,8 +499,6 @@ export default function PlanAction({ accidentData }) {
                                                     userInfo?.entreprisesConseillerPrevention?.includes(enterprise.label)
                                                 )
                                                 .map(enterprise => enterprise.label);
-
-                                            // Si on clique sur une entreprise individuelle
                                             if (Array.isArray(value)) {
                                                 handleEnterpriseChange(event);
                                             }
@@ -465,13 +530,7 @@ export default function PlanAction({ accidentData }) {
                                     >
                                         <MenuItem
                                             value=""
-                                            sx={{
-                                                backgroundColor: darkMode ? '#424242' : '#ee742d59',
-                                                color: darkMode ? '#fff' : 'inherit',
-                                                '&:hover': {
-                                                    backgroundColor: darkMode ? '#505050' : '#ee742d80'
-                                                }
-                                            }}
+                                            sx={getMenuItemStyles(darkMode)}
                                         >
                                             <Checkbox
                                                 checked={selectedEnterprises?.length === enterprises.filter(enterprise =>
@@ -497,16 +556,11 @@ export default function PlanAction({ accidentData }) {
                                                         }
                                                     });
                                                 }}
-                                                sx={{
-                                                    color: darkMode ? '#ff6b6b' : 'red',
-                                                    '&.Mui-checked': {
-                                                        color: darkMode ? '#ff8080' : 'red'
-                                                    }
-                                                }}
+                                                sx={getCheckboxStyles(darkMode)}
                                             />
                                             <ListItemText
                                                 primary="Toutes les entreprises"
-                                                sx={{ color: darkMode ? '#fff' : 'inherit' }}
+                                                sx={{ color: darkMode ? COLORS.DARK.TEXT : COLORS.LIGHT.TEXT }}
                                             />
                                         </MenuItem>
                                         {enterprises
@@ -518,26 +572,15 @@ export default function PlanAction({ accidentData }) {
                                                 <MenuItem
                                                     key={enterprise.label}
                                                     value={enterprise.label}
-                                                    sx={{
-                                                        backgroundColor: darkMode ? '#424242' : '#ee742d59',
-                                                        color: darkMode ? '#fff' : 'inherit',
-                                                        '&:hover': {
-                                                            backgroundColor: darkMode ? '#505050' : '#ee742d80'
-                                                        }
-                                                    }}
+                                                    sx={getMenuItemStyles(darkMode)}
                                                 >
                                                     <Checkbox
                                                         checked={selectedEnterprises?.includes(enterprise.label)}
-                                                        sx={{
-                                                            color: darkMode ? '#4CAF50' : '#257525',
-                                                            '&.Mui-checked': {
-                                                                color: darkMode ? '#81C784' : '#257525'
-                                                            }
-                                                        }}
+                                                        sx={getCheckboxStyles(darkMode)}
                                                     />
                                                     <ListItemText
                                                         primary={enterprise.label}
-                                                        sx={{ color: darkMode ? '#fff' : 'inherit' }}
+                                                        sx={{ color: darkMode ? COLORS.DARK.TEXT : COLORS.LIGHT.TEXT }}
                                                     />
                                                 </MenuItem>
                                             ))}
@@ -546,26 +589,10 @@ export default function PlanAction({ accidentData }) {
                             </Tooltip>
                         </Grid>
                     ) : null}
-                    <Grid item xs={6} style={{ marginRight: '20px' }}>
+                    <Grid item xs={6} sx={{ pr: ITEM_MARGIN }}>
                         <Tooltip title="Cliquez ici pour actualiser le tableau des actions" arrow>
                             <Button
-                                sx={{
-                                    marginLeft: '20px',
-                                    color: darkMode ? '#ffffff' : 'black',
-                                    padding: '15px 60px',
-                                    backgroundColor: darkMode ? '#424242' : '#ee742d59',
-                                    transition: 'all 0.1s ease-in-out',
-                                    '&:hover': {
-                                        backgroundColor: darkMode ? '#7a8e1c' : '#95ad22',
-                                        transform: 'scale(1.08)',
-                                        boxShadow: darkMode ? '0 6px 12px rgba(255,255,255,0.2)' : 6
-                                    },
-                                    boxShadow: darkMode ? '0 3px 6px rgba(255,255,255,0.1)' : 3,
-                                    textTransform: 'none',
-                                    '& .MuiSvgIcon-root': {
-                                        color: darkMode ? '#fff' : 'inherit'
-                                    }
-                                }}
+                                sx={getButtonStyles(darkMode)}
                                 variant="contained"
                                 color="secondary"
                                 onClick={refreshListActions}
@@ -575,27 +602,10 @@ export default function PlanAction({ accidentData }) {
                             </Button>
                         </Tooltip>
                     </Grid>
-
-                    <Grid item xs={6} style={{ marginRight: '20px' }}>
+                    <Grid item xs={6} sx={{ pr: ITEM_MARGIN }}>
                         <Tooltip title="Filtrer par année" arrow>
-                            <FormControl sx={{
-                                boxShadow: darkMode ? '0 3px 6px rgba(255,255,255,0.1)' : 3,
-                                width: '200px',
-                                backgroundColor: darkMode ? '#424242' : '#ee752d60',
-                                border: darkMode ? '1px solid rgba(255,255,255,0.1)' : 'none',
-                                '& .MuiInputLabel-root': {
-                                    color: darkMode ? '#fff' : 'inherit'
-                                },
-                                '& .MuiSelect-select': {
-                                    color: darkMode ? '#fff' : 'inherit'
-                                },
-                                '& .MuiOutlinedInput-notchedOutline': {
-                                    borderColor: darkMode ? 'rgba(255,255,255,0.3)' : 'rgba(0,0,0,0.23)'
-                                },
-                                '&:hover .MuiOutlinedInput-notchedOutline': {
-                                    borderColor: darkMode ? 'rgba(255,255,255,0.5)' : 'rgba(0,0,0,0.5)'
-                                }
-                            }}>
+                            <FormControl
+                                sx={getFormControlStyles(darkMode)}>
                                 <InputLabel id="years-select-label" sx={{ color: darkMode ? '#fff' : 'inherit' }}>
                                     Année
                                 </InputLabel>
@@ -609,65 +619,31 @@ export default function PlanAction({ accidentData }) {
                                 >
                                     <MenuItem
                                         value="all"
-                                        sx={{
-                                            backgroundColor: darkMode ? '#424242' : '#ee742d59',
-                                            color: darkMode ? '#fff' : 'inherit',
-                                            '&:hover': {
-                                                backgroundColor: darkMode ? '#505050' : '#ee742d80'
-                                            },
-                                            '&.Mui-selected': {
-                                                backgroundColor: darkMode ? '#424242 !important' : '#ee742d59 !important'
-                                            },
-                                            '&.Mui-selected:hover': {
-                                                backgroundColor: darkMode ? '#505050 !important' : '#ee742d80 !important'
-                                            }
-                                        }}
+                                        sx={getMenuItemStyles(darkMode)}
                                     >
                                         <Checkbox
                                             checked={selectedYears.length === availableYears.length}
                                             indeterminate={selectedYears.length > 0 && selectedYears.length < availableYears.length}
-                                            sx={{
-                                                color: darkMode ? '#ff6b6b' : 'red',
-                                                '&.Mui-checked': {
-                                                    color: darkMode ? '#ff8080' : 'red'
-                                                }
-                                            }}
+                                            sx={getCheckboxStyles(darkMode)}
                                         />
                                         <ListItemText
                                             primary="Tout sélectionner"
-                                            sx={{ color: darkMode ? '#fff' : 'inherit' }}
+                                            sx={{ color: darkMode ? COLORS.DARK.TEXT : COLORS.LIGHT.TEXT }}
                                         />
                                     </MenuItem>
                                     {availableYears.map((year) => (
                                         <MenuItem
                                             key={year}
                                             value={year}
-                                            sx={{
-                                                backgroundColor: darkMode ? '#424242' : '#ee742d59',
-                                                color: darkMode ? '#fff' : 'inherit',
-                                                '&:hover': {
-                                                    backgroundColor: darkMode ? '#505050' : '#ee742d80'
-                                                },
-                                                '&.Mui-selected': {
-                                                    backgroundColor: darkMode ? '#424242 !important' : '#ee742d59 !important'
-                                                },
-                                                '&.Mui-selected:hover': {
-                                                    backgroundColor: darkMode ? '#505050 !important' : '#ee742d80 !important'
-                                                }
-                                            }}
+                                            sx={getMenuItemStyles(darkMode)}
                                         >
                                             <Checkbox
                                                 checked={selectedYears.includes(year)}
-                                                sx={{
-                                                    color: darkMode ? '#4CAF50' : '#257525',
-                                                    '&.Mui-checked': {
-                                                        color: darkMode ? '#81C784' : '#257525'
-                                                    }
-                                                }}
+                                                sx={getCheckboxStyles(darkMode)}
                                             />
                                             <ListItemText
                                                 primary={year}
-                                                sx={{ color: darkMode ? '#fff' : 'inherit' }}
+                                                sx={{ color: darkMode ? COLORS.DARK.TEXT : COLORS.LIGHT.TEXT }}
                                             />
                                         </MenuItem>
                                     ))}
@@ -675,8 +651,7 @@ export default function PlanAction({ accidentData }) {
                             </FormControl>
                         </Tooltip>
                     </Grid>
-
-                    <Grid item xs={6} style={{ marginRight: '20px' }}>
+                    <Grid item xs={6} sx={{ pr: ITEM_MARGIN }}>
                         <Tooltip title="Filtrer les actions par mots clés" arrow>
                             <TextField
                                 variant="outlined"
@@ -708,27 +683,10 @@ export default function PlanAction({ accidentData }) {
                             />
                         </Tooltip>
                     </Grid>
-
-                    <Grid item xs={6} style={{ marginRight: '20px' }}>
+                    <Grid item xs={6} sx={{ pr: ITEM_MARGIN }}>
                         <Tooltip title="Cliquez ici pour exporter les données du plan d'action, en excel, en fonction des filtres sélèctionnés " arrow>
                             <Button
-                                sx={{
-                                    marginRight: '20px',
-                                    color: darkMode ? '#ffffff' : 'black',
-                                    padding: '15px 60px',
-                                    backgroundColor: darkMode ? '#424242' : '#ee742d59',
-                                    transition: 'all 0.1s ease-in-out',
-                                    '&:hover': {
-                                        backgroundColor: darkMode ? '#7a8e1c' : '#95ad22',
-                                        transform: 'scale(1.08)',
-                                        boxShadow: darkMode ? '0 6px 12px rgba(255,255,255,0.2)' : 6
-                                    },
-                                    boxShadow: darkMode ? '0 3px 6px rgba(255,255,255,0.1)' : 3,
-                                    textTransform: 'none',
-                                    '& .MuiSvgIcon-root': {
-                                        color: darkMode ? '#fff' : 'inherit'
-                                    }
-                                }}
+                                sx={getButtonStyles(darkMode)}
                                 variant="contained"
                                 color="primary"
                                 onClick={() => handleExport()}
@@ -862,7 +820,6 @@ export default function PlanAction({ accidentData }) {
                                                     </Button>
                                                 </Tooltip>
                                             </TableCell>
-
                                             <TableCell style={{ padding: 0, width: '70px' }}>
                                                 <Tooltip title="Cliquez ici pour ajouter des fichiers a l'action" arrow>
                                                     <Button sx={{
@@ -891,7 +848,6 @@ export default function PlanAction({ accidentData }) {
                                                     </Button>
                                                 </Tooltip>
                                             </TableCell>
-
                                             <TableCell style={{ padding: 0, width: '70px' }}>
                                                 <Tooltip title="Cliquez ici pour supprimer l'action" arrow>
                                                     <Button sx={{
@@ -960,7 +916,6 @@ export default function PlanAction({ accidentData }) {
                                 ))}
                         </TableBody>
                     </Table>
-
                 </TableContainer>
                 <CustomSnackbar
                     open={snackbar.open}

@@ -51,36 +51,22 @@ const getAccidentDetails = async (accidentId) => {
     }
 };
 
-/**
- * Page de téléchargement de fichier
- * 
- * @param {int} accidentId Envoyer via state, id de l'accident pour lequel on veut télécharger un fichier
- * @returns affiche un formulaire pour télécharger un fichier
- */
 export default function PageDownloadFile() {
     const { darkMode } = useTheme();
     const accidentId = useLocation().state;
     const { logAction } = useLogger(); // Ajout du hook useLogger
-    /** Fonction pour envoyer un fichier vers le serveur 
-     * 
-     * @param {*} file Fichier à envoyer
-     * @param {string} name Nom du fichier
-     */
     const handleFileUpload = async (file, name) => {
         if (!accidentId || !file) return;
 
         try {
-            // Récupérer les détails de l'accident
             const accidentDetails = await getAccidentDetails(accidentId);
             const dataFile = new FormData();
             dataFile.append('file', file, name);
-
             const response = await axios.post(`http://${apiUrl}:3100/api/stockFile/${accidentId}`, dataFile, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }
             });
-
             await logAction({
                 actionType: 'import',
                 details: `Upload de fichier - Nom: ${name} - Taille: ${(file.size / 1024).toFixed(2)}KB - Type: ${file.type} - Travailleur: ${accidentDetails?.nomTravailleur} ${accidentDetails?.prenomTravailleur} - Date accident: ${accidentDetails?.dateAccident}`,
@@ -88,34 +74,16 @@ export default function PageDownloadFile() {
                 entityId: response.data._id || null,
                 entreprise: accidentDetails?.entreprise || null
             });
-
             window.location.reload();
         } catch (error) {
             console.error('Erreur lors de l\'envoi d\'un fichier :', error);
         }
     };
 
-    /** Fonction pour afficher la boîte de dialogue personnalisée pour entrer le nom du fichier
-     * 
-     * @param {*} file Fichier à envoyer
-     */
     const promptForFileName = (file) => {
         confirmAlert({
-            /**
-             * Boîte de dialogue personnalisée pour demander le nom du fichier à uploader
-             * 
-             * @param {{ onClose: () => void }} props - Fonction pour fermer la boîte de dialogue
-             * @returns Un JSX Element qui contient la boîte de dialogue personnalisée
-             * 
-             * La boîte de dialogue contient un champ de saisie pour renommer le fichier
-             * et deux boutons : "Envoyer" et "Annuler".
-             * Lorsque le bouton "Envoyer" est cliqué, la fonction handleFileUpload est appelée
-             * avec le fichier à envoyer et le nom du fichier renommé.
-             * Lorsque le bouton "Annuler" est cliqué, la fonction onClose est appelée pour fermer la boîte de dialogue.
-             */
             customUI: ({ onClose }) => {
                 let fileName = file.name;
-
                 return (
                     <div className="custom-confirm-dialog" style={{ textAlign: 'center' }}>
                         <h1 className="custom-confirm-title">Renommer le fichier</h1>
@@ -126,13 +94,13 @@ export default function PageDownloadFile() {
                             onChange={(e) => { fileName = e.target.value; }}
                             className="custom-confirm-input"
                             style={{
-                                border: '2px solid #0098f9', // Encadre l'input avec une bordure bleue
+                                border: '2px solid #0098f9',
                                 padding: '10px',
                                 borderRadius: '5px',
                                 fontSize: '16px',
-                                width: '60%', // Prend toute la largeur du conteneur
-                                backgroundColor: '#f0f8ff', // Donne un fond léger et contrastant
-                                color: 'black', // Texte en noir
+                                width: '60%',
+                                backgroundColor: '#f0f8ff',
+                                color: 'black',
                             }}
                         />
                         <div className="custom-confirm-buttons">
@@ -184,7 +152,7 @@ export default function PageDownloadFile() {
                         {
                             name: 'offset',
                             options: {
-                                offset: [0, -100], // Ajustez cet offset pour centrer verticalement
+                                offset: [0, -100],
                             },
                         },
                     ],

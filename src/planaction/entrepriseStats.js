@@ -3,6 +3,23 @@ import { useTheme } from '../pageAdmin/user/ThemeContext';
 import { Grid, Card, CardContent, Typography } from '@mui/material';
 import listeaddaction from '../liste/listeaddaction.json';
 
+const DARK_MODE_COLORS = {
+    100: '#50A150',
+    75: '#7A9E7A', 
+    50: '#BFA980',
+    25: '#B67F7F',
+    0: '#B68080'
+  };
+  
+  const LIGHT_MODE_COLORS = {
+    100: '#90EE90',
+    75: '#B7E4B7',
+    50: '#FFE4B5',
+    25: '#FFB6B6',
+    0: '#FFCCCB'  
+  };
+
+
 const EnterpriseStats = React.memo(({ actions }) => {
     const { darkMode } = useTheme();
 
@@ -41,29 +58,26 @@ const EnterpriseStats = React.memo(({ actions }) => {
 
     const getCardStyle = useMemo(() => (completed, total) => {
         const completionRate = (completed / total) * 100;
-        const getColorByCompletion = (rate) => {
-            if (darkMode) {
-                if (rate === 100) return '#50A150';
-                if (rate >= 75) return '#7A9E7A';
-                if (rate >= 50) return '#BFA980';
-                if (rate >= 25) return '#B67F7F';
-                return '#B68080';
-            } else {
-                if (rate === 100) return '#90EE90';
-                if (rate >= 75) return '#B7E4B7';
-                if (rate >= 50) return '#FFE4B5';
-                if (rate >= 25) return '#FFB6B6';
-                return '#FFCCCB';
-            }
-        };
-
+        
+        // Get color threshold
+        const threshold = 
+          completionRate === 100 ? 100 :
+          completionRate >= 75 ? 75 :
+          completionRate >= 50 ? 50 :
+          completionRate >= 25 ? 25 : 0;
+    
+        // Get color from lookup table
+        const backgroundColor = darkMode 
+          ? DARK_MODE_COLORS[threshold]
+          : LIGHT_MODE_COLORS[threshold];
+    
         return {
-            backgroundColor: getColorByCompletion(completionRate),
+            backgroundColor,
             color: darkMode ? '#ffffff' : 'inherit',
             boxShadow: darkMode ? '0 4px 8px 0 rgba(0,0,0,0.2)' : 3,
             transition: 'all 0.1s ease-in-out',
             '&:hover': {
-                transform: 'scale(1.02)',
+                transform: 'scale(1.02)', 
                 boxShadow: darkMode ? '0 8px 16px 0 rgba(0,0,0,0.3)' : 6,
             }
         };
