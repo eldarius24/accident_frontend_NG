@@ -4,9 +4,10 @@ import { useLocation } from 'react-router-dom';
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import listFilesInaction from './actionFilesAction';
-import { Tooltip } from '@mui/material';
+import { Tooltip, Box, Typography} from '@mui/material';
 import { useLogger } from '../../Hook/useLogger';
 import config from '../../config.json';
+import { useTheme } from '../../pageAdmin/user/ThemeContext';
 
 const apiUrl = config.apiUrl;
 const dropZoneStyle = {
@@ -56,6 +57,7 @@ const getactionDiversDetails = async (actionId) => {
  * @returns affiche un formulaire pour télécharger un fichier
  */
 export default function PageDownloadFile() {
+    const { darkMode } = useTheme();
     const actionId = useLocation().state;
     const { logAction } = useLogger(); // Ajout du hook useLogger
     /** Fonction pour envoyer un fichier vers le serveur 

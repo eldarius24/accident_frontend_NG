@@ -131,15 +131,9 @@ const LogsViewer = () => {
     });
   }, []);
 
-  // useEffect hook to apply filters whenever filterLogsWithState function changes
   useEffect(() => {
-    /**
-     * Applies the current filters to the logs.
-     * The filterLogsWithState function is used to filter logs based on
-     * the current state of search term, selected date, and log type.
-     */
-    filterLogsWithState();
-  }, [filterLogsWithState]);
+    fetchLogsWithState();
+  }, [selectedDate, selectedType, page]);
 
   /**
    * Réinitialise les paramètres de filtrage des logs.

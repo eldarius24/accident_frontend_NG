@@ -270,7 +270,7 @@ function ResponsiveAppBar() {
           justifyContent: 'flex-end',
           mr: 0 // Marge droite à 0
         }}>
-          {!['/messSupport','/logView', '/adminUser', '/addEntreprise', '/adminEntreprises','/addUser','/adminaction','/formulaireAction','/planAction','/','/entreprise','/Accident', '/login','/statistiques'].includes(location.pathname) &&
+          {!['/fichierdll','/actionfichierdll','/messSupport','/logView', '/adminUser', '/addEntreprise', '/adminEntreprises','/addUser','/adminaction','/formulaireAction','/planAction','/','/entreprise','/Accident', '/login','/statistiques'].includes(location.pathname) &&
             renderButton("/Accident", "Cliquez ici pour revenir aux accidents", <ViewListIcon />, "Accidents")}
 
           {!['/', '/login',].includes(location.pathname) &&
