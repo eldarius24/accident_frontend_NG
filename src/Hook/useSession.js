@@ -10,8 +10,7 @@ export const useSession = () => {
     const hasSession = sessionStorage.getItem(SESSION_KEY);
 
     // Uniquement pour une nouvelle session de navigateur
-    if (!hasSession) {
-      console.log('Nouvelle session de navigateur détectée');
+    if (!hasSession) {k
       sessionStorage.setItem(SESSION_KEY, 'true');
 
       if (token) {

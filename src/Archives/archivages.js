@@ -21,7 +21,6 @@ const onRestaurer = async (id, type, onSuccess) => {
     }
 
     await axios.post(`http://${apiUrl}:3100/api/archives/${id}/restore`);
-    console.log("Archive restaurée avec succès");
     
     // Appeler la fonction de rappel si elle existe
     if (onSuccess) {

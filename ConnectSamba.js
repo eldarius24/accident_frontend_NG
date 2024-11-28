@@ -11,8 +11,6 @@ try {
     client.readdir('', (err, files) => {
         if (err) {
             console.error('Erreur lors de la lecture du répertoire :', err);
-        } else {
-            console.log('Fichiers :', files);
         }
     });
 } catch (error) {

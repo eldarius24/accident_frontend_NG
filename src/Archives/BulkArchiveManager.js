@@ -162,12 +162,6 @@ const BulkArchiveManager = ({ darkMode, onSuccess }) => {
                 let successCount = 0;
                 for (const item of itemsToRestore) {
                     try {
-                        console.log('Tentative de restauration pour:', {
-                            id: item._id,
-                            type: type,
-                            donnees: item.donnees
-                        });
-
                         const response = await axios.post(
                             `http://${apiUrl}:3100/api/archives/${item._id}/restore`,
                             {
@@ -185,7 +179,6 @@ const BulkArchiveManager = ({ darkMode, onSuccess }) => {
                         }
 
                         successCount++;
-                        console.log(`Item ${item._id} restauré avec succès`);
                     } catch (restoreError) {
                         console.error(`Erreur détaillée pour l'item ${item._id}:`, {
                             message: restoreError.message,
@@ -328,101 +321,101 @@ const BulkArchiveManager = ({ darkMode, onSuccess }) => {
                         >Actions</MenuItem>
                     </Select>
                 </FormControl>
-                    <Box sx={{
-                        display: 'flex',
-                        gap: 2,
-                        alignItems: 'center',
-                        flexWrap: 'wrap',
-                        justifyContent: 'center'
-                    }}>
-                        <FormControl sx={{
-                            boxShadow: darkMode ? '0 3px 6px rgba(255,255,255,0.1)' : 3,
-                            minWidth: 220,
-                            backgroundColor: darkMode ? '#424242' : '#ee752d60',
-                            '& .MuiInputLabel-root': {
-                                color: darkMode ? '#fff' : 'inherit'
+                <Box sx={{
+                    display: 'flex',
+                    gap: 2,
+                    alignItems: 'center',
+                    flexWrap: 'wrap',
+                    justifyContent: 'center'
+                }}>
+                    <FormControl sx={{
+                        boxShadow: darkMode ? '0 3px 6px rgba(255,255,255,0.1)' : 3,
+                        minWidth: 220,
+                        backgroundColor: darkMode ? '#424242' : '#ee752d60',
+                        '& .MuiInputLabel-root': {
+                            color: darkMode ? '#fff' : 'inherit'
+                        },
+                        '& .MuiOutlinedInput-root': {
+                            color: darkMode ? '#fff' : 'inherit',
+                            '& fieldset': {
+                                borderColor: darkMode ? 'rgba(255,255,255,0.3)' : 'rgba(0,0,0,0.23)'
                             },
-                            '& .MuiOutlinedInput-root': {
-                                color: darkMode ? '#fff' : 'inherit',
-                                '& fieldset': {
-                                    borderColor: darkMode ? 'rgba(255,255,255,0.3)' : 'rgba(0,0,0,0.23)'
-                                },
-                                '&:hover fieldset': {
-                                    borderColor: darkMode ? 'rgba(255,255,255,0.5)' : 'rgba(0,0,0,0.5)'
-                                }
+                            '&:hover fieldset': {
+                                borderColor: darkMode ? 'rgba(255,255,255,0.5)' : 'rgba(0,0,0,0.5)'
                             }
-                        }}>
-                            <InputLabel sx={{ color: darkMode ? '#fff' : 'inherit' }}>Année à archiver</InputLabel>
-                            <Select
-                                value={selectedYearArchive}
-                                onChange={(e) => setSelectedYearArchive(e.target.value)}
-                                label="Année à archiver"
-                                disabled={!type || availableYearsArchive.length === 0}
+                        }
+                    }}>
+                        <InputLabel sx={{ color: darkMode ? '#fff' : 'inherit' }}>Année à archiver</InputLabel>
+                        <Select
+                            value={selectedYearArchive}
+                            onChange={(e) => setSelectedYearArchive(e.target.value)}
+                            label="Année à archiver"
+                            disabled={!type || availableYearsArchive.length === 0}
+                            sx={{
+                                color: darkMode ? '#fff' : 'inherit',
+                                '& .MuiOutlinedInput-notchedOutline': {
+                                    borderColor: darkMode ? 'rgba(255,255,255,0.23)' : 'rgba(0,0,0,0.23)'
+                                }
+                            }}
+                        >
+                            {availableYearsArchive.map(year => (
+                                <MenuItem
+                                    key={year}
+                                    value={year.toString()}
+                                    sx={{
+                                        backgroundColor: darkMode ? '#424242' : '#ee742d59',
+                                        color: darkMode ? '#fff' : 'inherit',
+                                        '&:hover': {
+                                            backgroundColor: darkMode ? '#505050' : '#ee742d80'
+                                        },
+                                        '&.Mui-selected': {
+                                            backgroundColor: darkMode ? '#424242 !important' : '#ee742d59 !important'
+                                        },
+                                        '&.Mui-selected:hover': {
+                                            backgroundColor: darkMode ? '#505050 !important' : '#ee742d80 !important'
+                                        }
+                                    }}
+                                >{year}</MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
+
+                    <Tooltip title="Archiver tous les éléments de l'année sélectionnée">
+                        <span>
+                            <Button
+                                onClick={handleArchive}
+                                disabled={!type || !selectedYearArchive || loading}
+                                startIcon={<ArchiveIcon />}
                                 sx={{
-                                    color: darkMode ? '#fff' : 'inherit',
-                                    '& .MuiOutlinedInput-notchedOutline': {
-                                        borderColor: darkMode ? 'rgba(255,255,255,0.23)' : 'rgba(0,0,0,0.23)'
+                                    ...defaultStyle,
+                                    color: darkMode ? '#ffffff !important' : 'black',
+                                    backgroundColor: darkMode ? '#424242' : '#ee742d59',
+                                    transition: 'all 0.1s ease-in-out',
+                                    '&:hover': {
+                                        backgroundColor: darkMode ? '#7a8e1c' : '#95ad22',
+                                        transform: 'scale(1.08)',
+                                        boxShadow: darkMode ? '0 6px 12px rgba(255,255,255,0.2)' : 6
+                                    },
+                                    '&.Mui-disabled': {
+                                        color: darkMode ? '#ffffff81 !important' : 'rgba(0, 0, 0, 0.26)',
+                                        '& .MuiSvgIcon-root': {
+                                            color: darkMode ? '#ffffff81 !important' : 'rgba(0, 0, 0, 0.26)'
+                                        }
+                                    },
+                                    boxShadow: darkMode ? '0 3px 6px rgba(255,255,255,0.1)' : 3,
+                                    textTransform: 'none',
+                                    border: darkMode ? '1px solid rgba(255,255,255,0.1)' : 'none',
+                                    '& .MuiSvgIcon-root': {
+                                        color: darkMode ? '#ffffff' : 'inherit'
                                     }
                                 }}
                             >
-                                {availableYearsArchive.map(year => (
-                                    <MenuItem
-                                        key={year}
-                                        value={year.toString()}
-                                        sx={{
-                                            backgroundColor: darkMode ? '#424242' : '#ee742d59',
-                                            color: darkMode ? '#fff' : 'inherit',
-                                            '&:hover': {
-                                                backgroundColor: darkMode ? '#505050' : '#ee742d80'
-                                            },
-                                            '&.Mui-selected': {
-                                                backgroundColor: darkMode ? '#424242 !important' : '#ee742d59 !important'
-                                            },
-                                            '&.Mui-selected:hover': {
-                                                backgroundColor: darkMode ? '#505050 !important' : '#ee742d80 !important'
-                                            }
-                                        }}
-                                    >{year}</MenuItem>
-                                ))}
-                            </Select>
-                        </FormControl>
+                                Archiver l'année
+                            </Button>
+                        </span>
+                    </Tooltip>
+                </Box>
 
-                        <Tooltip title="Archiver tous les éléments de l'année sélectionnée">
-                            <span>
-                                <Button
-                                    onClick={handleArchive}
-                                    disabled={!type || !selectedYearArchive || loading}
-                                    startIcon={<ArchiveIcon />}
-                                    sx={{
-                                        ...defaultStyle,
-                                        color: darkMode ? '#ffffff !important' : 'black',
-                                        backgroundColor: darkMode ? '#424242' : '#ee742d59',
-                                        transition: 'all 0.1s ease-in-out',
-                                        '&:hover': {
-                                            backgroundColor: darkMode ? '#7a8e1c' : '#95ad22',
-                                            transform: 'scale(1.08)',
-                                            boxShadow: darkMode ? '0 6px 12px rgba(255,255,255,0.2)' : 6
-                                        },
-                                        '&.Mui-disabled': {
-                                            color: darkMode ? '#ffffff81 !important' : 'rgba(0, 0, 0, 0.26)',
-                                            '& .MuiSvgIcon-root': {
-                                                color: darkMode ? '#ffffff81 !important' : 'rgba(0, 0, 0, 0.26)'
-                                            }
-                                        },
-                                        boxShadow: darkMode ? '0 3px 6px rgba(255,255,255,0.1)' : 3,
-                                        textTransform: 'none',
-                                        border: darkMode ? '1px solid rgba(255,255,255,0.1)' : 'none',
-                                        '& .MuiSvgIcon-root': {
-                                            color: darkMode ? '#ffffff' : 'inherit'
-                                        }
-                                    }}
-                                >
-                                    Archiver l'année
-                                </Button>
-                            </span>
-                        </Tooltip>
-                    </Box>
-                
                 <Box>
 
                     <Box sx={{

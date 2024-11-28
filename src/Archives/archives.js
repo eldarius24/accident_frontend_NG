@@ -31,9 +31,6 @@ const Archivage = ({ darkMode }) => {
 
   const onArchiver = async (archiveData) => {
     try {
-      // Logique d'archivage ici
-      console.log("Archiver les données:", archiveData);
-      // Vous pouvez envoyer les données d'archivage au backend si nécessaire
     } catch (error) {
       console.error("Erreur lors de l'archivage:", error);
     }
@@ -41,9 +38,6 @@ const Archivage = ({ darkMode }) => {
 
   const onRestaurer = async (id) => {
     try {
-      // Logique pour restaurer une archive
-      console.log("Restaurer l'archive avec l'ID :", id);
-      // Vous pouvez envoyer une requête pour restaurer l'archive
     } catch (error) {
       console.error("Erreur lors de la restauration de l'archive:", error);
     }
@@ -54,11 +48,11 @@ const Archivage = ({ darkMode }) => {
       <h1>Gestion des Archives</h1>
 
       <SystemeArchivage
-        typeArchive="accident" // Passer le type d'archive ici
-        donnees={donneesArchivees} // Passer les données d'archive
-        onArchiver={onArchiver} // Passer la fonction d'archivage
-        onRestaurer={onRestaurer} // Passer la fonction de restauration
-        darkMode={darkMode} // Passer le mode sombre
+        typeArchive="accident" 
+        donnees={donneesArchivees} 
+        onArchiver={onArchiver} 
+        onRestaurer={onRestaurer} 
+        darkMode={darkMode} 
       />
     </div>
   );
