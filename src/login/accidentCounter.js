@@ -1,11 +1,30 @@
-import React, { useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Box, Typography, Paper } from '@mui/material';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import TrafficLightIcon from './TrafficLightIcon';
 
 const AccidentCounter = ({ days = 0, lastDate, darkMode }) => {
-    const { color, gradient, message } = useMemo(() => {
-        if (days <= 5) {
+    const [displayedDays, setDisplayedDays] = useState(0);
+    const INCREMENT_INTERVAL = 50;
+
+    useEffect(() => {
+        if (days > 0) {
+            let current = 0;
+            const interval = setInterval(() => {
+                if (current < days) {
+                    current += 1;
+                    setDisplayedDays(current);
+                } else {
+                    clearInterval(interval);
+                }
+            }, INCREMENT_INTERVAL);
+
+            return () => clearInterval(interval);
+        }
+    }, [days]);
+
+    const { color, gradient, message } = (() => {
+        if (displayedDays <= 5) {
             return {
                 color: '#ff0000',
                 gradient: 'linear-gradient(90deg, #ff0000, #ff3333)',
@@ -14,7 +33,7 @@ const AccidentCounter = ({ days = 0, lastDate, darkMode }) => {
                     text: ' La sécurité est notre priorité. Continuons ensemble à maintenir un environnement de travail sûr.'
                 }
             };
-        } else if (days <= 15) {
+        } else if (displayedDays <= 15) {
             return {
                 color: '#ff9800',
                 gradient: 'linear-gradient(90deg, #ff9800, #ffb74d)',
@@ -23,7 +42,7 @@ const AccidentCounter = ({ days = 0, lastDate, darkMode }) => {
                     text: ' La sécurité est notre priorité. Continuons ensemble à maintenir un environnement de travail sûr.'
                 }
             };
-        } else if (days <= 30) {
+        } else if (displayedDays <= 30) {
             return {
                 color: '#ffd700',
                 gradient: 'linear-gradient(90deg, #ffd700, #ffeb3b)',
@@ -42,7 +61,7 @@ const AccidentCounter = ({ days = 0, lastDate, darkMode }) => {
                 }
             };
         }
-    }, [days]);
+    })();
 
     return (
         <Paper
@@ -101,7 +120,6 @@ const AccidentCounter = ({ days = 0, lastDate, darkMode }) => {
                         }}
                     />
 
-                    {/* Nombre de jours */}
                     <Box
                         sx={{
                             display: 'flex',
@@ -122,7 +140,7 @@ const AccidentCounter = ({ days = 0, lastDate, darkMode }) => {
                                 transition: 'all 0.3s ease',
                             }}
                         >
-                            {days}
+                            {displayedDays}
                         </Typography>
                         <Typography
                             sx={{
@@ -136,7 +154,6 @@ const AccidentCounter = ({ days = 0, lastDate, darkMode }) => {
                         </Typography>
                     </Box>
 
-                    {/* Texte descriptif */}
                     <Typography
                         variant="h6"
                         sx={{
@@ -151,15 +168,7 @@ const AccidentCounter = ({ days = 0, lastDate, darkMode }) => {
                     </Typography>
                 </Box>
 
-                {/* Section information complémentaire */}
-                <Box
-                    sx={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        gap: '1rem'
-                    }}
-                >
-                    {/* Carte statistique */}
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                     <Box
                         sx={{
                             background: darkMode
@@ -225,7 +234,6 @@ const AccidentCounter = ({ days = 0, lastDate, darkMode }) => {
                         )}
                     </Box>
 
-                    {/* Zone de message */}
                     <Box
                         sx={{
                             background: `${color}15`,

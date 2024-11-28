@@ -2,14 +2,12 @@ import React from 'react';
 import { SvgIcon } from '@mui/material';
 
 const TrafficLightIcon = ({ color, ...props }) => {
-    // Determine active light based on color
     const isRed = color === '#ff0000';
     const isOrange = color === '#ff9800' || color === '#ffd700';
     const isGreen = color === '#4caf50';
 
     return (
         <SvgIcon {...props} viewBox="0 0 200 144" sx={{ fontSize: '144px' }}>
-            {/* Define the blinking animation */}
             <defs>
                 <radialGradient id="emergencyGlow" cx="0.5" cy="0.5" r="0.5">
                     <stop offset="0%" stopColor="#ff0000" stopOpacity="1"/>
@@ -21,7 +19,6 @@ const TrafficLightIcon = ({ color, ...props }) => {
                 </filter>
             </defs>
 
-            {/* Background rectangle */}
             <rect
                 x="64"
                 y="12"
@@ -33,10 +30,8 @@ const TrafficLightIcon = ({ color, ...props }) => {
                 strokeWidth="2"
             />
 
-            {/* Emergency lights - Only visible when red */}
             {isRed && (
                 <>
-                    {/* Left emergency light base */}
                     <rect
                         x="8"
                         y="12"
@@ -48,7 +43,6 @@ const TrafficLightIcon = ({ color, ...props }) => {
                         strokeWidth="1"
                     />
 
-                    {/* Right emergency light base */}
                     <rect
                         x="144"
                         y="12"
@@ -60,7 +54,6 @@ const TrafficLightIcon = ({ color, ...props }) => {
                         strokeWidth="1"
                     />
 
-                    {/* Left emergency light glow */}
                     <circle
                         cx="32"
                         cy="48"
@@ -75,7 +68,6 @@ const TrafficLightIcon = ({ color, ...props }) => {
                         />
                     </circle>
 
-                    {/* Right emergency light glow */}
                     <circle
                         cx="168"
                         cy="48"
@@ -91,7 +83,6 @@ const TrafficLightIcon = ({ color, ...props }) => {
                         />
                     </circle>
 
-                    {/* Left emergency light */}
                     <circle
                         cx="32"
                         cy="48"
@@ -105,7 +96,6 @@ const TrafficLightIcon = ({ color, ...props }) => {
                         />
                     </circle>
 
-                    {/* Right emergency light */}
                     <circle
                         cx="168"
                         cy="48"
@@ -122,7 +112,6 @@ const TrafficLightIcon = ({ color, ...props }) => {
                 </>
             )}
 
-            {/* Regular traffic lights */}
             <circle
                 cx="100"
                 cy="42"
