@@ -1,4 +1,4 @@
-import { COOKIE_PREFIXES, saveYearSelections } from '../Home/_actions/cookieUtils';
+import { COOKIE_PREFIXES, saveYearSelections } from '../Accidents/_actions/cookieUtils';
 
 // Ajout du mot-clé export devant la déclaration de la fonction
 const createUpdateUserSelectedYears = (apiUrl, showSnackbar) => (userInfo, setSelectedYears) => {

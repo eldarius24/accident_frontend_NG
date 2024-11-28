@@ -34,9 +34,9 @@ import {
     getSelectedYearsFromCookie,
     getSelectedStatusFromCookie
 } from './_actions/cookieUtils.js';
-import createFetchData from './_actions/fetch-accidents-data';
-import useYearFilter from '../Hook/useYearFilter';
-import Footer from '../_composants/Footer';
+import createFetchData from './_actions/fetch-accidents-data.js';
+import useYearFilter from '../Hook/useYearFilter.js';
+import Footer from '../_composants/Footer.jsx';
 
 const apiUrl = config.apiUrl;
 

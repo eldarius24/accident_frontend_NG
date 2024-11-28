@@ -17,7 +17,7 @@ import LinearProgress from '@mui/material/LinearProgress';
 import { Link } from 'react-router-dom';
 import CustomSnackbar from '../../_composants/CustomSnackbar';
 import { useTheme } from '../../pageAdmin/user/ThemeContext';
-import showDeleteConfirm from '../../pageFormulaire/FileManagement/showDeleteConfirm';
+import showDeleteConfirm from '../../Accidents/FileManagement/showDeleteConfirm';
 import getUsers from './_actions/get-users';
 import deleteUser from './_actions/delete-user';
 import { blueGrey } from '@mui/material/colors';

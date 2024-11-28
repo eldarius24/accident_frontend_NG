@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { 
     getSelectedYearsFromCookie,
     saveYearSelections
-} from '../Home/_actions/cookieUtils.js';
+} from '../Accidents/_actions/cookieUtils.js';
 
 const useYearFilter = (prefix, availableYears = []) => {
   const [selectedYears, setSelectedYears] = useState(() => {

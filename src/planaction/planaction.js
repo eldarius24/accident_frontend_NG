@@ -34,7 +34,7 @@ import {
     COOKIE_PREFIXES,
     getSelectedEnterpriseFromCookie,
     saveEnterpriseSelection
-} from '../Home/_actions/cookieUtils';
+} from '../Accidents/_actions/cookieUtils';
 import listeaddaction from '../liste/listeaddaction.json';
 import useYearFilter from '../Hook/useYearFilter';
 

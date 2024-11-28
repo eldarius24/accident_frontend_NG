@@ -1,4 +1,4 @@
-import { COOKIE_PREFIXES, saveEnterpriseSelection } from '../Home/_actions/cookieUtils';
+import { COOKIE_PREFIXES, saveEnterpriseSelection } from '../Accidents/_actions/cookieUtils';
 
 const createUpdateUserSelectedEnterprise = (showSnackbar) => (userInfo, setSelectedEnterprise) => {
     return (newValues) => {

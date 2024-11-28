@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Login from './login/Login';
-import Accidents from './Home/Accident';
+import Accidents from './Accidents/Accident';
 import Formulaire from './pageFormulaire/Formulaire';
 import Statistiques from './statistique/statistiques';
 import AdminPanelSettingsAction from './pageAdmin/AdminPanelSettingsaction';
@@ -13,7 +13,7 @@ import Deviation from './pageFormulaire/codeDeviation';
 import Agentmateriel from './pageFormulaire/codeAgentMateriel';
 import Naturelesion from './pageFormulaire/codeNatureLesion';
 import Siegelesion from './pageFormulaire/codeSiegeLesion';
-import Fichierdll from './pageFormulaire/FileManagement/fichierdll';
+import Fichierdll from './Accidents/FileManagement/fichierdll';
 import PlanAction from './planaction/planaction';
 import Actionfichierdll from './planaction/filesAction/actionfichierdll';
 import ProtectedRoute from './Model/protectedRoute';
@@ -23,7 +23,7 @@ import AddUser from './pageAdmin/user/addUser/AddUser';
 import ProtectedRouteAdminOrConseiller from './Model/protectedRouteConseillerPrevention'; // Importer le nouveau composant
 import FormulaireAction from './planaction/FormulaireAction';
 import { ThemeProvider } from './pageAdmin/user/ThemeContext'; // Importez ThemeProvider
-import LogView from './pageAdmin/logView';
+import LogView from './Logs/logView';
 import Entreprise from './entrepriseDivers/entreprise';
 import QuesEntrep from './entrepriseDivers/quesEntrep';
 import MessSupport from './Dialog/messSupport';
