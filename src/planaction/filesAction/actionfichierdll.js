@@ -232,7 +232,6 @@ export default function PageDownloadFile() {
                     </label>
                 </Tooltip>
             </div>
-            <Footer />
         </div>
     );
 }

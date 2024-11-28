@@ -1057,7 +1057,6 @@ const EnterpriseDivers = () => {
 
                 ))
             }
-            <Footer />
             <Modal
                 open={modalOpen}
                 onClose={handleCloseModal}

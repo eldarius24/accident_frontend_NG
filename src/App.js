@@ -30,7 +30,7 @@ import MessSupport from './Dialog/messSupport';
 import Archivage from './Archives/archivages';
 import Archives from './Archives/archives';
 import Home from './Home/Home';
-
+import Footer from './_composants/Footer';
 /**
  * App est le composant principal de l'application. Il contient les routes 
  * ainsi que la barre de navigation.
@@ -46,10 +46,12 @@ import Home from './Home/Home';
  */
 const App = () => {
   return (
+    <div className="app-container">
     <ThemeProvider>
       <Router>
-        <div>
+        <div className="content-wrapper">
           <ResponsiveAppBar />
+          <main className="main-content">
           <Routes>
             {/* Routes accessibles uniquement par usernormal */}
             <Route path="/" element={<ProtectedRoute><Home/></ProtectedRoute>} />
@@ -82,10 +84,13 @@ const App = () => {
             <Route path="/planAction" element={<ProtectedRouteAdminOrConseiller><PlanAction /></ProtectedRouteAdminOrConseiller>} />
             <Route path="/actionfichierdll" element={<ProtectedRouteAdminOrConseiller><Actionfichierdll /></ProtectedRouteAdminOrConseiller>} />
 
-          </Routes>
-        </div>
-      </Router>
-    </ThemeProvider>
+            </Routes>
+            </main>
+            <Footer />
+          </div>
+        </Router>
+      </ThemeProvider>
+    </div>
   );
 };
 

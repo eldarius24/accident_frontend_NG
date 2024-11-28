@@ -434,7 +434,6 @@ export default function FormulaireAction() {
                     severity={snackbar.severity}
                 />
             </div>
-            <Footer />
         </form>
     );
 }

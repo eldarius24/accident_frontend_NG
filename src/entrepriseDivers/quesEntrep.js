@@ -674,7 +674,6 @@ const QuesEntrep = () => {
                 message={formState.snackbar.message}
                 severity={formState.snackbar.severity}
             />
-             <Footer />
         </form>
     );
 };

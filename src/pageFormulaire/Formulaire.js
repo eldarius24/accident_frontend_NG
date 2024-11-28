@@ -278,7 +278,6 @@ export default function Formulaire() {
             />
 
             <h3 style={{ color: darkMode ? '#ffffff' : 'inherit' }}>Une fois les données enregistrées, vous pouvez les retrouver et les ré-éditer dans la base de données.</h3>
-            <Footer />
         </form>
     );
 }

@@ -923,7 +923,6 @@ export default function PlanAction({ accidentData }) {
                     message={snackbar.message}
                     severity={snackbar.severity}
                 />
-                 <Footer />
             </form >
         </div>
     );

@@ -7,6 +7,19 @@ const Footer = () => {
 
   return (
     <>
+    <Box
+      component="footer"
+      sx={{
+        width: '100%',
+        marginTop: 'auto', // Pousse le footer vers le bas
+        position: 'sticky',
+        bottom: 0,
+        backgroundColor: darkMode ? '#1a1a1a' : '#ffffff',
+        borderTop: `1px solid ${darkMode ? '#333' : '#eee'}`,
+      }}
+    >
+      
+    </Box>
       <div className="image-cortigroupe"></div>
       <Tooltip title="Développé par Remy et Benoit pour Le Cortigroupe." arrow>
         <h5 role="note" style={{ marginBottom: '40px', color: darkMode ? '#ffffff' : 'inherit' }}>

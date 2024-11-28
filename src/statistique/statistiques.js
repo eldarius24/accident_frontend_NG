@@ -1258,7 +1258,6 @@ const Statistiques = () => {
           )}
         </Paper>
       )}
-      <Footer />
     </div>
   );
 };

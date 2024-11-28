@@ -919,7 +919,6 @@ function Accident() {
                 message={snackbar.message}
                 severity={snackbar.severity}
             />
-            <Footer />
         </div>
     );
 }

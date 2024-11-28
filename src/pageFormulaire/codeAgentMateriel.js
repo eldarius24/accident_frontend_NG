@@ -48,7 +48,6 @@ const AgentMateriel = () => {
           </div>
         ))}
       </div>
-      <Footer />
     </div>
   );
 };

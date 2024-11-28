@@ -504,7 +504,6 @@ export default function Navigation() {
                     </Box>
                 </Paper>
             </form>
-            <Footer />
         </div>
     );
 }

@@ -499,9 +499,9 @@ const Login = () => {
             Pour avoir accès, veuillez le demander au support
           </h6>
         </form>
-        <Footer />
       </div>
     </div>
+    
   );
 };
 
