@@ -7,7 +7,7 @@ import { Button, Tooltip, Paper, Box, Typography } from '@mui/material/';
 import config from '../config.json';
 import { useNavigate, useLocation } from 'react-router-dom';
 import CustomSnackbar from '../_composants/CustomSnackbar';
-import { useTheme } from '../pageAdmin/user/ThemeContext';
+import { useTheme } from '../Hook/ThemeContext';
 
 /**
  * AdminPanelSettings est un composant qui permet de créer une nouvelle entreprise

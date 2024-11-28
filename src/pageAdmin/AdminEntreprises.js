@@ -21,7 +21,7 @@ import 'react-confirm-alert/src/react-confirm-alert.css';
 import config from '../config.json';
 import { useNavigate } from 'react-router-dom';
 import CustomSnackbar from '../_composants/CustomSnackbar';
-import { useTheme } from '../pageAdmin/user/ThemeContext';
+import { useTheme } from '../Hook/ThemeContext';
 /**
  * Adminusern est un composant React qui permet de gérer les entreprises
  * 

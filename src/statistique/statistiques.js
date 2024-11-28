@@ -9,7 +9,7 @@ import { renderOptimizedChart, getRenderConfig } from './chartComponents';
 import axios from 'axios';
 import config from '../config.json';
 import { saveFiltersToCookies, loadFiltersFromCookies } from './filterPersistence';
-import { useTheme } from '../pageAdmin/user/ThemeContext';
+import { useTheme } from '../Hook/ThemeContext';
 import StyledChart from '../_composants/styledTitle';
 import useYearFilter from '../Hook/useYearFilter';
 import Footer from '../_composants/Footer';

@@ -7,7 +7,7 @@ import listFilesInAccident from './FilesActions';
 import { Tooltip, Box, Typography} from '@mui/material';
 import { useLogger } from '../../Hook/useLogger';
 import config from '../../config.json';
-import { useTheme } from '../../pageAdmin/user/ThemeContext';
+import { useTheme } from '../../Hook/ThemeContext';
 import Footer from '../../_composants/Footer';
 
 const apiUrl = config.apiUrl;

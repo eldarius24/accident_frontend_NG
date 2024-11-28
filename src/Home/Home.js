@@ -7,7 +7,7 @@ import ListAltIcon from '@mui/icons-material/ListAlt';
 import FolderIcon from '@mui/icons-material/Folder';
 import { keyframes } from '@mui/system';
 import { LineChart, Line } from 'recharts';
-import { useTheme } from '../pageAdmin/user/ThemeContext'; // Add this import
+import { useTheme } from '../Hook/ThemeContext.js'; // Add this import
 import { useUserConnected } from '../Hook/userConnected.js';
 import Footer from '../_composants/Footer';
 

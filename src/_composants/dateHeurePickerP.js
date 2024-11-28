@@ -4,7 +4,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import dayjs from 'dayjs';
 import 'dayjs/locale/fr';
-import { useTheme } from '../pageAdmin/user/ThemeContext';
+import { useTheme } from '../Hook/ThemeContext';
 
 dayjs.locale('fr');
 

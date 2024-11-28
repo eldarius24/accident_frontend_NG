@@ -21,7 +21,7 @@ import '../pageFormulaire/formulaire.css';
 import config from '../config.json';
 import { useUserConnected } from '../Hook/userConnected';
 import CustomSnackbar from '../_composants/CustomSnackbar';
-import { useTheme } from '../pageAdmin/user/ThemeContext';
+import { useTheme } from '../Hook/ThemeContext.js';
 import EnterpriseStats from './entrepriseStats';
 import createFilteredUsers from './filteredUsers';
 import createFetchData from './fetchData.js';

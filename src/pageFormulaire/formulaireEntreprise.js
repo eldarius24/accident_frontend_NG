@@ -10,7 +10,7 @@ import listeDeclarationAssBelfius from '../liste/listeDeclarationAssBelfius.json
 import DateHeurePickerQ from '../_composants/dateHeurePickerQ';
 import listAccident from '../liste/listAccident.json';
 import listAssureur from '../liste/listAssureur.json';
-import { useTheme } from '../pageAdmin/user/ThemeContext';
+import { useTheme } from '../Hook/ThemeContext';
 import { FormGroup, Box, Typography } from '@mui/material';
 import ControlLabelP from '../_composants/controlLabelP';
 

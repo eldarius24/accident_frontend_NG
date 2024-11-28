@@ -21,7 +21,7 @@ import config from '../config.json';
 import editPDF from '../Model/pdfGenerator.js';
 import { useUserConnected } from '../Hook/userConnected.js';
 import CustomSnackbar from '../_composants/CustomSnackbar.js';
-import { useTheme } from '../pageAdmin/user/ThemeContext.js';
+import { useTheme } from '../Hook/ThemeContext.js';
 import { handleExportDataAccident } from './_actions/exportAcci.js';
 import { handleExportDataAssurance } from './_actions/exportAss.js';
 import { useLogger } from '../Hook/useLogger.js';

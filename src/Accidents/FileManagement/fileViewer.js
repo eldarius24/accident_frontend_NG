@@ -5,7 +5,7 @@ import { Box, Typography, CircularProgress } from '@mui/material';
 import { useLogger } from '../../Hook/useLogger';
 import * as XLSX from 'xlsx';
 import { getAccidentDetails } from "./deleteFile";
-import { useTheme } from '../../pageAdmin/user/ThemeContext';
+import { useTheme } from '../../Hook/ThemeContext';
 import config from '../../config.json';
 
 const apiUrl = config.apiUrl;

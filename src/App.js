@@ -22,7 +22,7 @@ import Adminuser from './pageAdmin/user/AdminUser';
 import AddUser from './pageAdmin/user/addUser/AddUser';
 import ProtectedRouteAdminOrConseiller from './Model/protectedRouteConseillerPrevention'; // Importer le nouveau composant
 import FormulaireAction from './planaction/FormulaireAction';
-import { ThemeProvider } from './pageAdmin/user/ThemeContext'; // Importez ThemeProvider
+import { ThemeProvider } from './Hook/ThemeContext'; // Importez ThemeProvider
 import LogView from './Logs/logView';
 import Entreprise from './entrepriseDivers/entreprise';
 import QuesEntrep from './entrepriseDivers/quesEntrep';

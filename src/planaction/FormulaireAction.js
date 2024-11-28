@@ -23,7 +23,7 @@ import listeaddaction from '../liste/listeaddaction.json';
 import { useUserConnected } from '../Hook/userConnected';
 import CustomSnackbar from '../_composants/CustomSnackbar';
 import { useLogger } from '../Hook/useLogger';
-import { useTheme } from '../pageAdmin/user/ThemeContext';
+import { useTheme } from '../Hook/ThemeContext';
 import Footer from '../_composants/Footer';
 
 const apiUrl = config.apiUrl;

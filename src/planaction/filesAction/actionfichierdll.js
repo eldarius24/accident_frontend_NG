@@ -7,7 +7,7 @@ import listFilesInaction from './actionFilesAction';
 import { Tooltip} from '@mui/material';
 import { useLogger } from '../../Hook/useLogger';
 import config from '../../config.json';
-import { useTheme } from '../../pageAdmin/user/ThemeContext';
+import { useTheme } from '../../Hook/ThemeContext';
 import Footer from '../../_composants/Footer';
 
 const apiUrl = config.apiUrl;

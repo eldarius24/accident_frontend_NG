@@ -22,7 +22,7 @@ import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import { confirmAlert } from 'react-confirm-alert';
 import config from '../config.json';
 import CustomSnackbar from '../_composants/CustomSnackbar';
-import { useTheme } from '../pageAdmin/user/ThemeContext';
+import { useTheme } from '../Hook/ThemeContext';
 
 /**
  * AddSecteur

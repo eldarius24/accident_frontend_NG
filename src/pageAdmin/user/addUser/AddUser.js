@@ -14,7 +14,7 @@ import getEntreprises from './_actions/get-entreprises';
 import putUser from './_actions/put-user';
 import { useNavigate } from 'react-router-dom';
 import CustomSnackbar from '../../../_composants/CustomSnackbar';
-import { useTheme } from '../../../pageAdmin/user/ThemeContext';
+import { useTheme } from '../../../Hook/ThemeContext';
 
 export default function AddUser() {
     const { darkMode } = useTheme();
