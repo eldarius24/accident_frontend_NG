@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Box, Typography, Paper } from '@mui/material';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import TrafficLightIcon from './TrafficLightIcon';
+import { getRandomSafetyMessage } from './safetyMessages';
 
 const AccidentCounter = ({ days = 0, lastDate, darkMode }) => {
     const [displayedDays, setDisplayedDays] = useState(0);
@@ -23,45 +24,35 @@ const AccidentCounter = ({ days = 0, lastDate, darkMode }) => {
         }
     }, [days]);
 
-    const { color, gradient, message } = (() => {
+    const { color, gradient, alert } = (() => {
         if (displayedDays <= 5) {
             return {
                 color: '#ff0000',
                 gradient: 'linear-gradient(90deg, #ff0000, #ff3333)',
-                message: {
-                    alert: 'Vigilance maximale requise.',
-                    text: ' La sécurité est notre priorité. Continuons ensemble à maintenir un environnement de travail sûr.'
-                }
+                alert: 'Vigilance maximale requise.'
             };
         } else if (displayedDays <= 15) {
             return {
                 color: '#ff9800',
                 gradient: 'linear-gradient(90deg, #ff9800, #ffb74d)',
-                message: {
-                    alert: 'Restons vigilants.',
-                    text: ' La sécurité est notre priorité. Continuons ensemble à maintenir un environnement de travail sûr.'
-                }
+                alert: 'Restons vigilants.'
             };
         } else if (displayedDays <= 30) {
             return {
                 color: '#ffd700',
                 gradient: 'linear-gradient(90deg, #ffd700, #ffeb3b)',
-                message: {
-                    alert: 'Continuons nos efforts.',
-                    text: ' La sécurité est notre priorité. Continuons ensemble à maintenir un environnement de travail sûr.'
-                }
+                alert: 'Continuons nos efforts.'
             };
         } else {
             return {
                 color: '#4caf50',
                 gradient: 'linear-gradient(90deg, #4caf50, #81c784)',
-                message: {
-                    alert: 'Excellent travail !',
-                    text: ' La sécurité est notre priorité. Continuons ensemble à maintenir un environnement de travail sûr.'
-                }
+                alert: 'Excellent travail !'
             };
         }
     })();
+
+    const initialMessage = React.useRef(getRandomSafetyMessage());
 
     return (
         <Paper
@@ -254,12 +245,12 @@ const AccidentCounter = ({ days = 0, lastDate, darkMode }) => {
                                 color: color,
                                 fontWeight: 600
                             }}>
-                                {message.alert}
+                                {alert}
                             </span>
                             <span style={{
                                 color: darkMode ? 'rgba(255,255,255,0.9)' : 'rgba(0,0,0,0.9)'
                             }}>
-                                {message.text}
+                                {initialMessage.current}
                             </span>
                         </Typography>
                     </Box>
