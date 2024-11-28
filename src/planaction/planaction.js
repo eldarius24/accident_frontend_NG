@@ -29,7 +29,6 @@ import createHandleExport from './handleExport';
 import { useLogger } from '../Hook/useLogger';
 import { blueGrey } from '@mui/material/colors';
 import BoutonArchiver from '../Archives/BoutonArchiver';
-import Footer from '../_composants/Footer';
 import {
     COOKIE_PREFIXES,
     getSelectedEnterpriseFromCookie,

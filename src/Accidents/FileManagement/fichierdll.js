@@ -4,11 +4,10 @@ import { useLocation } from 'react-router-dom';
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import listFilesInAccident from './FilesActions';
-import { Tooltip, Box, Typography} from '@mui/material';
+import { Tooltip } from '@mui/material';
 import { useLogger } from '../../Hook/useLogger';
 import config from '../../config.json';
 import { useTheme } from '../../Hook/ThemeContext';
-import Footer from '../../_composants/Footer';
 
 const apiUrl = config.apiUrl;
 

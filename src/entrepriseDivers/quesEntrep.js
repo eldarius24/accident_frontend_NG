@@ -14,7 +14,6 @@ import '../pageFormulaire/formulaire.css';
 import { useTheme } from '../Hook/ThemeContext';
 import listeQuesEntr from '../liste/listeQuesEntre.json';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
-import Footer from '../_composants/Footer';
 const dropZoneStyle = {
     display: 'flex',
     justifyContent: 'center',

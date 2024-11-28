@@ -11,7 +11,6 @@ import axios from 'axios';
 import { useTheme } from '../Hook/ThemeContext';
 import AccidentCounter from './accidentCounter';
 import config from '../config.json';
-import Footer from '../_composants/Footer';
 const apiUrl = config.apiUrl;
 
 // Fonction utilitaire pour les logs

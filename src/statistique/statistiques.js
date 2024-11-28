@@ -12,7 +12,6 @@ import { saveFiltersToCookies, loadFiltersFromCookies } from './filterPersistenc
 import { useTheme } from '../Hook/ThemeContext';
 import StyledChart from '../_composants/styledTitle';
 import UseYearFilterStat from './useYearFilterstat';
-import Footer from '../_composants/Footer';
 
 /**
  * Affiche les graphiques des accidents de travail par type de travailleur, âge, jour de la semaine, mois, an, secteur et par entreprise.
