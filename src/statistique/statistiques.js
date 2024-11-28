@@ -11,7 +11,7 @@ import config from '../config.json';
 import { saveFiltersToCookies, loadFiltersFromCookies } from './filterPersistence';
 import { useTheme } from '../Hook/ThemeContext';
 import StyledChart from '../_composants/styledTitle';
-import useYearFilter from '../Hook/useYearFilter';
+import UseYearFilterStat from './useYearFilterstat';
 import Footer from '../_composants/Footer';
 
 /**
@@ -23,7 +23,7 @@ import Footer from '../_composants/Footer';
  */
 const Statistiques = () => {
   const [allYears, setAllYears] = useState([]);
-  const { selectedYears, setSelectedYears, handleYearChange } = useYearFilter('statistics');
+  const { selectedYears, setSelectedYears, handleYearChange } = UseYearFilterStat('statistics');
   const [data, setData] = useState([]);
   const [tfData, setTfData] = useState([]);
   const [graphs, setGraphs] = useState({
