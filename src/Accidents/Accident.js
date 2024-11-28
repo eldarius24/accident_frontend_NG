@@ -40,6 +40,61 @@ import Footer from '../_composants/Footer.jsx';
 
 const apiUrl = config.apiUrl;
 
+const ITEM_MARGIN = '20px';
+const FORM_CONTROL_STYLES = {
+    DARK: {
+        bg: '#424242',
+        border: 'rgba(255,255,255,0.3)',
+        hoverBorder: 'rgba(255,255,255,0.5)',
+        text: '#fff',
+        shadow: '0 3px 6px rgba(255,255,255,0.1)',
+        hoverShadow: '0 6px 12px rgba(255,255,255,0.2)'
+    },
+    LIGHT: {
+        bg: '#ee742d59',
+        border: 'rgba(0,0,0,0.23)',
+        hoverBorder: 'rgba(0,0,0,0.5)',
+        text: 'inherit',
+        shadow: 3,
+        hoverShadow: 6
+    }
+};
+
+
+const BUTTON_STYLES = {
+    DARK: {
+        color: '#ffffff',
+        backgroundColor: '#424242',
+        hoverBg: '#7a8e1c',
+        boxShadow: '0 3px 6px rgba(255,255,255,0.1)',
+        hoverShadow: '0 6px 12px rgba(255,255,255,0.2)'
+    },
+    LIGHT: {
+        color: 'black',
+        backgroundColor: '#ee742d59',
+        hoverBg: '#95ad22',
+        boxShadow: 3,
+        hoverShadow: 6
+    }
+};
+
+const COLORS = {
+    DARK: {
+        BG: '#424242',
+        BG_HOVER: '#505050',
+        TEXT: '#fff',
+        CHECKBOX: '#4CAF50',
+        CHECKBOX_CHECKED: '#81C784'
+    },
+    LIGHT: {
+        BG: '#ee742d59',
+        BG_HOVER: '#ee742d80',
+        TEXT: 'inherit',
+        CHECKBOX: '#257525',
+        CHECKBOX_CHECKED: '#257525'
+    }
+};
+
 /**
  * Page principale de l'application, cette page contient une table avec 
  * les accidents du travail, les boutons pour exporter les données, 
@@ -49,6 +104,71 @@ const apiUrl = config.apiUrl;
  */
 function Accident() {
     const [yearsFromData, setYearsFromData] = useState([]);
+
+
+    const getFormControlStyles = useMemo(() => (isDark) => ({
+        width: '100%',
+        mb: 2,
+        transition: 'all 0.2s ease-in-out',
+        backgroundColor: isDark ? FORM_CONTROL_STYLES.DARK.bg : FORM_CONTROL_STYLES.LIGHT.bg,
+        boxShadow: isDark ? FORM_CONTROL_STYLES.DARK.shadow : FORM_CONTROL_STYLES.LIGHT.shadow,
+        '&:hover': {
+            boxShadow: isDark ? FORM_CONTROL_STYLES.DARK.hoverShadow : FORM_CONTROL_STYLES.LIGHT.hoverShadow,
+            transform: 'translateY(-2px)'
+        },
+        '& .MuiOutlinedInput-root': {
+            color: isDark ? FORM_CONTROL_STYLES.DARK.text : FORM_CONTROL_STYLES.LIGHT.text,
+            '& fieldset': {
+                borderColor: isDark ? FORM_CONTROL_STYLES.DARK.border : FORM_CONTROL_STYLES.LIGHT.border,
+                transition: 'border-color 0.2s ease-in-out'
+            },
+            '&:hover fieldset': {
+                borderColor: isDark ? FORM_CONTROL_STYLES.DARK.hoverBorder : FORM_CONTROL_STYLES.LIGHT.hoverBorder
+            }
+        },
+        '& .MuiInputLabel-root, & .MuiSvgIcon-root': {
+            color: isDark ? FORM_CONTROL_STYLES.DARK.text : FORM_CONTROL_STYLES.LIGHT.text
+        }
+    }), []);
+
+    const getButtonStyles = useMemo(() => (isDark) => ({
+        color: isDark ? BUTTON_STYLES.DARK.color : BUTTON_STYLES.LIGHT.color,
+        padding: '15px 60px',
+        backgroundColor: isDark ? BUTTON_STYLES.DARK.backgroundColor : BUTTON_STYLES.LIGHT.backgroundColor,
+        transition: 'all 0.1s ease-in-out',
+        boxShadow: isDark ? BUTTON_STYLES.DARK.boxShadow : BUTTON_STYLES.LIGHT.boxShadow,
+        textTransform: 'none',
+        '&:hover': {
+            backgroundColor: isDark ? BUTTON_STYLES.DARK.hoverBg : BUTTON_STYLES.LIGHT.hoverBg,
+            transform: 'scale(1.08)',
+            boxShadow: isDark ? BUTTON_STYLES.DARK.hoverShadow : BUTTON_STYLES.LIGHT.hoverShadow
+        },
+        '& .MuiSvgIcon-root': {
+            color: isDark ? '#fff' : 'inherit'
+        }
+    }), []);
+
+    const getMenuItemStyles = useMemo(() => (isDark) => ({
+        backgroundColor: isDark ? COLORS.DARK.BG : COLORS.LIGHT.BG,
+        color: isDark ? COLORS.DARK.TEXT : COLORS.LIGHT.TEXT,
+        '&:hover': {
+            backgroundColor: isDark ? COLORS.DARK.BG_HOVER : COLORS.LIGHT.BG_HOVER
+        },
+        '&.Mui-selected': {
+            backgroundColor: `${isDark ? COLORS.DARK.BG : COLORS.LIGHT.BG} !important`
+        },
+        '&.Mui-selected:hover': {
+            backgroundColor: `${isDark ? COLORS.DARK.BG_HOVER : COLORS.LIGHT.BG_HOVER} !important`
+        }
+    }), []);
+
+    const getCheckboxStyles = useMemo(() => (isDark) => ({
+        color: isDark ? COLORS.DARK.CHECKBOX : COLORS.LIGHT.CHECKBOX,
+        '&.Mui-checked': {
+            color: isDark ? COLORS.DARK.CHECKBOX_CHECKED : COLORS.LIGHT.CHECKBOX_CHECKED
+        }
+    }), []);
+
 
     // Utiliser useYearFilter avec les années récupérées
     const { selectedYears, handleYearChange } = useYearFilter(
@@ -81,7 +201,6 @@ function Accident() {
     const [statusFilters, setStatusFilters] = useState(() => {
         return getSelectedStatusFromCookie(COOKIE_PREFIXES.HOME);
     });
-
 
     const [accidents, setAccidents] = useState([]);;
     const [searchTerm, setSearchTerm] = useState('');
@@ -388,359 +507,199 @@ function Accident() {
                     Gesion des Accidents
                 </Typography>
             </Box>
-            <div style={{ display: 'flex', justifyContent: 'center', margin: '20px 0rem' }}>
-                <Grid
-                    container
-                    spacing={2}
-                    sx={{
-                        display: 'flex',
-                        justifyContent: 'center',
-                        alignItems: 'center'
-                    }}
-                >
-                    <Grid item xs={12} sm={6} md={1.5}>
-                        <Tooltip title="Filtrer par état" arrow>
-                            <FormControl sx={{
-                                boxShadow: darkMode ? '0 3px 6px rgba(255,255,255,0.1)' : 3,
-                                width: '100%',
-                                backgroundColor: darkMode ? '#424242' : '#ee752d60',
-                                border: darkMode ? '1px solid rgba(255,255,255,0.1)' : 'none',
-                                '& .MuiInputLabel-root': {
-                                    color: darkMode ? '#fff' : 'inherit'
-                                },
-                                '& .MuiSelect-select': {
-                                    color: darkMode ? '#fff' : 'inherit'
-                                },
-                                '& .MuiOutlinedInput-notchedOutline': {
-                                    borderColor: darkMode ? 'rgba(255,255,255,0.3)' : 'rgba(0,0,0,0.23)'
-                                },
-                                '&:hover .MuiOutlinedInput-notchedOutline': {
-                                    borderColor: darkMode ? 'rgba(255,255,255,0.5)' : 'rgba(0,0,0,0.5)'
-                                }
-                            }}>
-                                <InputLabel id="etat-label" sx={{ color: darkMode ? '#fff' : 'inherit' }}>
-                                    État
-                                </InputLabel>
-                                <Select
-                                    labelId="etat-label"
-                                    id="etat-select"
-                                    multiple
-                                    value={statusFilters}
-                                    onChange={handleStatusFilterChange}
-                                    renderValue={(selected) => {
-                                        if (!selected || !Array.isArray(selected) || selected.length === 0) {
-                                            return "Tous les états";
-                                        }
-                                        return selected.map(s => s === 'closed' ? 'Clôturé' : 'En attente').join(', ');
-                                    }}
-                                    sx={{
-                                        '& .MuiSelect-icon': {
-                                            color: darkMode ? '#fff' : 'inherit'
-                                        }
-                                    }}
-                                >
-                                    <MenuItem
-                                        value=""
-                                        sx={{
-                                            backgroundColor: darkMode ? '#424242' : '#ee742d59',
-                                            color: darkMode ? '#fff' : 'inherit',
-                                            '&:hover': {
-                                                backgroundColor: darkMode ? '#505050' : '#ee742d80'
-                                            },
-                                            '&.Mui-selected': {
-                                                backgroundColor: darkMode ? '#424242 !important' : '#ee742d59 !important'
-                                            },
-                                            '&.Mui-selected:hover': {
-                                                backgroundColor: darkMode ? '#505050 !important' : '#ee742d80 !important'
-                                            }
-                                        }}
-                                    >
-                                        <Checkbox
-                                            checked={statusFilters?.length === 2}
-                                            onChange={(event) => {
-                                                // Si la case est cochée, on sélectionne tout, sinon on déselectionne tout
-                                                const newValue = event.target.checked ? ['closed', 'pending'] : [];
-                                                handleStatusFilterChange({ target: { value: newValue } });
-                                            }}
-                                            sx={{
-                                                color: darkMode ? '#ff6b6b' : 'red',
-                                                '&.Mui-checked': {
-                                                    color: darkMode ? '#ff8080' : 'red'
-                                                }
-                                            }}
-                                        />
-                                        <ListItemText
-                                            primary="Tous les états"
-                                            sx={{ color: darkMode ? '#fff' : 'inherit' }}
-                                        />
-                                    </MenuItem>
-                                    {['closed', 'pending'].map(status => (
-                                        <MenuItem
-                                            key={status}
-                                            value={status}
-                                            sx={{
-                                                backgroundColor: darkMode ? '#424242' : '#ee742d59',
-                                                color: darkMode ? '#fff' : 'inherit',
-                                                '&:hover': {
-                                                    backgroundColor: darkMode ? '#505050' : '#ee742d80'
-                                                },
-                                                '&.Mui-selected': {
-                                                    backgroundColor: darkMode ? '#424242 !important' : '#ee742d59 !important'
-                                                },
-                                                '&.Mui-selected:hover': {
-                                                    backgroundColor: darkMode ? '#505050 !important' : '#ee742d80 !important'
-                                                }
-                                            }}
-                                        >
-                                            <Checkbox
-                                                checked={statusFilters?.includes(status)}
-                                                sx={{
-                                                    color: darkMode ? '#4CAF50' : '#257525',
-                                                    '&.Mui-checked': {
-                                                        color: darkMode ? '#81C784' : '#257525'
-                                                    }
-                                                }}
-                                            />
-                                            <ListItemText
-                                                primary={status === 'closed' ? 'Clôturé' : 'En attente'}
-                                                sx={{ color: darkMode ? '#fff' : 'inherit' }}
-                                            />
-                                        </MenuItem>
-                                    ))}
-                                </Select>
-                            </FormControl>
-                        </Tooltip>
-                    </Grid>
-                    <Grid item xs={12} sm={6} md={1.5}>
-                        <Tooltip title="Cliquez ici pour actualiser le tableau des accidents du travails" arrow>
-                            <Button
-                                sx={{
-                                    color: darkMode ? '#ffffff' : 'black',
-                                    padding: '15px',
-                                    width: '100%',
-                                    backgroundColor: darkMode ? '#424242' : '#ee752d60',
-                                    transition: 'all 0.1s ease-in-out',
-                                    '&:hover': {
-                                        backgroundColor: darkMode ? '#7a8e1c' : '#95ad22',
-                                        transform: 'scale(1.08)',
-                                        boxShadow: darkMode ? '0 6px 12px rgba(255,255,255,0.2)' : 6
-                                    },
-                                    boxShadow: darkMode ? '0 3px 6px rgba(255,255,255,0.1)' : 3,
-                                    textTransform: 'none',
-                                    border: darkMode ? '1px solid rgba(255,255,255,0.1)' : 'none'
+            <Box style={{ display: 'flex', justifyContent: 'center', margin: '20px 0rem' }}>
+                <Grid item xs={6} sx={{ pr: ITEM_MARGIN }}>
+                    <Tooltip title="Filtrer par état" arrow>
+                        <FormControl sx={getFormControlStyles(darkMode)}>
+                            <InputLabel id="etat-label" sx={{ color: darkMode ? '#fff' : 'inherit' }}>
+                                État
+                            </InputLabel>
+                            <Select
+                                labelId="etat-label"
+                                id="etat-select"
+                                multiple
+                                value={statusFilters}
+                                onChange={handleStatusFilterChange}
+                                renderValue={(selected) => {
+                                    if (!selected || !Array.isArray(selected) || selected.length === 0) {
+                                        return "Tous les états";
+                                    }
+                                    return selected.map(s => s === 'closed' ? 'Clôturé' : 'En attente').join(', ');
                                 }}
-                                variant="contained"
-                                color="secondary"
-                                onClick={refreshListAccidents}
-                                startIcon={<RefreshIcon />}
-                            >
-                                Actualiser
-                            </Button>
-                        </Tooltip>
-                    </Grid>
-                    <Grid item xs={12} sm={6} md={1.5}>
-                        <Tooltip title="Cliquez ici pour filtrer les accidents par années" arrow placement="top">
-                            <FormControl sx={{
-                                boxShadow: darkMode ? '0 3px 6px rgba(255,255,255,0.1)' : 3,
-                                width: '100%',
-                                backgroundColor: darkMode ? '#424242' : '#ee752d60',
-                                border: darkMode ? '1px solid rgba(255,255,255,0.1)' : 'none',
-                                '& .MuiInputLabel-root': {
-                                    color: darkMode ? '#fff' : 'inherit'
-                                },
-                                '& .MuiSelect-select': {
-                                    color: darkMode ? '#fff' : 'inherit'
-                                },
-                                '& .MuiOutlinedInput-notchedOutline': {
-                                    borderColor: darkMode ? 'rgba(255,255,255,0.3)' : 'rgba(0,0,0,0.23)'
-                                },
-                                '&:hover .MuiOutlinedInput-notchedOutline': {
-                                    borderColor: darkMode ? 'rgba(255,255,255,0.5)' : 'rgba(0,0,0,0.5)'
-                                }
-                            }}>
-                                <InputLabel id="sort-label" sx={{ color: darkMode ? '#fff' : 'inherit' }}>
-                                    Année
-                                </InputLabel>
-                                <Select
-                                    labelId="years-label"
-                                    id="years-select"
-                                    multiple
-                                    value={selectedYears}
-                                    onChange={handleYearChange}
-                                    renderValue={(selected) => `${selected.length} année(s)`}
-                                >
-                                    <MenuItem
-                                        value="all"
-                                        sx={{
-                                            backgroundColor: darkMode ? '#424242' : '#ee742d59',
-                                            color: darkMode ? '#fff' : 'inherit',
-                                            '&:hover': {
-                                                backgroundColor: darkMode ? '#505050' : '#ee742d80'
-                                            },
-                                            '&.Mui-selected': {
-                                                backgroundColor: darkMode ? '#424242 !important' : '#ee742d59 !important'
-                                            },
-                                            '&.Mui-selected:hover': {
-                                                backgroundColor: darkMode ? '#505050 !important' : '#ee742d80 !important'
-                                            }
-                                        }}
-                                    >
-                                        <Checkbox
-                                            checked={selectedYears.length === yearsFromData.length}
-                                            indeterminate={selectedYears.length > 0 && selectedYears.length < yearsFromData.length}
-                                            sx={{
-                                                color: darkMode ? '#ff6b6b' : 'red',
-                                                '&.Mui-checked': {
-                                                    color: darkMode ? '#ff8080' : 'red'
-                                                }
-                                            }}
-                                        />
-                                        <ListItemText primary="Tout sélectionner" />
-                                    </MenuItem>
-                                    {yearsFromData.map((year) => (
-                                        <MenuItem
-                                            key={year}
-                                            value={year}
-                                            sx={{
-                                                backgroundColor: darkMode ? '#424242' : '#ee742d59',
-                                                color: darkMode ? '#fff' : 'inherit',
-                                                '&:hover': {
-                                                    backgroundColor: darkMode ? '#505050' : '#ee742d80'
-                                                },
-                                                '&.Mui-selected': {
-                                                    backgroundColor: darkMode ? '#424242 !important' : '#ee742d59 !important'
-                                                },
-                                                '&.Mui-selected:hover': {
-                                                    backgroundColor: darkMode ? '#505050 !important' : '#ee742d80 !important'
-                                                }
-                                            }}
-                                        >
-                                            <Checkbox
-                                                checked={selectedYears.includes(year)}
-                                                sx={{
-                                                    color: darkMode ? '#4CAF50' : '#257525',
-                                                    '&.Mui-checked': {
-                                                        color: darkMode ? '#81C784' : '#257525'
-                                                    }
-                                                }}
-                                            />
-                                            <ListItemText
-                                                primary={year}
-                                                sx={{ color: darkMode ? '#fff' : 'inherit' }}
-                                            />
-                                        </MenuItem>
-                                    ))}
-                                </Select>
-                            </FormControl>
-                        </Tooltip>
-                    </Grid>
-                    <Grid item xs={12} sm={6} md={1.5}>
-                        <Tooltip title="Filtrer les accidents par mots clés" arrow>
-                            <TextField
-                                value={searchTerm}
-                                onChange={event => setSearchTerm(event.target.value)}
-                                variant="outlined"
                                 sx={{
-                                    boxShadow: darkMode ? '0 3px 6px rgba(255,255,255,0.1)' : 3,
-                                    backgroundColor: darkMode ? '#424242' : '#ee752d60',
-                                    width: '100%',
-                                    '& .MuiOutlinedInput-root': {
-                                        color: darkMode ? '#fff' : 'inherit',
-                                        '& fieldset': {
-                                            borderColor: darkMode ? 'rgba(255,255,255,0.3)' : 'rgba(0,0,0,0.23)'
-                                        },
-                                        '&:hover fieldset': {
-                                            borderColor: darkMode ? 'rgba(255,255,255,0.5)' : 'rgba(0,0,0,0.5)'
-                                        },
-                                        '&.Mui-focused fieldset': {
-                                            borderColor: darkMode ? 'rgba(255,255,255,0.7)' : '#1976d2'
-                                        }
-                                    },
-                                    '& .MuiInputLabel-root': {
+                                    '& .MuiSelect-icon': {
                                         color: darkMode ? '#fff' : 'inherit'
                                     }
                                 }}
-                                InputProps={{
-                                    startAdornment: (
-                                        <InputAdornment position="start">
-                                            <SearchIcon sx={{ color: darkMode ? '#fff' : 'inherit' }} />
-                                        </InputAdornment>
-                                    ),
-                                    sx: {
-                                        '&::placeholder': {
-                                            color: darkMode ? 'rgba(255,255,255,0.7)' : 'inherit'
-                                        }
-                                    }
-                                }}
-                            />
-                        </Tooltip>
-                    </Grid>
-                    {isAdminOrDevOrConseiller && (
-                        <>
-                            <Grid item xs={12} sm={6} md={1.5}>
-                                <Tooltip title="Cliquez ici pour exporter les données Accident en fonction des filtres sélèctionnes en excel" arrow>
-                                    <Button
-                                        sx={{
-                                            color: darkMode ? '#ffffff' : 'black',
-                                            padding: '15px',
-                                            width: '100%',
-                                            backgroundColor: darkMode ? '#424242' : '#ee752d60',
-                                            transition: 'all 0.1s ease-in-out',
-                                            '&:hover': {
-                                                backgroundColor: darkMode ? '#7a8e1c' : '#95ad22',
-                                                transform: 'scale(1.08)',
-                                                boxShadow: darkMode ? '0 6px 12px rgba(255,255,255,0.2)' : 6
-                                            },
-                                            boxShadow: darkMode ? '0 3px 6px rgba(255,255,255,0.1)' : 3,
-                                            textTransform: 'none',
-                                            border: darkMode ? '1px solid rgba(255,255,255,0.1)' : 'none',
-                                            '& .MuiSvgIcon-root': {
-                                                color: darkMode ? '#fff' : 'inherit'
-                                            }
+                            >
+                                <MenuItem
+                                    value=""
+                                    sx={getMenuItemStyles(darkMode)}
+                                >
+                                    <Checkbox
+                                        checked={statusFilters?.length === 2}
+                                        onChange={(event) => {
+                                            // Si la case est cochée, on sélectionne tout, sinon on déselectionne tout
+                                            const newValue = event.target.checked ? ['closed', 'pending'] : [];
+                                            handleStatusFilterChange({ target: { value: newValue } });
                                         }}
-                                        variant="contained"
-                                        color="primary"
-                                        onClick={handleExportAccidentClick}
-                                        startIcon={<FileUploadIcon />}
+                                        sx={getCheckboxStyles(darkMode)}
+                                    />
+                                    <ListItemText
+                                        primary="Tous les états"
+                                        sx={{ color: darkMode ? '#fff' : 'inherit' }}
+                                    />
+                                </MenuItem>
+                                {['closed', 'pending'].map(status => (
+                                    <MenuItem
+                                        key={status}
+                                        value={status}
+                                        sx={getMenuItemStyles(darkMode)}
                                     >
-                                        Accident
-                                    </Button>
-                                </Tooltip>
-                            </Grid>
-                            <Grid item xs={12} sm={6} md={1.5}>
-                                <Tooltip title="Cliquez ici pour exporter les données Assurance en fonction des filtres sélèctionnes en excel" arrow>
-                                    <Button
-                                        sx={{
-                                            color: darkMode ? '#ffffff' : 'black',
-                                            padding: '15px',
-                                            width: '100%',
-                                            backgroundColor: darkMode ? '#424242' : '#ee752d60',
-                                            transition: 'all 0.1s ease-in-out',
-                                            '&:hover': {
-                                                backgroundColor: darkMode ? '#7a8e1c' : '#95ad22',
-                                                transform: 'scale(1.08)',
-                                                boxShadow: darkMode ? '0 6px 12px rgba(255,255,255,0.2)' : 6
-                                            },
-                                            boxShadow: darkMode ? '0 3px 6px rgba(255,255,255,0.1)' : 3,
-                                            textTransform: 'none',
-                                            border: darkMode ? '1px solid rgba(255,255,255,0.1)' : 'none',
-                                            '& .MuiSvgIcon-root': {
-                                                color: darkMode ? '#fff' : 'inherit'
-                                            }
-                                        }}
-                                        variant="contained"
-                                        color="primary"
-                                        onClick={handleExportAssuranceClick}
-                                        startIcon={<FileUploadIcon />}
-                                    >
-                                        Assurance
-                                    </Button>
-                                </Tooltip>
-                            </Grid>
-                        </>
-                    )}
+                                        <Checkbox
+                                            checked={statusFilters?.includes(status)}
+                                            sx={getCheckboxStyles(darkMode)}
+                                        />
+                                        <ListItemText
+                                            primary={status === 'closed' ? 'Clôturé' : 'En attente'}
+                                            sx={{ color: darkMode ? '#fff' : 'inherit' }}
+                                        />
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+                    </Tooltip>
                 </Grid>
-            </div>
+                <Grid item xs={6} sx={{ pr: ITEM_MARGIN }}>
+                    <Tooltip title="Cliquez ici pour actualiser le tableau des accidents du travails" arrow>
+                        <Button
+                            sx={getButtonStyles(darkMode)}
+                            variant="contained"
+                            color="secondary"
+                            onClick={refreshListAccidents}
+                            startIcon={<RefreshIcon />}
+                        >
+                            Actualiser
+                        </Button>
+                    </Tooltip>
+                </Grid>
+                <Grid item xs={6} sx={{ pr: ITEM_MARGIN }}>
+                    <Tooltip title="Cliquez ici pour filtrer les accidents par années" arrow placement="top">
+                        <FormControl sx={getFormControlStyles(darkMode)}>
+                            <InputLabel id="sort-label" sx={{ color: darkMode ? '#fff' : 'inherit' }}>
+                                Année
+                            </InputLabel>
+                            <Select
+                                labelId="years-label"
+                                id="years-select"
+                                multiple
+                                value={selectedYears}
+                                onChange={handleYearChange}
+                                renderValue={(selected) => `${selected.length} année(s)`}
+                            >
+                                <MenuItem
+                                    value="all"
+                                    sx={getMenuItemStyles(darkMode)}
+                                >
+                                    <Checkbox
+                                        checked={selectedYears.length === yearsFromData.length}
+                                        indeterminate={selectedYears.length > 0 && selectedYears.length < yearsFromData.length}
+                                        sx={getCheckboxStyles(darkMode)}
+                                    />
+                                    <ListItemText primary="Tout sélectionner" />
+                                </MenuItem>
+                                {yearsFromData.map((year) => (
+                                    <MenuItem
+                                        key={year}
+                                        value={year}
+                                        sx={getMenuItemStyles(darkMode)}
+                                    >
+                                        <Checkbox
+                                            checked={selectedYears.includes(year)}
+                                            sx={getCheckboxStyles(darkMode)}
+                                        />
+                                        <ListItemText
+                                            primary={year}
+                                            sx={{ color: darkMode ? '#fff' : 'inherit' }}
+                                        />
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+                    </Tooltip>
+                </Grid>
+                <Grid item xs={6} sx={{ pr: ITEM_MARGIN }}>
+                    <Tooltip title="Filtrer les accidents par mots clés" arrow>
+                        <TextField
+                            value={searchTerm}
+                            onChange={event => setSearchTerm(event.target.value)}
+                            variant="outlined"
+                            sx={{
+                                boxShadow: darkMode ? '0 3px 6px rgba(255,255,255,0.1)' : 3,
+                                backgroundColor: darkMode ? '#424242' : '#ee752d60',
+                                width: '100%',
+                                '& .MuiOutlinedInput-root': {
+                                    color: darkMode ? '#fff' : 'inherit',
+                                    '& fieldset': {
+                                        borderColor: darkMode ? 'rgba(255,255,255,0.3)' : 'rgba(0,0,0,0.23)'
+                                    },
+                                    '&:hover fieldset': {
+                                        borderColor: darkMode ? 'rgba(255,255,255,0.5)' : 'rgba(0,0,0,0.5)'
+                                    },
+                                    '&.Mui-focused fieldset': {
+                                        borderColor: darkMode ? 'rgba(255,255,255,0.7)' : '#1976d2'
+                                    }
+                                },
+                                '& .MuiInputLabel-root': {
+                                    color: darkMode ? '#fff' : 'inherit'
+                                }
+                            }}
+                            InputProps={{
+                                startAdornment: (
+                                    <InputAdornment position="start">
+                                        <SearchIcon sx={{ color: darkMode ? '#fff' : 'inherit' }} />
+                                    </InputAdornment>
+                                ),
+                                sx: {
+                                    '&::placeholder': {
+                                        color: darkMode ? 'rgba(255,255,255,0.7)' : 'inherit'
+                                    }
+                                }
+                            }}
+                        />
+                    </Tooltip>
+                </Grid>
+                {isAdminOrDevOrConseiller && (
+                    <>
+                        <Grid item xs={6} sx={{ pr: ITEM_MARGIN }}>
+                            <Tooltip title="Cliquez ici pour exporter les données Accident en fonction des filtres sélèctionnes en excel" arrow>
+                                <Button
+                                    sx={getButtonStyles(darkMode)}
+                                    variant="contained"
+                                    color="primary"
+                                    onClick={handleExportAccidentClick}
+                                    startIcon={<FileUploadIcon />}
+                                >
+                                    Accident
+                                </Button>
+                            </Tooltip>
+                        </Grid>
+                        <Grid item xs={6} sx={{ pr: ITEM_MARGIN }}>
+                            <Tooltip title="Cliquez ici pour exporter les données Assurance en fonction des filtres sélèctionnes en excel" arrow>
+                                <Button
+                                    sx={getButtonStyles(darkMode)}
+                                    variant="contained"
+                                    color="primary"
+                                    onClick={handleExportAssuranceClick}
+                                    startIcon={<FileUploadIcon />}
+                                >
+                                    Assurance
+                                </Button>
+                            </Tooltip>
+                        </Grid>
+                    </>
+                )}
+            </Box>
             <TableContainer
                 className="frameStyle-style"
                 style={{
@@ -960,7 +919,7 @@ function Accident() {
                 message={snackbar.message}
                 severity={snackbar.severity}
             />
-             <Footer />
+            <Footer />
         </div>
     );
 }

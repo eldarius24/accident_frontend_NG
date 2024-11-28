@@ -145,21 +145,21 @@ const Statistiques = () => {
       const response = await axios.get(`http://${config.apiUrl}:3100/api/questionnaires`);
       const tfDataByCompany = {};
       const detailedTfDataByCompany = {};
-  
+
       response.data.forEach(questionnaire => {
         const { resultTf, entrepriseName, annees, valueATf, valueBTf } = questionnaire;
-        
+
         if (resultTf && entrepriseName && annees) {
           // Initialize if needed
           if (!tfDataByCompany[entrepriseName]) {
             tfDataByCompany[entrepriseName] = {};
             detailedTfDataByCompany[entrepriseName] = [];
           }
-  
+
           annees.forEach(annee => {
             // Simple TF data
             tfDataByCompany[entrepriseName][annee] = parseFloat(resultTf);
-  
+
             // Detailed TF data
             detailedTfDataByCompany[entrepriseName].push({
               year: annee,
@@ -170,19 +170,19 @@ const Statistiques = () => {
           });
         }
       });
-  
+
       // Transform simple TF data
       const transformedTfData = Object.entries(tfDataByCompany).map(([company, yearData]) => ({
         company,
         ...yearData
       }));
-  
+
       // Transform detailed TF data
       const transformedDetailedData = Object.entries(detailedTfDataByCompany).map(([company, data]) => ({
         company,
         data: data.sort((a, b) => a.year - b.year)
       }));
-  
+
       // Update both states
       setTfData(transformedTfData);
       setDetailedTfData(transformedDetailedData);
@@ -190,7 +190,7 @@ const Statistiques = () => {
       console.error('Erreur lors du chargement des données Tf:', error);
     }
   };
-  
+
   useEffect(() => {
     loadTfDataSets();
   }, []);
@@ -334,10 +334,10 @@ const Statistiques = () => {
       backgroundColor: darkMode ? '#505050' : '#ee742d80'
     },
     '&.Mui-selected': {
-      backgroundColor: darkMode ? '#424242' : '#ee742d59', // Même couleur que l'état normal
+      backgroundColor: darkMode ? '#424242' : '#ee742d59',
     },
     '&.Mui-selected:hover': {
-      backgroundColor: darkMode ? '#505050' : '#ee742d80' // Même couleur que le hover normal
+      backgroundColor: darkMode ? '#505050' : '#ee742d80'
     },
     '& .MuiListItemText-primary, & .MuiListItemText-secondary': {
       color: darkMode ? '#fff' : 'inherit'
@@ -419,7 +419,7 @@ const Statistiques = () => {
           Statistiques
         </Typography>
       </Box>
-      <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: '10px', marginBottom: '20px' }}>
+      <Box sx={{ justifyContent: 'center', display: 'flex', flexWrap: 'wrap', gap: '10px', marginBottom: '20px' }}>
         <FormControl sx={formControlStyle}>
           <InputLabel id="companies-label">Entreprises</InputLabel>
           <Select
