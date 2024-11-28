@@ -140,72 +140,59 @@ const Statistiques = () => {
     selectedCompanies,
   ]);
 
-  const loadDetailedTfData = async () => {
+  const loadTfDataSets = async () => {
     try {
       const response = await axios.get(`http://${config.apiUrl}:3100/api/questionnaires`);
       const tfDataByCompany = {};
-
+      const detailedTfDataByCompany = {};
+  
       response.data.forEach(questionnaire => {
-        if (questionnaire.resultTf && questionnaire.entrepriseName && questionnaire.annees) {
-          if (!tfDataByCompany[questionnaire.entrepriseName]) {
-            tfDataByCompany[questionnaire.entrepriseName] = [];
+        const { resultTf, entrepriseName, annees, valueATf, valueBTf } = questionnaire;
+        
+        if (resultTf && entrepriseName && annees) {
+          // Initialize if needed
+          if (!tfDataByCompany[entrepriseName]) {
+            tfDataByCompany[entrepriseName] = {};
+            detailedTfDataByCompany[entrepriseName] = [];
           }
-
-          questionnaire.annees.forEach(annee => {
-            tfDataByCompany[questionnaire.entrepriseName].push({
+  
+          annees.forEach(annee => {
+            // Simple TF data
+            tfDataByCompany[entrepriseName][annee] = parseFloat(resultTf);
+  
+            // Detailed TF data
+            detailedTfDataByCompany[entrepriseName].push({
               year: annee,
-              tf: parseFloat(questionnaire.resultTf),
-              heuresPreste: parseFloat(questionnaire.valueATf || 0),
-              accidents: parseFloat(questionnaire.valueBTf || 0)
+              tf: parseFloat(resultTf),
+              heuresPreste: parseFloat(valueATf || 0),
+              accidents: parseFloat(valueBTf || 0)
             });
           });
         }
       });
-
-      // Transformer les données pour le format attendu par le composant
-      const transformedData = Object.entries(tfDataByCompany).map(([company, data]) => ({
-        company,
-        data: data.sort((a, b) => a.year - b.year)
-      }));
-
-      setDetailedTfData(transformedData);
-    } catch (error) {
-      console.error('Erreur lors du chargement des données Tf:', error);
-    }
-  };
-
-  // Ajoutez cette nouvelle fonction pour charger les données Tf
-  const loadTfData = async () => {
-    try {
-      const response = await axios.get(`http://${config.apiUrl}:3100/api/questionnaires`);
-      const tfDataByCompany = {};
-
-      response.data.forEach(questionnaire => {
-        if (questionnaire.resultTf && questionnaire.entrepriseName && questionnaire.annees) {
-          questionnaire.annees.forEach(annee => {
-            if (!tfDataByCompany[questionnaire.entrepriseName]) {
-              tfDataByCompany[questionnaire.entrepriseName] = {};
-            }
-            tfDataByCompany[questionnaire.entrepriseName][annee] = parseFloat(questionnaire.resultTf);
-          });
-        }
-      });
-
-      // Transformation des données pour le graphique
-      const transformedData = Object.entries(tfDataByCompany).map(([company, yearData]) => ({
+  
+      // Transform simple TF data
+      const transformedTfData = Object.entries(tfDataByCompany).map(([company, yearData]) => ({
         company,
         ...yearData
       }));
-
-      setTfData(transformedData);
+  
+      // Transform detailed TF data
+      const transformedDetailedData = Object.entries(detailedTfDataByCompany).map(([company, data]) => ({
+        company,
+        data: data.sort((a, b) => a.year - b.year)
+      }));
+  
+      // Update both states
+      setTfData(transformedTfData);
+      setDetailedTfData(transformedDetailedData);
     } catch (error) {
       console.error('Erreur lors du chargement des données Tf:', error);
     }
   };
-
+  
   useEffect(() => {
-    loadTfData();
-    loadDetailedTfData();
+    loadTfDataSets();
   }, []);
 
   const stats = useAccidentStats(
