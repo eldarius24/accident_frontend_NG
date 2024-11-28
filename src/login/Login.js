@@ -235,9 +235,9 @@ const Login = () => {
     <div style={{
       backgroundColor: darkMode ? '#6e6e6e' : '#ffffff',
       color: darkMode ? '#ffffff' : '#000000',
-      minHeight: '100vh'
+
     }}>
-      <div className="max-h-screen">
+      <div className="max-h-screen"> 
         <Box
           sx={{
             display: 'flex',
@@ -501,7 +501,6 @@ const Login = () => {
         </form>
       </div>
     </div>
-    
   );
 };
 
