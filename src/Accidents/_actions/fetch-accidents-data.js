@@ -2,16 +2,21 @@ import axios from 'axios';
 import CountNumberAccidentGroupe from "../../Model/CountNumberAccident";
 import dateConverter from "../../Model/dateConverter";
 
-const DATE_PROPERTIES = [
-   'DateHeureAccident', 'DateEnvoieDeclarationAccident',
-   'DateJourIncapDebut', 'DateJourIncapFin', 
-   'dateNaissance', 'dateDebutArret', 'dateFinArret',
-   'dateEntrEntreprise', 'dateSortie', 'dateNotifEmployeur',
-   'dateProcesVerbalOuiRedigeQuand', 'dateSoinsMedicauxDate', 
-   'dateSoinsMedicauxMedecin', 'dateSoinsMedicauxHopital',
-   'dateRepriseEffective', 'dateChangementFonction',
-   'dateDecede', 'dateIncapaciteTemporaire', 'dateTravailAddapte'
+const REQUIRED_FIELDS = [
+    'boolAsCloture',
+    'numeroGroupe',
+    'numeroEntreprise',
+    'AssureurStatus',
+    'DateHeureAccident',
+    'entrepriseName',
+    'secteur',
+    'nomTravailleur',
+    'prenomTravailleur',
+    'typeAccident',
+    '_id'
 ];
+
+const DATE_PROPERTIES = ['DateHeureAccident'];
 
 const createFetchData = (apiUrl) => (
     setAccidents,
@@ -24,48 +29,62 @@ const createFetchData = (apiUrl) => (
     return async () => {
         setLoading(true);
         try {
-            // Appel direct à l'API
-            const { data: accidents } = await axios.get(`http://${apiUrl}:3100/api/accidents`);
+            const queryParams = new URLSearchParams({
+                fields: JSON.stringify(REQUIRED_FIELDS)
+            });
 
-            if (!Array.isArray(accidents) || accidents.length === 0) {
-                console.error("La réponse de l'API est vide.");
+            if (!isAdminOrDev && userInfo?.entreprisesConseillerPrevention) {
+                queryParams.append('entreprises', JSON.stringify(userInfo.entreprisesConseillerPrevention));
+            }
+
+            const response = await axios.get(
+                `http://${apiUrl}:3100/api/accidents/filtered-fields?${queryParams}`
+            );
+
+            const { success, message, accidents } = response.data;
+
+            if (!success) {
+                console.error(message);
                 setAccidents([]);
                 setYearsFromData([]);
+                showSnackbar(message, 'error');
                 return;
             }
 
-            // Traitement des données comme dans getAccidents
+            if (!accidents || accidents.length === 0) {
+                setAccidents([]);
+                setYearsFromData([]);
+                showSnackbar('Aucun accident trouvé', 'info');
+                return;
+            }
+
+            // Traitement des données
             const processedAccidents = CountNumberAccidentGroupe(accidents).map(item => {
-                // Conversion des dates
                 DATE_PROPERTIES.forEach(property => {
-                    item[property] = dateConverter(item[property], property === 'DateHeureAccident');
+                    if (item[property]) {
+                        item[property] = dateConverter(item[property], true);
+                    }
                 });
                 return item;
             });
 
-            // Filtrer les accidents selon les permissions si nécessaire
-            let filteredAccidents = processedAccidents;
-            if (!isAdminOrDev && userInfo?.entreprisesConseillerPrevention) {
-                filteredAccidents = processedAccidents.filter(accident =>
-                    userInfo.entreprisesConseillerPrevention.includes(accident.entrepriseName)
-                );
-            }
-
-            // Extraire les années uniques des accidents
-            const years = [...new Set(filteredAccidents
-                .filter(accident => accident.DateHeureAccident) // Vérifier que la date existe
-                .map(accident => new Date(accident.DateHeureAccident).getFullYear())
+            // Extraction des années
+            const years = [...new Set(processedAccidents
+                .filter(accident => accident.DateHeureAccident)
+                .map(accident => {
+                    const date = new Date(accident.DateHeureAccident);
+                    return date.getFullYear();
+                })
+                .filter(year => !isNaN(year))
             )].sort((a, b) => b - a);
 
-            // Mettre à jour les états
-            setAccidents(filteredAccidents);
+            setAccidents(processedAccidents);
             setYearsFromData(years);
+            showSnackbar('Données récupérées avec succès', 'success');
 
         } catch (error) {
             console.error('Error fetching accidents data:', error);
             showSnackbar('Erreur lors de la récupération des données', 'error');
-            
-            // Réinitialiser les états en cas d'erreur
             setAccidents([]);
             setYearsFromData([]);
         } finally {
