@@ -7,7 +7,7 @@ import listFilesInAccident from './FilesActions';
 import { Tooltip } from '@mui/material';
 import { useLogger } from '../../Hook/useLogger';
 import config from '../../config.json';
-import { useTheme } from '../../Hook/ThemeContext';
+
 
 const apiUrl = config.apiUrl;
 
@@ -52,7 +52,6 @@ const getAccidentDetails = async (accidentId) => {
 };
 
 export default function PageDownloadFile() {
-    const { darkMode } = useTheme();
     const accidentId = useLocation().state;
     const { logAction } = useLogger(); // Ajout du hook useLogger
     const handleFileUpload = async (file, name) => {

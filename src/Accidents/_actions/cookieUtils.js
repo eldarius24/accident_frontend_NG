@@ -28,8 +28,6 @@ export const COOKIE_NAMES = {
     }
 };
 
-
-
 // Nouvelle fonction pour obtenir l'état sélectionné
 export const getSelectedStatusFromCookie = (prefix) => {
     const cookieName = COOKIE_NAMES.SELECTED_STATUS[prefix];
@@ -43,7 +41,6 @@ export const saveStatusSelection = (prefix, status) => {
     }
     setCookie(COOKIE_NAMES.SELECTED_STATUS[prefix], status);
 };
-
 
 /**
  * Récupère la valeur d'un cookie

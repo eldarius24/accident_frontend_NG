@@ -12,8 +12,6 @@ import {
     DialogActions,
     Typography,
     Tooltip,
-    Card,
-    CardContent
 } from '@mui/material';
 import ArchiveIcon from '@mui/icons-material/Archive';
 import UnarchiveIcon from '@mui/icons-material/Unarchive';
@@ -218,7 +216,6 @@ const BulkArchiveManager = ({ darkMode, onSuccess }) => {
             setLoading(false);
         }
     };
-
 
     const defaultStyle = {
         margin: '10px', backgroundColor: '#0098f9', '&:hover': { backgroundColor: '#95ad22' },
