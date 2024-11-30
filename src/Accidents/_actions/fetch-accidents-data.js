@@ -1,3 +1,5 @@
+// fetch-accidents-data.js
+
 import axios from 'axios';
 import CountNumberAccidentGroupe from "../../Model/CountNumberAccident";
 import dateConverter from "../../Model/dateConverter";

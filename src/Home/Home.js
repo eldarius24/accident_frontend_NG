@@ -9,7 +9,6 @@ import { keyframes } from '@mui/system';
 import { LineChart, Line } from 'recharts';
 import { useTheme } from '../Hook/ThemeContext.js'; // Add this import
 import { useUserConnected } from '../Hook/userConnected.js';
-import Footer from '../_composants/Footer';
 
 export default function Navigation() {
     const { isAdmin, isAdminOuConseiller, userInfo, isConseiller, isAdminOrDev, isAdminOrDevOrConseiller } = useUserConnected();
