@@ -1,5 +1,19 @@
 import axios from 'axios';
 
+const REQUIRED_FIELDS = [
+    'AddAction',
+    'AddActionDate',
+    'AddActionQui',
+    'AddActionSecteur',
+    'AddActionEntreprise',
+    'AddboolStatus',
+    'AddActoinmoi',
+    'AddActionanne',
+    'AddActionDange',
+    'priority',
+    '_id'
+];
+
 const createFetchData = (apiUrl) => (
     setAddactions,
     setEnterprises,
@@ -11,32 +25,54 @@ const createFetchData = (apiUrl) => (
     userInfo
 ) => {
     return async () => {
-        setLoading(true); // Assurez-vous que le loading est activé au début
+        setLoading(true);
         try {
-            const [actionsResponse, enterprisesResponse, sectorsResponse] = await Promise.all([
-                axios.get(`http://${apiUrl}:3100/api/planaction`),
-                axios.get(`http://${apiUrl}:3100/api/entreprises`),
-                axios.get(`http://${apiUrl}:3100/api/secteurs`)
-            ]);
+            const actionsResponse = await axios.get(
+                `http://${apiUrl}:3100/api/planaction/filtered-fields?fields=${JSON.stringify(REQUIRED_FIELDS)}`
+            );
 
-            // Récupérer les actions
-            const actionsData = actionsResponse.data || [];
+            if (!actionsResponse.data || !actionsResponse.data.success) {
+                throw new Error('Réponse des actions invalide');
+            }
+
+            const actionsData = actionsResponse.data.data || [];
             
-            // Extraire toutes les entreprises uniques des actions
             const entreprisesFromActions = [...new Set(actionsData
                 .filter(action => action?.AddActionEntreprise)
                 .map(action => action.AddActionEntreprise)
             )];
 
-            // Obtenir les entreprises de la table entreprises
-            let entreprisesData = (enterprisesResponse.data || [])
+            const enterprisesResponse = await axios.get(
+                `http://${apiUrl}:3100/api/entreprises/by-names`, {
+                    params: {
+                        names: JSON.stringify(entreprisesFromActions)
+                    }
+                }
+            );
+
+            if (!enterprisesResponse.data || !enterprisesResponse.data.success) {
+                throw new Error('Réponse des entreprises invalide');
+            }
+
+            const sectorsResponse = await axios.get(
+                `http://${apiUrl}:3100/api/secteurs/by-enterprises`, {
+                    params: {
+                        names: JSON.stringify(entreprisesFromActions)
+                    }
+                }
+            );
+
+            if (!sectorsResponse.data || !sectorsResponse.data.success) {
+                throw new Error('Réponse des secteurs invalide');
+            }
+
+            let entreprisesData = (enterprisesResponse.data.data || [])
                 .filter(e => e?.AddEntreName)
                 .map(e => ({
                     label: e.AddEntreName,
                     id: e._id
                 }));
 
-            // Ajouter les entreprises uniques des actions
             entreprisesFromActions.forEach(actionEntreprise => {
                 if (!entreprisesData.some(e => e.label === actionEntreprise)) {
                     entreprisesData.push({
@@ -46,30 +82,29 @@ const createFetchData = (apiUrl) => (
                 }
             });
 
-            // Filtrer selon les permissions si nécessaire
             if (!isAdminOrDev && userInfo?.entreprisesConseillerPrevention) {
                 entreprisesData = entreprisesData.filter(e =>
                     userInfo.entreprisesConseillerPrevention.includes(e.label)
                 );
             }
 
-            // Mettre à jour les états dans un ordre spécifique
+            const secteursData = sectorsResponse.data.data || [];
+
             setAddactions(actionsData);
             setEnterprises(entreprisesData);
-            
-            const secteursData = sectorsResponse.data || [];
             setAllSectors(secteursData);
-            setAvailableSectors(secteursData
+            const availableSectors = secteursData
                 .filter(s => s?.secteurName)
-                .map(s => s.secteurName)
-            );
+                .map(s => s.secteurName);
+            setAvailableSectors(availableSectors);
+
+            showSnackbar('Données récupérées avec succès', 'success');
 
         } catch (error) {
-            console.error('Error fetching data:', error);
             showSnackbar('Erreur lors de la récupération des données', 'error');
-            // Réinitialiser les états en cas d'erreur
+            
             setAddactions([]);
-            setEntreprises([]);
+            setEnterprises([]);
             setAllSectors([]);
             setAvailableSectors([]);
         } finally {
@@ -77,7 +112,5 @@ const createFetchData = (apiUrl) => (
         }
     };
 };
-
-
 
 export default createFetchData;
