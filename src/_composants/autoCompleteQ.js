@@ -13,6 +13,7 @@ export default function AutoCompleteQ({
     sx = { width: '50%', boxShadow: 3, margin: '0 auto 1rem' }
 }) {
     const { darkMode } = useTheme();
+    const initialValue = Array.isArray(defaultValue) ? defaultValue[0] : defaultValue;
     const [value, setValue] = useState(defaultValue || null);
     const [backgroundColor, setBackgroundColor] = useState(darkMode ? '#333333' : '#e62a5663');
 
@@ -37,7 +38,17 @@ export default function AutoCompleteQ({
                 id={id}
                 options={option}
                 value={value}
-                isOptionEqualToValue={(option, value) => option === value}
+                isOptionEqualToValue={(option, value) => {
+                    if (Array.isArray(value)) {
+                        return value.includes(option);
+                    }
+                    return option === value;
+                }}
+                getOptionLabel={(option) => {
+                    if (typeof option === 'string') return option;
+                    if (Array.isArray(option)) return option[0];
+                    return '';
+                }}
                 sx={{
                     ...sx,
                     backgroundColor,
