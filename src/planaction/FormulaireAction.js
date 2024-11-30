@@ -28,6 +28,7 @@ import { useTheme } from '../Hook/ThemeContext';
 const apiUrl = config.apiUrl;
 
 export default function FormulaireAction() {
+    const [isSubmitting, setIsSubmitting] = useState(false);
     const { darkMode } = useTheme();
     const { logAction } = useLogger();
     const { state: actionData } = useLocation();
@@ -172,9 +173,16 @@ export default function FormulaireAction() {
     }, [AddActionEntreprise, enterprises, allSectors, setValue, getLinkedSecteurs, AddActionSecteur]);
 
     const onSubmit = useCallback((data) => {
+        // Éviter la double soumission
+        if (isSubmitting) return;
+
+        // Marquer comme en cours de soumission
+        setIsSubmitting(true);
+
         // Vérifier que AddActionDange n'est pas vide
         if (!AddActionDange || AddActionDange.length === 0) {
             showSnackbar('Le type de risque est obligatoire', 'error');
+            setIsSubmitting(false); // Réactiver le bouton
             return;
         }
 
@@ -186,7 +194,6 @@ export default function FormulaireAction() {
             AddActionQui,
             AddAction,
             AddboolStatus,
-            // Ensure AddActionDange is always an array
             AddActionDange: Array.isArray(AddActionDange) ? AddActionDange :
                 typeof AddActionDange === 'string' ? AddActionDange.split(',').map(v => v.trim()).filter(Boolean) :
                     AddActionDange ? [AddActionDange] : [],
@@ -202,7 +209,6 @@ export default function FormulaireAction() {
 
         axios[method](url, formData)
             .then(async response => {
-                // Création du log
                 try {
                     await logAction({
                         actionType: actionData ? 'modification' : 'creation',
@@ -223,9 +229,10 @@ export default function FormulaireAction() {
                 console.error('Status de l\'erreur:', error.response?.status);
                 console.error('Headers de l\'erreur:', error.response?.headers);
                 showSnackbar(`Erreur lors de la ${actionData ? 'modification' : 'création'} de l'action`, 'error');
+                setIsSubmitting(false); // Réactiver le bouton en cas d'erreur
             });
-    }, [logAction, actionData, apiUrl, navigate, showSnackbar, AddActionEntreprise, AddActionSecteur, AddActionDate, AddActionQui, AddAction, AddboolStatus, AddActionDange, AddActionanne, AddActoinmoi, priority]);
-
+    }, [logAction, actionData, apiUrl, navigate, showSnackbar, AddActionEntreprise, AddActionSecteur, AddActionDate,
+        AddActionQui, AddAction, AddboolStatus, AddActionDange, AddActionanne, AddActoinmoi, priority, isSubmitting]);
     if (loading) {
         return <LinearProgress color="success" />;
     }
@@ -423,6 +430,7 @@ export default function FormulaireAction() {
                 <Tooltip title={`Cliquez ici pour ${actionData ? 'modifier' : 'créer'} l'action (certains champs doivent être obligatoirement remplis)`} arrow>
                     <Button
                         type="submit"
+                        disabled={isSubmitting}
                         sx={{
                             backgroundColor: darkMode ? '#424242' : '#ee752d60',
                             color: darkMode ? '#ffffff' : 'black',
@@ -439,6 +447,11 @@ export default function FormulaireAction() {
                             marginTop: '1cm',
                             height: '300%',
                             fontSize: '2rem',
+                            opacity: isSubmitting ? 0.7 : 1,
+                            '&:disabled': {
+                                backgroundColor: darkMode ? '#2a2a2a' : '#cccccc',
+                                cursor: 'not-allowed'
+                            },
                             '& .MuiSvgIcon-root': {
                                 color: darkMode ? '#fff' : 'inherit'
                             },
@@ -451,7 +464,10 @@ export default function FormulaireAction() {
                         }}
                         variant="contained"
                     >
-                        {actionData ? 'Modifier l\'action' : 'Créer l\'action'}
+                        {isSubmitting
+                            ? actionData ? 'Modification en cours...' : 'Création en cours...'
+                            : actionData ? 'Modifier l\'action' : 'Créer l\'action'
+                        }
                     </Button>
                 </Tooltip>
                 <CustomSnackbar

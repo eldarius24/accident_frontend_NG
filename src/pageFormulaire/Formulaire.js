@@ -31,6 +31,7 @@ const mandatoryFields = [
 ];
 
 export default function Formulaire() {
+    const [isSubmitting, setIsSubmitting] = useState(false);
     const { darkMode } = useTheme();
     const { logAction } = useLogger();
     const { state: accidentData } = useLocation();
@@ -59,6 +60,12 @@ export default function Formulaire() {
     }, []);
 
     const onSubmit = useCallback((data) => {
+        // Éviter la double soumission
+        if (isSubmitting) return;
+
+        // Marquer comme en cours de soumission
+        setIsSubmitting(true);
+
         // Convertir explicitement boolAsCloture en booléen
         const formattedData = {
             ...data,
@@ -70,6 +77,7 @@ export default function Formulaire() {
         if (missingFields.length > 0) {
             const missingFieldNames = missingFields.map(field => field.replace('_', ' ')).join(', ');
             showSnackbar(`Veuillez remplir les champs obligatoires suivants : ${missingFieldNames}`, 'error');
+            setIsSubmitting(false); // Réactiver le bouton en cas d'erreur
             return;
         }
 
@@ -81,8 +89,6 @@ export default function Formulaire() {
 
         axios[method](url, formattedData)
             .then(async response => {
-
-                // Création du log
                 try {
                     await logAction({
                         actionType: accidentData ? 'modification' : 'creation',
@@ -101,8 +107,9 @@ export default function Formulaire() {
             .catch(error => {
                 console.error('Erreur de requête:', error.message);
                 showSnackbar(`Erreur lors de la ${accidentData ? 'modification' : 'création'} de l'accident`, 'error');
+                setIsSubmitting(false); // Réactiver le bouton en cas d'erreur
             });
-    }, [accidentData, apiUrl, navigate, showSnackbar, logAction]);
+    }, [accidentData, apiUrl, navigate, showSnackbar, logAction, isSubmitting]);
 
     const handleStepChange = useCallback((direction) => {
         setActiveStep(prevStep => prevStep + direction);

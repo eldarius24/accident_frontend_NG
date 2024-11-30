@@ -93,7 +93,8 @@ const QuesEntrep = () => {
             quesEntreCommentaire: editMode ? questionnaire?.commentaire || '' : '',
             valueATf: editMode ? questionnaire?.valueATf || '' : '',
             valueBTf: editMode ? questionnaire?.valueBTf || '' : '',
-            resultTf: editMode ? questionnaire?.resultTf || '' : ''
+            resultTf: editMode ? questionnaire?.resultTf || '' : '',
+
         },
         uploadedFiles: editMode ? questionnaire?.files || [] : [],
         tfCalculation: {
@@ -105,7 +106,8 @@ const QuesEntrep = () => {
             open: false,
             message: '',
             severity: 'info'
-        }
+        },
+        isSubmitting: false
     });
 
     // Determine whether the Tf calculator should be shown based on the questionnaire type
@@ -314,6 +316,10 @@ const QuesEntrep = () => {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
+
+        // Éviter la double soumission
+        if (formState.isSubmitting) return;
+
         const { questionnaireData, uploadedFiles } = formState;
 
         // Validation
@@ -321,6 +327,12 @@ const QuesEntrep = () => {
             showSnackbar('Veuillez remplir tous les champs obligatoires', 'error');
             return;
         }
+
+        // Activer l'état de soumission
+        setFormState(prev => ({
+            ...prev,
+            isSubmitting: true
+        }));
 
         try {
             const dataToSubmit = {
@@ -348,7 +360,6 @@ const QuesEntrep = () => {
             });
 
             showSnackbar(`Questionnaire ${editMode ? 'modifié' : 'créé'} avec succès`, 'success');
-
             setTimeout(() => navigate('/entreprise'), 500);
         } catch (error) {
             console.error('Erreur lors de la sauvegarde:', error);
@@ -357,6 +368,11 @@ const QuesEntrep = () => {
                 `Erreur lors de la ${editMode ? 'modification' : 'création'} du questionnaire`,
                 'error'
             );
+            // Réactiver le bouton en cas d'erreur
+            setFormState(prev => ({
+                ...prev,
+                isSubmitting: false
+            }));
         }
     };
 
@@ -639,6 +655,7 @@ const QuesEntrep = () => {
                         <Button
                             type="submit"
                             variant="contained"
+                            disabled={formState.isSubmitting}
                             sx={{
                                 backgroundColor: darkMode ? '#424242' : '#ee742d59',
                                 color: darkMode ? '#ffffff' : 'black',
@@ -657,12 +674,20 @@ const QuesEntrep = () => {
                                     lg: '3rem'
                                 },
                                 border: darkMode ? '1px solid rgba(255,255,255,0.1)' : 'none',
+                                opacity: formState.isSubmitting ? 0.7 : 1,
+                                '&:disabled': {
+                                    backgroundColor: darkMode ? '#2a2a2a' : '#cccccc',
+                                    cursor: 'not-allowed'
+                                },
                                 '& .MuiSvgIcon-root': {
                                     color: darkMode ? '#fff' : 'inherit'
                                 },
                             }}
                         >
-                            Enregistrer le questionnaire
+                            {formState.isSubmitting
+                                ? 'Enregistrement en cours...'
+                                : 'Enregistrer le questionnaire'
+                            }
                         </Button>
                     </Tooltip>
                 </div>
