@@ -18,15 +18,20 @@ export default function MultipleAutoComplete({
 }) {
     const { darkMode } = useTheme();
 
-    // Normaliser defaultValue
-    const initialValue = Array.isArray(defaultValue) ? defaultValue :
-        defaultValue ? [defaultValue] :
-            [];
+    // Fonction pour normaliser les valeurs en tableau
+    const normalizeValue = (val) => {
+        if (!val) return [];
+        if (Array.isArray(val)) return val;
+        if (typeof val === 'string') return val.split(',').map(v => v.trim()).filter(Boolean);
+        return [val];
+    };
 
-    const [value, setValue] = useState(initialValue);
+    // État initial normalisé
+    const [value, setValue] = useState(normalizeValue(defaultValue));
     const [backgroundColor, setBackgroundColor] = useState(darkMode ? '#333333' : '#e62a5663');
     const [touched, setTouched] = useState(false);
 
+    // S'assurer que les options sont toujours un tableau valide
     const safeOptions = Array.isArray(option) ? option : [];
 
     useEffect(() => {
@@ -36,26 +41,22 @@ export default function MultipleAutoComplete({
         );
     }, [value, darkMode]);
 
+    // Mettre à jour la valeur quand defaultValue change
     useEffect(() => {
         if (defaultValue !== undefined && defaultValue !== null) {
-            const newValue = Array.isArray(defaultValue) ? defaultValue :
-                defaultValue ? [defaultValue] :
-                    [];
-            setValue(newValue);
+            setValue(normalizeValue(defaultValue));
         }
     }, [defaultValue]);
 
     const handleChange = (_, newValue) => {
-        // S'assurer que newValue est toujours un tableau
-        const safeNewValue = Array.isArray(newValue) ? newValue : [];
-        setValue(safeNewValue);
+        const normalizedValue = normalizeValue(newValue);
+        setValue(normalizedValue);
         setTouched(true);
         if (onChange) {
-            onChange(safeNewValue);
+            onChange(normalizedValue);
         }
     };
 
-    // Le champ est invalide seulement si required=true et qu'il n'y a pas de valeur sélectionnée après avoir été touché
     const isInvalid = required && touched && value.length === 0;
 
     return (
@@ -67,11 +68,12 @@ export default function MultipleAutoComplete({
             value={value}
             getOptionLabel={(option) => {
                 if (option === null || option === undefined) return '';
-                return option.toString();
+                return option.toString().trim();
             }}
             isOptionEqualToValue={(option, value) => {
-                // Comparaison directe des valeurs
-                return option === value;
+                const normalizedOption = option?.toString().trim();
+                const normalizedValue = value?.toString().trim();
+                return normalizedOption === normalizedValue;
             }}
             sx={{
                 ...sx,
@@ -101,31 +103,27 @@ export default function MultipleAutoComplete({
             }}
             onChange={handleChange}
             onBlur={() => setTouched(true)}
-            renderOption={(props, option, { selected }) => {
-                // Extract key from props and rest of the properties
-                const { key, ...otherProps } = props;
-                return (
-                    <li key={key} {...otherProps}>
-                        <Checkbox
-                            icon={icon}
-                            checkedIcon={checkedIcon}
-                            style={{ marginRight: 8 }}
-                            checked={selected}
-                        />
-                        {option}
-                    </li>
-                );
-            }}
+            renderOption={(props, option, { selected }) => (
+                <li {...props}>
+                    <Checkbox
+                        icon={icon}
+                        checkedIcon={checkedIcon}
+                        style={{ marginRight: 8 }}
+                        checked={selected}
+                    />
+                    {option}
+                </li>
+            )}
             renderInput={(params) => (
                 <TextField
                     {...params}
                     label={label}
                     required={required}
                     error={isInvalid}
-                    helperText={required || isInvalid ? "Ce champ est obligatoire" : ""}
+                    helperText={isInvalid ? "Ce champ est obligatoire" : ""}
                     inputProps={{
                         ...params.inputProps,
-                        required: false, // Désactive la validation HTML5 native
+                        required: false,
                     }}
                 />
             )}

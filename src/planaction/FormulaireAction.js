@@ -48,7 +48,15 @@ export default function FormulaireAction() {
     const [AddboolStatus, setAddboolStatus] = useState(watch('AddboolStatus') ? watch('AddboolStatus') : (actionData && actionData.AddboolStatus ? actionData.AddboolStatus : null));
     const [AddActionanne, setAddActionanne] = useState(watch('AddActionanne') ? watch('AddActionanne') : (actionData && actionData.AddActionanne ? actionData.AddActionanne : null));
     const [AddActoinmoi, setAddActoinmoi] = useState(watch('AddActoinmoi') ? watch('AddActoinmoi') : (actionData && actionData.AddActoinmoi ? actionData.AddActoinmoi : null));
-    const [AddActionDange, setAddActionDange] = useState(watch('AddActionDange') ? Array.isArray(watch('AddActionDange')) ? watch('AddActionDange') : [watch('AddActionDange')] : (actionData && actionData.AddActionDange ? Array.isArray(actionData.AddActionDange) ? actionData.AddActionDange : [actionData.AddActionDange] : []));
+    const [AddActionDange, setAddActionDange] = useState(() => {
+        const initial = watch('AddActionDange') || (actionData && actionData.AddActionDange) || [];
+        // Handle string input
+        if (typeof initial === 'string') {
+            return initial.split(',').map(v => v.trim()).filter(Boolean);
+        }
+        // Handle array input
+        return Array.isArray(initial) ? initial : initial ? [initial] : [];
+    });
     const [priority, setPriority] = useState(watch('priority') ? watch('priority') : (actionData && actionData.priority ? actionData.priority : null));
 
     const [snackbar, setSnackbar] = useState({
@@ -167,7 +175,7 @@ export default function FormulaireAction() {
         // Vérifier que AddActionDange n'est pas vide
         if (!AddActionDange || AddActionDange.length === 0) {
             showSnackbar('Le type de risque est obligatoire', 'error');
-            return; // Arrête la soumission du formulaire
+            return;
         }
 
         const formData = {
@@ -178,7 +186,10 @@ export default function FormulaireAction() {
             AddActionQui,
             AddAction,
             AddboolStatus,
-            AddActionDange: Array.isArray(AddActionDange) ? AddActionDange : [AddActionDange],
+            // Ensure AddActionDange is always an array
+            AddActionDange: Array.isArray(AddActionDange) ? AddActionDange :
+                typeof AddActionDange === 'string' ? AddActionDange.split(',').map(v => v.trim()).filter(Boolean) :
+                    AddActionDange ? [AddActionDange] : [],
             AddActionanne,
             AddActoinmoi,
             priority
@@ -368,14 +379,31 @@ export default function FormulaireAction() {
                     option={listeaddaction.AddActionDange}
                     label="Type de risque"
                     onChange={(AddActionDangeSelect) => {
-                        if (!Array.isArray(AddActionDangeSelect) || AddActionDangeSelect.length === 0) {
+                        // Ensure we're working with an array
+                        const selectedValues = Array.isArray(AddActionDangeSelect) ? AddActionDangeSelect :
+                            typeof AddActionDangeSelect === 'string' ? AddActionDangeSelect.split(',').map(v => v.trim()).filter(Boolean) :
+                                AddActionDangeSelect ? [AddActionDangeSelect] : [];
+
+                        if (selectedValues.length === 0) {
                             showSnackbar('Au moins un type de risque doit être sélectionné', 'warning');
                         }
-                        setAddActionDange(AddActionDangeSelect);
-                        setValue('AddActionDange', AddActionDangeSelect);
+
+                        setAddActionDange(selectedValues);
+                        setValue('AddActionDange', selectedValues);
                     }}
                     defaultValue={AddActionDange}
                     required={true}
+                    isOptionEqualToValue={(option, value) => {
+                        // Handle both string and array comparisons
+                        if (Array.isArray(value)) {
+                            return value.includes(option);
+                        }
+                        if (typeof value === 'string') {
+                            const values = value.split(',').map(v => v.trim());
+                            return values.includes(option);
+                        }
+                        return option === value;
+                    }}
                 />
                 <AutoCompleteQ
                     id='priority'
