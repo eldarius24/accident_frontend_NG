@@ -372,91 +372,81 @@ const EnterpriseDivers = () => {
         setSelectedFile(null);
         setModalOpen(false);
     };
+    
+    const fetchData = useCallback(async () => {
+        if (!apiUrl) return;
+        
+        setLoading(true);
+        const controller = new AbortController();
 
-    const fetchQuestionnaires = useCallback(async () => {
         try {
-            const response = await axios.get(`http://${apiUrl}:3100/api/questionnaires`);
-            const questionnairesByEnterprise = response.data.reduce((acc, q) => {
+            const enterpriseResponse = await axios.get(
+                `http://${apiUrl}:3100/api/entreprises`, 
+                { 
+                    signal: controller.signal,
+                    params: {
+                        fields: 'AddEntreName _id'
+                    }
+                }
+            );
+
+            if (Array.isArray(enterpriseResponse.data)) {
+                const filteredData = isAdminOrDev
+                    ? enterpriseResponse.data
+                    : enterpriseResponse.data.filter(enterprise =>
+                        isConseiller && isConseillerPrevention(enterprise.AddEntreName)
+                        || isUserPrevention && isUserPrev(enterprise.AddEntreName)
+                    );
+
+                setEnterprises(filteredData);
+                setFilteredEnterprises(
+                    Array.isArray(selectedEnterprises) && selectedEnterprises.length > 0
+                        ? filteredData.filter(e => selectedEnterprises.includes(e.AddEntreName))
+                        : filteredData
+                );
+            }
+
+            const questionnaireResponse = await axios.get(
+                `http://${apiUrl}:3100/api/questionnaires`,
+                { 
+                    signal: controller.signal,
+                }
+            );
+
+            const questionnairesByEnterprise = questionnaireResponse.data.reduce((acc, q) => {
                 if (!acc[q.entrepriseId]) {
                     acc[q.entrepriseId] = [];
                 }
                 acc[q.entrepriseId].push(q);
                 return acc;
             }, {});
+
             setQuestionnaires(questionnairesByEnterprise);
+
         } catch (error) {
-            console.error('Error fetching questionnaires:', error);
-        }
-    }, [apiUrl]);
-
-    useEffect(() => {
-        let isSubscribed = true;
-        const controller = new AbortController();
-
-        const fetchData = async () => {
-            if (!apiUrl) return;
-
-            setLoading(true);
-            try {
-                const [enterprisesResponse, questionnairesResponse] = await Promise.all([
-                    axios.get(`http://${apiUrl}:3100/api/entreprises`, {
-                        signal: controller.signal
-                    }),
-                    axios.get(`http://${apiUrl}:3100/api/questionnaires`, {
-                        signal: controller.signal
-                    })
-                ]);
-
-                if (!isSubscribed) return;
-
-                const enterpriseData = enterprisesResponse.data;
-
-                if (Array.isArray(enterpriseData)) {
-                    const filteredData = isAdminOrDev
-                        ? enterpriseData
-                        : enterpriseData.filter(enterprise =>
-                            isConseiller && isConseillerPrevention(enterprise.AddEntreName)
-                            || isUserPrevention && isUserPrev(enterprise.AddEntreName)
-                        );
-
-                    setEnterprises(filteredData);
-                    setFilteredEnterprises(
-                        Array.isArray(selectedEnterprises) && selectedEnterprises.length > 0
-                            ? filteredData.filter(e => selectedEnterprises.includes(e.AddEntreName))
-                            : filteredData
-                    );
-                }
-
-                const questionnairesByEnterprise = questionnairesResponse.data.reduce((acc, q) => {
-                    if (!acc[q.entrepriseId]) {
-                        acc[q.entrepriseId] = [];
-                    }
-                    acc[q.entrepriseId].push(q);
-                    return acc;
-                }, {});
-
-                if (isSubscribed) {
-                    setQuestionnaires(questionnairesByEnterprise);
-                    setLoading(false);
-                }
-
-            } catch (error) {
-                if (error.name === 'AbortError') {
-                    return;
-                }
-                console.error('Error fetching data:', error);
-                if (isSubscribed) {
-                    setLoading(false);
-                }
+            if (error.name === 'AbortError') {
+                console.log('Requête annulée');
+                return;
             }
-        };
-
-        fetchData();
+            console.error('Error fetching data:', error);
+        } finally {
+            setLoading(false);
+        }
 
         return () => {
-            isSubscribed = false;
             controller.abort();
         };
+    }, [apiUrl, isAdminOrDev, isConseiller, isUserPrevention, isConseillerPrevention, isUserPrev, selectedEnterprises]);
+
+
+    // useEffect reste le même
+    useEffect(() => {
+        const fetchDataAndCleanup = async () => {
+            const cleanup = await fetchData();
+            return cleanup;
+        };
+
+        fetchDataAndCleanup();
     }, []);
 
     const handleDeleteFile = async (questionnaireId, fileId, enterpriseId) => {
@@ -787,24 +777,24 @@ const EnterpriseDivers = () => {
 
                             <Divider sx={{ my: 2, backgroundColor: darkMode ? '#ffffff' : '#000000' }} />
                             {isAdminOrDevOrConseiller && (
-                            <Tooltip title="Ajouter un nouveau document lié a l'entreprise" arrow>
-                                <Button
-                                    variant="contained"
-                                    startIcon={<GetAppIcon />}
-                                    onClick={() => handleStartQuestionnaire(enterprise)}
-                                    sx={{
-                                        ...buttonStyle,
-                                        transition: 'all 0.1s ease-in-out',
-                                        '&:hover': {
-                                            backgroundColor: '#95ad22',
-                                            transform: 'scale(1.08)',
-                                            boxShadow: 6
-                                        }
-                                    }}
-                                >
-                                    Ajouter un pièce
-                                </Button>
-                            </Tooltip>
+                                <Tooltip title="Ajouter un nouveau document lié a l'entreprise" arrow>
+                                    <Button
+                                        variant="contained"
+                                        startIcon={<GetAppIcon />}
+                                        onClick={() => handleStartQuestionnaire(enterprise)}
+                                        sx={{
+                                            ...buttonStyle,
+                                            transition: 'all 0.1s ease-in-out',
+                                            '&:hover': {
+                                                backgroundColor: '#95ad22',
+                                                transform: 'scale(1.08)',
+                                                boxShadow: 6
+                                            }
+                                        }}
+                                    >
+                                        Ajouter un pièce
+                                    </Button>
+                                </Tooltip>
                             )}
                             <AccordionControls enterprise={enterprise} />
                             {organizeQuestionnaires(questionnaires[enterprise._id])?.map(({ year, questionnaires }) => (
@@ -980,33 +970,33 @@ const EnterpriseDivers = () => {
                                                                             </Button>
                                                                         </Tooltip>
                                                                         {isAdminOrDevOrConseiller && (
-                                                                        <Tooltip title="Renommer le fichier" arrow>
-                                                                            <Button
-                                                                                sx={{
-                                                                                    backgroundColor: blueGrey[500],
-                                                                                    minWidth: '36px',
-                                                                                    width: '36px',
-                                                                                    height: '36px',
-                                                                                    padding: 0,
-                                                                                    '&:hover': {
-                                                                                        backgroundColor: blueGrey[700],
-                                                                                        transform: 'scale(1.08)'
-                                                                                    }
-                                                                                }}
-                                                                                onClick={() => handleRenameFile(
-                                                                                    file.fileId,
-                                                                                    file.fileName,
-                                                                                    q._id,
-                                                                                    enterprise.AddEntreName,
-                                                                                    (fileId, newFileName) => handleRename(q._id, fileId, newFileName),
-                                                                                    logAction
-                                                                                )}
-                                                                                variant="contained"
-                                                                                color="info"
-                                                                            >
-                                                                                <EditIcon sx={{ fontSize: 20 }} />
-                                                                            </Button>
-                                                                        </Tooltip>
+                                                                            <Tooltip title="Renommer le fichier" arrow>
+                                                                                <Button
+                                                                                    sx={{
+                                                                                        backgroundColor: blueGrey[500],
+                                                                                        minWidth: '36px',
+                                                                                        width: '36px',
+                                                                                        height: '36px',
+                                                                                        padding: 0,
+                                                                                        '&:hover': {
+                                                                                            backgroundColor: blueGrey[700],
+                                                                                            transform: 'scale(1.08)'
+                                                                                        }
+                                                                                    }}
+                                                                                    onClick={() => handleRenameFile(
+                                                                                        file.fileId,
+                                                                                        file.fileName,
+                                                                                        q._id,
+                                                                                        enterprise.AddEntreName,
+                                                                                        (fileId, newFileName) => handleRename(q._id, fileId, newFileName),
+                                                                                        logAction
+                                                                                    )}
+                                                                                    variant="contained"
+                                                                                    color="info"
+                                                                                >
+                                                                                    <EditIcon sx={{ fontSize: 20 }} />
+                                                                                </Button>
+                                                                            </Tooltip>
                                                                         )}
                                                                         <Tooltip title="Visualiser le fichier" arrow>
                                                                             <Button
@@ -1024,21 +1014,21 @@ const EnterpriseDivers = () => {
                                                                             </Button>
                                                                         </Tooltip>
                                                                         {isAdminOrDevOrConseiller && (
-                                                                        <Tooltip title="Supprimer le fichier" arrow>
-                                                                            <Button
-                                                                                sx={{
-                                                                                    minWidth: '36px',
-                                                                                    width: '36px',
-                                                                                    height: '36px',
-                                                                                    padding: 0
-                                                                                }}
-                                                                                onClick={() => handleDelete(q._id, file.fileId, enterprise._id, 'file')}
-                                                                                variant="contained"
-                                                                                color="error"
-                                                                            >
-                                                                                <DeleteForeverIcon sx={{ fontSize: 20 }} />
-                                                                            </Button>
-                                                                        </Tooltip>
+                                                                            <Tooltip title="Supprimer le fichier" arrow>
+                                                                                <Button
+                                                                                    sx={{
+                                                                                        minWidth: '36px',
+                                                                                        width: '36px',
+                                                                                        height: '36px',
+                                                                                        padding: 0
+                                                                                    }}
+                                                                                    onClick={() => handleDelete(q._id, file.fileId, enterprise._id, 'file')}
+                                                                                    variant="contained"
+                                                                                    color="error"
+                                                                                >
+                                                                                    <DeleteForeverIcon sx={{ fontSize: 20 }} />
+                                                                                </Button>
+                                                                            </Tooltip>
                                                                         )}
                                                                     </Box>
                                                                 </Box>

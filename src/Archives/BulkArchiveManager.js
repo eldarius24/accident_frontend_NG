@@ -36,11 +36,17 @@ const BulkArchiveManager = ({ darkMode, onSuccess }) => {
         try {
             const endpoint = type === 'accident' ? 'accidents' : 'planaction';
             const response = await axios.get(`http://${apiUrl}:3100/api/${endpoint}`);
-            const years = [...new Set(response.data.map(item =>
-                type === 'accident'
-                    ? new Date(item.DateHeureAccident).getFullYear()
-                    : item.AddActionanne
-            ))].sort((a, b) => b - a);
+            const years = [...new Set(response.data
+                .map(item => {
+                    if (type === 'accident') {
+                        return item.DateHeureAccident ? new Date(item.DateHeureAccident).getFullYear() : null;
+                    } else {
+                        return item.AddActionanne || null;
+                    }
+                })
+                .filter(year => year !== null) // Filtrer les années null ou undefined
+            )].sort((a, b) => b - a);
+            
             setAvailableYearsArchive(years);
         } catch (error) {
             console.error('Erreur lors de la récupération des années actives:', error);
@@ -52,12 +58,18 @@ const BulkArchiveManager = ({ darkMode, onSuccess }) => {
         if (!type) return;
         try {
             const response = await axios.get(`http://${apiUrl}:3100/api/archives/${type}`);
-            const years = [...new Set(response.data.map(item => {
-                const donnees = item.donnees;
-                return type === 'accident'
-                    ? new Date(donnees.DateHeureAccident).getFullYear()
-                    : donnees.AddActionanne;
-            }))].sort((a, b) => b - a);
+            const years = [...new Set(response.data
+                .map(item => {
+                    const donnees = item.donnees;
+                    if (type === 'accident') {
+                        return donnees.DateHeureAccident ? new Date(donnees.DateHeureAccident).getFullYear() : null;
+                    } else {
+                        return donnees.AddActionanne || null;
+                    }
+                })
+                .filter(year => year !== null) // Filtrer les années null ou undefined
+            )].sort((a, b) => b - a);
+            
             setAvailableYearsRestore(years);
         } catch (error) {
             console.error('Erreur lors de la récupération des années archivées:', error);
