@@ -29,6 +29,10 @@ const createFetchData = (apiUrl) => (
     userInfo
 ) => {
     return async () => {
+        console.log("Début fetchData");
+        console.log("User Info:", userInfo);
+        console.log("Is Admin or Dev:", isAdminOrDev);
+        
         setLoading(true);
         try {
             const queryParams = new URLSearchParams({
@@ -36,12 +40,15 @@ const createFetchData = (apiUrl) => (
             });
 
             if (!isAdminOrDev && userInfo?.entreprisesConseillerPrevention) {
+                console.log("Entreprises du conseiller:", userInfo.entreprisesConseillerPrevention);
                 queryParams.append('entreprises', JSON.stringify(userInfo.entreprisesConseillerPrevention));
             }
 
-            const response = await axios.get(
-                `http://${apiUrl}:3100/api/accidents/filtered-fields?${queryParams}`
-            );
+            const url = `http://${apiUrl}:3100/api/accidents/filtered-fields?${queryParams}`;
+            console.log("URL appelée:", url);
+
+            const response = await axios.get(url);
+            console.log("Réponse brute:", response.data);
 
             const { success, message, accidents } = response.data;
 

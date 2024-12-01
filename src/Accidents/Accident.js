@@ -412,14 +412,14 @@ function Accident() {
      * @param {function} [params.onError] - La fonction à appeler en cas d'erreur
      */
     const handleExportAccidentClick = useCallback(() => {
-        const cleanSearchTerm = searchTerm || ''; // S'assure que searchTerm n'est jamais undefined
+        const cleanSearchTerm = searchTerm || ''; 
 
         handleExportDataAccident({
             filteredData,
             isAdminOrDev,
             userInfo,
             logAction,
-            searchTerm: cleanSearchTerm, // Passe la version nettoyée
+            searchTerm: cleanSearchTerm, 
             onSuccess: (message) => showSnackbar(message, 'success'),
             onError: (message) => showSnackbar(message, 'error')
         });
