@@ -11,7 +11,8 @@ const putUser = async (idUser, dataUser) => {
             ...dataUser,
             adresseMail: dataUser.userLogin,
             darkMode: dataUser.darkMode ?? false,
-            selectedYears: dataUser.selectedYears ?? [new Date().getFullYear().toString()]
+            selectedYears: dataUser.selectedYears ?? [new Date().getFullYear().toString()],
+            entreprisesUserPrevention: dataUser.entreprisesUserPrevention ?? []
         };
 
         if (idUser) {

@@ -11,7 +11,7 @@ import { useTheme } from '../Hook/ThemeContext.js'; // Add this import
 import { useUserConnected } from '../Hook/userConnected.js';
 
 export default function Navigation() {
-    const { isAdmin, isAdminOuConseiller, userInfo, isConseiller, isAdminOrDev, isAdminOrDevOrConseiller } = useUserConnected();
+    const { isAdmin, isAdminOuConseiller, userInfo, isConseiller, isAdminOrDev, isAdminOrDevOrConseiller, isUserPreventionOrAdminOrConseiller } = useUserConnected();
     const { darkMode } = useTheme(); // Add this hook
     const [hoverStates, setHoverStates] = useState({
         accident: false,
@@ -483,7 +483,7 @@ export default function Navigation() {
                                 </Box>
                             </Button>
                         </Tooltip>
-                        {isAdminOrDevOrConseiller && (
+                        {isUserPreventionOrAdminOrConseiller && (
                             <Tooltip title="Gérer les documents divers" arrow>
                                 <Button
                                     component={Link}

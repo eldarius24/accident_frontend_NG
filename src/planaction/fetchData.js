@@ -82,9 +82,15 @@ const createFetchData = (apiUrl) => (
                 }
             });
 
-            if (!isAdminOrDev && userInfo?.entreprisesConseillerPrevention) {
+            // Correction de la logique de filtrage pour les non-admins
+            if (!isAdminOrDev) {
+                const authorizedEnterprises = [
+                    ...(userInfo?.entreprisesConseillerPrevention || []),
+                    ...(userInfo?.entreprisesUserPrevention || [])
+                ];
+                
                 entreprisesData = entreprisesData.filter(e =>
-                    userInfo.entreprisesConseillerPrevention.includes(e.label)
+                    authorizedEnterprises.includes(e.label)
                 );
             }
 

@@ -32,16 +32,16 @@ const createFetchData = (apiUrl) => (
         console.log("Début fetchData");
         console.log("User Info:", userInfo);
         console.log("Is Admin or Dev:", isAdminOrDev);
-        
+
         setLoading(true);
         try {
             const queryParams = new URLSearchParams({
                 fields: JSON.stringify(REQUIRED_FIELDS)
             });
-
-            if (!isAdminOrDev && userInfo?.entreprisesConseillerPrevention) {
-                console.log("Entreprises du conseiller:", userInfo.entreprisesConseillerPrevention);
-                queryParams.append('entreprises', JSON.stringify(userInfo.entreprisesConseillerPrevention));
+            // rend uniquement les donnée liée au conseiller en prevention visibles
+            if (!isAdminOrDev && userInfo?.entreprisesUserPrevention) {
+                console.log("Entreprises du conseiller:", userInfo.entreprisesUserPrevention);
+                queryParams.append('entreprises', JSON.stringify(userInfo.entreprisesUserPrevention));
             }
 
             const url = `http://${apiUrl}:3100/api/accidents/filtered-fields?${queryParams}`;

@@ -12,6 +12,7 @@ import ViewListIcon from '@mui/icons-material/ViewList';
 import AddIcon from '@mui/icons-material/Add';
 import config from '../config.json';
 
+
 const apiUrl = config.apiUrl;
 /**
  * Component React qui permet d'afficher le panel d'administration des droits

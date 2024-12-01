@@ -100,6 +100,9 @@ export default function Adminuser() {
         if (user.boolAdministrateur && user.boolDeveloppeur) return 'Administrateur et Développeur';
         if (user.boolAdministrateur) return 'Administrateur';
         if (user.boolDeveloppeur) return 'Développeur';
+        if (user.entreprisesUserPrevention && user.entreprisesUserPrevention.length > 0) {
+            return 'Utilisateur en prévention';
+        }
         if (user.entreprisesConseillerPrevention && user.entreprisesConseillerPrevention.length > 0) {
             return 'Conseiller en prévention';
         }

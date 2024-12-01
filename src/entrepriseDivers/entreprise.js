@@ -61,7 +61,7 @@ const EnterpriseDivers = () => {
     const { darkMode } = useTheme();
     const [enterprises, setEnterprises] = useState([]);
     const [loading, setLoading] = useState(true);
-    const { isConseiller, userInfo, isAdminOrDev } = useUserConnected();
+    const { isConseiller, userInfo, isAdminOrDev, isUserPreventionOrConseiller, isUserPrevention } = useUserConnected();
     const apiUrl = config.apiUrl;
     const [questionnaires, setQuestionnaires] = useState({});
     const [filteredEnterprises, setFilteredEnterprises] = useState([]);
@@ -332,6 +332,11 @@ const EnterpriseDivers = () => {
             && userInfo?.entreprisesConseillerPrevention.includes(entrepriseName);
     }, [userInfo]);
 
+    const isUserPrev = useCallback((entrepriseName) => {
+        return Array.isArray(userInfo?.entreprisesUserPrevention)
+            && userInfo?.entreprisesUserPrevention.includes(entrepriseName);
+    }, [userInfo]);
+
     const handleOpenPreview = async (fileId, fileName) => {
         if (!fileId || !fileName) return;
 
@@ -412,6 +417,7 @@ const EnterpriseDivers = () => {
                         ? enterpriseData
                         : enterpriseData.filter(enterprise =>
                             isConseiller && isConseillerPrevention(enterprise.AddEntreName)
+                            || isUserPrevention && isUserPrev(enterprise.AddEntreName)
                         );
 
                     setEnterprises(filteredData);

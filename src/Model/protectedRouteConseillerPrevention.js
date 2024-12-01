@@ -13,17 +13,17 @@ import { useUserConnected } from '../Hook/userConnected';
  */
 const ProtectedRouteAdminOrConseiller = ({ children }) => {
   const navigate = useNavigate();
-  const { isAuthenticated, isAdmin, isConseiller,isAdminOrDev } = useUserConnected();
+  const { isAuthenticated, isUserPreventionOrAdminOrConseiller } = useUserConnected();
 
   useEffect(() => {
     if (!isAuthenticated) {
       navigate('/login');
-    } else if (!isAdminOrDev && !isConseiller) {
+    } else if (!isUserPreventionOrAdminOrConseiller) {
       navigate('/Accident'); // Rediriger vers la page d'accueil si l'utilisateur n'est ni admin ni conseiller
     }
-  }, [isAuthenticated, isAdminOrDev, isConseiller, navigate]);
+  }, [isAuthenticated, isUserPreventionOrAdminOrConseiller, navigate]);
 
-  if (!isAuthenticated || (!isAdminOrDev && !isConseiller)) {
+  if (!isAuthenticated || !isUserPreventionOrAdminOrConseiller) {
     return null; // Ne pas afficher les enfants si l'utilisateur n'est pas autorisé
   }
 

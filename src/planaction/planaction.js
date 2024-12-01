@@ -412,11 +412,13 @@ export default function PlanAction({ accidentData }) {
     }, [apiUrl, showSnackbar]);
 
     const userEnterprise = userInfo?.entreprisesConseillerPrevention || [];
+    const userPrevEntreprise = userInfo?.entreprisesUserPrevention || [];
 
     const canViewAction = useCallback((action) => {
         if (isAdminOrDev) return true;
-        return userEnterprise.includes(action.AddActionEntreprise);
-    }, [isAdminOrDev, userEnterprise]);
+        return userEnterprise.includes(action.AddActionEntreprise) || userPrevEntreprise.includes(action.AddActionEntreprise);
+    }, [isAdminOrDev, userEnterprise, userPrevEntreprise]);
+
 
     const sortByYear = useCallback((a, b) => {
         return parseInt(a.AddActionanne) - parseInt(b.AddActionanne);
