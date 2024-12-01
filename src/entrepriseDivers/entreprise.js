@@ -33,7 +33,6 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Cookies from 'js-cookie';
 import NumbersIcon from '@mui/icons-material/Numbers';
 import handleRenameFile from './fileRenameEntre';
-import Footer from '../_composants/Footer';
 
 const modalStyles = {
     position: 'absolute',
@@ -61,7 +60,7 @@ const EnterpriseDivers = () => {
     const { darkMode } = useTheme();
     const [enterprises, setEnterprises] = useState([]);
     const [loading, setLoading] = useState(true);
-    const { isConseiller, userInfo, isAdminOrDev, isUserPreventionOrConseiller, isUserPrevention } = useUserConnected();
+    const { isConseiller, userInfo, isAdminOrDev, isAdminOrDevOrConseiller, isUserPrevention } = useUserConnected();
     const apiUrl = config.apiUrl;
     const [questionnaires, setQuestionnaires] = useState({});
     const [filteredEnterprises, setFilteredEnterprises] = useState([]);
@@ -790,6 +789,7 @@ const EnterpriseDivers = () => {
                             />
 
                             <Divider sx={{ my: 2, backgroundColor: darkMode ? '#ffffff' : '#000000' }} />
+                            {isAdminOrDevOrConseiller && (
                             <Tooltip title="Ajouter un nouveau document lié a l'entreprise" arrow>
                                 <Button
                                     variant="contained"
@@ -808,6 +808,7 @@ const EnterpriseDivers = () => {
                                     Ajouter un pièce
                                 </Button>
                             </Tooltip>
+                            )}
                             <AccordionControls enterprise={enterprise} />
                             {organizeQuestionnaires(questionnaires[enterprise._id])?.map(({ year, questionnaires }) => (
                                 <Accordion
@@ -864,45 +865,47 @@ const EnterpriseDivers = () => {
                                                             {renderConditionalValue('Tf', q.resultTf)}
                                                         </Typography>
                                                     </Box>
-                                                    <Box display="flex" gap={1}>
-                                                        <Tooltip title="Modifier le questionnaire" arrow>
-                                                            <Button
-                                                                sx={{
-                                                                    backgroundColor: blueGrey[500],
-                                                                    minWidth: '36px',
-                                                                    width: '36px',
-                                                                    height: '36px',
-                                                                    padding: 0,
-                                                                    '&:hover': {
-                                                                        backgroundColor: blueGrey[700],
-                                                                        transform: 'scale(1.08)'
-                                                                    }
-                                                                }}
-                                                                onClick={() => handleEdit(q._id, enterprise._id)}
-                                                                variant="contained"
-                                                            >
-                                                                <EditIcon sx={{ fontSize: 20 }} />
-                                                            </Button>
-                                                        </Tooltip>
-                                                        <Tooltip title="Supprimer le questionnaire" arrow>
-                                                            <Button
-                                                                sx={{
-                                                                    minWidth: '36px',
-                                                                    width: '36px',
-                                                                    height: '36px',
-                                                                    padding: 0,
-                                                                    '&:hover': {
-                                                                        transform: 'scale(1.08)'
-                                                                    }
-                                                                }}
-                                                                onClick={() => handleDelete(q._id, null, enterprise._id, 'questionnaire')}
-                                                                variant="contained"
-                                                                color="error"
-                                                            >
-                                                                <DeleteForeverIcon sx={{ fontSize: 20 }} />
-                                                            </Button>
-                                                        </Tooltip>
-                                                    </Box>
+                                                    {isAdminOrDevOrConseiller && (
+                                                        <Box display="flex" gap={1}>
+                                                            <Tooltip title="Modifier le questionnaire" arrow>
+                                                                <Button
+                                                                    sx={{
+                                                                        backgroundColor: blueGrey[500],
+                                                                        minWidth: '36px',
+                                                                        width: '36px',
+                                                                        height: '36px',
+                                                                        padding: 0,
+                                                                        '&:hover': {
+                                                                            backgroundColor: blueGrey[700],
+                                                                            transform: 'scale(1.08)'
+                                                                        }
+                                                                    }}
+                                                                    onClick={() => handleEdit(q._id, enterprise._id)}
+                                                                    variant="contained"
+                                                                >
+                                                                    <EditIcon sx={{ fontSize: 20 }} />
+                                                                </Button>
+                                                            </Tooltip>
+                                                            <Tooltip title="Supprimer le questionnaire" arrow>
+                                                                <Button
+                                                                    sx={{
+                                                                        minWidth: '36px',
+                                                                        width: '36px',
+                                                                        height: '36px',
+                                                                        padding: 0,
+                                                                        '&:hover': {
+                                                                            transform: 'scale(1.08)'
+                                                                        }
+                                                                    }}
+                                                                    onClick={() => handleDelete(q._id, null, enterprise._id, 'questionnaire')}
+                                                                    variant="contained"
+                                                                    color="error"
+                                                                >
+                                                                    <DeleteForeverIcon sx={{ fontSize: 20 }} />
+                                                                </Button>
+                                                            </Tooltip>
+                                                        </Box>
+                                                    )}
                                                 </Box>
 
                                                 {/* Fichiers du questionnaire */}
@@ -979,6 +982,7 @@ const EnterpriseDivers = () => {
                                                                                 <GetAppIcon sx={{ fontSize: 20 }} />
                                                                             </Button>
                                                                         </Tooltip>
+                                                                        {isAdminOrDevOrConseiller && (
                                                                         <Tooltip title="Renommer le fichier" arrow>
                                                                             <Button
                                                                                 sx={{
@@ -1006,6 +1010,7 @@ const EnterpriseDivers = () => {
                                                                                 <EditIcon sx={{ fontSize: 20 }} />
                                                                             </Button>
                                                                         </Tooltip>
+                                                                        )}
                                                                         <Tooltip title="Visualiser le fichier" arrow>
                                                                             <Button
                                                                                 sx={{
@@ -1021,6 +1026,7 @@ const EnterpriseDivers = () => {
                                                                                 <VisibilityIcon sx={{ fontSize: 20 }} />
                                                                             </Button>
                                                                         </Tooltip>
+                                                                        {isAdminOrDevOrConseiller && (
                                                                         <Tooltip title="Supprimer le fichier" arrow>
                                                                             <Button
                                                                                 sx={{
@@ -1036,6 +1042,7 @@ const EnterpriseDivers = () => {
                                                                                 <DeleteForeverIcon sx={{ fontSize: 20 }} />
                                                                             </Button>
                                                                         </Tooltip>
+                                                                        )}
                                                                     </Box>
                                                                 </Box>
                                                             ))}
