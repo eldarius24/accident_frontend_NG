@@ -31,6 +31,13 @@ import Archivage from './Archives/archivages';
 import Archives from './Archives/archives';
 import Home from './Home/Home';
 import Footer from './_composants/Footer';
+import VehicleUserManagement from './pageAdmin/user/VehicleUserManagement';
+import AddVehicleUser from './pageAdmin/user/addUser/_actions/AddVehicleUser';
+import AdminAddVéhiculeCompany from './pageAdmin/AdminAddVéhiculeCompany';
+import AdminVehiculeCompany from './pageAdmin/AdminVehiculeCompany'; 
+import AdminVehicule from './pageAdmin/AdminVehicule';
+import AdminAddVehicule from './pageAdmin/AdminAddVehicule';
+
 /**
  * App est le composant principal de l'application. Il contient les routes 
  * ainsi que la barre de navigation.
@@ -47,44 +54,50 @@ import Footer from './_composants/Footer';
 const App = () => {
   return (
     <div className="app-container">
-    <ThemeProvider>
-      <Router>
-        <div className="content-wrapper">
-          <ResponsiveAppBar />
-          <main className="main-content">
-          <Routes>
-            {/* Routes accessibles uniquement par usernormal */}
-            <Route path="/" element={<ProtectedRoute><Home/></ProtectedRoute>} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/Accident" element={<ProtectedRoute><Accidents/></ProtectedRoute>} />
-            <Route path="/statistiques" element={<ProtectedRoute><Statistiques /></ProtectedRoute>} />
+      <ThemeProvider>
+        <Router>
+          <div className="content-wrapper">
+            <ResponsiveAppBar />
+            <main className="main-content">
+              <Routes>
+                {/* Routes accessibles uniquement par usernormal */}
+                <Route path="/login" element={<Login />} />
+                <Route path="/vehicleUsers" element={<VehicleUserManagement />} />
+                <Route path="/addVehicleUser" element={<AddVehicleUser />} />
+                <Route path="/adminVehiculeCompany" element={<AdminVehiculeCompany />} />
+                <Route path="/adminAddVehiculeCompany" element={<AdminAddVéhiculeCompany />} />
+                <Route path="/adminVehicule" element={<AdminVehicule />} />
+                <Route path="/adminAddVehicule" element={<AdminAddVehicule />} />
 
-            {/* Routes accessibles uniquement par isAdmin */}
-            <Route path="/logView" element={<ProtectedRouteAdmin><LogView /></ProtectedRouteAdmin>} />
-            <Route path="/adminUser" element={<ProtectedRouteAdmin><Adminuser /></ProtectedRouteAdmin>} />
-            <Route path="/adminaction" element={<ProtectedRouteAdmin><AdminPanelSettingsAction /></ProtectedRouteAdmin>} />
-            <Route path="/addEntreprise" element={<ProtectedRouteAdmin><AdminAddEntreprise /></ProtectedRouteAdmin>} />
-            <Route path="/addSecteur" element={<ProtectedRouteAdmin><AddSecteur /></ProtectedRouteAdmin>} />
-            <Route path="/adminEntreprises" element={<ProtectedRouteAdmin><AdminEntreprises /></ProtectedRouteAdmin>} />
-            <Route path="/addUser" element={<ProtectedRouteAdmin><AddUser /></ProtectedRouteAdmin>} />
-            <Route path="/messSupport" element={<ProtectedRouteAdmin><MessSupport /></ProtectedRouteAdmin>} />
-            <Route path="/archivages" element={<ProtectedRouteAdmin><Archivage /></ProtectedRouteAdmin>} />
-            <Route path="/archives" element={ <ProtectedRouteAdmin> <Archives /></ProtectedRouteAdmin>} />
+                {/* Routes accessibles uniquement par isAdmin */}
+                <Route path="/logView" element={<ProtectedRouteAdmin><LogView /></ProtectedRouteAdmin>} />
+                <Route path="/adminUser" element={<ProtectedRouteAdmin><Adminuser /></ProtectedRouteAdmin>} />
+                <Route path="/adminaction" element={<ProtectedRouteAdmin><AdminPanelSettingsAction /></ProtectedRouteAdmin>} />
+                <Route path="/addEntreprise" element={<ProtectedRouteAdmin><AdminAddEntreprise /></ProtectedRouteAdmin>} />
+                <Route path="/addSecteur" element={<ProtectedRouteAdmin><AddSecteur /></ProtectedRouteAdmin>} />
+                <Route path="/adminEntreprises" element={<ProtectedRouteAdmin><AdminEntreprises /></ProtectedRouteAdmin>} />
+                <Route path="/addUser" element={<ProtectedRouteAdmin><AddUser /></ProtectedRouteAdmin>} />
+                <Route path="/messSupport" element={<ProtectedRouteAdmin><MessSupport /></ProtectedRouteAdmin>} />
+                <Route path="/archivages" element={<ProtectedRouteAdmin><Archivage /></ProtectedRouteAdmin>} />
+                <Route path="/archives" element={<ProtectedRouteAdmin> <Archives /></ProtectedRouteAdmin>} />
 
-            {/* Routes accessibles par isAdmin ou Conseiller */}
-            <Route path="/quesEntrep" element={<ProtectedRouteAdminOrConseiller><QuesEntrep /></ProtectedRouteAdminOrConseiller>} />
-            <Route path="/entreprise" element={<ProtectedRouteAdminOrConseiller><Entreprise /></ProtectedRouteAdminOrConseiller>} />
-            <Route path="/formulaireAction" element={<ProtectedRouteAdminOrConseiller><FormulaireAction /></ProtectedRouteAdminOrConseiller>} />
-            <Route path="/formulaire" element={<ProtectedRouteAdminOrConseiller><Formulaire /></ProtectedRouteAdminOrConseiller>} />
-            <Route path="/deviation" element={<ProtectedRouteAdminOrConseiller><Deviation /></ProtectedRouteAdminOrConseiller>} />
-            <Route path="/agentmateriel" element={<ProtectedRouteAdminOrConseiller><Agentmateriel /></ProtectedRouteAdminOrConseiller>} />
-            <Route path="/naturelesion" element={<ProtectedRouteAdminOrConseiller><Naturelesion /></ProtectedRouteAdminOrConseiller>} />
-            <Route path="/siegelesion" element={<ProtectedRouteAdminOrConseiller><Siegelesion /></ProtectedRouteAdminOrConseiller>} />
-            <Route path="/fichierdll" element={<ProtectedRouteAdminOrConseiller><Fichierdll /></ProtectedRouteAdminOrConseiller>} />
-            <Route path="/planAction" element={<ProtectedRouteAdminOrConseiller><PlanAction /></ProtectedRouteAdminOrConseiller>} />
-            <Route path="/actionfichierdll" element={<ProtectedRouteAdminOrConseiller><Actionfichierdll /></ProtectedRouteAdminOrConseiller>} />
+                {/* Routes accessibles par isAdmin ou Conseiller */}
+                <Route path="/quesEntrep" element={<ProtectedRouteAdminOrConseiller><QuesEntrep /></ProtectedRouteAdminOrConseiller>} />
+                <Route path="/entreprise" element={<ProtectedRouteAdminOrConseiller><Entreprise /></ProtectedRouteAdminOrConseiller>} />
+                <Route path="/formulaireAction" element={<ProtectedRouteAdminOrConseiller><FormulaireAction /></ProtectedRouteAdminOrConseiller>} />
+                <Route path="/formulaire" element={<ProtectedRouteAdminOrConseiller><Formulaire /></ProtectedRouteAdminOrConseiller>} />
+                <Route path="/deviation" element={<ProtectedRouteAdminOrConseiller><Deviation /></ProtectedRouteAdminOrConseiller>} />
+                <Route path="/agentmateriel" element={<ProtectedRouteAdminOrConseiller><Agentmateriel /></ProtectedRouteAdminOrConseiller>} />
+                <Route path="/naturelesion" element={<ProtectedRouteAdminOrConseiller><Naturelesion /></ProtectedRouteAdminOrConseiller>} />
+                <Route path="/siegelesion" element={<ProtectedRouteAdminOrConseiller><Siegelesion /></ProtectedRouteAdminOrConseiller>} />
+                <Route path="/fichierdll" element={<ProtectedRouteAdminOrConseiller><Fichierdll /></ProtectedRouteAdminOrConseiller>} />
+                <Route path="/planAction" element={<ProtectedRouteAdminOrConseiller><PlanAction /></ProtectedRouteAdminOrConseiller>} />
+                <Route path="/actionfichierdll" element={<ProtectedRouteAdminOrConseiller><Actionfichierdll /></ProtectedRouteAdminOrConseiller>} />
+                <Route path="/Accident" element={<ProtectedRouteAdminOrConseiller><Accidents /></ProtectedRouteAdminOrConseiller>} />
+                <Route path="/statistiques" element={<ProtectedRouteAdminOrConseiller><Statistiques /></ProtectedRouteAdminOrConseiller>} />
+                <Route path="/" element={<ProtectedRouteAdminOrConseiller><Home /></ProtectedRouteAdminOrConseiller>} />
 
-            </Routes>
+              </Routes>
             </main>
             <Footer />
           </div>

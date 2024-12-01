@@ -9,7 +9,7 @@ import { keyframes } from '@mui/system';
 import { LineChart, Line } from 'recharts';
 import { useTheme } from '../Hook/ThemeContext.js'; // Add this import
 import { useUserConnected } from '../Hook/userConnected.js';
-
+import DriveEtaIcon from '@mui/icons-material/DriveEta';
 export default function Navigation() {
     const { isAdmin, isAdminOuConseiller, userInfo, isConseiller, isAdminOrDev, isAdminOrDevOrConseiller, isUserPreventionOrAdminOrConseiller } = useUserConnected();
     const { darkMode } = useTheme(); // Add this hook
@@ -17,7 +17,8 @@ export default function Navigation() {
         accident: false,
         stats: false,
         plan: false,
-        business: false
+        business: false,
+        vehicule: false
     });
 
     // Données simulées pour le graphique
@@ -73,7 +74,7 @@ export default function Navigation() {
             ? 'linear-gradient(135deg, rgba(122,142,28,0.1) 0%, rgba(66,66,66,0.95) 50%, rgba(122,142,28,0.2) 100%)'
             : 'linear-gradient(135deg, rgba(238,117,45,0.1) 0%, rgba(255,255,255,0.95) 50%, rgba(238,117,45,0.2) 100%)',
         color: darkMode ? '#ffffff' : '#000000',
-        border: darkMode 
+        border: darkMode
             ? '2px solid #a5d6a7'  // Light orange for dark mode
             : '2px solid #f57c00', // Darker orange for light mode
         '&:hover': {
@@ -181,6 +182,69 @@ export default function Navigation() {
                         height: '4px',
                         backgroundColor: darkMode ? '#7a8e1c' : '#ee752d',
                         animation: isHovered ? `${slideIn} ${0.3 + i * 0.1}s ease` : 'none',
+                    }}
+                />
+            ))}
+        </Box>
+    );
+
+    const VehicleAnimation = ({ isHovered }) => (
+        <Box sx={{
+            position: 'absolute',
+            top: '10px',
+            right: '10px',
+            width: '60px',
+            height: '60px',
+            opacity: isHovered ? 1 : 0.3,
+            transition: 'all 0.3s ease'
+        }}>
+            {/* Corps du véhicule */}
+            <Box sx={{
+                position: 'absolute',
+                top: '20px',
+                width: '50px',
+                height: '20px',
+                backgroundColor: darkMode ? '#7a8e1c' : '#ee752d',
+                borderRadius: '5px',
+                animation: isHovered ? `${slideIn} 0.3s ease` : 'none',
+            }} />
+            
+            {/* Toit du véhicule */}
+            <Box sx={{
+                position: 'absolute',
+                top: '10px',
+                left: '20px',
+                width: '25px',
+                height: '15px',
+                backgroundColor: darkMode ? '#7a8e1c' : '#ee752d',
+                borderRadius: '3px',
+                animation: isHovered ? `${slideIn} 0.4s ease` : 'none',
+            }} />
+            
+            {/* Roues */}
+            {[15, 35].map((left, i) => (
+                <Box
+                    key={i}
+                    sx={{
+                        position: 'absolute',
+                        top: '35px',
+                        left: `${left}px`,
+                        width: '12px',
+                        height: '12px',
+                        borderRadius: '50%',
+                        backgroundColor: darkMode ? '#a4bd24' : '#f4a261',
+                        animation: isHovered ? `${rotateIn} 1s infinite linear` : 'none',
+                        '&::after': {
+                            content: '""',
+                            position: 'absolute',
+                            top: '50%',
+                            left: '50%',
+                            width: '4px',
+                            height: '4px',
+                            borderRadius: '50%',
+                            backgroundColor: darkMode ? '#4a5411' : '#cc5a1d',
+                            transform: 'translate(-50%, -50%)',
+                        }
                     }}
                 />
             ))}
@@ -500,6 +564,22 @@ export default function Navigation() {
                                 </Button>
                             </Tooltip>
                         )}
+                        <Tooltip title="Gérer les véhicules" arrow>
+                            <Button
+                                component={Link}
+                                to="/planAction"
+                                sx={buttonStyle(2)}
+                                onMouseEnter={() => setHoverStates(prev => ({ ...prev, vehicule: true }))}
+                                onMouseLeave={() => setHoverStates(prev => ({ ...prev, vehicule: false }))}
+                            >
+                                <VehicleAnimation isHovered={hoverStates.vehicule} />
+                                <Box className="button-content" sx={{ zIndex: 1 }}>
+                                    <DriveEtaIcon sx={{ fontSize: '3rem', mb: 2 }} />
+                                    <Typography variant="h5">Gestion des véhicules</Typography>
+                                </Box>
+                            </Button>
+                        </Tooltip>
+                        
                     </Box>
                 </Paper>
             </form>
