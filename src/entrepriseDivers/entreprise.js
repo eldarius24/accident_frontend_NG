@@ -592,7 +592,6 @@ const EnterpriseDivers = () => {
             }
         });
     };
-
     return (
         <Box sx={{ p: 3 }}>
             <Box sx={{
@@ -733,7 +732,6 @@ const EnterpriseDivers = () => {
                     </Grid>
                 </Grid>
             )}
-
             {
                 filteredEnterprises.map((enterprise) => (
 
@@ -745,7 +743,6 @@ const EnterpriseDivers = () => {
                             backgroundColor: darkMode ? '#2a2a2a' : '#ebebeb',
                         }}>
                         <CardContent>
-
                             <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
                                 <Typography
                                     variant="h5"

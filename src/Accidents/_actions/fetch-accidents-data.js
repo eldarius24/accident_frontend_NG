@@ -29,9 +29,7 @@ const createFetchData = (apiUrl) => (
     userInfo
 ) => {
     return async () => {
-        console.log("Début fetchData");
-        console.log("User Info:", userInfo);
-        console.log("Is Admin or Dev:", isAdminOrDev);
+
 
         setLoading(true);
         try {
@@ -40,20 +38,19 @@ const createFetchData = (apiUrl) => (
             });
             // rend uniquement les donnée liée au conseiller en prevention visibles
             if (!isAdminOrDev && userInfo?.entreprisesUserPrevention) {
-                console.log("Entreprises du conseiller:", userInfo.entreprisesUserPrevention);
+
                 queryParams.append('entreprises', JSON.stringify(userInfo.entreprisesUserPrevention));
             }
 
             const url = `http://${apiUrl}:3100/api/accidents/filtered-fields?${queryParams}`;
-            console.log("URL appelée:", url);
+
 
             const response = await axios.get(url);
-            console.log("Réponse brute:", response.data);
+
 
             const { success, message, accidents } = response.data;
 
-            if (!success) {
-                console.error(message);
+            if (!success) {;
                 setAccidents([]);
                 setYearsFromData([]);
                 showSnackbar(message, 'error');
@@ -92,7 +89,6 @@ const createFetchData = (apiUrl) => (
             showSnackbar('Données récupérées avec succès', 'success');
 
         } catch (error) {
-            console.error('Error fetching accidents data:', error);
             showSnackbar('Erreur lors de la récupération des données', 'error');
             setAccidents([]);
             setYearsFromData([]);
