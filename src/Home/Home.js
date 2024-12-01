@@ -196,7 +196,7 @@ export default function Navigation() {
             width: '60px',
             height: '60px',
             opacity: isHovered ? 1 : 0.3,
-            transition: 'all 0.3s ease'
+            transition: 'all 3s ease'
         }}>
             {/* Corps du véhicule */}
             <Box sx={{
@@ -206,7 +206,7 @@ export default function Navigation() {
                 height: '20px',
                 backgroundColor: darkMode ? '#7a8e1c' : '#ee752d',
                 borderRadius: '5px',
-                animation: isHovered ? `${slideIn} 0.3s ease` : 'none',
+                animation: isHovered ? `${slideIn} 3s ease` : 'none',
             }} />
             
             {/* Toit du véhicule */}
@@ -218,7 +218,7 @@ export default function Navigation() {
                 height: '15px',
                 backgroundColor: darkMode ? '#7a8e1c' : '#ee752d',
                 borderRadius: '3px',
-                animation: isHovered ? `${slideIn} 0.4s ease` : 'none',
+                animation: isHovered ? `${slideIn} 3s ease` : 'none',
             }} />
             
             {/* Roues */}
@@ -233,7 +233,7 @@ export default function Navigation() {
                         height: '12px',
                         borderRadius: '50%',
                         backgroundColor: darkMode ? '#a4bd24' : '#f4a261',
-                        animation: isHovered ? `${rotateIn} 1s infinite linear` : 'none',
+                        animation: isHovered ? `${rotateIn} 1s infinite linear` && `${slideIn} 3s ease` : 'none',
                         '&::after': {
                             content: '""',
                             position: 'absolute',
