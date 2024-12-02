@@ -22,7 +22,7 @@ import CustomSnackbar from '../_composants/CustomSnackbar';
 import { useTheme } from '../Hook/ThemeContext';
 import axios from 'axios';
 
-export default function VehicleList() {
+export default function GetionVehicleList() {
     const { darkMode } = useTheme();
     const navigate = useNavigate();
     const [vehicles, setVehicles] = useState([]);
@@ -158,8 +158,8 @@ export default function VehicleList() {
                             <TableCell style={{ fontWeight: 'bold' }}>Kilométrage</TableCell>
                             <TableCell style={{ fontWeight: 'bold' }}>Dernier CT</TableCell>
                             <TableCell style={{ fontWeight: 'bold' }}>Prochain CT</TableCell>
-                            <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>Modifier</TableCell>
-                            <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>Supprimer</TableCell>
+                             {/*<TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>Modifier</TableCell>
+                            <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>Supprimer</TableCell>*/}
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -178,7 +178,7 @@ export default function VehicleList() {
                                 <TableCell>{vehicle.kilometrage} km</TableCell>
                                 <TableCell>{formatDate(vehicle.dateDernierCT)}</TableCell>
                                 <TableCell>{formatDate(vehicle.dateProchainCT)}</TableCell>
-                                <TableCell style={{ padding: 0, width: '70px' }}>
+                                {/*<TableCell style={{ padding: 0, width: '70px' }}>
                                     <Tooltip title="Modifier le véhicule" arrow>
                                         <Button
                                             variant="contained"
@@ -232,7 +232,7 @@ export default function VehicleList() {
                                             <DeleteForeverIcon />
                                         </Button>
                                     </Tooltip>
-                                </TableCell>
+                                </TableCell>*/}
                             </TableRow>
                         ))}
                     </TableBody>

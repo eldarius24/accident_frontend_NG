@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-import TextFieldP from '../../../../_composants/textFieldP';
-import ControlLabelAdminP from '../../../../_composants/controlLabelAdminP';
+import TextFieldP from '../../../_composants/textFieldP';
+import ControlLabelAdminP from '../../../_composants/controlLabelAdminP';
 import { Box, Paper, Tooltip, Typography, Grid } from '@mui/material';
 import Button from '@mui/material/Button';
 import axios from 'axios';
 import { useNavigate, useLocation } from 'react-router-dom';
-import CustomSnackbar from '../../../../_composants/CustomSnackbar';
-import { useTheme } from '../../../../Hook/ThemeContext';
-import config from '../../../../config.json';
+import CustomSnackbar from '../../../_composants/CustomSnackbar';
+import { useTheme } from '../../../Hook/ThemeContext';
+import config from '../../../config.json';
 
 export default function AddVehicleUser() {
     const { darkMode } = useTheme();

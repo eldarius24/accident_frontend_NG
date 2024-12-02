@@ -567,7 +567,7 @@ export default function Navigation() {
                         <Tooltip title="Gérer les véhicules" arrow>
                             <Button
                                 component={Link}
-                                to="/planAction"
+                                to="/gestionVehicules"
                                 sx={buttonStyle(2)}
                                 onMouseEnter={() => setHoverStates(prev => ({ ...prev, vehicule: true }))}
                                 onMouseLeave={() => setHoverStates(prev => ({ ...prev, vehicule: false }))}

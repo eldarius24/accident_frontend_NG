@@ -32,11 +32,12 @@ import Archives from './Archives/archives';
 import Home from './Home/Home';
 import Footer from './_composants/Footer';
 import VehicleUserManagement from './pageAdmin/user/VehicleUserManagement';
-import AddVehicleUser from './pageAdmin/user/addUser/_actions/AddVehicleUser';
+import AddVehicleUser from './pageAdmin/user/addUser/AddVehicleUser';
 import AdminAddVéhiculeCompany from './pageAdmin/AdminAddVéhiculeCompany';
 import AdminVehiculeCompany from './pageAdmin/AdminVehiculeCompany'; 
 import AdminVehicule from './pageAdmin/AdminVehicule';
 import AdminAddVehicule from './pageAdmin/AdminAddVehicule';
+import GetionVehicle from './Getionvehicules/GestionVehicule';
 
 /**
  * App est le composant principal de l'application. Il contient les routes 
@@ -68,6 +69,8 @@ const App = () => {
                 <Route path="/adminAddVehiculeCompany" element={<AdminAddVéhiculeCompany />} />
                 <Route path="/adminVehicule" element={<AdminVehicule />} />
                 <Route path="/adminAddVehicule" element={<AdminAddVehicule />} />
+                <Route path="/gestionVehicules" element={<GetionVehicle />} />
+                
 
                 {/* Routes accessibles uniquement par isAdmin */}
                 <Route path="/logView" element={<ProtectedRouteAdmin><LogView /></ProtectedRouteAdmin>} />
