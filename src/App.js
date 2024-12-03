@@ -38,6 +38,7 @@ import AdminVehiculeCompany from './pageAdmin/AdminVehiculeCompany';
 import AdminVehicule from './pageAdmin/AdminVehicule';
 import AdminAddVehicule from './pageAdmin/AdminAddVehicule';
 import GetionVehicle from './Getionvehicules/GestionVehicule';
+import VehiculeDetails from './Getionvehicules/VehicleDetails';
 
 /**
  * App est le composant principal de l'application. Il contient les routes 
@@ -70,6 +71,7 @@ const App = () => {
                 <Route path="/adminVehicule" element={<AdminVehicule />} />
                 <Route path="/adminAddVehicule" element={<AdminAddVehicule />} />
                 <Route path="/gestionVehicules" element={<GetionVehicle />} />
+                <Route path="/vehiculeDetails" element={<VehiculeDetails />} />
                 
 
                 {/* Routes accessibles uniquement par isAdmin */}

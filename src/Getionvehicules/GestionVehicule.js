@@ -21,6 +21,7 @@ import config from '../config.json';
 import CustomSnackbar from '../_composants/CustomSnackbar';
 import { useTheme } from '../Hook/ThemeContext';
 import axios from 'axios';
+import InfoIcon from '@mui/icons-material/Info';
 
 export default function GetionVehicleList() {
     const { darkMode } = useTheme();
@@ -66,7 +67,7 @@ export default function GetionVehicleList() {
             const vehicleToEdit = {
                 ...vehicle,
                 kilometrage: vehicle.kilometrage || 0  // Assurez-vous que le kilométrage existe
-                
+
             };
             console.log("Vehicle avant navigation:", vehicle);
             navigate("/AdminAddVehicule", { state: { vehicle: vehicleToEdit } });
@@ -158,7 +159,8 @@ export default function GetionVehicleList() {
                             <TableCell style={{ fontWeight: 'bold' }}>Kilométrage</TableCell>
                             <TableCell style={{ fontWeight: 'bold' }}>Dernier CT</TableCell>
                             <TableCell style={{ fontWeight: 'bold' }}>Prochain CT</TableCell>
-                             {/*<TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>Modifier</TableCell>
+                            <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>Détails</TableCell>
+                            {/*<TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>Modifier</TableCell>
                             <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>Supprimer</TableCell>*/}
                         </TableRow>
                     </TableHead>
@@ -178,6 +180,22 @@ export default function GetionVehicleList() {
                                 <TableCell>{vehicle.kilometrage} km</TableCell>
                                 <TableCell>{formatDate(vehicle.dateDernierCT)}</TableCell>
                                 <TableCell>{formatDate(vehicle.dateProchainCT)}</TableCell>
+                                <TableCell style={{ padding: 0, width: '70px' }}>
+                                    <Tooltip title="Voir les détails" arrow>
+                                        <Button
+                                            variant="contained"
+                                            onClick={() => navigate('/vehiculeDetails', { state: { vehicleId: vehicle._id } })}
+                                            sx={{
+                                                backgroundColor: darkMode ? '#424242' : '#1976d2',
+                                                '&:hover': {
+                                                    backgroundColor: darkMode ? '#7a8e1c' : '#95ad22',
+                                                }
+                                            }}
+                                        >
+                                            <InfoIcon />
+                                        </Button>
+                                    </Tooltip>
+                                </TableCell>
                                 {/*<TableCell style={{ padding: 0, width: '70px' }}>
                                     <Tooltip title="Modifier le véhicule" arrow>
                                         <Button
