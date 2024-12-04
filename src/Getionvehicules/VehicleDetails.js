@@ -441,7 +441,12 @@ export default function VehicleDetails() {
         }
     };
 
-
+    const buttonStyle = {
+        backgroundColor: '#01aeac',
+        '&:hover': { backgroundColor: '#95519b' },
+        mr: 1,
+        whiteSpace: 'nowrap',
+    };
 
     useEffect(() => {
         if (vehicleId) {
@@ -590,9 +595,12 @@ export default function VehicleDetails() {
                     startIcon={<AddIcon />}
                     onClick={() => setOpenDialog(true)}
                     sx={{
-                        backgroundColor: darkMode ? '#424242' : '#1976d2',
+                        ...buttonStyle,
+                        transition: 'all 0.1s ease-in-out',
                         '&:hover': {
-                            backgroundColor: darkMode ? '#7a8e1c' : '#95ad22',
+                            backgroundColor: '#95ad22',
+                            transform: 'scale(1.08)',
+                            boxShadow: 6
                         }
                     }}
                 >

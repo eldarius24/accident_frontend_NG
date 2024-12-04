@@ -792,7 +792,7 @@ const EnterpriseDivers = () => {
                                             }
                                         }}
                                     >
-                                        Ajouter un pièce
+                                        Ajouter une pièce
                                     </Button>
                                 </Tooltip>
                             )}
