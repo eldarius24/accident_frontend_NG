@@ -311,70 +311,6 @@ export default function AdminPanelSettingsaction() {
                             </Tooltip>
                         </Box>
                     </Paper>
-                    <Paper
-                        elevation={3}
-                        sx={{
-                            border: darkMode ? '1px solid #ffffff' : '1px solid #ee742d',
-                            borderRadius: '8px',
-                            padding: '20px',
-                            margin: '20px 0',
-                            backgroundColor: darkMode ? '#2e2e2e' : '#ffffff',
-                            '&:hover': {
-                                boxShadow: darkMode
-                                    ? '0 8px 16px rgba(255, 255, 255, 0.1)'
-                                    : '0 8px 16px rgba(238, 116, 45, 0.2)'
-                            }
-                        }}
-                    >
-                        <h3 style={{ color: darkMode ? '#ffffff' : 'inherit' }}>Administration des archives</h3>
-                        <BulkArchiveManager
-                            darkMode={darkMode}
-                            onSuccess={(message) => showSnackbar(message, 'success')}
-                        />
-                        <Typography variant="h6" sx={{ mb: 4, color: darkMode ? '#ffffff' : 'inherit', textAlign: 'center' }}>
-                            Accéder aux archives
-                        </Typography>
-                        <Box sx={{
-                            display: 'flex',
-                            justifyContent: 'center',
-                            marginLeft: '120px',
-                            marginRight: '120px',
-                            gap: '20px'
-                        }}>
-                            <SystemeArchivage
-                                typeArchive="planaction"
-                                donnees={users}
-                                onArchiver={async (archiveData) => {
-                                    try {
-                                        await axios.post(`http://${apiUrl}:3100/api/archives`, archiveData);
-                                        refreshListAccidents();
-                                        showSnackbar('Action archivée avec succès', 'success');
-                                    } catch (error) {
-                                        console.error("Erreur lors de l'archivage:", error);
-                                        showSnackbar('Erreur lors de l\'archivage', 'error');
-                                    }
-                                }}
-                                darkMode={darkMode}
-                            />
-                            {/* Deuxième système d'archivage pour les accidents */}
-                            <SystemeArchivage
-                                typeArchive="accident"
-                                donnees={users}
-                                onArchiver={async (archiveData) => {
-                                    try {
-                                        await axios.post(`http://${apiUrl}:3100/api/archives`, archiveData);
-                                        refreshListAccidents();
-                                        showSnackbar('Accident archivé avec succès', 'success');
-                                    } catch (error) {
-                                        console.error("Erreur lors de l'archivage:", error);
-                                        showSnackbar('Erreur lors de l\'archivage', 'error');
-                                    }
-                                }}
-                                darkMode={darkMode}
-                            />
-
-                        </Box>
-                    </Paper>
                 </Paper>
                 <Paper
                     elevation={3}
@@ -391,6 +327,7 @@ export default function AdminPanelSettingsaction() {
                         }
                     }}
                 >
+
                     <Box
                         sx={{
                             display: 'flex',
@@ -514,7 +451,7 @@ export default function AdminPanelSettingsaction() {
                                     variant="contained"
                                 >
                                     <AddIcon />
-                                    Créer un nouvel utilisateur
+                                    Créer un nouvel utilisateur prévention
                                 </Button>
                             </Tooltip>
                             <Tooltip title="Cliquez ici afficher, éditér ou supprimer un utilisateur" arrow>
@@ -539,7 +476,7 @@ export default function AdminPanelSettingsaction() {
                                     variant="contained"
                                 >
                                     <ViewListIcon />
-                                    Consulter les utilisateurs
+                                    Consulter les utilisateurs prévention
                                 </Button>
                             </Tooltip>
                         </Box>
@@ -590,7 +527,7 @@ export default function AdminPanelSettingsaction() {
                                     variant="contained"
                                 >
                                     <AddIcon />
-                                    Créer une nouvelle entreprise
+                                    Créer une nouvelle entreprise prévention
                                 </Button>
                             </Tooltip>
                             <Tooltip title="Cliquez ici pour afficher, éditez ou supprimer une entreprise ou créer un secteur d'activé" arrow>
@@ -615,11 +552,76 @@ export default function AdminPanelSettingsaction() {
                                     variant="contained"
                                 >
                                     <ViewListIcon />
-                                    Consulter les entreprises
+                                    Consulter les entreprises prévention
                                 </Button>
                             </Tooltip>
                         </Box>
                     </Paper>
+                    <Paper
+                        elevation={3}
+                        sx={{
+                            border: darkMode ? '1px solid #ffffff' : '1px solid #ee742d',
+                            borderRadius: '8px',
+                            padding: '20px',
+                            margin: '20px 0',
+                            backgroundColor: darkMode ? '#2e2e2e' : '#ffffff',
+                            '&:hover': {
+                                boxShadow: darkMode
+                                    ? '0 8px 16px rgba(255, 255, 255, 0.1)'
+                                    : '0 8px 16px rgba(238, 116, 45, 0.2)'
+                            }
+                        }}
+                    >
+                        <h3 style={{ color: darkMode ? '#ffffff' : 'inherit' }}>Administration des archives</h3>
+                        <BulkArchiveManager
+                            darkMode={darkMode}
+                            onSuccess={(message) => showSnackbar(message, 'success')}
+                        />
+                        <Typography variant="h6" sx={{ mb: 4, color: darkMode ? '#ffffff' : 'inherit', textAlign: 'center' }}>
+                            Accéder aux archives
+                        </Typography>
+                        <Box sx={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                            marginLeft: '120px',
+                            marginRight: '120px',
+                            gap: '20px'
+                        }}>
+                            <SystemeArchivage
+                                typeArchive="planaction"
+                                donnees={users}
+                                onArchiver={async (archiveData) => {
+                                    try {
+                                        await axios.post(`http://${apiUrl}:3100/api/archives`, archiveData);
+                                        refreshListAccidents();
+                                        showSnackbar('Action archivée avec succès', 'success');
+                                    } catch (error) {
+                                        console.error("Erreur lors de l'archivage:", error);
+                                        showSnackbar('Erreur lors de l\'archivage', 'error');
+                                    }
+                                }}
+                                darkMode={darkMode}
+                            />
+                            {/* Deuxième système d'archivage pour les accidents */}
+                            <SystemeArchivage
+                                typeArchive="accident"
+                                donnees={users}
+                                onArchiver={async (archiveData) => {
+                                    try {
+                                        await axios.post(`http://${apiUrl}:3100/api/archives`, archiveData);
+                                        refreshListAccidents();
+                                        showSnackbar('Accident archivé avec succès', 'success');
+                                    } catch (error) {
+                                        console.error("Erreur lors de l'archivage:", error);
+                                        showSnackbar('Erreur lors de l\'archivage', 'error');
+                                    }
+                                }}
+                                darkMode={darkMode}
+                            />
+
+                        </Box>
+                    </Paper>
+
                 </Paper>
                 <Paper
                     elevation={3}
@@ -859,7 +861,7 @@ export default function AdminPanelSettingsaction() {
                                     variant="contained"
                                 >
                                     <ViewListIcon />
-                                    Consulter les entreprises
+                                    Consulter les entreprises véhicules
                                 </Button>
                             </Tooltip>
                         </Box>
