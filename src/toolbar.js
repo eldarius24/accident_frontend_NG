@@ -279,7 +279,7 @@ function ResponsiveAppBar() {
           {!['/', '/modifVehicule', '/vehiculeDetails', '/gestionVehicules', '/AdminVehicule', '/AdminAddVehicule', '/vehicleUsers', '/addVehicleUser', '/adminAddVehiculeCompany', '/adminVehiculeCompany', '/addSecteur', '/quesEntrep', '/actionfichierdll', '/messSupport', '/logView', '/adminUser', '/addEntreprise', '/adminEntreprises', '/addUser', '/adminaction', '/formulaireAction', '/planAction', '/entreprise', '/Accident', '/login', '/statistiques'].includes(location.pathname) &&
             renderButton("/Accident", "Cliquez ici pour revenir aux accidents", <ViewListIcon />, "Accidents")}
 
-          {!['/', '/gestionVehicules', '/AdminVehicule', '/AdminAddVehicule', '/vehicleUsers', '/addVehicleUser', '/adminAddVehiculeCompany', '/adminVehiculeCompany', '/addSecteur', '/quesEntrep', '/actionfichierdll', '/messSupport', '/logView', '/adminUser', '/addEntreprise', '/adminEntreprises', '/addUser', '/adminaction', '/formulaireAction', '/planAction', '/entreprise', '/Accident', '/login', '/statistiques'].includes(location.pathname) &&
+          {!['/','/formulaire', '/gestionVehicules', '/AdminVehicule', '/AdminAddVehicule', '/vehicleUsers', '/addVehicleUser', '/adminAddVehiculeCompany', '/adminVehiculeCompany', '/addSecteur', '/quesEntrep', '/actionfichierdll', '/messSupport', '/logView', '/adminUser', '/addEntreprise', '/adminEntreprises', '/addUser', '/adminaction', '/formulaireAction', '/planAction', '/entreprise', '/Accident', '/login', '/statistiques'].includes(location.pathname) &&
             renderButton("/gestionVehicules", "Cliquez ici pour revenir aux accidents", <ViewListIcon />, "Liste des Véhicules")}
 
           {isAdminOrDevOrConseiller && (
