@@ -10,18 +10,16 @@ import {
     LinearProgress,
     Tooltip,
     Box,
-    Typography,
-    Paper
+    Typography
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
-import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import { useNavigate } from 'react-router-dom';
-import { confirmAlert } from 'react-confirm-alert';
 import config from '../config.json';
 import CustomSnackbar from '../_composants/CustomSnackbar';
 import { useTheme } from '../Hook/ThemeContext';
 import axios from 'axios';
-import InfoIcon from '@mui/icons-material/Info';
+import { blueGrey } from '@mui/material/colors';
+import GetAppIcon from '@mui/icons-material/GetApp';
 
 export default function GetionVehicleList() {
     const { darkMode } = useTheme();
@@ -70,7 +68,7 @@ export default function GetionVehicleList() {
 
             };
             console.log("Vehicle avant navigation:", vehicle);
-            navigate("/AdminAddVehicule", { state: { vehicle: vehicleToEdit } });
+            navigate("/modifVehicule", { state: { vehicle: vehicleToEdit } });
             showSnackbar('Modification du véhicule initiée', 'info');
         } catch (error) {
             console.error("Erreur lors de la navigation:", error);
@@ -159,9 +157,9 @@ export default function GetionVehicleList() {
                             <TableCell style={{ fontWeight: 'bold' }}>Kilométrage</TableCell>
                             <TableCell style={{ fontWeight: 'bold' }}>Dernier CT</TableCell>
                             <TableCell style={{ fontWeight: 'bold' }}>Prochain CT</TableCell>
-                            <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>Détails</TableCell>
-                            {/*<TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>Modifier</TableCell>
-                            <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>Supprimer</TableCell>*/}
+                            <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>Fichier</TableCell>
+                            <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>Modifier</TableCell>
+                            {/*<TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>Supprimer</TableCell>*/}
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -181,30 +179,42 @@ export default function GetionVehicleList() {
                                 <TableCell>{formatDate(vehicle.dateDernierCT)}</TableCell>
                                 <TableCell>{formatDate(vehicle.dateProchainCT)}</TableCell>
                                 <TableCell style={{ padding: 0, width: '70px' }}>
-                                    <Tooltip title="Voir les détails" arrow>
+                                    <Tooltip title="ajouter et consulter les documents ou infos du véhicule" arrow>
                                         <Button
                                             variant="contained"
                                             onClick={() => navigate('/vehiculeDetails', { state: { vehicleId: vehicle._id } })}
                                             sx={{
-                                                backgroundColor: darkMode ? '#424242' : '#1976d2',
+                                                backgroundColor: darkMode ? '#7b1fa2' : '#9c27b0',
+                                                transition: 'all 0.1s ease-in-out',
                                                 '&:hover': {
-                                                    backgroundColor: darkMode ? '#7a8e1c' : '#95ad22',
+                                                    backgroundColor: darkMode ? '#4a0072' : '#7b1fa2',
+                                                    transform: 'scale(1.08)',
+                                                    boxShadow: darkMode ? '0 6px 12px rgba(255,255,255,0.2)' : 6
+                                                },
+                                                '& .MuiSvgIcon-root': {
+                                                    color: darkMode ? '#fff' : 'inherit'
                                                 }
                                             }}
                                         >
-                                            <InfoIcon />
+                                            <GetAppIcon />
                                         </Button>
                                     </Tooltip>
                                 </TableCell>
-                                {/*<TableCell style={{ padding: 0, width: '70px' }}>
-                                    <Tooltip title="Modifier le véhicule" arrow>
+                                <TableCell style={{ padding: 0, width: '70px' }}>
+                                    <Tooltip title="Modifier les date de passage au contrôle technique et dates des entretiens" arrow>
                                         <Button
                                             variant="contained"
                                             onClick={() => handleEdit(vehicle)}
                                             sx={{
-                                                backgroundColor: darkMode ? '#424242' : '#1976d2',
+                                                backgroundColor: darkMode ? blueGrey[700] : blueGrey[500],
+                                                transition: 'all 0.1s ease-in-out',
                                                 '&:hover': {
-                                                    backgroundColor: darkMode ? '#7a8e1c' : '#95ad22',
+                                                    backgroundColor: darkMode ? blueGrey[900] : blueGrey[700],
+                                                    transform: 'scale(1.08)',
+                                                    boxShadow: darkMode ? '0 6px 12px rgba(255,255,255,0.2)' : 6
+                                                },
+                                                '& .MuiSvgIcon-root': {
+                                                    color: darkMode ? '#fff' : 'inherit'
                                                 }
                                             }}
                                         >
@@ -212,7 +222,7 @@ export default function GetionVehicleList() {
                                         </Button>
                                     </Tooltip>
                                 </TableCell>
-                                <TableCell style={{ padding: 0, width: '70px' }}>
+                                {/*<TableCell style={{ padding: 0, width: '70px' }}>
                                     <Tooltip title="Supprimer le véhicule" arrow>
                                         <Button
                                             variant="contained"

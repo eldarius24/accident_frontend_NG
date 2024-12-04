@@ -26,7 +26,6 @@ export default function AddVehicle() {
     const location = useLocation();
     const vehicleToEdit = location.state?.vehicle;
     const apiUrl = config.apiUrl;
-
     const { register, setValue, handleSubmit, formState: { errors } } = useForm();
 
     const [numPlaque, setNumPlaque] = useState(vehicleToEdit?.numPlaque || "");
@@ -66,6 +65,20 @@ export default function AddVehicle() {
         severity: 'info',
     });
 
+    useEffect(() => {
+        const fetchCompanies = async () => {
+            try {
+                const response = await axios.get(`http://${apiUrl}:3100/api/vehicleCompanies`);
+                const companyNames = response.data.map(company => company.companyName);
+                setCompanies(companyNames);
+            } catch (error) {
+                console.error('Erreur lors du chargement des entreprises:', error);
+                showSnackbar('Erreur lors du chargement des entreprises', 'error');
+            }
+        };
+    
+        fetchCompanies();
+    }, [apiUrl]);
 
     const showSnackbar = (message, severity = 'info') => {
         setSnackbar({ open: true, message, severity });
@@ -125,7 +138,15 @@ export default function AddVehicle() {
                 ? `http://${apiUrl}:3100/api/vehicles/${vehicleToEdit._id}`
                 : `http://${apiUrl}:3100/api/vehicles`;
 
-            await axios[method](endpoint, vehicleData);
+            const response = await axios[method](endpoint, vehicleData);
+
+            await logAction({
+                actionType: vehicleToEdit ? 'modification' : 'creation',
+                details: `${vehicleToEdit ? 'Modification' : 'Création'} du véhicule ${vehicleData.numPlaque}`,
+                entity: 'Vehicle',
+                entityId: vehicleToEdit ? vehicleToEdit._id : response.data.vehicle._id
+            });
+
             showSnackbar(vehicleToEdit ? 'Véhicule modifié avec succès' : 'Véhicule créé avec succès', 'success');
             setTimeout(() => navigate('/AdminVehicule'), 2000);
         } catch (error) {

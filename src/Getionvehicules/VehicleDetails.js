@@ -3,7 +3,7 @@ import {
     Table, TableBody, TableCell, TableContainer, TableHead, TableRow,
     Button, LinearProgress, Tooltip, Box, Typography,
     Dialog, DialogTitle, DialogContent, DialogActions,
-    IconButton
+    IconButton, CircularProgress
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -20,25 +20,12 @@ import { confirmAlert } from 'react-confirm-alert';
 import { useLogger } from '../Hook/useLogger';
 import DownloadIcon from '@mui/icons-material/GetApp';
 import VisibilityIcon from '@mui/icons-material/Visibility';
-import FileViewer from '../Accidents/FileManagement/fileViewer';
+import FileViewer from './VehicleFileViewer';
+import getPreview from '../Accidents/FileManagement/getPreview';
 import CloseIcon from '@mui/icons-material/Close';
 import Modal from '@mui/material/Modal';
+import VehicleFileManagement from './VehicleFileManagement';
 
-const modalStyles = {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: '90%',
-    height: '90%',
-    bgcolor: 'background.paper',
-    border: '2px solid #000',
-    boxShadow: 24,
-    p: 4,
-    overflow: 'hidden',
-    display: 'flex',
-    flexDirection: 'column'
-};
 
 const dropZoneStyle = {
     display: 'flex',
@@ -64,6 +51,8 @@ const labelStyle = {
 
 export default function VehicleDetails() {
     const [modalOpen, setModalOpen] = useState(false);
+    const [preview, setPreview] = useState(null);
+    const [isLoading, setIsLoading] = useState(false);
     const [selectedFile, setSelectedFile] = useState(null);
     const { logAction } = useLogger();
     const { darkMode } = useTheme();
@@ -88,6 +77,23 @@ export default function VehicleDetails() {
         severity: 'info',
     });
 
+
+    const modalStyles = {
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        width: '90%',
+        height: '90%',
+        bgcolor: 'background.paper',
+        border: '2px solid #000',
+        boxShadow: 24,
+        p: 4,
+        overflow: 'hidden',
+        display: 'flex',
+        flexDirection: 'column'
+    };
+
     const vehicleId = location.state?.vehicleId;
     const apiUrl = config.apiUrl;
 
@@ -102,14 +108,33 @@ export default function VehicleDetails() {
 
 
     const handleOpenPreview = async (fileId, fileName) => {
-        if (!fileId || !fileName) return;
+        if (!fileId || !fileName) {
+            console.error('FileId ou fileName manquant:', { fileId, fileName });
+            showSnackbar('Informations du fichier manquantes', 'error');
+            return;
+        }
 
         setSelectedFile({
-            fileId,
-            fileName,
-            file: { fileId, fileName }
+            fileId: fileId, // Utiliser le documentVechiule comme ID
+            fileName: fileName,
+            file: {
+                fileId: fileId,
+                fileName: fileName
+            }
         });
         setModalOpen(true);
+
+        try {
+            await logAction({
+                actionType: 'consultation',
+                details: `Prévisualisation du fichier - Nom: ${fileName}`,
+                entity: 'Vehicle',
+                entityId: fileId,
+                vehicleId: vehicleId
+            });
+        } catch (error) {
+            console.error('Erreur log prévisualisation:', error);
+        }
     };
 
     const handleCloseModal = () => {
@@ -117,36 +142,38 @@ export default function VehicleDetails() {
         setModalOpen(false);
     };
 
-
-    const handleFileUpload = useCallback(async (file) => {
-        if (!file) {
-            showSnackbar('Fichier manquant', 'error');
-            return;
-        }
-
+    const handleFileUpload = async (file) => {
         const formData = new FormData();
         formData.append('file', file, file.name);
 
         try {
-            const response = await axios.post(
-                `http://${apiUrl}:3100/api/stockFile`,
-                formData,
-                {
-                    headers: { 'Content-Type': 'multipart/form-data' }
-                }
-            );
+            const response = await axios.post(`http://${apiUrl}:3100/api/stockFile`, formData);
+
+            await logAction({
+                actionType: 'import',
+                details: `Import du fichier ${file.name} pour le véhicule`,
+                entity: 'Vehicle',
+                entityId: vehicleId
+            });
 
             setNewRecord(prev => ({
                 ...prev,
-                documentUrl: response.data.fileId,
-                documentVechiule: file.name
+                fileId: response.data.fileId,
+                fileName: file.name
             }));
-
             showSnackbar('Fichier ajouté', 'success');
         } catch (error) {
+
+            await logAction({
+                actionType: 'error',
+                details: `Erreur lors de l'import du fichier ${file.name}`,
+                entity: 'Vehicle',
+                entityId: vehicleId
+            });
+
             showSnackbar('Erreur téléchargement', 'error');
         }
-    }, [apiUrl, showSnackbar]);
+    };
 
     const handleDrop = useCallback((e) => {
         e.preventDefault();
@@ -215,7 +242,23 @@ export default function VehicleDetails() {
         try {
             const response = await axios.get(`http://${apiUrl}:3100/api/vehicles/${vehicleId}`);
             setVehicle(response.data);
+
+            await logAction({
+                actionType: 'consultation',
+                details: `Consultation des détails du véhicule`,
+                entity: 'Vehicle',
+                entityId: vehicleId
+            });
+
         } catch (error) {
+
+            await logAction({
+                actionType: 'error',
+                details: 'Erreur lors du chargement des détails du véhicule',
+                entity: 'Vehicle',
+                entityId: vehicleId
+            });
+
             setSnackbar({
                 open: true,
                 message: 'Erreur lors du chargement du véhicule',
@@ -228,7 +271,23 @@ export default function VehicleDetails() {
         try {
             const response = await axios.get(`http://${apiUrl}:3100/api/vehicles/${vehicleId}/records`);
             setRecords(response.data);
+
+            await logAction({
+                actionType: 'consultation',
+                details: 'Consultation des enregistrements du véhicule',
+                entity: 'Vehicle',
+                entityId: vehicleId
+            });
+
         } catch (error) {
+
+            await logAction({
+                actionType: 'error',
+                details: 'Erreur lors du chargement des enregistrements',
+                entity: 'Vehicle',
+                entityId: vehicleId
+            });
+
             setSnackbar({
                 open: true,
                 message: 'Erreur lors du chargement des enregistrements',
@@ -240,9 +299,14 @@ export default function VehicleDetails() {
     };
 
     const handleRenameFile = useCallback((record) => {
+        if (!record?._id) {
+            showSnackbar('ID de l\'enregistrement manquant', 'error');
+            return;
+        }
+
         confirmAlert({
             customUI: ({ onClose }) => {
-                let newFileName = record.documentVechiule;
+                let newFileName = record.fileName || record.documentVehicle;
 
                 return (
                     <div className="custom-confirm-dialog">
@@ -271,15 +335,6 @@ export default function VehicleDetails() {
                                         await axios.put(`http://${apiUrl}:3100/api/vehicles/records/${record._id}`, {
                                             newFileName
                                         });
-
-                                        await logAction({
-                                            actionType: 'modification',
-                                            details: `Fichier renommé - Ancien nom: ${currentFileName} - Nouveau nom: ${newFileName}`,
-                                            entity: 'Vehicle Document',
-                                            entityId: documentUrl,
-                                            vehicleId
-                                        });
-
                                         fetchRecords();
                                         showSnackbar('Fichier renommé avec succès', 'success');
                                         onClose();
@@ -299,7 +354,7 @@ export default function VehicleDetails() {
                 );
             }
         });
-    }, [apiUrl, logAction, fetchRecords, showSnackbar]);
+    }, [apiUrl, fetchRecords, showSnackbar]);
 
     const formatDate = (dateString) => {
         if (!dateString) return 'Non définie';
@@ -315,20 +370,53 @@ export default function VehicleDetails() {
         try {
             const recordData = {
                 ...newRecord,
-                documentUrl: newRecord.documentUrl // Ajoutez cette ligne
+                documentVehicle: newRecord.documentVechiule // Corriger le nom du champ
             };
-            await axios.post(`http://${apiUrl}:3100/api/vehicles/${vehicleId}/records`, recordData);
-            setOpenDialog(false);
-            fetchRecords();
-            showSnackbar('Information ajoutée avec succès', 'success');
+
+            const response = await axios.post(
+                `http://${apiUrl}:3100/api/vehicles/${vehicleId}/records`,
+                recordData
+            );
+
+            await logAction({
+                actionType: 'creation',
+                details: `Ajout d'un enregistrement - Type: ${recordData.type}`,
+                entity: 'Vehicle',
+                entityId: vehicleId
+            });
+
+            if (response.data) {
+                setOpenDialog(false);
+                fetchRecords();
+                showSnackbar('Information ajoutée avec succès', 'success');
+                setNewRecord({
+                    type: '',
+                    date: new Date(),
+                    documentVehicle: '',
+                    documentVechiule: '',
+                    cost: '',
+                    commentaire: ''
+                });
+            }
         } catch (error) {
-            showSnackbar('Erreur lors de l\'ajout', 'error');
+            console.error('Erreur lors de l\'ajout:', error);
+            showSnackbar(error.response?.data?.message || 'Erreur lors de l\'ajout', 'error');
         }
     };
+
 
     const handleDeleteRecord = async (recordId) => {
         try {
             await axios.delete(`http://${apiUrl}:3100/api/vehicles/records/${recordId}`);
+
+            await logAction({
+                actionType: 'suppression',
+                details: 'Suppression d\'un enregistrement',
+                entity: 'Vehicle',
+                entityId: recordId,
+                vehicleId: vehicleId
+            });
+
             fetchRecords();
             setSnackbar({
                 open: true,
@@ -336,6 +424,15 @@ export default function VehicleDetails() {
                 severity: 'success'
             });
         } catch (error) {
+
+            await logAction({
+                actionType: 'error',
+                details: 'Erreur lors de la suppression d\'un enregistrement',
+                entity: 'Vehicle',
+                entityId: recordId,
+                vehicleId: vehicleId
+            });
+
             setSnackbar({
                 open: true,
                 message: 'Erreur lors de la suppression',
@@ -361,28 +458,54 @@ export default function VehicleDetails() {
     const handleDownload = async (fileId, fileName) => {
         try {
             const response = await axios.get(`http://${apiUrl}:3100/api/getFile/${fileId}`, {
-                responseType: 'blob'
+                responseType: 'blob',
+                headers: {
+                    'Accept': '*/*',
+                },
+                timeout: 30000
             });
 
-            const url = window.URL.createObjectURL(new Blob([response.data]));
+            const blob = new Blob([response.data], {
+                type: response.headers['content-type'] || 'application/octet-stream'
+            });
+
+            const url = window.URL.createObjectURL(blob);
             const link = document.createElement('a');
             link.href = url;
-            link.setAttribute('download', fileName);
+            link.download = fileName || 'fichier-téléchargé';
+
             document.body.appendChild(link);
             link.click();
-            link.remove();
-            window.URL.revokeObjectURL(url);
+
+            await logAction({
+                actionType: 'export',
+                details: `Téléchargement du fichier ${fileName}`,
+                entity: 'Vehicle',
+                entityId: fileId,
+                vehicleId: vehicleId
+            });
+
+            setTimeout(() => {
+                window.URL.revokeObjectURL(url);
+                document.body.removeChild(link);
+            }, 100);
+
+            showSnackbar('Téléchargement réussi', 'success');
 
         } catch (error) {
-            console.error('Erreur lors du téléchargement:', error);
-            setSnackbar({
-                open: true,
-                message: 'Erreur lors du téléchargement du fichier',
-                severity: 'error'
+
+            await logAction({
+                actionType: 'error',
+                details: `Erreur lors du téléchargement du fichier ${fileName}`,
+                entity: 'Vehicle',
+                entityId: fileId,
+                vehicleId: vehicleId
             });
+
+            console.error('Erreur téléchargement:', error);
+            showSnackbar('Erreur lors du téléchargement', 'error');
         }
     };
-
 
     const renderTableBody = () => (
         <TableBody>
@@ -391,37 +514,34 @@ export default function VehicleDetails() {
                     <TableCell>{record.type}</TableCell>
                     <TableCell>{formatDate(record.date)}</TableCell>
                     <TableCell>{record.documentVechiule}</TableCell>
+                    <TableCell>{record.commentaire}</TableCell>
                     <TableCell>{record.cost}</TableCell>
+                    <TableCell>{record.fileName}</TableCell>
                     <TableCell>
                         <Box display="flex" gap={1}>
-                            {record.documentUrl && (
-                                <>
-                                    <Tooltip title="Télécharger le fichier" arrow>
-                                        <IconButton
-                                            onClick={() => handleDownload(record.documentUrl, record.documentVechiule)}
-                                            color="primary"
-                                        >
-                                            <DownloadIcon />
-                                        </IconButton>
-                                    </Tooltip>
-                                    <Tooltip title="Prévisualiser le fichier" arrow>
-                                        <IconButton
-                                            onClick={() => handleOpenPreview(record.documentUrl, record.documentVechiule)}
-                                            color="secondary"
-                                        >
-                                            <VisibilityIcon />
-                                        </IconButton>
-                                    </Tooltip>
-                                    <Tooltip title="Renommer le fichier" arrow>
-                                        <IconButton
-                                            onClick={() => handleRenameFile(record.documentUrl, record.documentVechiule)}
-                                            sx={{ color: '#1976d2' }}
-                                        >
-                                            <EditIcon />
-                                        </IconButton>
-                                    </Tooltip>
-                                </>
-                            )}
+                            <Tooltip title="Télécharger le fichier" arrow>
+                                <IconButton
+                                    onClick={() => handleDownload(record.fileId, record.fileName)}
+                                    color="primary"
+                                >
+                                    <DownloadIcon />
+                                </IconButton>
+                            </Tooltip>
+                            <Tooltip title="Prévisualiser le fichier" arrow>
+                                <IconButton
+                                    onClick={() => handleOpenPreview(record.fileId, record.fileName)}
+                                >
+                                    <VisibilityIcon />
+                                </IconButton>
+                            </Tooltip>
+                            <Tooltip title="Renommer le fichier" arrow>
+                                <IconButton
+                                    onClick={() => handleRenameFile(record)}
+                                    sx={{ color: '#1976d2' }}
+                                >
+                                    <EditIcon />
+                                </IconButton>
+                            </Tooltip>
                             <Tooltip title="Supprimer l'enregistrement" arrow>
                                 <IconButton
                                     onClick={() => handleDeleteRecord(record._id)}
@@ -433,8 +553,9 @@ export default function VehicleDetails() {
                         </Box>
                     </TableCell>
                 </TableRow>
-            ))}
-        </TableBody>
+            ))
+            }
+        </TableBody >
     );
 
 
@@ -491,7 +612,9 @@ export default function VehicleDetails() {
                             <TableCell>Type</TableCell>
                             <TableCell>Date</TableCell>
                             <TableCell>Document</TableCell>
+                            <TableCell>commentaire</TableCell>
                             <TableCell>Coût</TableCell>
+                            <TableCell>Nom du fichier</TableCell>
                             <TableCell>Actions</TableCell>
                         </TableRow>
                     </TableHead>
@@ -506,6 +629,8 @@ export default function VehicleDetails() {
                     style: {
                         backgroundColor: darkMode ? '#424242' : '#ffffff',
                         color: darkMode ? '#ffffff' : '#000000',
+                        width: '800px',
+                        maxWidth: '90vw'
                     }
                 }}
             >
@@ -530,50 +655,64 @@ export default function VehicleDetails() {
                             style={{ display: 'none' }}
                             onChange={handleFileInputChange}
                         />
-                        <label htmlFor="file-upload" style={labelStyle}>
+                        <label htmlFor="file-upload" style={{ ...labelStyle, textAlign: 'center', display: 'block', width: '100%' }}>
                             Ajouter un fichier
                         </label>
                     </div>
-                    <AutocompleteP
-                        id="type"
-                        label="Type de document"
-                        option={[
-                            'Certificat de Conformité',
-                            'Carte Grise',
-                            'Assurance',
-                            'Contrôle Technique',
-                            'Facture',
-                            'Réparation',
-                            'Autre'
-                        ]}
-                        defaultValue={newRecord.type}
-                        onChange={(value) => setNewRecord({ ...newRecord, type: value })}
-                    />
-                    <DatePickerP
-                        label="Date du document"
-                        value={newRecord.date}
-                        onChange={(value) => setNewRecord({ ...newRecord, date: value })}
-                    />
-                    <TextFieldP
-                        label="Document"
-                        value={newRecord.documentVechiule}
-                        onChange={(value) => setNewRecord({ ...newRecord, documentVechiule: value })}
-                    />
-                    <TextFieldP
-                        label="Commentaire"
-                        value={newRecord.commentaire}
-                        onChange={(value) => setNewRecord({ ...newRecord, commentaire: value })}
-                        multiline
-                    />
-                    <TextFieldP
-                        label="Coût"
-                        type="number"
-                        value={newRecord.cost}
-                        onChange={(value) => setNewRecord({ ...newRecord, cost: value })}
-                        InputProps={{
-                            startAdornment: <span>€</span>
-                        }}
-                    />
+                    <Box sx={{ gap: 2, mt: 6 }}>
+                        <Box sx={{ width: '100%' }}>
+                            <AutocompleteP
+                                id="type"
+                                label="Type de document"
+                                option={[
+                                    'Certificat de Conformité',
+                                    'Carte Grise',
+                                    'Contrôle technique',
+                                    'Assurance',
+                                    'Contrôle Technique',
+                                    'Facture',
+                                    'Réparation',
+                                    'Entretien',
+                                    'Autre'
+                                ]}
+                                defaultValue=""
+                                value={newRecord.type}
+                                onChange={(value) => setNewRecord(prev => ({ ...prev, type: value }))}
+                                isOptionEqualToValue={(option, value) => option === value}
+                            />
+                            <DatePickerP
+                                label="Date du document"
+                                value={newRecord.date}
+                                onChange={(value) => setNewRecord({ ...newRecord, date: value })}
+                            />
+                        </Box>
+
+                        <Box sx={{ width: '100%' }}>
+                            <TextFieldP
+                                label="Document"
+                                value={newRecord.documentVechiule}
+                                onChange={(value) => setNewRecord({ ...newRecord, documentVechiule: value })}
+                            />
+                            <TextFieldP
+                                label="Commentaire"
+                                value={newRecord.commentaire}
+                                onChange={(value) => setNewRecord({ ...newRecord, commentaire: value })}
+                                multiline
+                            />
+                        </Box>
+
+                        <Box sx={{ width: '100%' }}>
+                            <TextFieldP
+                                label="Coût"
+                                type="number"
+                                value={newRecord.cost}
+                                onChange={(value) => setNewRecord({ ...newRecord, cost: value })}
+                                InputProps={{
+                                    startAdornment: <span>€</span>
+                                }}
+                            />
+                        </Box>
+                    </Box>
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={() => setOpenDialog(false)}>Annuler</Button>
@@ -582,44 +721,37 @@ export default function VehicleDetails() {
             </Dialog>
             <Modal
                 open={modalOpen}
-                onClose={handleCloseModal}
-                aria-labelledby="file-viewer-modal"
-                keepMounted={false}
-                disableEnforceFocus={false}
-                disableAutoFocus={false}
-                onKeyDown={(event) => {
-                    if (event.key === 'Escape') {
-                        handleCloseModal();
-                    }
+                onClose={() => {
+                    setModalOpen(false);
+                    setSelectedFile(null);
                 }}
             >
-                <Box sx={{ ...modalStyles }} role="dialog" aria-modal="true">
-                    <Typography id="file-preview-title" variant="h6" sx={{ position: 'absolute', left: -9999 }}>
-                        Prévisualisation du fichier: {selectedFile?.fileName}
-                    </Typography>
-                    <Tooltip title="Fermer la fenêtre" arrow>
-                        <Button
-                            onClick={handleCloseModal}
-                            sx={{
-                                position: 'absolute',
-                                right: 8,
-                                top: 8,
-                                color: 'white',
-                                backgroundColor: 'rgba(0, 0, 0, 0.5)',
-                                '&:hover': {
-                                    backgroundColor: 'rgba(0, 0, 0, 0.7)',
-                                }
-                            }}
-                        >
-                            <CloseIcon />
-                        </Button>
-                    </Tooltip>
+                <Box sx={modalStyles}>
+                    <IconButton
+                        sx={{
+                            position: 'absolute',
+                            right: 8,
+                            top: 8,
+                            color: 'white',
+                            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                            '&:hover': {
+                                backgroundColor: 'rgba(0, 0, 0, 0.7)',
+                            }
+                        }}
+                        onClick={() => {
+                            setModalOpen(false);
+                            setSelectedFile(null);
+                        }}
+                    >
+                        <CloseIcon />
+                    </IconButton>
+
                     {selectedFile && (
-                        <Box sx={{ width: '100%', height: '100%', overflow: 'auto' }} tabIndex={-1}>
+                        <Box sx={{ width: '100%', height: '100%', overflow: 'auto' }}>
                             <FileViewer
-                                file={selectedFile.file}
+                                file={selectedFile}
                                 accidentId={null}
-                                isEntreprise={true}
+                                isVehicle={true}
                             />
                         </Box>
                     )}

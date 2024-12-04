@@ -21,8 +21,9 @@ import config from '../config.json';
 import CustomSnackbar from '../_composants/CustomSnackbar';
 import { useTheme } from '../Hook/ThemeContext';
 import axios from 'axios';
-
+import { useLogger } from '../Hook/useLogger';
 export default function VehicleList() {
+    const { logAction } = useLogger();
     const { darkMode } = useTheme();
     const navigate = useNavigate();
     const [vehicles, setVehicles] = useState([]);
@@ -60,14 +61,22 @@ export default function VehicleList() {
         });
     };
 
-    const handleEdit = (vehicle) => {
+    const handleEdit = async (vehicle) => {
         try {
             // S'assurer que tous les champs sont disponibles avant la navigation
             const vehicleToEdit = {
                 ...vehicle,
                 kilometrage: vehicle.kilometrage || 0  // Assurez-vous que le kilométrage existe
-                
+
             };
+
+            await logAction({
+                actionType: 'modification',
+                details: `Modification du véhicule ${vehicle.numPlaque}`,
+                entity: 'Vehicle',
+                entityId: vehicle._id
+            });
+
             console.log("Vehicle avant navigation:", vehicle);
             navigate("/AdminAddVehicule", { state: { vehicle: vehicleToEdit } });
             showSnackbar('Modification du véhicule initiée', 'info');
@@ -80,6 +89,14 @@ export default function VehicleList() {
     const handleDelete = async (vehicleId) => {
         try {
             await axios.delete(`http://${apiUrl}:3100/api/vehicles/${vehicleId}`);
+
+            await logAction({
+                actionType: 'suppression',
+                details: `Suppression du véhicule`,
+                entity: 'Vehicle',
+                entityId: vehicleId
+            });
+
             setVehicles(vehicles.filter(vehicle => vehicle._id !== vehicleId));
             showSnackbar('Véhicule supprimé avec succès', 'success');
         } catch (error) {
@@ -93,6 +110,13 @@ export default function VehicleList() {
             try {
                 const response = await axios.get(`http://${apiUrl}:3100/api/vehicles`);
                 setVehicles(response.data);
+
+                await logAction({
+                    actionType: 'consultation',
+                    details: 'Consultation de la liste des véhicules',
+                    entity: 'Vehicle'
+                });
+
                 showSnackbar('Véhicules chargés avec succès', 'success');
             } catch (error) {
                 console.error('Error fetching vehicles:', error);

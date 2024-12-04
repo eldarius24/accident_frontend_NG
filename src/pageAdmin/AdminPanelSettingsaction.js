@@ -150,7 +150,7 @@ export default function AdminPanelSettingsaction() {
                         borderRadius: '8px',
                         padding: '20px',
                         margin: '20px 0',
-                        backgroundColor: darkMode ? '#2e2e2e' : '#ffffff',
+                        backgroundColor: darkMode ? '#252525' : '#e2e2e2',
                         '&:hover': {
                             boxShadow: darkMode
                                 ? '0 8px 16px rgba(255, 255, 255, 0.1)'
@@ -158,7 +158,315 @@ export default function AdminPanelSettingsaction() {
                         }
                     }}
                 >
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                            position: 'relative',
+                            margin: '1.5rem 0',
+                            '&::before': {
+                                content: '""',
+                                position: 'absolute',
+                                top: '50%',
+                                left: '50%',
+                                transform: 'translate(-50%, -50%)',
+                                width: '200px',
+                                height: '45px',
+                                background: darkMode
+                                    ? 'rgba(122,142,28,0.1)'
+                                    : 'rgba(238,117,45,0.1)',
+                                filter: 'blur(10px)',
+                                borderRadius: '10px',
+                                zIndex: 0
+                            }
+                        }}
+                    >
+                        <Typography
+                            variant="h2"
+                            sx={{
+                                fontSize: { xs: '1.5rem', sm: '1.8rem', md: '2.2rem' },
+                                fontWeight: 600,
+                                background: darkMode
+                                    ? 'linear-gradient(45deg, #7a8e1c, #a4bd24)'
+                                    : 'linear-gradient(45deg, #ee752d, #f4a261)',
+                                backgroundClip: 'text',
+                                WebkitBackgroundClip: 'text',
+                                color: 'transparent',
+                                textTransform: 'uppercase',
+                                letterSpacing: '3px',
+                                position: 'relative',
+                                padding: '0.5rem 1.5rem',
+                                zIndex: 1,
+                                '&::after': {
+                                    content: '""',
+                                    position: 'absolute',
+                                    bottom: 0,
+                                    left: 0,
+                                    width: '100%',
+                                    height: '2px',
+                                    background: darkMode
+                                        ? 'linear-gradient(90deg, transparent, #7a8e1c, transparent)'
+                                        : 'linear-gradient(90deg, transparent, #ee752d, transparent)'
+                                }
+                            }}
+                        >
+                            Administration de l'application
+                        </Typography>
+                        <Box
+                            sx={{
+                                position: 'absolute',
+                                width: '100%',
+                                height: '100%',
+                                opacity: 0.5,
+                                pointerEvents: 'none',
+                                '&::before': {
+                                    content: '""',
+                                    position: 'absolute',
+                                    top: 0,
+                                    left: 0,
+                                    width: '100%',
+                                    height: '1px',
+                                    background: darkMode
+                                        ? 'linear-gradient(90deg, transparent, rgba(122,142,28,0.3), transparent)'
+                                        : 'linear-gradient(90deg, transparent, rgba(238,117,45,0.3), transparent)'
+                                }
+                            }}
+                        />
+                    </Box>
+                    <Paper
+                        elevation={3}
+                        sx={{
+                            border: darkMode ? '1px solid #ffffff' : '1px solid #ee742d',
+                            borderRadius: '8px',
+                            padding: '20px',
+                            margin: '20px 0',
+                            backgroundColor: darkMode ? '#2e2e2e' : '#ffffff',
+                            '&:hover': {
+                                boxShadow: darkMode
+                                    ? '0 8px 16px rgba(255, 255, 255, 0.1)'
+                                    : '0 8px 16px rgba(238, 116, 45, 0.2)'
+                            }
+                        }}
+                    >
+                        <h3 style={{ color: darkMode ? '#ffffff' : 'inherit' }}>Administration des logs et des messages de support</h3>
+                        {/* Box pour le bouton des logs */}
+                        <Box sx={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                            marginLeft: '120px',
+                            marginRight: '120px',
+                            gap: '20px'
+                        }}>
+                            <Tooltip title="Visualisation des logs" arrow>
+                                <Button
+                                    type="submit"
+                                    component={Link}
+                                    to={'/logView'}
+                                    sx={{
+                                        ...defaultStyle,
+                                        color: darkMode ? '#ffffff' : 'black',
+                                        backgroundColor: darkMode ? '#424242' : '#ee742d59',
+                                        transition: 'all 0.1s ease-in-out',
+                                        '&:hover': {
+                                            backgroundColor: darkMode ? '#7a8e1c' : '#95ad22',
+                                            transform: 'scale(1.08)',
+                                            boxShadow: darkMode ? '0 6px 12px rgba(255,255,255,0.2)' : 6
+                                        },
+                                        boxShadow: darkMode ? '0 3px 6px rgba(255,255,255,0.1)' : 3,
+                                        textTransform: 'none',
+                                        border: darkMode ? '1px solid rgba(255,255,255,0.1)' : 'none'
+                                    }}
+                                    variant="contained"
+                                >
+                                    <History />
+                                    Visualisation des logs
+                                </Button>
+                            </Tooltip>
+                            <Tooltip title="Visualisation messages de support" arrow>
+                                <Button
+                                    type="submit"
+                                    component={Link}
+                                    to={'/messSupport'}
+                                    sx={{
+                                        ...defaultStyle,
+                                        color: darkMode ? '#ffffff' : 'black',
+                                        backgroundColor: darkMode ? '#424242' : '#ee742d59',
+                                        transition: 'all 0.1s ease-in-out',
+                                        '&:hover': {
+                                            backgroundColor: darkMode ? '#7a8e1c' : '#95ad22',
+                                            transform: 'scale(1.08)',
+                                            boxShadow: darkMode ? '0 6px 12px rgba(255,255,255,0.2)' : 6
+                                        },
+                                        boxShadow: darkMode ? '0 3px 6px rgba(255,255,255,0.1)' : 3,
+                                        textTransform: 'none',
+                                        border: darkMode ? '1px solid rgba(255,255,255,0.1)' : 'none'
+                                    }}
+                                    variant="contained"
+                                >
+                                    <HelpIcon />
+                                    Visualisation des supports
 
+                                </Button>
+                            </Tooltip>
+                        </Box>
+                    </Paper>
+                    <Paper
+                        elevation={3}
+                        sx={{
+                            border: darkMode ? '1px solid #ffffff' : '1px solid #ee742d',
+                            borderRadius: '8px',
+                            padding: '20px',
+                            margin: '20px 0',
+                            backgroundColor: darkMode ? '#2e2e2e' : '#ffffff',
+                            '&:hover': {
+                                boxShadow: darkMode
+                                    ? '0 8px 16px rgba(255, 255, 255, 0.1)'
+                                    : '0 8px 16px rgba(238, 116, 45, 0.2)'
+                            }
+                        }}
+                    >
+                        <h3 style={{ color: darkMode ? '#ffffff' : 'inherit' }}>Administration des archives</h3>
+                        <BulkArchiveManager
+                            darkMode={darkMode}
+                            onSuccess={(message) => showSnackbar(message, 'success')}
+                        />
+                        <Typography variant="h6" sx={{ mb: 4, color: darkMode ? '#ffffff' : 'inherit', textAlign: 'center' }}>
+                            Accéder aux archives
+                        </Typography>
+                        <Box sx={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                            marginLeft: '120px',
+                            marginRight: '120px',
+                            gap: '20px'
+                        }}>
+                            <SystemeArchivage
+                                typeArchive="planaction"
+                                donnees={users}
+                                onArchiver={async (archiveData) => {
+                                    try {
+                                        await axios.post(`http://${apiUrl}:3100/api/archives`, archiveData);
+                                        refreshListAccidents();
+                                        showSnackbar('Action archivée avec succès', 'success');
+                                    } catch (error) {
+                                        console.error("Erreur lors de l'archivage:", error);
+                                        showSnackbar('Erreur lors de l\'archivage', 'error');
+                                    }
+                                }}
+                                darkMode={darkMode}
+                            />
+                            {/* Deuxième système d'archivage pour les accidents */}
+                            <SystemeArchivage
+                                typeArchive="accident"
+                                donnees={users}
+                                onArchiver={async (archiveData) => {
+                                    try {
+                                        await axios.post(`http://${apiUrl}:3100/api/archives`, archiveData);
+                                        refreshListAccidents();
+                                        showSnackbar('Accident archivé avec succès', 'success');
+                                    } catch (error) {
+                                        console.error("Erreur lors de l'archivage:", error);
+                                        showSnackbar('Erreur lors de l\'archivage', 'error');
+                                    }
+                                }}
+                                darkMode={darkMode}
+                            />
+
+                        </Box>
+                    </Paper>
+                </Paper>
+                <Paper
+                    elevation={3}
+                    sx={{
+                        border: darkMode ? '1px solid #ffffff' : '1px solid #ee742d',
+                        borderRadius: '8px',
+                        padding: '20px',
+                        margin: '20px 0',
+                        backgroundColor: darkMode ? '#252525' : '#e2e2e2',
+                        '&:hover': {
+                            boxShadow: darkMode
+                                ? '0 8px 16px rgba(255, 255, 255, 0.1)'
+                                : '0 8px 16px rgba(238, 116, 45, 0.2)'
+                        }
+                    }}
+                >
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                            position: 'relative',
+                            margin: '1.5rem 0',
+                            '&::before': {
+                                content: '""',
+                                position: 'absolute',
+                                top: '50%',
+                                left: '50%',
+                                transform: 'translate(-50%, -50%)',
+                                width: '200px',
+                                height: '45px',
+                                background: darkMode
+                                    ? 'rgba(122,142,28,0.1)'
+                                    : 'rgba(238,117,45,0.1)',
+                                filter: 'blur(10px)',
+                                borderRadius: '10px',
+                                zIndex: 0
+                            }
+                        }}
+                    >
+                        <Typography
+                            variant="h2"
+                            sx={{
+                                fontSize: { xs: '1.5rem', sm: '1.8rem', md: '2.2rem' },
+                                fontWeight: 600,
+                                background: darkMode
+                                    ? 'linear-gradient(45deg, #7a8e1c, #a4bd24)'
+                                    : 'linear-gradient(45deg, #ee752d, #f4a261)',
+                                backgroundClip: 'text',
+                                WebkitBackgroundClip: 'text',
+                                color: 'transparent',
+                                textTransform: 'uppercase',
+                                letterSpacing: '3px',
+                                position: 'relative',
+                                padding: '0.5rem 1.5rem',
+                                zIndex: 1,
+                                '&::after': {
+                                    content: '""',
+                                    position: 'absolute',
+                                    bottom: 0,
+                                    left: 0,
+                                    width: '100%',
+                                    height: '2px',
+                                    background: darkMode
+                                        ? 'linear-gradient(90deg, transparent, #7a8e1c, transparent)'
+                                        : 'linear-gradient(90deg, transparent, #ee752d, transparent)'
+                                }
+                            }}
+                        >
+                            Administration prévention
+                        </Typography>
+                        <Box
+                            sx={{
+                                position: 'absolute',
+                                width: '100%',
+                                height: '100%',
+                                opacity: 0.5,
+                                pointerEvents: 'none',
+                                '&::before': {
+                                    content: '""',
+                                    position: 'absolute',
+                                    top: 0,
+                                    left: 0,
+                                    width: '100%',
+                                    height: '1px',
+                                    background: darkMode
+                                        ? 'linear-gradient(90deg, transparent, rgba(122,142,28,0.3), transparent)'
+                                        : 'linear-gradient(90deg, transparent, rgba(238,117,45,0.3), transparent)'
+                                }
+                            }}
+                        />
+                    </Box>
                     <Paper
                         elevation={3}
                         sx={{
@@ -313,7 +621,6 @@ export default function AdminPanelSettingsaction() {
                         </Box>
                     </Paper>
                 </Paper>
-
                 <Paper
                     elevation={3}
                     sx={{
@@ -321,7 +628,7 @@ export default function AdminPanelSettingsaction() {
                         borderRadius: '8px',
                         padding: '20px',
                         margin: '20px 0',
-                        backgroundColor: darkMode ? '#2e2e2e' : '#ffffff',
+                        backgroundColor: darkMode ? '#252525' : '#e2e2e2',
                         '&:hover': {
                             boxShadow: darkMode
                                 ? '0 8px 16px rgba(255, 255, 255, 0.1)'
@@ -329,147 +636,82 @@ export default function AdminPanelSettingsaction() {
                         }
                     }}
                 >
-                    <h3 style={{ color: darkMode ? '#ffffff' : 'inherit' }}>Administration des logs et des messages de support</h3>
-                    {/* Box pour le bouton des logs */}
-                    <Box sx={{
-                        display: 'flex',
-                        justifyContent: 'center',
-                        marginLeft: '120px',
-                        marginRight: '120px',
-                        gap: '20px'
-                    }}>
-                        <Tooltip title="Visualisation des logs" arrow>
-                            <Button
-                                type="submit"
-                                component={Link}
-                                to={'/logView'}
-                                sx={{
-                                    ...defaultStyle,
-                                    color: darkMode ? '#ffffff' : 'black',
-                                    backgroundColor: darkMode ? '#424242' : '#ee742d59',
-                                    transition: 'all 0.1s ease-in-out',
-                                    '&:hover': {
-                                        backgroundColor: darkMode ? '#7a8e1c' : '#95ad22',
-                                        transform: 'scale(1.08)',
-                                        boxShadow: darkMode ? '0 6px 12px rgba(255,255,255,0.2)' : 6
-                                    },
-                                    boxShadow: darkMode ? '0 3px 6px rgba(255,255,255,0.1)' : 3,
-                                    textTransform: 'none',
-                                    border: darkMode ? '1px solid rgba(255,255,255,0.1)' : 'none'
-                                }}
-                                variant="contained"
-                            >
-                                <History />
-                                Visualisation des logs
-                            </Button>
-                        </Tooltip>
-                        <Tooltip title="Visualisation messages de support" arrow>
-                            <Button
-                                type="submit"
-                                component={Link}
-                                to={'/messSupport'}
-                                sx={{
-                                    ...defaultStyle,
-                                    color: darkMode ? '#ffffff' : 'black',
-                                    backgroundColor: darkMode ? '#424242' : '#ee742d59',
-                                    transition: 'all 0.1s ease-in-out',
-                                    '&:hover': {
-                                        backgroundColor: darkMode ? '#7a8e1c' : '#95ad22',
-                                        transform: 'scale(1.08)',
-                                        boxShadow: darkMode ? '0 6px 12px rgba(255,255,255,0.2)' : 6
-                                    },
-                                    boxShadow: darkMode ? '0 3px 6px rgba(255,255,255,0.1)' : 3,
-                                    textTransform: 'none',
-                                    border: darkMode ? '1px solid rgba(255,255,255,0.1)' : 'none'
-                                }}
-                                variant="contained"
-                            >
-                                <HelpIcon />
-                                Visualisation des supports
-
-                            </Button>
-                        </Tooltip>
-                    </Box>
-                </Paper>
-                <Paper
-                    elevation={3}
-                    sx={{
-                        border: darkMode ? '1px solid #ffffff' : '1px solid #ee742d',
-                        borderRadius: '8px',
-                        padding: '20px',
-                        margin: '20px 0',
-                        backgroundColor: darkMode ? '#2e2e2e' : '#ffffff',
-                        '&:hover': {
-                            boxShadow: darkMode
-                                ? '0 8px 16px rgba(255, 255, 255, 0.1)'
-                                : '0 8px 16px rgba(238, 116, 45, 0.2)'
-                        }
-                    }}
-                >
-                    <h3 style={{ color: darkMode ? '#ffffff' : 'inherit' }}>Administration des archives</h3>
-                    <BulkArchiveManager
-                        darkMode={darkMode}
-                        onSuccess={(message) => showSnackbar(message, 'success')}
-                    />
-                    <Typography variant="h6" sx={{ mb: 4, color: darkMode ? '#ffffff' : 'inherit', textAlign: 'center' }}>
-                        Accéder aux archives
-                    </Typography>
-                    <Box sx={{
-                        display: 'flex',
-                        justifyContent: 'center',
-                        marginLeft: '120px',
-                        marginRight: '120px',
-                        gap: '20px'
-                    }}>
-                        <SystemeArchivage
-                            typeArchive="planaction"
-                            donnees={users}
-                            onArchiver={async (archiveData) => {
-                                try {
-                                    await axios.post(`http://${apiUrl}:3100/api/archives`, archiveData);
-                                    refreshListAccidents();
-                                    showSnackbar('Action archivée avec succès', 'success');
-                                } catch (error) {
-                                    console.error("Erreur lors de l'archivage:", error);
-                                    showSnackbar('Erreur lors de l\'archivage', 'error');
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                            position: 'relative',
+                            margin: '1.5rem 0',
+                            '&::before': {
+                                content: '""',
+                                position: 'absolute',
+                                top: '50%',
+                                left: '50%',
+                                transform: 'translate(-50%, -50%)',
+                                width: '200px',
+                                height: '45px',
+                                background: darkMode
+                                    ? 'rgba(122,142,28,0.1)'
+                                    : 'rgba(238,117,45,0.1)',
+                                filter: 'blur(10px)',
+                                borderRadius: '10px',
+                                zIndex: 0
+                            }
+                        }}
+                    >
+                        <Typography
+                            variant="h2"
+                            sx={{
+                                fontSize: { xs: '1.5rem', sm: '1.8rem', md: '2.2rem' },
+                                fontWeight: 600,
+                                background: darkMode
+                                    ? 'linear-gradient(45deg, #7a8e1c, #a4bd24)'
+                                    : 'linear-gradient(45deg, #ee752d, #f4a261)',
+                                backgroundClip: 'text',
+                                WebkitBackgroundClip: 'text',
+                                color: 'transparent',
+                                textTransform: 'uppercase',
+                                letterSpacing: '3px',
+                                position: 'relative',
+                                padding: '0.5rem 1.5rem',
+                                zIndex: 1,
+                                '&::after': {
+                                    content: '""',
+                                    position: 'absolute',
+                                    bottom: 0,
+                                    left: 0,
+                                    width: '100%',
+                                    height: '2px',
+                                    background: darkMode
+                                        ? 'linear-gradient(90deg, transparent, #7a8e1c, transparent)'
+                                        : 'linear-gradient(90deg, transparent, #ee752d, transparent)'
                                 }
                             }}
-                            darkMode={darkMode}
-                        />
-                        {/* Deuxième système d'archivage pour les accidents */}
-                        <SystemeArchivage
-                            typeArchive="accident"
-                            donnees={users}
-                            onArchiver={async (archiveData) => {
-                                try {
-                                    await axios.post(`http://${apiUrl}:3100/api/archives`, archiveData);
-                                    refreshListAccidents();
-                                    showSnackbar('Accident archivé avec succès', 'success');
-                                } catch (error) {
-                                    console.error("Erreur lors de l'archivage:", error);
-                                    showSnackbar('Erreur lors de l\'archivage', 'error');
+                        >
+                            Administration Véhicules
+                        </Typography>
+                        <Box
+                            sx={{
+                                position: 'absolute',
+                                width: '100%',
+                                height: '100%',
+                                opacity: 0.5,
+                                pointerEvents: 'none',
+                                '&::before': {
+                                    content: '""',
+                                    position: 'absolute',
+                                    top: 0,
+                                    left: 0,
+                                    width: '100%',
+                                    height: '1px',
+                                    background: darkMode
+                                        ? 'linear-gradient(90deg, transparent, rgba(122,142,28,0.3), transparent)'
+                                        : 'linear-gradient(90deg, transparent, rgba(238,117,45,0.3), transparent)'
                                 }
                             }}
-                            darkMode={darkMode}
                         />
-
                     </Box>
-                </Paper>
-                <Paper
-                    elevation={3}
-                    sx={{
-                        border: darkMode ? '1px solid #ffffff' : '1px solid #ee742d',
-                        borderRadius: '8px',
-                        padding: '20px',
-                        margin: '20px 0',
-                        backgroundColor: darkMode ? '#2e2e2e' : '#ffffff',
-                        '&:hover': {
-                            boxShadow: darkMode
-                                ? '0 8px 16px rgba(255, 255, 255, 0.1)'
-                                : '0 8px 16px rgba(238, 116, 45, 0.2)'
-                        }
-                    }}
-                >
                     <Paper
                         elevation={3}
                         sx={{
@@ -592,7 +834,7 @@ export default function AdminPanelSettingsaction() {
                                     variant="contained"
                                 >
                                     <AddIcon />
-                                    Créer une nouvelle entreprise
+                                    Créer une nouvelle entreprise véhicule
                                 </Button>
                             </Tooltip>
                             <Tooltip title="Consulter les entreprises véhicules" arrow>
