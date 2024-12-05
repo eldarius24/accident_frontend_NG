@@ -342,13 +342,6 @@ export default function AddUser() {
                             </IconButton>
                         </Grid>
                     </Grid>
-
-
-
-
-
-
-
                 </Tooltip>
                 <h3 style={{ color: darkMode ? '#ffffff' : 'inherit' }}>Donner les accès developpeur du site:</h3>
                 <Tooltip title="Cocher cette case si l'utilisateur est développeur du site. Il aura les mêmes droits qu'un administrateur" arrow>
@@ -545,6 +538,62 @@ export default function AddUser() {
                         </IconButton>
                     </Grid>
                 </Grid>
+
+                <h3 style={{ color: darkMode ? '#ffffff' : 'inherit' }}>Donner les accès Administrateur véhicule du site:</h3>
+                <Tooltip title="Cocher cette case si l'utilisateur est administrateur véhicule du site. " arrow>
+                    <Grid container direction="row" alignItems="center">
+                        <Grid item xs={11.99999} sx={{ display: 'flex', justifyContent: 'center' }}>
+                            <ControlLabelAdminP
+                                id="boolAdministrateurVehicule"
+                                label="Administrateur véhicule du site"
+                                onChange={(value) => {
+                                    handleChange('boolAdministrateurVehicule', value);
+                                    setValue('boolAdministrateurVehicule', value);
+                                }}
+                                checked={Boolean(user.boolAdministrateurVehicule)}
+                                defaultChecked={Boolean(user.boolAdministrateurVehicule)}
+                            />
+                        </Grid>
+                        <Grid item xs={0.00001} style={{ margin: '-24.5%' }}>
+                            <IconButton onClick={() => handleOpenPreview('admin')}>
+                                <Tooltip title="Info rôle" arrow>
+                                    <InfoIcon style={{ color: darkMode ? '#ffffff' : 'black' }} />
+                                </Tooltip>
+                            </IconButton>
+                        </Grid>
+                    </Grid>
+                </Tooltip>
+
+
+                <h3 style={{ color: darkMode ? '#ffffff' : 'inherit' }}>Donner les accès getionnaire véhicule du site:</h3>
+                <Tooltip title="Cocher cette case si l'utilisateur est administrateur véhicule du site. " arrow>
+                    <Grid container direction="row" alignItems="center">
+                        <Grid item xs={11.99999} sx={{ display: 'flex', justifyContent: 'center' }}>
+                            <ControlLabelAdminP
+                                id="boolGetionaireVehicule"
+                                label="Getionnaire véhicule du site"
+                                onChange={(value) => {
+                                    handleChange('boolGetionaireVehicule', value);
+                                    setValue('boolGetionaireVehicule', value);
+                                }}
+                                checked={Boolean(user.boolGetionaireVehicule)}
+                                defaultChecked={Boolean(user.boolGetionaireVehicule)}
+                            />
+                        </Grid>
+                        <Grid item xs={0.00001} style={{ margin: '-24.5%' }}>
+                            <IconButton onClick={() => handleOpenPreview('admin')}>
+                                <Tooltip title="Info rôle" arrow>
+                                    <InfoIcon style={{ color: darkMode ? '#ffffff' : 'black' }} />
+                                </Tooltip>
+                            </IconButton>
+                        </Grid>
+                    </Grid>
+                </Tooltip>
+
+
+
+
+
 
                 <div style={{ display: 'flex', justifyContent: 'center' }}>
                     <Tooltip title="Cliquez ici pour enregistrer et créer le nouvel utilisateur" arrow>

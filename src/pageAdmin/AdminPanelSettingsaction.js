@@ -714,7 +714,7 @@ export default function AdminPanelSettingsaction() {
                             }}
                         />
                     </Box>
-                    <Paper
+                     {/*<Paper
                         elevation={3}
                         sx={{
                             border: darkMode ? '1px solid #ffffff' : '1px solid #ee742d',
@@ -729,8 +729,8 @@ export default function AdminPanelSettingsaction() {
                             }
                         }}
                     >
-                        <h3 style={{ color: darkMode ? '#ffffff' : 'inherit' }}>Administration des véhicules</h3>
-                        {/* Box pour les boutons véhicules */}
+                       <h3 style={{ color: darkMode ? '#ffffff' : 'inherit' }}>Administration des véhicules</h3>
+                        
                         <Box sx={{
                             display: 'flex',
                             justifyContent: 'center',
@@ -789,7 +789,7 @@ export default function AdminPanelSettingsaction() {
                                 </Button>
                             </Tooltip>
                         </Box>
-                    </Paper>
+                    </Paper>*/}
 
                     <Paper
                         elevation={3}

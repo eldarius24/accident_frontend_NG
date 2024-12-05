@@ -11,7 +11,18 @@ import { useTheme } from '../Hook/ThemeContext.js'; // Add this import
 import { useUserConnected } from '../Hook/userConnected.js';
 import DriveEtaIcon from '@mui/icons-material/DriveEta';
 export default function Navigation() {
-    const { isAdmin, isAdminOuConseiller, userInfo, isConseiller, isAdminOrDev, isAdminOrDevOrConseiller, isUserPreventionOrAdminOrConseiller } = useUserConnected();
+    const {
+        isAdmin,
+        isAdminOuConseiller,
+        userInfo,
+        isConseiller,
+        isAdminOrDev,
+        isAdminOrDevOrConseiller,
+        isUserPreventionOrAdminOrConseiller,
+        isVehicleAdminManager,
+        isFleetManager,
+        isVehicleAdmin
+    } = useUserConnected();
     const { darkMode } = useTheme(); // Add this hook
     const [hoverStates, setHoverStates] = useState({
         accident: false,
@@ -208,7 +219,7 @@ export default function Navigation() {
                 borderRadius: '5px',
                 animation: isHovered ? `${slideIn} 3s ease` : 'none',
             }} />
-            
+
             {/* Toit du véhicule */}
             <Box sx={{
                 position: 'absolute',
@@ -220,7 +231,7 @@ export default function Navigation() {
                 borderRadius: '3px',
                 animation: isHovered ? `${slideIn} 3s ease` : 'none',
             }} />
-            
+
             {/* Roues */}
             {[15, 35].map((left, i) => (
                 <Box
@@ -277,6 +288,19 @@ export default function Navigation() {
             ))}
         </Box>
     );
+
+    console.log("User roles:", {
+        isFleetManager,
+        isVehicleAdmin,
+        isVehicleAdminManager,
+        userInfo
+    });
+    console.log("Vehicle access roles:", {
+        isFleetManager,
+        isVehicleAdmin,
+        isVehicleAdminManager,
+        boolGetionaireVehicule: userInfo.boolGetionaireVehicule
+    });
 
     return (
         <div style={{
@@ -492,6 +516,7 @@ export default function Navigation() {
                         </Typography>
                     </Box>
 
+
                     <Box
                         sx={{
                             display: 'grid',
@@ -500,53 +525,57 @@ export default function Navigation() {
                             padding: '20px',
                         }}
                     >
-                        <Tooltip title="Gérer les accidents" arrow>
-                            <Button
-                                component={Link}
-                                to="/Accident"
-                                sx={buttonStyle(0)}
-                                onMouseEnter={() => setHoverStates(prev => ({ ...prev, accident: true }))}
-                                onMouseLeave={() => setHoverStates(prev => ({ ...prev, accident: false }))}
-                            >
-                                <AccidentAnimation isHovered={hoverStates.accident} />
-                                <Box className="button-content" sx={{ zIndex: 1 }}>
-                                    <ViewListIcon sx={{ fontSize: '3rem', mb: 2 }} />
-                                    <Typography variant="h5">Accidents</Typography>
-                                </Box>
-                            </Button>
-                        </Tooltip>
-
-                        <Tooltip title="Consulter les statistiques" arrow>
-                            <Button
-                                component={Link}
-                                to="/statistiques"
-                                sx={buttonStyle(1)}
-                                onMouseEnter={() => setHoverStates(prev => ({ ...prev, stats: true }))}
-                                onMouseLeave={() => setHoverStates(prev => ({ ...prev, stats: false }))}
-                            >
-                                <StatsAnimation isHovered={hoverStates.stats} />
-                                <Box className="button-content" sx={{ zIndex: 1 }}>
-                                    <BarChartIcon sx={{ fontSize: '3rem', mb: 2 }} />
-                                    <Typography variant="h5">Statistiques</Typography>
-                                </Box>
-                            </Button>
-                        </Tooltip>
-
-                        <Tooltip title="Gérer le plan d'action" arrow>
-                            <Button
-                                component={Link}
-                                to="/planAction"
-                                sx={buttonStyle(2)}
-                                onMouseEnter={() => setHoverStates(prev => ({ ...prev, plan: true }))}
-                                onMouseLeave={() => setHoverStates(prev => ({ ...prev, plan: false }))}
-                            >
-                                <PlanAnimation isHovered={hoverStates.plan} />
-                                <Box className="button-content" sx={{ zIndex: 1 }}>
-                                    <ListAltIcon sx={{ fontSize: '3rem', mb: 2 }} />
-                                    <Typography variant="h5">Plan d'actions</Typography>
-                                </Box>
-                            </Button>
-                        </Tooltip>
+                        {isAdminOrDevOrConseiller && (
+                            <Tooltip title="Gérer les accidents" arrow>
+                                <Button
+                                    component={Link}
+                                    to="/Accident"
+                                    sx={buttonStyle(0)}
+                                    onMouseEnter={() => setHoverStates(prev => ({ ...prev, accident: true }))}
+                                    onMouseLeave={() => setHoverStates(prev => ({ ...prev, accident: false }))}
+                                >
+                                    <AccidentAnimation isHovered={hoverStates.accident} />
+                                    <Box className="button-content" sx={{ zIndex: 1 }}>
+                                        <ViewListIcon sx={{ fontSize: '3rem', mb: 2 }} />
+                                        <Typography variant="h5">Accidents</Typography>
+                                    </Box>
+                                </Button>
+                            </Tooltip>
+                        )}
+                        {isAdminOrDevOrConseiller && (
+                            <Tooltip title="Consulter les statistiques" arrow>
+                                <Button
+                                    component={Link}
+                                    to="/statistiques"
+                                    sx={buttonStyle(1)}
+                                    onMouseEnter={() => setHoverStates(prev => ({ ...prev, stats: true }))}
+                                    onMouseLeave={() => setHoverStates(prev => ({ ...prev, stats: false }))}
+                                >
+                                    <StatsAnimation isHovered={hoverStates.stats} />
+                                    <Box className="button-content" sx={{ zIndex: 1 }}>
+                                        <BarChartIcon sx={{ fontSize: '3rem', mb: 2 }} />
+                                        <Typography variant="h5">Statistiques</Typography>
+                                    </Box>
+                                </Button>
+                            </Tooltip>
+                        )}
+                        {isAdminOrDevOrConseiller && (
+                            <Tooltip title="Gérer le plan d'action" arrow>
+                                <Button
+                                    component={Link}
+                                    to="/planAction"
+                                    sx={buttonStyle(2)}
+                                    onMouseEnter={() => setHoverStates(prev => ({ ...prev, plan: true }))}
+                                    onMouseLeave={() => setHoverStates(prev => ({ ...prev, plan: false }))}
+                                >
+                                    <PlanAnimation isHovered={hoverStates.plan} />
+                                    <Box className="button-content" sx={{ zIndex: 1 }}>
+                                        <ListAltIcon sx={{ fontSize: '3rem', mb: 2 }} />
+                                        <Typography variant="h5">Plan d'actions</Typography>
+                                    </Box>
+                                </Button>
+                            </Tooltip>
+                        )}
                         {isUserPreventionOrAdminOrConseiller && (
                             <Tooltip title="Gérer les documents divers" arrow>
                                 <Button
@@ -564,22 +593,22 @@ export default function Navigation() {
                                 </Button>
                             </Tooltip>
                         )}
-                        <Tooltip title="Gérer les véhicules" arrow>
-                            <Button
-                                component={Link}
-                                to="/gestionVehicules"
-                                sx={buttonStyle(2)}
-                                onMouseEnter={() => setHoverStates(prev => ({ ...prev, vehicule: true }))}
-                                onMouseLeave={() => setHoverStates(prev => ({ ...prev, vehicule: false }))}
-                            >
-                                <VehicleAnimation isHovered={hoverStates.vehicule} />
-                                <Box className="button-content" sx={{ zIndex: 1 }}>
-                                    <DriveEtaIcon sx={{ fontSize: '3rem', mb: 2 }} />
-                                    <Typography variant="h5">Gestion des véhicules</Typography>
-                                </Box>
-                            </Button>
-                        </Tooltip>
-                        
+                        {(isVehicleAdminManager || isFleetManager) && (
+                            <Tooltip title="Gérer les véhicules" arrow>
+                                <Button
+                                    component={Link}
+                                    to="/gestionVehicules"
+                                    sx={buttonStyle(2)}
+                                // ... reste du code du bouton ...
+                                >
+                                    <VehicleAnimation isHovered={hoverStates.vehicule} />
+                                    <Box className="button-content" sx={{ zIndex: 1 }}>
+                                        <DriveEtaIcon sx={{ fontSize: '3rem', mb: 2 }} />
+                                        <Typography variant="h5">Gestion des véhicules</Typography>
+                                    </Box>
+                                </Button>
+                            </Tooltip>
+                        )}
                     </Box>
                 </Paper>
             </form>

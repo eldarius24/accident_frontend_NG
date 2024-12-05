@@ -21,6 +21,7 @@ import ProtectedRouteAdmin from './Model/protectedRouteAdmin';
 import Adminuser from './pageAdmin/user/AdminUser';
 import AddUser from './pageAdmin/user/addUser/AddUser';
 import ProtectedRouteAdminOrConseiller from './Model/protectedRouteConseillerPrevention'; // Importer le nouveau composant
+import ProtectedRouteAdminOrGesionaireVehicule from './Model/protectedRoutegetiovechi';
 import FormulaireAction from './planaction/FormulaireAction';
 import { ThemeProvider } from './Hook/ThemeContext'; // Importez ThemeProvider
 import LogView from './Logs/logView';
@@ -40,6 +41,7 @@ import AdminAddVehicule from './pageAdmin/AdminAddVehicule';
 import GetionVehicle from './Getionvehicules/GestionVehicule';
 import VehiculeDetails from './Getionvehicules/VehicleDetails';
 import ModifVehicule from './Getionvehicules/ModifVehicule';
+
 
 /**
  * App est le composant principal de l'application. Il contient les routes 
@@ -65,16 +67,7 @@ const App = () => {
               <Routes>
                 {/* Routes accessibles uniquement par usernormal */}
                 <Route path="/login" element={<Login />} />
-                <Route path="/vehicleUsers" element={<VehicleUserManagement />} />
-                <Route path="/addVehicleUser" element={<AddVehicleUser />} />
-                <Route path="/adminVehiculeCompany" element={<AdminVehiculeCompany />} />
-                <Route path="/adminAddVehiculeCompany" element={<AdminAddVéhiculeCompany />} />
-                <Route path="/adminVehicule" element={<AdminVehicule />} />
-                <Route path="/adminAddVehicule" element={<AdminAddVehicule />} />
-                <Route path="/gestionVehicules" element={<GetionVehicle />} />
-                <Route path="/vehiculeDetails" element={<VehiculeDetails />} />
-                <Route path="/modifVehicule" element={<ModifVehicule />} />
-                
+                <Route path="/" element={<Home />} />
 
                 {/* Routes accessibles uniquement par isAdmin */}
                 <Route path="/logView" element={<ProtectedRouteAdmin><LogView /></ProtectedRouteAdmin>} />
@@ -87,7 +80,15 @@ const App = () => {
                 <Route path="/messSupport" element={<ProtectedRouteAdmin><MessSupport /></ProtectedRouteAdmin>} />
                 <Route path="/archivages" element={<ProtectedRouteAdmin><Archivage /></ProtectedRouteAdmin>} />
                 <Route path="/archives" element={<ProtectedRouteAdmin> <Archives /></ProtectedRouteAdmin>} />
-
+                <Route path="/vehicleUsers" element={<VehicleUserManagement />} />
+                <Route path="/addVehicleUser" element={<AddVehicleUser />} />
+                <Route path="/adminVehiculeCompany" element={<AdminVehiculeCompany />} />
+                <Route path="/adminAddVehiculeCompany" element={<AdminAddVéhiculeCompany />} />
+                <Route path="/adminVehicule" element={<AdminVehicule />} />
+                <Route path="/adminAddVehicule" element={<AdminAddVehicule />} />
+                <Route path="/gestionVehicules" element={<GetionVehicle />} />
+                <Route path="/vehiculeDetails" element={<VehiculeDetails />} />
+                <Route path="/modifVehicule" element={<ModifVehicule />} />
                 {/* Routes accessibles par isAdmin ou Conseiller */}
                 <Route path="/quesEntrep" element={<ProtectedRouteAdminOrConseiller><QuesEntrep /></ProtectedRouteAdminOrConseiller>} />
                 <Route path="/entreprise" element={<ProtectedRouteAdminOrConseiller><Entreprise /></ProtectedRouteAdminOrConseiller>} />
@@ -102,7 +103,13 @@ const App = () => {
                 <Route path="/actionfichierdll" element={<ProtectedRouteAdminOrConseiller><Actionfichierdll /></ProtectedRouteAdminOrConseiller>} />
                 <Route path="/Accident" element={<ProtectedRouteAdminOrConseiller><Accidents /></ProtectedRouteAdminOrConseiller>} />
                 <Route path="/statistiques" element={<ProtectedRouteAdminOrConseiller><Statistiques /></ProtectedRouteAdminOrConseiller>} />
-                <Route path="/" element={<ProtectedRouteAdminOrConseiller><Home /></ProtectedRouteAdminOrConseiller>} />
+                
+
+
+                {/* Routes accessibles par isAdmin ou GestionnaireVehicule */}
+                <Route path="/gestionVehicules" element={<ProtectedRouteAdminOrGesionaireVehicule><GetionVehicle /></ProtectedRouteAdminOrGesionaireVehicule>} />
+                <Route path="/vehiculeDetails" element={<ProtectedRouteAdminOrGesionaireVehicule><VehiculeDetails /></ProtectedRouteAdminOrGesionaireVehicule>} />
+                <Route path="/modifVehicule" element={<ProtectedRouteAdminOrGesionaireVehicule><ModifVehicule /></ProtectedRouteAdminOrGesionaireVehicule>} />
 
               </Routes>
             </main>
