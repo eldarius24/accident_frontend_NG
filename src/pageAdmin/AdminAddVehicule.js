@@ -17,10 +17,12 @@ import { useTheme } from '../Hook/ThemeContext';
 import config from '../config.json';
 import axios from 'axios';
 import dayjs from 'dayjs';
+import { useLogger } from '../Hook/useLogger';
 
 const CARBURANT_TYPES = ['DIESEL', 'ESSENCE', 'HYBRID', 'ELECTRIC'];
 
 export default function AddVehicle() {
+    const { logAction } = useLogger();
     const { darkMode } = useTheme();
     const navigate = useNavigate();
     const location = useLocation();

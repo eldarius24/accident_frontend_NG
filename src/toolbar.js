@@ -88,7 +88,7 @@ function ResponsiveAppBar() {
 
   const showText = windowWidth > 1000;
 
-  const { isGestionVehicules, isHome, isAccident, isquesEntrep, isentreprise, issiegelesion, isnaturelesion, isagentmateriel, isdeviation, isAddSecteur, isadminEntreprises, isaddEntrprise, isadminUser, isaddUser, isFormulaireAction, isFormulaireAccident, isPageAdmin, isPageStats, isLoginPage, isplanAction, isHiddenPage } = useMemo(() => ({
+  const {isAdminVehicules, isGestionVehicules, isHome, isAccident, isquesEntrep, isentreprise, issiegelesion, isnaturelesion, isagentmateriel, isdeviation, isAddSecteur, isadminEntreprises, isaddEntrprise, isadminUser, isaddUser, isFormulaireAction, isFormulaireAccident, isPageAdmin, isPageStats, isLoginPage, isplanAction, isHiddenPage } = useMemo(() => ({
     isFormulaireAccident: location.pathname === '/formulaire',
     isPageAdmin: location.pathname === '/adminaction',
     isPageStats: location.pathname === '/statistiques',
@@ -109,6 +109,7 @@ function ResponsiveAppBar() {
     ismessSupport: location.pathname === '/messSupport',
     isAccident: location.pathname === '/Accident',
     isGestionVehicules: location.pathname === '/gestionVehicules',
+    isAdminVehicules: location.pathname === '/AdminVehicule',
     isHome: location.pathname === '/',
     isHiddenPage: [].includes(location.pathname),
 
@@ -279,8 +280,11 @@ function ResponsiveAppBar() {
           {!['/', '/modifVehicule', '/vehiculeDetails', '/gestionVehicules', '/AdminVehicule', '/AdminAddVehicule', '/vehicleUsers', '/addVehicleUser', '/adminAddVehiculeCompany', '/adminVehiculeCompany', '/addSecteur', '/quesEntrep', '/actionfichierdll', '/messSupport', '/logView', '/adminUser', '/addEntreprise', '/adminEntreprises', '/addUser', '/adminaction', '/formulaireAction', '/planAction', '/entreprise', '/Accident', '/login', '/statistiques'].includes(location.pathname) &&
             renderButton("/Accident", "Cliquez ici pour revenir aux accidents", <ViewListIcon />, "Accidents")}
 
-          {!['/','/formulaire', '/gestionVehicules', '/AdminVehicule', '/AdminAddVehicule', '/vehicleUsers', '/addVehicleUser', '/adminAddVehiculeCompany', '/adminVehiculeCompany', '/addSecteur', '/quesEntrep', '/actionfichierdll', '/messSupport', '/logView', '/adminUser', '/addEntreprise', '/adminEntreprises', '/addUser', '/adminaction', '/formulaireAction', '/planAction', '/entreprise', '/Accident', '/login', '/statistiques'].includes(location.pathname) &&
+          {!['/', '/formulaire', '/gestionVehicules', '/AdminVehicule', '/AdminAddVehicule', '/vehicleUsers', '/addVehicleUser', '/adminAddVehiculeCompany', '/adminVehiculeCompany', '/addSecteur', '/quesEntrep', '/actionfichierdll', '/messSupport', '/logView', '/adminUser', '/addEntreprise', '/adminEntreprises', '/addUser', '/adminaction', '/formulaireAction', '/planAction', '/entreprise', '/Accident', '/login', '/statistiques'].includes(location.pathname) &&
             renderButton("/gestionVehicules", "Cliquez ici pour revenir aux accidents", <ViewListIcon />, "Liste des Véhicules")}
+
+          {!['/', '/formulaire', '/gestionVehicules', '/AdminAddVehicule', '/vehicleUsers', '/addVehicleUser', '/adminAddVehiculeCompany', '/adminVehiculeCompany', '/addSecteur', '/quesEntrep', '/actionfichierdll', '/messSupport', '/logView', '/adminUser', '/addEntreprise', '/adminEntreprises', '/addUser', '/adminaction', '/formulaireAction', '/planAction', '/entreprise', '/Accident', '/login', '/statistiques'].includes(location.pathname) &&
+            renderButton("/AdminAddVehicule", "Cliquez ici pour revenir aux accidents", <AddIcon />, "ajouter des Véhicules")}
 
           {isAdminOrDevOrConseiller && (
             <>
