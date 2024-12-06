@@ -97,16 +97,21 @@ export default function Adminuser() {
      * Détermine le rôle/statut de l'utilisateur
      */
     const getRole = useCallback((user) => {
-        if (user.boolAdministrateur && user.boolDeveloppeur) return 'Administrateur et Développeur';
-        if (user.boolAdministrateur) return 'Administrateur';
-        if (user.boolDeveloppeur) return 'Développeur';
-        if (user.entreprisesUserPrevention && user.entreprisesUserPrevention.length > 0) {
-            return 'Utilisateur en prévention';
+        const roles = [];
+        if (user.boolDeveloppeur) roles.push('Développeur');
+        if (user.boolAdministrateur) roles.push('Administrateur prévention');
+        if (user.boolAdministrateurVehicule) roles.push('Administrateur véhicule');
+        if (user.entreprisesUserPrevention?.length > 0) {
+            roles.push(`Utilisateur en prévention: ${user.entreprisesUserPrevention.join(', ')}`);
         }
-        if (user.entreprisesConseillerPrevention && user.entreprisesConseillerPrevention.length > 0) {
-            return 'Conseiller en prévention';
+        if (user.entreprisesConseillerPrevention?.length > 0) {
+            roles.push(`Conseiller en prévention: ${user.entreprisesConseillerPrevention.join(', ')}`);
         }
-        return 'Utilisateur';
+        if (user.userGetionaireVehicule?.length > 0) {
+            roles.push(`Gestionnaire de véhicules: ${user.userGetionaireVehicule.join(', ')}`);
+        }
+        
+        return roles.length ? roles.join(', ') : 'Utilisateur';
     }, []);
 
     const rowColors = useMemo(() =>

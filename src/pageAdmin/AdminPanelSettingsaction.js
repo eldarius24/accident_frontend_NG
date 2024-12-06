@@ -311,6 +311,162 @@ export default function AdminPanelSettingsaction() {
                             </Tooltip>
                         </Box>
                     </Paper>
+
+                    <Paper
+                        elevation={3}
+                        sx={{
+                            border: darkMode ? '1px solid #ffffff' : '1px solid #ee742d',
+                            borderRadius: '8px',
+                            padding: '20px',
+                            margin: '20px 0',
+                            backgroundColor: darkMode ? '#2e2e2e' : '#ffffff',
+                            '&:hover': {
+                                boxShadow: darkMode
+                                    ? '0 8px 16px rgba(255, 255, 255, 0.1)'
+                                    : '0 8px 16px rgba(238, 116, 45, 0.2)'
+                            }
+                        }}
+                    >
+
+                        <h3 style={{ color: darkMode ? '#ffffff' : 'inherit' }}>Administration des entreprises</h3>
+                        {/* Premier Box avec les boutons entreprise */}
+                        <Box sx={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                            marginLeft: '120px',
+                            marginRight: '120px',
+                            gap: '20px'
+                        }}>
+                            <Tooltip title="Cliquez ici Créer une nouvelle entreprise" arrow>
+                                <Button
+                                    type="submit"
+                                    component={Link}
+                                    to={'/addEntreprise'}
+                                    sx={{
+                                        ...defaultStyle,
+                                        color: darkMode ? '#ffffff' : 'black',
+                                        backgroundColor: darkMode ? '#424242' : '#ee742d59',
+                                        transition: 'all 0.1s ease-in-out',
+                                        '&:hover': {
+                                            backgroundColor: darkMode ? '#7a8e1c' : '#95ad22',
+                                            transform: 'scale(1.08)',
+                                            boxShadow: darkMode ? '0 6px 12px rgba(255,255,255,0.2)' : 6
+                                        },
+                                        boxShadow: darkMode ? '0 3px 6px rgba(255,255,255,0.1)' : 3,
+                                        textTransform: 'none',
+                                        border: darkMode ? '1px solid rgba(255,255,255,0.1)' : 'none'
+                                    }}
+                                    variant="contained"
+                                >
+                                    <AddIcon />
+                                    Créer une nouvelle entreprise
+                                </Button>
+                            </Tooltip>
+                            <Tooltip title="Cliquez ici pour afficher, éditez ou supprimer une entreprise ou créer un secteur d'activé" arrow>
+                                <Button
+                                    type="submit"
+                                    component={Link}
+                                    to={'/adminEntreprises'}
+                                    sx={{
+                                        ...defaultStyle,
+                                        color: darkMode ? '#ffffff' : 'black',
+                                        backgroundColor: darkMode ? '#424242' : '#ee742d59',
+                                        transition: 'all 0.1s ease-in-out',
+                                        '&:hover': {
+                                            backgroundColor: darkMode ? '#7a8e1c' : '#95ad22',
+                                            transform: 'scale(1.08)',
+                                            boxShadow: darkMode ? '0 6px 12px rgba(255,255,255,0.2)' : 6
+                                        },
+                                        boxShadow: darkMode ? '0 3px 6px rgba(255,255,255,0.1)' : 3,
+                                        textTransform: 'none',
+                                        border: darkMode ? '1px solid rgba(255,255,255,0.1)' : 'none'
+                                    }}
+                                    variant="contained"
+                                >
+                                    <ViewListIcon />
+                                    Consulter les entreprises prévention
+                                </Button>
+                            </Tooltip>
+                        </Box>
+                    </Paper>
+
+
+
+                    <Paper
+                        elevation={3}
+                        sx={{
+                            border: darkMode ? '1px solid #ffffff' : '1px solid #ee742d',
+                            borderRadius: '8px',
+                            padding: '20px',
+                            margin: '20px 0',
+                            backgroundColor: darkMode ? '#2e2e2e' : '#ffffff',
+                            '&:hover': {
+                                boxShadow: darkMode
+                                    ? '0 8px 16px rgba(255, 255, 255, 0.1)'
+                                    : '0 8px 16px rgba(238, 116, 45, 0.2)'
+                            }
+                        }}
+                    >
+                        <h3 style={{ color: darkMode ? '#ffffff' : 'inherit' }}>Gestion des véhicules</h3>
+                        <Box sx={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                            marginLeft: '120px',
+                            marginRight: '120px',
+                            gap: '20px'
+                        }}>
+                            <Tooltip title="Ajouter un nouveau véhicule" arrow>
+                                <Button
+                                    type="submit"
+                                    component={Link}
+                                    to={'/AdminAddVehicule'}
+                                    sx={{
+                                        ...defaultStyle,
+                                        color: darkMode ? '#ffffff' : 'black',
+                                        backgroundColor: darkMode ? '#424242' : '#ee742d59',
+                                        transition: 'all 0.1s ease-in-out',
+                                        '&:hover': {
+                                            backgroundColor: darkMode ? '#7a8e1c' : '#95ad22',
+                                            transform: 'scale(1.08)',
+                                            boxShadow: darkMode ? '0 6px 12px rgba(255,255,255,0.2)' : 6
+                                        },
+                                        boxShadow: darkMode ? '0 3px 6px rgba(255,255,255,0.1)' : 3,
+                                        textTransform: 'none',
+                                        border: darkMode ? '1px solid rgba(255,255,255,0.1)' : 'none'
+                                    }}
+                                    variant="contained"
+                                >
+                                    <AddIcon />
+                                    Ajouter un véhicule
+                                </Button>
+                            </Tooltip>
+                            <Tooltip title="Voir tous les véhicules" arrow>
+                                <Button
+                                    type="submit"
+                                    component={Link}
+                                    to={'/AdminVehicule'}
+                                    sx={{
+                                        ...defaultStyle,
+                                        color: darkMode ? '#ffffff' : 'black',
+                                        backgroundColor: darkMode ? '#424242' : '#ee742d59',
+                                        transition: 'all 0.1s ease-in-out',
+                                        '&:hover': {
+                                            backgroundColor: darkMode ? '#7a8e1c' : '#95ad22',
+                                            transform: 'scale(1.08)',
+                                            boxShadow: darkMode ? '0 6px 12px rgba(255,255,255,0.2)' : 6
+                                        },
+                                        boxShadow: darkMode ? '0 3px 6px rgba(255,255,255,0.1)' : 3,
+                                        textTransform: 'none',
+                                        border: darkMode ? '1px solid rgba(255,255,255,0.1)' : 'none'
+                                    }}
+                                    variant="contained"
+                                >
+                                    <ViewListIcon />
+                                    Liste des véhicules
+                                </Button>
+                            </Tooltip>
+                        </Box>
+                    </Paper>
                     <Paper
                         elevation={3}
                         sx={{
@@ -388,176 +544,6 @@ export default function AdminPanelSettingsaction() {
                             </Tooltip>
                         </Box>
                     </Paper>
-                </Paper>
-                <Paper
-                    elevation={3}
-                    sx={{
-                        border: darkMode ? '1px solid #ffffff' : '1px solid #ee742d',
-                        borderRadius: '8px',
-                        padding: '20px',
-                        margin: '20px 0',
-                        backgroundColor: darkMode ? '#252525' : '#e2e2e2',
-                        '&:hover': {
-                            boxShadow: darkMode
-                                ? '0 8px 16px rgba(255, 255, 255, 0.1)'
-                                : '0 8px 16px rgba(238, 116, 45, 0.2)'
-                        }
-                    }}
-                >
-
-                    <Box
-                        sx={{
-                            display: 'flex',
-                            flexDirection: 'column',
-                            alignItems: 'center',
-                            position: 'relative',
-                            margin: '1.5rem 0',
-                            '&::before': {
-                                content: '""',
-                                position: 'absolute',
-                                top: '50%',
-                                left: '50%',
-                                transform: 'translate(-50%, -50%)',
-                                width: '200px',
-                                height: '45px',
-                                background: darkMode
-                                    ? 'rgba(122,142,28,0.1)'
-                                    : 'rgba(238,117,45,0.1)',
-                                filter: 'blur(10px)',
-                                borderRadius: '10px',
-                                zIndex: 0
-                            }
-                        }}
-                    >
-                        <Typography
-                            variant="h2"
-                            sx={{
-                                fontSize: { xs: '1.5rem', sm: '1.8rem', md: '2.2rem' },
-                                fontWeight: 600,
-                                background: darkMode
-                                    ? 'linear-gradient(45deg, #7a8e1c, #a4bd24)'
-                                    : 'linear-gradient(45deg, #ee752d, #f4a261)',
-                                backgroundClip: 'text',
-                                WebkitBackgroundClip: 'text',
-                                color: 'transparent',
-                                textTransform: 'uppercase',
-                                letterSpacing: '3px',
-                                position: 'relative',
-                                padding: '0.5rem 1.5rem',
-                                zIndex: 1,
-                                '&::after': {
-                                    content: '""',
-                                    position: 'absolute',
-                                    bottom: 0,
-                                    left: 0,
-                                    width: '100%',
-                                    height: '2px',
-                                    background: darkMode
-                                        ? 'linear-gradient(90deg, transparent, #7a8e1c, transparent)'
-                                        : 'linear-gradient(90deg, transparent, #ee752d, transparent)'
-                                }
-                            }}
-                        >
-                            Administration prévention
-                        </Typography>
-                        <Box
-                            sx={{
-                                position: 'absolute',
-                                width: '100%',
-                                height: '100%',
-                                opacity: 0.5,
-                                pointerEvents: 'none',
-                                '&::before': {
-                                    content: '""',
-                                    position: 'absolute',
-                                    top: 0,
-                                    left: 0,
-                                    width: '100%',
-                                    height: '1px',
-                                    background: darkMode
-                                        ? 'linear-gradient(90deg, transparent, rgba(122,142,28,0.3), transparent)'
-                                        : 'linear-gradient(90deg, transparent, rgba(238,117,45,0.3), transparent)'
-                                }
-                            }}
-                        />
-                    </Box>
-
-                    <Paper
-                        elevation={3}
-                        sx={{
-                            border: darkMode ? '1px solid #ffffff' : '1px solid #ee742d',
-                            borderRadius: '8px',
-                            padding: '20px',
-                            margin: '20px 0',
-                            backgroundColor: darkMode ? '#2e2e2e' : '#ffffff',
-                            '&:hover': {
-                                boxShadow: darkMode
-                                    ? '0 8px 16px rgba(255, 255, 255, 0.1)'
-                                    : '0 8px 16px rgba(238, 116, 45, 0.2)'
-                            }
-                        }}
-                    >
-                        <h3 style={{ color: darkMode ? '#ffffff' : 'inherit' }}>Administration des entreprises</h3>
-                        {/* Premier Box avec les boutons entreprise */}
-                        <Box sx={{
-                            display: 'flex',
-                            justifyContent: 'center',
-                            marginLeft: '120px',
-                            marginRight: '120px',
-                            gap: '20px'
-                        }}>
-                            <Tooltip title="Cliquez ici Créer une nouvelle entreprise" arrow>
-                                <Button
-                                    type="submit"
-                                    component={Link}
-                                    to={'/addEntreprise'}
-                                    sx={{
-                                        ...defaultStyle,
-                                        color: darkMode ? '#ffffff' : 'black',
-                                        backgroundColor: darkMode ? '#424242' : '#ee742d59',
-                                        transition: 'all 0.1s ease-in-out',
-                                        '&:hover': {
-                                            backgroundColor: darkMode ? '#7a8e1c' : '#95ad22',
-                                            transform: 'scale(1.08)',
-                                            boxShadow: darkMode ? '0 6px 12px rgba(255,255,255,0.2)' : 6
-                                        },
-                                        boxShadow: darkMode ? '0 3px 6px rgba(255,255,255,0.1)' : 3,
-                                        textTransform: 'none',
-                                        border: darkMode ? '1px solid rgba(255,255,255,0.1)' : 'none'
-                                    }}
-                                    variant="contained"
-                                >
-                                    <AddIcon />
-                                    Créer une nouvelle entreprise prévention
-                                </Button>
-                            </Tooltip>
-                            <Tooltip title="Cliquez ici pour afficher, éditez ou supprimer une entreprise ou créer un secteur d'activé" arrow>
-                                <Button
-                                    type="submit"
-                                    component={Link}
-                                    to={'/adminEntreprises'}
-                                    sx={{
-                                        ...defaultStyle,
-                                        color: darkMode ? '#ffffff' : 'black',
-                                        backgroundColor: darkMode ? '#424242' : '#ee742d59',
-                                        transition: 'all 0.1s ease-in-out',
-                                        '&:hover': {
-                                            backgroundColor: darkMode ? '#7a8e1c' : '#95ad22',
-                                            transform: 'scale(1.08)',
-                                            boxShadow: darkMode ? '0 6px 12px rgba(255,255,255,0.2)' : 6
-                                        },
-                                        boxShadow: darkMode ? '0 3px 6px rgba(255,255,255,0.1)' : 3,
-                                        textTransform: 'none',
-                                        border: darkMode ? '1px solid rgba(255,255,255,0.1)' : 'none'
-                                    }}
-                                    variant="contained"
-                                >
-                                    <ViewListIcon />
-                                    Consulter les entreprises prévention
-                                </Button>
-                            </Tooltip>
-                        </Box>
-                    </Paper>
                     <Paper
                         elevation={3}
                         sx={{
@@ -620,251 +606,6 @@ export default function AdminPanelSettingsaction() {
                                 darkMode={darkMode}
                             />
 
-                        </Box>
-                    </Paper>
-
-                </Paper>
-                <Paper
-                    elevation={3}
-                    sx={{
-                        border: darkMode ? '1px solid #ffffff' : '1px solid #ee742d',
-                        borderRadius: '8px',
-                        padding: '20px',
-                        margin: '20px 0',
-                        backgroundColor: darkMode ? '#252525' : '#e2e2e2',
-                        '&:hover': {
-                            boxShadow: darkMode
-                                ? '0 8px 16px rgba(255, 255, 255, 0.1)'
-                                : '0 8px 16px rgba(238, 116, 45, 0.2)'
-                        }
-                    }}
-                >
-                    <Box
-                        sx={{
-                            display: 'flex',
-                            flexDirection: 'column',
-                            alignItems: 'center',
-                            position: 'relative',
-                            margin: '1.5rem 0',
-                            '&::before': {
-                                content: '""',
-                                position: 'absolute',
-                                top: '50%',
-                                left: '50%',
-                                transform: 'translate(-50%, -50%)',
-                                width: '200px',
-                                height: '45px',
-                                background: darkMode
-                                    ? 'rgba(122,142,28,0.1)'
-                                    : 'rgba(238,117,45,0.1)',
-                                filter: 'blur(10px)',
-                                borderRadius: '10px',
-                                zIndex: 0
-                            }
-                        }}
-                    >
-                        <Typography
-                            variant="h2"
-                            sx={{
-                                fontSize: { xs: '1.5rem', sm: '1.8rem', md: '2.2rem' },
-                                fontWeight: 600,
-                                background: darkMode
-                                    ? 'linear-gradient(45deg, #7a8e1c, #a4bd24)'
-                                    : 'linear-gradient(45deg, #ee752d, #f4a261)',
-                                backgroundClip: 'text',
-                                WebkitBackgroundClip: 'text',
-                                color: 'transparent',
-                                textTransform: 'uppercase',
-                                letterSpacing: '3px',
-                                position: 'relative',
-                                padding: '0.5rem 1.5rem',
-                                zIndex: 1,
-                                '&::after': {
-                                    content: '""',
-                                    position: 'absolute',
-                                    bottom: 0,
-                                    left: 0,
-                                    width: '100%',
-                                    height: '2px',
-                                    background: darkMode
-                                        ? 'linear-gradient(90deg, transparent, #7a8e1c, transparent)'
-                                        : 'linear-gradient(90deg, transparent, #ee752d, transparent)'
-                                }
-                            }}
-                        >
-                            Administration Véhicules
-                        </Typography>
-                        <Box
-                            sx={{
-                                position: 'absolute',
-                                width: '100%',
-                                height: '100%',
-                                opacity: 0.5,
-                                pointerEvents: 'none',
-                                '&::before': {
-                                    content: '""',
-                                    position: 'absolute',
-                                    top: 0,
-                                    left: 0,
-                                    width: '100%',
-                                    height: '1px',
-                                    background: darkMode
-                                        ? 'linear-gradient(90deg, transparent, rgba(122,142,28,0.3), transparent)'
-                                        : 'linear-gradient(90deg, transparent, rgba(238,117,45,0.3), transparent)'
-                                }
-                            }}
-                        />
-                    </Box>
-                    {/*<Paper
-                        elevation={3}
-                        sx={{
-                            border: darkMode ? '1px solid #ffffff' : '1px solid #ee742d',
-                            borderRadius: '8px',
-                            padding: '20px',
-                            margin: '20px 0',
-                            backgroundColor: darkMode ? '#2e2e2e' : '#ffffff',
-                            '&:hover': {
-                                boxShadow: darkMode
-                                    ? '0 8px 16px rgba(255, 255, 255, 0.1)'
-                                    : '0 8px 16px rgba(238, 116, 45, 0.2)'
-                            }
-                        }}
-                    >
-                       <h3 style={{ color: darkMode ? '#ffffff' : 'inherit' }}>Administration des véhicules</h3>
-                        
-                        <Box sx={{
-                            display: 'flex',
-                            justifyContent: 'center',
-                            marginLeft: '120px',
-                            marginRight: '120px',
-                            gap: '20px'
-                        }}>
-                            <Tooltip title="Créer un nouvel utilisateur véhicule" arrow>
-                                <Button
-                                    type="submit"
-                                    component={Link}
-                                    to={'/addVehicleUser'}
-                                    sx={{
-                                        ...defaultStyle,
-                                        color: darkMode ? '#ffffff' : 'black',
-                                        backgroundColor: darkMode ? '#424242' : '#ee742d59',
-                                        transition: 'all 0.1s ease-in-out',
-                                        '&:hover': {
-                                            backgroundColor: darkMode ? '#7a8e1c' : '#95ad22',
-                                            transform: 'scale(1.08)',
-                                            boxShadow: darkMode ? '0 6px 12px rgba(255,255,255,0.2)' : 6
-                                        },
-                                        boxShadow: darkMode ? '0 3px 6px rgba(255,255,255,0.1)' : 3,
-                                        textTransform: 'none',
-                                        border: darkMode ? '1px solid rgba(255,255,255,0.1)' : 'none'
-                                    }}
-                                    variant="contained"
-                                >
-                                    <AddIcon />
-                                    Créer un nouvel utilisateur véhicule
-                                </Button>
-                            </Tooltip>
-                            <Tooltip title="Consulter les utilisateurs véhicules" arrow>
-                                <Button
-                                    type="submit"
-                                    component={Link}
-                                    to={'/vehicleUsers'}
-                                    sx={{
-                                        ...defaultStyle,
-                                        color: darkMode ? '#ffffff' : 'black',
-                                        backgroundColor: darkMode ? '#424242' : '#ee742d59',
-                                        transition: 'all 0.1s ease-in-out',
-                                        '&:hover': {
-                                            backgroundColor: darkMode ? '#7a8e1c' : '#95ad22',
-                                            transform: 'scale(1.08)',
-                                            boxShadow: darkMode ? '0 6px 12px rgba(255,255,255,0.2)' : 6
-                                        },
-                                        boxShadow: darkMode ? '0 3px 6px rgba(255,255,255,0.1)' : 3,
-                                        textTransform: 'none',
-                                        border: darkMode ? '1px solid rgba(255,255,255,0.1)' : 'none'
-                                    }}
-                                    variant="contained"
-                                >
-                                    <ViewListIcon />
-                                    Consulter les utilisateurs véhicules
-                                </Button>
-                            </Tooltip>
-                        </Box>
-                    </Paper>*/}
-
-                    <Paper
-                        elevation={3}
-                        sx={{
-                            border: darkMode ? '1px solid #ffffff' : '1px solid #ee742d',
-                            borderRadius: '8px',
-                            padding: '20px',
-                            margin: '20px 0',
-                            backgroundColor: darkMode ? '#2e2e2e' : '#ffffff',
-                            '&:hover': {
-                                boxShadow: darkMode
-                                    ? '0 8px 16px rgba(255, 255, 255, 0.1)'
-                                    : '0 8px 16px rgba(238, 116, 45, 0.2)'
-                            }
-                        }}
-                    >
-                        <h3 style={{ color: darkMode ? '#ffffff' : 'inherit' }}>Gestion des véhicules</h3>
-                        <Box sx={{
-                            display: 'flex',
-                            justifyContent: 'center',
-                            marginLeft: '120px',
-                            marginRight: '120px',
-                            gap: '20px'
-                        }}>
-                            <Tooltip title="Ajouter un nouveau véhicule" arrow>
-                                <Button
-                                    type="submit"
-                                    component={Link}
-                                    to={'/AdminAddVehicule'}
-                                    sx={{
-                                        ...defaultStyle,
-                                        color: darkMode ? '#ffffff' : 'black',
-                                        backgroundColor: darkMode ? '#424242' : '#ee742d59',
-                                        transition: 'all 0.1s ease-in-out',
-                                        '&:hover': {
-                                            backgroundColor: darkMode ? '#7a8e1c' : '#95ad22',
-                                            transform: 'scale(1.08)',
-                                            boxShadow: darkMode ? '0 6px 12px rgba(255,255,255,0.2)' : 6
-                                        },
-                                        boxShadow: darkMode ? '0 3px 6px rgba(255,255,255,0.1)' : 3,
-                                        textTransform: 'none',
-                                        border: darkMode ? '1px solid rgba(255,255,255,0.1)' : 'none'
-                                    }}
-                                    variant="contained"
-                                >
-                                    <AddIcon />
-                                    Ajouter un véhicule
-                                </Button>
-                            </Tooltip>
-                            <Tooltip title="Voir tous les véhicules" arrow>
-                                <Button
-                                    type="submit"
-                                    component={Link}
-                                    to={'/AdminVehicule'}
-                                    sx={{
-                                        ...defaultStyle,
-                                        color: darkMode ? '#ffffff' : 'black',
-                                        backgroundColor: darkMode ? '#424242' : '#ee742d59',
-                                        transition: 'all 0.1s ease-in-out',
-                                        '&:hover': {
-                                            backgroundColor: darkMode ? '#7a8e1c' : '#95ad22',
-                                            transform: 'scale(1.08)',
-                                            boxShadow: darkMode ? '0 6px 12px rgba(255,255,255,0.2)' : 6
-                                        },
-                                        boxShadow: darkMode ? '0 3px 6px rgba(255,255,255,0.1)' : 3,
-                                        textTransform: 'none',
-                                        border: darkMode ? '1px solid rgba(255,255,255,0.1)' : 'none'
-                                    }}
-                                    variant="contained"
-                                >
-                                    <ViewListIcon />
-                                    Liste des véhicules
-                                </Button>
-                            </Tooltip>
                         </Box>
                     </Paper>
                 </Paper>
