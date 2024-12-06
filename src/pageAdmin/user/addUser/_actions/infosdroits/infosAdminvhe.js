@@ -2,7 +2,7 @@
 import React from 'react';
 import { useTheme } from '../../../../../Hook/ThemeContext';
 
-const InfosAdmin = () => {
+const InfosAdminVhe = () => {
   const { darkMode } = useTheme();
 
   const darkModeStyles = {
@@ -34,7 +34,7 @@ const InfosAdmin = () => {
       <div className="space-y-6">
         <div className="rounded-lg shadow-md overflow-hidden" style={cardStyles}>
           <h2 className="text-xl font-semibold p-4" style={headerStyles}>
-            Droits Administrateur prévention
+            Droits Administrateur véhicule
           </h2>
           <div className="p-4" style={itemStyles}>
             <p>L'administrateur du site a un accès complet à toutes les fonctionnalités, notamment :</p>
@@ -46,22 +46,22 @@ const InfosAdmin = () => {
               <li>✅ Gestion complète des messages support liés a l'administration</li>
               <li>❌ Gestion complète des messages support liés aux dévelopements</li>
               <li>✅ Gestion complète des archivages</li>
-              <li>✅ Visualistion total de tous les accidents prévention</li>
+              <li>❌ Visualistion total de tous les accidents prévention</li>
               <li>❌ Visualistion limitée de tous les accidents prévention</li>
               <li>❌ Visualistion limitée des accidents liés a l'entreprise prévention</li>
-              <li>✅ Gestion de tous les accidents prévention</li>
-              <li>❌ Gestion des accidents liés a l'entreprise prévention</li>
-              <li>✅ Visualistion total de toutes les actions prévention</li>
-              <li>❌ Visualistion des actions liés a l'entreprise prévention</li>
-              <li>✅ Gestion de tous les actions prévention</li>
-              <li>❌ Gestion des actions liés a l'entreprise prévention</li>
-              <li>✅ Visualistion total de toutes les document divers prévention</li>
+              <li>❌ Gestion de tous les accidents  prévention</li>
+              <li>❌ Gestion des accidents liés a l'entreprise  prévention</li>
+              <li>❌ Visualistion total de toutes les actions  prévention</li>
+              <li>❌ Visualistion des actions liés a l'entreprise  prévention</li>
+              <li>❌ Gestion de tous les actions  prévention</li>
+              <li>❌ Gestion des actions liés a l'entreprise  prévention</li>
+              <li>❌ Visualistion total de toutes les document divers prévention</li>
               <li>❌ Visualistion des document divers liés a l'entreprise prévention</li>
-              <li>✅ Gestion de tous les document divers prévention</li>
+              <li>❌ Gestion de tous les document divers prévention</li>
               <li>❌ Gestion des document divers liés a l'entreprise prévention</li>
-              <li>❌ Gestion complète des véhicules</li>
+              <li>✅ Gestion complète des véhicules</li>
               <li>❌ Gestion limitée des véhicules liée a lentreprise</li>
-              <li>❌ Visualistion total de touts les véhicule</li>              
+              <li>✅ Visualistion total de touts les véhicule</li>              
               <li>❌ Visualistion limitée des véhicule lier a l'entreprise</li>
 
             </ul>
@@ -73,4 +73,4 @@ const InfosAdmin = () => {
   );
 };
 
-export default InfosAdmin;
+export default InfosAdminVhe;

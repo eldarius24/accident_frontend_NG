@@ -45,19 +45,23 @@ const InfosUserPrev = () => {
               <li>❌ Gestion complète des messages support liés a l'administration</li>
               <li>❌ Gestion complète des messages support liés aux dévelopements</li>
               <li>❌ Gestion complète des archivages</li>
-              <li>❌ Visualistion total de tous les accidents</li>
-              <li>❌ Visualistion limitée de tous les accidents</li>
-              <li>✅ Visualistion limitée des accidents liés a l'entreprise</li>
-              <li>❌ Gestion de tous les accidents</li>
-              <li>❌ Gestion des accidents liés a l'entreprise</li>
-              <li>❌ Visualistion total de toutes les actions</li>
-              <li>✅ Visualistion des actions liés a l'entreprise</li>
-              <li>❌ Gestion de tous les actions</li>
-              <li>❌ Gestion des actions liés a l'entreprise</li>
-              <li>❌ Visualistion total de toutes les document divers</li>
-              <li>✅ Visualistion des document divers liés a l'entreprise</li>
-              <li>❌ Gestion de tous les document divers</li>
-              <li>❌ Gestion des document divers liés a l'entreprise</li>
+              <li>❌ Visualistion total de tous les accidents prévention</li>
+              <li>❌ Visualistion limitée de tous les accidents prévention</li>
+              <li>✅ Visualistion limitée des accidents liés a l'entreprise prévention</li>
+              <li>❌ Gestion de tous les accidents prévention</li>
+              <li>❌ Gestion des accidents liés a l'entreprise prévention</li>
+              <li>❌ Visualistion total de toutes les actions prévention</li>
+              <li>✅ Visualistion des actions liés a l'entreprise prévention</li>
+              <li>❌ Gestion de tous les actions prévention</li>
+              <li>❌ Gestion des actions liés a l'entreprise prévention</li>
+              <li>❌ Visualistion total de toutes les document divers prévention</li>
+              <li>✅ Visualistion des document divers liés a l'entreprise prévention</li>
+              <li>❌ Gestion de tous les document divers prévention</li>
+              <li>❌ Gestion des document divers liés a l'entreprise prévention</li>
+              <li>❌ Gestion complète des véhicules</li>
+              <li>❌ Gestion limitée des véhicules liée a lentreprise</li>
+              <li>❌ Visualistion total de touts les véhicule</li>              
+              <li>❌ Visualistion limitée des véhicule lier a l'entreprise</li>
             </ul>
           </div>
         </div>

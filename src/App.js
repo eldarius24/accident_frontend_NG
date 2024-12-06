@@ -32,10 +32,8 @@ import Archivage from './Archives/archivages';
 import Archives from './Archives/archives';
 import Home from './Home/Home';
 import Footer from './_composants/Footer';
-import VehicleUserManagement from './pageAdmin/user/VehicleUserManagement';
-import AddVehicleUser from './pageAdmin/user/addUser/AddVehicleUser';
-import AdminAddVéhiculeCompany from './pageAdmin/AdminAddVéhiculeCompany';
-import AdminVehiculeCompany from './pageAdmin/AdminVehiculeCompany'; 
+
+
 import AdminVehicule from './pageAdmin/AdminVehicule';
 import AdminAddVehicule from './pageAdmin/AdminAddVehicule';
 import GetionVehicle from './Getionvehicules/GestionVehicule';
@@ -80,15 +78,12 @@ const App = () => {
                 <Route path="/messSupport" element={<ProtectedRouteAdmin><MessSupport /></ProtectedRouteAdmin>} />
                 <Route path="/archivages" element={<ProtectedRouteAdmin><Archivage /></ProtectedRouteAdmin>} />
                 <Route path="/archives" element={<ProtectedRouteAdmin> <Archives /></ProtectedRouteAdmin>} />
-                <Route path="/vehicleUsers" element={<VehicleUserManagement />} />
-                <Route path="/addVehicleUser" element={<AddVehicleUser />} />
-                <Route path="/adminVehiculeCompany" element={<AdminVehiculeCompany />} />
-                <Route path="/adminAddVehiculeCompany" element={<AdminAddVéhiculeCompany />} />
                 <Route path="/adminVehicule" element={<AdminVehicule />} />
                 <Route path="/adminAddVehicule" element={<AdminAddVehicule />} />
                 <Route path="/gestionVehicules" element={<GetionVehicle />} />
                 <Route path="/vehiculeDetails" element={<VehiculeDetails />} />
                 <Route path="/modifVehicule" element={<ModifVehicule />} />
+
                 {/* Routes accessibles par isAdmin ou Conseiller */}
                 <Route path="/quesEntrep" element={<ProtectedRouteAdminOrConseiller><QuesEntrep /></ProtectedRouteAdminOrConseiller>} />
                 <Route path="/entreprise" element={<ProtectedRouteAdminOrConseiller><Entreprise /></ProtectedRouteAdminOrConseiller>} />

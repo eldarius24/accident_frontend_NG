@@ -179,6 +179,8 @@ export default function VehicleList() {
                             <TableCell style={{ fontWeight: 'bold' }}>Marque/Modèle</TableCell>
                             <TableCell style={{ fontWeight: 'bold' }}>Carburant</TableCell>
                             <TableCell style={{ fontWeight: 'bold' }}>Entreprise</TableCell>
+                            <TableCell style={{ fontWeight: 'bold' }}>Secteur</TableCell>
+                            <TableCell style={{ fontWeight: 'bold' }}>Num. Chassis</TableCell>
                             <TableCell style={{ fontWeight: 'bold' }}>Kilométrage</TableCell>
                             <TableCell style={{ fontWeight: 'bold' }}>Dernier CT</TableCell>
                             <TableCell style={{ fontWeight: 'bold' }}>Prochain CT</TableCell>
@@ -199,6 +201,8 @@ export default function VehicleList() {
                                 <TableCell>{`${vehicle.marque} ${vehicle.modele}`}</TableCell>
                                 <TableCell>{vehicle.typeCarburant}</TableCell>
                                 <TableCell>{vehicle.entrepriseName}</TableCell>
+                                <TableCell>{vehicle.secteur}</TableCell>
+                                <TableCell>{vehicle.numChassis}</TableCell>
                                 <TableCell>{vehicle.kilometrage} km</TableCell>
                                 <TableCell>{formatDate(vehicle.dateDernierCT)}</TableCell>
                                 <TableCell>{formatDate(vehicle.dateProchainCT)}</TableCell>

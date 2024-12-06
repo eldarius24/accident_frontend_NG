@@ -249,6 +249,83 @@ export default function AdminPanelSettingsaction() {
                             }
                         }}
                     >
+
+                        <h3 style={{ color: darkMode ? '#ffffff' : 'inherit' }}>Administration des droits</h3>
+
+                        <Box sx={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                            marginLeft: '120px',
+                            marginRight: '120px',
+                            gap: '20px' // Ajoute un espacement entre les boutons
+                        }}>
+                            <Tooltip title="Cliquez ici Créer un nouvel utilisateur" arrow>
+                                <Button
+                                    type="submit"
+                                    component={Link}
+                                    to={'/addUser'}
+                                    sx={{
+                                        ...defaultStyle,
+                                        color: darkMode ? '#ffffff' : 'black',
+                                        backgroundColor: darkMode ? '#424242' : '#ee742d59',
+                                        transition: 'all 0.1s ease-in-out',
+                                        '&:hover': {
+                                            backgroundColor: darkMode ? '#7a8e1c' : '#95ad22',
+                                            transform: 'scale(1.08)',
+                                            boxShadow: darkMode ? '0 6px 12px rgba(255,255,255,0.2)' : 6
+                                        },
+                                        boxShadow: darkMode ? '0 3px 6px rgba(255,255,255,0.1)' : 3,
+                                        textTransform: 'none',
+                                        border: darkMode ? '1px solid rgba(255,255,255,0.1)' : 'none'
+                                    }}
+                                    variant="contained"
+                                >
+                                    <AddIcon />
+                                    Créer un nouvel utilisateur prévention
+                                </Button>
+                            </Tooltip>
+                            <Tooltip title="Cliquez ici afficher, éditér ou supprimer un utilisateur" arrow>
+                                <Button
+                                    type="submit"
+                                    component={Link}
+                                    to={'/adminUser'}
+                                    sx={{
+                                        ...defaultStyle,
+                                        color: darkMode ? '#ffffff' : 'black',
+                                        backgroundColor: darkMode ? '#424242' : '#ee742d59',
+                                        transition: 'all 0.1s ease-in-out',
+                                        '&:hover': {
+                                            backgroundColor: darkMode ? '#7a8e1c' : '#95ad22',
+                                            transform: 'scale(1.08)',
+                                            boxShadow: darkMode ? '0 6px 12px rgba(255,255,255,0.2)' : 6
+                                        },
+                                        boxShadow: darkMode ? '0 3px 6px rgba(255,255,255,0.1)' : 3,
+                                        textTransform: 'none',
+                                        border: darkMode ? '1px solid rgba(255,255,255,0.1)' : 'none'
+                                    }}
+                                    variant="contained"
+                                >
+                                    <ViewListIcon />
+                                    Consulter les utilisateurs prévention
+                                </Button>
+                            </Tooltip>
+                        </Box>
+                    </Paper>
+                    <Paper
+                        elevation={3}
+                        sx={{
+                            border: darkMode ? '1px solid #ffffff' : '1px solid #ee742d',
+                            borderRadius: '8px',
+                            padding: '20px',
+                            margin: '20px 0',
+                            backgroundColor: darkMode ? '#2e2e2e' : '#ffffff',
+                            '&:hover': {
+                                boxShadow: darkMode
+                                    ? '0 8px 16px rgba(255, 255, 255, 0.1)'
+                                    : '0 8px 16px rgba(238, 116, 45, 0.2)'
+                            }
+                        }}
+                    >
                         <h3 style={{ color: darkMode ? '#ffffff' : 'inherit' }}>Administration des logs et des messages de support</h3>
                         {/* Box pour le bouton des logs */}
                         <Box sx={{
@@ -404,83 +481,7 @@ export default function AdminPanelSettingsaction() {
                             }}
                         />
                     </Box>
-                    <Paper
-                        elevation={3}
-                        sx={{
-                            border: darkMode ? '1px solid #ffffff' : '1px solid #ee742d',
-                            borderRadius: '8px',
-                            padding: '20px',
-                            margin: '20px 0',
-                            backgroundColor: darkMode ? '#2e2e2e' : '#ffffff',
-                            '&:hover': {
-                                boxShadow: darkMode
-                                    ? '0 8px 16px rgba(255, 255, 255, 0.1)'
-                                    : '0 8px 16px rgba(238, 116, 45, 0.2)'
-                            }
-                        }}
-                    >
 
-                        <h3 style={{ color: darkMode ? '#ffffff' : 'inherit' }}>Administration des droits</h3>
-
-                        <Box sx={{
-                            display: 'flex',
-                            justifyContent: 'center',
-                            marginLeft: '120px',
-                            marginRight: '120px',
-                            gap: '20px' // Ajoute un espacement entre les boutons
-                        }}>
-                            <Tooltip title="Cliquez ici Créer un nouvel utilisateur" arrow>
-                                <Button
-                                    type="submit"
-                                    component={Link}
-                                    to={'/addUser'}
-                                    sx={{
-                                        ...defaultStyle,
-                                        color: darkMode ? '#ffffff' : 'black',
-                                        backgroundColor: darkMode ? '#424242' : '#ee742d59',
-                                        transition: 'all 0.1s ease-in-out',
-                                        '&:hover': {
-                                            backgroundColor: darkMode ? '#7a8e1c' : '#95ad22',
-                                            transform: 'scale(1.08)',
-                                            boxShadow: darkMode ? '0 6px 12px rgba(255,255,255,0.2)' : 6
-                                        },
-                                        boxShadow: darkMode ? '0 3px 6px rgba(255,255,255,0.1)' : 3,
-                                        textTransform: 'none',
-                                        border: darkMode ? '1px solid rgba(255,255,255,0.1)' : 'none'
-                                    }}
-                                    variant="contained"
-                                >
-                                    <AddIcon />
-                                    Créer un nouvel utilisateur prévention
-                                </Button>
-                            </Tooltip>
-                            <Tooltip title="Cliquez ici afficher, éditér ou supprimer un utilisateur" arrow>
-                                <Button
-                                    type="submit"
-                                    component={Link}
-                                    to={'/adminUser'}
-                                    sx={{
-                                        ...defaultStyle,
-                                        color: darkMode ? '#ffffff' : 'black',
-                                        backgroundColor: darkMode ? '#424242' : '#ee742d59',
-                                        transition: 'all 0.1s ease-in-out',
-                                        '&:hover': {
-                                            backgroundColor: darkMode ? '#7a8e1c' : '#95ad22',
-                                            transform: 'scale(1.08)',
-                                            boxShadow: darkMode ? '0 6px 12px rgba(255,255,255,0.2)' : 6
-                                        },
-                                        boxShadow: darkMode ? '0 3px 6px rgba(255,255,255,0.1)' : 3,
-                                        textTransform: 'none',
-                                        border: darkMode ? '1px solid rgba(255,255,255,0.1)' : 'none'
-                                    }}
-                                    variant="contained"
-                                >
-                                    <ViewListIcon />
-                                    Consulter les utilisateurs prévention
-                                </Button>
-                            </Tooltip>
-                        </Box>
-                    </Paper>
                     <Paper
                         elevation={3}
                         sx={{
@@ -714,7 +715,7 @@ export default function AdminPanelSettingsaction() {
                             }}
                         />
                     </Box>
-                     {/*<Paper
+                    {/*<Paper
                         elevation={3}
                         sx={{
                             border: darkMode ? '1px solid #ffffff' : '1px solid #ee742d',
@@ -790,83 +791,6 @@ export default function AdminPanelSettingsaction() {
                             </Tooltip>
                         </Box>
                     </Paper>*/}
-
-                    <Paper
-                        elevation={3}
-                        sx={{
-                            border: darkMode ? '1px solid #ffffff' : '1px solid #ee742d',
-                            borderRadius: '8px',
-                            padding: '20px',
-                            margin: '20px 0',
-                            backgroundColor: darkMode ? '#2e2e2e' : '#ffffff',
-                            '&:hover': {
-                                boxShadow: darkMode
-                                    ? '0 8px 16px rgba(255, 255, 255, 0.1)'
-                                    : '0 8px 16px rgba(238, 116, 45, 0.2)'
-                            }
-                        }}
-                    >
-                        <h3 style={{ color: darkMode ? '#ffffff' : 'inherit' }}>Administration des entreprises véhicules</h3>
-                        <Box sx={{
-                            display: 'flex',
-                            justifyContent: 'center',
-                            marginLeft: '120px',
-                            marginRight: '120px',
-                            gap: '20px'
-                        }}>
-                            <Tooltip title="Créer une nouvelle entreprise véhicule" arrow>
-                                <Button
-                                    type="submit"
-                                    component={Link}
-                                    to={'/adminAddVehiculeCompany'}
-                                    sx={{
-                                        ...defaultStyle,
-                                        color: darkMode ? '#ffffff' : 'black',
-                                        backgroundColor: darkMode ? '#424242' : '#ee742d59',
-                                        transition: 'all 0.1s ease-in-out',
-                                        '&:hover': {
-                                            backgroundColor: darkMode ? '#7a8e1c' : '#95ad22',
-                                            transform: 'scale(1.08)',
-                                            boxShadow: darkMode ? '0 6px 12px rgba(255,255,255,0.2)' : 6
-                                        },
-                                        boxShadow: darkMode ? '0 3px 6px rgba(255,255,255,0.1)' : 3,
-                                        textTransform: 'none',
-                                        border: darkMode ? '1px solid rgba(255,255,255,0.1)' : 'none'
-                                    }}
-                                    variant="contained"
-                                >
-                                    <AddIcon />
-                                    Créer une nouvelle entreprise véhicule
-                                </Button>
-                            </Tooltip>
-                            <Tooltip title="Consulter les entreprises véhicules" arrow>
-                                <Button
-                                    type="submit"
-                                    component={Link}
-                                    to={'/adminVehiculeCompany'}
-                                    sx={{
-                                        ...defaultStyle,
-                                        color: darkMode ? '#ffffff' : 'black',
-                                        backgroundColor: darkMode ? '#424242' : '#ee742d59',
-                                        transition: 'all 0.1s ease-in-out',
-                                        '&:hover': {
-                                            backgroundColor: darkMode ? '#7a8e1c' : '#95ad22',
-                                            transform: 'scale(1.08)',
-                                            boxShadow: darkMode ? '0 6px 12px rgba(255,255,255,0.2)' : 6
-                                        },
-                                        boxShadow: darkMode ? '0 3px 6px rgba(255,255,255,0.1)' : 3,
-                                        textTransform: 'none',
-                                        border: darkMode ? '1px solid rgba(255,255,255,0.1)' : 'none'
-                                    }}
-                                    variant="contained"
-                                >
-                                    <ViewListIcon />
-                                    Consulter les entreprises véhicules
-                                </Button>
-                            </Tooltip>
-                        </Box>
-                    </Paper>
-
 
                     <Paper
                         elevation={3}

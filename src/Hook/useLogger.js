@@ -30,7 +30,8 @@ export const useLogger = () => {
         entity,
         entityId,
         entreprise: entreprise || userInfo.entreprisesConseillerPrevention?.[0],
-        entreprise: entreprise || userInfo.entreprisesUserPrevention?.[0]
+        entreprise: entreprise || userInfo.entreprisesUserPrevention?.[0],
+        entreprise: entreprise || userInfo.userGetionaireVehicule?.[0],
       });
     } catch (error) {
       console.error('Erreur lors de l\'enregistrement du log:', error);

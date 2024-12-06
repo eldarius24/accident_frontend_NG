@@ -29,6 +29,9 @@ export default function AddVehicle() {
     const vehicleToEdit = location.state?.vehicle;
     const apiUrl = config.apiUrl;
     const { register, setValue, handleSubmit, formState: { errors } } = useForm();
+    const [entreprises, setEntreprises] = useState([]);
+    const [secteurs, setSecteurs] = useState([]);
+    const [secteur, setSecteur] = useState(vehicleToEdit?.secteur || "");
 
     const [numPlaque, setNumPlaque] = useState(vehicleToEdit?.numPlaque || "");
     const [marque, setMarque] = useState(vehicleToEdit?.marque || "");
@@ -42,6 +45,7 @@ export default function AddVehicle() {
     const [dateDerniereRevision, setDateDerniereRevision] = useState(vehicleToEdit?.dateDerniereRevision || "");
     const [dateDernierCT, setDateDernierCT] = useState(vehicleToEdit?.dateDernierCT || "");
     const [dateProchainCT, setDateProchainCT] = useState(vehicleToEdit?.dateProchainCT || "");
+    const [numChassis, setNumChassis] = useState(vehicleToEdit?.numChassis || "");
 
     useEffect(() => {
         setValue('numPlaque', numPlaque);
@@ -56,9 +60,10 @@ export default function AddVehicle() {
         setValue('dateDerniereRevision', dateDerniereRevision);
         setValue('dateDernierCT', dateDernierCT);
         setValue('dateProchainCT', dateProchainCT);
+        setValue('numChassis', numChassis);
     }, [numPlaque, marque, modele, typeCarburant, nombrePlaces, anneeConstruction,
         entrepriseName, kilometrage, dateAchat, dateDerniereRevision, dateDernierCT,
-        dateProchainCT, setValue]);
+        dateProchainCT, numChassis, setValue]);
 
     const [companies, setCompanies] = useState([]);
     const [snackbar, setSnackbar] = useState({
@@ -66,6 +71,29 @@ export default function AddVehicle() {
         message: '',
         severity: 'info',
     });
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const [entreprisesResponse, secteursResponse] = await Promise.all([
+                    axios.get(`http://${apiUrl}:3100/api/entreprises`),
+                    axios.get(`http://${apiUrl}:3100/api/secteurs`)
+                ]);
+                
+                const entreprisesData = entreprisesResponse.data.map(e => ({
+                    label: e.AddEntreName,
+                    id: e._id
+                }));
+                
+                setEntreprises(entreprisesData);
+                setSecteurs(secteursResponse.data);
+            } catch (error) {
+                console.error('Error fetching data:', error);
+                showSnackbar('Erreur lors du chargement des données', 'error');
+            }
+        };
+        fetchData();
+    }, [apiUrl]);
 
     useEffect(() => {
         const fetchCompanies = async () => {
@@ -91,7 +119,23 @@ export default function AddVehicle() {
         setSnackbar({ ...snackbar, open: false });
     };
 
+    const handleEntrepriseSelect = (entrepriseSelect) => {
+        const selectedEntreprise = entreprises.find(e => e.label === entrepriseSelect);
+        if (selectedEntreprise) {
+            setEntrepriseName(selectedEntreprise.label);
+            setSecteur('');
+        }
+    };
 
+    const getLinkedSecteurs = () => {
+        const selectedEntreprise = entreprises.find(e => e.label === entrepriseName);
+        if (selectedEntreprise) {
+            return secteurs
+                .filter(s => s.entrepriseId === selectedEntreprise.id)
+                .map(s => s.secteurName);
+        }
+        return [];
+    };
 
     const validateForm = () => {
         const requiredFields = {
@@ -128,7 +172,9 @@ export default function AddVehicle() {
                 nombrePlaces: parseInt(nombrePlaces),
                 anneeConstruction: parseInt(anneeConstruction),
                 entrepriseName,
+                secteur,
                 kilometrage: parseInt(kilometrage) || 0,
+                numChassis,
                 dateAchat: dayjs(dateAchat).format('YYYY-MM-DD'),
                 dateDerniereRevision: dateDerniereRevision ? dayjs(dateDerniereRevision).format('YYYY-MM-DD') : null,
                 dateDernierCT: dateDernierCT ? dayjs(dateDernierCT).format('YYYY-MM-DD') : null,
@@ -274,12 +320,33 @@ export default function AddVehicle() {
                         <AutoCompleteP
                             id='entrepriseName'
                             label="Nom de l'entreprise"
-                            option={companies}
+                            option={entreprises.map(e => e.label)}
                             defaultValue={entrepriseName}
+                            onChange={handleEntrepriseSelect}
+                            required
+                        />
+                    </Grid>
+
+                    <Grid item xs={12}>
+                        <AutoCompleteP
+                            id='secteur'
+                            label="Secteur"
+                            option={getLinkedSecteurs()}
+                            defaultValue={secteur}
+                            onChange={setSecteur}
+                            required
+                        />
+                    </Grid>
+
+                    <Grid item xs={12}>
+                        <TextFieldP
+                            id='numChassis'
+                            label="Numéro de chassis"
                             onChange={(value) => {
-                                setEntrepriseName(value);
-                                setValue('entrepriseName', value);
+                                setNumChassis(value);
+                                setValue('numChassis', value);
                             }}
+                            defaultValue={numChassis}
                         />
                     </Grid>
 

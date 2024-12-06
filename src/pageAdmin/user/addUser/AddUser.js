@@ -17,10 +17,11 @@ import CustomSnackbar from '../../../_composants/CustomSnackbar';
 import { useTheme } from '../../../Hook/ThemeContext';
 import InfoIcon from '@mui/icons-material/Info';
 import InfosAdmin from './_actions/infosdroits/infosAdmin';
-
+import InfosAdminVhe from './_actions/infosdroits/infosAdminvhe';
 import InfosConseiller from './_actions/infosdroits/infosConseiller';
 import InfosDev from './_actions/infosdroits/infosDev';
 import InfosUserPrev from './_actions/infosdroits/infosUserPrev';
+import InfosUserGetion from './_actions/infosdroits/infosUsergetio';
 
 import CloseIcon from '@mui/icons-material/Close';
 export default function AddUser() {
@@ -66,6 +67,16 @@ export default function AddUser() {
                     title: 'Info utilisateur prévention',
                     content: <InfosUserPrev />
                 };
+            case 'adminVehicule':
+                return {
+                    title: 'Info Admin Véhicule',
+                    content: <InfosAdminVhe />
+                };
+                case 'getionnaireVehicule':
+                return {
+                    title: 'Info Gestionnaire Véhicule',
+                    content: <InfosUserGetion />
+                }
             default:
                 return { title: '', content: null };
         }
@@ -83,6 +94,8 @@ export default function AddUser() {
         boolDeveloppeur: false,
         entreprisesConseillerPrevention: [],
         entreprisesUserPrevention: [],
+        userGetionaireVehicule: [],
+        boolAdministrateurVehicule: false,
         darkMode: false,
         selectedYears: [new Date().getFullYear().toString()]
     });
@@ -319,30 +332,6 @@ export default function AddUser() {
                     defaultValue={user.userName}
                 />
 
-                <h3 style={{ color: darkMode ? '#ffffff' : 'inherit' }}>Donner les accès administration du site:</h3>
-                <Tooltip title="Cocher cette case si l'utilisateur est administrateur du site. Il aura accès à tous les menus pour toutes les entreprises" arrow>
-                    <Grid container direction="row" alignItems="center">
-                        <Grid item xs={11.99999} sx={{ display: 'flex', justifyContent: 'center' }}>
-                            <ControlLabelAdminP
-                                id="boolAdministrateur"
-                                label="Administrateur du site"
-                                onChange={(value) => {
-                                    handleChange('boolAdministrateur', value);
-                                    setValue('boolAdministrateur', value);
-                                }}
-                                checked={Boolean(user.boolAdministrateur)}
-                                defaultChecked={Boolean(user.boolAdministrateur)}
-                            />
-                        </Grid>
-                        <Grid item xs={0.00001} style={{ margin: '-24.5%' }}>
-                            <IconButton onClick={() => handleOpenPreview('admin')}>
-                                <Tooltip title="Info rôle" arrow>
-                                    <InfoIcon style={{ color: darkMode ? '#ffffff' : 'black' }} />
-                                </Tooltip>
-                            </IconButton>
-                        </Grid>
-                    </Grid>
-                </Tooltip>
                 <h3 style={{ color: darkMode ? '#ffffff' : 'inherit' }}>Donner les accès developpeur du site:</h3>
                 <Tooltip title="Cocher cette case si l'utilisateur est développeur du site. Il aura les mêmes droits qu'un administrateur" arrow>
                     <Grid container direction="row" alignItems="center">
@@ -368,6 +357,58 @@ export default function AddUser() {
                         </Grid>
                     </Grid>
                 </Tooltip>
+
+
+                <h3 style={{ color: darkMode ? '#ffffff' : 'inherit' }}>Donner les accès administrateur prévention du site:</h3>
+                <Tooltip title="Cocher cette case si l'utilisateur est administrateur du site. Il aura accès à tous les menus pour toutes les entreprises" arrow>
+                    <Grid container direction="row" alignItems="center">
+                        <Grid item xs={11.99999} sx={{ display: 'flex', justifyContent: 'center' }}>
+                            <ControlLabelAdminP
+                                id="boolAdministrateur"
+                                label="Administrateur du site"
+                                onChange={(value) => {
+                                    handleChange('boolAdministrateur', value);
+                                    setValue('boolAdministrateur', value);
+                                }}
+                                checked={Boolean(user.boolAdministrateur)}
+                                defaultChecked={Boolean(user.boolAdministrateur)}
+                            />
+                        </Grid>
+                        <Grid item xs={0.00001} style={{ margin: '-24.5%' }}>
+                            <IconButton onClick={() => handleOpenPreview('admin')}>
+                                <Tooltip title="Info rôle" arrow>
+                                    <InfoIcon style={{ color: darkMode ? '#ffffff' : 'black' }} />
+                                </Tooltip>
+                            </IconButton>
+                        </Grid>
+                    </Grid>
+                </Tooltip>
+
+                <h3 style={{ color: darkMode ? '#ffffff' : 'inherit' }}>Donner les accès Administrateur véhicule du site:</h3>
+                <Tooltip title="Cocher cette case si l'utilisateur est administrateur véhicule du site. " arrow>
+                    <Grid container direction="row" alignItems="center">
+                        <Grid item xs={11.99999} sx={{ display: 'flex', justifyContent: 'center' }}>
+                            <ControlLabelAdminP
+                                id="boolAdministrateurVehicule"
+                                label="Administrateur véhicule du site"
+                                onChange={(value) => {
+                                    handleChange('boolAdministrateurVehicule', value);
+                                    setValue('boolAdministrateurVehicule', value);
+                                }}
+                                checked={Boolean(user.boolAdministrateurVehicule)}
+                                defaultChecked={Boolean(user.boolAdministrateurVehicule)}
+                            />
+                        </Grid>
+                        <Grid item xs={0.00001} style={{ margin: '-24.5%' }}>
+                            <IconButton onClick={() => handleOpenPreview('adminVehicule')}>
+                                <Tooltip title="Info rôle" arrow>
+                                    <InfoIcon style={{ color: darkMode ? '#ffffff' : 'black' }} />
+                                </Tooltip>
+                            </IconButton>
+                        </Grid>
+                    </Grid>
+                </Tooltip>
+
                 <h3 style={{ color: darkMode ? '#ffffff' : 'inherit' }}>Donner les accès conseiller en prévention:</h3>
                 <Tooltip title="Si le nouvel utilisateur est conseiller en prévention, sélectionner son entreprise" arrow>
                     <Grid container direction="row" alignItems="center">
@@ -539,56 +580,89 @@ export default function AddUser() {
                     </Grid>
                 </Grid>
 
-                <h3 style={{ color: darkMode ? '#ffffff' : 'inherit' }}>Donner les accès Administrateur véhicule du site:</h3>
-                <Tooltip title="Cocher cette case si l'utilisateur est administrateur véhicule du site. " arrow>
-                    <Grid container direction="row" alignItems="center">
-                        <Grid item xs={11.99999} sx={{ display: 'flex', justifyContent: 'center' }}>
-                            <ControlLabelAdminP
-                                id="boolAdministrateurVehicule"
-                                label="Administrateur véhicule du site"
-                                onChange={(value) => {
-                                    handleChange('boolAdministrateurVehicule', value);
-                                    setValue('boolAdministrateurVehicule', value);
-                                }}
-                                checked={Boolean(user.boolAdministrateurVehicule)}
-                                defaultChecked={Boolean(user.boolAdministrateurVehicule)}
-                            />
-                        </Grid>
-                        <Grid item xs={0.00001} style={{ margin: '-24.5%' }}>
-                            <IconButton onClick={() => handleOpenPreview('admin')}>
-                                <Tooltip title="Info rôle" arrow>
-                                    <InfoIcon style={{ color: darkMode ? '#ffffff' : 'black' }} />
-                                </Tooltip>
-                            </IconButton>
-                        </Grid>
+                <h3 style={{ color: darkMode ? '#ffffff' : 'inherit' }}>Donner les accès gestionnaire véhicule:</h3>
+                <Grid container direction="row" alignItems="center">
+                    <Grid item xs={11.99999} sx={{ display: 'flex', justifyContent: 'center' }}>
+                        <Autocomplete
+                            multiple
+                            id="checkboxes-tags-demo-getionnaire"
+                            options={entreprises}
+                            onChange={(_, value) => handleChange('userGetionaireVehicule', value)}
+                            value={user.userGetionaireVehicule}
+                            disableCloseOnSelect
+                            sx={{
+                                width: '50%',
+                                boxShadow: darkMode ? '0 3px 6px rgba(255,255,255,0.1)' : 3,
+                                margin: '0 auto 1rem',
+                                '& .MuiOutlinedInput-root': {
+                                    color: darkMode ? '#fff' : 'inherit',
+                                    '& fieldset': {
+                                        borderColor: darkMode ? 'rgba(255,255,255,0.3)' : 'rgba(0,0,0,0.23)'
+                                    },
+                                    '&:hover fieldset': {
+                                        borderColor: darkMode ? 'rgba(255,255,255,0.5)' : 'rgba(0,0,0,0.5)'
+                                    }
+                                },
+                                '& .MuiInputLabel-root': {
+                                    color: darkMode ? '#fff' : 'inherit'
+                                },
+                                '& .MuiChip-root': {
+                                    backgroundColor: darkMode ? '#505050' : '#e0e0e0',
+                                    color: darkMode ? '#fff' : 'inherit',
+                                    '& .MuiChip-deleteIcon': {
+                                        color: darkMode ? '#fff' : 'inherit'
+                                    }
+                                }
+                            }}
+                            getOptionLabel={(option) => option}
+                            renderOption={(props, option, { selected }) => (
+                                <li {...props}>
+                                    <Checkbox
+                                        icon={icon}
+                                        checkedIcon={checkedIcon}
+                                        sx={{
+                                            marginRight: 1,
+                                            color: darkMode ? '#4CAF50' : 'green',
+                                            '&.Mui-checked': {
+                                                color: darkMode ? '#81C784' : 'green'
+                                            }
+                                        }}
+                                        checked={selected}
+                                    />
+                                    {option}
+                                </li>
+                            )}
+                            style={{ width: 500 }}
+                            renderInput={(params) => (
+                                <TextField
+                                    {...params}
+                                    label="Sélectionnez l'entreprise"
+                                    placeholder="entreprise"
+                                    sx={{
+                                        backgroundColor: darkMode ? '#424242' : '#00479871',
+                                        boxShadow: darkMode ? '0 3px 6px rgba(255,255,255,0.1)' : 3,
+                                        '& .MuiInputLabel-root': {
+                                            color: darkMode ? '#fff' : 'inherit'
+                                        },
+                                        '& .MuiOutlinedInput-root': {
+                                            '& input': {
+                                                color: darkMode ? '#fff' : 'inherit'
+                                            }
+                                        }
+                                    }}
+                                />
+                            )}
+                            PaperComponent={PaperComponent}
+                        />
                     </Grid>
-                </Tooltip>
-
-
-                <h3 style={{ color: darkMode ? '#ffffff' : 'inherit' }}>Donner les accès getionnaire véhicule du site:</h3>
-                <Tooltip title="Cocher cette case si l'utilisateur est administrateur véhicule du site. " arrow>
-                    <Grid container direction="row" alignItems="center">
-                        <Grid item xs={11.99999} sx={{ display: 'flex', justifyContent: 'center' }}>
-                            <ControlLabelAdminP
-                                id="boolGetionaireVehicule"
-                                label="Getionnaire véhicule du site"
-                                onChange={(value) => {
-                                    handleChange('boolGetionaireVehicule', value);
-                                    setValue('boolGetionaireVehicule', value);
-                                }}
-                                checked={Boolean(user.boolGetionaireVehicule)}
-                                defaultChecked={Boolean(user.boolGetionaireVehicule)}
-                            />
-                        </Grid>
-                        <Grid item xs={0.00001} style={{ margin: '-24.5%' }}>
-                            <IconButton onClick={() => handleOpenPreview('admin')}>
-                                <Tooltip title="Info rôle" arrow>
-                                    <InfoIcon style={{ color: darkMode ? '#ffffff' : 'black' }} />
-                                </Tooltip>
-                            </IconButton>
-                        </Grid>
+                    <Grid item xs={0.00001} style={{ margin: '-24.5%' }}>
+                        <IconButton onClick={() => handleOpenPreview('getionnaireVehicule')}>
+                            <Tooltip title="Info rôle" arrow>
+                                <InfoIcon style={{ color: darkMode ? '#ffffff' : 'black' }} />
+                            </Tooltip>
+                        </IconButton>
                     </Grid>
-                </Tooltip>
+                </Grid>
 
 
 
