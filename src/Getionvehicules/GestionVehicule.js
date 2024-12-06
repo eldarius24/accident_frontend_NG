@@ -17,6 +17,7 @@ import { useNavigate } from 'react-router-dom';
 import config from '../config.json';
 import CustomSnackbar from '../_composants/CustomSnackbar';
 import { useTheme } from '../Hook/ThemeContext';
+import { useUserConnected } from '../Hook/userConnected';
 import axios from 'axios';
 import { blueGrey } from '@mui/material/colors';
 import GetAppIcon from '@mui/icons-material/GetApp';
@@ -27,6 +28,7 @@ export default function GetionVehicleList() {
     const [vehicles, setVehicles] = useState([]);
     const [loading, setLoading] = useState(true);
     const apiUrl = config.apiUrl;
+    const { userInfo, isAdminOrDev } = useUserConnected();
     const [snackbar, setSnackbar] = useState({
         open: false,
         message: '',
@@ -61,13 +63,10 @@ export default function GetionVehicleList() {
 
     const handleEdit = (vehicle) => {
         try {
-            // S'assurer que tous les champs sont disponibles avant la navigation
             const vehicleToEdit = {
                 ...vehicle,
-                kilometrage: vehicle.kilometrage || 0  // Assurez-vous que le kilométrage existe
-
+                kilometrage: vehicle.kilometrage || 0
             };
-            console.log("Vehicle avant navigation:", vehicle);
             navigate("/modifVehicule", { state: { vehicle: vehicleToEdit } });
             showSnackbar('Modification du véhicule initiée', 'info');
         } catch (error) {
@@ -76,22 +75,20 @@ export default function GetionVehicleList() {
         }
     };
 
-    const handleDelete = async (vehicleId) => {
-        try {
-            await axios.delete(`http://${apiUrl}:3100/api/vehicles/${vehicleId}`);
-            setVehicles(vehicles.filter(vehicle => vehicle._id !== vehicleId));
-            showSnackbar('Véhicule supprimé avec succès', 'success');
-        } catch (error) {
-            console.error('Erreur lors de la suppression:', error);
-            showSnackbar('Erreur lors de la suppression du véhicule', 'error');
-        }
-    };
-
     useEffect(() => {
         const fetchVehicles = async () => {
             try {
                 const response = await axios.get(`http://${apiUrl}:3100/api/vehicles`);
-                setVehicles(response.data);
+                let filteredVehicles = response.data;
+
+                // Filtre les véhicules si l'utilisateur n'est pas admin
+                if (!isAdminOrDev && userInfo?.userGetionaireVehicule) {
+                    filteredVehicles = response.data.filter(vehicle =>
+                        userInfo.userGetionaireVehicule.includes(vehicle.entrepriseName)
+                    );
+                }
+
+                setVehicles(filteredVehicles);
                 showSnackbar('Véhicules chargés avec succès', 'success');
             } catch (error) {
                 console.error('Error fetching vehicles:', error);
@@ -102,7 +99,7 @@ export default function GetionVehicleList() {
         };
 
         fetchVehicles();
-    }, [apiUrl]);
+    }, [apiUrl, isAdminOrDev, userInfo]);
 
     if (loading) {
         return <LinearProgress color="success" />;
@@ -161,7 +158,6 @@ export default function GetionVehicleList() {
                             <TableCell style={{ fontWeight: 'bold' }}>Prochain CT</TableCell>
                             <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>Fichier</TableCell>
                             <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>Modifier</TableCell>
-                            {/*<TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>Supprimer</TableCell>*/}
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -226,45 +222,6 @@ export default function GetionVehicleList() {
                                         </Button>
                                     </Tooltip>
                                 </TableCell>
-                                {/*<TableCell style={{ padding: 0, width: '70px' }}>
-                                    <Tooltip title="Supprimer le véhicule" arrow>
-                                        <Button
-                                            variant="contained"
-                                            color="error"
-                                            onClick={() => {
-                                                confirmAlert({
-                                                    customUI: ({ onClose }) => {
-                                                        return (
-                                                            <div className="custom-confirm-dialog">
-                                                                <h1>Supprimer</h1>
-                                                                <p>Êtes-vous sûr de vouloir supprimer ce véhicule ?</p>
-                                                                <Button
-                                                                    onClick={() => {
-                                                                        handleDelete(vehicle._id);
-                                                                        onClose();
-                                                                    }}
-                                                                >
-                                                                    Oui
-                                                                </Button>
-                                                                <Button onClick={onClose}>
-                                                                    Non
-                                                                </Button>
-                                                            </div>
-                                                        );
-                                                    }
-                                                });
-                                            }}
-                                            sx={{
-                                                backgroundColor: darkMode ? '#b71c1c' : '#d32f2f',
-                                                '&:hover': {
-                                                    backgroundColor: darkMode ? '#d32f2f' : '#b71c1c',
-                                                }
-                                            }}
-                                        >
-                                            <DeleteForeverIcon />
-                                        </Button>
-                                    </Tooltip>
-                                </TableCell>*/}
                             </TableRow>
                         ))}
                     </TableBody>
