@@ -12,6 +12,7 @@ import { useLogger } from '../Hook/useLogger';
 import config from '../config.json';
 import axios from 'axios';
 import dayjs from 'dayjs';
+import EmailNotificationManager from '../Dialog/EmailNotificationManager';
 
 export default function ModifVehicle() {
     const { darkMode } = useTheme();
@@ -23,6 +24,7 @@ export default function ModifVehicle() {
     const { register, setValue, handleSubmit } = useForm();
 
     const [dateDerniereRevision, setDateDerniereRevision] = useState(vehicleToEdit?.dateDerniereRevision || null);
+    const [dateProchaineRevision, setdateProchaineRevision] = useState(vehicleToEdit?.dateProchaineRevision || "");
     const [dateDernierCT, setDateDernierCT] = useState(vehicleToEdit?.dateDernierCT || null);
     const [dateProchainCT, setDateProchainCT] = useState(vehicleToEdit?.dateProchainCT || null);
     const [snackbar, setSnackbar] = useState({
@@ -33,9 +35,10 @@ export default function ModifVehicle() {
 
     useEffect(() => {
         setValue('dateDerniereRevision', dateDerniereRevision);
+        setValue('dateProchaineRevision', dateProchaineRevision);
         setValue('dateDernierCT', dateDernierCT);
         setValue('dateProchainCT', dateProchainCT);
-    }, [dateDerniereRevision, dateDernierCT, dateProchainCT, setValue]);
+    }, [dateProchaineRevision, dateDerniereRevision, dateDernierCT, dateProchainCT, setValue]);
 
     const showSnackbar = (message, severity = 'info') => {
         setSnackbar({ open: true, message, severity });
@@ -65,6 +68,7 @@ export default function ModifVehicle() {
             const vehicleData = {
                 ...vehicleToEdit,
                 dateDerniereRevision: dateDerniereRevision ? dayjs(dateDerniereRevision).format('YYYY-MM-DD') : null,
+                dateProchaineRevision: dateProchaineRevision ? dayjs(dateProchaineRevision).format('YYYY-MM-DD') : null,
                 dateDernierCT: dateDernierCT ? dayjs(dateDernierCT).format('YYYY-MM-DD') : null,
                 dateProchainCT: dateProchainCT ? dayjs(dateProchainCT).format('YYYY-MM-DD') : null
             };
@@ -139,6 +143,18 @@ export default function ModifVehicle() {
 
                     <Grid item xs={12}>
                         <DatePickerP
+                            id='dateProchaineRevision'
+                            label="Date prochaine révision"
+                            onChange={(value) => {
+                                setdateProchaineRevision(value);
+                                setValue('dateProchaineRevision', value);
+                            }}
+                            defaultValue={dateProchaineRevision}
+                        />
+                    </Grid>
+
+                    <Grid item xs={12}>
+                        <DatePickerP
                             id='dateDernierCT'
                             label="Date dernier CT"
                             onChange={(value) => {
@@ -161,7 +177,9 @@ export default function ModifVehicle() {
                         />
                     </Grid>
                 </Grid>
-
+                <Grid item xs={12}>
+                    <EmailNotificationManager vehicleId={vehicleToEdit._id} />
+                </Grid>
                 <div style={{ display: 'flex', justifyContent: 'center', marginTop: '2rem' }}>
                     <Tooltip title={vehicleToEdit ? "Modifier le véhicule" : "Ajouter le véhicule"} arrow>
                         <Button

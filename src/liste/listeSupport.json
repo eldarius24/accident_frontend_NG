@@ -2,11 +2,14 @@
     "AssureurStatus": [
       "Bug",
       "Améliorations de fonctionnalités", 
-      "Connexion et accès",
+      "Je dois acceder a la partie Prévention",
+      "Je dois acceder a la partie Véhicules",
       "Autorisation et permissions",
       "Mise à jour des informations de profil",
       "Suppression de compte",
       "Autre"
+
+
     ]
   }
   

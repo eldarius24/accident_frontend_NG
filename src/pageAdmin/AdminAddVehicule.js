@@ -43,6 +43,7 @@ export default function AddVehicle() {
     const [kilometrage, setKilometrage] = useState(vehicleToEdit?.kilometrage?.toString() || "");
     const [dateAchat, setDateAchat] = useState(vehicleToEdit?.dateAchat || "");
     const [dateDerniereRevision, setDateDerniereRevision] = useState(vehicleToEdit?.dateDerniereRevision || "");
+    const [dateProchaineRevision, setdateProchaineRevision] = useState(vehicleToEdit?.dateProchaineRevision || "");
     const [dateDernierCT, setDateDernierCT] = useState(vehicleToEdit?.dateDernierCT || "");
     const [dateProchainCT, setDateProchainCT] = useState(vehicleToEdit?.dateProchainCT || "");
     const [numChassis, setNumChassis] = useState(vehicleToEdit?.numChassis || "");
@@ -58,10 +59,11 @@ export default function AddVehicle() {
         setValue('kilometrage', kilometrage);
         setValue('dateAchat', dateAchat);
         setValue('dateDerniereRevision', dateDerniereRevision);
+        setValue('dateProchaineRevision', dateProchaineRevision);
         setValue('dateDernierCT', dateDernierCT);
         setValue('dateProchainCT', dateProchainCT);
         setValue('numChassis', numChassis);
-    }, [numPlaque, marque, modele, typeCarburant, nombrePlaces, anneeConstruction,
+    }, [dateProchaineRevision, numPlaque, marque, modele, typeCarburant, nombrePlaces, anneeConstruction,
         entrepriseName, kilometrage, dateAchat, dateDerniereRevision, dateDernierCT,
         dateProchainCT, numChassis, setValue]);
 
@@ -79,12 +81,12 @@ export default function AddVehicle() {
                     axios.get(`http://${apiUrl}:3100/api/entreprises`),
                     axios.get(`http://${apiUrl}:3100/api/secteurs`)
                 ]);
-                
+
                 const entreprisesData = entreprisesResponse.data.map(e => ({
                     label: e.AddEntreName,
                     id: e._id
                 }));
-                
+
                 setEntreprises(entreprisesData);
                 setSecteurs(secteursResponse.data);
             } catch (error) {
@@ -95,20 +97,6 @@ export default function AddVehicle() {
         fetchData();
     }, [apiUrl]);
 
-    useEffect(() => {
-        const fetchCompanies = async () => {
-            try {
-                const response = await axios.get(`http://${apiUrl}:3100/api/vehicleCompanies`);
-                const companyNames = response.data.map(company => company.companyName);
-                setCompanies(companyNames);
-            } catch (error) {
-                console.error('Erreur lors du chargement des entreprises:', error);
-                showSnackbar('Erreur lors du chargement des entreprises', 'error');
-            }
-        };
-    
-        fetchCompanies();
-    }, [apiUrl]);
 
     const showSnackbar = (message, severity = 'info') => {
         setSnackbar({ open: true, message, severity });
@@ -177,6 +165,7 @@ export default function AddVehicle() {
                 numChassis,
                 dateAchat: dayjs(dateAchat).format('YYYY-MM-DD'),
                 dateDerniereRevision: dateDerniereRevision ? dayjs(dateDerniereRevision).format('YYYY-MM-DD') : null,
+                dateProchaineRevision: dateProchaineRevision ? dayjs(dateProchaineRevision).format('YYYY-MM-DD') : null,
                 dateDernierCT: dateDernierCT ? dayjs(dateDernierCT).format('YYYY-MM-DD') : null,
                 dateProchainCT: dateProchainCT ? dayjs(dateProchainCT).format('YYYY-MM-DD') : null
             };
@@ -384,6 +373,18 @@ export default function AddVehicle() {
                                 setValue('dateDerniereRevision', value);
                             }}
                             defaultValue={dateDerniereRevision}
+                        />
+                    </Grid>
+
+                    <Grid item xs={12}>
+                        <DatePickerP
+                            id='dateProchaineRevision'
+                            label="Date prochaine révision"
+                            onChange={(value) => {
+                                setdateProchaineRevision(value);
+                                setValue('dateProchaineRevision', value);
+                            }}
+                            defaultValue={dateProchaineRevision}
                         />
                     </Grid>
 

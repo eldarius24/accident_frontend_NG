@@ -80,7 +80,8 @@ const MessSupport = () => {
     const SUPPORT_TYPE_ROUTING = {
         'Bug': 'dev',
         'Améliorations de fonctionnalités': 'dev',
-        'Connexion et accès': 'admin',
+        'Je dois acceder a la partie Prévention': 'admin',
+        'Je dois acceder a la partie Véhicules': 'admin',
         'Autorisation et permissions': 'admin',
         'Mise à jour des informations de profil': 'admin',
         'Suppression de compte': 'admin',

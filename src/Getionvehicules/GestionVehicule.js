@@ -99,7 +99,7 @@ export default function GetionVehicleList() {
         };
 
         fetchVehicles();
-    }, [apiUrl, isAdminOrDev, userInfo]);
+    }, []);
 
     if (loading) {
         return <LinearProgress color="success" />;
@@ -154,6 +154,8 @@ export default function GetionVehicleList() {
                             <TableCell style={{ fontWeight: 'bold' }}>Secteur</TableCell>
                             <TableCell style={{ fontWeight: 'bold' }}>Num. Chassis</TableCell>
                             <TableCell style={{ fontWeight: 'bold' }}>Kilométrage</TableCell>
+                            <TableCell style={{ fontWeight: 'bold' }}>Dernier entretien</TableCell>
+                            <TableCell style={{ fontWeight: 'bold' }}>Prochain entretien</TableCell>                            
                             <TableCell style={{ fontWeight: 'bold' }}>Dernier CT</TableCell>
                             <TableCell style={{ fontWeight: 'bold' }}>Prochain CT</TableCell>
                             <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>Fichier</TableCell>
@@ -176,6 +178,8 @@ export default function GetionVehicleList() {
                                 <TableCell>{vehicle.secteur}</TableCell>
                                 <TableCell>{vehicle.numChassis}</TableCell>
                                 <TableCell>{vehicle.kilometrage} km</TableCell>
+                                <TableCell>{formatDate(vehicle.dateDerniereRevision)}</TableCell>
+                                <TableCell>{formatDate(vehicle.dateProchaineRevision)}</TableCell>                              
                                 <TableCell>{formatDate(vehicle.dateDernierCT)}</TableCell>
                                 <TableCell>{formatDate(vehicle.dateProchainCT)}</TableCell>
                                 <TableCell style={{ padding: 0, width: '70px' }}>
