@@ -425,7 +425,7 @@ const EnterpriseDivers = () => {
 
         } catch (error) {
             if (error.name === 'AbortError') {
-                console.log('Requête annulée');
+
                 return;
             }
             console.error('Error fetching data:', error);

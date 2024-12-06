@@ -77,7 +77,7 @@ export default function VehicleList() {
                 entityId: vehicle._id
             });
 
-            console.log("Vehicle avant navigation:", vehicle);
+
             navigate("/AdminAddVehicule", { state: { vehicle: vehicleToEdit } });
             showSnackbar('Modification du véhicule initiée', 'info');
         } catch (error) {

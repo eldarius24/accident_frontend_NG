@@ -289,6 +289,7 @@ export default function Navigation() {
         </Box>
     );
 
+    /*
     console.log("User roles:", {
         isFleetManager,
         isVehicleAdmin,
@@ -301,7 +302,7 @@ export default function Navigation() {
         isVehicleAdminManager,
         boolGetionaireVehicule: userInfo.boolGetionaireVehicule
     });
-
+*/
     return (
         <div style={{
             backgroundColor: darkMode ? '#6e6e6e' : '#ffffff',

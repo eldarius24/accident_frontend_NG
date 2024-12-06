@@ -9,11 +9,11 @@ import { useTheme } from '../Hook/ThemeContext';
 dayjs.locale('fr');
 
 export default function DatePickerP({id, label, defaultValue, onChange}) {
-    console.log(`DatePickerP ${id}:`, { defaultValue });
+
     const { darkMode } = useTheme();
 
     const handleChange = (event, _) => {
-        console.log(`DatePickerP ${id} handleChange:`, event);
+
         if (onChange) {
             const date = dayjs(event).format('YYYY-MM-DD');
             onChange(date);
