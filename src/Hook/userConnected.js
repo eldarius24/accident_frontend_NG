@@ -24,6 +24,7 @@ export const useUserConnected = () => {
     const isUserPreventionOrAdminOrConseiller = isAdminOrDevOrConseiller || isUserPrevention;
     const isUserPreventionOrConseiller = isUserPrevention || isConseiller;
     const isVehicleAdminManager = isVehicleAdmin || isFleetManager;
+    const isAllAcces= isVehicleAdminManager || isUserPreventionOrAdminOrConseiller;
 
     return {
         userInfo,
@@ -41,6 +42,7 @@ export const useUserConnected = () => {
         //véhicule
         isVehicleAdmin,
         isFleetManager,
-        isVehicleAdminManager
+        isVehicleAdminManager,
+        isAllAcces
     };
 };
