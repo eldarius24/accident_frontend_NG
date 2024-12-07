@@ -39,7 +39,7 @@ import AdminAddVehicule from './pageAdmin/AdminAddVehicule';
 import GetionVehicle from './Getionvehicules/GestionVehicule';
 import VehiculeDetails from './Getionvehicules/VehicleDetails';
 import ModifVehicule from './Getionvehicules/ModifVehicule';
-
+import StatistiquesVehicules from './Getionvehicules/StatistiquesVehicules';
 
 /**
  * App est le composant principal de l'application. Il contient les routes 
@@ -105,6 +105,7 @@ const App = () => {
                 <Route path="/gestionVehicules" element={<ProtectedRouteAdminOrGesionaireVehicule><GetionVehicle /></ProtectedRouteAdminOrGesionaireVehicule>} />
                 <Route path="/vehiculeDetails" element={<ProtectedRouteAdminOrGesionaireVehicule><VehiculeDetails /></ProtectedRouteAdminOrGesionaireVehicule>} />
                 <Route path="/modifVehicule" element={<ProtectedRouteAdminOrGesionaireVehicule><ModifVehicule /></ProtectedRouteAdminOrGesionaireVehicule>} />
+                <Route path="/statistiquesVehicules" element={<ProtectedRouteAdminOrGesionaireVehicule><StatistiquesVehicules /></ProtectedRouteAdminOrGesionaireVehicule>} />
 
               </Routes>
             </main>

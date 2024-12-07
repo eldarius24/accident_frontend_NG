@@ -415,7 +415,7 @@ const Statistiques = () => {
             padding: '0 20px'
           }}
         >
-          Statistiques
+          Statistiques prévention
         </Typography>
       </Box>
       <Box sx={{ justifyContent: 'center', display: 'flex', flexWrap: 'wrap', gap: '10px', marginBottom: '20px' }}>

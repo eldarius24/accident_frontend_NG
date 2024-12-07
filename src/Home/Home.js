@@ -615,7 +615,7 @@ export default function Navigation() {
                             <Tooltip title="Consulter les statistiques des véhicules" arrow>
                                 <Button
                                     component={Link}
-                                    to="/statistiques"
+                                    to="/statistiquesVehicules"
                                     sx={buttonStyle(1)}
                                     onMouseEnter={() => setHoverStates(prev => ({ ...prev, stats: true }))}
                                     onMouseLeave={() => setHoverStates(prev => ({ ...prev, stats: false }))}
