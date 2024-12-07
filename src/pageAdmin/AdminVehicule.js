@@ -237,6 +237,18 @@ export default function VehicleList() {
                                 <TableCell style={{ padding: 0, width: '70px' }}>
                                     <Tooltip title="Supprimer le véhicule" arrow>
                                         <Button
+                                            sx={{
+                                                backgroundColor: darkMode ? '#b71c1c' : '#d32f2f',
+                                                transition: 'all 0.1s ease-in-out',
+                                                '&:hover': {
+                                                    backgroundColor: darkMode ? '#d32f2f' : '#b71c1c',
+                                                    transform: 'scale(1.08)',
+                                                    boxShadow: darkMode ? '0 6px 12px rgba(255,255,255,0.2)' : 6
+                                                },
+                                                '& .MuiSvgIcon-root': {
+                                                    color: darkMode ? '#fff' : 'inherit'
+                                                }
+                                            }}
                                             variant="contained"
                                             color="error"
                                             onClick={() => {
@@ -244,29 +256,33 @@ export default function VehicleList() {
                                                     customUI: ({ onClose }) => {
                                                         return (
                                                             <div className="custom-confirm-dialog">
-                                                                <h1>Supprimer</h1>
-                                                                <p>Êtes-vous sûr de vouloir supprimer ce véhicule ?</p>
-                                                                <Button
-                                                                    onClick={() => {
-                                                                        handleDelete(vehicle._id);
-                                                                        onClose();
-                                                                    }}
-                                                                >
-                                                                    Oui
-                                                                </Button>
-                                                                <Button onClick={onClose}>
-                                                                    Non
-                                                                </Button>
+                                                                <h1 className="custom-confirm-title">Supprimer</h1>
+                                                                <p className="custom-confirm-message">Êtes-vous sûr de vouloir supprimer ce véhicule ?</p>
+                                                                <div className="custom-confirm-buttons">
+                                                                    <Tooltip title="Cliquez sur OUI pour supprimer" arrow>
+                                                                        <button
+                                                                            className="custom-confirm-button"
+                                                                            onClick={() => {
+                                                                                handleDelete(vehicle._id);
+                                                                                onClose();
+                                                                            }}
+                                                                        >
+                                                                            Oui
+                                                                        </button>
+                                                                    </Tooltip>
+                                                                    <Tooltip title="Cliquez sur NON pour annuler la suppression" arrow>
+                                                                        <button
+                                                                            className="custom-confirm-button custom-confirm-no"
+                                                                            onClick={onClose}
+                                                                        >
+                                                                            Non
+                                                                        </button>
+                                                                    </Tooltip>
+                                                                </div>
                                                             </div>
                                                         );
                                                     }
                                                 });
-                                            }}
-                                            sx={{
-                                                backgroundColor: darkMode ? '#b71c1c' : '#d32f2f',
-                                                '&:hover': {
-                                                    backgroundColor: darkMode ? '#d32f2f' : '#b71c1c',
-                                                }
                                             }}
                                         >
                                             <DeleteForeverIcon />

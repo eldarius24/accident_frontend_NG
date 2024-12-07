@@ -25,6 +25,7 @@ import InfosUserGetion from './_actions/infosdroits/infosUsergetio';
 
 import CloseIcon from '@mui/icons-material/Close';
 export default function AddUser() {
+    const [isSubmitting, setIsSubmitting] = useState(false);
     const { darkMode } = useTheme();
     const navigate = useNavigate();
     const params = new URLSearchParams(window.location.search);
@@ -72,7 +73,7 @@ export default function AddUser() {
                     title: 'Info Admin Véhicule',
                     content: <InfosAdminVhe />
                 };
-                case 'getionnaireVehicule':
+            case 'getionnaireVehicule':
                 return {
                     title: 'Info Gestionnaire Véhicule',
                     content: <InfosUserGetion />
@@ -174,6 +175,12 @@ export default function AddUser() {
     };
 
     const onSubmit = async () => {
+        // Éviter la double soumission
+        if (isSubmitting) return;
+
+        // Marquer comme en cours de soumission
+        setIsSubmitting(true);
+
         try {
             // Préparation des données utilisateur
             const userData = {
@@ -194,6 +201,7 @@ export default function AddUser() {
         } catch (error) {
             console.error('Erreur de requête:', error.message);
             showSnackbar('Erreur lors de la création de l\'utilisateur', 'error');
+            setIsSubmitting(false);
         }
     };
 
@@ -673,6 +681,7 @@ export default function AddUser() {
                     <Tooltip title="Cliquez ici pour enregistrer et créer le nouvel utilisateur" arrow>
                         <Button
                             type="submit"
+                            disabled={isSubmitting}
                             sx={{
                                 backgroundColor: darkMode ? '#424242' : '#ee742d59',
                                 color: darkMode ? '#ffffff' : 'black',
@@ -701,7 +710,7 @@ export default function AddUser() {
                             }}
                             variant="contained"
                         >
-                            Enregistrer l'utilisateur
+                            {isSubmitting ? 'Enregistrement en cours...' : "Enregistrer l'utilisateur"}
                         </Button>
                     </Tooltip>
                 </div>

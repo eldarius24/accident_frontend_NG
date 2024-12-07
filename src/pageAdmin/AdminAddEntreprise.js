@@ -18,6 +18,7 @@ import { useTheme } from '../Hook/ThemeContext';
  * @returns {JSX.Element} - Le composant AdminPanelSettings.
  */
 export default function AdminPanelSettings({ accidentData }) {
+    const [isSubmitting, setIsSubmitting] = useState(false);
     const { darkMode } = useTheme();
     const navigate = useNavigate();
     const apiUrl = config.apiUrl;
@@ -305,6 +306,12 @@ export default function AdminPanelSettings({ accidentData }) {
      * METHODE ON SUBMIT
      * ************************************************************************/
     const onSubmit = async (data) => {
+
+        if (isSubmitting) return;
+
+        // Marquer comme en cours de soumission
+        setIsSubmitting(true);
+
         // Valider le format ONSS avant soumission
         const onssValidation = validateONSS(data.AddEntrOnss);
         if (onssValidation !== true) {
@@ -325,6 +332,7 @@ export default function AdminPanelSettings({ accidentData }) {
         } catch (error) {
             console.error('Erreur de requête:', error.message);
             showSnackbar(`Erreur lors de la ${entrepriseToEdit ? 'modification' : 'création'} de l'entreprise`, 'error');
+            setIsSubmitting(false);
         }
     };
 
@@ -559,6 +567,7 @@ export default function AdminPanelSettings({ accidentData }) {
                     <Tooltip title="Cliquez ici pour crée et enregistrer l'entreprise" arrow>
                         <Button
                             type="submit"
+                            disabled={isSubmitting}
                             sx={{
                                 backgroundColor: darkMode ? '#424242' : '#ee742d59',
                                 color: darkMode ? '#ffffff' : 'black',
@@ -588,7 +597,10 @@ export default function AdminPanelSettings({ accidentData }) {
                             }}
                             variant="contained"
                         >
-                            {entrepriseToEdit ? "Modifier l'entreprise" : "Créer l'entreprise"}
+                            {isSubmitting
+                            ? (entrepriseToEdit ? "Modification en cours..." : "Création en cours...")
+                            : (entrepriseToEdit ? "Modifier l'entreprise" : "Créer l'entreprise")
+                        }
                         </Button>
                     </Tooltip>
                 </div>

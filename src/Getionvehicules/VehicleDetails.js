@@ -26,6 +26,8 @@ import Modal from '@mui/material/Modal';
 import { blueGrey } from '@mui/material/colors';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
 import '../pageFormulaire/formulaire.css';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+
 
 const dropZoneStyle = {
     display: 'flex',
@@ -422,38 +424,48 @@ export default function VehicleDetails() {
     };
 
 
-    const handleDeleteRecord = async (recordId) => {
+    const handleDelete = async (recordId) => {
         try {
-            await axios.delete(`http://${apiUrl}:3100/api/vehicles/records/${recordId}`);
-
-            await logAction({
-                actionType: 'suppression',
-                details: 'Suppression d\'un enregistrement',
-                entity: 'Vehicle',
-                entityId: recordId,
-                vehicleId: vehicleId
-            });
-
-            fetchRecords();
-            setSnackbar({
-                open: true,
-                message: 'Enregistrement supprimé avec succès',
-                severity: 'success'
-            });
+            // Get vehicle info for logging
+            const vehicleResponse = await axios.get(`http://${apiUrl}:3100/api/vehicles/${vehicleId}`);
+            const vehicle = vehicleResponse.data;
+    
+            const response = await axios.delete(`http://${apiUrl}:3100/api/vehicles/records/${recordId}`);
+            
+            if (response.status === 200) {
+                // Update records list after deletion
+                setRecords(records.filter(record => record._id !== recordId));
+                
+                // Show success message
+                setSnackbar({
+                    open: true,
+                    message: "Enregistrement supprimé avec succès",
+                    severity: "success"
+                });
+                
+                // Log the deletion action using the logAction from useLogger hook
+                await logAction({
+                    actionType: 'suppression',
+                    details: `Suppression d'un enregistrement pour le véhicule ${vehicle.numPlaque}`,
+                    entity: 'Vehicle',
+                    entityId: vehicleId
+                });
+            }
         } catch (error) {
-
+            console.error("Erreur lors de la suppression:", error);
+            
+            // Log the error
             await logAction({
                 actionType: 'error',
-                details: 'Erreur lors de la suppression d\'un enregistrement',
+                details: `Erreur lors de la suppression d'un enregistrement - ${error.message}`,
                 entity: 'Vehicle',
-                entityId: recordId,
-                vehicleId: vehicleId
+                entityId: vehicleId
             });
-
+            
             setSnackbar({
                 open: true,
-                message: 'Erreur lors de la suppression',
-                severity: 'error'
+                message: "Erreur lors de la suppression de l'enregistrement",
+                severity: "error"
             });
         }
     };
@@ -629,9 +641,6 @@ export default function VehicleDetails() {
                     <TableCell style={{ padding: 0, width: '70px' }}>
                         <Tooltip title="Supprimer l'enregistrement" arrow>
                             <Button
-                                onClick={() => handleDeleteRecord(record._id)}
-                                variant="contained"
-                                color="error"
                                 sx={{
                                     backgroundColor: darkMode ? '#b71c1c' : '#d32f2f',
                                     transition: 'all 0.1s ease-in-out',
@@ -644,8 +653,43 @@ export default function VehicleDetails() {
                                         color: darkMode ? '#fff' : 'inherit'
                                     }
                                 }}
+                                variant="contained"
+                                color="error"
+                                onClick={() => {
+                                    confirmAlert({
+                                        customUI: ({ onClose }) => {
+                                            return (
+                                                <div className="custom-confirm-dialog">
+                                                    <h1 className="custom-confirm-title">Supprimer</h1>
+                                                    <p className="custom-confirm-message">Êtes-vous sûr de vouloir supprimer cet enregistrement ?</p>
+                                                    <div className="custom-confirm-buttons">
+                                                        <Tooltip title="Cliquez sur OUI pour supprimer" arrow>
+                                                            <button
+                                                                className="custom-confirm-button"
+                                                                onClick={() => {
+                                                                    handleDelete(record._id);
+                                                                    onClose();
+                                                                }}
+                                                            >
+                                                                Oui
+                                                            </button>
+                                                        </Tooltip>
+                                                        <Tooltip title="Cliquez sur NON pour annuler la suppression" arrow>
+                                                            <button
+                                                                className="custom-confirm-button custom-confirm-no"
+                                                                onClick={onClose}
+                                                            >
+                                                                Non
+                                                            </button>
+                                                        </Tooltip>
+                                                    </div>
+                                                </div>
+                                            );
+                                        }
+                                    });
+                                }}
                             >
-                                <DeleteIcon />
+                                <DeleteForeverIcon />
                             </Button>
                         </Tooltip>
                     </TableCell>

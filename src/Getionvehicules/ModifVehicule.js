@@ -14,6 +14,7 @@ import dayjs from 'dayjs';
 import EmailNotificationManager from '../Dialog/EmailNotificationManager';
 
 export default function ModifVehicle() {
+    const [isSubmitting, setIsSubmitting] = useState(false);
     const { darkMode } = useTheme();
     const { logAction } = useLogger();
     const navigate = useNavigate();
@@ -61,8 +62,17 @@ export default function ModifVehicle() {
     };
 
     const onSubmit = async () => {
-        try {
-            if (!validateDates()) return;
+              // Éviter la double soumission
+              if (isSubmitting) return;
+
+              // Marquer comme en cours de soumission
+              setIsSubmitting(true);
+      
+              try {
+                  if (!validateDates()) {
+                      setIsSubmitting(false);
+                      return;
+                  }
 
             const vehicleData = {
                 ...vehicleToEdit,
@@ -183,6 +193,7 @@ export default function ModifVehicle() {
                     <Tooltip title={vehicleToEdit ? "Modifier le véhicule" : "Ajouter le véhicule"} arrow>
                         <Button
                             type="submit"
+                            disabled={isSubmitting}
                             sx={{
                                 backgroundColor: darkMode ? '#424242' : '#ee742d59',
                                 color: darkMode ? '#ffffff' : 'black',
@@ -207,7 +218,10 @@ export default function ModifVehicle() {
                             }}
                             variant="contained"
                         >
-                            {vehicleToEdit ? 'Modifier le véhicule' : 'Ajouter le véhicule'}
+                            {isSubmitting 
+                                ? 'Modification en cours...' 
+                                : (vehicleToEdit ? 'Modifier le véhicule' : 'Ajouter le véhicule')
+                            }
                         </Button>
                     </Tooltip>
                 </div>

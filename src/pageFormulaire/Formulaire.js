@@ -245,6 +245,7 @@ export default function Formulaire() {
                 <Tooltip title="Cliquez ici pour enregistrer les données (certains champs doivent être obligatoirement remplis)" arrow>
                     <Button
                         type="submit"
+                        disabled={isSubmitting}
                         sx={{
                             color: darkMode ? '#ffffff' : 'black',
                             backgroundColor: darkMode ? '#424242' : '#ee752d60',
@@ -271,7 +272,7 @@ export default function Formulaire() {
                         }}
                         variant="contained"
                     >
-                        Enregistrer les données
+                        {isSubmitting ? 'Enregistrement en cours...' : "Enregistrer les données"}
                     </Button>
                 </Tooltip>
             </div>
