@@ -32,26 +32,26 @@ const EmailNotificationManager = ({ vehicleId }) => {
 
     const handleAddEmail = async () => {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        
+
         if (!inputValue) {
             return;
         }
-    
+
         if (!emailRegex.test(inputValue)) {
             return;
         }
-    
+
         if (emails.includes(inputValue)) {
             return;
         }
-    
+
         try {
             const updatedEmails = [...emails, inputValue];
             // Appel API pour sauvegarder
             await axios.post(`http://${apiUrl}:3100/api/vehicles/${vehicleId}/notifications`, {
                 emails: updatedEmails
             });
-            
+
             // Mettre à jour l'état local uniquement après succès de l'API
             setEmails(updatedEmails);
             setInputValue('');
@@ -76,9 +76,18 @@ const EmailNotificationManager = ({ vehicleId }) => {
     return (
 
         <Box sx={{ mt: 2 }}>
-            <Typography variant="h6">Notifications par email</Typography>
-            <Typography variant="body2" color="text.secondary" sx={{ mb: 2, textAlign: 'center' }}>
-                Ces adresses recevront une notification 15 jours & 1 jour avant le contrôle technique
+            <Typography variant="h6"
+                sx={{
+                    textAlign: 'center',
+                    color: darkMode ? '#fff' : 'black',
+                }}>
+                Notifications par email
+            </Typography>
+            <Typography variant="body2" color="text.secondary" sx={{
+                textAlign: 'center',
+                color: darkMode ? '#fff' : 'black',
+            }}>
+                Ces adresses recevront une notification 15 jours & 1 jour avant le contrôle technique ou un entretien
             </Typography>
 
             <Box >
@@ -132,7 +141,20 @@ const EmailNotificationManager = ({ vehicleId }) => {
                         key={index}
                         label={email}
                         onDelete={() => handleDeleteEmail(email)}
-                        color="primary"
+                        sx={{
+                            backgroundColor: darkMode ? '#17583648' : '#269c5b48',
+                            color: darkMode ? '#ffffff' : 'black',
+                            '& .MuiChip-deleteIcon': {
+                                color: darkMode ? '#8f2922' : '#f44336',
+                                '&:hover': {
+                                    color: darkMode ? '#8f2922' : '#f44336',
+                                }
+                            },
+                            '& .MuiChip-deleteIcon:hover': {
+                                color: darkMode ? '#8f2922' : '#f44336',
+                            }
+                        }}
+                        
                         variant="outlined"
                     />
                 ))}
