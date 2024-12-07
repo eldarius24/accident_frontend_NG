@@ -17,9 +17,9 @@ export const VEHICLE_COLORS = [
 ];
 
 // Styles des tooltips
-const getVehicleTooltipStyle = (darkMode) => ({
+const getTooltipStyle = (darkMode) => ({
     backgroundColor: darkMode ? '#1a1a1a' : 'white',
-    border: `2px solid ${darkMode ? '#404040' : '#1E88E5'}`,
+    border: `2px solid ${darkMode ? '#404040' : '#ee742d'}`,
     borderRadius: '8px',
     padding: '12px 16px',
     color: darkMode ? '#e0e0e0' : '#333333',
@@ -29,23 +29,105 @@ const getVehicleTooltipStyle = (darkMode) => ({
     fontSize: '14px',
     lineHeight: '1.6',
     minWidth: '200px',
+    fontFamily: 'Arial, sans-serif',
+    transition: 'all 0.2s ease',
+    backdropFilter: 'blur(8px)',
+    WebkitBackdropFilter: 'blur(8px)',
 });
 
-// Tooltips personnalisés
-const VehicleBarChartTooltip = ({ active, payload, label, darkMode }) => {
+const getTooltipContentStyle = (darkMode) => ({
+    title: {
+        fontSize: '25px',
+        fontWeight: 'bold',
+        color: darkMode ? '#ffffff' : '#333333',
+        marginBottom: '8px',
+        borderBottom: `1px solid ${darkMode ? '#404040' : '#ee742d33'}`,
+        paddingBottom: '6px'
+    },
+    label: {
+        color: darkMode ? '#b0b0b0' : '#666666',
+        fontSize: '20px',
+        marginBottom: '4px'
+    },
+    value: {
+        color: darkMode ? '#ffffff' : '#333333',
+        fontSize: '20px',
+        fontWeight: '500'
+    },
+    row: {
+        marginBottom: '8px',
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        gap: '12px'
+    }
+});
+
+const CustomBarChartTooltip = ({ active, payload, label, darkMode }) => {
     if (active && payload && payload.length) {
+        const tooltipStyle = getTooltipStyle(darkMode);
+        const contentStyle = getTooltipContentStyle(darkMode);
         return (
-            <div style={getVehicleTooltipStyle(darkMode)}>
-                <div style={{ fontWeight: 'bold', marginBottom: '8px' }}>{label}</div>
+            <div style={tooltipStyle}>
+                <div style={contentStyle.title}>{label}</div>
                 {payload.map((entry, index) => (
-                    <div key={index} style={{ display: 'flex', justifyContent: 'space-between' }}>
-                        <span>{entry.name}:</span>
-                        <span style={{ marginLeft: '20px', color: entry.color }}>
-                            {entry.name.toLowerCase().includes('coût') || entry.name.toLowerCase().includes('cout')
-                                ? `${entry.value.toLocaleString()} €`
-                                : entry.name.toLowerCase().includes('km')
-                                    ? `${entry.value.toLocaleString()} km`
-                                    : entry.value.toLocaleString()}
+                    <div key={index} style={contentStyle.row}>
+                        <span style={contentStyle.label}>{entry.name}:</span>
+                        <span style={contentStyle.value}>
+                            {entry.value.toLocaleString()}
+                        </span>
+                    </div>
+                ))}
+            </div>
+        );
+    }
+    return null;
+};
+
+const CustomPieChartTooltip = ({ active, payload, darkMode, company }) => {
+    if (active && payload && payload.length) {
+        const tooltipStyle = getTooltipStyle(darkMode);
+        const contentStyle = getTooltipContentStyle(darkMode);
+        const data = payload[0];
+        return (
+            <div style={tooltipStyle}>
+                {company && (
+                    <div style={contentStyle.title}>
+                        {company}
+                    </div>
+                )}
+                <div style={contentStyle.row}>
+                    <span style={{
+                        ...contentStyle.label,
+                        color: data.payload.fill || data.color  // Utilise la couleur du secteur
+                    }}>
+                        {data.name}:
+                    </span>
+                    <span style={contentStyle.value}>
+                        {data.value.toLocaleString()}
+                    </span>
+                </div>
+            </div>
+        );
+    }
+    return null;
+};
+
+const CustomLineChartTooltip = ({ active, payload, label, darkMode }) => {
+    if (active && payload && payload.length) {
+        const tooltipStyle = getTooltipStyle(darkMode);
+        const contentStyle = getTooltipContentStyle(darkMode);
+        return (
+            <div style={tooltipStyle}>
+                <div style={contentStyle.title}>{label}</div>
+                {payload.map((entry, index) => (
+                    <div key={index} style={contentStyle.row}>
+                        <span style={contentStyle.label}>{entry.name}:</span>
+                        <span style={{
+                            ...contentStyle.value,
+                            color: entry.color
+                        }}>
+                            {entry.value.toLocaleString()}
                         </span>
                     </div>
                 ))}
@@ -58,130 +140,100 @@ const VehicleBarChartTooltip = ({ active, payload, label, darkMode }) => {
 // Composant de graphique en barres pour véhicules
 const MemoizedVehicleBarChart = memo(({ data, title, xKey, yKey, fill, darkMode }) => (
     <div className="col-span-full">
-        <Box
-            sx={{
-                position: 'relative',
-                padding: '20px',
-                background: darkMode ? '#1a1a1a' : '#ffffff',
-                borderRadius: '10px',
-                boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)'
-            }}
-        >
-            <Typography variant="h6" sx={{ mb: 2, color: darkMode ? '#ffffff' : '#333333' }}>
-                {title}
-            </Typography>
-            <ResponsiveContainer width="100%" height={300}>
-                <BarChart data={data}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis
-                        dataKey={xKey}
-                        tick={{ fill: darkMode ? '#ffffff' : '#666666' }}
-                    />
-                    <YAxis
-                        tick={{ fill: darkMode ? '#ffffff' : '#666666' }}
-                        tickFormatter={(value) => {
-                            if (yKey.toLowerCase().includes('cout') || yKey.toLowerCase().includes('coût')) {
-                                return `${value.toLocaleString()} €`;
-                            }
-                            if (yKey.toLowerCase().includes('km')) {
-                                return `${value.toLocaleString()} km`;
-                            }
-                            return value.toLocaleString();
-                        }}
-                    />
-                    <Tooltip content={props => <VehicleBarChartTooltip {...props} darkMode={darkMode} />} />
-                    <Legend />
-                    <Bar dataKey={yKey} fill={fill || VEHICLE_COLORS[0]} />
-                </BarChart>
-            </ResponsiveContainer>
-        </Box>
+        <Typography variant="h6" sx={{ mb: 2, color: darkMode ? '#ffffff' : '#333333' }}>
+            {title}
+        </Typography>
+        <ResponsiveContainer width="100%" height={300}>
+            <BarChart data={data}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis
+                    dataKey={xKey}
+                    tick={{ fill: darkMode ? '#ffffff' : '#666666' }}
+                />
+                <YAxis
+                    tick={{ fill: darkMode ? '#ffffff' : '#666666' }}
+                    tickFormatter={(value) => {
+                        if (yKey.toLowerCase().includes('cout') || yKey.toLowerCase().includes('coût')) {
+                            return `${value.toLocaleString()} €`;
+                        }
+                        if (yKey.toLowerCase().includes('km')) {
+                            return `${value.toLocaleString()} km`;
+                        }
+                        return value.toLocaleString();
+                    }}
+                />
+                <Tooltip content={props => <CustomBarChartTooltip {...props} darkMode={darkMode} />} />
+                <Legend />
+                <Bar dataKey={yKey} fill={fill || VEHICLE_COLORS[0]} />
+            </BarChart>
+        </ResponsiveContainer>
     </div>
 ));
 
 // Composant de graphique en ligne pour véhicules
 const MemoizedVehicleLineChart = memo(({ data, title, xKey, series, darkMode }) => (
     <div className="col-span-full">
-        <Box
-            sx={{
-                position: 'relative',
-                padding: '20px',
-                background: darkMode ? '#1a1a1a' : '#ffffff',
-                borderRadius: '10px',
-                boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)'
-            }}
-        >
-            <Typography variant="h6" sx={{ mb: 2, color: darkMode ? '#ffffff' : '#333333' }}>
-                {title}
-            </Typography>
-            <ResponsiveContainer width="100%" height={300}>
-                <LineChart data={data}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis
-                        dataKey={xKey}
-                        tick={{ fill: darkMode ? '#ffffff' : '#666666' }}
+        <Typography variant="h6" sx={{ mb: 2, color: darkMode ? '#ffffff' : '#333333' }}>
+            {title}
+        </Typography>
+        <ResponsiveContainer width="100%" height={300}>
+            <LineChart data={data}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis
+                    dataKey={xKey}
+                    tick={{ fill: darkMode ? '#ffffff' : '#666666' }}
+                />
+                <YAxis
+                    tick={{ fill: darkMode ? '#ffffff' : '#666666' }}
+                    tickFormatter={(value) => value.toLocaleString()}
+                />
+                <Tooltip content={props => <CustomLineChartTooltip {...props} darkMode={darkMode} />} />
+                <Legend />
+                {series.map((serie, index) => (
+                    <Line
+                        key={serie.dataKey}
+                        type="monotone"
+                        dataKey={serie.dataKey}
+                        name={serie.name}
+                        stroke={VEHICLE_COLORS[index % VEHICLE_COLORS.length]}
+                        strokeWidth={2}
+                        dot={{ r: 4 }}
+                        activeDot={{ r: 8 }}
                     />
-                    <YAxis
-                        tick={{ fill: darkMode ? '#ffffff' : '#666666' }}
-                        tickFormatter={(value) => value.toLocaleString()}
-                    />
-                    <Tooltip content={props => <VehicleBarChartTooltip {...props} darkMode={darkMode} />} />
-                    <Legend />
-                    {series.map((serie, index) => (
-                        <Line
-                            key={serie.dataKey}
-                            type="monotone"
-                            dataKey={serie.dataKey}
-                            name={serie.name}
-                            stroke={VEHICLE_COLORS[index % VEHICLE_COLORS.length]}
-                            strokeWidth={2}
-                            dot={{ r: 4 }}
-                            activeDot={{ r: 8 }}
-                        />
-                    ))}
-                </LineChart>
-            </ResponsiveContainer>
-        </Box>
+                ))}
+            </LineChart>
+        </ResponsiveContainer>
     </div>
 ));
 
 // Composant de graphique circulaire pour véhicules
 const MemoizedVehiclePieChart = memo(({ data, title, darkMode }) => (
     <div className="col-span-full">
-        <Box
-            sx={{
-                position: 'relative',
-                padding: '20px',
-                background: darkMode ? '#1a1a1a' : '#ffffff',
-                borderRadius: '10px',
-                boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)'
-            }}
-        >
-            <Typography variant="h6" sx={{ mb: 2, color: darkMode ? '#ffffff' : '#333333' }}>
-                {title}
-            </Typography>
-            <ResponsiveContainer width="100%" height={300}>
-                <PieChart>
-                    <Pie
-                        data={data}
-                        cx="50%"
-                        cy="50%"
-                        labelLine={false}
-                        outerRadius={80}
-                        fill="#8884d8"
-                        dataKey="value"
-                        label={({ name, value, percent }) => 
-                            `${name}: ${value.toLocaleString()} (${(percent * 100).toFixed(1)}%)`
-                        }
-                    >
-                        {data.map((entry, index) => (
-                            <Cell key={`cell-${index}`} fill={VEHICLE_COLORS[index % VEHICLE_COLORS.length]} />
-                        ))}
-                    </Pie>
-                    <Tooltip content={props => <VehicleBarChartTooltip {...props} darkMode={darkMode} />} />
-                    <Legend />
-                </PieChart>
-            </ResponsiveContainer>
-        </Box>
+        <Typography variant="h6" sx={{ mb: 2, color: darkMode ? '#ffffff' : '#333333' }}>
+            {title}
+        </Typography>
+        <ResponsiveContainer width="100%" height={300}>
+            <PieChart>
+                <Pie
+                    data={data}
+                    cx="50%"
+                    cy="50%"
+                    labelLine={false}
+                    outerRadius={80}
+                    fill="#8884d8"
+                    dataKey="value"
+                    label={({ name, value, percent }) =>
+                        `${name}: ${value.toLocaleString()} (${(percent * 100).toFixed(1)}%)`
+                    }
+                >
+                    {data.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={VEHICLE_COLORS[index % VEHICLE_COLORS.length]} />
+                    ))}
+                </Pie>
+                <Tooltip content={props => <CustomPieChartTooltip {...props} darkMode={darkMode} />} />
+                <Legend />
+            </PieChart>
+        </ResponsiveContainer>
     </div>
 ));
 
@@ -242,15 +294,15 @@ export const getVehicleChartConfig = (type, data, options = {}) => {
                 fill: options.fill || VEHICLE_COLORS[0]
             };
 
-            case 'line':
-                return {
-                    ...baseConfig,
-                    xKey: options.xKey || 'month',
-                    series: options.series || [{
-                        dataKey: options.yKey || 'value',
-                        name: options.yKey === 'cost' ? 'Coût' : 'Kilométrage'
-                    }]
-                };
+        case 'line':
+            return {
+                ...baseConfig,
+                xKey: options.xKey || 'month',
+                series: options.series || [{
+                    dataKey: options.yKey || 'value',
+                    name: options.yKey === 'cost' ? 'Coût' : 'Kilométrage'
+                }]
+            };
 
         case 'pie':
             return baseConfig;

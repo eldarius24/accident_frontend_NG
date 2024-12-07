@@ -205,7 +205,7 @@ export default function GetionVehicleList() {
                                     </Tooltip>
                                 </TableCell>
                                 <TableCell style={{ padding: 0, width: '70px' }}>
-                                    <Tooltip title="Modifier les date de passage au contrôle technique et dates des entretiens" arrow>
+                                    <Tooltip title="Modifier les date de passage au contrôle technique et dates des entretiens et ajouter des contacts pour l'envoie des notifications" arrow>
                                         <Button
                                             variant="contained"
                                             onClick={() => handleEdit(vehicle)}
