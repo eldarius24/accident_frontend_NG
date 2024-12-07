@@ -3,7 +3,6 @@ import axios from "axios";
 import { Button, Tooltip, Card, Modal, Box } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
-import GetAppIcon from '@mui/icons-material/GetApp';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import CloseIcon from '@mui/icons-material/Close';
 import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutline';
@@ -17,6 +16,7 @@ import { useLogger } from '../../Hook/useLogger';
 import deleteFile, { getactionDiversDetails } from "./actiondeleteFile";
 import showDeleteConfirm from './actionshowDeleteConfirm';
 import config from '../../config.json';
+import FileUploadIcon from '@mui/icons-material/FileUpload';
 
 const apiUrl = config.apiUrl;
 const modalStyle = {
@@ -313,7 +313,7 @@ export default function ListFilesInaction(actionId) {
                                         variant="contained"
                                         color="primary"
                                     >
-                                        <GetAppIcon sx={{ fontSize: 20 }} />
+                                        <FileUploadIcon sx={{ fontSize: 20 }} />
                                     </Button>
                                 </Tooltip>
                                 <Tooltip title="Supprimer le fichier" arrow>

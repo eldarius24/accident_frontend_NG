@@ -33,6 +33,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Cookies from 'js-cookie';
 import NumbersIcon from '@mui/icons-material/Numbers';
 import handleRenameFile from './fileRenameEntre';
+import FileUploadIcon from '@mui/icons-material/FileUpload';
 
 const modalStyles = {
     position: 'absolute',
@@ -966,7 +967,7 @@ const EnterpriseDivers = () => {
                                                                                 variant="contained"
                                                                                 color="primary"
                                                                             >
-                                                                                <GetAppIcon sx={{ fontSize: 20 }} />
+                                                                                <FileUploadIcon sx={{ fontSize: 20 }} />
                                                                             </Button>
                                                                         </Tooltip>
                                                                         {isAdminOrDevOrConseiller && (

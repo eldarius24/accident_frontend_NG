@@ -1,12 +1,12 @@
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import {
     Table, TableBody, TableCell, TableContainer, TableHead, TableRow,
     Button, LinearProgress, Tooltip, Box, Typography,
     Dialog, DialogTitle, DialogContent, DialogActions,
-    IconButton, CircularProgress
+    IconButton
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
-import DeleteIcon from '@mui/icons-material/Delete';
+import DeleteIcon from '@mui/icons-material/DeleteForever';
 import EditIcon from '@mui/icons-material/Edit';
 import { useLocation, useNavigate } from 'react-router-dom';
 import config from '../config.json';
@@ -18,14 +18,13 @@ import axios from 'axios';
 import AutocompleteP from '../_composants/autoCompleteP';
 import { confirmAlert } from 'react-confirm-alert';
 import { useLogger } from '../Hook/useLogger';
-import DownloadIcon from '@mui/icons-material/GetApp';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import FileViewer from './VehicleFileViewer';
-import getPreview from '../Accidents/FileManagement/getPreview';
 import CloseIcon from '@mui/icons-material/Close';
 import Modal from '@mui/material/Modal';
-import VehicleFileManagement from './VehicleFileManagement';
-
+import { blueGrey } from '@mui/material/colors';
+import FileUploadIcon from '@mui/icons-material/FileUpload';
+import '../pageFormulaire/formulaire.css';
 
 const dropZoneStyle = {
     display: 'flex',
@@ -186,6 +185,12 @@ export default function VehicleDetails() {
         if (file) handleFileUpload(file);
     }, [handleFileUpload]);
 
+    const rowColors = useMemo(() =>
+        darkMode
+            ? ['#7a7a7a', '#979797']  // Couleurs pour le thème sombre
+            : ['#e62a5625', '#95519b25'],  // Couleurs pour le thème clair
+        [darkMode]
+    );
 
     const promptForFileName = useCallback((file) => {
         confirmAlert({
@@ -441,12 +446,24 @@ export default function VehicleDetails() {
         }
     };
 
-    const buttonStyle = {
-        backgroundColor: '#01aeac',
-        '&:hover': { backgroundColor: '#95519b' },
+    const buttonStyle = useMemo(() => ({
+        backgroundColor: darkMode ? '#424242' : '#01aeac',
+        color: darkMode ? '#000' : '#fff',
+        '&:hover': {
+          backgroundColor: darkMode ? '#95519b' : '#95ad22',
+          boxShadow: darkMode
+            ? '0 0 10px rgba(255,255,255,0.2)'
+            : '0 0 10px rgba(0,0,0,0.2)'
+        },
         mr: 1,
         whiteSpace: 'nowrap',
-    };
+
+        
+        transition: 'all 0.1s ease-in-out',
+
+        border: darkMode ? '1px solid rgba(255,255,255,0.1)' : 'none',
+        backdropFilter: darkMode ? 'blur(4px)' : 'none',
+      }), [darkMode]);
 
     useEffect(() => {
         if (vehicleId) {
@@ -514,8 +531,13 @@ export default function VehicleDetails() {
 
     const renderTableBody = () => (
         <TableBody>
-            {records.map((record) => (
-                <TableRow key={record._id}>
+            {records.map((record, index) => (
+                <TableRow 
+                className={`table-row-separatormenu ${darkMode ? 'dark-separator' : ''}`}
+                style={{
+                    backgroundColor: rowColors[index % rowColors.length]
+                }}
+                key={record._id}>
                     <TableCell>{record.type}</TableCell>
                     <TableCell>{formatDate(record.date)}</TableCell>
                     <TableCell>{record.documentVechiule}</TableCell>
@@ -525,35 +547,84 @@ export default function VehicleDetails() {
                     <TableCell>
                         <Box display="flex" gap={1}>
                             <Tooltip title="Télécharger le fichier" arrow>
-                                <IconButton
+                                <Button
                                     onClick={() => handleDownload(record.fileId, record.fileName)}
+                                    variant="contained"
                                     color="primary"
+                                    sx={{
+                                        padding: 0,
+                                        transition: 'all 0.1s ease-in-out',
+                                        '&:hover': {
+                                            transform: 'scale(1.08)',
+                                            boxShadow: 6
+                                        }
+                                    }}
                                 >
-                                    <DownloadIcon />
-                                </IconButton>
+                                    <FileUploadIcon />
+                                </Button>
                             </Tooltip>
                             <Tooltip title="Prévisualiser le fichier" arrow>
-                                <IconButton
+                                <Button
+                                    variant="contained"
+                                    color="secondary"
                                     onClick={() => handleOpenPreview(record.fileId, record.fileName)}
+                                    sx={{
+                                        backgroundColor: darkMode ? '#7b1fa2' : '#9c27b0',
+                                        transition: 'all 0.1s ease-in-out',
+                                        '&:hover': {
+                                            backgroundColor: darkMode ? '#4a0072' : '#7b1fa2',
+                                            transform: 'scale(1.08)',
+                                            boxShadow: darkMode ? '0 6px 12px rgba(255,255,255,0.2)' : 6
+                                        },
+                                        '& .MuiSvgIcon-root': {
+                                            color: darkMode ? '#fff' : 'inherit'
+                                        }
+                                    }}
                                 >
                                     <VisibilityIcon />
-                                </IconButton>
+                                </Button>
                             </Tooltip>
                             <Tooltip title="Renommer le fichier" arrow>
-                                <IconButton
+                                <Button
+                                    variant="contained"
+                                    color="primary"
                                     onClick={() => handleRenameFile(record)}
-                                    sx={{ color: '#1976d2' }}
+                                    sx={{
+                                        backgroundColor: darkMode ? blueGrey[700] : blueGrey[500],
+                                        transition: 'all 0.1s ease-in-out',
+                                        '&:hover': {
+                                            backgroundColor: darkMode ? blueGrey[900] : blueGrey[700],
+                                            transform: 'scale(1.08)',
+                                            boxShadow: darkMode ? '0 6px 12px rgba(255,255,255,0.2)' : 6
+                                        },
+                                        '& .MuiSvgIcon-root': {
+                                            color: darkMode ? '#fff' : 'inherit'
+                                        }
+                                    }}
                                 >
                                     <EditIcon />
-                                </IconButton>
+                                </Button>
                             </Tooltip>
                             <Tooltip title="Supprimer l'enregistrement" arrow>
-                                <IconButton
+                                <Button
                                     onClick={() => handleDeleteRecord(record._id)}
+                                    variant="contained"
                                     color="error"
+                                    sx={{
+                                        backgroundColor: darkMode ? '#b71c1c' : '#d32f2f',
+                                        transition: 'all 0.1s ease-in-out',
+                                        '&:hover': {
+                                            backgroundColor: darkMode ? '#d32f2f' : '#b71c1c',
+                                            transform: 'scale(1.08)',
+                                            boxShadow: darkMode ? '0 6px 12px rgba(255,255,255,0.2)' : 6
+                                        },
+                                        '& .MuiSvgIcon-root': {
+                                            color: darkMode ? '#fff' : 'inherit'
+                                        }
+                                    }}
                                 >
                                     <DeleteIcon />
-                                </IconButton>
+                                </Button>
                             </Tooltip>
                         </Box>
                     </TableCell>
@@ -608,15 +679,21 @@ export default function VehicleDetails() {
                 </Button>
             </Box>
 
-            <TableContainer sx={{
-                backgroundColor: darkMode ? '#6e6e6e' : '#ffffff',
-                borderRadius: 1
+            <TableContainer className="frameStyle-style"
+                style={{
+                    maxHeight: '900px',
+                    overflowY: 'auto',
+                    backgroundColor: darkMode ? '#6e6e6e' : '#ffffff',
+                
             }}>
                 <Table>
                     <TableHead>
-                        <TableRow sx={{
+                        <TableRow
+                        className={`table-row-separatormenu ${darkMode ? 'dark-separator' : ''}`}
+                        style={{
                             backgroundColor: darkMode ? '#535353' : '#0098f950'
-                        }}>
+                        }}
+                        >
                             <TableCell>Type</TableCell>
                             <TableCell>Date</TableCell>
                             <TableCell>Document</TableCell>

@@ -22,6 +22,7 @@ import CustomSnackbar from '../_composants/CustomSnackbar';
 import { useTheme } from '../Hook/ThemeContext';
 import axios from 'axios';
 import { useLogger } from '../Hook/useLogger';
+import { blueGrey } from '@mui/material/colors';
 export default function VehicleList() {
     const { logAction } = useLogger();
     const { darkMode } = useTheme();
@@ -214,11 +215,18 @@ export default function VehicleList() {
                                     <Tooltip title="Modifier le véhicule" arrow>
                                         <Button
                                             variant="contained"
+                                            color="primary"
                                             onClick={() => handleEdit(vehicle)}
                                             sx={{
-                                                backgroundColor: darkMode ? '#424242' : '#1976d2',
+                                                backgroundColor: darkMode ? blueGrey[700] : blueGrey[500],
+                                                transition: 'all 0.1s ease-in-out',
                                                 '&:hover': {
-                                                    backgroundColor: darkMode ? '#7a8e1c' : '#95ad22',
+                                                    backgroundColor: darkMode ? blueGrey[900] : blueGrey[700],
+                                                    transform: 'scale(1.08)',
+                                                    boxShadow: darkMode ? '0 6px 12px rgba(255,255,255,0.2)' : 6
+                                                },
+                                                '& .MuiSvgIcon-root': {
+                                                    color: darkMode ? '#fff' : 'inherit'
                                                 }
                                             }}
                                         >
