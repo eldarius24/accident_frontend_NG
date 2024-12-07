@@ -538,7 +538,7 @@ export default function Navigation() {
                                     <AccidentAnimation isHovered={hoverStates.accident} />
                                     <Box className="button-content" sx={{ zIndex: 1 }}>
                                         <ViewListIcon sx={{ fontSize: '3rem', mb: 2 }} />
-                                        <Typography variant="h5">Accidents</Typography>
+                                        <Typography variant="h5">Accidents prévention</Typography>
                                     </Box>
                                 </Button>
                             </Tooltip>
@@ -555,7 +555,7 @@ export default function Navigation() {
                                     <StatsAnimation isHovered={hoverStates.stats} />
                                     <Box className="button-content" sx={{ zIndex: 1 }}>
                                         <BarChartIcon sx={{ fontSize: '3rem', mb: 2 }} />
-                                        <Typography variant="h5">Statistiques</Typography>
+                                        <Typography variant="h5">Statistiques prévention</Typography>
                                     </Box>
                                 </Button>
                             </Tooltip>
@@ -572,7 +572,7 @@ export default function Navigation() {
                                     <PlanAnimation isHovered={hoverStates.plan} />
                                     <Box className="button-content" sx={{ zIndex: 1 }}>
                                         <ListAltIcon sx={{ fontSize: '3rem', mb: 2 }} />
-                                        <Typography variant="h5">Plan d'actions</Typography>
+                                        <Typography variant="h5">Plan d'actions prévention</Typography>
                                     </Box>
                                 </Button>
                             </Tooltip>
@@ -589,23 +589,41 @@ export default function Navigation() {
                                     <BusinessAnimation isHovered={hoverStates.business} />
                                     <Box className="button-content" sx={{ zIndex: 1 }}>
                                         <FolderIcon sx={{ fontSize: '3rem', mb: 2 }} />
-                                        <Typography variant="h5"> Documents Divers</Typography>
+                                        <Typography variant="h5"> Documents divers prévention</Typography>
                                     </Box>
                                 </Button>
                             </Tooltip>
                         )}
-                        {(isVehicleAdminManager || isFleetManager) && (
+                        {isVehicleAdminManager && (
                             <Tooltip title="Gérer les véhicules" arrow>
                                 <Button
                                     component={Link}
                                     to="/gestionVehicules"
                                     sx={buttonStyle(2)}
-                                // ... reste du code du bouton ...
+                                    onMouseEnter={() => setHoverStates(prev => ({ ...prev, vehicule: true }))}
+                                    onMouseLeave={() => setHoverStates(prev => ({ ...prev, vehicule: false }))}
                                 >
                                     <VehicleAnimation isHovered={hoverStates.vehicule} />
                                     <Box className="button-content" sx={{ zIndex: 1 }}>
                                         <DriveEtaIcon sx={{ fontSize: '3rem', mb: 2 }} />
                                         <Typography variant="h5">Gestion des véhicules</Typography>
+                                    </Box>
+                                </Button>
+                            </Tooltip>
+                        )}
+                        {isVehicleAdminManager && (
+                            <Tooltip title="Consulter les statistiques des véhicules" arrow>
+                                <Button
+                                    component={Link}
+                                    to="/statistiques"
+                                    sx={buttonStyle(1)}
+                                    onMouseEnter={() => setHoverStates(prev => ({ ...prev, stats: true }))}
+                                    onMouseLeave={() => setHoverStates(prev => ({ ...prev, stats: false }))}
+                                >
+                                    <StatsAnimation isHovered={hoverStates.stats} />
+                                    <Box className="button-content" sx={{ zIndex: 1 }}>
+                                        <BarChartIcon sx={{ fontSize: '3rem', mb: 2 }} />
+                                        <Typography variant="h5">Statistiques véhicules</Typography>
                                     </Box>
                                 </Button>
                             </Tooltip>

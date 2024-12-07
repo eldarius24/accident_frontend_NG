@@ -186,17 +186,7 @@ function Accident() {
     const { darkMode } = useTheme();
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
-    const ensureArray = (value) => {
-        if (!value) return [];
-        if (Array.isArray(value)) return value;
-        try {
-            // Si c'est une chaîne JSON, essayer de la parser
-            const parsed = JSON.parse(value);
-            return Array.isArray(parsed) ? parsed : [];
-        } catch {
-            return [];
-        }
-    };
+    
     const [statusFilters, setStatusFilters] = useState(() => {
         return getSelectedStatusFromCookie(COOKIE_PREFIXES.HOME);
     });
@@ -412,14 +402,14 @@ function Accident() {
      * @param {function} [params.onError] - La fonction à appeler en cas d'erreur
      */
     const handleExportAccidentClick = useCallback(() => {
-        const cleanSearchTerm = searchTerm || ''; 
+        const cleanSearchTerm = searchTerm || '';
 
         handleExportDataAccident({
             filteredData,
             isAdminOrDev,
             userInfo,
             logAction,
-            searchTerm: cleanSearchTerm, 
+            searchTerm: cleanSearchTerm,
             onSuccess: (message) => showSnackbar(message, 'success'),
             onError: (message) => showSnackbar(message, 'error')
         });

@@ -13,9 +13,10 @@ import config from '../config.json';
 import CustomSnackbar from '../_composants/CustomSnackbar';
 import { useTheme } from '../Hook/ThemeContext';
 import TextFieldP from '../_composants/textFieldP';
-import DatePickerP from '../_composants/datePickerP';
+import TextFieldQ from '../_composants/textFieldQ';
+import DatePickerQ from '../_composants/datePickerQ';
 import axios from 'axios';
-import AutocompleteP from '../_composants/autoCompleteP';
+import AutocompleteQ from '../_composants/autoCompleteQ';
 import { confirmAlert } from 'react-confirm-alert';
 import { useLogger } from '../Hook/useLogger';
 import VisibilityIcon from '@mui/icons-material/Visibility';
@@ -67,7 +68,8 @@ export default function VehicleDetails() {
         date: new Date(),
         documentVechiule: '',
         cost: '',
-        commentaire: ''
+        commentaire: '',
+        kilometrage: ''
 
     });
     const [snackbar, setSnackbar] = useState({
@@ -114,7 +116,7 @@ export default function VehicleDetails() {
         }
 
         setSelectedFile({
-            fileId: fileId, // Utiliser le documentVechiule comme ID
+            fileId: fileId,
             fileName: fileName,
             file: {
                 fileId: fileId,
@@ -124,9 +126,13 @@ export default function VehicleDetails() {
         setModalOpen(true);
 
         try {
+            // Récupérer d'abord les informations du véhicule
+            const vehicleResponse = await axios.get(`http://${apiUrl}:3100/api/vehicles/${vehicleId}`);
+            const vehicle = vehicleResponse.data;
+
             await logAction({
                 actionType: 'consultation',
-                details: `Prévisualisation du fichier - Nom: ${fileName}`,
+                details: `Prévisualisation du fichier - Nom: ${fileName} - Véhicule: ${vehicle.numPlaque}`,
                 entity: 'Vehicle',
                 entityId: fileId,
                 vehicleId: vehicleId
@@ -250,7 +256,7 @@ export default function VehicleDetails() {
 
             await logAction({
                 actionType: 'consultation',
-                details: `Consultation des détails du véhicule`,
+                details: `Consultation des détails du véhicule ${response.data.numPlaque}`,
                 entity: 'Vehicle',
                 entityId: vehicleId
             });
@@ -274,21 +280,26 @@ export default function VehicleDetails() {
 
     const fetchRecords = async () => {
         try {
-            const response = await axios.get(`http://${apiUrl}:3100/api/vehicles/${vehicleId}/records`);
-            setRecords(response.data);
+            // D'abord récupérer les informations du véhicule
+            const vehicleResponse = await axios.get(`http://${apiUrl}:3100/api/vehicles/${vehicleId}`);
+            const vehicle = vehicleResponse.data;
+
+            // Ensuite récupérer les enregistrements
+            const recordsResponse = await axios.get(`http://${apiUrl}:3100/api/vehicles/${vehicleId}/records`);
+            setRecords(recordsResponse.data);
 
             await logAction({
                 actionType: 'consultation',
-                details: 'Consultation des enregistrements du véhicule',
+                details: `Consultation des enregistrements du véhicule ${vehicle.numPlaque}`,
                 entity: 'Vehicle',
                 entityId: vehicleId
             });
-
         } catch (error) {
+            console.error('Erreur lors du chargement des enregistrements:', error);
 
             await logAction({
                 actionType: 'error',
-                details: 'Erreur lors du chargement des enregistrements',
+                details: `Erreur lors du chargement des enregistrements du véhicule ID: ${vehicleId}`,
                 entity: 'Vehicle',
                 entityId: vehicleId
             });
@@ -400,7 +411,8 @@ export default function VehicleDetails() {
                     documentVehicle: '',
                     documentVechiule: '',
                     cost: '',
-                    commentaire: ''
+                    commentaire: '',
+                    kilometrage: ''
                 });
             }
         } catch (error) {
@@ -450,20 +462,20 @@ export default function VehicleDetails() {
         backgroundColor: darkMode ? '#424242' : '#01aeac',
         color: darkMode ? '#000' : '#fff',
         '&:hover': {
-          backgroundColor: darkMode ? '#95519b' : '#95ad22',
-          boxShadow: darkMode
-            ? '0 0 10px rgba(255,255,255,0.2)'
-            : '0 0 10px rgba(0,0,0,0.2)'
+            backgroundColor: darkMode ? '#95519b' : '#95ad22',
+            boxShadow: darkMode
+                ? '0 0 10px rgba(255,255,255,0.2)'
+                : '0 0 10px rgba(0,0,0,0.2)'
         },
         mr: 1,
         whiteSpace: 'nowrap',
 
-        
+
         transition: 'all 0.1s ease-in-out',
 
         border: darkMode ? '1px solid rgba(255,255,255,0.1)' : 'none',
         backdropFilter: darkMode ? 'blur(4px)' : 'none',
-      }), [darkMode]);
+    }), [darkMode]);
 
     useEffect(() => {
         if (vehicleId) {
@@ -532,102 +544,113 @@ export default function VehicleDetails() {
     const renderTableBody = () => (
         <TableBody>
             {records.map((record, index) => (
-                <TableRow 
-                className={`table-row-separatormenu ${darkMode ? 'dark-separator' : ''}`}
-                style={{
-                    backgroundColor: rowColors[index % rowColors.length]
-                }}
-                key={record._id}>
+                <TableRow
+                    className={`table-row-separatormenu ${darkMode ? 'dark-separator' : ''}`}
+                    style={{
+                        backgroundColor: rowColors[index % rowColors.length]
+                    }}
+                    key={record._id}>
                     <TableCell>{record.type}</TableCell>
                     <TableCell>{formatDate(record.date)}</TableCell>
+                    <TableCell>{record.kilometrage}</TableCell>
                     <TableCell>{record.documentVechiule}</TableCell>
                     <TableCell>{record.commentaire}</TableCell>
                     <TableCell>{record.cost}</TableCell>
                     <TableCell>{record.fileName}</TableCell>
-                    <TableCell>
-                        <Box display="flex" gap={1}>
-                            <Tooltip title="Télécharger le fichier" arrow>
-                                <Button
-                                    onClick={() => handleDownload(record.fileId, record.fileName)}
-                                    variant="contained"
-                                    color="primary"
-                                    sx={{
-                                        padding: 0,
-                                        transition: 'all 0.1s ease-in-out',
-                                        '&:hover': {
-                                            transform: 'scale(1.08)',
-                                            boxShadow: 6
-                                        }
-                                    }}
-                                >
-                                    <FileUploadIcon />
-                                </Button>
-                            </Tooltip>
-                            <Tooltip title="Prévisualiser le fichier" arrow>
-                                <Button
-                                    variant="contained"
-                                    color="secondary"
-                                    onClick={() => handleOpenPreview(record.fileId, record.fileName)}
-                                    sx={{
-                                        backgroundColor: darkMode ? '#7b1fa2' : '#9c27b0',
-                                        transition: 'all 0.1s ease-in-out',
-                                        '&:hover': {
-                                            backgroundColor: darkMode ? '#4a0072' : '#7b1fa2',
-                                            transform: 'scale(1.08)',
-                                            boxShadow: darkMode ? '0 6px 12px rgba(255,255,255,0.2)' : 6
-                                        },
-                                        '& .MuiSvgIcon-root': {
-                                            color: darkMode ? '#fff' : 'inherit'
-                                        }
-                                    }}
-                                >
-                                    <VisibilityIcon />
-                                </Button>
-                            </Tooltip>
-                            <Tooltip title="Renommer le fichier" arrow>
-                                <Button
-                                    variant="contained"
-                                    color="primary"
-                                    onClick={() => handleRenameFile(record)}
-                                    sx={{
-                                        backgroundColor: darkMode ? blueGrey[700] : blueGrey[500],
-                                        transition: 'all 0.1s ease-in-out',
-                                        '&:hover': {
-                                            backgroundColor: darkMode ? blueGrey[900] : blueGrey[700],
-                                            transform: 'scale(1.08)',
-                                            boxShadow: darkMode ? '0 6px 12px rgba(255,255,255,0.2)' : 6
-                                        },
-                                        '& .MuiSvgIcon-root': {
-                                            color: darkMode ? '#fff' : 'inherit'
-                                        }
-                                    }}
-                                >
-                                    <EditIcon />
-                                </Button>
-                            </Tooltip>
-                            <Tooltip title="Supprimer l'enregistrement" arrow>
-                                <Button
-                                    onClick={() => handleDeleteRecord(record._id)}
-                                    variant="contained"
-                                    color="error"
-                                    sx={{
-                                        backgroundColor: darkMode ? '#b71c1c' : '#d32f2f',
-                                        transition: 'all 0.1s ease-in-out',
-                                        '&:hover': {
-                                            backgroundColor: darkMode ? '#d32f2f' : '#b71c1c',
-                                            transform: 'scale(1.08)',
-                                            boxShadow: darkMode ? '0 6px 12px rgba(255,255,255,0.2)' : 6
-                                        },
-                                        '& .MuiSvgIcon-root': {
-                                            color: darkMode ? '#fff' : 'inherit'
-                                        }
-                                    }}
-                                >
-                                    <DeleteIcon />
-                                </Button>
-                            </Tooltip>
-                        </Box>
+                    <TableCell style={{ padding: 0, width: '70px' }}>
+                        <Tooltip title="Télécharger le fichier" arrow>
+                            <Button
+                                onClick={() => handleDownload(record.fileId, record.fileName)}
+                                variant="contained"
+                                color="secondary"
+                                sx={{
+                                    backgroundColor: darkMode ? '#14589c' : '#1976d2',
+                                    transition: 'all 0.1s ease-in-out',
+                                    '&:hover': {
+                                        backgroundColor: darkMode ? '#1976d2' : '#14589c',
+                                        transform: 'scale(1.08)',
+                                        boxShadow: darkMode ? '0 6px 12px rgba(255,255,255,0.2)' : 6
+                                    },
+                                    '& .MuiSvgIcon-root': {
+                                        color: darkMode ? '#fff' : 'inherit'
+                                    }
+                                }}
+                            >
+                                <FileUploadIcon />
+                            </Button>
+                        </Tooltip>
                     </TableCell>
+                    <TableCell style={{ padding: 0, width: '70px' }}>
+                        <Tooltip title="Prévisualiser le fichier" arrow>
+                            <Button
+                                variant="contained"
+                                color="secondary"
+                                onClick={() => handleOpenPreview(record.fileId, record.fileName)}
+                                sx={{
+                                    backgroundColor: darkMode ? '#7b1fa2' : '#9c27b0',
+                                    transition: 'all 0.1s ease-in-out',
+                                    '&:hover': {
+                                        backgroundColor: darkMode ? '#4a0072' : '#7b1fa2',
+                                        transform: 'scale(1.08)',
+                                        boxShadow: darkMode ? '0 6px 12px rgba(255,255,255,0.2)' : 6
+                                    },
+                                    '& .MuiSvgIcon-root': {
+                                        color: darkMode ? '#fff' : 'inherit'
+                                    }
+                                }}
+                            >
+                                <VisibilityIcon />
+                            </Button>
+                        </Tooltip>
+                    </TableCell>
+                    <TableCell style={{ padding: 0, width: '70px' }}>
+                        <Tooltip title="Renommer le fichier" arrow>
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                onClick={() => handleRenameFile(record)}
+                                sx={{
+                                    backgroundColor: darkMode ? blueGrey[700] : blueGrey[500],
+                                    transition: 'all 0.1s ease-in-out',
+                                    '&:hover': {
+                                        backgroundColor: darkMode ? blueGrey[900] : blueGrey[700],
+                                        transform: 'scale(1.08)',
+                                        boxShadow: darkMode ? '0 6px 12px rgba(255,255,255,0.2)' : 6
+                                    },
+                                    '& .MuiSvgIcon-root': {
+                                        color: darkMode ? '#fff' : 'inherit'
+                                    }
+                                }}
+                            >
+                                <EditIcon />
+                            </Button>
+                        </Tooltip>
+                    </TableCell>
+                    <TableCell style={{ padding: 0, width: '70px' }}>
+                        <Tooltip title="Supprimer l'enregistrement" arrow>
+                            <Button
+                                onClick={() => handleDeleteRecord(record._id)}
+                                variant="contained"
+                                color="error"
+                                sx={{
+                                    backgroundColor: darkMode ? '#b71c1c' : '#d32f2f',
+                                    transition: 'all 0.1s ease-in-out',
+                                    '&:hover': {
+                                        backgroundColor: darkMode ? '#d32f2f' : '#b71c1c',
+                                        transform: 'scale(1.08)',
+                                        boxShadow: darkMode ? '0 6px 12px rgba(255,255,255,0.2)' : 6
+                                    },
+                                    '& .MuiSvgIcon-root': {
+                                        color: darkMode ? '#fff' : 'inherit'
+                                    }
+                                }}
+                            >
+                                <DeleteIcon />
+                            </Button>
+                        </Tooltip>
+                    </TableCell>
+
+
                 </TableRow>
             ))
             }
@@ -684,23 +707,27 @@ export default function VehicleDetails() {
                     maxHeight: '900px',
                     overflowY: 'auto',
                     backgroundColor: darkMode ? '#6e6e6e' : '#ffffff',
-                
-            }}>
+
+                }}>
                 <Table>
                     <TableHead>
                         <TableRow
-                        className={`table-row-separatormenu ${darkMode ? 'dark-separator' : ''}`}
-                        style={{
-                            backgroundColor: darkMode ? '#535353' : '#0098f950'
-                        }}
+                            className={`table-row-separatormenu ${darkMode ? 'dark-separator' : ''}`}
+                            style={{
+                                backgroundColor: darkMode ? '#535353' : '#0098f950'
+                            }}
                         >
                             <TableCell>Type</TableCell>
                             <TableCell>Date</TableCell>
+                            <TableCell>Kilometrage</TableCell>
                             <TableCell>Document</TableCell>
                             <TableCell>commentaire</TableCell>
                             <TableCell>Coût</TableCell>
                             <TableCell>Nom du fichier</TableCell>
-                            <TableCell>Actions</TableCell>
+                            <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>DLL</TableCell>
+                            <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>Vue</TableCell>
+                            <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>Editer</TableCell>
+                            <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>Supprimer</TableCell>
                         </TableRow>
                     </TableHead>
                     {renderTableBody()}
@@ -746,7 +773,7 @@ export default function VehicleDetails() {
                     </div>
                     <Box sx={{ gap: 2, mt: 6 }}>
                         <Box sx={{ width: '100%' }}>
-                            <AutocompleteP
+                            <AutocompleteQ
                                 id="type"
                                 label="Type de document"
                                 option={[
@@ -764,11 +791,13 @@ export default function VehicleDetails() {
                                 value={newRecord.type}
                                 onChange={(value) => setNewRecord(prev => ({ ...prev, type: value }))}
                                 isOptionEqualToValue={(option, value) => option === value}
+                                required={true}
                             />
-                            <DatePickerP
+                            <DatePickerQ
                                 label="Date du document"
                                 value={newRecord.date}
                                 onChange={(value) => setNewRecord({ ...newRecord, date: value })}
+                                required={true}
                             />
                         </Box>
 
@@ -795,6 +824,14 @@ export default function VehicleDetails() {
                                 InputProps={{
                                     startAdornment: <span>€</span>
                                 }}
+                            />
+
+                            <TextFieldQ
+                                label="Kilometrage"
+                                type="number"
+                                value={newRecord.kilometrage}
+                                onChange={(value) => setNewRecord({ ...newRecord, kilometrage: value })}
+                                required={true}
                             />
                         </Box>
                     </Box>
