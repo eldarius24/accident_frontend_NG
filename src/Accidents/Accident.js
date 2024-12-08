@@ -186,7 +186,7 @@ function Accident() {
     const { darkMode } = useTheme();
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
-    
+
     const [statusFilters, setStatusFilters] = useState(() => {
         return getSelectedStatusFromCookie(COOKIE_PREFIXES.HOME);
     });
@@ -311,33 +311,31 @@ function Accident() {
      * @param {string} accidentIdToGenerate L'ID de l'accident pour lequel le PDF doit être généré
      */
     const handleGeneratePDF = useCallback(async (accidentIdToGenerate) => {
-        const accident = accidents.find(item => item._id === accidentIdToGenerate);
-        if (accident) {
-            try {
-                // Génère le PDF avec les données de l'accident
-                await editPDF(accident);
+        try {
+            // Récupérer l'accident complet avec tous ses champs
+            const { data } = await axios.get(`http://${apiUrl}:3100/api/accidents/${accidentIdToGenerate}`);
+            if (data) {
+                // Générer le PDF avec les données complètes
+                await editPDF(data);
 
-                // Crée un log pour le téléchargement en utilisant les données de l'accident trouvé
+                // Log de l'action
                 await logAction({
                     actionType: 'export',
-                    details: `Téléchargement de la déclaration PDF - Travailleur: ${accident.nomTravailleur} ${accident.prenomTravailleur} - Date: ${new Date(accident.DateHeureAccident).toLocaleDateString()}`,
+                    details: `Téléchargement de la déclaration PDF - Travailleur: ${data.nomTravailleur} ${data.prenomTravailleur} - Date: ${new Date(data.DateHeureAccident).toLocaleDateString()}`,
                     entity: 'Accident',
                     entityId: accidentIdToGenerate,
-                    entreprise: accident.entrepriseName
+                    entreprise: data.entrepriseName
                 });
 
-                // Affiche une snackbar pour indiquer que l'opération a réussi
                 showSnackbar('PDF généré avec succès', 'success');
-            } catch (error) {
-                console.error(error);
-                // Affiche une erreur si la génération du PDF a échoué
-                showSnackbar('Erreur lors de la génération du PDF', 'error');
+            } else {
+                showSnackbar('Accident non trouvé', 'error');
             }
-        } else {
-            // Affiche une erreur si l'accident n'a pas été trouvé
-            showSnackbar('Accident non trouvé', 'error');
+        } catch (error) {
+            console.error(error);
+            showSnackbar('Erreur lors de la génération du PDF', 'error');
         }
-    }, [accidents, showSnackbar, logAction]); // Ajout de logAction dans les dépendances
+    }, [apiUrl, showSnackbar, logAction]);
 
     /**
      * Redirige l'utilisateur vers la page de modification d'un accident de travail
