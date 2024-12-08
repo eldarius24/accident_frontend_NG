@@ -1,15 +1,12 @@
 import React, { useState } from 'react';
 import { Box, Paper, Tooltip, Button, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
-import ViewListIcon from '@mui/icons-material/ViewList';
-import BarChartIcon from '@mui/icons-material/BarChart';
-import ListAltIcon from '@mui/icons-material/ListAlt';
-import FolderIcon from '@mui/icons-material/Folder';
 import { keyframes } from '@mui/system';
 import { LineChart, Line } from 'recharts';
 import { useTheme } from '../Hook/ThemeContext.js'; // Add this import
 import { useUserConnected } from '../Hook/userConnected.js';
-import DriveEtaIcon from '@mui/icons-material/DriveEta';
+import { ActionPlanIcon, WorkAccidentStatsIcon, WorkAccidentIcon, VehicleManagementIcon, VehicleStatsIcon, PreventionDocsIcon } from './iconePerso';
+
 export default function Navigation() {
     const {
         isAdmin,
@@ -537,7 +534,7 @@ export default function Navigation() {
                                 >
                                     <AccidentAnimation isHovered={hoverStates.accident} />
                                     <Box className="button-content" sx={{ zIndex: 1 }}>
-                                        <ViewListIcon sx={{ fontSize: '3rem', mb: 2 }} />
+                                        <WorkAccidentIcon sx={{ fontSize: '3rem', mb: 2 }} />
                                         <Typography variant="h5">Accidents prévention</Typography>
                                     </Box>
                                 </Button>
@@ -554,7 +551,7 @@ export default function Navigation() {
                                 >
                                     <StatsAnimation isHovered={hoverStates.stats} />
                                     <Box className="button-content" sx={{ zIndex: 1 }}>
-                                        <BarChartIcon sx={{ fontSize: '3rem', mb: 2 }} />
+                                        <WorkAccidentStatsIcon sx={{ fontSize: '3rem', mb: 2 }} />
                                         <Typography variant="h5">Statistiques prévention</Typography>
                                     </Box>
                                 </Button>
@@ -571,7 +568,7 @@ export default function Navigation() {
                                 >
                                     <PlanAnimation isHovered={hoverStates.plan} />
                                     <Box className="button-content" sx={{ zIndex: 1 }}>
-                                        <ListAltIcon sx={{ fontSize: '3rem', mb: 2 }} />
+                                        <ActionPlanIcon sx={{ fontSize: '3rem', mb: 2 }} />
                                         <Typography variant="h5">Plan d'actions prévention</Typography>
                                     </Box>
                                 </Button>
@@ -588,7 +585,7 @@ export default function Navigation() {
                                 >
                                     <BusinessAnimation isHovered={hoverStates.business} />
                                     <Box className="button-content" sx={{ zIndex: 1 }}>
-                                        <FolderIcon sx={{ fontSize: '3rem', mb: 2 }} />
+                                        <PreventionDocsIcon sx={{ fontSize: '3rem', mb: 2 }} />
                                         <Typography variant="h5"> Documents divers prévention</Typography>
                                     </Box>
                                 </Button>
@@ -605,7 +602,7 @@ export default function Navigation() {
                                 >
                                     <VehicleAnimation isHovered={hoverStates.vehicule} />
                                     <Box className="button-content" sx={{ zIndex: 1 }}>
-                                        <DriveEtaIcon sx={{ fontSize: '3rem', mb: 2 }} />
+                                        <VehicleManagementIcon sx={{ fontSize: '3rem', mb: 2 }} />
                                         <Typography variant="h5">Gestion des véhicules</Typography>
                                     </Box>
                                 </Button>
@@ -622,7 +619,7 @@ export default function Navigation() {
                                 >
                                     <StatsAnimation isHovered={hoverStates.stats} />
                                     <Box className="button-content" sx={{ zIndex: 1 }}>
-                                        <BarChartIcon sx={{ fontSize: '3rem', mb: 2 }} />
+                                        <VehicleStatsIcon sx={{ fontSize: '3rem', mb: 2 }} />
                                         <Typography variant="h5">Statistiques véhicules</Typography>
                                     </Box>
                                 </Button>
