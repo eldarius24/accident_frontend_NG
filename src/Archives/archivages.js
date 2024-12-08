@@ -13,27 +13,9 @@ import config from '../config.json';
 
 const apiUrl = config.apiUrl;
 
-const onRestaurer = async (id, type, onSuccess) => {
-  try {
-    if (!id) {
-      console.error("L'ID de l'archive est manquant.");
-      return;
-    }
-
-    await axios.post(`http://${apiUrl}:3100/api/archives/${id}/restore`);
-
-    if (onSuccess) {
-      onSuccess();
-    }
-  } catch (error) {
-    console.error("Erreur lors de la restauration de l'archive:", error);
-  }
-};
-
 const SystemeArchivage = ({
   donnees,
   typeArchive,
-  onArchiver,
   darkMode,
   onSuccess
 }) => {
@@ -138,6 +120,52 @@ const SystemeArchivage = ({
     }
   };
 
+
+  const handleRestore = async (archiveId) => {
+    try {
+      console.log('=== DÉBUT PROCESSUS DE RESTAURATION ===');
+      console.log('ID de l\'archive à restaurer:', archiveId);
+      
+      // Récupérer les données de l'archive spécifique
+      const archiveResponse = await axios.get(`http://${apiUrl}:3100/api/archives/${typeArchive}/${archiveId}`);
+      console.log('Archive spécifique récupérée:', archiveResponse.data);
+      
+      if (!archiveResponse.data) {
+        throw new Error('Archive non trouvée');
+      }
+
+      // Restaurer l'archive
+      console.log('Envoi de la requête de restauration avec les données:', archiveResponse.data);
+      const response = await axios.post(
+        `http://${apiUrl}:3100/api/archives/${archiveId}/restore`,
+        archiveResponse.data
+      );
+      console.log('Réponse de la restauration:', response.data);
+
+      if (response.status === 200) {
+        console.log('Restauration réussie');
+        await refreshArchives();
+        if (onSuccess) {
+          onSuccess('Archive restaurée avec succès');
+        }
+      } else {
+        throw new Error("La restauration n'a pas retourné un statut 200");
+      }
+
+      console.log('=== FIN PROCESSUS DE RESTAURATION ===');
+    } catch (error) {
+      console.error("=== ERREUR LORS DE LA RESTAURATION ===");
+      console.error("Message d'erreur:", error.message);
+      console.error("Détails de l'erreur:", error);
+      if (onSuccess) {
+        onSuccess("Erreur lors de la restauration de l'archive", 'error');
+      }
+    }
+  };
+
+
+
+  
   const defaultStyle = {
     margin: '10px',
     backgroundColor: '#0098f9',
@@ -265,14 +293,7 @@ const SystemeArchivage = ({
     }
   };
 
-  const handleRestore = async (archiveId) => {
-    await onRestaurer(archiveId, typeArchive, () => {
-      refreshArchives();
-      if (onSuccess) {
-        onSuccess();
-      }
-    });
-  };
+  
 
   return (
     <div className="systeme-archivage">

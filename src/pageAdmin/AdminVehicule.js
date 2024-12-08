@@ -23,6 +23,7 @@ import { useTheme } from '../Hook/ThemeContext';
 import axios from 'axios';
 import { useLogger } from '../Hook/useLogger';
 import { blueGrey } from '@mui/material/colors';
+import BoutonArchiver from '../Archives/BoutonArchiver.js';
 export default function VehicleList() {
     const { logAction } = useLogger();
     const { darkMode } = useTheme();
