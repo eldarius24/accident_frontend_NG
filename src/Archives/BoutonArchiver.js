@@ -43,26 +43,34 @@ const BoutonArchiver = ({ donnee, type, onSuccess, updateList }) => {
         donnees: donnee,
         titre: type === 'planaction'
           ? `${donnee.AddActionEntreprise} - ${donnee.AddAction}`
-          : `${donnee.entrepriseName} - ${donnee.typeAccident}`,
+          : type === 'vehicle'
+            ? `${donnee.entrepriseName} - ${donnee.numPlaque}`
+            : `${donnee.entrepriseName} - ${donnee.typeAccident}`,
         taille: JSON.stringify(donnee).length
       };
 
       // Créer l'archive
       const archiveResponse = await axios.post(`http://${apiUrl}:3100/api/archives`, archiveData);
-      
+
       if (!archiveResponse.data) {
         throw new Error("Échec de la création de l'archive");
       }
-     
+
       // Supprimer la donnée originale
       const deleteUrl = type === 'planaction'
         ? `http://${apiUrl}:3100/api/planaction/${donnee._id}`
-        : `http://${apiUrl}:3100/api/accidents/${donnee._id}`;
-           
+        : type === 'vehicle'
+          ? `http://${apiUrl}:3100/api/vehicles/${donnee._id}`
+          : `http://${apiUrl}:3100/api/accidents/${donnee._id}`;
+
       const deleteResponse = await axios.delete(deleteUrl);
 
       if (deleteResponse.status === 200 || deleteResponse.status === 204) {
-        // Mettre à jour la liste localement et appeler les callbacks
+        // Mettre à jour la liste localement
+        if (updateList) {
+          updateList();
+        }
+        // Appeler le callback de succès
         if (onSuccess) {
           onSuccess();
         }

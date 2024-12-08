@@ -289,6 +289,21 @@ export default function VehicleList() {
                                         </Button>
                                     </Tooltip>
                                 </TableCell>
+                                <TableCell style={{ padding: 0, width: '70px' }}>
+                                    <BoutonArchiver
+                                        donnee={vehicle}
+                                        type="vehicle"
+                                        onSuccess={() => {
+                                            showSnackbar('Véhicule archivé avec succès', 'success');
+                                        }}
+                                        updateList={() => {
+                                            // Mettre à jour la liste en retirant le véhicule archivé
+                                            setVehicles(prevVehicles =>
+                                                prevVehicles.filter(v => v._id !== vehicle._id)
+                                            );
+                                        }}
+                                    />
+                                </TableCell>
                             </TableRow>
                         ))}
                     </TableBody>

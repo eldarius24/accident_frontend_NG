@@ -496,6 +496,21 @@ export default function AdminPanelSettingsaction() {
                             }}
                             darkMode={darkMode}
                         />
+                        <SystemeArchivage
+                            typeArchive="vehicle"
+                            donnees={users}
+                            onArchiver={async (archiveData) => {
+                                try {
+                                    await axios.post(`http://${apiUrl}:3100/api/archives`, archiveData);
+                                    refreshListAccidents();
+                                    showSnackbar('Véhicule archivé avec succès', 'success');
+                                } catch (error) {
+                                    console.error("Erreur lors de l'archivage:", error);
+                                    showSnackbar('Erreur lors de l\'archivage', 'error');
+                                }
+                            }}
+                            darkMode={darkMode}
+                        />
                     </Box>
                 </Paper>
             </Paper>

@@ -89,24 +89,33 @@ const SystemeArchivage = ({
       const searchTerm = recherche.toLowerCase();
       const dateRecherche = typeArchive === 'planaction'
         ? item.donnees.AddActionanne
-        : new Date(item.donnees.DateHeureAccident || item.date).getFullYear().toString();
+        : typeArchive === 'vehicle'
+          ? new Date(item.date).getFullYear().toString()
+          : new Date(item.donnees.DateHeureAccident || item.date).getFullYear().toString();
 
-      // Recherche dans les différents champs selon le type d'archive
       let matchRecherche = false;
 
-      if (typeArchive === 'accident') {
-        matchRecherche =
-          (item.donnees.entrepriseName?.toLowerCase() || '').includes(searchTerm) ||
-          (item.donnees.nomTravailleur?.toLowerCase() || '').includes(searchTerm) ||
-          (item.donnees.prenomTravailleur?.toLowerCase() || '').includes(searchTerm) ||
-          (item.titre?.toLowerCase() || '').includes(searchTerm);
-      } else {
-        // Pour les actions
-        matchRecherche =
-          (item.donnees.AddActionEntreprise?.toLowerCase() || '').includes(searchTerm) ||
-          (item.donnees.AddActionanne?.toString() || '').includes(searchTerm) ||
-          (item.donnees.AddActionSecteur?.toLowerCase() || '').includes(searchTerm) ||
-          (item.titre?.toLowerCase() || '').includes(searchTerm);
+      switch (typeArchive) {
+        case 'accident':
+          matchRecherche =
+            (item.donnees.entrepriseName?.toLowerCase() || '').includes(searchTerm) ||
+            (item.donnees.nomTravailleur?.toLowerCase() || '').includes(searchTerm) ||
+            (item.donnees.prenomTravailleur?.toLowerCase() || '').includes(searchTerm) ||
+            (item.titre?.toLowerCase() || '').includes(searchTerm);
+          break;
+        case 'vehicle':
+          matchRecherche =
+            (item.donnees.numPlaque?.toLowerCase() || '').includes(searchTerm) ||
+            (item.donnees.marque?.toLowerCase() || '').includes(searchTerm) ||
+            (item.donnees.modele?.toLowerCase() || '').includes(searchTerm) ||
+            (item.donnees.entrepriseName?.toLowerCase() || '').includes(searchTerm);
+          break;
+        default: // planaction
+          matchRecherche =
+            (item.donnees.AddActionEntreprise?.toLowerCase() || '').includes(searchTerm) ||
+            (item.donnees.AddActionanne?.toString() || '').includes(searchTerm) ||
+            (item.donnees.AddActionSecteur?.toLowerCase() || '').includes(searchTerm) ||
+            (item.titre?.toLowerCase() || '').includes(searchTerm);
       }
 
       const matchAnnee = anneeFiltre === 'tout' || dateRecherche === anneeFiltre;
@@ -115,12 +124,15 @@ const SystemeArchivage = ({
     });
   };
 
+
   const getButtonText = (type) => {
     switch (type) {
       case 'planaction':
         return 'Accéder aux archives des actions';
       case 'accident':
         return 'Accéder aux archives des accidents';
+      case 'vehicle':
+        return 'Accéder aux archives des véhicules';
       default:
         return 'Accéder aux Archives';
     }
@@ -141,80 +153,116 @@ const SystemeArchivage = ({
   };
 
   const getTableHeaders = () => {
-    if (typeArchive === 'accident') {
-      return (
-        <TableRow>
-          <TableCell sx={{ color: darkMode ? '#fff' : 'inherit' }}>Entreprise</TableCell>
-          <TableCell sx={{ color: darkMode ? '#fff' : 'inherit' }}>Nom</TableCell>
-          <TableCell sx={{ color: darkMode ? '#fff' : 'inherit' }}>Prénom</TableCell>
-          <TableCell sx={{ color: darkMode ? '#fff' : 'inherit' }}>Date</TableCell>
-          <TableCell sx={{ color: darkMode ? '#fff' : 'inherit' }}>Taille</TableCell>
-          <TableCell sx={{ color: darkMode ? '#fff' : 'inherit' }}>Actions</TableCell>
-        </TableRow>
-      );
+    switch (typeArchive) {
+      case 'accident':
+        return (
+          <TableRow>
+            <TableCell sx={{ color: darkMode ? '#fff' : 'inherit' }}>Entreprise</TableCell>
+            <TableCell sx={{ color: darkMode ? '#fff' : 'inherit' }}>Nom</TableCell>
+            <TableCell sx={{ color: darkMode ? '#fff' : 'inherit' }}>Prénom</TableCell>
+            <TableCell sx={{ color: darkMode ? '#fff' : 'inherit' }}>Date</TableCell>
+            <TableCell sx={{ color: darkMode ? '#fff' : 'inherit' }}>Taille</TableCell>
+            <TableCell sx={{ color: darkMode ? '#fff' : 'inherit' }}>Actions</TableCell>
+          </TableRow>
+        );
+      case 'vehicle':
+        return (
+          <TableRow>
+            <TableCell sx={{ color: darkMode ? '#fff' : 'inherit' }}>N° Plaque</TableCell>
+            <TableCell sx={{ color: darkMode ? '#fff' : 'inherit' }}>Marque/Modèle</TableCell>
+            <TableCell sx={{ color: darkMode ? '#fff' : 'inherit' }}>Entreprise</TableCell>
+            <TableCell sx={{ color: darkMode ? '#fff' : 'inherit' }}>Secteur</TableCell>
+            <TableCell sx={{ color: darkMode ? '#fff' : 'inherit' }}>Taille</TableCell>
+            <TableCell sx={{ color: darkMode ? '#fff' : 'inherit' }}>Actions</TableCell>
+          </TableRow>
+        );
+      default: // planaction
+        return (
+          <TableRow>
+            <TableCell sx={{ color: darkMode ? '#fff' : 'inherit' }}>Entreprise</TableCell>
+            <TableCell sx={{ color: darkMode ? '#fff' : 'inherit' }}>Année</TableCell>
+            <TableCell sx={{ color: darkMode ? '#fff' : 'inherit' }}>Secteur</TableCell>
+            <TableCell sx={{ color: darkMode ? '#fff' : 'inherit' }}>Date</TableCell>
+            <TableCell sx={{ color: darkMode ? '#fff' : 'inherit' }}>Taille</TableCell>
+            <TableCell sx={{ color: darkMode ? '#fff' : 'inherit' }}>Actions</TableCell>
+          </TableRow>
+        );
     }
-    return (
-      <TableRow>
-        <TableCell sx={{ color: darkMode ? '#fff' : 'inherit' }}>Entreprise</TableCell>
-        <TableCell sx={{ color: darkMode ? '#fff' : 'inherit' }}>Année</TableCell>
-        <TableCell sx={{ color: darkMode ? '#fff' : 'inherit' }}>Secteur</TableCell>
-        <TableCell sx={{ color: darkMode ? '#fff' : 'inherit' }}>Date</TableCell>
-        <TableCell sx={{ color: darkMode ? '#fff' : 'inherit' }}>Taille</TableCell>
-        <TableCell sx={{ color: darkMode ? '#fff' : 'inherit' }}>Actions</TableCell>
-      </TableRow>
-    );
   };
 
   const getTableRow = (archive, index) => {
     const archiveId = archive._id || `archive-${index}`;
     const cellStyle = { color: darkMode ? '#fff' : 'inherit' };
 
-    if (typeArchive === 'accident') {
-      return (
-        <TableRow key={archiveId}>
-          <TableCell sx={cellStyle}>{archive.donnees.entrepriseName}</TableCell>
-          <TableCell sx={cellStyle}>{archive.donnees.nomTravailleur}</TableCell>
-          <TableCell sx={cellStyle}>{archive.donnees.prenomTravailleur}</TableCell>
-          <TableCell sx={cellStyle}>
-            {new Date(archive.donnees.DateHeureAccident || archive.date).toLocaleDateString()}
-          </TableCell>
-          <TableCell sx={cellStyle}>{(archive.taille / 1024).toFixed(2)} Ko</TableCell>
-          <TableCell>
-            <Tooltip title="Restaurer">
-              <IconButton
-                onClick={() => handleRestore(archiveId)}
-                size="small"
-                sx={{ color: darkMode ? '#fff' : 'inherit' }}
-              >
-                <UnarchiveIcon />
-              </IconButton>
-            </Tooltip>
-          </TableCell>
-        </TableRow>
-      );
+    switch (typeArchive) {
+      case 'accident':
+        return (
+          <TableRow key={archiveId}>
+            <TableCell sx={cellStyle}>{archive.donnees.entrepriseName}</TableCell>
+            <TableCell sx={cellStyle}>{archive.donnees.nomTravailleur}</TableCell>
+            <TableCell sx={cellStyle}>{archive.donnees.prenomTravailleur}</TableCell>
+            <TableCell sx={cellStyle}>
+              {new Date(archive.donnees.DateHeureAccident || archive.date).toLocaleDateString()}
+            </TableCell>
+            <TableCell sx={cellStyle}>{(archive.taille / 1024).toFixed(2)} Ko</TableCell>
+            <TableCell>
+              <Tooltip title="Restaurer">
+                <IconButton
+                  onClick={() => handleRestore(archiveId)}
+                  size="small"
+                  sx={{ color: darkMode ? '#fff' : 'inherit' }}
+                >
+                  <UnarchiveIcon />
+                </IconButton>
+              </Tooltip>
+            </TableCell>
+          </TableRow>
+        );
+      case 'vehicle':
+        return (
+          <TableRow key={archiveId}>
+            <TableCell sx={cellStyle}>{archive.donnees.numPlaque}</TableCell>
+            <TableCell sx={cellStyle}>{`${archive.donnees.marque} ${archive.donnees.modele}`}</TableCell>
+            <TableCell sx={cellStyle}>{archive.donnees.entrepriseName}</TableCell>
+            <TableCell sx={cellStyle}>{archive.donnees.secteur}</TableCell>
+            <TableCell sx={cellStyle}>{(archive.taille / 1024).toFixed(2)} Ko</TableCell>
+            <TableCell>
+              <Tooltip title="Restaurer">
+                <IconButton
+                  onClick={() => handleRestore(archiveId)}
+                  size="small"
+                  sx={{ color: darkMode ? '#fff' : 'inherit' }}
+                >
+                  <UnarchiveIcon />
+                </IconButton>
+              </Tooltip>
+            </TableCell>
+          </TableRow>
+        );
+      default: // planaction
+        return (
+          <TableRow key={archiveId}>
+            <TableCell sx={cellStyle}>{archive.donnees.AddActionEntreprise}</TableCell>
+            <TableCell sx={cellStyle}>{archive.donnees.AddActionanne}</TableCell>
+            <TableCell sx={cellStyle}>{archive.donnees.AddActionSecteur}</TableCell>
+            <TableCell sx={cellStyle}>
+              {new Date(archive.date).toLocaleDateString()}
+            </TableCell>
+            <TableCell sx={cellStyle}>{(archive.taille / 1024).toFixed(2)} Ko</TableCell>
+            <TableCell>
+              <Tooltip title="Restaurer">
+                <IconButton
+                  onClick={() => handleRestore(archiveId)}
+                  size="small"
+                  sx={{ color: darkMode ? '#fff' : 'inherit' }}
+                >
+                  <UnarchiveIcon />
+                </IconButton>
+              </Tooltip>
+            </TableCell>
+          </TableRow>
+        );
     }
-    return (
-      <TableRow key={archiveId}>
-        <TableCell sx={cellStyle}>{archive.donnees.AddActionEntreprise}</TableCell>
-        <TableCell sx={cellStyle}>{archive.donnees.AddActionanne}</TableCell>
-        <TableCell sx={cellStyle}>{archive.donnees.AddActionSecteur}</TableCell>
-        <TableCell sx={cellStyle}>
-          {new Date(archive.date).toLocaleDateString()}
-        </TableCell>
-        <TableCell sx={cellStyle}>{(archive.taille / 1024).toFixed(2)} Ko</TableCell>
-        <TableCell>
-          <Tooltip title="Restaurer">
-            <IconButton
-              onClick={() => handleRestore(archiveId)}
-              size="small"
-              sx={{ color: darkMode ? '#fff' : 'inherit' }}
-            >
-              <UnarchiveIcon />
-            </IconButton>
-          </Tooltip>
-        </TableCell>
-      </TableRow>
-    );
   };
 
   const handleRestore = async (archiveId) => {
