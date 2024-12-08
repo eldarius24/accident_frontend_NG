@@ -33,7 +33,7 @@ import filterLogs from './foncLogs/filterLogs';
 import exportLogs from './foncLogs/exportLogs';
 import { useLogger } from '../Hook/useLogger';
 
-const apiUrl = config.apiUrl || 'localhost';
+const apiUrl = config.apiUrl;
 
 /**
  * Component qui affiche la liste des logs du système.

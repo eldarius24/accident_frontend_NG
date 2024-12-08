@@ -20,7 +20,7 @@ export default async function chargerDonnees({
     setSelectedCompanies
 }) {
     try {
-        const urlApi = process.env.REACT_APP_API_URL || 'localhost';
+        const urlApi = process.env.REACT_APP_API_URL;
 
         // Charger les données actives et archivées en parallèle
         const [accidentsResponse, tfResponse, archivesResponse] = await Promise.all([

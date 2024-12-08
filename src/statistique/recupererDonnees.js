@@ -12,7 +12,7 @@ import axios from 'axios';
  */
 export default async function recupererDonnees() {
     try {
-        const urlApi = process.env.REACT_APP_API_URL || 'localhost';
+        const urlApi = process.env.REACT_APP_API_URL;
         const reponse = await axios.get(`http://${urlApi}:3100/api/accidents`, {
             timeout: 5000,
             headers: {
