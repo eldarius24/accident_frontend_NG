@@ -1,5 +1,6 @@
 // Dans chargerDonnees.js
 import axios from 'axios';
+import config from '../config.json';
 
 /**
  * Charge toutes les données, y compris les archives
@@ -20,7 +21,7 @@ export default async function chargerDonnees({
     setSelectedCompanies
 }) {
     try {
-        const urlApi = process.env.REACT_APP_API_URL;
+        const urlApi = config.apiUrl;
 
         // Charger les données actives et archivées en parallèle
         const [accidentsResponse, tfResponse, archivesResponse] = await Promise.all([

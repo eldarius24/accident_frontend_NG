@@ -1,4 +1,5 @@
 import axios from 'axios';
+import config from '../config.json';
 
 /**
  * Récupère les données des accidents à partir de l'API.
@@ -12,7 +13,7 @@ import axios from 'axios';
  */
 export default async function recupererDonnees() {
     try {
-        const urlApi = process.env.REACT_APP_API_URL;
+        const urlApi = config.apiUrl;
         const reponse = await axios.get(`http://${urlApi}:3100/api/accidents`, {
             timeout: 5000,
             headers: {

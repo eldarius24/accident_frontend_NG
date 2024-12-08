@@ -1,7 +1,7 @@
 import axios from 'axios';
 import config from '../../config.json';
 
-const apiUrl = config.apiUrl;
+const apiUrl = config.apiUrl ;
 
 const fetchLogs = async (params) => {
   const {
