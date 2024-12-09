@@ -34,10 +34,16 @@ const Login = () => {
   useEffect(() => {
     const fetchLastAccident = async () => {
       try {
-        const response = await axios.get(`http://${apiUrl}:3100/api/accidents`);
+        // Modification ici pour ne récupérer que les champs nécessaires
+        const response = await axios.get(`http://${apiUrl}:3100/api/accidents/filtered-fields`, {
+          params: {
+            fields: JSON.stringify(['DateHeureAccident']), // Ne récupérer que la date de l'accident
+            entreprises: JSON.stringify([]) // Pas de filtrage par entreprise
+          }
+        });
 
-        if (response.data && response.data.length > 0) {
-          const sortedAccidents = response.data.sort((a, b) => {
+        if (response.data.accidents && response.data.accidents.length > 0) {
+          const sortedAccidents = response.data.accidents.sort((a, b) => {
             const dateA = new Date(a.DateHeureAccident);
             const dateB = new Date(b.DateHeureAccident);
             return dateB - dateA;
@@ -56,13 +62,10 @@ const Login = () => {
             } else {
               setDaysWithoutAccident(0);
             }
-          } else {
-            setDaysWithoutAccident(0);
           }
-        } else {
-          setDaysWithoutAccident(0);
         }
       } catch (error) {
+        console.error('Erreur lors de la récupération des accidents:', error);
         setDaysWithoutAccident(0);
       }
     };
@@ -178,7 +181,7 @@ const Login = () => {
       });
 
       const response = await axios.post(`http://${apiUrl}:3100/api/login`, { email, password }, {
-        withCredentials: true,
+        
         headers: { 'Content-Type': 'application/json' }
       });
 
