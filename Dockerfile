@@ -1,15 +1,18 @@
 # Utiliser l'image de base officielle Node.js
-FROM node:latest
+FROM node:20.8.0-alpine3.18
 
 # Définir le répertoire de travail dans le conteneur
 WORKDIR /app
 
 # Copier les fichiers de l'application vers le répertoire de travail
-COPY package.json package-lock.json /app/
-COPY ./src ./public /app/
+COPY package*.json ./
 
-# Installer les dépendances de l'application
-RUN npm install
+# Installer les dépendances en mode production
+RUN npm ci --only=production && \
+    npm cache clean --force
+
+# Copier les fichiers source de l'application
+COPY . .
 
 # Exposer le port sur lequel votre application écoute
 EXPOSE 3000

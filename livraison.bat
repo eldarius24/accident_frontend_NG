@@ -24,7 +24,7 @@ if errorlevel 1 (
 
 REM Sauvegarder l'image Docker
 echo Saving Docker image to %IMAGE_NAME%.tar...
-docker save -o %IMAGE_NAME%.tar %IMAGE_NAME%:%VERSION%
+docker save -o %IMAGE_NAME%%VERSION%.tar %IMAGE_NAME%:%VERSION%
 if errorlevel 1 (
     echo Docker save failed!
     exit /B 1
