@@ -180,10 +180,13 @@ const Login = () => {
         userId: 'anonymous'
       });
 
-      const response = await axios.post(`http://${apiUrl}:3100/api/login`, { email, password }, {
-        
-        headers: { 'Content-Type': 'application/json' }
-      });
+      const response = await axios.post(`http://${apiUrl}:3100/api/login`, 
+        { email, password },
+        { 
+          withCredentials: true,
+          headers: { 'Content-Type': 'application/json' }
+        }
+      );
 
       const userData = response.data;
 
