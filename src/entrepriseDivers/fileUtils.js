@@ -11,7 +11,7 @@ const handleFileDownload = async ({ fileId, fileName, entrepriseName, logAction,
         }
 
         // Téléchargement du fichier
-        const response = await axios.get(`http://${apiUrl}3100/api/getFile/${fileId}`, {
+        const response = await axios.get(`http://${apiUrl}:3100/api/getFile/${fileId}`, {
             responseType: 'blob'
         });
 
