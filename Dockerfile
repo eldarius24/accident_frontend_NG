@@ -1,32 +1,21 @@
-# Étape de build
-FROM node:20.8.0-alpine3.18 as builder
+# Utiliser l'image de base officielle Node.js
+FROM node:20.8.0-alpine3.18
 
-# Définir le répertoire de travail
+# Définir le répertoire de travail dans le conteneur
 WORKDIR /app
 
-# Copier les fichiers package.json et package-lock.json
+# Copier les fichiers de l'application vers le répertoire de travail
 COPY package*.json ./
 
-# Installer les dépendances
-RUN npm ci
+# Installer les dépendances en mode production
+RUN npm ci --only=production && \
+    npm cache clean --force
 
-# Copier les fichiers source
+# Copier les fichiers source de l'application
 COPY . .
 
-# Construire l'application pour la production
-RUN npm run build
+# Exposer le port sur lequel votre application écoute
+EXPOSE 3000
 
-# Étape de production
-FROM nginx:alpine
-
-# Copier les fichiers buildés depuis l'étape de build
-COPY --from=builder /app/build /usr/share/nginx/html
-
-# Copier la configuration nginx personnalisée
-COPY nginx.conf /etc/nginx/conf.d/default.conf
-
-# Expose le port 80
-EXPOSE 80
-
-# Démarrer nginx
-CMD ["nginx", "-g", "daemon off;"]
+# Commande pour démarrer votre application
+CMD ["npm", "start"]
