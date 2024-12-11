@@ -1,21 +1,24 @@
-# Build stage
-FROM node:20.8.0-alpine3.18 AS builder
+FROM node:20.8.0-alpine3.18
+
+# Définir le répertoire de travail
 WORKDIR /app
+
+# Installer les dépendances d'abord
 COPY package*.json ./
-RUN npm ci
+RUN npm install
+
+# Copier le reste du code
 COPY . .
+ENV CI=true
+ENV NODE_ENV=production
+# Build l'application pour la production
 RUN npm run build
 
-# Production stage
-FROM node:20.8.0-alpine3.18
-WORKDIR /app
-COPY package*.json ./
-RUN npm ci --only=production
-COPY --from=builder /app/build ./build
+# Exposer le port
 EXPOSE 3000
 
-# Installer serve pour servir l'application en production
+# Installer serve globalement
 RUN npm install -g serve
 
-# Utiliser serve pour servir l'application
+# Démarrer l'application
 CMD ["serve", "-s", "build", "-l", "3000"]
