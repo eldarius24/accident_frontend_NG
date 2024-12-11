@@ -1,21 +1,21 @@
-# Utiliser l'image de base officielle Node.js
-FROM node:20.8.0-alpine3.18
-
-# Définir le répertoire de travail dans le conteneur
+# Build stage
+FROM node:20.8.0-alpine3.18 AS builder
 WORKDIR /app
-
-# Copier les fichiers de l'application vers le répertoire de travail
 COPY package*.json ./
-
-# Installer les dépendances en mode production
-RUN npm ci --only=production && \
-    npm cache clean --force
-
-# Copier les fichiers source de l'application
+RUN npm ci
 COPY . .
+RUN npm run build
 
-# Exposer le port sur lequel votre application écoute
+# Production stage
+FROM node:20.8.0-alpine3.18
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci --only=production
+COPY --from=builder /app/build ./build
 EXPOSE 3000
 
-# Commande pour démarrer votre application
-CMD ["npm", "start"]
+# Installer serve pour servir l'application en production
+RUN npm install -g serve
+
+# Utiliser serve pour servir l'application
+CMD ["serve", "-s", "build", "-l", "3000"]
