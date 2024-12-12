@@ -828,7 +828,7 @@ const StatistiquesVehicules = () => {
                     <StyledChart
                         chartType="bar"
                         data={chartData.costByVehicle}
-                        title="Coût total par véhicule"
+                        title="Coût total par véhicule" 
                         xAxis="name"
                         darkMode={darkMode}
                         renderOptimizedChart={renderVehicleChart}
