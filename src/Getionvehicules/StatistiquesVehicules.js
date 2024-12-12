@@ -167,6 +167,42 @@ const StatistiquesVehicules = () => {
             }
         });
 
+        const kmByCompany = {};
+        const recordsByEntreprise = {};
+    
+        // Grouper d'abord les records par entreprise
+        Object.values(combinedDataByVehicle).forEach(vehicleData => {
+            const entrepriseName = vehicleData.entrepriseName;
+            if (selectedCompanies.includes(entrepriseName)) {
+                if (!recordsByEntreprise[entrepriseName]) {
+                    recordsByEntreprise[entrepriseName] = [];
+                }
+    
+                // Filtrer les records par années sélectionnées
+                const vehicleRecords = vehicleData.records
+                    .filter(record => selectedYears.includes(new Date(record.date).getFullYear()))
+                    .map(record => ({
+                        ...record,
+                        date: new Date(record.date)
+                    }))
+                    .sort((a, b) => a.date - b.date);
+    
+                if (vehicleRecords.length >= 2) {
+                    const kmDiff = vehicleRecords[vehicleRecords.length - 1].kilometrage -
+                                  vehicleRecords[0].kilometrage;
+                    if (kmDiff >= 0) {
+                        kmByCompany[entrepriseName] = (kmByCompany[entrepriseName] || 0) + kmDiff;
+                    }
+                }
+            }
+        });
+    
+        // Assurons-nous que toutes les entreprises sélectionnées sont représentées
+        selectedCompanies.forEach(company => {
+            if (!kmByCompany[company]) {
+                kmByCompany[company] = 0;
+            }
+        });
 
         // Pour chaque véhicule, ajouter la dernière lecture connue si elle n'existe pas déjà
         Object.values(combinedDataByVehicle).forEach(vehicleData => {
@@ -234,7 +270,7 @@ const StatistiquesVehicules = () => {
         });
     
         // Calculer les kilométrages par entreprise
-        const kmByCompany = {};
+
         Object.values(combinedDataByVehicle).forEach(vehicleData => {
             if (selectedCompanies.includes(vehicleData.entrepriseName)) {
                 const allRecords = vehicleData.records.sort((a, b) => 
