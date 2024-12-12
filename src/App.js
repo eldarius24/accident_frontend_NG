@@ -20,10 +20,10 @@ import ProtectedRoute from './Model/protectedRoute';
 import ProtectedRouteAdmin from './Model/protectedRouteAdmin';
 import Adminuser from './pageAdmin/user/AdminUser';
 import AddUser from './pageAdmin/user/addUser/AddUser';
-import ProtectedRouteAdminOrConseiller from './Model/protectedRouteConseillerPrevention'; // Importer le nouveau composant
+import ProtectedRouteAdminOrConseiller from './Model/protectedRouteConseillerPrevention';
 import ProtectedRouteAdminOrGesionaireVehicule from './Model/protectedRoutegetiovechi';
 import FormulaireAction from './planaction/FormulaireAction';
-import { ThemeProvider } from './Hook/ThemeContext'; // Importez ThemeProvider
+import { ThemeProvider } from './Hook/ThemeContext';
 import LogView from './Logs/logView';
 import Entreprise from './entrepriseDivers/entreprise';
 import QuesEntrep from './entrepriseDivers/quesEntrep';
@@ -61,8 +61,11 @@ const App = () => {
             <ResponsiveAppBar />
             <main className="main-content">
               <Routes>
-                {/* Routes accessibles uniquement par usernormal */}
+
+                {/* Routes accessibles par tous */}
                 <Route path="/login" element={<Login />} />
+
+                {/* Routes accessibles uniquement par usernormal */}
                 <Route path="/" element={<ProtectedRoute><Home /></ProtectedRoute>} />
 
                 {/* Routes accessibles uniquement par isAdmin */}
@@ -95,8 +98,6 @@ const App = () => {
                 <Route path="/actionfichierdll" element={<ProtectedRouteAdminOrConseiller><Actionfichierdll /></ProtectedRouteAdminOrConseiller>} />
                 <Route path="/Accident" element={<ProtectedRouteAdminOrConseiller><Accidents /></ProtectedRouteAdminOrConseiller>} />
                 <Route path="/statistiques" element={<ProtectedRouteAdminOrConseiller><Statistiques /></ProtectedRouteAdminOrConseiller>} />
-                
-
 
                 {/* Routes accessibles par isAdmin ou GestionnaireVehicule */}
                 <Route path="/gestionVehicules" element={<ProtectedRouteAdminOrGesionaireVehicule><GetionVehicle /></ProtectedRouteAdminOrGesionaireVehicule>} />

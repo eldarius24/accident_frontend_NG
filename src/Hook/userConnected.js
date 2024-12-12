@@ -4,6 +4,13 @@ export const useUserConnected = () => {
     useSession();
 
     const token = JSON.parse(localStorage.getItem('token'));
+    
+    // Vérification de l'expiration du token
+    if (token && token.expirationDate && new Date(token.expirationDate) < new Date()) {
+        localStorage.removeItem('token');
+        return { isAuthenticated: false };
+    }
+
     if (!token || !token.data)
         return { isAuthenticated: false };
 
