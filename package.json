@@ -1,6 +1,7 @@
 {
   "name": "accident_frontend",
   "version": "0.1.0",
+  "homepage": "https://eldarius24.github.io/accident_frontend",
   "private": true,
   "dependencies": {
     "@emotion/react": "^11.11.1",
@@ -19,6 +20,7 @@
     "exceljs": "^4.4.0",
     "express": "^4.21.1",
     "file-saver": "^2.0.5",
+    "gh-pages": "^6.2.0",
     "js-cookie": "^3.0.5",
     "mammoth": "^1.8.0",
     "msg-parser": "^1.0.10",
@@ -39,7 +41,9 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "build:css": "postcss src/index.css -o src/tailwind-output.css"
+    "build:css": "postcss src/index.css -o src/tailwind-output.css",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
   },
   "browserslist": {
     "production": [

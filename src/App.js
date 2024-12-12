@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { HashRouter as Router, Route, Routes } from 'react-router-dom';
 import Login from './login/Login';
 import Accidents from './Accidents/Accident';
 import Formulaire from './pageFormulaire/Formulaire';
@@ -32,8 +32,6 @@ import Archivage from './Archives/archivages';
 import Archives from './Archives/archives';
 import Home from './Home/Home';
 import Footer from './_composants/Footer';
-
-
 import AdminVehicule from './pageAdmin/AdminVehicule';
 import AdminAddVehicule from './pageAdmin/AdminAddVehicule';
 import GetionVehicle from './Getionvehicules/GestionVehicule';
