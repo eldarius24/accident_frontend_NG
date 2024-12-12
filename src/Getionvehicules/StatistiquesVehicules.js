@@ -149,6 +149,25 @@ const StatistiquesVehicules = () => {
             }
         });
     
+        const kmByVehicle = {}; // Ajout de l'initialisation manquante
+
+        Object.values(combinedDataByVehicle).forEach(vehicleData => {
+            if (selectedCompanies.includes(vehicleData.entrepriseName)) {
+                const allRecords = vehicleData.records.sort((a, b) => 
+                    new Date(a.date) - new Date(b.date)
+                );
+        
+                if (allRecords.length >= 2) {
+                    const kmDiff = allRecords[allRecords.length - 1].kilometrage - 
+                                  allRecords[0].kilometrage;
+                    if (kmDiff >= 0) {
+                        kmByVehicle[vehicleData.numPlaque] = kmDiff;
+                    }
+                }
+            }
+        });
+
+
         // Pour chaque véhicule, ajouter la dernière lecture connue si elle n'existe pas déjà
         Object.values(combinedDataByVehicle).forEach(vehicleData => {
             const latestRecord = vehicleData.records[vehicleData.records.length - 1];
@@ -167,12 +186,12 @@ const StatistiquesVehicules = () => {
         Object.values(combinedDataByVehicle).forEach(vehicleData => {
             selectedYears.forEach(year => {
                 const yearRecords = vehicleData.records
-                    .filter(r => r.date.getFullYear() === year)
-                    .sort((a, b) => a.date - b.date);
-    
+                    .filter(r => new Date(r.date).getFullYear() === year)
+                    .sort((a, b) => new Date(a.date) - new Date(b.date));
+            
                 if (yearRecords.length >= 2) {
                     const kmDiff = yearRecords[yearRecords.length - 1].kilometrage - yearRecords[0].kilometrage;
-                    if (kmDiff > 0) {
+                    if (kmDiff >= 0) { // Changé > à >= pour inclure 0
                         kmByYear[year] = (kmByYear[year] || 0) + kmDiff;
                     }
                 }
@@ -182,24 +201,33 @@ const StatistiquesVehicules = () => {
         // Calculer les kilométrages par mois
         const kmByMonth = {};
         Object.values(combinedDataByVehicle).forEach(vehicleData => {
-            vehicleData.records.forEach((record, index) => {
-                if (index > 0) {
-                    const prevRecord = vehicleData.records[index - 1];
-                    const year = record.date.getFullYear();
-                    
-                    if (selectedYears.includes(year)) {
-                        const monthKey = record.date.toLocaleDateString('fr-FR', {
-                            month: 'long',
-                            year: 'numeric'
-                        });
-                        
-                        if (record.date.getMonth() === prevRecord.date.getMonth() &&
-                            record.date.getFullYear() === prevRecord.date.getFullYear()) {
-                            const kmDiff = record.kilometrage - prevRecord.kilometrage;
-                            if (kmDiff > 0) {
-                                kmByMonth[monthKey] = (kmByMonth[monthKey] || 0) + kmDiff;
-                            }
-                        }
+            // Grouper par mois
+            const monthlyRecords = {};
+            
+            vehicleData.records.forEach(record => {
+                const date = new Date(record.date);
+                const monthKey = date.toLocaleDateString('fr-FR', {
+                    month: 'long',
+                    year: 'numeric'
+                });
+                
+                if (!monthlyRecords[monthKey]) {
+                    monthlyRecords[monthKey] = {
+                        first: record.kilometrage,
+                        last: record.kilometrage,
+                        year: date.getFullYear()
+                    };
+                } else {
+                    monthlyRecords[monthKey].last = record.kilometrage;
+                }
+            });
+        
+            // Calculer les différences
+            Object.entries(monthlyRecords).forEach(([monthKey, data]) => {
+                if (selectedYears.includes(data.year)) {
+                    const kmDiff = data.last - data.first;
+                    if (kmDiff >= 0) {
+                        kmByMonth[monthKey] = (kmByMonth[monthKey] || 0) + kmDiff;
                     }
                 }
             });
@@ -208,24 +236,35 @@ const StatistiquesVehicules = () => {
         // Calculer les kilométrages par entreprise
         const kmByCompany = {};
         Object.values(combinedDataByVehicle).forEach(vehicleData => {
-            const records = vehicleData.records;
-            if (records.length >= 2) {
-                const kmDiff = records[records.length - 1].kilometrage - records[0].kilometrage;
-                if (kmDiff > 0) {
-                    kmByCompany[vehicleData.entrepriseName] = 
-                        (kmByCompany[vehicleData.entrepriseName] || 0) + kmDiff;
+            if (selectedCompanies.includes(vehicleData.entrepriseName)) {
+                const allRecords = vehicleData.records.sort((a, b) => 
+                    new Date(a.date) - new Date(b.date)
+                );
+        
+                if (allRecords.length >= 2) {
+                    const kmDiff = allRecords[allRecords.length - 1].kilometrage - 
+                                  allRecords[0].kilometrage;
+                    if (kmDiff >= 0) {
+                        kmByCompany[vehicleData.entrepriseName] = 
+                            (kmByCompany[vehicleData.entrepriseName] || 0) + kmDiff;
+                    }
                 }
             }
         });
     
         // Calculer les kilométrages par véhicule
-        const kmByVehicle = {};
         Object.values(combinedDataByVehicle).forEach(vehicleData => {
-            const records = vehicleData.records;
-            if (records.length >= 2) {
-                const kmDiff = records[records.length - 1].kilometrage - records[0].kilometrage;
-                if (kmDiff > 0) {
-                    kmByVehicle[vehicleData.numPlaque] = kmDiff;
+            if (selectedCompanies.includes(vehicleData.entrepriseName)) {
+                const allRecords = vehicleData.records.sort((a, b) => 
+                    new Date(a.date) - new Date(b.date)
+                );
+        
+                if (allRecords.length >= 2) {
+                    const kmDiff = allRecords[allRecords.length - 1].kilometrage - 
+                                  allRecords[0].kilometrage;
+                    if (kmDiff >= 0) {
+                        kmByVehicle[vehicleData.numPlaque] = kmDiff;
+                    }
                 }
             }
         });
