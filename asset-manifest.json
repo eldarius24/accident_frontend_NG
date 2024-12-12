@@ -1,0 +1,16 @@
+{
+  "files": {
+    "main.css": "/accident_frontend/static/css/main.d2e93c1b.css",
+    "main.js": "/accident_frontend/static/js/main.edf1c508.js",
+    "static/js/581.e5f522da.chunk.js": "/accident_frontend/static/js/581.e5f522da.chunk.js",
+    "static/media/logo animé.gif": "/accident_frontend/static/media/logo animé.6a9d815dafdbd4490a0f.gif",
+    "index.html": "/accident_frontend/index.html",
+    "main.d2e93c1b.css.map": "/accident_frontend/static/css/main.d2e93c1b.css.map",
+    "main.edf1c508.js.map": "/accident_frontend/static/js/main.edf1c508.js.map",
+    "581.e5f522da.chunk.js.map": "/accident_frontend/static/js/581.e5f522da.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.d2e93c1b.css",
+    "static/js/main.edf1c508.js"
+  ]
+}
