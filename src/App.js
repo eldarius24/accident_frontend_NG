@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { HashRouter as Router, Route, Routes } from 'react-router-dom';
 import Login from './login/Login';
 import Accidents from './Accidents/Accident';
 import Formulaire from './pageFormulaire/Formulaire';
@@ -20,10 +20,10 @@ import ProtectedRoute from './Model/protectedRoute';
 import ProtectedRouteAdmin from './Model/protectedRouteAdmin';
 import Adminuser from './pageAdmin/user/AdminUser';
 import AddUser from './pageAdmin/user/addUser/AddUser';
-import ProtectedRouteAdminOrConseiller from './Model/protectedRouteConseillerPrevention'; // Importer le nouveau composant
+import ProtectedRouteAdminOrConseiller from './Model/protectedRouteConseillerPrevention';
 import ProtectedRouteAdminOrGesionaireVehicule from './Model/protectedRoutegetiovechi';
 import FormulaireAction from './planaction/FormulaireAction';
-import { ThemeProvider } from './Hook/ThemeContext'; // Importez ThemeProvider
+import { ThemeProvider } from './Hook/ThemeContext';
 import LogView from './Logs/logView';
 import Entreprise from './entrepriseDivers/entreprise';
 import QuesEntrep from './entrepriseDivers/quesEntrep';
@@ -32,8 +32,6 @@ import Archivage from './Archives/archivages';
 import Archives from './Archives/archives';
 import Home from './Home/Home';
 import Footer from './_composants/Footer';
-
-
 import AdminVehicule from './pageAdmin/AdminVehicule';
 import AdminAddVehicule from './pageAdmin/AdminAddVehicule';
 import GetionVehicle from './Getionvehicules/GestionVehicule';
@@ -63,9 +61,12 @@ const App = () => {
             <ResponsiveAppBar />
             <main className="main-content">
               <Routes>
-                {/* Routes accessibles uniquement par usernormal */}
+
+                {/* Routes accessibles par tous */}
                 <Route path="/login" element={<Login />} />
-                <Route path="/" element={<Home />} />
+
+                {/* Routes accessibles uniquement par usernormal */}
+                <Route path="/" element={<ProtectedRoute><Home /></ProtectedRoute>} />
 
                 {/* Routes accessibles uniquement par isAdmin */}
                 <Route path="/logView" element={<ProtectedRouteAdmin><LogView /></ProtectedRouteAdmin>} />
@@ -78,11 +79,10 @@ const App = () => {
                 <Route path="/messSupport" element={<ProtectedRouteAdmin><MessSupport /></ProtectedRouteAdmin>} />
                 <Route path="/archivages" element={<ProtectedRouteAdmin><Archivage /></ProtectedRouteAdmin>} />
                 <Route path="/archives" element={<ProtectedRouteAdmin> <Archives /></ProtectedRouteAdmin>} />
-                <Route path="/adminVehicule" element={<AdminVehicule />} />
-                <Route path="/adminAddVehicule" element={<AdminAddVehicule />} />
-                <Route path="/gestionVehicules" element={<GetionVehicle />} />
-                <Route path="/vehiculeDetails" element={<VehiculeDetails />} />
-                <Route path="/modifVehicule" element={<ModifVehicule />} />
+                <Route path="/adminVehicule" element={<ProtectedRouteAdmin><AdminVehicule /></ProtectedRouteAdmin>} />
+                <Route path="/adminAddVehicule" element={<ProtectedRouteAdmin><AdminAddVehicule /></ProtectedRouteAdmin>} />
+                <Route path="/vehiculeDetails" element={<ProtectedRouteAdmin><VehiculeDetails /></ProtectedRouteAdmin>} />
+                <Route path="/modifVehicule" element={<ProtectedRouteAdmin><ModifVehicule /></ProtectedRouteAdmin>} />
 
                 {/* Routes accessibles par isAdmin ou Conseiller */}
                 <Route path="/quesEntrep" element={<ProtectedRouteAdminOrConseiller><QuesEntrep /></ProtectedRouteAdminOrConseiller>} />
@@ -98,8 +98,6 @@ const App = () => {
                 <Route path="/actionfichierdll" element={<ProtectedRouteAdminOrConseiller><Actionfichierdll /></ProtectedRouteAdminOrConseiller>} />
                 <Route path="/Accident" element={<ProtectedRouteAdminOrConseiller><Accidents /></ProtectedRouteAdminOrConseiller>} />
                 <Route path="/statistiques" element={<ProtectedRouteAdminOrConseiller><Statistiques /></ProtectedRouteAdminOrConseiller>} />
-                
-
 
                 {/* Routes accessibles par isAdmin ou GestionnaireVehicule */}
                 <Route path="/gestionVehicules" element={<ProtectedRouteAdminOrGesionaireVehicule><GetionVehicle /></ProtectedRouteAdminOrGesionaireVehicule>} />
