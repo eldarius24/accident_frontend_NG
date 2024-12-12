@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { HashRouter as Router, Route, Routes } from 'react-router-dom';
 import Login from './login/Login';
 import Accidents from './Accidents/Accident';
 import Formulaire from './pageFormulaire/Formulaire';
@@ -32,8 +32,6 @@ import Archivage from './Archives/archivages';
 import Archives from './Archives/archives';
 import Home from './Home/Home';
 import Footer from './_composants/Footer';
-
-
 import AdminVehicule from './pageAdmin/AdminVehicule';
 import AdminAddVehicule from './pageAdmin/AdminAddVehicule';
 import GetionVehicle from './Getionvehicules/GestionVehicule';
@@ -65,7 +63,7 @@ const App = () => {
               <Routes>
                 {/* Routes accessibles uniquement par usernormal */}
                 <Route path="/login" element={<Login />} />
-                <Route path="/" element={<Home />} />
+                <Route path="/" element={<ProtectedRoute><Home /></ProtectedRoute>} />
 
                 {/* Routes accessibles uniquement par isAdmin */}
                 <Route path="/logView" element={<ProtectedRouteAdmin><LogView /></ProtectedRouteAdmin>} />
@@ -78,11 +76,10 @@ const App = () => {
                 <Route path="/messSupport" element={<ProtectedRouteAdmin><MessSupport /></ProtectedRouteAdmin>} />
                 <Route path="/archivages" element={<ProtectedRouteAdmin><Archivage /></ProtectedRouteAdmin>} />
                 <Route path="/archives" element={<ProtectedRouteAdmin> <Archives /></ProtectedRouteAdmin>} />
-                <Route path="/adminVehicule" element={<AdminVehicule />} />
-                <Route path="/adminAddVehicule" element={<AdminAddVehicule />} />
-                <Route path="/gestionVehicules" element={<GetionVehicle />} />
-                <Route path="/vehiculeDetails" element={<VehiculeDetails />} />
-                <Route path="/modifVehicule" element={<ModifVehicule />} />
+                <Route path="/adminVehicule" element={<ProtectedRouteAdmin><AdminVehicule /></ProtectedRouteAdmin>} />
+                <Route path="/adminAddVehicule" element={<ProtectedRouteAdmin><AdminAddVehicule /></ProtectedRouteAdmin>} />
+                <Route path="/vehiculeDetails" element={<ProtectedRouteAdmin><VehiculeDetails /></ProtectedRouteAdmin>} />
+                <Route path="/modifVehicule" element={<ProtectedRouteAdmin><ModifVehicule /></ProtectedRouteAdmin>} />
 
                 {/* Routes accessibles par isAdmin ou Conseiller */}
                 <Route path="/quesEntrep" element={<ProtectedRouteAdminOrConseiller><QuesEntrep /></ProtectedRouteAdminOrConseiller>} />
