@@ -63,7 +63,7 @@ const App = () => {
               <Routes>
                 {/* Routes accessibles uniquement par usernormal */}
                 <Route path="/login" element={<Login />} />
-                <Route path="/" element={<Home />} />
+                <Route path="/" element={<ProtectedRoute><Home /></ProtectedRoute>} />
 
                 {/* Routes accessibles uniquement par isAdmin */}
                 <Route path="/logView" element={<ProtectedRouteAdmin><LogView /></ProtectedRouteAdmin>} />
@@ -76,11 +76,11 @@ const App = () => {
                 <Route path="/messSupport" element={<ProtectedRouteAdmin><MessSupport /></ProtectedRouteAdmin>} />
                 <Route path="/archivages" element={<ProtectedRouteAdmin><Archivage /></ProtectedRouteAdmin>} />
                 <Route path="/archives" element={<ProtectedRouteAdmin> <Archives /></ProtectedRouteAdmin>} />
-                <Route path="/adminVehicule" element={<AdminVehicule />} />
-                <Route path="/adminAddVehicule" element={<AdminAddVehicule />} />
-                <Route path="/gestionVehicules" element={<GetionVehicle />} />
-                <Route path="/vehiculeDetails" element={<VehiculeDetails />} />
-                <Route path="/modifVehicule" element={<ModifVehicule />} />
+                <Route path="/adminVehicule" element={<ProtectedRouteAdmin><AdminVehicule /></ProtectedRouteAdmin>} />
+                <Route path="/adminAddVehicule" element={<ProtectedRouteAdmin><AdminAddVehicule /></ProtectedRouteAdmin>} />
+                <Route path="/gestionVehicules" element={<ProtectedRouteAdmin><GetionVehicle /></ProtectedRouteAdmin>} />
+                <Route path="/vehiculeDetails" element={<ProtectedRouteAdmin><VehiculeDetails /></ProtectedRouteAdmin>} />
+                <Route path="/modifVehicule" element={<ProtectedRouteAdmin><ModifVehicule /></ProtectedRouteAdmin>} />
 
                 {/* Routes accessibles par isAdmin ou Conseiller */}
                 <Route path="/quesEntrep" element={<ProtectedRouteAdminOrConseiller><QuesEntrep /></ProtectedRouteAdminOrConseiller>} />
