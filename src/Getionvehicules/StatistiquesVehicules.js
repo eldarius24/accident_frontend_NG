@@ -98,6 +98,145 @@ const StatistiquesVehicules = () => {
         });
     };
 
+    const processKilometrageData = (records, vehicles, selectedYears, selectedCompanies) => {
+        // Créer une map des véhicules pour un accès rapide
+        const vehiclesMap = new Map(vehicles.map(v => [v._id, v]));
+        
+        // Organiser tous les records et données véhicules par véhicule
+        const combinedDataByVehicle = {};
+        
+        // D'abord, initialiser avec les données de GestionVehicules
+        vehicles.forEach(vehicle => {
+            if (selectedCompanies.includes(vehicle.entrepriseName)) {
+                const lastUpdatedDate = vehicle.lastUpdated ? new Date(vehicle.lastUpdated) : new Date();
+                
+                combinedDataByVehicle[vehicle._id] = {
+                    entrepriseName: vehicle.entrepriseName,
+                    numPlaque: vehicle.numPlaque,
+                    kilometrage: Number(vehicle.kilometrage) || 0,
+                    records: [{
+                        date: lastUpdatedDate,
+                        kilometrage: Number(vehicle.kilometrage) || 0
+                    }]
+                };
+            }
+        });
+    
+        // Ajouter les records de VehicleDetails
+        records.forEach(record => {
+            if (record.vehicleId && record.vehicleId._id && record.kilometrage !== undefined) {
+                const vehicleId = record.vehicleId._id;
+                const vehicle = vehiclesMap.get(vehicleId);
+                
+                if (vehicle && selectedCompanies.includes(vehicle.entrepriseName)) {
+                    if (!combinedDataByVehicle[vehicleId]) {
+                        combinedDataByVehicle[vehicleId] = {
+                            entrepriseName: vehicle.entrepriseName,
+                            numPlaque: vehicle.numPlaque,
+                            kilometrage: Number(vehicle.kilometrage) || 0,
+                            records: []
+                        };
+                    }
+                    
+                    // Assurons-nous que la date est un objet Date
+                    const recordDate = record.date instanceof Date ? record.date : new Date(record.date);
+                    
+                    combinedDataByVehicle[vehicleId].records.push({
+                        date: recordDate,
+                        kilometrage: Number(record.kilometrage)
+                    });
+                }
+            }
+        });
+    
+        // Pour chaque véhicule, ajouter la dernière lecture connue si elle n'existe pas déjà
+        Object.values(combinedDataByVehicle).forEach(vehicleData => {
+            const latestRecord = vehicleData.records[vehicleData.records.length - 1];
+            if (latestRecord.kilometrage !== vehicleData.kilometrage) {
+                vehicleData.records.push({
+                    date: new Date(),
+                    kilometrage: vehicleData.kilometrage
+                });
+            }
+            // Trier les records par date
+            vehicleData.records.sort((a, b) => a.date - b.date);
+        });
+    
+        // Calculer les kilométrages par année
+        const kmByYear = {};
+        Object.values(combinedDataByVehicle).forEach(vehicleData => {
+            selectedYears.forEach(year => {
+                const yearRecords = vehicleData.records
+                    .filter(r => r.date.getFullYear() === year)
+                    .sort((a, b) => a.date - b.date);
+    
+                if (yearRecords.length >= 2) {
+                    const kmDiff = yearRecords[yearRecords.length - 1].kilometrage - yearRecords[0].kilometrage;
+                    if (kmDiff > 0) {
+                        kmByYear[year] = (kmByYear[year] || 0) + kmDiff;
+                    }
+                }
+            });
+        });
+    
+        // Calculer les kilométrages par mois
+        const kmByMonth = {};
+        Object.values(combinedDataByVehicle).forEach(vehicleData => {
+            vehicleData.records.forEach((record, index) => {
+                if (index > 0) {
+                    const prevRecord = vehicleData.records[index - 1];
+                    const year = record.date.getFullYear();
+                    
+                    if (selectedYears.includes(year)) {
+                        const monthKey = record.date.toLocaleDateString('fr-FR', {
+                            month: 'long',
+                            year: 'numeric'
+                        });
+                        
+                        if (record.date.getMonth() === prevRecord.date.getMonth() &&
+                            record.date.getFullYear() === prevRecord.date.getFullYear()) {
+                            const kmDiff = record.kilometrage - prevRecord.kilometrage;
+                            if (kmDiff > 0) {
+                                kmByMonth[monthKey] = (kmByMonth[monthKey] || 0) + kmDiff;
+                            }
+                        }
+                    }
+                }
+            });
+        });
+    
+        // Calculer les kilométrages par entreprise
+        const kmByCompany = {};
+        Object.values(combinedDataByVehicle).forEach(vehicleData => {
+            const records = vehicleData.records;
+            if (records.length >= 2) {
+                const kmDiff = records[records.length - 1].kilometrage - records[0].kilometrage;
+                if (kmDiff > 0) {
+                    kmByCompany[vehicleData.entrepriseName] = 
+                        (kmByCompany[vehicleData.entrepriseName] || 0) + kmDiff;
+                }
+            }
+        });
+    
+        // Calculer les kilométrages par véhicule
+        const kmByVehicle = {};
+        Object.values(combinedDataByVehicle).forEach(vehicleData => {
+            const records = vehicleData.records;
+            if (records.length >= 2) {
+                const kmDiff = records[records.length - 1].kilometrage - records[0].kilometrage;
+                if (kmDiff > 0) {
+                    kmByVehicle[vehicleData.numPlaque] = kmDiff;
+                }
+            }
+        });
+    
+        return {
+            kmByYear,
+            kmByMonth,
+            kmByCompany,
+            kmByVehicle
+        };
+    };
 
 
     const processedData = useMemo(() => {
@@ -113,14 +252,24 @@ const StatistiquesVehicules = () => {
                 kmByVehicle: {}
             };
         }
-
+    
         const recordsByVehicle = {};
-
+        const tempMonthlyData = {
+            costs: {},
+            kilometers: {}
+        };
+        const processedCosts = {
+            costByYear: {},
+            costByMonth: {},
+            costByCompany: {},
+            costByVehicle: {}
+        };
+    
         // Trier d'abord tous les enregistrements par véhicule et par date
         data.records.forEach(record => {
             const vehicleInfo = record.vehicleId;
             if (!vehicleInfo) return;
-
+    
             if (!recordsByVehicle[vehicleInfo._id]) {
                 recordsByVehicle[vehicleInfo._id] = [];
             }
@@ -128,168 +277,67 @@ const StatistiquesVehicules = () => {
                 ...record,
                 year: new Date(record.date).getFullYear()
             });
-        });
-
-        const kmByYear = {};
-        selectedYears.forEach(year => {
-            kmByYear[year] = 0;
-        });
-
-        // Trier les enregistrements de chaque véhicule par date
-        Object.values(recordsByVehicle).forEach(records => {
-            records.sort((a, b) => a.date - b.date);
-        });
-
-        const processedData = {
-            costByYear: {},
-            costByMonth: {},
-            kmByYear: {},
-            kmByMonth: {},
-            costByCompany: {},
-            kmByCompany: {},
-            costByVehicle: {},
-            kmByVehicle: {}
-        };
-
-        const tempMonthlyData = {
-            costs: {},
-            kilometers: {}
-        };
-        // Traiter chaque véhicule
-        Object.entries(recordsByVehicle).forEach(([vehicleId, records]) => {
-            // Trier les enregistrements par date
-            records.sort((a, b) => new Date(a.date) - new Date(b.date));
-            let prevRecord = null;
-            let yearlyKmStart = {}; // Pour stocker le kilométrage initial de chaque année
-
-            records.forEach(record => {
-                const vehicleInfo = record.vehicleId;
-                const year = record.date.getFullYear();
-
-                // Vérifier les filtres
-                if (!selectedYears.includes(year) || !selectedCompanies.includes(vehicleInfo.entrepriseName)) {
-                    return;
-                }
-
-                const monthKey = formatMonthKey(record.date);
-                const month = record.date.toLocaleDateString('fr-FR', {
-                    month: 'long',
-                    year: 'numeric'
-                });
-
-                // Traitement des coûts
-                const cost = Number(record.cost) || 0;
+    
+            // Traitement des coûts
+            const year = new Date(record.date).getFullYear();
+            const monthKey = formatMonthKey(record.date);
+            const cost = Number(record.cost) || 0;
+    
+            if (selectedYears.includes(year) && selectedCompanies.includes(vehicleInfo.entrepriseName)) {
                 // Coûts mensuels
                 tempMonthlyData.costs[monthKey] = (tempMonthlyData.costs[monthKey] || 0) + cost;
                 // Coûts annuels
-                processedData.costByYear[year] = (processedData.costByYear[year] || 0) + cost;
+                processedCosts.costByYear[year] = (processedCosts.costByYear[year] || 0) + cost;
                 // Coûts par mois
-                processedData.costByMonth[month] = (processedData.costByMonth[month] || 0) + cost;
+                processedCosts.costByMonth[monthKey] = (processedCosts.costByMonth[monthKey] || 0) + cost;
                 // Coûts par entreprise
-                processedData.costByCompany[vehicleInfo.entrepriseName] =
-                    (processedData.costByCompany[vehicleInfo.entrepriseName] || 0) + cost;
+                processedCosts.costByCompany[vehicleInfo.entrepriseName] =
+                    (processedCosts.costByCompany[vehicleInfo.entrepriseName] || 0) + cost;
                 // Coûts par véhicule
-                processedData.costByVehicle[vehicleInfo.numPlaque] =
-                    (processedData.costByVehicle[vehicleInfo.numPlaque] || 0) + cost;
-
-                // Traitement des kilométrages
-                const currentKm = Number(record.kilometrage) || 0;
-
-                // Initialiser le kilométrage de début d'année si pas encore fait
-                if (!yearlyKmStart[year] && currentKm > 0) {
-                    yearlyKmStart[year] = prevRecord ? Math.max(prevRecord.kilometrage, currentKm) : currentKm;
-                }
-
-                if (prevRecord && currentKm > prevRecord.kilometrage) {
-                    const kmDiff = currentKm - prevRecord.kilometrage;
-                    const prevDate = new Date(prevRecord.date);
-                    const currDate = new Date(record.date);
-
-                    // Si les deux enregistrements sont dans la même année
-                    if (prevDate.getFullYear() === year) {
-                        // Kilométrage mensuel
-                        tempMonthlyData.kilometers[monthKey] =
-                            (tempMonthlyData.kilometers[monthKey] || 0) + kmDiff;
-                        // Kilométrage annuel
-                        processedData.kmByYear[year] =
-                            (processedData.kmByYear[year] || 0) + kmDiff;
-                        // Kilométrage par mois
-                        processedData.kmByMonth[month] =
-                            (processedData.kmByMonth[month] || 0) + kmDiff;
-                    } else {
-                        // Si les enregistrements sont sur des années différentes,
-                        // répartir proportionnellement les kilomètres
-                        const totalDays = (currDate - prevDate) / (1000 * 60 * 60 * 24);
-                        const daysInCurrentYear =
-                            (currDate - new Date(year, 0, 1)) / (1000 * 60 * 60 * 24);
-                        const kmForCurrentYear = (kmDiff * daysInCurrentYear) / totalDays;
-
-                        processedData.kmByYear[year] =
-                            (processedData.kmByYear[year] || 0) + kmForCurrentYear;
-                        tempMonthlyData.kilometers[monthKey] =
-                            (tempMonthlyData.kilometers[monthKey] || 0) + kmForCurrentYear;
-                        processedData.kmByMonth[month] =
-                            (processedData.kmByMonth[month] || 0) + kmForCurrentYear;
-                    }
-
-                    // Kilométrage par entreprise
-                    processedData.kmByCompany[vehicleInfo.entrepriseName] =
-                        (processedData.kmByCompany[vehicleInfo.entrepriseName] || 0) + kmDiff;
-                    // Kilométrage par véhicule
-                    processedData.kmByVehicle[vehicleInfo.numPlaque] =
-                        (processedData.kmByVehicle[vehicleInfo.numPlaque] || 0) + kmDiff;
-                }
-
-                prevRecord = {
-                    ...record,
-                    kilometrage: currentKm,
-                    date: record.date
-                };
-            });
+                processedCosts.costByVehicle[vehicleInfo.numPlaque] =
+                    (processedCosts.costByVehicle[vehicleInfo.numPlaque] || 0) + cost;
+            }
         });
-
-        // Arrondir tous les kilométrages
-        Object.keys(processedData.kmByYear).forEach(year => {
-            processedData.kmByYear[year] = Math.round(processedData.kmByYear[year]);
-        });
-        Object.keys(processedData.kmByMonth).forEach(month => {
-            processedData.kmByMonth[month] = Math.round(processedData.kmByMonth[month]);
-        });
-        Object.keys(processedData.kmByCompany).forEach(company => {
-            processedData.kmByCompany[company] = Math.round(processedData.kmByCompany[company]);
-        });
-        Object.keys(processedData.kmByVehicle).forEach(vehicle => {
-            processedData.kmByVehicle[vehicle] = Math.round(processedData.kmByVehicle[vehicle]);
-        });
-
+    
+        // Calculer les kilométrages avec la fonction dédiée
+        const kilometrageData = processKilometrageData(
+            data.records, 
+            data.vehicles, 
+            selectedYears, 
+            selectedCompanies
+        );
+    
         const sortedMonths = sortMonthKeys(Object.keys(tempMonthlyData.costs));
-
-        // Créer les tableaux triés pour les graphiques
-        const monthlyData = {
-            costs: sortedMonths.map(month => ({
+    
+        return {
+            costByYear: processedCosts.costByYear,
+            costByMonth: Object.entries(processedCosts.costByMonth).map(([month, value]) => ({
                 month,
-                value: Number(tempMonthlyData.costs[month] || 0)
+                value
             })),
-            kilometers: sortedMonths.map(month => ({
+            kmByYear: kilometrageData.kmByYear,
+            kmByMonth: Object.entries(kilometrageData.kmByMonth).map(([month, value]) => ({
                 month,
-                value: Number(tempMonthlyData.kilometers[month] || 0)
+                value
+            })),
+            costByCompany: Object.entries(processedCosts.costByCompany).map(([name, value]) => ({
+                name,
+                value
+            })),
+            kmByCompany: Object.entries(kilometrageData.kmByCompany).map(([name, value]) => ({
+                name,
+                value
+            })),
+            costByVehicle: Object.entries(processedCosts.costByVehicle).map(([name, value]) => ({
+                name,
+                value
+            })),
+            kmByVehicle: Object.entries(kilometrageData.kmByVehicle).map(([name, value]) => ({
+                name,
+                value
             }))
         };
-
-        console.log('Données mensuelles avant retour:', monthlyData);
-
-        return {
-            costByYear: processedData.costByYear || {},
-            costByMonth: monthlyData.costs,
-            kmByYear: processedData.kmByYear || {},
-            kmByMonth: monthlyData.kilometers,
-            costByCompany: processedData.costByCompany || {},
-            kmByCompany: processedData.kmByCompany || {},
-            costByVehicle: processedData.costByVehicle || {},
-            kmByVehicle: processedData.kmByVehicle || {}
-        };
     }, [data, selectedYears, selectedCompanies]);
-
 
     useEffect(() => {
         if (data.records?.length > 0) {
@@ -553,20 +601,20 @@ const StatistiquesVehicules = () => {
             {/* Affichage des graphiques */}
             {graphs.costByYear.visible && (
                 <Paper
-                elevation={3}
-                sx={{
-                  border: darkMode ? '1px solid #ffffff' : '1px solid #ee742d',
-                  borderRadius: '8px',
-                  padding: '20px',
-                  margin: '20px 0',
-                  backgroundColor: darkMode ? '#1a1a1a' : '#ffffff',
-                  '&:hover': {
-                    boxShadow: darkMode
-                      ? '0 8px 16px rgba(255, 255, 255, 0.1)'
-                      : '0 8px 16px rgba(238, 116, 45, 0.2)'
-                  }
-                }}
-              >
+                    elevation={3}
+                    sx={{
+                        border: darkMode ? '1px solid #ffffff' : '1px solid #ee742d',
+                        borderRadius: '8px',
+                        padding: '20px',
+                        margin: '20px 0',
+                        backgroundColor: darkMode ? '#1a1a1a' : '#ffffff',
+                        '&:hover': {
+                            boxShadow: darkMode
+                                ? '0 8px 16px rgba(255, 255, 255, 0.1)'
+                                : '0 8px 16px rgba(238, 116, 45, 0.2)'
+                        }
+                    }}
+                >
                     <StyledChart
                         chartType="bar"
                         data={chartData.costByYear}
@@ -583,25 +631,25 @@ const StatistiquesVehicules = () => {
                         })}
                     />
                 </Paper>
-                
+
             )}
 
             {graphs.kmByYear.visible && (
                 <Paper
-                elevation={3}
-                sx={{
-                  border: darkMode ? '1px solid #ffffff' : '1px solid #ee742d',
-                  borderRadius: '8px',
-                  padding: '20px',
-                  margin: '20px 0',
-                  backgroundColor: darkMode ? '#1a1a1a' : '#ffffff',
-                  '&:hover': {
-                    boxShadow: darkMode
-                      ? '0 8px 16px rgba(255, 255, 255, 0.1)'
-                      : '0 8px 16px rgba(238, 116, 45, 0.2)'
-                  }
-                }}
-              >
+                    elevation={3}
+                    sx={{
+                        border: darkMode ? '1px solid #ffffff' : '1px solid #ee742d',
+                        borderRadius: '8px',
+                        padding: '20px',
+                        margin: '20px 0',
+                        backgroundColor: darkMode ? '#1a1a1a' : '#ffffff',
+                        '&:hover': {
+                            boxShadow: darkMode
+                                ? '0 8px 16px rgba(255, 255, 255, 0.1)'
+                                : '0 8px 16px rgba(238, 116, 45, 0.2)'
+                        }
+                    }}
+                >
                     <StyledChart
                         chartType="bar"
                         data={chartData.kmByYear}
@@ -623,25 +671,25 @@ const StatistiquesVehicules = () => {
                         })}
                     />
                 </Paper>
-               
+
             )}
 
             {graphs.costByMonth.visible && (
                 <Paper
-                elevation={3}
-                sx={{
-                  border: darkMode ? '1px solid #ffffff' : '1px solid #ee742d',
-                  borderRadius: '8px',
-                  padding: '20px',
-                  margin: '20px 0',
-                  backgroundColor: darkMode ? '#1a1a1a' : '#ffffff',
-                  '&:hover': {
-                    boxShadow: darkMode
-                      ? '0 8px 16px rgba(255, 255, 255, 0.1)'
-                      : '0 8px 16px rgba(238, 116, 45, 0.2)'
-                  }
-                }}
-              >
+                    elevation={3}
+                    sx={{
+                        border: darkMode ? '1px solid #ffffff' : '1px solid #ee742d',
+                        borderRadius: '8px',
+                        padding: '20px',
+                        margin: '20px 0',
+                        backgroundColor: darkMode ? '#1a1a1a' : '#ffffff',
+                        '&:hover': {
+                            boxShadow: darkMode
+                                ? '0 8px 16px rgba(255, 255, 255, 0.1)'
+                                : '0 8px 16px rgba(238, 116, 45, 0.2)'
+                        }
+                    }}
+                >
                     <StyledChart
                         chartType="line"
                         data={chartData.costByMonth}
@@ -662,25 +710,25 @@ const StatistiquesVehicules = () => {
                         })}
                     />
                 </Paper>
-               
+
             )}
 
             {graphs.kmByMonth.visible && (
                 <Paper
-                elevation={3}
-                sx={{
-                  border: darkMode ? '1px solid #ffffff' : '1px solid #ee742d',
-                  borderRadius: '8px',
-                  padding: '20px',
-                  margin: '20px 0',
-                  backgroundColor: darkMode ? '#1a1a1a' : '#ffffff',
-                  '&:hover': {
-                    boxShadow: darkMode
-                      ? '0 8px 16px rgba(255, 255, 255, 0.1)'
-                      : '0 8px 16px rgba(238, 116, 45, 0.2)'
-                  }
-                }}
-              >
+                    elevation={3}
+                    sx={{
+                        border: darkMode ? '1px solid #ffffff' : '1px solid #ee742d',
+                        borderRadius: '8px',
+                        padding: '20px',
+                        margin: '20px 0',
+                        backgroundColor: darkMode ? '#1a1a1a' : '#ffffff',
+                        '&:hover': {
+                            boxShadow: darkMode
+                                ? '0 8px 16px rgba(255, 255, 255, 0.1)'
+                                : '0 8px 16px rgba(238, 116, 45, 0.2)'
+                        }
+                    }}
+                >
                     <StyledChart
                         chartType="line"
                         data={chartData.kmByMonth}
@@ -701,25 +749,25 @@ const StatistiquesVehicules = () => {
                         })}
                     />
                 </Paper>
-                
+
             )}
 
             {graphs.costByCompany.visible && (
                 <Paper
-                elevation={3}
-                sx={{
-                  border: darkMode ? '1px solid #ffffff' : '1px solid #ee742d',
-                  borderRadius: '8px',
-                  padding: '20px',
-                  margin: '20px 0',
-                  backgroundColor: darkMode ? '#1a1a1a' : '#ffffff',
-                  '&:hover': {
-                    boxShadow: darkMode
-                      ? '0 8px 16px rgba(255, 255, 255, 0.1)'
-                      : '0 8px 16px rgba(238, 116, 45, 0.2)'
-                  }
-                }}
-              >
+                    elevation={3}
+                    sx={{
+                        border: darkMode ? '1px solid #ffffff' : '1px solid #ee742d',
+                        borderRadius: '8px',
+                        padding: '20px',
+                        margin: '20px 0',
+                        backgroundColor: darkMode ? '#1a1a1a' : '#ffffff',
+                        '&:hover': {
+                            boxShadow: darkMode
+                                ? '0 8px 16px rgba(255, 255, 255, 0.1)'
+                                : '0 8px 16px rgba(238, 116, 45, 0.2)'
+                        }
+                    }}
+                >
                     <StyledChart
                         chartType="pie"
                         data={chartData.costByCompany}
@@ -729,25 +777,25 @@ const StatistiquesVehicules = () => {
                         getRenderConfig={getVehicleChartConfig}
                     />
                 </Paper>
-                
+
             )}
 
             {graphs.kmByCompany.visible && (
                 <Paper
-                elevation={3}
-                sx={{
-                  border: darkMode ? '1px solid #ffffff' : '1px solid #ee742d',
-                  borderRadius: '8px',
-                  padding: '20px',
-                  margin: '20px 0',
-                  backgroundColor: darkMode ? '#1a1a1a' : '#ffffff',
-                  '&:hover': {
-                    boxShadow: darkMode
-                      ? '0 8px 16px rgba(255, 255, 255, 0.1)'
-                      : '0 8px 16px rgba(238, 116, 45, 0.2)'
-                  }
-                }}
-              >
+                    elevation={3}
+                    sx={{
+                        border: darkMode ? '1px solid #ffffff' : '1px solid #ee742d',
+                        borderRadius: '8px',
+                        padding: '20px',
+                        margin: '20px 0',
+                        backgroundColor: darkMode ? '#1a1a1a' : '#ffffff',
+                        '&:hover': {
+                            boxShadow: darkMode
+                                ? '0 8px 16px rgba(255, 255, 255, 0.1)'
+                                : '0 8px 16px rgba(238, 116, 45, 0.2)'
+                        }
+                    }}
+                >
                     <StyledChart
                         chartType="pie"
                         data={chartData.kmByCompany}
@@ -757,26 +805,26 @@ const StatistiquesVehicules = () => {
                         getRenderConfig={getVehicleChartConfig}
                     />
                 </Paper>
-                
+
             )}
 
             {/* Graphiques par véhicule */}
             {graphs.costByVehicle.visible && (
                 <Paper
-                elevation={3}
-                sx={{
-                  border: darkMode ? '1px solid #ffffff' : '1px solid #ee742d',
-                  borderRadius: '8px',
-                  padding: '20px',
-                  margin: '20px 0',
-                  backgroundColor: darkMode ? '#1a1a1a' : '#ffffff',
-                  '&:hover': {
-                    boxShadow: darkMode
-                      ? '0 8px 16px rgba(255, 255, 255, 0.1)'
-                      : '0 8px 16px rgba(238, 116, 45, 0.2)'
-                  }
-                }}
-              >
+                    elevation={3}
+                    sx={{
+                        border: darkMode ? '1px solid #ffffff' : '1px solid #ee742d',
+                        borderRadius: '8px',
+                        padding: '20px',
+                        margin: '20px 0',
+                        backgroundColor: darkMode ? '#1a1a1a' : '#ffffff',
+                        '&:hover': {
+                            boxShadow: darkMode
+                                ? '0 8px 16px rgba(255, 255, 255, 0.1)'
+                                : '0 8px 16px rgba(238, 116, 45, 0.2)'
+                        }
+                    }}
+                >
                     <StyledChart
                         chartType="bar"
                         data={chartData.costByVehicle}
@@ -787,25 +835,25 @@ const StatistiquesVehicules = () => {
                         getRenderConfig={getVehicleChartConfig}
                     />
                 </Paper>
-                
+
             )}
 
             {graphs.kmByVehicle.visible && (
                 <Paper
-                elevation={3}
-                sx={{
-                  border: darkMode ? '1px solid #ffffff' : '1px solid #ee742d',
-                  borderRadius: '8px',
-                  padding: '20px',
-                  margin: '20px 0',
-                  backgroundColor: darkMode ? '#1a1a1a' : '#ffffff',
-                  '&:hover': {
-                    boxShadow: darkMode
-                      ? '0 8px 16px rgba(255, 255, 255, 0.1)'
-                      : '0 8px 16px rgba(238, 116, 45, 0.2)'
-                  }
-                }}
-              >
+                    elevation={3}
+                    sx={{
+                        border: darkMode ? '1px solid #ffffff' : '1px solid #ee742d',
+                        borderRadius: '8px',
+                        padding: '20px',
+                        margin: '20px 0',
+                        backgroundColor: darkMode ? '#1a1a1a' : '#ffffff',
+                        '&:hover': {
+                            boxShadow: darkMode
+                                ? '0 8px 16px rgba(255, 255, 255, 0.1)'
+                                : '0 8px 16px rgba(238, 116, 45, 0.2)'
+                        }
+                    }}
+                >
                     <StyledChart
                         chartType="bar"
                         data={chartData.kmByVehicle}
