@@ -9,6 +9,15 @@ export const useSession = () => {
     const token = localStorage.getItem('token');
     const hasSession = sessionStorage.getItem(SESSION_KEY);
 
+    if (token) {
+      const parsedToken = JSON.parse(token);
+      if (parsedToken.expirationDate && new Date(parsedToken.expirationDate) < new Date()) {
+        localStorage.removeItem('token');
+        navigate('/login');
+        return;
+      }
+    }
+
     // Uniquement pour une nouvelle session de navigateur
     if (!hasSession) {
       sessionStorage.setItem(SESSION_KEY, 'true');
