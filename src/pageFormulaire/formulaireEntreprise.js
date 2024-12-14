@@ -41,6 +41,14 @@ export default function FormulaireEntreprise({ setValue, accidentData, watch }) 
   const apiUrl = config.apiUrl;
   const { isAdmin, isAdminOuConseiller, userInfo, isConseiller, isAdminOrDev } = useUserConnected();
   const [formData, setFormData] = useState(accidentData);
+  const convertToBoolean = (value) => {
+    if (typeof value === 'string') {
+      return value.toLowerCase() === 'true';
+    }
+    return Boolean(value);
+  };
+
+
 
   const [nomTravailleur, setNomTravailleur] = useState(watch('nomTravailleur') ? watch('nomTravailleur') : (accidentData && accidentData.nomTravailleur ? accidentData.nomTravailleur : null));
   const [prenomTravailleur, setPrenomTravailleur] = useState(watch('prenomTravailleur') ? watch('prenomTravailleur') : (accidentData && accidentData.prenomTravailleur ? accidentData.prenomTravailleur : null));
@@ -50,8 +58,13 @@ export default function FormulaireEntreprise({ setValue, accidentData, watch }) 
   const [DateHeureAccident, setDateHeureAccident] = useState(watch('DateHeureAccident') ? watch('DateHeureAccident') : (accidentData && accidentData.DateHeureAccident ? accidentData.DateHeureAccident : null));
   const [blessures, setBlessures] = useState(watch('blessures') ? watch('blessures') : (accidentData && accidentData.blessures ? accidentData.blessures : ''));
   const [assureurStatus, setAssureurStatus] = useState(watch('AssureurStatus') ? watch('AssureurStatus') : (accidentData && accidentData.AssureurStatus ? accidentData.AssureurStatus : ''));
-  const [boolAsCloture, setboolAsCloture] = useState(() => { const watchValue = Boolean(watch('boolAsCloture')); const accidentDataValue = accidentData ? Boolean(accidentData.boolAsCloture) : true; return watchValue || accidentDataValue; });
+
+  const [boolAsCloture, setboolAsCloture] = useState(() => convertToBoolean(watch('boolAsCloture') || accidentData?.boolAsCloture || false));
+
   const [circonstanceAccident, setCirconstanceAccident] = useState(watch('circonstanceAccident') ? watch('circonstanceAccident') : (accidentData && accidentData.circonstanceAccident ? accidentData.circonstanceAccident : ""));
+
+
+
 
   useEffect(() => {
     const data = sessionStorage.getItem('accidentData');
@@ -156,6 +169,13 @@ export default function FormulaireEntreprise({ setValue, accidentData, watch }) 
   if (loading) {
     return <div>Chargement...</div>;
   }
+
+  const handleBooleanChange = (setter, fieldName) => (value) => {
+    const boolValue = convertToBoolean(value);
+    setter(boolValue);
+    setValue(fieldName, boolValue);
+  };
+
 
   return (
 
@@ -369,20 +389,8 @@ export default function FormulaireEntreprise({ setValue, accidentData, watch }) 
               <ControlLabelP
                 id="boolAsCloture"
                 label="Clôturé"
-                onChange={(boolAsClotureCoche) => {
-                  // Assurez-vous que la valeur est bien un booléen
-                  const value = Boolean(boolAsClotureCoche);
-                  setboolAsCloture(value);
-                  // Mettre à jour la valeur dans le formulaire parent
-                  setValue('boolAsCloture', value);
-                  // Mettre à jour formData également
-                  setFormData(prev => ({
-                    ...prev,
-                    boolAsCloture: value
-                  }));
-                }}
-                defaultValue={Boolean(boolAsCloture)}
-              />
+                onChange={handleBooleanChange(setboolAsCloture, 'boolAsCloture')}
+                defaultValue={boolAsCloture}></ControlLabelP>
             </FormGroup>
           </div>
         </div>

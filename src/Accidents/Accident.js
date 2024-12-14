@@ -168,7 +168,13 @@ function Accident() {
         }
     }), []);
 
-
+    const convertToBoolean = (value) => {
+        if (typeof value === 'string') {
+          return value.toLowerCase() === 'true';
+        }
+        return Boolean(value);
+      };
+      
     // Utiliser useYearFilter avec les années récupérées
     const { selectedYears, handleYearChange } = useYearFilter(
         COOKIE_PREFIXES.HOME,
@@ -193,7 +199,7 @@ function Accident() {
 
     const [accidents, setAccidents] = useState([]);;
     const [searchTerm, setSearchTerm] = useState('');
-    const { userInfo, isConseiller, isAdminOrDev, isAdminOrDevOrConseiller } = useUserConnected();
+    const { userInfo, isConseiller, isAdminOrDev, isAdminOrDevOrConseiller, isDeveloppeur } = useUserConnected();
     const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'info' });
     const { logAction } = useLogger();
     const showSnackbar = useCallback((message, severity = 'info') => {
@@ -382,7 +388,7 @@ function Accident() {
             return years.includes(date) &&
                 matchesStatus &&
                 ['AssureurStatus', 'DateHeureAccident', 'entrepriseName', 'secteur',
-                    'nomTravailleur', 'prenomTravailleur', 'typeAccident'].some(property =>
+                    'nomTravailleur', 'prenomTravailleur', 'typeAccident', 'boolAsCloture'].some(property =>
                         item[property]?.toString().toLowerCase().includes(searchTermLower)
                     );
         });
@@ -732,14 +738,15 @@ function Accident() {
                                     }}
                                 >
                                     <TableCell>
+                                        {isDeveloppeur && console.log('Valeur de boolAsCloture:', item.boolAsCloture, 'Type:', typeof item.boolAsCloture)}
                                         <Chip
-                                            label={item.boolAsCloture ? "Clôturé" : "En attente"}
-                                            color={item.boolAsCloture ? "error" : "success"}
+                                            label={convertToBoolean(item.boolAsCloture) ? "Clôturé" : "En attente"}
+                                            color={convertToBoolean(item.boolAsCloture) ? "error" : "success"}
                                             size="small"
                                             sx={{
-                                                opacity: 0.6,  // Ajuste la transparence (0 = invisible, 1 = opaque)
+                                                opacity: 0.6,
                                                 '& .MuiChip-label': {
-                                                    opacity: 1  // Garde le texte complètement visible
+                                                    opacity: 1
                                                 }
                                             }}
                                         />

@@ -16,6 +16,8 @@ import CustomSnackbar from '../_composants/CustomSnackbar';
 import { Tooltip, Button, Paper, Box, Typography } from '@mui/material';
 import { useLogger } from '../Hook/useLogger';
 import { useTheme } from '../Hook/ThemeContext';
+import { useUserConnected } from '../Hook/userConnected';
+
 
 const forms = [
     { id: 0, component: FormulaireEntreprise },
@@ -31,6 +33,7 @@ const mandatoryFields = [
 ];
 
 export default function Formulaire() {
+    const { isAdmin, isAdminOuConseiller, userInfo, isConseiller, isAdminOrDev, isDeveloppeur } = useUserConnected();
     const [isSubmitting, setIsSubmitting] = useState(false);
     const { darkMode } = useTheme();
     const { logAction } = useLogger();
@@ -60,6 +63,9 @@ export default function Formulaire() {
     }, []);
 
     const onSubmit = useCallback((data) => {
+        if (isDeveloppeur) {
+            console.log('Données complètes envoyées à l\'API:', data);
+        }
         // Éviter la double soumission
         if (isSubmitting) return;
 
