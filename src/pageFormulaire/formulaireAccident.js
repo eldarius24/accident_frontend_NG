@@ -33,6 +33,13 @@ export default function FormulaireAccident({ setValue, accidentData, watch }) {
   const [openPreview, setOpenPreview] = useState(false);
   const [previewType, setPreviewType] = useState('');
 
+  const convertToBoolean = (value) => {
+    if (typeof value === 'string') {
+      return value.toLowerCase() === 'true';
+    }
+    return Boolean(value);
+  };
+
   const handleOpenPreview = (type) => {
     setPreviewType(type);
     setOpenPreview(true);
@@ -89,20 +96,25 @@ export default function FormulaireAccident({ setValue, accidentData, watch }) {
   const [DateJourIncapDebut, setDateJourIncapDebut] = useState(watch('DateJourIncapDebut') ? watch('DateJourIncapDebut') : (accidentData && accidentData.DateJourIncapDebut ? accidentData.DateJourIncapDebut : null));
   const [DateJourIncapFin, setDateJourIncapFin] = useState(watch('DateJourIncapFin') ? watch('DateJourIncapFin') : (accidentData && accidentData.DateJourIncapFin ? accidentData.DateJourIncapFin : null));
   const [indemnisationAccident, setIndemnisationAccident] = useState(watch('indemnisationAccident') ? watch('indemnisationAccident') : (accidentData && accidentData.indemnisationAccident ? accidentData.indemnisationAccident : ""));
-  const [boolAucun, setBoolAucun] = useState(watch('boolAucun') ? watch('boolAucun') : (accidentData && accidentData.boolAucun ? accidentData.boolAucun : false));
-  const [boolChausure, setBoolChausure] = useState(watch('boolChausure') ? watch('boolChausure') : (accidentData && accidentData.boolChausure ? accidentData.boolChausure : false));
-  const [boolLunette, setBoolLunette] = useState(watch('boolLunette') ? watch('boolLunette') : (accidentData && accidentData.boolLunette ? accidentData.boolLunette : false));
-  const [boolGant, setBoolGant] = useState(watch('boolGant') ? watch('boolGant') : (accidentData && accidentData.boolGant ? accidentData.boolGant : false));
-  const [boolCasque, setBoolCasque] = useState(watch('boolCasque') ? watch('boolCasque') : (accidentData && accidentData.boolCasque ? accidentData.boolCasque : false));
-  const [boolAuditive, setBoolAuditive] = useState(watch('boolAuditive') ? watch('boolAuditive') : (accidentData && accidentData.boolAuditive ? accidentData.boolAuditive : false));
-  const [boolMasque, setBoolMasque] = useState(watch('boolMasque') ? watch('boolMasque') : (accidentData && accidentData.boolMasque ? accidentData.boolMasque : false));
-  const [boolEcran, setBoolEcran] = useState(watch('boolEcran') ? watch('boolEcran') : (accidentData && accidentData.boolEcran ? accidentData.boolEcran : false));
-  const [boolTenue, setBoolTenue] = useState(watch('boolTenue') ? watch('boolTenue') : (accidentData && accidentData.boolTenue ? accidentData.boolTenue : false));
-  const [boolFiltre, setBoolFiltre] = useState(watch('boolFiltre') ? watch('boolFiltre') : (accidentData && accidentData.boolFiltre ? accidentData.boolFiltre : false));
-  const [boolVeste, setBoolVeste] = useState(watch('boolVeste') ? watch('boolVeste') : (accidentData && accidentData.boolVeste ? accidentData.boolVeste : false));
-  const [boolMaire, setBoolMaire] = useState(watch('boolMaire') ? watch('boolMaire') : (accidentData && accidentData.boolMaire ? accidentData.boolMaire : false));
-  const [boolChute, setBoolChute] = useState(watch('boolChute') ? watch('boolChute') : (accidentData && accidentData.boolChute ? accidentData.boolChute : false));
-  const [boolAutre, setBoolAutre] = useState(watch('boolAutre') ? watch('boolAutre') : (accidentData && accidentData.boolAutre ? accidentData.boolAutre : false));
+
+
+  const [boolAucun, setBoolAucun] = useState(() => convertToBoolean(watch('boolAucun') || accidentData?.boolAucun || false));
+  const [boolChausure, setBoolChausure] = useState(() => convertToBoolean(watch('boolChausure') || accidentData?.boolChausure || false));
+  const [boolLunette, setBoolLunette] = useState(() => convertToBoolean(watch('boolLunette') || accidentData?.boolLunette || false));
+  const [boolGant, setBoolGant] = useState(() => convertToBoolean(watch('boolGant') || accidentData?.boolGant || false));
+  const [boolCasque, setBoolCasque] = useState(() => convertToBoolean(watch('boolCasque') || accidentData?.boolCasque || false));
+  const [boolAuditive, setBoolAuditive] = useState(() => convertToBoolean(watch('boolAuditive') || accidentData?.boolAuditive || false));
+  const [boolMasque, setBoolMasque] = useState(() => convertToBoolean(watch('boolMasque') || accidentData?.boolMasque || false));
+  const [boolEcran, setBoolEcran] = useState(() => convertToBoolean(watch('boolEcran') || accidentData?.boolEcran || false));
+  const [boolTenue, setBoolTenue] = useState(() => convertToBoolean(watch('boolTenue') || accidentData?.boolTenue || false));
+  const [boolFiltre, setBoolFiltre] = useState(() => convertToBoolean(watch('boolFiltre') || accidentData?.boolFiltre || false));
+  const [boolVeste, setBoolVeste] = useState(() => convertToBoolean(watch('boolVeste') || accidentData?.boolVeste || false));
+  const [boolMaire, setBoolMaire] = useState(() => convertToBoolean(watch('boolMaire') || accidentData?.boolMaire || false));
+  const [boolChute, setBoolChute] = useState(() => convertToBoolean(watch('boolChute') || accidentData?.boolChute || false));
+  const [boolAutre, setBoolAutre] = useState(() => convertToBoolean(watch('boolAutre') || accidentData?.boolAutre || false));
+
+
+
   const [codeDeviation, setCodeDeviation] = useState(watch('codeDeviation') ? watch('codeDeviation') : (accidentData && accidentData.codeDeviation ? accidentData.codeDeviation : null));
   const [codeAgentMateriel, setCodeAgentMateriel] = useState(watch('codeAgentMateriel') ? watch('codeAgentMateriel') : (accidentData && accidentData.codeAgentMateriel ? accidentData.codeAgentMateriel : null));
   const [codeNatureLesion, setCodeNatureLesion] = useState(watch('codeNatureLesion') ? watch('codeNatureLesion') : (accidentData && accidentData.codeNatureLesion ? accidentData.codeNatureLesion : null));
@@ -110,6 +122,10 @@ export default function FormulaireAccident({ setValue, accidentData, watch }) {
   const [horaireJourAccident, sethoraireJourAccident] = useState(watch('horaireJourAccident') ? watch('horaireJourAccident') : (accidentData && accidentData.horaireJourAccident ? accidentData.horaireJourAccident : null));
 
   const [formData, setFormData] = useState(accidentData);
+
+
+
+
 
   useEffect(() => {
     const data = sessionStorage.getItem('accidentData');
@@ -150,6 +166,15 @@ export default function FormulaireAccident({ setValue, accidentData, watch }) {
     setValue('codeSiegeLesion', codeSiegeLesion)
     setValue('horaireJourAccident', horaireJourAccident)
   }, [horaireJourAccident, DateJourIncapDebut, DateJourIncapFin, indemnisationAccident, boolAucun, boolChausure, boolLunette, boolGant, boolCasque, boolAuditive, boolMasque, boolEcran, boolTenue, boolFiltre, boolVeste, boolMaire, boolChute, boolAutre, codeDeviation, codeAgentMateriel, codeNatureLesion, codeSiegeLesion, setValue]);
+
+
+  const handleBooleanChange = (setter, fieldName) => (value) => {
+    const boolValue = convertToBoolean(value);
+    setter(boolValue);
+    setValue(fieldName, boolValue);
+  };
+
+
 
   /**
    * Etape 3 : retourner le formulaire (IHMs)
@@ -306,62 +331,79 @@ export default function FormulaireAccident({ setValue, accidentData, watch }) {
         </div>
         <div>
           <FormGroup>
-            <ControlLabelP id="boolAucun" label="Aucun" onChange={(boolAucunCoche) => {
-              setBoolAucun(boolAucunCoche);
-              setValue('boolAucun', boolAucunCoche);
-            }} defaultValue={boolAucun}></ControlLabelP>
-            <ControlLabelP id="boolChausure" label="Chaussure de sécurité" onChange={(boolChausureCoche) => {
-              setBoolChausure(boolChausureCoche);
-              setValue('boolChausure', boolChausureCoche);
-            }} defaultValue={boolChausure}></ControlLabelP>
-            <ControlLabelP id="boolLunette" label="Lunettes de sécurité" onChange={(boolLunetteCoche) => {
-              setBoolLunette(boolLunetteCoche);
-              setValue('boolLunette', boolLunetteCoche);
-            }} defaultValue={boolLunette}></ControlLabelP>
-            <ControlLabelP id="boolGant" label="Gants" onChange={(boolGantCoche) => {
-              setBoolGant(boolGantCoche);
-              setValue('boolGant', boolGantCoche);
-            }} defaultValue={boolGant}></ControlLabelP>
-            <ControlLabelP id="boolCasque" label="Casque" onChange={(boolCasqueCoche) => {
-              setBoolCasque(boolCasqueCoche);
-              setValue('boolCasque', boolCasqueCoche);
-            }} defaultValue={boolCasque}></ControlLabelP>
-            <ControlLabelP id="boolAuditive" label="Protection de l'ouie" onChange={(boolAuditiveCoche) => {
-              setBoolAuditive(boolAuditiveCoche);
-              setValue('boolAuditive', boolAuditiveCoche);
-            }} defaultValue={boolAuditive}></ControlLabelP>
-            <ControlLabelP id="boolMasque" label="Masque antiseptique" onChange={(boolMasqueCoche) => {
-              setBoolMasque(boolMasqueCoche);
-              setValue('boolMasque', boolMasqueCoche);
-            }} defaultValue={boolMasque}></ControlLabelP>
-            <ControlLabelP id="boolEcran" label="Ecran facial" onChange={(boolEcranCoche) => {
-              setBoolEcran(boolEcranCoche);
-              setValue('boolEcran', boolEcranCoche);
-            }} defaultValue={boolEcran}></ControlLabelP>
-            <ControlLabelP id="boolTenue" label="Tenue de signalisation" onChange={(boolTenueCoche) => {
-              setBoolTenue(boolTenueCoche);
-              setValue('boolTenue', boolTenueCoche);
-            }} defaultValue={boolTenue}></ControlLabelP>
-            <ControlLabelP id="boolFiltre" label="Masque respiratoire à filtre" onChange={(boolFiltreCoche) => {
-              setBoolFiltre(boolFiltreCoche);
-              setValue('boolFiltre', boolFiltreCoche);
-            }} defaultValue={boolFiltre}></ControlLabelP>
-            <ControlLabelP id="boolVeste" label="Veste de protection" onChange={(boolVesteCoche) => {
-              setBoolVeste(boolVesteCoche);
-              setValue('boolVeste', boolVesteCoche);
-            }} defaultValue={boolVeste}></ControlLabelP>
-            <ControlLabelP id="boolMaire" label="Masque respiratoire avec apport d'air frais" onChange={(boolMaireCoche) => {
-              setBoolMaire(boolMaireCoche);
-              setValue('boolMaire', boolMaireCoche);
-            }} defaultValue={boolMaire}></ControlLabelP>
-            <ControlLabelP id="boolChute" label="Protection contre les chutes" onChange={(boolChuteCoche) => {
-              setBoolChute(boolChuteCoche);
-              setValue('boolChute', boolChuteCoche);
-            }} defaultValue={boolChute}></ControlLabelP>
-            <ControlLabelP id="boolAutre" label="Autre" onChange={(boolAutreCoche) => {
-              setBoolAutre(boolAutreCoche);
-              setValue('boolAutre', boolAutreCoche);
-            }} defaultValue={boolAutre}></ControlLabelP>
+
+
+            <ControlLabelP id="boolAucun"
+              label="Aucun"
+              onChange={handleBooleanChange(setBoolAucun, 'boolAucun')}
+              defaultValue={boolAucun}></ControlLabelP>
+
+
+            <ControlLabelP id="boolChausure"
+              label="Chaussure de sécurité"
+              onChange={handleBooleanChange(setBoolChausure, 'boolChausure')}
+              defaultValue={boolChausure}></ControlLabelP>
+
+            <ControlLabelP id="boolLunette"
+              label="Lunettes de sécurité"
+              onChange={handleBooleanChange(setBoolLunette, 'boolLunette')}
+              defaultValue={boolLunette}></ControlLabelP>
+
+            <ControlLabelP id="boolGant"
+              label="Gants"
+              onChange={handleBooleanChange(setBoolGant, 'boolGant')}
+              defaultValue={boolGant}></ControlLabelP>
+
+            <ControlLabelP id="boolCasque"
+              label="Casque"
+              onChange={handleBooleanChange(setBoolCasque, 'boolCasque')}
+              defaultValue={boolCasque}></ControlLabelP>
+
+            <ControlLabelP id="boolAuditive"
+              label="Protection de l'ouie"
+              onChange={handleBooleanChange(setBoolAuditive, 'boolAuditive')}
+              defaultValue={boolAuditive}></ControlLabelP>
+
+            <ControlLabelP id="boolMasque"
+              label="Masque antiseptique"
+              onChange={handleBooleanChange(setBoolMasque, 'boolMasque')}
+              defaultValue={boolMasque}></ControlLabelP>
+
+            <ControlLabelP id="boolEcran"
+              label="Ecran facial"
+              onChange={handleBooleanChange(setBoolEcran, 'boolEcran')}
+              defaultValue={boolEcran}></ControlLabelP>
+
+            <ControlLabelP id="boolTenue"
+              label="Tenue de signalisation"
+              onChange={handleBooleanChange(setBoolTenue, 'boolTenue')}
+              defaultValue={boolTenue}></ControlLabelP>
+
+            <ControlLabelP id="boolFiltre"
+              label="Masque respiratoire à filtre"
+              onChange={handleBooleanChange(setBoolFiltre, 'boolFiltre')}
+              defaultValue={boolFiltre}></ControlLabelP>
+
+            <ControlLabelP id="boolVeste"
+              label="Veste de protection"
+              onChange={handleBooleanChange(setBoolVeste, 'boolVeste')}
+              defaultValue={boolVeste}></ControlLabelP>
+
+            <ControlLabelP id="boolMaire"
+              label="Masque respiratoire avec apport d'air frais"
+              onChange={handleBooleanChange(setBoolMaire, 'boolMaire')}
+              defaultValue={boolMaire}></ControlLabelP>
+
+            <ControlLabelP id="boolChute"
+              label="Protection contre les chutes"
+              onChange={handleBooleanChange(setBoolChute, 'boolChute')}
+              defaultValue={boolChute}></ControlLabelP>
+
+            <ControlLabelP id="boolAutre"
+              label="Autre"
+              onChange={handleBooleanChange(setBoolAutre, 'boolAutre')}
+              defaultValue={boolAutre}></ControlLabelP>
+
           </FormGroup>
         </div>
         <Dialog
