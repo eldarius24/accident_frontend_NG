@@ -5,6 +5,14 @@ import config from '../config.json';
 import TextFieldP from '../_composants/textFieldP';
 import { useTheme } from '../Hook/ThemeContext';
 
+const isDevelopment = process.env.NODE_ENV === 'development';
+
+const devLog = (...args) => {
+    if (isDevelopment) {
+        console.log('[DEV]', ...args);
+    }
+};
+
 const EmailNotificationManager = ({ vehicleId }) => {
     const [inputValue, setInputValue] = useState('');
     const { darkMode } = useTheme();
@@ -21,13 +29,17 @@ const EmailNotificationManager = ({ vehicleId }) => {
         const fetchEmails = async () => {
             try {
                 setLoading(true);
+                devLog('Fetching emails for vehicleId:', { vehicleId });
                 const response = await axios.get(`http://${apiUrl}:3100/api/vehicles/${vehicleId}/notifications`);
-                // Vérifier la structure de la réponse et extraire le tableau d'emails
+                devLog('API Response:', { response: response.data });
+                
                 const emailsData = response.data?.emails || [];
+                devLog('Extracted emails data:', { emailsData });
+                
                 setEmails(Array.isArray(emailsData) ? emailsData : []);
                 setError('');
             } catch (error) {
-                console.error('Erreur lors du chargement des emails:', error);
+                devLog('Error loading emails:', { error: error.message, response: error.response?.data });
                 setError('Erreur lors du chargement des emails');
             } finally {
                 setLoading(false);
@@ -35,65 +47,94 @@ const EmailNotificationManager = ({ vehicleId }) => {
         };
         
         if (vehicleId) {
+            devLog('VehicleId changed, fetching emails...', { vehicleId });
             fetchEmails();
         }
     }, [vehicleId, apiUrl]);
 
-    const handleAddEmail = async () => {
+     const handleAddEmail = async () => {
+        devLog('Adding email:', { inputValue, currentEmails: emails });
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
         if (!inputValue) {
+            devLog('Empty input value');
             setError('Veuillez entrer une adresse email');
             return;
         }
 
         if (!emailRegex.test(inputValue)) {
+            devLog('Invalid email format');
             setError('Format d\'email invalide');
             return;
         }
 
         if (emails.includes(inputValue)) {
+            devLog('Email already exists');
             setError('Cet email existe déjà');
             return;
         }
 
         try {
             const updatedEmails = [...emails, inputValue];
+            devLog('Sending updated emails to API:', { updatedEmails });
+            
             const response = await axios.post(`http://${apiUrl}:3100/api/vehicles/${vehicleId}/notifications`, {
                 emails: updatedEmails
             });
+            devLog('API Response for add:', { response: response.data });
 
             if (response.data.success) {
                 setEmails(updatedEmails);
                 setInputValue('');
                 setError('');
+                devLog('Email added successfully');
             } else {
+                devLog('API returned error:', { message: response.data.message });
                 setError(response.data.message || 'Erreur lors de l\'ajout de l\'email');
             }
         } catch (error) {
-            console.error('Erreur lors de l\'ajout de l\'email:', error);
+            devLog('Error adding email:', { 
+                error: error.message, 
+                response: error.response?.data 
+            });
             setError(error.response?.data?.message || 'Erreur lors de l\'ajout de l\'email');
         }
     };
 
     const handleDeleteEmail = async (emailToDelete) => {
+        devLog('Deleting email:', { emailToDelete });
         try {
             const updatedEmails = emails.filter(email => email !== emailToDelete);
+            devLog('Updated emails after deletion:', { updatedEmails });
+            
             const response = await axios.post(`http://${apiUrl}:3100/api/vehicles/${vehicleId}/notifications`, {
                 emails: updatedEmails
             });
+            devLog('API Response for delete:', { response: response.data });
 
             if (response.data.success) {
                 setEmails(updatedEmails);
                 setError('');
+                devLog('Email deleted successfully');
             } else {
+                devLog('API returned error:', { message: response.data.message });
                 setError(response.data.message || 'Erreur lors de la suppression de l\'email');
             }
         } catch (error) {
-            console.error('Erreur lors de la suppression de l\'email:', error);
+            devLog('Error deleting email:', {
+                error: error.message,
+                response: error.response?.data
+            });
             setError(error.response?.data?.message || 'Erreur lors de la suppression de l\'email');
         }
     };
+
+    devLog('Component render state:', {
+        emails,
+        isArray: Array.isArray(emails),
+        loading,
+        error
+    });
 
     if (loading) {
         return (
