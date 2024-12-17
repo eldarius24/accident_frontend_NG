@@ -16,14 +16,11 @@ const TrafficLightIcon = ({ color, ...props }) => {
                 <style>
                     {`
                         .blink {
-                            animation: blinkAnimation 1.5s linear infinite;  
-                        }
-                        .blink-delayed {
-                            animation: blinkAnimation 1.5s linear infinite 0.75s;  
+                            animation: blinkAnimation 1.75s linear infinite;  
                         }
                         @keyframes blinkAnimation {
                             0%, 100% { opacity: 1; }
-                            15% { opacity: 0.3; }
+                            40% { opacity: 0.3; }
                         }
                     `}
                 </style>
@@ -46,6 +43,7 @@ const TrafficLightIcon = ({ color, ...props }) => {
                     </filter>
                 </defs>
 
+                {/* Boîtiers */}
                 <rect
                     x="96"
                     y="18"
@@ -69,7 +67,6 @@ const TrafficLightIcon = ({ color, ...props }) => {
                             stroke="#666"
                             strokeWidth="2"
                         />
-
                         <rect
                             x="216"
                             y="18"
@@ -80,66 +77,118 @@ const TrafficLightIcon = ({ color, ...props }) => {
                             stroke="#666"
                             strokeWidth="2"
                         />
+                    </>
+                )}
 
+                {/* Feux rouges */}
+                {isRed && (
+                    <>
+                        {/* Feux latéraux */}
                         <circle
                             cx="48"
                             cy="72"
                             r="36"
-                            fill={isGreen ? "url(#emergencyGlowGreen)" : "url(#emergencyGlow)"}
+                            fill="url(#emergencyGlow)"
                             style={{ filter: "url(#emergencyBlur)" }}
-                            className="blink-delayed"
+                            className="blink"
                         />
-
                         <circle
                             cx="252"
                             cy="72"
                             r="36"
-                            fill={isGreen ? "url(#emergencyGlowGreen)" : "url(#emergencyGlow)"}
+                            fill="url(#emergencyGlow)"
                             style={{ filter: "url(#emergencyBlur)" }}
-                            className="blink-delayed"
+                            className="blink"
                         />
-
                         <circle
                             cx="48"
                             cy="72"
                             r="24"
-                            fill={isGreen ? "#00ff00" : "#ff0000"}
-                            className="blink-delayed"
+                            fill="#ff0000"
+                            className="blink"
                         />
-
                         <circle
                             cx="252"
                             cy="72"
                             r="24"
-                            fill={isGreen ? "#00ff00" : "#ff0000"}
-                            className="blink-delayed"
+                            fill="#ff0000"
+                            className="blink"
+                        />
+                        {/* Feu central rouge */}
+                        <circle
+                            cx="150"
+                            cy="63"
+                            r="36"
+                            fill="url(#emergencyGlow)"
+                            style={{ filter: "url(#emergencyBlur)" }}
+                            className="blink"
+                        />
+                        <circle
+                            cx="150"
+                            cy="63"
+                            r="27"
+                            fill="#ff0000"
+                            className="blink"
                         />
                     </>
                 )}
 
-                {/* Effets de lueur pour les feux centraux */}
-                {isRed && (
-                    <circle
-                        cx="150"
-                        cy="63"
-                        r="36"
-                        fill="url(#emergencyGlow)"
-                        style={{ filter: "url(#emergencyBlur)" }}
-                        className="blink"
-                    />
-                )}
+                {/* Feu orange */}
                 {isOrange && (
-                    <circle
-                        cx="150"
-                        cy="108"
-                        r="36"
-                        fill="url(#emergencyGlowOrange)"
-                        style={{ filter: "url(#emergencyBlur)" }}
-                        className="blink"
-                    />
+                    <>
+                        <circle
+                            cx="150"
+                            cy="108"
+                            r="36"
+                            fill="url(#emergencyGlowOrange)"
+                            style={{ filter: "url(#emergencyBlur)" }}
+                            className="blink"
+                        />
+                        <circle
+                            cx="150"
+                            cy="108"
+                            r="27"
+                            fill="#ffa500"
+                            className="blink"
+                        />
+                    </>
                 )}
+
+                {/* Feux verts */}
                 {isGreen && (
                     <>
+                        {/* Feux latéraux */}
+                        <circle
+                            cx="48"
+                            cy="72"
+                            r="36"
+                            fill="url(#emergencyGlowGreen)"
+                            style={{ filter: "url(#emergencyBlur)" }}
+                            className="blink"
+                        />
+                        <circle
+                            cx="252"
+                            cy="72"
+                            r="36"
+                            fill="url(#emergencyGlowGreen)"
+                            style={{ filter: "url(#emergencyBlur)" }}
+                            className="blink"
+                        />
+                        <circle
+                            cx="48"
+                            cy="72"
+                            r="24"
+                            fill="#00ff00"
+                            className="blink"
+                        />
+                        <circle
+                            cx="252"
+                            cy="72"
+                            r="24"
+                            fill="#00ff00"
+                            className="blink"
+                        />
+                        {/* Feux centraux verts */}
                         <circle
                             cx="150"
                             cy="63"
@@ -164,36 +213,58 @@ const TrafficLightIcon = ({ color, ...props }) => {
                             style={{ filter: "url(#emergencyBlur)" }}
                             className="blink"
                         />
+                        <circle
+                            cx="150"
+                            cy="63"
+                            r="27"
+                            fill="#00ff00"
+                            className="blink"
+                        />
+                        <circle
+                            cx="150"
+                            cy="108"
+                            r="27"
+                            fill="#00ff00"
+                            className="blink"
+                        />
+                        <circle
+                            cx="150"
+                            cy="153"
+                            r="27"
+                            fill="#00ff00"
+                            className="blink"
+                        />
                     </>
                 )}
 
-                {/* Feux centraux */}
-                <circle
-                    cx="150"
-                    cy="63"
-                    r="27"
-                    fill={isGreen ? '#00ff00' : (isRed ? '#ff0000' : '#660000')}
-                    opacity={isRed || isGreen ? 1 : 0.3}
-                    className={isRed || isGreen ? "blink" : ""}
-                />
-
-                <circle
-                    cx="150"
-                    cy="108"
-                    r="27"
-                    fill={isGreen ? '#00ff00' : (isOrange ? '#ffa500' : '#805300')}
-                    opacity={isGreen || isOrange ? 1 : 0.3}
-                    className={isOrange || isGreen ? "blink" : ""}
-                />
-
-                <circle
-                    cx="150"
-                    cy="153"
-                    r="27"
-                    fill={isGreen ? '#00ff00' : '#006600'}
-                    opacity={isGreen ? 1 : 0.3}
-                    className={isGreen ? "blink" : ""}
-                />
+                {/* Feux éteints */}
+                {!isRed && !isGreen && (
+                    <circle
+                        cx="150"
+                        cy="63"
+                        r="27"
+                        fill="#660000"
+                        opacity={0.3}
+                    />
+                )}
+                {!isOrange && !isGreen && (
+                    <circle
+                        cx="150"
+                        cy="108"
+                        r="27"
+                        fill="#805300"
+                        opacity={0.3}
+                    />
+                )}
+                {!isGreen && (
+                    <circle
+                        cx="150"
+                        cy="153"
+                        r="27"
+                        fill="#006600"
+                        opacity={0.3}
+                    />
+                )}
             </svg>
         </div>
     );
