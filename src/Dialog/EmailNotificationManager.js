@@ -7,74 +7,103 @@ import { useTheme } from '../Hook/ThemeContext';
 
 const EmailNotificationManager = ({ vehicleId }) => {
     const [inputValue, setInputValue] = useState('');
-
     const { darkMode } = useTheme();
     const [emails, setEmails] = useState([]);
-    const [newEmail, setNewEmail] = useState('');
     const [error, setError] = useState('');
+    const [loading, setLoading] = useState(true);
     const apiUrl = config.apiUrl;
+
     const handleEmailChange = (value) => {
         setInputValue(value);
     };
 
-
     useEffect(() => {
         const fetchEmails = async () => {
             try {
+                setLoading(true);
                 const response = await axios.get(`http://${apiUrl}:3100/api/vehicles/${vehicleId}/notifications`);
-                setEmails(response.data);
+                // Vérifier la structure de la réponse et extraire le tableau d'emails
+                const emailsData = response.data?.emails || [];
+                setEmails(Array.isArray(emailsData) ? emailsData : []);
+                setError('');
             } catch (error) {
                 console.error('Erreur lors du chargement des emails:', error);
+                setError('Erreur lors du chargement des emails');
+            } finally {
+                setLoading(false);
             }
         };
-        fetchEmails();
+        
+        if (vehicleId) {
+            fetchEmails();
+        }
     }, [vehicleId, apiUrl]);
 
     const handleAddEmail = async () => {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
         if (!inputValue) {
+            setError('Veuillez entrer une adresse email');
             return;
         }
 
         if (!emailRegex.test(inputValue)) {
+            setError('Format d\'email invalide');
             return;
         }
 
         if (emails.includes(inputValue)) {
+            setError('Cet email existe déjà');
             return;
         }
 
         try {
             const updatedEmails = [...emails, inputValue];
-            // Appel API pour sauvegarder
-            await axios.post(`http://${apiUrl}:3100/api/vehicles/${vehicleId}/notifications`, {
+            const response = await axios.post(`http://${apiUrl}:3100/api/vehicles/${vehicleId}/notifications`, {
                 emails: updatedEmails
             });
 
-            // Mettre à jour l'état local uniquement après succès de l'API
-            setEmails(updatedEmails);
-            setInputValue('');
+            if (response.data.success) {
+                setEmails(updatedEmails);
+                setInputValue('');
+                setError('');
+            } else {
+                setError(response.data.message || 'Erreur lors de l\'ajout de l\'email');
+            }
         } catch (error) {
             console.error('Erreur lors de l\'ajout de l\'email:', error);
-            // Ajouter gestion d'erreur UI si nécessaire
+            setError(error.response?.data?.message || 'Erreur lors de l\'ajout de l\'email');
         }
     };
 
     const handleDeleteEmail = async (emailToDelete) => {
         try {
             const updatedEmails = emails.filter(email => email !== emailToDelete);
-            await axios.post(`http://${apiUrl}:3100/api/vehicles/${vehicleId}/notifications`, {
+            const response = await axios.post(`http://${apiUrl}:3100/api/vehicles/${vehicleId}/notifications`, {
                 emails: updatedEmails
             });
-            setEmails(updatedEmails);
+
+            if (response.data.success) {
+                setEmails(updatedEmails);
+                setError('');
+            } else {
+                setError(response.data.message || 'Erreur lors de la suppression de l\'email');
+            }
         } catch (error) {
             console.error('Erreur lors de la suppression de l\'email:', error);
+            setError(error.response?.data?.message || 'Erreur lors de la suppression de l\'email');
         }
     };
 
-    return (
+    if (loading) {
+        return (
+            <Box sx={{ mt: 2, textAlign: 'center' }}>
+                <Typography>Chargement des notifications...</Typography>
+            </Box>
+        );
+    }
 
+    return (
         <Box sx={{ mt: 2 }}>
             <Typography variant="h6"
                 sx={{
@@ -99,6 +128,8 @@ const EmailNotificationManager = ({ vehicleId }) => {
                             placeholder="Ajouter une adresse email"
                             fullWidth
                             variant="outlined"
+                            error={!!error}
+                            helperText={error}
                         />
                     </Grid>
                     <Grid item xs={0.00001} style={{ margin: '-24.5%' }}>
@@ -134,9 +165,10 @@ const EmailNotificationManager = ({ vehicleId }) => {
                 flexWrap: 'wrap',
                 gap: 1,
                 justifyContent: 'center',
-                width: '100%'
+                width: '100%',
+                mt: 2
             }}>
-                {emails.map((email, index) => (
+                {Array.isArray(emails) && emails.map((email, index) => (
                     <Chip
                         key={index}
                         label={email}
@@ -154,13 +186,11 @@ const EmailNotificationManager = ({ vehicleId }) => {
                                 color: darkMode ? '#8f2922' : '#f44336',
                             }
                         }}
-                        
                         variant="outlined"
                     />
                 ))}
             </Box>
         </Box>
-
     );
 };
 
