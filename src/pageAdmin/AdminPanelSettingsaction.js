@@ -513,6 +513,56 @@ export default function AdminPanelSettingsaction() {
                         />
                     </Box>
                 </Paper>
+                <Paper
+    elevation={3}
+    sx={{
+        border: darkMode ? '1px solid #ffffff' : '1px solid #ee742d',
+        borderRadius: '8px',
+        padding: '20px',
+        margin: '20px 0',
+        backgroundColor: darkMode ? '#2e2e2e' : '#ffffff',
+        '&:hover': {
+            boxShadow: darkMode
+                ? '0 8px 16px rgba(255, 255, 255, 0.1)'
+                : '0 8px 16px rgba(238, 116, 45, 0.2)'
+        }
+    }}
+>
+    <h3 style={{ color: darkMode ? '#ffffff' : 'inherit' }}>Compteur d'accidents</h3>
+    <Box sx={{
+        display: 'flex',
+        justifyContent: 'center',
+        marginLeft: '120px',
+        marginRight: '120px',
+        gap: '20px'
+    }}>
+        <Tooltip title="Afficher le compteur d'accidents en plein écran" arrow>
+            <Button
+                type="submit"
+                component={Link}
+                to={'/accidentCounter'}
+                sx={{
+                    ...defaultStyle,
+                    color: darkMode ? '#ffffff' : 'black',
+                    backgroundColor: darkMode ? '#424242' : '#ee742d59',
+                    transition: 'all 0.1s ease-in-out',
+                    '&:hover': {
+                        backgroundColor: darkMode ? '#7a8e1c' : '#95ad22',
+                        transform: 'scale(1.08)',
+                        boxShadow: darkMode ? '0 6px 12px rgba(255,255,255,0.2)' : 6
+                    },
+                    boxShadow: darkMode ? '0 3px 6px rgba(255,255,255,0.1)' : 3,
+                    textTransform: 'none',
+                    border: darkMode ? '1px solid rgba(255,255,255,0.1)' : 'none'
+                }}
+                variant="contained"
+            >
+                <ViewListIcon />
+                Compteur d'accidents plein écran
+            </Button>
+        </Tooltip>
+    </Box>
+</Paper>
             </Paper>
             <CustomSnackbar
                 open={snackbar.open}

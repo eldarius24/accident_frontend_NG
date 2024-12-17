@@ -4,16 +4,10 @@ import axios from 'axios';
 import config from '../config.json';
 import TextFieldP from '../_composants/textFieldP';
 import { useTheme } from '../Hook/ThemeContext';
-
-const isDevelopment = process.env.NODE_ENV === 'development';
-
-const devLog = (...args) => {
-    if (isDevelopment) {
-        console.log('[DEV]', ...args);
-    }
-};
+import { useUserConnected } from '../Hook/userConnected';
 
 const EmailNotificationManager = ({ vehicleId }) => {
+    const { isDeveloppeur } = useUserConnected();
     const [inputValue, setInputValue] = useState('');
     const { darkMode } = useTheme();
     const [emails, setEmails] = useState([]);
@@ -29,114 +23,150 @@ const EmailNotificationManager = ({ vehicleId }) => {
         const fetchEmails = async () => {
             try {
                 setLoading(true);
-                devLog('Fetching emails for vehicleId:', { vehicleId });
+                if (isDeveloppeur) {
+                    console.log('Fetching emails for vehicleId:', vehicleId);
+                }
                 const response = await axios.get(`http://${apiUrl}:3100/api/vehicles/${vehicleId}/notifications`);
-                devLog('API Response:', { response: response.data });
-                
+                if (isDeveloppeur) {
+                    console.log('API Response:', response.data);
+                }
+
+                // Vérifier la structure de la réponse et extraire le tableau d'emails
                 const emailsData = response.data?.emails || [];
-                devLog('Extracted emails data:', { emailsData });
-                
+                if (isDeveloppeur) {
+                    console.log('Extracted emails data:', emailsData);
+                }
+
                 setEmails(Array.isArray(emailsData) ? emailsData : []);
                 setError('');
             } catch (error) {
-                devLog('Error loading emails:', { error: error.message, response: error.response?.data });
+                console.error('Erreur lors du chargement des emails:', error);
+                if (isDeveloppeur) {
+                    console.log('Error response:', error.response?.data);
+                }
                 setError('Erreur lors du chargement des emails');
             } finally {
                 setLoading(false);
             }
         };
-        
+
         if (vehicleId) {
-            devLog('VehicleId changed, fetching emails...', { vehicleId });
+            if (isDeveloppeur) {
+                console.log('VehicleId changed, fetching emails...');
+            }
             fetchEmails();
         }
     }, [vehicleId, apiUrl]);
 
-     const handleAddEmail = async () => {
-        devLog('Adding email:', { inputValue, currentEmails: emails });
+    const handleAddEmail = async () => {
+        if (isDeveloppeur) {
+            console.log('Adding email:', inputValue);
+        }
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
         if (!inputValue) {
-            devLog('Empty input value');
+            if (isDeveloppeur) {
+                console.log('Empty input value');
+            }
             setError('Veuillez entrer une adresse email');
             return;
         }
 
         if (!emailRegex.test(inputValue)) {
-            devLog('Invalid email format');
+            if (isDeveloppeur) {
+                console.log('Invalid email format');
+            }
             setError('Format d\'email invalide');
             return;
         }
 
         if (emails.includes(inputValue)) {
-            devLog('Email already exists');
+            if (isDeveloppeur) {
+                console.log('Email already exists');
+            }
             setError('Cet email existe déjà');
             return;
         }
 
         try {
             const updatedEmails = [...emails, inputValue];
-            devLog('Sending updated emails to API:', { updatedEmails });
-            
+            if (isDeveloppeur) {
+                console.log('Sending updated emails to API:', updatedEmails);
+            }
+
             const response = await axios.post(`http://${apiUrl}:3100/api/vehicles/${vehicleId}/notifications`, {
                 emails: updatedEmails
             });
-            devLog('API Response for add:', { response: response.data });
+            if (isDeveloppeur) {
+                console.log('API Response for add:', response.data);
+            }
 
             if (response.data.success) {
                 setEmails(updatedEmails);
                 setInputValue('');
                 setError('');
-                devLog('Email added successfully');
+                console.log('Email added successfully');
             } else {
-                devLog('API returned error:', { message: response.data.message });
+                if (isDeveloppeur) {
+                    console.log('API returned error:', response.data.message);
+                }
                 setError(response.data.message || 'Erreur lors de l\'ajout de l\'email');
             }
         } catch (error) {
-            devLog('Error adding email:', { 
-                error: error.message, 
-                response: error.response?.data 
-            });
+            console.error('Erreur lors de l\'ajout de l\'email:', error);
+            if (isDeveloppeur) {
+                console.log('Error response:', error.response?.data);
+            }
             setError(error.response?.data?.message || 'Erreur lors de l\'ajout de l\'email');
         }
     };
 
     const handleDeleteEmail = async (emailToDelete) => {
-        devLog('Deleting email:', { emailToDelete });
+        if (isDeveloppeur) {
+            console.log('Deleting email:', emailToDelete);
+        }
         try {
             const updatedEmails = emails.filter(email => email !== emailToDelete);
-            devLog('Updated emails after deletion:', { updatedEmails });
-            
+            if (isDeveloppeur) {
+                console.log('Updated emails after deletion:', updatedEmails);
+            }
+
             const response = await axios.post(`http://${apiUrl}:3100/api/vehicles/${vehicleId}/notifications`, {
                 emails: updatedEmails
             });
-            devLog('API Response for delete:', { response: response.data });
+            if (isDeveloppeur) {
+                console.log('API Response for delete:', response.data);
+            }
 
             if (response.data.success) {
                 setEmails(updatedEmails);
                 setError('');
-                devLog('Email deleted successfully');
+                if (isDeveloppeur) {
+                    console.log('Email deleted successfully');
+                }
             } else {
-                devLog('API returned error:', { message: response.data.message });
+                if (isDeveloppeur) {
+                    console.log('API returned error:', response.data.message);
+                }
                 setError(response.data.message || 'Erreur lors de la suppression de l\'email');
             }
         } catch (error) {
-            devLog('Error deleting email:', {
-                error: error.message,
-                response: error.response?.data
-            });
+            console.error('Erreur lors de la suppression de l\'email:', error);
+            if (isDeveloppeur) {
+                console.log('Error response:', error.response?.data);
+            }
             setError(error.response?.data?.message || 'Erreur lors de la suppression de l\'email');
         }
     };
-
-    devLog('Component render state:', {
-        emails,
-        isArray: Array.isArray(emails),
-        loading,
-        error
-    });
+    if (isDeveloppeur) {
+        console.log('Current emails state:', emails);
+        console.log('Is emails an array?', Array.isArray(emails));
+    }
 
     if (loading) {
+        if (isDeveloppeur) {
+            console.log('Component is loading');
+        }
         return (
             <Box sx={{ mt: 2, textAlign: 'center' }}>
                 <Typography>Chargement des notifications...</Typography>

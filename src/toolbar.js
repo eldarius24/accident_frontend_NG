@@ -88,7 +88,7 @@ function ResponsiveAppBar() {
 
   const showText = windowWidth > 1000;
 
-  const { isVehiculeDetails, isAdminAddVehicule, isAdminVehicules, isGestionVehicules, isHome, isAccident, isquesEntrep, isentreprise, issiegelesion, isnaturelesion, isagentmateriel, isdeviation, isAddSecteur, isadminEntreprises, isaddEntrprise, isadminUser, isaddUser, isFormulaireAction, isFormulaireAccident, isPageAdmin, isPageStats, isLoginPage, isplanAction, isHiddenPage } = useMemo(() => ({
+  const {isAccidentCounter, isVehiculeDetails, isAdminAddVehicule, isAdminVehicules, isGestionVehicules, isHome, isAccident, isquesEntrep, isentreprise, issiegelesion, isnaturelesion, isagentmateriel, isdeviation, isAddSecteur, isadminEntreprises, isaddEntrprise, isadminUser, isaddUser, isFormulaireAction, isFormulaireAccident, isPageAdmin, isPageStats, isLoginPage, isplanAction, isHiddenPage } = useMemo(() => ({
     isFormulaireAccident: location.pathname === '/formulaire',
     isPageAdmin: location.pathname === '/adminaction',
     isPageStats: location.pathname === '/statistiques',
@@ -114,6 +114,7 @@ function ResponsiveAppBar() {
     isHiddenPage: [].includes(location.pathname),
     isAdminAddVehicule: location.pathname === '/AdminAddVehicule',
     isVehiculeDetails: location.pathname === '/vehiculeDetails',
+    isAccidentCounter: location.pathname === '/accidentCounter'
 
   }), [location.pathname]);
 
@@ -155,7 +156,7 @@ function ResponsiveAppBar() {
     }
   }), [windowWidth, darkMode]);
 
-  if (isHiddenPage || isdeviation || isagentmateriel || isnaturelesion || issiegelesion) {
+  if (isHiddenPage || isdeviation || isagentmateriel || isnaturelesion || issiegelesion || isAccidentCounter) {
     return null;
   }
 

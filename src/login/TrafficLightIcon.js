@@ -1,5 +1,4 @@
 import React from 'react';
-import { SvgIcon } from '@mui/material';
 
 const TrafficLightIcon = ({ color, ...props }) => {
     const isRed = color === '#ff0000';
@@ -7,135 +6,196 @@ const TrafficLightIcon = ({ color, ...props }) => {
     const isGreen = color === '#4caf50';
 
     return (
-        <SvgIcon {...props} viewBox="0 0 200 144" sx={{ fontSize: '144px' }}>
-            <defs>
-                <radialGradient id="emergencyGlow" cx="0.5" cy="0.5" r="0.5">
-                    <stop offset="0%" stopColor="#ff0000" stopOpacity="1"/>
-                    <stop offset="100%" stopColor="#ff0000" stopOpacity="0"/>
-                </radialGradient>
-                
-                <filter id="emergencyBlur" x="-50%" y="-50%" width="200%" height="200%">
-                    <feGaussianBlur in="SourceGraphic" stdDeviation="3"/>
-                </filter>
-            </defs>
+        <div style={{ display: 'inline-block' }}>
+            <svg
+                width="300"
+                height="216"
+                viewBox="0 0 300 216"
+                {...props}
+            >
+                <style>
+                    {`
+                        .blink {
+                            animation: blinkAnimation 1.5s linear infinite;  
+                        }
+                        .blink-delayed {
+                            animation: blinkAnimation 1.5s linear infinite 0.75s;  
+                        }
+                        @keyframes blinkAnimation {
+                            0%, 100% { opacity: 1; }
+                            15% { opacity: 0.3; }
+                        }
+                    `}
+                </style>
 
-            <rect
-                x="64"
-                y="12"
-                width="72"
-                height="120"
-                rx="12"
-                fill="#333"
-                stroke="#666"
-                strokeWidth="2"
-            />
+                <defs>
+                    <radialGradient id="emergencyGlow" cx="0.5" cy="0.5" r="0.5">
+                        <stop offset="0%" stopColor="#ff0000" stopOpacity="1" />
+                        <stop offset="100%" stopColor="#ff0000" stopOpacity="0" />
+                    </radialGradient>
+                    <radialGradient id="emergencyGlowOrange" cx="0.5" cy="0.5" r="0.5">
+                        <stop offset="0%" stopColor="#ffa500" stopOpacity="1" />
+                        <stop offset="100%" stopColor="#ffa500" stopOpacity="0" />
+                    </radialGradient>
+                    <radialGradient id="emergencyGlowGreen" cx="0.5" cy="0.5" r="0.5">
+                        <stop offset="0%" stopColor="#00ff00" stopOpacity="1" />
+                        <stop offset="100%" stopColor="#00ff00" stopOpacity="0" />
+                    </radialGradient>
+                    <filter id="emergencyBlur">
+                        <feGaussianBlur in="SourceGraphic" stdDeviation="4" />
+                    </filter>
+                </defs>
 
-            {isRed && (
-                <>
-                    <rect
-                        x="8"
-                        y="12"
-                        width="48"
-                        height="72"
-                        rx="8"
-                        fill="#333"
-                        stroke="#666"
-                        strokeWidth="1"
-                    />
+                <rect
+                    x="96"
+                    y="18"
+                    width="108"
+                    height="180"
+                    rx="18"
+                    fill="#333"
+                    stroke="#666"
+                    strokeWidth="3"
+                />
 
-                    <rect
-                        x="144"
-                        y="12"
-                        width="48"
-                        height="72"
-                        rx="8"
-                        fill="#333"
-                        stroke="#666"
-                        strokeWidth="1"
-                    />
+                {(isRed || isGreen) && (
+                    <>
+                        <rect
+                            x="12"
+                            y="18"
+                            width="72"
+                            height="108"
+                            rx="12"
+                            fill="#333"
+                            stroke="#666"
+                            strokeWidth="2"
+                        />
 
+                        <rect
+                            x="216"
+                            y="18"
+                            width="72"
+                            height="108"
+                            rx="12"
+                            fill="#333"
+                            stroke="#666"
+                            strokeWidth="2"
+                        />
+
+                        <circle
+                            cx="48"
+                            cy="72"
+                            r="36"
+                            fill={isGreen ? "url(#emergencyGlowGreen)" : "url(#emergencyGlow)"}
+                            style={{ filter: "url(#emergencyBlur)" }}
+                            className="blink-delayed"
+                        />
+
+                        <circle
+                            cx="252"
+                            cy="72"
+                            r="36"
+                            fill={isGreen ? "url(#emergencyGlowGreen)" : "url(#emergencyGlow)"}
+                            style={{ filter: "url(#emergencyBlur)" }}
+                            className="blink-delayed"
+                        />
+
+                        <circle
+                            cx="48"
+                            cy="72"
+                            r="24"
+                            fill={isGreen ? "#00ff00" : "#ff0000"}
+                            className="blink-delayed"
+                        />
+
+                        <circle
+                            cx="252"
+                            cy="72"
+                            r="24"
+                            fill={isGreen ? "#00ff00" : "#ff0000"}
+                            className="blink-delayed"
+                        />
+                    </>
+                )}
+
+                {/* Effets de lueur pour les feux centraux */}
+                {isRed && (
                     <circle
-                        cx="32"
-                        cy="48"
-                        r="24"
+                        cx="150"
+                        cy="63"
+                        r="36"
                         fill="url(#emergencyGlow)"
-                        filter="url(#emergencyBlur)">
-                        <animate
-                            attributeName="opacity"
-                            values="1;0.3;1"
-                            dur="0.5s"
-                            repeatCount="indefinite"
-                        />
-                    </circle>
-
+                        style={{ filter: "url(#emergencyBlur)" }}
+                        className="blink"
+                    />
+                )}
+                {isOrange && (
                     <circle
-                        cx="168"
-                        cy="48"
-                        r="24"
-                        fill="url(#emergencyGlow)"
-                        filter="url(#emergencyBlur)">
-                        <animate
-                            attributeName="opacity"
-                            values="1;0.3;1"
-                            dur="0.5s"
-                            repeatCount="indefinite"
-                            begin="0.25s"
+                        cx="150"
+                        cy="108"
+                        r="36"
+                        fill="url(#emergencyGlowOrange)"
+                        style={{ filter: "url(#emergencyBlur)" }}
+                        className="blink"
+                    />
+                )}
+                {isGreen && (
+                    <>
+                        <circle
+                            cx="150"
+                            cy="63"
+                            r="36"
+                            fill="url(#emergencyGlowGreen)"
+                            style={{ filter: "url(#emergencyBlur)" }}
+                            className="blink"
                         />
-                    </circle>
-
-                    <circle
-                        cx="32"
-                        cy="48"
-                        r="16"
-                        fill="#ff0000">
-                        <animate
-                            attributeName="opacity"
-                            values="1;0.3;1"
-                            dur="0.5s"
-                            repeatCount="indefinite"
+                        <circle
+                            cx="150"
+                            cy="108"
+                            r="36"
+                            fill="url(#emergencyGlowGreen)"
+                            style={{ filter: "url(#emergencyBlur)" }}
+                            className="blink"
                         />
-                    </circle>
-
-                    <circle
-                        cx="168"
-                        cy="48"
-                        r="16"
-                        fill="#ff0000">
-                        <animate
-                            attributeName="opacity"
-                            values="1;0.3;1"
-                            dur="0.5s"
-                            repeatCount="indefinite"
-                            begin="0.25s"
+                        <circle
+                            cx="150"
+                            cy="153"
+                            r="36"
+                            fill="url(#emergencyGlowGreen)"
+                            style={{ filter: "url(#emergencyBlur)" }}
+                            className="blink"
                         />
-                    </circle>
-                </>
-            )}
+                    </>
+                )}
 
-            <circle
-                cx="100"
-                cy="42"
-                r="18"
-                fill={isRed ? '#ff0000' : '#660000'}
-                opacity={isRed ? 1 : 0.3}
-            />
+                {/* Feux centraux */}
+                <circle
+                    cx="150"
+                    cy="63"
+                    r="27"
+                    fill={isGreen ? '#00ff00' : (isRed ? '#ff0000' : '#660000')}
+                    opacity={isRed || isGreen ? 1 : 0.3}
+                    className={isRed || isGreen ? "blink" : ""}
+                />
 
-            <circle
-                cx="100"
-                cy="72"
-                r="18"
-                fill={isOrange ? '#ffa500' : '#805300'}
-                opacity={isOrange ? 1 : 0.3}
-            />
+                <circle
+                    cx="150"
+                    cy="108"
+                    r="27"
+                    fill={isGreen ? '#00ff00' : (isOrange ? '#ffa500' : '#805300')}
+                    opacity={isGreen || isOrange ? 1 : 0.3}
+                    className={isOrange || isGreen ? "blink" : ""}
+                />
 
-            <circle
-                cx="100"
-                cy="102"
-                r="18"
-                fill={isGreen ? '#00ff00' : '#006600'}
-                opacity={isGreen ? 1 : 0.3}
-            />
-        </SvgIcon>
+                <circle
+                    cx="150"
+                    cy="153"
+                    r="27"
+                    fill={isGreen ? '#00ff00' : '#006600'}
+                    opacity={isGreen ? 1 : 0.3}
+                    className={isGreen ? "blink" : ""}
+                />
+            </svg>
+        </div>
     );
 };
 
