@@ -10,7 +10,9 @@ import {
     LinearProgress,
     Tooltip,
     Box,
-    Typography
+    Typography,
+    TextField,
+    Grid
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import { useNavigate } from 'react-router-dom';
@@ -21,12 +23,15 @@ import { useUserConnected } from '../Hook/userConnected';
 import axios from 'axios';
 import { blueGrey } from '@mui/material/colors';
 import GetAppIcon from '@mui/icons-material/GetApp';
+import InputAdornment from '@mui/material/InputAdornment';
+import SearchIcon from '@mui/icons-material/Search';
 
 export default function GetionVehicleList() {
     const { darkMode } = useTheme();
     const navigate = useNavigate();
     const [vehicles, setVehicles] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [searchPlaque, setSearchPlaque] = useState('');
     const apiUrl = config.apiUrl;
     const { userInfo, isAdminOrDev } = useUserConnected();
     const [snackbar, setSnackbar] = useState({
@@ -34,13 +39,24 @@ export default function GetionVehicleList() {
         message: '',
         severity: 'info',
     });
-
+    const ITEM_MARGIN = '20px';
     const rowColors = useMemo(() =>
         darkMode
             ? ['#7a7a7a', '#979797']
             : ['#e62a5625', '#95519b25'],
         [darkMode]
     );
+
+    const filteredVehicles = useMemo(() => {
+        const searchTerm = searchPlaque.toLowerCase();
+        return vehicles.filter(vehicle =>
+            vehicle.numPlaque.toLowerCase().includes(searchTerm) ||
+            vehicle.marque.toLowerCase().includes(searchTerm) ||
+            vehicle.modele.toLowerCase().includes(searchTerm) ||
+            vehicle.entrepriseName.toLowerCase().includes(searchTerm) ||
+            vehicle.secteur.toLowerCase().includes(searchTerm)
+        );
+    }, [vehicles, searchPlaque]);
 
     const showSnackbar = (message, severity = 'info') => {
         setSnackbar({ open: true, message, severity });
@@ -81,7 +97,6 @@ export default function GetionVehicleList() {
                 const response = await axios.get(`http://${apiUrl}:3100/api/vehicles`);
                 let filteredVehicles = response.data;
 
-                // Filtre les véhicules si l'utilisateur n'est pas admin
                 if (!isAdminOrDev && userInfo?.userGetionaireVehicule) {
                     filteredVehicles = response.data.filter(vehicle =>
                         userInfo.userGetionaireVehicule.includes(vehicle.entrepriseName)
@@ -132,6 +147,49 @@ export default function GetionVehicleList() {
                     Liste des Véhicules
                 </Typography>
             </Box>
+            <Box style={{ display: 'flex', justifyContent: 'center', margin: '20px 0rem' }}>
+            <Grid item xs={3} sx={{ pr: ITEM_MARGIN }}>
+                <TextField
+                    fullWidth
+                    label="Rechercher par mot-clé"
+                    variant="outlined"
+                    value={searchPlaque}
+                    onChange={(e) => setSearchPlaque(e.target.value)}
+                    sx={{
+                        boxShadow: darkMode ? '0 3px 6px rgba(255,255,255,0.1)' : 3,
+                        backgroundColor: darkMode ? '#424242' : '#ee752d60',
+                        width: '100%',
+                        '& .MuiOutlinedInput-root': {
+                            color: darkMode ? '#fff' : 'inherit',
+                            '& fieldset': {
+                                borderColor: darkMode ? 'rgba(255,255,255,0.3)' : 'rgba(0,0,0,0.23)'
+                            },
+                            '&:hover fieldset': {
+                                borderColor: darkMode ? 'rgba(255,255,255,0.5)' : 'rgba(0,0,0,0.5)'
+                            },
+                            '&.Mui-focused fieldset': {
+                                borderColor: darkMode ? 'rgba(255,255,255,0.7)' : '#1976d2'
+                            }
+                        },
+                        '& .MuiInputLabel-root': {
+                            color: darkMode ? '#fff' : 'inherit'
+                        }
+                    }}
+                    InputProps={{
+                        startAdornment: (
+                            <InputAdornment position="start">
+                                <SearchIcon sx={{ color: darkMode ? '#fff' : 'inherit' }} />
+                            </InputAdornment>
+                        ),
+                        sx: {
+                            '&::placeholder': {
+                                color: darkMode ? 'rgba(255,255,255,0.7)' : 'inherit'
+                            }
+                        }
+                    }}
+                />
+            </Grid>
+            </Box>
 
             <TableContainer
                 className="frameStyle-style"
@@ -163,7 +221,7 @@ export default function GetionVehicleList() {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {vehicles.map((vehicle, index) => (
+                        {filteredVehicles.map((vehicle, index) => (
                             <TableRow
                                 key={vehicle._id}
                                 className={`table-row-separatormenu ${darkMode ? 'dark-separator' : ''}`}
