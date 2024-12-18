@@ -20,7 +20,7 @@ const TrafficLightIcon = ({ color, ...props }) => {
                         }
                         @keyframes blinkAnimation {
                             0%, 100% { opacity: 1; }
-                            40% { opacity: 0.3; }
+                            20% { opacity: 0; }
                         }
                     `}
                 </style>
@@ -46,9 +46,9 @@ const TrafficLightIcon = ({ color, ...props }) => {
                 {/* Boîtiers */}
                 <rect
                     x="96"
-                    y="18"
+                    y="8"
                     width="108"
-                    height="180"
+                    height="200"
                     rx="18"
                     fill="#333"
                     stroke="#666"
@@ -117,7 +117,7 @@ const TrafficLightIcon = ({ color, ...props }) => {
                         {/* Feu central rouge */}
                         <circle
                             cx="150"
-                            cy="63"
+                            cy="54"
                             r="36"
                             fill="url(#emergencyGlow)"
                             style={{ filter: "url(#emergencyBlur)" }}
@@ -125,7 +125,7 @@ const TrafficLightIcon = ({ color, ...props }) => {
                         />
                         <circle
                             cx="150"
-                            cy="63"
+                            cy="54"
                             r="27"
                             fill="#ff0000"
                             className="blink"
@@ -191,7 +191,7 @@ const TrafficLightIcon = ({ color, ...props }) => {
                         {/* Feux centraux verts */}
                         <circle
                             cx="150"
-                            cy="63"
+                            cy="54"
                             r="36"
                             fill="url(#emergencyGlowGreen)"
                             style={{ filter: "url(#emergencyBlur)" }}
@@ -207,7 +207,7 @@ const TrafficLightIcon = ({ color, ...props }) => {
                         />
                         <circle
                             cx="150"
-                            cy="153"
+                            cy="162"
                             r="36"
                             fill="url(#emergencyGlowGreen)"
                             style={{ filter: "url(#emergencyBlur)" }}
@@ -215,7 +215,7 @@ const TrafficLightIcon = ({ color, ...props }) => {
                         />
                         <circle
                             cx="150"
-                            cy="63"
+                            cy="54"
                             r="27"
                             fill="#00ff00"
                             className="blink"
@@ -229,7 +229,7 @@ const TrafficLightIcon = ({ color, ...props }) => {
                         />
                         <circle
                             cx="150"
-                            cy="153"
+                            cy="162"
                             r="27"
                             fill="#00ff00"
                             className="blink"
@@ -241,7 +241,7 @@ const TrafficLightIcon = ({ color, ...props }) => {
                 {!isRed && !isGreen && (
                     <circle
                         cx="150"
-                        cy="63"
+                        cy="54"
                         r="27"
                         fill="#660000"
                         opacity={0.3}
@@ -259,7 +259,7 @@ const TrafficLightIcon = ({ color, ...props }) => {
                 {!isGreen && (
                     <circle
                         cx="150"
-                        cy="153"
+                        cy="162"
                         r="27"
                         fill="#006600"
                         opacity={0.3}
