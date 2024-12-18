@@ -356,9 +356,9 @@ const Login = () => {
                   filter: 'blur(1px)',
                 },
               }}
-              data-text="T.I.G.R.E"
+              data-text="T.I.G.R.E ➕"
             >
-              T.I.G.R.E
+              T.I.G.R.E ➕
             </Typography>
 
             <Typography

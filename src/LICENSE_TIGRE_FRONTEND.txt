@@ -1,6 +1,6 @@
 Licence d'Utilisation Non Commerciale avec Autorisation d'Usage Interne
 
-Nom du Projet T.I.G.R.E (Traitement Informatisé pour la Gestion des Risques en Entreprise) partie 1/2 FRONTEND - Licence d'Utilisation Non Commerciale et Interne
+Nom du Projet T.I.G.R.E ➕ (Traitement Informatisé pour la Gestion des Risques en Entreprise) partie 1/2 FRONTEND - Licence d'Utilisation Non Commerciale et Interne
 
 1. Attribution
 
@@ -36,7 +36,7 @@ Clause Additionnelle : Pour toute demande d’utilisation commerciale ou en deho
 
 Non-Commercial Use License with Internal Use Permission
 
-Project Name: T.I.G.R.E (Computerized Management of Enterprise Risk) part 1/2 FRONTEND - Non-Commercial and Internal Use License
+Project Name: T.I.G.R.E ➕ (Computerized Management of Enterprise Risk) part 1/2 FRONTEND - Non-Commercial and Internal Use License
 1. Attribution
 
 Any use of this software must include clear attribution to the original creator of the project, including the project name, author’s name, and a link to the original repository.

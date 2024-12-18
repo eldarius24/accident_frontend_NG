@@ -261,7 +261,7 @@ function ResponsiveAppBar() {
                     : '0 0 6px rgba(238,117,45,0.3)'
                 }}
               >
-                T.I.G.R.E
+                T.I.G.R.E ➕
               </Box>
             </Tooltip>
           </Box>
