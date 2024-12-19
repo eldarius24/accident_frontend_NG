@@ -215,7 +215,7 @@ const AccidentCounterPage = () => {
             sx={{
                 height: '70vh',
                 width: '100vw',
-                backgroundColor: '#ffffff',
+                backgroundColor: darkMode ? '#6e6e6e' : '#ffffff',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
