@@ -170,11 +170,11 @@ function Accident() {
 
     const convertToBoolean = (value) => {
         if (typeof value === 'string') {
-          return value.toLowerCase() === 'true';
+            return value.toLowerCase() === 'true';
         }
         return Boolean(value);
-      };
-      
+    };
+
     // Utiliser useYearFilter avec les années récupérées
     const { selectedYears, handleYearChange } = useYearFilter(
         COOKIE_PREFIXES.HOME,
@@ -624,6 +624,7 @@ function Accident() {
                 <Grid item xs={6} sx={{ pr: ITEM_MARGIN }}>
                     <Tooltip title="Filtrer les accidents par mots clés" arrow>
                         <TextField
+                            label="Rechercher par mot-clé"
                             value={searchTerm}
                             onChange={event => setSearchTerm(event.target.value)}
                             variant="outlined"
