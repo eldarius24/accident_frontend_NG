@@ -480,7 +480,7 @@ const LogsViewer = () => {
             <Pagination style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }} count={totalPages} page={page} onChange={handlePageChange} color="primary" />
             <TableContainer className="frameStyle-style"
               style={{
-                maxHeight: '600px',
+                maxHeight: '900px',
                 overflowY: 'auto',
                 backgroundColor: darkMode ? '#6e6e6e' : '#ffffff',
               }}>

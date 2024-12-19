@@ -194,7 +194,7 @@ export default function GetionVehicleList() {
             <TableContainer
                 className="frameStyle-style"
                 style={{
-                    maxHeight: '600px',
+                    maxHeight: '900px',
                     overflowY: 'auto',
                     backgroundColor: darkMode ? '#6e6e6e' : '#ffffff',
                 }}
