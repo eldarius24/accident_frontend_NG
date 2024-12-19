@@ -655,6 +655,7 @@ export default function PlanAction({ accidentData }) {
                     <Grid item xs={6} sx={{ pr: ITEM_MARGIN }}>
                         <Tooltip title="Filtrer les actions par mots clés" arrow>
                             <TextField
+                                label="Rechercher par mot-clé"
                                 variant="outlined"
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
