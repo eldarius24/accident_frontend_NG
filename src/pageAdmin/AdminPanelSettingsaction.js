@@ -58,10 +58,6 @@ export default function AdminPanelSettingsaction() {
             });
     }, [showSnackbar]);
 
-    useEffect(() => {
-        refreshListAccidents();
-    }, []);
-
     const defaultStyle = {
         margin: '10px', backgroundColor: '#0098f9', '&:hover': { backgroundColor: '#95ad22' },
         fontSize: '1rem', // Taille de police de base
