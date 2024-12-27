@@ -16,8 +16,17 @@ const apiUrl = config.apiUrl;
 // Fonction utilitaire pour les logs
 const logAction = async (action) => {
   try {
-    await axios.post(`http://${apiUrl}:3100/api/logs`, action);
+    const ipResponse = await axios.get('https://api.ipify.org?format=json');
+    const adresseIp = ipResponse.data.ip;
+    
+    await axios.post(`http://${apiUrl}:3100/api/logs`, {
+      ...action,
+      adresseIp,
+      details: `${action.details} - IP: ${adresseIp}`
+    });
   } catch (error) {
+    // Si l'appel à ipify échoue, on continue avec les logs sans IP
+    await axios.post(`http://${apiUrl}:3100/api/logs`, action);
     console.error('Erreur lors de l\'enregistrement du log:', error);
   }
 };

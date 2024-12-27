@@ -22,6 +22,10 @@ export const useLogger = () => {
     }
 
     try {
+
+      const ipResponse = await axios.get('https://api.ipify.org?format=json');
+      const adresseIp = ipResponse.data.ip;
+
       await axios.post(`http://${apiUrl}:3100/api/logs`, {
         userId: userInfo._id,
         userName: userInfo.userName,
@@ -29,6 +33,7 @@ export const useLogger = () => {
         details,
         entity,
         entityId,
+        adresseIp: adresseIp,
         entreprise: entreprise || 
            userInfo.entreprisesConseillerPrevention?.[0] ||
            userInfo.entreprisesUserPrevention?.[0] ||
