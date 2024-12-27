@@ -183,7 +183,7 @@ const Login = () => {
       // Log de tentative de connexion
       await logAction({
         actionType: 'connexion',
-        details: `Tentative de connexion pour l'utilisateur: ${email}`,
+        details: `Tentative de connexion pour l'utilisateur: ${userData.userName} ${email}`,
         entity: 'Auth',
         userName: email,
         userId: 'anonymous'
@@ -204,7 +204,7 @@ const Login = () => {
 
         await logAction({
           actionType: 'error',
-          details: `Échec de connexion pour l'utilisateur: ${email} - Données invalides`,
+          details: `Échec de connexion pour l'utilisateur: ${userData.userName} ${email} - Données invalides`,
           entity: 'Auth',
           userName: email,
           userId: 'anonymous'
@@ -221,7 +221,7 @@ const Login = () => {
 
       await logAction({
         actionType: 'connexion',
-        details: `Connexion réussie pour l'utilisateur: ${userData.userName}`,
+        details: `Connexion réussie pour l'utilisateur: ${userData.userName} ${email}`,
         entity: 'Auth',
         userName: userData.userName,
         userId: userData._id,
@@ -236,7 +236,7 @@ const Login = () => {
 
       await logAction({
         actionType: 'error',
-        details: `Erreur de connexion pour l'utilisateur: ${email} - ${error.response ? error.response.data : error.message}`,
+        details: `Erreur de connexion pour l'utilisateur: ${userData.userName} ${email} - ${error.response ? error.response.data : error.message}`,
         entity: 'Auth',
         userName: email,
         userId: 'anonymous'
