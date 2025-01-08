@@ -1,21 +1,24 @@
-# Utiliser l'image de base officielle Node.js
 FROM node:20.8.0-alpine3.18
 
-# Définir le répertoire de travail dans le conteneur
+# Définir le répertoire de travail
 WORKDIR /app
 
-# Copier les fichiers de l'application vers le répertoire de travail
+# Installer les dépendances d'abord
 COPY package*.json ./
+RUN npm install
 
-# Installer les dépendances en mode production
-RUN npm ci --only=production && \
-    npm cache clean --force
-
-# Copier les fichiers source de l'application
+# Copier le reste du code
 COPY . .
+ENV CI=true
+ENV NODE_ENV=production
+# Build l'application pour la production
+RUN npm run build
 
-# Exposer le port sur lequel votre application écoute
+# Exposer le port
 EXPOSE 3000
 
-# Commande pour démarrer votre application
-CMD ["npm", "start"]
+# Installer serve globalement
+RUN npm install -g serve
+
+# Démarrer l'application
+CMD ["serve", "-s", "build", "-l", "3000"]

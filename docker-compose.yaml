@@ -37,13 +37,11 @@ services:
         restart: always
     
     app:
-      image: node:latest
-      working_dir: /app
-      volumes:
-        - .:/app
-      ports:
-        - 3000:3000
-      command: npm start
+      app:
+    build: .
+    ports:
+      - "3000:3000"
+    restart: always
 
 
 volumes:

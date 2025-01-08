@@ -2,7 +2,7 @@
 setlocal enabledelayedexpansion
 
 REM Définir les variables
-set "IMAGE_NAME=tigre-front"
+set "IMAGE_NAME=accident_frontend"
 set "VERSION=1.0.0"
 
 REM Demander confirmation à l'utilisateur
@@ -14,16 +14,16 @@ if /I "%CONFIRM%" NEQ "y" (
     exit /B 1
 )
 
-REM Build l'image Docker
+REM Build l'image Docker avec la configuration de production
 echo Building Docker image %IMAGE_NAME%:%VERSION%...
-docker build -t %IMAGE_NAME%:%VERSION% .
+docker build --no-cache -t %IMAGE_NAME%:%VERSION% .
 if errorlevel 1 (
     echo Docker build failed!
     exit /B 1
 )
 
 REM Sauvegarder l'image Docker
-echo Saving Docker image to %IMAGE_NAME%.tar...
+echo Saving Docker image to %IMAGE_NAME%%VERSION%.tar...
 docker save -o %IMAGE_NAME%%VERSION%.tar %IMAGE_NAME%:%VERSION%
 if errorlevel 1 (
     echo Docker save failed!
