@@ -16,18 +16,29 @@ const apiUrl = config.apiUrl;
 // Fonction utilitaire pour les logs
 const logAction = async (action) => {
   try {
-    const ipResponse = await axios.get('https://api.ipify.org?format=json');
-    const adresseIp = ipResponse.data.ip;
+    let adresseIp = 'unknown';
     
-    await axios.post(`http://${apiUrl}:3100/api/logs`, {
-      ...action,
-      adresseIp,
-      details: `${action.details} - IP: ${adresseIp}`
-    });
+    try {
+      const ipResponse = await axios.get('https://api.ipify.org?format=json');
+      adresseIp = ipResponse.data.ip;
+    } catch (ipError) {
+      console.warn('Unable to fetch IP address:', ipError);
+      // Continue with logging even if IP fetch fails
+    }
+    
+    try {
+      await axios.post(`http://${apiUrl}:3100/api/logs`, {
+        ...action,
+        adresseIp,
+        details: `${action.details}${adresseIp !== 'unknown' ? ` - IP: ${adresseIp}` : ''}`
+      });
+    } catch (logError) {
+      console.warn('Log recording failed:', logError);
+      // Don't throw error - logging failure shouldn't block login
+    }
   } catch (error) {
-    // Si l'appel à ipify échoue, on continue avec les logs sans IP
-    await axios.post(`http://${apiUrl}:3100/api/logs`, action);
-    console.error('Erreur lors de l\'enregistrement du log:', error);
+    console.warn('Logging system encountered an error:', error);
+    // Don't throw error - logging failure shouldn't block login
   }
 };
 
@@ -178,17 +189,17 @@ const Login = () => {
 
   const onSubmit = async (data) => {
     const { email, password } = data;
-
+  
     try {
-      // Log de tentative de connexion
+      // Log initial connection attempt
       await logAction({
         actionType: 'connexion',
-        details: `Tentative de connexion pour l'utilisateur: ${userData.userName} ${email}`,
+        details: `Tentative de connexion pour l'utilisateur: ${email}`,
         entity: 'Auth',
         userName: email,
         userId: 'anonymous'
       });
-
+  
       const response = await axios.post(`http://${apiUrl}:3100/api/login`, 
         { email, password },
         { 
@@ -196,29 +207,29 @@ const Login = () => {
           headers: { 'Content-Type': 'application/json' }
         }
       );
-
+  
       const userData = response.data;
-
+  
       if (!userData || response.status !== 200) {
         setIsPasswordValid(false);
-
+        
         await logAction({
           actionType: 'error',
-          details: `Échec de connexion pour l'utilisateur: ${userData.userName} ${email} - Données invalides`,
+          details: `Échec de connexion pour l'utilisateur: ${email} - Données invalides`,
           entity: 'Auth',
           userName: email,
           userId: 'anonymous'
         });
-
+  
         alert('Login failed');
         return;
       }
-
+  
       const tokenData = {
         data: userData
       };
       localStorage.setItem('token', JSON.stringify(tokenData));
-
+  
       await logAction({
         actionType: 'connexion',
         details: `Connexion réussie pour l'utilisateur: ${userData.userName} ${email}`,
@@ -227,21 +238,21 @@ const Login = () => {
         userId: userData._id,
         entreprise: userData.entreprisesConseillerPrevention?.[0]
       });
-
+  
       navigate('/');
-
+  
     } catch (error) {
       console.error('Erreur lors de la connexion:', error.response ? error.response.data : error.message);
       setIsPasswordValid(false);
-
+  
       await logAction({
         actionType: 'error',
-        details: `Erreur de connexion pour l'utilisateur: ${userData.userName} ${email} - ${error.response ? error.response.data : error.message}`,
+        details: `Erreur de connexion pour l'utilisateur: ${email} - ${error.response ? error.response.data : error.message}`,
         entity: 'Auth',
         userName: email,
         userId: 'anonymous'
       });
-
+  
       alert('Login failed: ' + (error.response ? error.response.data.message : 'Unknown error'));
     }
   };

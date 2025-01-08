@@ -736,7 +736,7 @@ const Statistiques = () => {
                 }
               }}
             >
-              Tolat des accidents
+              Total des accidents
             </Typography>
             <Box
               sx={{
