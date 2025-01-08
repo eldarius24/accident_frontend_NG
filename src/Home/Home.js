@@ -5,7 +5,7 @@ import { keyframes } from '@mui/system';
 import { LineChart, Line } from 'recharts';
 import { useTheme } from '../Hook/ThemeContext.js'; // Add this import
 import { useUserConnected } from '../Hook/userConnected.js';
-import { ActionPlanIcon, WorkAccidentStatsIcon, WorkAccidentIcon, VehicleManagementIcon, VehicleStatsIcon, PreventionDocsIcon } from './iconePerso';
+import {ElectronicSignatureIcon, ActionPlanIcon, WorkAccidentStatsIcon, WorkAccidentIcon, VehicleManagementIcon, VehicleStatsIcon, PreventionDocsIcon } from './iconePerso';
 
 export default function Navigation() {
     const {
@@ -417,8 +417,8 @@ export default function Navigation() {
                             },
                         }}
                         data-text="T.I.G.R.E ➕"
-                        >
-                          T.I.G.R.E ➕
+                    >
+                        T.I.G.R.E ➕
                     </Typography>
 
                     <Typography
@@ -625,6 +625,21 @@ export default function Navigation() {
                                 </Button>
                             </Tooltip>
                         )}
+                        <Tooltip title="Gérer les signatures électroniques" arrow>
+                            <Button
+                                component={Link}
+                                to="/signatures"
+                                sx={buttonStyle(3)}
+                                onMouseEnter={() => setHoverStates(prev => ({ ...prev, signature: true }))}
+                                onMouseLeave={() => setHoverStates(prev => ({ ...prev, signature: false }))}
+                            >
+                                <StatsAnimation isHovered={hoverStates.signature} />
+                                <Box className="button-content" sx={{ zIndex: 1 }}>
+                                    <ElectronicSignatureIcon sx={{ fontSize: '3rem', mb: 2 }} /> {/* importée de lucide-react */}
+                                    <Typography variant="h5">Signatures électroniques</Typography>
+                                </Box>
+                            </Button>
+                        </Tooltip>
                     </Box>
                 </Paper>
             </form>

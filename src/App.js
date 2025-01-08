@@ -39,7 +39,7 @@ import VehiculeDetails from './Getionvehicules/VehicleDetails';
 import ModifVehicule from './Getionvehicules/ModifVehicule';
 import StatistiquesVehicules from './Getionvehicules/StatistiquesVehicules';
 import AccidentCounterPage from './CompteurAccidentUnique/AccidentCounterPage';
-
+import SignaturesManager from './Signatures/SignaturesManager';
 /**
  * App est le composant principal de l'application. Il contient les routes 
  * ainsi que la barre de navigation.
@@ -66,7 +66,7 @@ const App = () => {
                 {/* Routes accessibles par tous */}
                 <Route path="/login" element={<Login />} />
                 <Route path="/accidentCounter" element={<AccidentCounterPage />} />
-
+                <Route path="/signatures" element={<SignaturesManager />} />
                 {/* Routes accessibles uniquement par usernormal */}
                 <Route path="/" element={<ProtectedRoute><Home /></ProtectedRoute>} />
 

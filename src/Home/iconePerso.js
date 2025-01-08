@@ -14,6 +14,11 @@ import DirectionsCarFilledIcon from '@mui/icons-material/DirectionsCarFilled';
 import BuildIcon from '@mui/icons-material/Build';
 import SettingsIcon from '@mui/icons-material/Settings';
 import BarChartIcon from '@mui/icons-material/BarChart';
+
+import GestureIcon from '@mui/icons-material/Gesture';
+import DrawIcon from '@mui/icons-material/Draw';
+import VerifiedIcon from '@mui/icons-material/Verified';
+
 import { useTheme } from '../Hook/ThemeContext.js';
 import { Badge } from '@mui/material';
 
@@ -249,6 +254,45 @@ export const VehicleStatsIcon = ({ size = "medium" }) => {
                 }
             >
                 <DirectionsCarIcon sx={iconStyles} />
+            </Badge>
+        </Badge>
+    );
+};
+
+export const ElectronicSignatureIcon = ({ size = "medium" }) => {
+    const { darkMode } = useTheme();
+
+    const iconStyles = {
+        fontSize: '3rem',
+        color: darkMode ? '#ffffff' : '#000000',
+    };
+
+    return (
+        <Badge
+            overlap="circular"
+            anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+            badgeContent={
+                <DrawIcon
+                    sx={{
+                        ...iconStyles,
+                        fontSize: '1.8rem',
+                    }}
+                />
+            }
+        >
+            <Badge
+                overlap="circular"
+                anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+                badgeContent={
+                    <VerifiedIcon
+                        sx={{
+                            ...iconStyles,
+                            fontSize: '1.8rem',
+                        }}
+                    />
+                }
+            >
+                <GestureIcon sx={iconStyles} />
             </Badge>
         </Badge>
     );
