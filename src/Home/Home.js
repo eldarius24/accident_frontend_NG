@@ -626,6 +626,7 @@ export default function Navigation() {
                                 </Button>
                             </Tooltip>
                         )}
+                        {isAdminOrDev && (
                         <Tooltip title="Gérer les signatures électroniques" arrow>
                             <Button
                                 component={Link}
@@ -641,6 +642,7 @@ export default function Navigation() {
                                 </Box>
                             </Button>
                         </Tooltip>
+                        )}
                     </Box>
                 </Paper>
             </form>
