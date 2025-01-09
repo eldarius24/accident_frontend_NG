@@ -720,10 +720,18 @@ function Accident() {
                             <TableCell style={{ fontWeight: 'bold' }}>Nom du travailleur</TableCell>
                             <TableCell style={{ fontWeight: 'bold' }}>Prénom du travailleur</TableCell>
                             <TableCell style={{ fontWeight: 'bold' }}>Type accident</TableCell>
-                            <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>Editer</TableCell>
-                            <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>Fichier</TableCell>
-                            <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>PDF</TableCell>
-                            <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>Supprimer</TableCell>
+                            {isAdminOrDevOrConseiller && (
+                                <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>Editer</TableCell>
+                            )}
+                            {isAdminOrDevOrConseiller && (
+                                <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>Fichier</TableCell>
+                            )}
+                            {isAdminOrDevOrConseiller && (
+                                <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>PDF</TableCell>
+                            )}
+                            {isAdminOrDevOrConseiller && (
+                                <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>Supprimer</TableCell>
+                            )}
                             {(isAdminOrDev) ? (
                                 <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>Archivage</TableCell>
                             ) : null}
@@ -762,8 +770,9 @@ function Accident() {
                                     <TableCell>{item.prenomTravailleur}</TableCell>
                                     <TableCell>{item.typeAccident}</TableCell>
                                     <>
-                                        <TableCell style={{ padding: 0, width: '70px' }}>
-                                            {(isAdminOrDev || (isConseiller && isConseillerPrevention(item.entrepriseName))) ? (
+                                        {(isAdminOrDev || (isConseiller && isConseillerPrevention(item.entrepriseName))) ? (
+                                            <TableCell style={{ padding: 0, width: '70px' }}>
+
                                                 <Tooltip title="Cliquez ici pour éditer les données de l'accident" arrow>
                                                     <Button sx={{
                                                         backgroundColor: darkMode ? blueGrey[700] : blueGrey[500],
@@ -783,11 +792,12 @@ function Accident() {
                                                         <EditIcon />
                                                     </Button>
                                                 </Tooltip>
-                                            ) : null}
-                                        </TableCell>
 
-                                        <TableCell style={{ padding: 0, width: '70px' }}>
-                                            {(isAdminOrDev || (isConseiller && isConseillerPrevention(item.entrepriseName))) ? (
+                                            </TableCell>
+                                        ) : null}
+                                        {(isAdminOrDev || (isConseiller && isConseillerPrevention(item.entrepriseName))) ? (
+                                            <TableCell style={{ padding: 0, width: '70px' }}>
+
                                                 <Tooltip title="Cliquez ici pour ajouter des fichiers a l'accident" arrow>
                                                     <Button sx={{
                                                         backgroundColor: darkMode ? '#7b1fa2' : '#9c27b0',
@@ -807,11 +817,12 @@ function Accident() {
                                                         <GetAppIcon />
                                                     </Button>
                                                 </Tooltip>
-                                            ) : null}
-                                        </TableCell>
 
-                                        <TableCell style={{ padding: 0, width: '70px' }}>
-                                            {(isAdminOrDev || (isConseiller && isConseillerPrevention(item.entrepriseName))) ? (
+                                            </TableCell>
+                                        ) : null}
+                                        {(isAdminOrDev || (isConseiller && isConseillerPrevention(item.entrepriseName))) ? (
+                                            <TableCell style={{ padding: 0, width: '70px' }}>
+
                                                 <Tooltip title="Cliquez ici pour générer la déclaration d'accident Belfius si vous avez remplis tous les champs du formulaire" arrow>
                                                     <Button sx={{
                                                         backgroundColor: darkMode ? '#1b5e20' : '#2e7d32',
@@ -831,11 +842,12 @@ function Accident() {
                                                         <PictureAsPdfIcon />
                                                     </Button>
                                                 </Tooltip>
-                                            ) : null}
-                                        </TableCell>
 
-                                        <TableCell style={{ padding: 0, width: '70px' }}>
-                                            {(isAdminOrDev || (isConseiller && isConseillerPrevention(item.entrepriseName))) ? (
+                                            </TableCell>
+                                        ) : null}
+                                        {(isAdminOrDev || (isConseiller && isConseillerPrevention(item.entrepriseName))) ? (
+                                            <TableCell style={{ padding: 0, width: '70px' }}>
+
                                                 <Tooltip title="Cliquez ici pour supprimer l'accident" arrow>
                                                     <Button sx={{
                                                         backgroundColor: darkMode ? '#b71c1c' : '#d32f2f',
@@ -886,8 +898,9 @@ function Accident() {
                                                         <DeleteForeverIcon />
                                                     </Button>
                                                 </Tooltip>
-                                            ) : null}
-                                        </TableCell>
+
+                                            </TableCell>
+                                        ) : null}
                                         {/* Autres cellules */}
                                         {(isAdminOrDev) ? (
                                             <TableCell style={{ padding: 0, width: '70px' }}>

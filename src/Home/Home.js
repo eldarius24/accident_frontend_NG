@@ -524,7 +524,7 @@ export default function Navigation() {
                             padding: '20px',
                         }}
                     >
-                        {isAdminOrDevOrConseiller || isUserPrevention  && (
+                        {isUserPreventionOrAdminOrConseiller  && (
                             <Tooltip title="Gérer les accidents" arrow>
                                 <Button
                                     component={Link}
@@ -541,7 +541,7 @@ export default function Navigation() {
                                 </Button>
                             </Tooltip>
                         )}
-                        {isAdminOrDevOrConseiller || isUserPrevention  && (
+                        {isUserPreventionOrAdminOrConseiller  && (
                             <Tooltip title="Consulter les statistiques" arrow>
                                 <Button
                                     component={Link}
@@ -558,7 +558,7 @@ export default function Navigation() {
                                 </Button>
                             </Tooltip>
                         )}
-                        {isAdminOrDevOrConseiller || isUserPrevention && (
+                        {isUserPreventionOrAdminOrConseiller && (
                             <Tooltip title="Gérer le plan d'action" arrow>
                                 <Button
                                     component={Link}
@@ -575,7 +575,7 @@ export default function Navigation() {
                                 </Button>
                             </Tooltip>
                         )}
-                        {isAdminOrDevOrConseiller || isUserPrevention && (
+                        {isUserPreventionOrAdminOrConseiller && (
                             <Tooltip title="Gérer les documents divers" arrow>
                                 <Button
                                     component={Link}

@@ -62,7 +62,7 @@ export default function PlanAction({ accidentData }) {
     const [searchTerm, setSearchTerm] = useState('');
     const [allSectors, setAllSectors] = useState([]);
     const [availableSectors, setAvailableSectors] = useState([]);
-    const { userInfo, isAdminOrDev } = useUserConnected();
+    const { userInfo, isAdminOrDev, isAdminOrDevOrConseiller } = useUserConnected();
     const currentYear = new Date().getFullYear().toString();
     const [isLoading, setLoading] = useState(true);
     const [selectedEnterprises, setSelectedEnterprises] = useState(() => {
@@ -724,9 +724,13 @@ export default function PlanAction({ accidentData }) {
                                     <TableCell style={{ fontWeight: 'bold' }}>Catégorie du risque</TableCell>
                                     <TableCell style={{ fontWeight: 'bold' }}>Crée quand</TableCell>
                                     <TableCell style={{ fontWeight: 'bold' }}>Par qui</TableCell>
-                                    <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>Edit</TableCell>
+                                    {isAdminOrDevOrConseiller && (
+                                        <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>Edit</TableCell>
+                                    )}
                                     <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>Download</TableCell>
-                                    <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>Delete</TableCell>
+                                    {isAdminOrDevOrConseiller && (
+                                        <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>Delete</TableCell>
+                                    )}
                                     {(isAdminOrDev) ? (
                                         <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>Archiver</TableCell>
                                     ) : null}
@@ -800,28 +804,30 @@ export default function PlanAction({ accidentData }) {
                                             <TableCell>{formatDangerCategories(addaction.AddActionDange)}</TableCell>
                                             <TableCell>{formatDate(addaction.AddActionDate)}</TableCell>
                                             <TableCell>{addaction.AddActionQui}</TableCell>
-                                            <TableCell style={{ padding: 0, width: '70px' }}>
-                                                <Tooltip title="Cliquez ici pour éditer les données de l'action" arrow>
-                                                    <Button sx={{
-                                                        backgroundColor: darkMode ? blueGrey[700] : blueGrey[500],
-                                                        transition: 'all 0.1s ease-in-out',
-                                                        '&:hover': {
-                                                            backgroundColor: darkMode ? blueGrey[900] : blueGrey[700],
-                                                            transform: 'scale(1.08)',
-                                                            boxShadow: darkMode ? '0 6px 12px rgba(255,255,255,0.2)' : 6
-                                                        },
-                                                        '& .MuiSvgIcon-root': {
-                                                            color: darkMode ? '#fff' : 'inherit'
-                                                        }
-                                                    }}
-                                                        variant="contained"
-                                                        color="primary"
-                                                        onClick={() => handleEdit(addaction._id)}
-                                                    >
-                                                        <EditIcon />
-                                                    </Button>
-                                                </Tooltip>
-                                            </TableCell>
+                                            {isAdminOrDevOrConseiller && (
+                                                <TableCell style={{ padding: 0, width: '70px' }}>
+                                                    <Tooltip title="Cliquez ici pour éditer les données de l'action" arrow>
+                                                        <Button sx={{
+                                                            backgroundColor: darkMode ? blueGrey[700] : blueGrey[500],
+                                                            transition: 'all 0.1s ease-in-out',
+                                                            '&:hover': {
+                                                                backgroundColor: darkMode ? blueGrey[900] : blueGrey[700],
+                                                                transform: 'scale(1.08)',
+                                                                boxShadow: darkMode ? '0 6px 12px rgba(255,255,255,0.2)' : 6
+                                                            },
+                                                            '& .MuiSvgIcon-root': {
+                                                                color: darkMode ? '#fff' : 'inherit'
+                                                            }
+                                                        }}
+                                                            variant="contained"
+                                                            color="primary"
+                                                            onClick={() => handleEdit(addaction._id)}
+                                                        >
+                                                            <EditIcon />
+                                                        </Button>
+                                                    </Tooltip>
+                                                </TableCell>
+                                            )}
                                             <TableCell style={{ padding: 0, width: '70px' }}>
                                                 <Tooltip title="Cliquez ici pour ajouter des fichiers a l'action" arrow>
                                                     <Button sx={{
@@ -850,57 +856,59 @@ export default function PlanAction({ accidentData }) {
                                                     </Button>
                                                 </Tooltip>
                                             </TableCell>
-                                            <TableCell style={{ padding: 0, width: '70px' }}>
-                                                <Tooltip title="Cliquez ici pour supprimer l'action" arrow>
-                                                    <Button sx={{
-                                                        backgroundColor: darkMode ? '#b71c1c' : '#d32f2f',
-                                                        transition: 'all 0.1s ease-in-out',
-                                                        '&:hover': {
-                                                            backgroundColor: darkMode ? '#d32f2f' : '#b71c1c',
-                                                            transform: 'scale(1.08)',
-                                                            boxShadow: darkMode ? '0 6px 12px rgba(255,255,255,0.2)' : 6
-                                                        },
-                                                        '& .MuiSvgIcon-root': {
-                                                            color: darkMode ? '#fff' : 'inherit'
-                                                        }
-                                                    }}
-                                                        variant="contained"
-                                                        color="error"
-                                                        onClick={() => {
-                                                            confirmAlert({
-                                                                customUI: ({ onClose }) => (
-                                                                    <div className="custom-confirm-dialog">
-                                                                        <h1 className="custom-confirm-title">Supprimer</h1>
-                                                                        <p className="custom-confirm-message">Êtes-vous sûr de vouloir supprimer cet action?</p>
-                                                                        <div className="custom-confirm-buttons">
-                                                                            <Tooltip title="Cliquez sur OUI pour supprimer" arrow>
-                                                                                <button
-                                                                                    className="custom-confirm-button"
-                                                                                    onClick={() => {
-                                                                                        handleDelete(addaction._id);
-                                                                                        onClose();
-                                                                                    }}
-                                                                                >
-                                                                                    Oui
-                                                                                </button>
-                                                                            </Tooltip>
-                                                                            <Tooltip title="Cliquez sur NON pour annuler la suppression" arrow>
-                                                                                <button
-                                                                                    className="custom-confirm-button custom-confirm-no"
-                                                                                    onClick={onClose}
-                                                                                >
-                                                                                    Non
-                                                                                </button>
-                                                                            </Tooltip>
+                                            {isAdminOrDevOrConseiller && (
+                                                <TableCell style={{ padding: 0, width: '70px' }}>
+                                                    <Tooltip title="Cliquez ici pour supprimer l'action" arrow>
+                                                        <Button sx={{
+                                                            backgroundColor: darkMode ? '#b71c1c' : '#d32f2f',
+                                                            transition: 'all 0.1s ease-in-out',
+                                                            '&:hover': {
+                                                                backgroundColor: darkMode ? '#d32f2f' : '#b71c1c',
+                                                                transform: 'scale(1.08)',
+                                                                boxShadow: darkMode ? '0 6px 12px rgba(255,255,255,0.2)' : 6
+                                                            },
+                                                            '& .MuiSvgIcon-root': {
+                                                                color: darkMode ? '#fff' : 'inherit'
+                                                            }
+                                                        }}
+                                                            variant="contained"
+                                                            color="error"
+                                                            onClick={() => {
+                                                                confirmAlert({
+                                                                    customUI: ({ onClose }) => (
+                                                                        <div className="custom-confirm-dialog">
+                                                                            <h1 className="custom-confirm-title">Supprimer</h1>
+                                                                            <p className="custom-confirm-message">Êtes-vous sûr de vouloir supprimer cet action?</p>
+                                                                            <div className="custom-confirm-buttons">
+                                                                                <Tooltip title="Cliquez sur OUI pour supprimer" arrow>
+                                                                                    <button
+                                                                                        className="custom-confirm-button"
+                                                                                        onClick={() => {
+                                                                                            handleDelete(addaction._id);
+                                                                                            onClose();
+                                                                                        }}
+                                                                                    >
+                                                                                        Oui
+                                                                                    </button>
+                                                                                </Tooltip>
+                                                                                <Tooltip title="Cliquez sur NON pour annuler la suppression" arrow>
+                                                                                    <button
+                                                                                        className="custom-confirm-button custom-confirm-no"
+                                                                                        onClick={onClose}
+                                                                                    >
+                                                                                        Non
+                                                                                    </button>
+                                                                                </Tooltip>
+                                                                            </div>
                                                                         </div>
-                                                                    </div>
-                                                                )
-                                                            });
-                                                        }}>
-                                                        <DeleteForeverIcon />
-                                                    </Button>
-                                                </Tooltip>
-                                            </TableCell>
+                                                                    )
+                                                                });
+                                                            }}>
+                                                            <DeleteForeverIcon />
+                                                        </Button>
+                                                    </Tooltip>
+                                                </TableCell>
+                                            )}
                                             {(isAdminOrDev) ? (
                                                 <TableCell style={{ padding: 0, width: '70px' }}>
                                                     <BoutonArchiver

@@ -24,9 +24,10 @@ export const useUserConnected = () => {
 
     const isFleetManager = userInfo.userGetionaireVehicule?.length > 0;
 
-    const isAdminOrDevOrConseiller = isAdmin || isDeveloppeur || isConseiller;
+    
     const isAdminOrDev = isAdmin || isDeveloppeur || isVehicleAdmin;
     const isAdminOuConseiller = isAdmin || isConseiller;
+    const isAdminOrDevOrConseiller = isAdmin || isDeveloppeur || isConseiller;
     const isUserPreventionOrAdmin = isAdmin || isUserPrevention;
     const isUserPreventionOrAdminOrConseiller = isAdminOrDevOrConseiller || isUserPrevention;
     const isUserPreventionOrConseiller = isUserPrevention || isConseiller;
