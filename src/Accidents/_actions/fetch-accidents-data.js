@@ -30,7 +30,6 @@ const createFetchData = (apiUrl) => (
     return async () => {
         setLoading(true);
         try {
-            // Vérification des permissions et de l'utilisateur
             if (!userInfo) {
                 setAccidents([]);
                 setYearsFromData([]);
@@ -38,20 +37,24 @@ const createFetchData = (apiUrl) => (
                 return;
             }
 
-            // Préparation des paramètres de la requête
             const queryParams = new URLSearchParams({
                 fields: JSON.stringify(REQUIRED_FIELDS)
             });
 
             // Filtrage basé sur les permissions
             if (!isAdminOrDev) {
-                if (!userInfo.entreprisesConseillerPrevention?.length) {
+                const userEntreprises = [
+                    ...(userInfo.entreprisesConseillerPrevention || []),
+                    ...(userInfo.entreprisesUserPrevention || [])
+                ];
+
+                if (!userEntreprises.length) {
                     setAccidents([]);
                     setYearsFromData([]);
                     showSnackbar('Aucune entreprise associée', 'warning');
                     return;
                 }
-                queryParams.append('entreprises', JSON.stringify(userInfo.entreprisesConseillerPrevention));
+                queryParams.append('entreprises', JSON.stringify(userEntreprises));
             }
 
             // Requête API

@@ -17,6 +17,7 @@ export default function Navigation() {
         isAdminOrDevOrConseiller,
         isUserPreventionOrAdminOrConseiller,
         isVehicleAdminManager,
+        isUserPrevention,
         isFleetManager,
         isVehicleAdmin
     } = useUserConnected();
@@ -523,7 +524,7 @@ export default function Navigation() {
                             padding: '20px',
                         }}
                     >
-                        {isAdminOrDevOrConseiller && (
+                        {isAdminOrDevOrConseiller || isUserPrevention  && (
                             <Tooltip title="Gérer les accidents" arrow>
                                 <Button
                                     component={Link}
@@ -540,7 +541,7 @@ export default function Navigation() {
                                 </Button>
                             </Tooltip>
                         )}
-                        {isAdminOrDevOrConseiller && (
+                        {isAdminOrDevOrConseiller || isUserPrevention  && (
                             <Tooltip title="Consulter les statistiques" arrow>
                                 <Button
                                     component={Link}
@@ -557,7 +558,7 @@ export default function Navigation() {
                                 </Button>
                             </Tooltip>
                         )}
-                        {isAdminOrDevOrConseiller && (
+                        {isAdminOrDevOrConseiller || isUserPrevention && (
                             <Tooltip title="Gérer le plan d'action" arrow>
                                 <Button
                                     component={Link}
@@ -574,7 +575,7 @@ export default function Navigation() {
                                 </Button>
                             </Tooltip>
                         )}
-                        {isUserPreventionOrAdminOrConseiller && (
+                        {isAdminOrDevOrConseiller || isUserPrevention && (
                             <Tooltip title="Gérer les documents divers" arrow>
                                 <Button
                                     component={Link}

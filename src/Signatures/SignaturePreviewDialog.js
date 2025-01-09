@@ -25,6 +25,7 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import ErrorIcon from '@mui/icons-material/Error';
 import WarningIcon from '@mui/icons-material/Warning';
 import PersonIcon from '@mui/icons-material/Person';
+import { useUserConnected } from '../Hook/userConnected.js';
 
 const SignaturePreviewDialog = ({ 
     open, 
@@ -39,12 +40,25 @@ const SignaturePreviewDialog = ({
     const [signed, setSigned] = useState(false);
     const [systemStatus, setSystemStatus] = useState(null);
     const [checkingSystem, setCheckingSystem] = useState(true);
+    const { isAdmin,
+            isAdminOuConseiller,
+            isConseiller,
+            isAdminOrDev,
+            isAdminOrDevOrConseiller,
+            isUserPreventionOrAdminOrConseiller,
+            isVehicleAdminManager,
+            isFleetManager,
+            isDeveloppeur,
+            isVehicleAdmin
+        } = useUserConnected();
 
     useEffect(() => {
         checkSystem();
         if (document && document.signers) {
+            if (isDeveloppeur) {
             console.log('Document:', document);
             console.log('Signers:', document.signers);
+            }
         }
     }, [open, document]);
 
