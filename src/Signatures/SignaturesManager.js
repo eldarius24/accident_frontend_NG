@@ -243,7 +243,7 @@ const SignaturesManager = () => {
                                         {doc.signers.map((signer) => (
                                             <Chip
                                                 key={signer._id}
-                                                label={signer.userName}
+                                                label={signer.userId?.userName}
                                                 onDelete={() => removeSigner(doc._id, signer._id)}
                                                 color={signer.signed ? "success" : "warning"}
                                                 sx={{ m: 0.5 }}
