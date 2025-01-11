@@ -19,6 +19,7 @@ export default function Navigation() {
         isVehicleAdminManager,
         isUserPrevention,
         isFleetManager,
+        isAdminOrDevOrSignataire,
         isVehicleAdmin
     } = useUserConnected();
     const { darkMode } = useTheme(); // Add this hook
@@ -626,7 +627,7 @@ export default function Navigation() {
                                 </Button>
                             </Tooltip>
                         )}
-                        {isAdminOrDev && (
+                        {isAdminOrDevOrSignataire && (
                         <Tooltip title="Gérer les signatures électroniques" arrow>
                             <Button
                                 component={Link}

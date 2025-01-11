@@ -110,7 +110,9 @@ export default function Adminuser() {
         if (user.userGetionaireVehicule?.length > 0) {
             roles.push(`Gestionnaire de véhicules: ${user.userGetionaireVehicule.join(', ')}`);
         }
-        
+        if (user.userSignataire?.length > 0) {
+            roles.push(`Signataire: ${user.userSignataire.join(', ')}`);
+        }
         return roles.length ? roles.join(', ') : 'Utilisateur';
     }, []);
 

@@ -96,6 +96,7 @@ export default function AddUser() {
         entreprisesConseillerPrevention: [],
         entreprisesUserPrevention: [],
         userGetionaireVehicule: [],
+        userSignataire: [],
         boolAdministrateurVehicule: false,
         darkMode: false,
         selectedYears: [new Date().getFullYear().toString()]
@@ -663,6 +664,8 @@ export default function AddUser() {
                             PaperComponent={PaperComponent}
                         />
                     </Grid>
+
+
                     <Grid item xs={0.00001} style={{ margin: '-24.5%' }}>
                         <IconButton onClick={() => handleOpenPreview('getionnaireVehicule')}>
                             <Tooltip title="Info rôle" arrow>
@@ -671,6 +674,95 @@ export default function AddUser() {
                         </IconButton>
                     </Grid>
                 </Grid>
+
+
+                    <h3 style={{ color: darkMode ? '#ffffff' : 'inherit' }}>Donner les accès signataire:</h3>
+                <Grid container direction="row" alignItems="center">
+                    <Grid item xs={11.99999} sx={{ display: 'flex', justifyContent: 'center' }}>
+                        <Autocomplete
+                            multiple
+                            id="checkboxes-tags-demo-signataire"
+                            options={entreprises}
+                            onChange={(_, value) => handleChange('userSignataire', value)}
+                            value={user.userSignataire}
+                            disableCloseOnSelect
+                            sx={{
+                                width: '50%',
+                                boxShadow: darkMode ? '0 3px 6px rgba(255,255,255,0.1)' : 3,
+                                margin: '0 auto 1rem',
+                                '& .MuiOutlinedInput-root': {
+                                    color: darkMode ? '#fff' : 'inherit',
+                                    '& fieldset': {
+                                        borderColor: darkMode ? 'rgba(255,255,255,0.3)' : 'rgba(0,0,0,0.23)'
+                                    },
+                                    '&:hover fieldset': {
+                                        borderColor: darkMode ? 'rgba(255,255,255,0.5)' : 'rgba(0,0,0,0.5)'
+                                    }
+                                },
+                                '& .MuiInputLabel-root': {
+                                    color: darkMode ? '#fff' : 'inherit'
+                                },
+                                '& .MuiChip-root': {
+                                    backgroundColor: darkMode ? '#505050' : '#e0e0e0',
+                                    color: darkMode ? '#fff' : 'inherit',
+                                    '& .MuiChip-deleteIcon': {
+                                        color: darkMode ? '#fff' : 'inherit'
+                                    }
+                                }
+                            }}
+                            getOptionLabel={(option) => option}
+                            renderOption={(props, option, { selected }) => (
+                                <li {...props}>
+                                    <Checkbox
+                                        icon={icon}
+                                        checkedIcon={checkedIcon}
+                                        sx={{
+                                            marginRight: 1,
+                                            color: darkMode ? '#4CAF50' : 'green',
+                                            '&.Mui-checked': {
+                                                color: darkMode ? '#81C784' : 'green'
+                                            }
+                                        }}
+                                        checked={selected}
+                                    />
+                                    {option}
+                                </li>
+                            )}
+                            style={{ width: 500 }}
+                            renderInput={(params) => (
+                                <TextField
+                                    {...params}
+                                    label="Sélectionnez l'entreprise"
+                                    placeholder="entreprise"
+                                    sx={{
+                                        backgroundColor: darkMode ? '#424242' : '#00479871',
+                                        boxShadow: darkMode ? '0 3px 6px rgba(255,255,255,0.1)' : 3,
+                                        '& .MuiInputLabel-root': {
+                                            color: darkMode ? '#fff' : 'inherit'
+                                        },
+                                        '& .MuiOutlinedInput-root': {
+                                            '& input': {
+                                                color: darkMode ? '#fff' : 'inherit'
+                                            }
+                                        }
+                                    }}
+                                />
+                            )}
+                            PaperComponent={PaperComponent}
+                        />
+                    </Grid>
+
+                    <Grid item xs={0.00001} style={{ margin: '-24.5%' }}>
+                        <IconButton onClick={() => handleOpenPreview('getionnaireVehicule')}>
+                            <Tooltip title="Info rôle" arrow>
+                                <InfoIcon style={{ color: darkMode ? '#ffffff' : 'black' }} />
+                            </Tooltip>
+                        </IconButton>
+                    </Grid>
+                </Grid>
+
+
+                    
 
 
 

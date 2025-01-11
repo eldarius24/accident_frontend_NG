@@ -19,6 +19,7 @@ export const useUserConnected = () => {
     const isDeveloppeur = userInfo.boolDeveloppeur;
     const isConseiller = userInfo.entreprisesConseillerPrevention?.length > 0;
     const isUserPrevention = userInfo.entreprisesUserPrevention?.length > 0;
+    const isUserSignataire = userInfo.userSignataire?.length > 0;
     //véhicule
     const isVehicleAdmin = userInfo.boolAdministrateurVehicule;
 
@@ -33,6 +34,7 @@ export const useUserConnected = () => {
     const isUserPreventionOrConseiller = isUserPrevention || isConseiller;
     const isVehicleAdminManager = isVehicleAdmin || isFleetManager;
     const isAllAcces= isVehicleAdminManager || isUserPreventionOrAdminOrConseiller;
+    const isAdminOrDevOrSignataire = isAdminOrDev || isUserSignataire;
 
     return {
         userInfo,
@@ -51,6 +53,9 @@ export const useUserConnected = () => {
         isVehicleAdmin,
         isFleetManager,
         isVehicleAdminManager,
-        isAllAcces
+        isAllAcces,
+        //signataire
+        isAdminOrDevOrSignataire,
+        isUserSignataire
     };
 };

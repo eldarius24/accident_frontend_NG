@@ -22,6 +22,7 @@ import Adminuser from './pageAdmin/user/AdminUser';
 import AddUser from './pageAdmin/user/addUser/AddUser';
 import ProtectedRouteAdminOrConseiller from './Model/protectedRouteConseillerPrevention';
 import ProtectedRouteAdminOrGesionaireVehicule from './Model/protectedRoutegetiovechi';
+import ProtectedRouteAdminOrsignataires from './Model/protectedRoutesignataire';
 import FormulaireAction from './planaction/FormulaireAction';
 import { ThemeProvider } from './Hook/ThemeContext';
 import LogView from './Logs/logView';
@@ -66,7 +67,6 @@ const App = () => {
                 {/* Routes accessibles par tous */}
                 <Route path="/login" element={<Login />} />
                 <Route path="/accidentCounter" element={<AccidentCounterPage />} />
-                <Route path="/signatures" element={<SignaturesManager />} />
                 {/* Routes accessibles uniquement par usernormal */}
                 <Route path="/" element={<ProtectedRoute><Home /></ProtectedRoute>} />
 
@@ -106,6 +106,10 @@ const App = () => {
                 <Route path="/vehiculeDetails" element={<ProtectedRouteAdminOrGesionaireVehicule><VehiculeDetails /></ProtectedRouteAdminOrGesionaireVehicule>} />
                 <Route path="/modifVehicule" element={<ProtectedRouteAdminOrGesionaireVehicule><ModifVehicule /></ProtectedRouteAdminOrGesionaireVehicule>} />
                 <Route path="/statistiquesVehicules" element={<ProtectedRouteAdminOrGesionaireVehicule><StatistiquesVehicules /></ProtectedRouteAdminOrGesionaireVehicule>} />
+
+                {/* Routes accessibles par isAdminordev ou signataire*/}
+                <Route path="/signatures" element={<ProtectedRouteAdminOrsignataires><SignaturesManager /> </ProtectedRouteAdminOrsignataires>} />
+
 
               </Routes>
             </main>
