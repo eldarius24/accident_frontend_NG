@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { 
+// SignaturePreviewDialog.js
+import React, { useState, useEffect, useMemo } from 'react';
+import {
     Dialog,
     DialogTitle,
     DialogContent,
@@ -27,41 +28,37 @@ import WarningIcon from '@mui/icons-material/Warning';
 import PersonIcon from '@mui/icons-material/Person';
 import { useUserConnected } from '../Hook/userConnected.js';
 
-const SignaturePreviewDialog = ({ 
-    open, 
-    onClose, 
-    document, 
-    apiUrl, 
+const SignaturePreviewDialog = ({
+    open,
+    onClose,
+    document,
+    apiUrl,
     userInfo,
-    onSignatureComplete 
+    onSignatureComplete
 }) => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [signed, setSigned] = useState(false);
     const [systemStatus, setSystemStatus] = useState(null);
     const [checkingSystem, setCheckingSystem] = useState(true);
-    const { isAdmin,
-            isAdminOuConseiller,
-            isConseiller,
-            isAdminOrDev,
-            isAdminOrDevOrConseiller,
-            isUserPreventionOrAdminOrConseiller,
-            isVehicleAdminManager,
-            isFleetManager,
-            isDeveloppeur,
-            isVehicleAdmin
-        } = useUserConnected();
+    const [previewKey, setPreviewKey] = useState(Date.now());
+    const { isDeveloppeur } = useUserConnected();
+    const [statusCheckInterval, setStatusCheckInterval] = useState(null);
 
-    useEffect(() => {
-        checkSystem();
-        if (document && document.signers) {
-            if (isDeveloppeur) {
-            console.log('Document:', document);
-            console.log('Signers:', document.signers);
-            }
-        }
-    }, [open, document]);
+    const handleRefreshPreview = () => {
+        setPreviewKey(Date.now());
+    };
 
+    // Vérifier si l'utilisateur actuel a déjà signé
+    const hasUserSigned = useMemo(() => {
+        if (!document || !document.signers || !userInfo) return false;
+        const userSigner = document.signers.find(signer =>
+            signer.userId._id === userInfo._id || signer.userId === userInfo._id
+        );
+        return userSigner?.signed || false;
+    }, [document, userInfo]);
+
+    // Fonction de vérification du système
     const checkSystem = async () => {
         try {
             setCheckingSystem(true);
@@ -77,6 +74,36 @@ const SignaturePreviewDialog = ({
             setCheckingSystem(false);
         }
     };
+
+    // Écouter les changements USB
+    useEffect(() => {
+        if (!open) return;
+    
+        // Vérification initiale
+        checkSystem();
+        handleRefreshPreview();
+        setSigned(false);
+        setError(null);
+    
+        // Établir la connexion SSE (Server-Sent Events)
+        const eventSource = new EventSource(`http://${apiUrl}:3100/api/signatures/subscribe-status`);
+        
+        eventSource.onmessage = (event) => {
+            const status = JSON.parse(event.data);
+            setSystemStatus(status);
+            setCheckingSystem(false);
+        };
+    
+        eventSource.onerror = () => {
+            console.error('Erreur de connexion SSE');
+            setCheckingSystem(false);
+        };
+    
+        // Cleanup
+        return () => {
+            eventSource.close();
+        };
+    }, [open, document, apiUrl]);
 
     const handleSign = async () => {
         if (!systemStatus?.ready) {
@@ -99,9 +126,14 @@ const SignaturePreviewDialog = ({
 
             if (response.data.success) {
                 setSigned(true);
-                if (onSignatureComplete) {
-                    onSignatureComplete();
-                }
+                // Attendre un peu pour que le serveur finisse de traiter le document
+                setTimeout(() => {
+                    handleRefreshPreview();
+                    if (onSignatureComplete) {
+                        // Mettre à jour la liste des documents sans fermer la dialog
+                        onSignatureComplete(false);
+                    }
+                }, 1000);
             }
         } catch (error) {
             console.error('Erreur lors de la signature:', error);
@@ -122,7 +154,7 @@ const SignaturePreviewDialog = ({
                 `http://${apiUrl}:3100/api/signatures/download/${document._id}`,
                 { responseType: 'blob' }
             );
-            
+
             const url = window.URL.createObjectURL(new Blob([response.data]));
             const link = document.createElement('a');
             link.href = url;
@@ -138,6 +170,18 @@ const SignaturePreviewDialog = ({
             });
         } finally {
             setLoading(false);
+        }
+    };
+
+    const handleClose = () => {
+        if (onClose) {
+            if (statusCheckInterval) {
+                clearInterval(statusCheckInterval);
+                setStatusCheckInterval(null);
+            }
+            setSigned(false);
+            setError(null);
+            onClose();
         }
     };
 
@@ -161,8 +205,8 @@ const SignaturePreviewDialog = ({
                             </ListItemIcon>
                             <ListItemText
                                 primary={signer.userId?.userName || signer.userId?.userLogin || "Utilisateur inconnu"}
-                                secondary={signer.signed ? 
-                                    `Signé le ${new Date(signer.signedDate).toLocaleDateString()}` : 
+                                secondary={signer.signed ?
+                                    `Signé le ${new Date(signer.signedDate).toLocaleDateString()}` :
                                     "En attente de signature"}
                             />
                         </ListItem>
@@ -181,14 +225,14 @@ const SignaturePreviewDialog = ({
                 </Box>
             );
         }
-    
+
         return (
             <Card variant="outlined" sx={{ my: 2 }}>
                 <CardContent>
                     <Typography variant="h6" gutterBottom>
                         État du système de signature
                     </Typography>
-                    
+
                     {systemStatus?.details?.map((detail, index) => (
                         <Box key={index} sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
                             {detail.includes('✅') ? (
@@ -203,7 +247,7 @@ const SignaturePreviewDialog = ({
                             </Typography>
                         </Box>
                     ))}
-    
+
                     {systemStatus?.issues?.length > 0 && (
                         <Alert severity="warning" sx={{ mt: 2 }}>
                             <AlertTitle>Action(s) requise(s)</AlertTitle>
@@ -212,8 +256,8 @@ const SignaturePreviewDialog = ({
                                     <Typography>{issue.message}</Typography>
                                     {issue.type === 'middleware' && (
                                         <Box sx={{ mt: 1 }}>
-                                            <Link 
-                                                href="https://eid.belgium.be" 
+                                            <Link
+                                                href="https://eid.belgium.be"
                                                 target="_blank"
                                                 rel="noopener"
                                             >
@@ -233,7 +277,7 @@ const SignaturePreviewDialog = ({
     return (
         <Dialog
             open={open}
-            onClose={onClose}
+            onClose={handleClose}
             maxWidth="md"
             fullWidth
         >
@@ -274,7 +318,8 @@ const SignaturePreviewDialog = ({
 
                 <Box sx={{ height: '500px', width: '100%', mb: 2 }}>
                     <iframe
-                        src={`http://${apiUrl}:3100/api/signatures/preview/${document?._id}`}
+                        key={previewKey}
+                        src={`http://${apiUrl}:3100/api/signatures/preview/${document?._id}?t=${previewKey}`}
                         style={{
                             width: '100%',
                             height: '100%',
@@ -286,16 +331,19 @@ const SignaturePreviewDialog = ({
             </DialogContent>
 
             <DialogActions>
-                <Button onClick={onClose}>
+                <Button onClick={handleClose} color="inherit">
                     Fermer
+                </Button>
+                <Button onClick={handleRefreshPreview} color="info">
+                    Rafraîchir
                 </Button>
                 <Button onClick={handleDownload}>
                     Télécharger
                 </Button>
-                {!signed && (
-                    <Button 
+                {!signed && !hasUserSigned && document?.status !== 'completed' && (
+                    <Button
                         onClick={handleSign}
-                        variant="contained" 
+                        variant="contained"
                         color="primary"
                         disabled={loading || !systemStatus?.ready}
                     >

@@ -772,7 +772,6 @@ function Accident() {
                                     <>
                                         {(isAdminOrDev || (isConseiller && isConseillerPrevention(item.entrepriseName))) ? (
                                             <TableCell style={{ padding: 0, width: '70px' }}>
-
                                                 <Tooltip title="Cliquez ici pour éditer les données de l'accident" arrow>
                                                     <Button sx={{
                                                         backgroundColor: darkMode ? blueGrey[700] : blueGrey[500],
@@ -792,7 +791,6 @@ function Accident() {
                                                         <EditIcon />
                                                     </Button>
                                                 </Tooltip>
-
                                             </TableCell>
                                         ) : null}
                                         {(isAdminOrDev || (isConseiller && isConseillerPrevention(item.entrepriseName))) ? (
