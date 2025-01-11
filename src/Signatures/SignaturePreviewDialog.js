@@ -21,7 +21,6 @@ import {
     Divider
 } from '@mui/material';
 import axios from 'axios';
-import InfoIcon from '@mui/icons-material/Info';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import ErrorIcon from '@mui/icons-material/Error';
 import WarningIcon from '@mui/icons-material/Warning';
@@ -78,27 +77,27 @@ const SignaturePreviewDialog = ({
     // Écouter les changements USB
     useEffect(() => {
         if (!open) return;
-    
+
         // Vérification initiale
         checkSystem();
         handleRefreshPreview();
         setSigned(false);
         setError(null);
-    
+
         // Établir la connexion SSE (Server-Sent Events)
         const eventSource = new EventSource(`http://${apiUrl}:3100/api/signatures/subscribe-status`);
-        
+
         eventSource.onmessage = (event) => {
             const status = JSON.parse(event.data);
             setSystemStatus(status);
             setCheckingSystem(false);
         };
-    
+
         eventSource.onerror = () => {
             console.error('Erreur de connexion SSE');
             setCheckingSystem(false);
         };
-    
+
         // Cleanup
         return () => {
             eventSource.close();
@@ -278,13 +277,12 @@ const SignaturePreviewDialog = ({
         <Dialog
             open={open}
             onClose={handleClose}
-            maxWidth="md"
+            maxWidth="full"
             fullWidth
         >
             <DialogTitle>
                 Signature du document : {document?.filename}
             </DialogTitle>
-
             <DialogContent>
                 {error && (
                     <Alert severity="error" sx={{ mb: 2 }}>

@@ -41,19 +41,7 @@ import ModifVehicule from './Getionvehicules/ModifVehicule';
 import StatistiquesVehicules from './Getionvehicules/StatistiquesVehicules';
 import AccidentCounterPage from './CompteurAccidentUnique/AccidentCounterPage';
 import SignaturesManager from './Signatures/SignaturesManager';
-/**
- * App est le composant principal de l'application. Il contient les routes 
- * ainsi que la barre de navigation.
- * 
- * Les routes sont divis es en 3 parties :
- * - Les routes accessibles par tous (login, home)
- * - Les routes accessibles uniquement par les admins (adminUser, adminaction, addEntreprise, addSecteur, adminEntreprises, addUser)
- * - Les routes accessibles par les admins et les conseillers (formulaireAction, formulaire, deviation, agentmateriel, naturelesion, siegelesion, fichierdll, planAction, fichierdllaction, statistiques)
- * 
- * Toutes les routes sont prot ge s par des composants de type ProtectedRoute, 
- * qui redirigent vers la page de connexion si l'utilisateur n'a pas les droits 
- * n cessaires.
- */
+
 const App = () => {
   return (
     <div className="app-container">
@@ -67,10 +55,11 @@ const App = () => {
                 {/* Routes accessibles par tous */}
                 <Route path="/login" element={<Login />} />
                 <Route path="/accidentCounter" element={<AccidentCounterPage />} />
+
                 {/* Routes accessibles uniquement par usernormal */}
                 <Route path="/" element={<ProtectedRoute><Home /></ProtectedRoute>} />
 
-                {/* Routes accessibles uniquement par isAdmin */}
+                {/* Routes accessibles uniquement par isAdminordev */}
                 <Route path="/logView" element={<ProtectedRouteAdmin><LogView /></ProtectedRouteAdmin>} />
                 <Route path="/adminUser" element={<ProtectedRouteAdmin><Adminuser /></ProtectedRouteAdmin>} />
                 <Route path="/adminaction" element={<ProtectedRouteAdmin><AdminPanelSettingsAction /></ProtectedRouteAdmin>} />
@@ -86,7 +75,7 @@ const App = () => {
                 <Route path="/vehiculeDetails" element={<ProtectedRouteAdmin><VehiculeDetails /></ProtectedRouteAdmin>} />
                 <Route path="/modifVehicule" element={<ProtectedRouteAdmin><ModifVehicule /></ProtectedRouteAdmin>} />
 
-                {/* Routes accessibles par isAdmin ou Conseiller */}
+                {/* Routes accessibles par isAdminordev ou Conseiller */}
                 <Route path="/quesEntrep" element={<ProtectedRouteAdminOrConseiller><QuesEntrep /></ProtectedRouteAdminOrConseiller>} />
                 <Route path="/entreprise" element={<ProtectedRouteAdminOrConseiller><Entreprise /></ProtectedRouteAdminOrConseiller>} />
                 <Route path="/formulaireAction" element={<ProtectedRouteAdminOrConseiller><FormulaireAction /></ProtectedRouteAdminOrConseiller>} />
@@ -101,7 +90,7 @@ const App = () => {
                 <Route path="/Accident" element={<ProtectedRouteAdminOrConseiller><Accidents /></ProtectedRouteAdminOrConseiller>} />
                 <Route path="/statistiques" element={<ProtectedRouteAdminOrConseiller><Statistiques /></ProtectedRouteAdminOrConseiller>} />
 
-                {/* Routes accessibles par isAdmin ou GestionnaireVehicule */}
+                {/* Routes accessibles par isAdminordev ou GestionnaireVehicule */}
                 <Route path="/gestionVehicules" element={<ProtectedRouteAdminOrGesionaireVehicule><GetionVehicle /></ProtectedRouteAdminOrGesionaireVehicule>} />
                 <Route path="/vehiculeDetails" element={<ProtectedRouteAdminOrGesionaireVehicule><VehiculeDetails /></ProtectedRouteAdminOrGesionaireVehicule>} />
                 <Route path="/modifVehicule" element={<ProtectedRouteAdminOrGesionaireVehicule><ModifVehicule /></ProtectedRouteAdminOrGesionaireVehicule>} />
@@ -109,7 +98,6 @@ const App = () => {
 
                 {/* Routes accessibles par isAdminordev ou signataire*/}
                 <Route path="/signatures" element={<ProtectedRouteAdminOrsignataires><SignaturesManager /> </ProtectedRouteAdminOrsignataires>} />
-
 
               </Routes>
             </main>

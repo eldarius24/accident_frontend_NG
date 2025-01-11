@@ -4,7 +4,7 @@ export const useUserConnected = () => {
     useSession();
 
     const token = JSON.parse(localStorage.getItem('token'));
-    
+
     // Vérification de l'expiration du token
     if (token && token.expirationDate && new Date(token.expirationDate) < new Date()) {
         localStorage.removeItem('token');
@@ -25,7 +25,7 @@ export const useUserConnected = () => {
 
     const isFleetManager = userInfo.userGetionaireVehicule?.length > 0;
 
-    
+
     const isAdminOrDev = isAdmin || isDeveloppeur || isVehicleAdmin;
     const isAdminOuConseiller = isAdmin || isConseiller;
     const isAdminOrDevOrConseiller = isAdmin || isDeveloppeur || isConseiller;
@@ -33,7 +33,7 @@ export const useUserConnected = () => {
     const isUserPreventionOrAdminOrConseiller = isAdminOrDevOrConseiller || isUserPrevention;
     const isUserPreventionOrConseiller = isUserPrevention || isConseiller;
     const isVehicleAdminManager = isVehicleAdmin || isFleetManager;
-    const isAllAcces= isVehicleAdminManager || isUserPreventionOrAdminOrConseiller;
+    const isAllAcces = isVehicleAdminManager || isUserPreventionOrAdminOrConseiller;
     const isAdminOrDevOrSignataire = isAdminOrDev || isUserSignataire;
 
     return {

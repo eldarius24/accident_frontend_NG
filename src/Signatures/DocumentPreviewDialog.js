@@ -20,14 +20,14 @@ const DocumentPreviewDialog = ({ open, onClose, document, apiUrl }) => {
         <Dialog
             open={open}
             onClose={handleClose}
-            maxWidth="md"
+            maxWidth="full"
             fullWidth
         >
             <DialogTitle>
                 Prévisualisation : {document?.filename}
             </DialogTitle>
             <DialogContent>
-                <Box sx={{ height: '600px', width: '100%', mb: 2 }}>
+                <Box sx={{ height: '1000px', width: '100%', mb: 2 }}>
                     <iframe
                         src={`http://${apiUrl}:3100/api/signatures/preview/${document?._id}`}
                         style={{
