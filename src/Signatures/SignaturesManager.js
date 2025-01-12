@@ -34,11 +34,11 @@ import SignaturePreviewDialog from './SignaturePreviewDialog';
 import DocumentPreviewDialog from './DocumentPreviewDialog';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { useTheme } from '../Hook/ThemeContext';
-import { TabletMac } from '@mui/icons-material';
 import AutoGraphIcon from '@mui/icons-material/AutoGraph';
 import { blueGrey } from '@mui/material/colors';
 import EditIcon from '@mui/icons-material/Edit';
 import RenameDialog from './RenameDialog';
+import { useLogger } from '../Hook/useLogger';
 
 const SignaturesManager = () => {
     const [documents, setDocuments] = useState([]);
@@ -54,6 +54,7 @@ const SignaturesManager = () => {
     const [selectedDocument, setSelectedDocument] = useState(null);
     const { darkMode } = useTheme();
     const [renameDialogOpen, setRenameDialogOpen] = useState(false);
+    const { logAction } = useLogger();
     const rowColors = useMemo(() =>
         darkMode
             ? ['#7a7a7a', '#979797']
@@ -210,21 +211,21 @@ const SignaturesManager = () => {
     const handleFileUpload = async (event) => {
         const file = event.target.files[0];
         if (!file) return;
-
+    
         if (!userInfo || !userInfo._id) {
             setError("Erreur : Utilisateur non identifié");
-            event.target.value = ''; // Réinitialiser l'input
+            event.target.value = '';
             return;
         }
-
+    
         const formData = new FormData();
         formData.append('file', file);
         formData.append('uploadedBy', userInfo._id);
-
+    
         try {
             setLoading(true);
             setError(null);
-
+    
             const response = await axios.post(
                 `http://${apiUrl}:3100/api/signatures/upload`,
                 formData,
@@ -234,8 +235,17 @@ const SignaturesManager = () => {
                     }
                 }
             );
-
+    
             if (response.data.success) {
+                // Ajouter le log
+                await logAction({
+                    actionType: 'import',
+                    details: `Document a signé ajouté pour signature : ${file.name}`,
+                    entity: 'Signature',
+                    entityId: response.data.document._id,
+                    entreprise: userInfo?.entreprise || 'N/A'
+                });
+                
                 await loadDocuments();
             } else {
                 throw new Error(response.data.message || 'Erreur lors de l\'upload');
@@ -247,12 +257,26 @@ const SignaturesManager = () => {
             setLoading(false);
         }
     };
+    
 
     const deleteDocument = async (documentId) => {
         try {
             setError(null);
             setLoading(true);
+            
+            const documentToLog = documents.find(doc => doc._id === documentId);
+            
             await axios.delete(`http://${apiUrl}:3100/api/signatures/${documentId}`);
+            
+            // Ajouter le log
+            await logAction({
+                actionType: 'suppression',
+                details: `Document a signé supprimé : ${documentToLog?.filename || 'Document inconnu'}`,
+                entity: 'Signature',
+                entityId: documentId,
+                entreprise: userInfo?.entreprise || 'N/A'
+            });
+    
             setDeleteDialogOpen(false);
             setDocumentToDelete(null);
             await loadDocuments();

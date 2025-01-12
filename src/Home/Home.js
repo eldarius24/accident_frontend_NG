@@ -24,6 +24,7 @@ export default function Navigation() {
         isDeveloppeur,
         isAdminOrDevOrAdmVechiOrAdmSignataireOrUsersignataire,
         isAdminOrDevOrAdmSignOrUserSignataire,
+        isAdminOrDevOrAdmVechiOrUserVehi,
         isVehicleAdmin
     } = useUserConnected();
     const { darkMode } = useTheme(); // Add this hook
@@ -597,7 +598,7 @@ export default function Navigation() {
                                 </Button>
                             </Tooltip>
                         )}
-                        {isVehicleAdminManager && (
+                        {isAdminOrDevOrAdmVechiOrUserVehi && (
                             <Tooltip title="Gérer les véhicules" arrow>
                                 <Button
                                     component={Link}
@@ -614,7 +615,7 @@ export default function Navigation() {
                                 </Button>
                             </Tooltip>
                         )}
-                        {isVehicleAdminManager && (
+                        {isAdminOrDevOrAdmVechiOrUserVehi && (
                             <Tooltip title="Consulter les statistiques des véhicules" arrow>
                                 <Button
                                     component={Link}

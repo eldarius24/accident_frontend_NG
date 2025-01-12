@@ -26,6 +26,7 @@ import ErrorIcon from '@mui/icons-material/Error';
 import WarningIcon from '@mui/icons-material/Warning';
 import PersonIcon from '@mui/icons-material/Person';
 import { useUserConnected } from '../Hook/userConnected.js';
+import { useLogger } from '../Hook/useLogger';
 
 const SignaturePreviewDialog = ({
     open,
@@ -35,6 +36,7 @@ const SignaturePreviewDialog = ({
     userInfo,
     onSignatureComplete
 }) => {
+    const { logAction } = useLogger();
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [signed, setSigned] = useState(false);
@@ -189,6 +191,49 @@ const SignaturePreviewDialog = ({
             );
 
             if (response.data.success) {
+                // Ajouter les logs détaillés pour la signature
+                const signerName = userInfo.userName || userInfo.userLogin;
+                
+                const documentName = signatureDoc?.filename || 'Document inconnu';
+                
+                // Nouveau calcul des signatures restantes
+                // On considère que la signature actuelle est déjà effectuée
+                const remainingSigners = signatureDoc?.signers?.filter(signer => {
+                    // Ne pas compter les signatures déjà faites
+                    if (signer.signed) return false;
+                    // Ne pas compter l'utilisateur actuel qui vient de signer
+                    if (signer.userId._id === userInfo._id || signer.userId === userInfo._id) return false;
+                    return true;
+                }).length || 0;
+            
+                // Log pour l'action de signature
+                await logAction({
+                    actionType: 'modification',
+                    details: `Document "${documentName}" signé par ${signerName} ${
+                        remainingSigners > 0
+                            ? `${remainingSigners} signature${remainingSigners > 1 ? 's' : ''} restante${remainingSigners > 1 ? 's' : ''}`
+                            : 'Dernière signature nécessaire'
+                    }`,
+                    entity: 'Signature',
+                    entityId: signatureDoc._id,
+                    userId: userInfo._id,
+                    userName: userInfo.userName || userInfo.userLogin,
+                    entreprise: userInfo?.entreprise || 'N/A'
+                });
+            
+                // Si c'est la dernière signature nécessaire, ajouter un log supplémentaire
+                if (remainingSigners === 0) {
+                    await logAction({
+                        actionType: 'modification',
+                        details: `Document "${documentName}" complètement signé. Toutes les signatures ont été obtenues.`,
+                        entity: 'Signature',
+                        entityId: signatureDoc._id,
+                        userId: userInfo._id,
+                        userName: userInfo.userName || userInfo.userLogin,
+                        entreprise: userInfo?.entreprise || 'N/A'
+                    });
+                }
+            
                 setSigned(true);
                 setTimeout(() => {
                     handleRefreshPreview();
@@ -235,7 +280,13 @@ const SignaturePreviewDialog = ({
             link.setAttribute('download', filename);
             window.document.body.appendChild(link);
             link.click();
-
+            await logAction({
+                actionType: 'export',
+                details: `Document a signé téléchargé : ${filename}`,
+                entity: 'Signature',
+                entityId: signatureDoc._id,
+                entreprise: userInfo?.entreprise || 'N/A'
+            });
             setTimeout(() => {
                 window.document.body.removeChild(link);
                 window.URL.revokeObjectURL(url);

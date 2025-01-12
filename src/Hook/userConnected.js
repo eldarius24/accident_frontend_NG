@@ -39,6 +39,7 @@ export const useUserConnected = () => {
     const isAdminOrDevOrSignataire = isAdminOrDev || isUserSignataire;
     const isAdminOrDevOrAdmSignOrUserSignataire = isAdminOrDev || isUserSignataire || isAdminSignataire;
     const isAdminOrDevOrAdmVechi = isAdmin || isDeveloppeur || isVehicleAdmin;
+    const isAdminOrDevOrAdmVechiOrUserVehi = isAdmin || isDeveloppeur || isVehicleAdmin || isFleetManager;
     const isAdminOrDevOrAdmVechiOrAdmSignataireOrUsersignataire = isAdmin || isDeveloppeur || isVehicleAdmin || isAdminSignataire || isUserSignataire;
 
     return {
@@ -58,6 +59,7 @@ export const useUserConnected = () => {
         isAdminOrDevOrAdmVechiOrAdmSignataireOrUsersignataire,
         isAdminOrDevOrAdmSign,
         isAdminOrDevOrAdmSignOrUserSignataire,
+        isAdminOrDevOrAdmVechiOrUserVehi,
         //véhicule
         isVehicleAdmin,
         isFleetManager,
