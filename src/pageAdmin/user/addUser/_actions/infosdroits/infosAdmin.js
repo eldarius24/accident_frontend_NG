@@ -63,6 +63,9 @@ const InfosAdmin = () => {
               <li>❌ Gestion limitée des véhicules liée a lentreprise</li>
               <li>❌ Visualistion total de touts les véhicule</li>              
               <li>❌ Visualistion limitée des véhicule lier a l'entreprise</li>
+              <li>✅ Signataire numérique des documents</li>
+              <li>✅ Ajouts de document a signer numeriquement</li>
+              <li>✅ Ajouts de signataire numerique a des documents</li>
 
             </ul>
           </div>

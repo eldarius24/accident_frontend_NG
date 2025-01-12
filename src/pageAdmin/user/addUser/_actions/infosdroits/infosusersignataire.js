@@ -47,24 +47,25 @@ const InfosUserPrev = () => {
               <li>❌ Gestion complète des archivages</li>
               <li>❌ Visualistion total de tous les accidents prévention</li>
               <li>❌ Visualistion limitée de tous les accidents prévention</li>
-              <li>✅ Visualistion limitée des accidents liés a l'entreprise prévention</li>
+              <li>❌ Visualistion limitée des accidents liés a l'entreprise prévention</li>
               <li>❌ Gestion de tous les accidents prévention</li>
               <li>❌ Gestion des accidents liés a l'entreprise prévention</li>
               <li>❌ Visualistion total de toutes les actions prévention</li>
-              <li>✅ Visualistion des actions liés a l'entreprise prévention</li>
+              <li>❌ Visualistion des actions liés a l'entreprise prévention</li>
               <li>❌ Gestion de tous les actions prévention</li>
               <li>❌ Gestion des actions liés a l'entreprise prévention</li>
               <li>❌ Visualistion total de toutes les document divers prévention</li>
-              <li>✅ Visualistion des document divers liés a l'entreprise prévention</li>
+              <li>❌ Visualistion des document divers liés a l'entreprise prévention</li>
               <li>❌ Gestion de tous les document divers prévention</li>
               <li>❌ Gestion des document divers liés a l'entreprise prévention</li>
               <li>❌ Gestion complète des véhicules</li>
               <li>❌ Gestion limitée des véhicules liée a lentreprise</li>
               <li>❌ Visualistion total de touts les véhicule</li>              
               <li>❌ Visualistion limitée des véhicule lier a l'entreprise</li>
-              <li>❌ Signataire numérique des documents</li>
-              <li>❌ Ajouts de document a signer numeriquement</li>
-              <li>❌ Ajouts de signataire numerique a des documents</li>
+              <li>✅ Signataire numérique des documents</li>
+              <li>✅ Ajouts de document a signer numeriquement</li>
+              <li>✅ Ajouts de signataire numerique a des documents</li>
+
             </ul>
           </div>
         </div>

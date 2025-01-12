@@ -22,9 +22,14 @@ import InfosConseiller from './_actions/infosdroits/infosConseiller';
 import InfosDev from './_actions/infosdroits/infosDev';
 import InfosUserPrev from './_actions/infosdroits/infosUserPrev';
 import InfosUserGetion from './_actions/infosdroits/infosUsergetio';
-
+import Infosusersignataire from './_actions/infosdroits/infosusersignataire';
 import CloseIcon from '@mui/icons-material/Close';
+import EmailSignataire from '../../../Signatures/EmailSignataire';
+import axios from 'axios';
+import config from '../../../config.json';
+
 export default function AddUser() {
+    const apiUrl = config.apiUrl;
     const [isSubmitting, setIsSubmitting] = useState(false);
     const { darkMode } = useTheme();
     const navigate = useNavigate();
@@ -35,6 +40,8 @@ export default function AddUser() {
     const checkedIcon = <CheckBoxIcon fontSize="small" />;
     const [openPreview, setOpenPreview] = useState(false);
     const [previewType, setPreviewType] = useState('');
+    const [signatairesEmails, setSignatairesEmails] = useState({});
+    const [entreprisesData, setEntreprisesData] = useState([]);
 
     const handleOpenPreview = (type) => {
         setPreviewType(type);
@@ -77,6 +84,11 @@ export default function AddUser() {
                 return {
                     title: 'Info Gestionnaire Véhicule',
                     content: <InfosUserGetion />
+                }
+            case 'usersignataire':
+                return {
+                    title: 'Info utilisateur signataire',
+                    content: <Infosusersignataire />
                 }
             default:
                 return { title: '', content: null };
@@ -148,6 +160,26 @@ export default function AddUser() {
                 setValue(key, value);
             });
 
+            // Si l'utilisateur a des entreprises en tant que signataire, on charge les emails
+            if (formattedData.userSignataire && formattedData.userSignataire.length > 0) {
+                const entreprisesResponse = await axios.get(`http://${apiUrl}:3100/api/entreprises`);
+                const entreprises = entreprisesResponse.data;
+
+                // On charge les emails pour chaque entreprise signataire
+                const emails = {};
+                formattedData.userSignataire.forEach(entrepriseName => {
+                    const entreprise = entreprises.find(e => e.AddEntreName === entrepriseName);
+                    if (entreprise?.signatairesEmails?.[entrepriseName]) {
+                        emails[entrepriseName] = entreprise.signatairesEmails[entrepriseName];
+                    } else if (entreprise?.AddEntrEmail) {
+                        emails[entrepriseName] = entreprise.AddEntrEmail;
+                    }
+                });
+
+                console.log('Emails chargés pour l\'édition:', emails);
+                setSignatairesEmails(emails);
+            }
+
         } catch (error) {
             console.error('Erreur lors de la récupération de l\'utilisateur:', error.message);
             showSnackbar('Erreur lors de la récupération de l\'utilisateur', 'error');
@@ -155,16 +187,101 @@ export default function AddUser() {
     };
 
     // Récupération des entreprises
+    // Modifiez la fonction getEntreprisesData pour utiliser axios et le bon endpoint
     const getEntreprisesData = async () => {
         try {
-            const entreprisesData = await getEntreprises();
+            console.log('Tentative de récupération des entreprises...');
+            const response = await axios.get(`http://${apiUrl}:3100/api/entreprises`);
+            console.log('Réponse brute de l\'API:', response);
+
+            const entreprisesData = response.data;
+            console.log('Données des entreprises:', entreprisesData);
+
             if (!entreprisesData) throw new Error('Aucune entreprise trouvée');
-            setEntreprises(entreprisesData.map(item => item.AddEntreName));
+
+            setEntreprisesData(entreprisesData);
+            const entrepriseNames = entreprisesData.map(item => item.AddEntreName);
+            console.log('Noms des entreprises extraits:', entrepriseNames);
+
+            setEntreprises(entrepriseNames);
         } catch (error) {
-            console.error('Erreur lors de la récupération des entreprises:', error.message);
+            console.error('Erreur lors de la récupération des entreprises:', error);
             showSnackbar('Erreur lors de la récupération des entreprises', 'error');
         }
     };
+
+    // Fonction pour mettre à jour l'email d'une entreprise
+    // Modifiez la fonction updateEntrepriseEmail
+    // Modifiez la fonction updateEntrepriseEmail
+    const updateEntrepriseEmail = async (entrepriseName, email) => {
+        try {
+            const entreprise = entreprisesData.find(e => e.AddEntreName === entrepriseName);
+            console.log('Mise à jour email pour entreprise:', {
+                entrepriseName,
+                email,
+                entrepriseData: entreprise
+            });
+
+            if (!entreprise) {
+                console.warn('Entreprise non trouvée:', entrepriseName);
+                return;
+            }
+
+            // Convertir signatairesEmails en objet s'il n'existe pas
+            const currentSignatairesEmails = entreprise.signatairesEmails || {};
+
+            // Créer un nouvel objet avec toutes les données nécessaires
+            const updatedData = {
+                _id: entreprise._id,
+                AddEntrEmail: email,
+                signatairesEmails: { ...currentSignatairesEmails },
+                // Copier tous les autres champs existants
+                ...entreprise
+            };
+
+            // S'assurer que signatairesEmails est initialisé comme un objet
+            if (!updatedData.signatairesEmails) {
+                updatedData.signatairesEmails = {};
+            }
+
+            // Ajouter ou mettre à jour l'email pour cette entreprise
+            updatedData.signatairesEmails[entrepriseName] = email;
+
+            console.log('Données complètes à envoyer:', updatedData);
+
+            const response = await axios.put(`http://${apiUrl}:3100/api/entreprises/${entreprise._id}`, updatedData);
+
+            console.log('Réponse mise à jour email:', response.data);
+
+            if (!response.data) {
+                throw new Error('Erreur lors de la mise à jour de l\'email');
+            }
+
+            // Mettre à jour le state local
+            setEntreprisesData(prevData => {
+                return prevData.map(e =>
+                    e._id === entreprise._id
+                        ? { ...updatedData }
+                        : e
+                );
+            });
+
+            // Mettre à jour l'état local des emails signataires
+            setSignatairesEmails(prev => ({
+                ...prev,
+                [entrepriseName]: email
+            }));
+
+        } catch (error) {
+            console.error('Erreur lors de la mise à jour de l\'email:', error);
+            if (error.response) {
+                console.error('Réponse d\'erreur:', error.response.data);
+            }
+            showSnackbar('Erreur lors de la mise à jour de l\'email', 'error');
+        }
+    };
+
+
 
     useEffect(() => {
         getUserData();
@@ -176,18 +293,15 @@ export default function AddUser() {
     };
 
     const onSubmit = async () => {
-        // Éviter la double soumission
         if (isSubmitting) return;
-
-        // Marquer comme en cours de soumission
         setIsSubmitting(true);
 
         try {
-            // Préparation des données utilisateur
             const userData = {
                 ...user,
                 darkMode: user.darkMode ?? false,
-                selectedYears: user.selectedYears ?? [new Date().getFullYear().toString()]
+                selectedYears: user.selectedYears ?? [new Date().getFullYear().toString()],
+                signatairesEmails // Ajout des emails des signataires
             };
 
             const result = await putUser(userId, userData);
@@ -676,20 +790,33 @@ export default function AddUser() {
                 </Grid>
 
 
-                    <h3 style={{ color: darkMode ? '#ffffff' : 'inherit' }}>Donner les accès signataire:</h3>
+                <h3 style={{ color: darkMode ? '#ffffff' : 'inherit' }}>Donner les accès signataire:</h3>
                 <Grid container direction="row" alignItems="center">
-                    <Grid item xs={11.99999} sx={{ display: 'flex', justifyContent: 'center' }}>
+                    <Grid item xs={11.99999} sx={{ display: 'flex', justifyContent: 'center', flexDirection: 'column', gap: 2 }}>
                         <Autocomplete
                             multiple
                             id="checkboxes-tags-demo-signataire"
                             options={entreprises}
-                            onChange={(_, value) => handleChange('userSignataire', value)}
+                            onChange={(_, value) => {
+                                handleChange('userSignataire', value);
+                                // Initialiser les emails avec les valeurs existantes
+                                const newEmails = {};
+                                value.forEach(entrepriseName => {
+                                    const entreprise = entreprisesData.find(e => e.AddEntreName === entrepriseName);
+                                    if (entreprise?.AddEntrEmail) {
+                                        newEmails[entrepriseName] = entreprise.AddEntrEmail;
+                                    } else {
+                                        newEmails[entrepriseName] = signatairesEmails[entrepriseName] || '';
+                                    }
+                                });
+                                setSignatairesEmails(newEmails);
+                            }}
                             value={user.userSignataire}
                             disableCloseOnSelect
                             sx={{
                                 width: '50%',
                                 boxShadow: darkMode ? '0 3px 6px rgba(255,255,255,0.1)' : 3,
-                                margin: '0 auto 1rem',
+                                margin: '0 auto',
                                 '& .MuiOutlinedInput-root': {
                                     color: darkMode ? '#fff' : 'inherit',
                                     '& fieldset': {
@@ -750,10 +877,49 @@ export default function AddUser() {
                             )}
                             PaperComponent={PaperComponent}
                         />
+
+                        {/* Champs d'email dynamiques */}
+                        {user.userSignataire && user.userSignataire.map((entreprise, index) => (
+                            <TextField
+                                key={entreprise}
+                                label={`Email pour ${entreprise}`}
+                                type="email"
+                                value={signatairesEmails[entreprise] || ''}
+                                onChange={(e) => {
+                                    const email = e.target.value;
+                                    setSignatairesEmails(prev => ({
+                                        ...prev,
+                                        [entreprise]: email
+                                    }));
+                                    updateEntrepriseEmail(entreprise, email);
+                                }}
+                                sx={{
+                                    width: '50%',
+                                    margin: '0 auto',
+                                    backgroundColor: darkMode ? '#424242' : '#00479871',
+                                    '& .MuiInputLabel-root': {
+                                        color: darkMode ? '#fff' : 'inherit'
+                                    },
+                                    '& .MuiOutlinedInput-root': {
+                                        color: darkMode ? '#fff' : 'inherit',
+                                        '& fieldset': {
+                                            borderColor: darkMode ? 'rgba(255,255,255,0.3)' : 'rgba(0,0,0,0.23)'
+                                        },
+                                        '&:hover fieldset': {
+                                            borderColor: darkMode ? 'rgba(255,255,255,0.5)' : 'rgba(0,0,0,0.5)'
+                                        },
+                                        '& input': {
+                                            color: darkMode ? '#fff' : 'inherit'
+                                        }
+                                    }
+                                }}
+                            />
+                        ))}
                     </Grid>
 
+
                     <Grid item xs={0.00001} style={{ margin: '-24.5%' }}>
-                        <IconButton onClick={() => handleOpenPreview('getionnaireVehicule')}>
+                        <IconButton onClick={() => handleOpenPreview('usersignataire')}>
                             <Tooltip title="Info rôle" arrow>
                                 <InfoIcon style={{ color: darkMode ? '#ffffff' : 'black' }} />
                             </Tooltip>
@@ -762,7 +928,7 @@ export default function AddUser() {
                 </Grid>
 
 
-                    
+
 
 
 
@@ -865,7 +1031,9 @@ export default function AddUser() {
                 </DialogContent>
 
             </Dialog>
-        </form>
+        </form >
     );
 }
+
+
 
