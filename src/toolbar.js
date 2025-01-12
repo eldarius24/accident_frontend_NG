@@ -26,7 +26,7 @@ import HelpIcon from '@mui/icons-material/Help';
 function ResponsiveAppBar() {
   const [supportDialogOpen, setSupportDialogOpen] = useState(false);
   const location = useLocation();
-  const { userInfo, isAdminOrDevOrConseiller, isAdminOrDev, isUserPreventionOrAdminOrConseiller, isVehicleAdminManager, isAllAcces } = useUserConnected();
+  const { userInfo, isAdminOrDevOrConseiller, isAdminOrDev, isUserPreventionOrAdminOrConseiller, isVehicleAdminManager, isAdminOrDevOrAdmVechi, isAdminOrDevOrAdmVechiOrAdmSignataireOrUsersignataire, isAllAcces } = useUserConnected();
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const { darkMode, toggleDarkMode } = useTheme();
   const { logAction } = useLogger();
@@ -222,7 +222,7 @@ function ResponsiveAppBar() {
             />
           </Tooltip>
           {renderLogoutButton()}
-          {isAdminOrDev && ['/', '/AdminVehicule', '/AdminAddVehicule', '/logView', '/messSupport', '/addSecteur', '/adminUser', "/adminEntreprises", "/addEntreprise", "/addUser"].includes(location.pathname) &&
+          {isAdminOrDevOrAdmVechiOrAdmSignataireOrUsersignataire && ['/', '/AdminVehicule', '/AdminAddVehicule', '/logView', '/messSupport', '/addSecteur', '/adminUser', "/adminEntreprises", "/addEntreprise", "/addUser"].includes(location.pathname) &&
             renderButton("/adminaction", "Cliquez ici accèder à l'espace d'administration", <AdminPanelSettingsIcon />, "Admin")}
 
         </Box>

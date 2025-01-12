@@ -5,17 +5,17 @@ import { useUserConnected } from '../Hook/userConnected';
 const ProtectedRouteAdminOrsignataires = ({ children }) => {
     const navigate = useNavigate();
     const location = useLocation();
-    const { isAuthenticated, isAdminOrDev, isUserSignataire } = useUserConnected();
+    const { isAuthenticated, isAdminOrDevOrAdmVechiOrAdmSignataireOrUsersignataire } = useUserConnected();
 
     useEffect(() => {
         if (!isAuthenticated) {
             navigate('/login');
-        } else if (!(isAdminOrDev || isUserSignataire) && location.pathname !== '/') {
+        } else if (!(isAdminOrDevOrAdmVechiOrAdmSignataireOrUsersignataire) && location.pathname !== '/') {
             navigate('/signatures');
         }
-    }, [isAuthenticated, isAdminOrDev, isUserSignataire, navigate, location]);
+    }, [isAuthenticated, isAdminOrDevOrAdmVechiOrAdmSignataireOrUsersignataire, navigate, location]);
 
-    if (!isAuthenticated || (!(isAdminOrDev || isUserSignataire) && location.pathname !== '/')) {
+    if (!isAuthenticated || (!(isAdminOrDevOrAdmVechiOrAdmSignataireOrUsersignataire) && location.pathname !== '/')) {
         return null;
     }
 

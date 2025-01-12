@@ -11,15 +11,15 @@ import { useUserConnected } from '../Hook/userConnected';
  */
 const ProtectedRouteAdmin = ({ children }) => {
   const navigate = useNavigate();
-  const { isAdminOrDev } = useUserConnected();
+  const { isAdminOrDevOrAdmVechiOrAdmSignataireOrUsersignataire } = useUserConnected();
 
   useEffect(() => {
-    if (!isAdminOrDev) {
+    if (!isAdminOrDevOrAdmVechiOrAdmSignataireOrUsersignataire) {
       navigate('/login'); // Redirige vers la page de connexion si l'utilisateur n'est pas admin
     }
-  }, [isAdminOrDev, navigate]);
+  }, [isAdminOrDevOrAdmVechiOrAdmSignataireOrUsersignataire, navigate]);
 
-  return isAdminOrDev ? children : null; // Retourne les enfants si l'utilisateur est admin
+  return isAdminOrDevOrAdmVechiOrAdmSignataireOrUsersignataire ? children : null; // Retourne les enfants si l'utilisateur est admin
 };
 
 export default ProtectedRouteAdmin;

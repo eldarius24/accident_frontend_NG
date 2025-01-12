@@ -11,6 +11,7 @@ import BulkArchiveManager from '../Archives/BulkArchiveManager';
 import ViewListIcon from '@mui/icons-material/ViewList';
 import AddIcon from '@mui/icons-material/Add';
 import config from '../config.json';
+import { useUserConnected } from '../Hook/userConnected.js';
 
 const apiUrl = config.apiUrl;
 /**
@@ -26,6 +27,7 @@ const apiUrl = config.apiUrl;
  * @returns Un component React qui affiche le panel d'administration des droits
  */
 export default function AdminPanelSettingsaction() {
+    const { userInfo, isDeveloppeur, isAdminOrDev, isAdminOrDevOrAdmVechi, isAdmin } = useUserConnected();
     const [archiveOuverte, setArchiveOuverte] = useState(false);
     const [users, setUsers] = useState([]);
     const { darkMode } = useTheme();
@@ -206,232 +208,249 @@ export default function AdminPanelSettingsaction() {
                         </Tooltip>
                     </Box>
                 </Paper>
-                <Paper
-                    elevation={3}
-                    sx={{
-                        border: darkMode ? '1px solid #ffffff' : '1px solid #ee742d',
-                        borderRadius: '8px',
-                        padding: '20px',
-                        margin: '20px 0',
-                        backgroundColor: darkMode ? '#2e2e2e' : '#ffffff',
-                        '&:hover': {
-                            boxShadow: darkMode
-                                ? '0 8px 16px rgba(255, 255, 255, 0.1)'
-                                : '0 8px 16px rgba(238, 116, 45, 0.2)'
-                        }
-                    }}
-                >
-                    <h3 style={{ color: darkMode ? '#ffffff' : 'inherit' }}>Administration des entreprises</h3>
-                    {/* Premier Box avec les boutons entreprise */}
-                    <Box sx={{
-                        display: 'flex',
-                        justifyContent: 'center',
-                        marginLeft: '120px',
-                        marginRight: '120px',
-                        gap: '20px'
-                    }}>
-                        <Tooltip title="Cliquez ici Créer une nouvelle entreprise" arrow>
-                            <Button
-                                type="submit"
-                                component={Link}
-                                to={'/addEntreprise'}
-                                sx={{
-                                    ...defaultStyle,
-                                    color: darkMode ? '#ffffff' : 'black',
-                                    backgroundColor: darkMode ? '#424242' : '#ee742d59',
-                                    transition: 'all 0.1s ease-in-out',
-                                    '&:hover': {
-                                        backgroundColor: darkMode ? '#7a8e1c' : '#95ad22',
-                                        transform: 'scale(1.08)',
-                                        boxShadow: darkMode ? '0 6px 12px rgba(255,255,255,0.2)' : 6
-                                    },
-                                    boxShadow: darkMode ? '0 3px 6px rgba(255,255,255,0.1)' : 3,
-                                    textTransform: 'none',
-                                    border: darkMode ? '1px solid rgba(255,255,255,0.1)' : 'none'
-                                }}
-                                variant="contained"
-                            >
-                                <AddIcon />
-                                Créer une nouvelle entreprise
-                            </Button>
-                        </Tooltip>
-                        <Tooltip title="Cliquez ici pour afficher, éditez ou supprimer une entreprise ou créer un secteur d'activé" arrow>
-                            <Button
-                                type="submit"
-                                component={Link}
-                                to={'/adminEntreprises'}
-                                sx={{
-                                    ...defaultStyle,
-                                    color: darkMode ? '#ffffff' : 'black',
-                                    backgroundColor: darkMode ? '#424242' : '#ee742d59',
-                                    transition: 'all 0.1s ease-in-out',
-                                    '&:hover': {
-                                        backgroundColor: darkMode ? '#7a8e1c' : '#95ad22',
-                                        transform: 'scale(1.08)',
-                                        boxShadow: darkMode ? '0 6px 12px rgba(255,255,255,0.2)' : 6
-                                    },
-                                    boxShadow: darkMode ? '0 3px 6px rgba(255,255,255,0.1)' : 3,
-                                    textTransform: 'none',
-                                    border: darkMode ? '1px solid rgba(255,255,255,0.1)' : 'none'
-                                }}
-                                variant="contained"
-                            >
-                                <ViewListIcon />
-                                Consulter les entreprises prévention
-                            </Button>
-                        </Tooltip>
-                    </Box>
-                </Paper>
-                <Paper
-                    elevation={3}
-                    sx={{
-                        border: darkMode ? '1px solid #ffffff' : '1px solid #ee742d',
-                        borderRadius: '8px',
-                        padding: '20px',
-                        margin: '20px 0',
-                        backgroundColor: darkMode ? '#2e2e2e' : '#ffffff',
-                        '&:hover': {
-                            boxShadow: darkMode
-                                ? '0 8px 16px rgba(255, 255, 255, 0.1)'
-                                : '0 8px 16px rgba(238, 116, 45, 0.2)'
-                        }
-                    }}
-                >
-                    <h3 style={{ color: darkMode ? '#ffffff' : 'inherit' }}>Administration des véhicules</h3>
-                    <Box sx={{
-                        display: 'flex',
-                        justifyContent: 'center',
-                        marginLeft: '120px',
-                        marginRight: '120px',
-                        gap: '20px'
-                    }}>
-                        <Tooltip title="Ajouter un nouveau véhicule" arrow>
-                            <Button
-                                type="submit"
-                                component={Link}
-                                to={'/AdminAddVehicule'}
-                                sx={{
-                                    ...defaultStyle,
-                                    color: darkMode ? '#ffffff' : 'black',
-                                    backgroundColor: darkMode ? '#424242' : '#ee742d59',
-                                    transition: 'all 0.1s ease-in-out',
-                                    '&:hover': {
-                                        backgroundColor: darkMode ? '#7a8e1c' : '#95ad22',
-                                        transform: 'scale(1.08)',
-                                        boxShadow: darkMode ? '0 6px 12px rgba(255,255,255,0.2)' : 6
-                                    },
-                                    boxShadow: darkMode ? '0 3px 6px rgba(255,255,255,0.1)' : 3,
-                                    textTransform: 'none',
-                                    border: darkMode ? '1px solid rgba(255,255,255,0.1)' : 'none'
-                                }}
-                                variant="contained"
-                            >
-                                <AddIcon />
-                                Ajouter un véhicule
-                            </Button>
-                        </Tooltip>
-                        <Tooltip title="Voir tous les véhicules" arrow>
-                            <Button
-                                type="submit"
-                                component={Link}
-                                to={'/AdminVehicule'}
-                                sx={{
-                                    ...defaultStyle,
-                                    color: darkMode ? '#ffffff' : 'black',
-                                    backgroundColor: darkMode ? '#424242' : '#ee742d59',
-                                    transition: 'all 0.1s ease-in-out',
-                                    '&:hover': {
-                                        backgroundColor: darkMode ? '#7a8e1c' : '#95ad22',
-                                        transform: 'scale(1.08)',
-                                        boxShadow: darkMode ? '0 6px 12px rgba(255,255,255,0.2)' : 6
-                                    },
-                                    boxShadow: darkMode ? '0 3px 6px rgba(255,255,255,0.1)' : 3,
-                                    textTransform: 'none',
-                                    border: darkMode ? '1px solid rgba(255,255,255,0.1)' : 'none'
-                                }}
-                                variant="contained"
-                            >
-                                <ViewListIcon />
-                                Liste des véhicules
-                            </Button>
-                        </Tooltip>
-                    </Box>
-                </Paper>
-                <Paper
-                    elevation={3}
-                    sx={{
-                        border: darkMode ? '1px solid #ffffff' : '1px solid #ee742d',
-                        borderRadius: '8px',
-                        padding: '20px',
-                        margin: '20px 0',
-                        backgroundColor: darkMode ? '#2e2e2e' : '#ffffff',
-                        '&:hover': {
-                            boxShadow: darkMode
-                                ? '0 8px 16px rgba(255, 255, 255, 0.1)'
-                                : '0 8px 16px rgba(238, 116, 45, 0.2)'
-                        }
-                    }}
-                >
-                    <h3 style={{ color: darkMode ? '#ffffff' : 'inherit' }}>Administration des logs et des messages de support</h3>
-                    <Box sx={{
-                        display: 'flex',
-                        justifyContent: 'center',
-                        marginLeft: '120px',
-                        marginRight: '120px',
-                        gap: '20px'
-                    }}>
-                        <Tooltip title="Visualisation des logs" arrow>
-                            <Button
-                                type="submit"
-                                component={Link}
-                                to={'/logView'}
-                                sx={{
-                                    ...defaultStyle,
-                                    color: darkMode ? '#ffffff' : 'black',
-                                    backgroundColor: darkMode ? '#424242' : '#ee742d59',
-                                    transition: 'all 0.1s ease-in-out',
-                                    '&:hover': {
-                                        backgroundColor: darkMode ? '#7a8e1c' : '#95ad22',
-                                        transform: 'scale(1.08)',
-                                        boxShadow: darkMode ? '0 6px 12px rgba(255,255,255,0.2)' : 6
-                                    },
-                                    boxShadow: darkMode ? '0 3px 6px rgba(255,255,255,0.1)' : 3,
-                                    textTransform: 'none',
-                                    border: darkMode ? '1px solid rgba(255,255,255,0.1)' : 'none'
-                                }}
-                                variant="contained"
-                            >
-                                <History />
-                                Visualisation des logs
-                            </Button>
-                        </Tooltip>
-                        <Tooltip title="Visualisation messages de support" arrow>
-                            <Button
-                                type="submit"
-                                component={Link}
-                                to={'/messSupport'}
-                                sx={{
-                                    ...defaultStyle,
-                                    color: darkMode ? '#ffffff' : 'black',
-                                    backgroundColor: darkMode ? '#424242' : '#ee742d59',
-                                    transition: 'all 0.1s ease-in-out',
-                                    '&:hover': {
-                                        backgroundColor: darkMode ? '#7a8e1c' : '#95ad22',
-                                        transform: 'scale(1.08)',
-                                        boxShadow: darkMode ? '0 6px 12px rgba(255,255,255,0.2)' : 6
-                                    },
-                                    boxShadow: darkMode ? '0 3px 6px rgba(255,255,255,0.1)' : 3,
-                                    textTransform: 'none',
-                                    border: darkMode ? '1px solid rgba(255,255,255,0.1)' : 'none'
-                                }}
-                                variant="contained"
-                            >
-                                <HelpIcon />
-                                Visualisation des supports
-                            </Button>
-                        </Tooltip>
-                    </Box>
-                </Paper>
+                {isAdminOrDev && (
+                    <div>
+                        <Paper
+                            elevation={3}
+                            sx={{
+                                border: darkMode ? '1px solid #ffffff' : '1px solid #ee742d',
+                                borderRadius: '8px',
+                                padding: '20px',
+                                margin: '20px 0',
+                                backgroundColor: darkMode ? '#2e2e2e' : '#ffffff',
+                                '&:hover': {
+                                    boxShadow: darkMode
+                                        ? '0 8px 16px rgba(255, 255, 255, 0.1)'
+                                        : '0 8px 16px rgba(238, 116, 45, 0.2)'
+                                }
+                            }}
+                        >
+
+                            <h3 style={{ color: darkMode ? '#ffffff' : 'inherit' }}>Administration des entreprises</h3>
+                            {/* Premier Box avec les boutons entreprise */}
+                            <Box sx={{
+                                display: 'flex',
+                                justifyContent: 'center',
+                                marginLeft: '120px',
+                                marginRight: '120px',
+                                gap: '20px'
+                            }}>
+                                <Tooltip title="Cliquez ici Créer une nouvelle entreprise" arrow>
+                                    <Button
+                                        type="submit"
+                                        component={Link}
+                                        to={'/addEntreprise'}
+                                        sx={{
+                                            ...defaultStyle,
+                                            color: darkMode ? '#ffffff' : 'black',
+                                            backgroundColor: darkMode ? '#424242' : '#ee742d59',
+                                            transition: 'all 0.1s ease-in-out',
+                                            '&:hover': {
+                                                backgroundColor: darkMode ? '#7a8e1c' : '#95ad22',
+                                                transform: 'scale(1.08)',
+                                                boxShadow: darkMode ? '0 6px 12px rgba(255,255,255,0.2)' : 6
+                                            },
+                                            boxShadow: darkMode ? '0 3px 6px rgba(255,255,255,0.1)' : 3,
+                                            textTransform: 'none',
+                                            border: darkMode ? '1px solid rgba(255,255,255,0.1)' : 'none'
+                                        }}
+                                        variant="contained"
+                                    >
+                                        <AddIcon />
+                                        Créer une nouvelle entreprise
+                                    </Button>
+                                </Tooltip>
+                                <Tooltip title="Cliquez ici pour afficher, éditez ou supprimer une entreprise ou créer un secteur d'activé" arrow>
+                                    <Button
+                                        type="submit"
+                                        component={Link}
+                                        to={'/adminEntreprises'}
+                                        sx={{
+                                            ...defaultStyle,
+                                            color: darkMode ? '#ffffff' : 'black',
+                                            backgroundColor: darkMode ? '#424242' : '#ee742d59',
+                                            transition: 'all 0.1s ease-in-out',
+                                            '&:hover': {
+                                                backgroundColor: darkMode ? '#7a8e1c' : '#95ad22',
+                                                transform: 'scale(1.08)',
+                                                boxShadow: darkMode ? '0 6px 12px rgba(255,255,255,0.2)' : 6
+                                            },
+                                            boxShadow: darkMode ? '0 3px 6px rgba(255,255,255,0.1)' : 3,
+                                            textTransform: 'none',
+                                            border: darkMode ? '1px solid rgba(255,255,255,0.1)' : 'none'
+                                        }}
+                                        variant="contained"
+                                    >
+                                        <ViewListIcon />
+                                        Consulter les entreprises prévention
+                                    </Button>
+                                </Tooltip>
+                            </Box>
+                        </Paper>
+                    </div>
+                )}
+
+
+                {isAdminOrDevOrAdmVechi && (
+                    <div>
+                        <Paper
+                            elevation={3}
+                            sx={{
+                                border: darkMode ? '1px solid #ffffff' : '1px solid #ee742d',
+                                borderRadius: '8px',
+                                padding: '20px',
+                                margin: '20px 0',
+                                backgroundColor: darkMode ? '#2e2e2e' : '#ffffff',
+                                '&:hover': {
+                                    boxShadow: darkMode
+                                        ? '0 8px 16px rgba(255, 255, 255, 0.1)'
+                                        : '0 8px 16px rgba(238, 116, 45, 0.2)'
+                                }
+                            }}
+                        >
+
+                            <h3 style={{ color: darkMode ? '#ffffff' : 'inherit' }}>Administration des véhicules</h3>
+                            <Box sx={{
+                                display: 'flex',
+                                justifyContent: 'center',
+                                marginLeft: '120px',
+                                marginRight: '120px',
+                                gap: '20px'
+                            }}>
+                                <Tooltip title="Ajouter un nouveau véhicule" arrow>
+                                    <Button
+                                        type="submit"
+                                        component={Link}
+                                        to={'/AdminAddVehicule'}
+                                        sx={{
+                                            ...defaultStyle,
+                                            color: darkMode ? '#ffffff' : 'black',
+                                            backgroundColor: darkMode ? '#424242' : '#ee742d59',
+                                            transition: 'all 0.1s ease-in-out',
+                                            '&:hover': {
+                                                backgroundColor: darkMode ? '#7a8e1c' : '#95ad22',
+                                                transform: 'scale(1.08)',
+                                                boxShadow: darkMode ? '0 6px 12px rgba(255,255,255,0.2)' : 6
+                                            },
+                                            boxShadow: darkMode ? '0 3px 6px rgba(255,255,255,0.1)' : 3,
+                                            textTransform: 'none',
+                                            border: darkMode ? '1px solid rgba(255,255,255,0.1)' : 'none'
+                                        }}
+                                        variant="contained"
+                                    >
+                                        <AddIcon />
+                                        Ajouter un véhicule
+                                    </Button>
+                                </Tooltip>
+                                <Tooltip title="Voir tous les véhicules" arrow>
+                                    <Button
+                                        type="submit"
+                                        component={Link}
+                                        to={'/AdminVehicule'}
+                                        sx={{
+                                            ...defaultStyle,
+                                            color: darkMode ? '#ffffff' : 'black',
+                                            backgroundColor: darkMode ? '#424242' : '#ee742d59',
+                                            transition: 'all 0.1s ease-in-out',
+                                            '&:hover': {
+                                                backgroundColor: darkMode ? '#7a8e1c' : '#95ad22',
+                                                transform: 'scale(1.08)',
+                                                boxShadow: darkMode ? '0 6px 12px rgba(255,255,255,0.2)' : 6
+                                            },
+                                            boxShadow: darkMode ? '0 3px 6px rgba(255,255,255,0.1)' : 3,
+                                            textTransform: 'none',
+                                            border: darkMode ? '1px solid rgba(255,255,255,0.1)' : 'none'
+                                        }}
+                                        variant="contained"
+                                    >
+                                        <ViewListIcon />
+                                        Liste des véhicules
+                                    </Button>
+                                </Tooltip>
+                            </Box>
+                        </Paper>
+                    </div>
+                )}
+                {isAdminOrDev && (
+                    <div>
+                        <Paper
+                            elevation={3}
+                            sx={{
+                                border: darkMode ? '1px solid #ffffff' : '1px solid #ee742d',
+                                borderRadius: '8px',
+                                padding: '20px',
+                                margin: '20px 0',
+                                backgroundColor: darkMode ? '#2e2e2e' : '#ffffff',
+                                '&:hover': {
+                                    boxShadow: darkMode
+                                        ? '0 8px 16px rgba(255, 255, 255, 0.1)'
+                                        : '0 8px 16px rgba(238, 116, 45, 0.2)'
+                                }
+                            }}
+                        >
+                            <h3 style={{ color: darkMode ? '#ffffff' : 'inherit' }}>Administration des logs et des messages de support</h3>
+                            <Box sx={{
+                                display: 'flex',
+                                justifyContent: 'center',
+                                marginLeft: '120px',
+                                marginRight: '120px',
+                                gap: '20px'
+                            }}>
+                                <Tooltip title="Visualisation des logs" arrow>
+                                    <Button
+                                        type="submit"
+                                        component={Link}
+                                        to={'/logView'}
+                                        sx={{
+                                            ...defaultStyle,
+                                            color: darkMode ? '#ffffff' : 'black',
+                                            backgroundColor: darkMode ? '#424242' : '#ee742d59',
+                                            transition: 'all 0.1s ease-in-out',
+                                            '&:hover': {
+                                                backgroundColor: darkMode ? '#7a8e1c' : '#95ad22',
+                                                transform: 'scale(1.08)',
+                                                boxShadow: darkMode ? '0 6px 12px rgba(255,255,255,0.2)' : 6
+                                            },
+                                            boxShadow: darkMode ? '0 3px 6px rgba(255,255,255,0.1)' : 3,
+                                            textTransform: 'none',
+                                            border: darkMode ? '1px solid rgba(255,255,255,0.1)' : 'none'
+                                        }}
+                                        variant="contained"
+                                    >
+                                        <History />
+                                        Visualisation des logs
+                                    </Button>
+                                </Tooltip>
+                                <Tooltip title="Visualisation messages de support" arrow>
+                                    <Button
+                                        type="submit"
+                                        component={Link}
+                                        to={'/messSupport'}
+                                        sx={{
+                                            ...defaultStyle,
+                                            color: darkMode ? '#ffffff' : 'black',
+                                            backgroundColor: darkMode ? '#424242' : '#ee742d59',
+                                            transition: 'all 0.1s ease-in-out',
+                                            '&:hover': {
+                                                backgroundColor: darkMode ? '#7a8e1c' : '#95ad22',
+                                                transform: 'scale(1.08)',
+                                                boxShadow: darkMode ? '0 6px 12px rgba(255,255,255,0.2)' : 6
+                                            },
+                                            boxShadow: darkMode ? '0 3px 6px rgba(255,255,255,0.1)' : 3,
+                                            textTransform: 'none',
+                                            border: darkMode ? '1px solid rgba(255,255,255,0.1)' : 'none'
+                                        }}
+                                        variant="contained"
+                                    >
+                                        <HelpIcon />
+                                        Visualisation des supports
+                                    </Button>
+                                </Tooltip>
+                            </Box>
+                        </Paper>
+                    </div>
+                )}
+
                 <Paper
                     elevation={3}
                     sx={{
@@ -448,10 +467,14 @@ export default function AdminPanelSettingsaction() {
                     }}
                 >
                     <h3 style={{ color: darkMode ? '#ffffff' : 'inherit' }}>Administration des archives</h3>
-                    <BulkArchiveManager
-                        darkMode={darkMode}
-                        onSuccess={(message) => showSnackbar(message, 'success')}
-                    />
+                    {isAdminOrDev && (
+                        <div>
+                            <BulkArchiveManager
+                                darkMode={darkMode}
+                                onSuccess={(message) => showSnackbar(message, 'success')}
+                            />
+                        </div>
+                    )}
                     <Typography variant="h6" sx={{ mb: 4, color: darkMode ? '#ffffff' : 'inherit', textAlign: 'center' }}>
                         Accéder aux archives
                     </Typography>
@@ -462,103 +485,115 @@ export default function AdminPanelSettingsaction() {
                         marginRight: '120px',
                         gap: '20px'
                     }}>
-                        <SystemeArchivage
-                            typeArchive="planaction"
-                            donnees={users}
-                            onArchiver={async (archiveData) => {
-                                try {
-                                    await axios.post(`http://${apiUrl}:3100/api/archives`, archiveData);
-                                    refreshListAccidents();
-                                    showSnackbar('Action archivée avec succès', 'success');
-                                } catch (error) {
-                                    console.error("Erreur lors de l'archivage:", error);
-                                    showSnackbar('Erreur lors de l\'archivage', 'error');
-                                }
-                            }}
-                            darkMode={darkMode}
-                        />
-                        <SystemeArchivage
-                            typeArchive="accident"
-                            donnees={users}
-                            onArchiver={async (archiveData) => {
-                                try {
-                                    await axios.post(`http://${apiUrl}:3100/api/archives`, archiveData);
-                                    refreshListAccidents();
-                                    showSnackbar('Accident archivé avec succès', 'success');
-                                } catch (error) {
-                                    console.error("Erreur lors de l'archivage:", error);
-                                    showSnackbar('Erreur lors de l\'archivage', 'error');
-                                }
-                            }}
-                            darkMode={darkMode}
-                        />
-                        <SystemeArchivage
-                            typeArchive="vehicle"
-                            donnees={users}
-                            onArchiver={async (archiveData) => {
-                                try {
-                                    await axios.post(`http://${apiUrl}:3100/api/archives`, archiveData);
-                                    refreshListAccidents();
-                                    showSnackbar('Véhicule archivé avec succès', 'success');
-                                } catch (error) {
-                                    console.error("Erreur lors de l'archivage:", error);
-                                    showSnackbar('Erreur lors de l\'archivage', 'error');
-                                }
-                            }}
-                            darkMode={darkMode}
-                        />
+                        {isAdminOrDev && (
+                            <div>
+                                <SystemeArchivage
+                                    typeArchive="planaction"
+                                    donnees={users}
+                                    onArchiver={async (archiveData) => {
+                                        try {
+                                            await axios.post(`http://${apiUrl}:3100/api/archives`, archiveData);
+                                            refreshListAccidents();
+                                            showSnackbar('Action archivée avec succès', 'success');
+                                        } catch (error) {
+                                            console.error("Erreur lors de l'archivage:", error);
+                                            showSnackbar('Erreur lors de l\'archivage', 'error');
+                                        }
+                                    }}
+                                    darkMode={darkMode}
+                                />
+                                <SystemeArchivage
+                                    typeArchive="accident"
+                                    donnees={users}
+                                    onArchiver={async (archiveData) => {
+                                        try {
+                                            await axios.post(`http://${apiUrl}:3100/api/archives`, archiveData);
+                                            refreshListAccidents();
+                                            showSnackbar('Accident archivé avec succès', 'success');
+                                        } catch (error) {
+                                            console.error("Erreur lors de l'archivage:", error);
+                                            showSnackbar('Erreur lors de l\'archivage', 'error');
+                                        }
+                                    }}
+                                    darkMode={darkMode}
+                                />
+                            </div>
+                        )}
+                        {isAdminOrDevOrAdmVechi && (
+                            <div>
+                                <SystemeArchivage
+                                    typeArchive="vehicle"
+                                    donnees={users}
+                                    onArchiver={async (archiveData) => {
+                                        try {
+                                            await axios.post(`http://${apiUrl}:3100/api/archives`, archiveData);
+                                            refreshListAccidents();
+                                            showSnackbar('Véhicule archivé avec succès', 'success');
+                                        } catch (error) {
+                                            console.error("Erreur lors de l'archivage:", error);
+                                            showSnackbar('Erreur lors de l\'archivage', 'error');
+                                        }
+                                    }}
+                                    darkMode={darkMode}
+                                />
+                            </div>
+                        )}
                     </Box>
                 </Paper>
-                <Paper
-    elevation={3}
-    sx={{
-        border: darkMode ? '1px solid #ffffff' : '1px solid #ee742d',
-        borderRadius: '8px',
-        padding: '20px',
-        margin: '20px 0',
-        backgroundColor: darkMode ? '#2e2e2e' : '#ffffff',
-        '&:hover': {
-            boxShadow: darkMode
-                ? '0 8px 16px rgba(255, 255, 255, 0.1)'
-                : '0 8px 16px rgba(238, 116, 45, 0.2)'
-        }
-    }}
->
-    <h3 style={{ color: darkMode ? '#ffffff' : 'inherit' }}>Compteur d'accidents</h3>
-    <Box sx={{
-        display: 'flex',
-        justifyContent: 'center',
-        marginLeft: '120px',
-        marginRight: '120px',
-        gap: '20px'
-    }}>
-        <Tooltip title="Afficher le compteur d'accidents en plein écran" arrow>
-            <Button
-                type="submit"
-                component={Link}
-                to={'/accidentCounter'}
-                sx={{
-                    ...defaultStyle,
-                    color: darkMode ? '#ffffff' : 'black',
-                    backgroundColor: darkMode ? '#424242' : '#ee742d59',
-                    transition: 'all 0.1s ease-in-out',
-                    '&:hover': {
-                        backgroundColor: darkMode ? '#7a8e1c' : '#95ad22',
-                        transform: 'scale(1.08)',
-                        boxShadow: darkMode ? '0 6px 12px rgba(255,255,255,0.2)' : 6
-                    },
-                    boxShadow: darkMode ? '0 3px 6px rgba(255,255,255,0.1)' : 3,
-                    textTransform: 'none',
-                    border: darkMode ? '1px solid rgba(255,255,255,0.1)' : 'none'
-                }}
-                variant="contained"
-            >
-                <ViewListIcon />
-                Compteur d'accidents plein écran
-            </Button>
-        </Tooltip>
-    </Box>
-</Paper>
+                {isAdminOrDev && (
+                    <div>
+                        <Paper
+                            elevation={3}
+                            sx={{
+                                border: darkMode ? '1px solid #ffffff' : '1px solid #ee742d',
+                                borderRadius: '8px',
+                                padding: '20px',
+                                margin: '20px 0',
+                                backgroundColor: darkMode ? '#2e2e2e' : '#ffffff',
+                                '&:hover': {
+                                    boxShadow: darkMode
+                                        ? '0 8px 16px rgba(255, 255, 255, 0.1)'
+                                        : '0 8px 16px rgba(238, 116, 45, 0.2)'
+                                }
+                            }}
+                        >
+                            <h3 style={{ color: darkMode ? '#ffffff' : 'inherit' }}>Compteur d'accidents</h3>
+                            <Box sx={{
+                                display: 'flex',
+                                justifyContent: 'center',
+                                marginLeft: '120px',
+                                marginRight: '120px',
+                                gap: '20px'
+                            }}>
+                                <Tooltip title="Afficher le compteur d'accidents en plein écran" arrow>
+                                    <Button
+                                        type="submit"
+                                        component={Link}
+                                        to={'/accidentCounter'}
+                                        sx={{
+                                            ...defaultStyle,
+                                            color: darkMode ? '#ffffff' : 'black',
+                                            backgroundColor: darkMode ? '#424242' : '#ee742d59',
+                                            transition: 'all 0.1s ease-in-out',
+                                            '&:hover': {
+                                                backgroundColor: darkMode ? '#7a8e1c' : '#95ad22',
+                                                transform: 'scale(1.08)',
+                                                boxShadow: darkMode ? '0 6px 12px rgba(255,255,255,0.2)' : 6
+                                            },
+                                            boxShadow: darkMode ? '0 3px 6px rgba(255,255,255,0.1)' : 3,
+                                            textTransform: 'none',
+                                            border: darkMode ? '1px solid rgba(255,255,255,0.1)' : 'none'
+                                        }}
+                                        variant="contained"
+                                    >
+                                        <ViewListIcon />
+                                        Compteur d'accidents plein écran
+                                    </Button>
+                                </Tooltip>
+                            </Box>
+                        </Paper>
+                    </div>
+                )}
             </Paper>
             <CustomSnackbar
                 open={snackbar.open}

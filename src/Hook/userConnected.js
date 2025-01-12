@@ -19,14 +19,16 @@ export const useUserConnected = () => {
     const isDeveloppeur = userInfo.boolDeveloppeur;
     const isConseiller = userInfo.entreprisesConseillerPrevention?.length > 0;
     const isUserPrevention = userInfo.entreprisesUserPrevention?.length > 0;
+    //signataire
+    const isAdminSignataire = userInfo.boolAdministrateursignataire;
     const isUserSignataire = userInfo.userSignataire?.length > 0;
     //véhicule
     const isVehicleAdmin = userInfo.boolAdministrateurVehicule;
-
     const isFleetManager = userInfo.userGetionaireVehicule?.length > 0;
 
-
-    const isAdminOrDev = isAdmin || isDeveloppeur || isVehicleAdmin;
+    //multiple
+    const isAdminOrDev = isAdmin || isDeveloppeur;
+    const isAdminOrDevOrAdmSign = isAdmin || isDeveloppeur || isAdminSignataire;
     const isAdminOuConseiller = isAdmin || isConseiller;
     const isAdminOrDevOrConseiller = isAdmin || isDeveloppeur || isConseiller;
     const isUserPreventionOrAdmin = isAdmin || isUserPrevention;
@@ -35,6 +37,9 @@ export const useUserConnected = () => {
     const isVehicleAdminManager = isVehicleAdmin || isFleetManager;
     const isAllAcces = isVehicleAdminManager || isUserPreventionOrAdminOrConseiller;
     const isAdminOrDevOrSignataire = isAdminOrDev || isUserSignataire;
+    const isAdminOrDevOrAdmSignOrUserSignataire = isAdminOrDev || isUserSignataire || isAdminSignataire;
+    const isAdminOrDevOrAdmVechi = isAdmin || isDeveloppeur || isVehicleAdmin;
+    const isAdminOrDevOrAdmVechiOrAdmSignataireOrUsersignataire = isAdmin || isDeveloppeur || isVehicleAdmin || isAdminSignataire || isUserSignataire;
 
     return {
         userInfo,
@@ -49,6 +54,10 @@ export const useUserConnected = () => {
         isUserPreventionOrAdmin,
         isUserPreventionOrAdminOrConseiller,
         isUserPreventionOrConseiller,
+        isAdminOrDevOrAdmVechi,
+        isAdminOrDevOrAdmVechiOrAdmSignataireOrUsersignataire,
+        isAdminOrDevOrAdmSign,
+        isAdminOrDevOrAdmSignOrUserSignataire,
         //véhicule
         isVehicleAdmin,
         isFleetManager,
@@ -56,6 +65,7 @@ export const useUserConnected = () => {
         isAllAcces,
         //signataire
         isAdminOrDevOrSignataire,
-        isUserSignataire
+        isUserSignataire,
+        isAdminSignataire
     };
 };

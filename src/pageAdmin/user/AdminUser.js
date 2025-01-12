@@ -99,8 +99,9 @@ export default function Adminuser() {
     const getRole = useCallback((user) => {
         const roles = [];
         if (user.boolDeveloppeur) roles.push('Développeur');
-        if (user.boolAdministrateur) roles.push('Administrateur prévention');
+        if (user.boolAdministrateur) roles.push('Administrateur du site');
         if (user.boolAdministrateurVehicule) roles.push('Administrateur véhicule');
+        if (user.boolAdministrateursignataire) roles.push('Administrateur signataire'); 
         if (user.entreprisesUserPrevention?.length > 0) {
             roles.push(`Utilisateur en prévention: ${user.entreprisesUserPrevention.join(', ')}`);
         }
