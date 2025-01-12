@@ -47,7 +47,7 @@ const SignaturesManager = () => {
     const [error, setError] = useState(null);
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
     const [documentToDelete, setDocumentToDelete] = useState(null);
-    const { userInfo } = useUserConnected();
+    const { userInfo, isAdminOrDevOrAdmSign } = useUserConnected();
     const apiUrl = config.apiUrl;
     const [signatureDialogOpen, setSignatureDialogOpen] = useState(false);
     const [previewDialogOpen, setPreviewDialogOpen] = useState(false);
@@ -418,9 +418,13 @@ const SignaturesManager = () => {
                                 <TableCell style={{ fontWeight: 'bold' }}>Sélection des Signataires</TableCell>
                                 <TableCell style={{ fontWeight: 'bold' }}>Signataires</TableCell>
                                 <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>Signer</TableCell>
+                                {isAdminOrDevOrAdmSign && (
                                 <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>Modifier</TableCell>
+                                )}
                                 <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>Visualiser</TableCell>
+                                {isAdminOrDevOrAdmSign && (
                                 <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>Supprimer</TableCell>
+                                )}
                             </TableRow>
                         </TableHead>
                         <TableBody>
