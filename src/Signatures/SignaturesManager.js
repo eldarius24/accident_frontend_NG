@@ -166,7 +166,15 @@ const SignaturesManager = () => {
         try {
             setLoading(true);
             const response = await axios.get(`http://${apiUrl}:3100/api/signatures/documents`);
-            setDocuments(response.data);
+            // Filtrer les documents par entreprise si l'utilisateur n'est pas admin
+            const filteredDocs = response.data.filter(doc => {
+                // Vérifier si le document a une entreprise valide
+                if (!doc || !doc.entreprise) {
+                    return false;
+                }
+                return isAdminOrDevOrAdmSign || doc.entreprise === userInfo?.entreprise;
+            });
+            setDocuments(filteredDocs);
         } catch (error) {
             console.error('Erreur loadDocuments:', error);
             setError("Erreur lors du chargement des documents");
@@ -179,15 +187,38 @@ const SignaturesManager = () => {
         try {
             const response = await axios.get(`http://${apiUrl}:3100/api/users`);
             if (response.data && Array.isArray(response.data)) {
-                setUsers(response.data);
-            } else {
-                throw new Error('Format de données utilisateurs invalide');
+                console.log('Debug - Chargement users:', {
+                    userConnecté: userInfo?.userName,
+                    entrepriseConnectée: userInfo?.entreprise,
+                    userSignataireConnecté: userInfo?.userSignataire
+                });
+    
+                const filteredUsers = response.data.filter(user => {
+                    const userSignataire = user.userSignataire || [];
+                    
+                    // Pour le débogage
+                    console.log('Vérification utilisateur:', {
+                        name: user.userName,
+                        userSignataire: userSignataire,
+                        matchEntreprise: userSignataire.includes(userInfo?.entreprise)
+                    });
+    
+                    if (isAdminOrDevOrAdmSign) {
+                        return userSignataire.length > 0;
+                    }
+    
+                    return userSignataire.includes(userInfo?.entreprise);
+                });
+    
+                console.log('Utilisateurs filtrés pour la signature:', filteredUsers);
+                setUsers(filteredUsers);
             }
         } catch (error) {
             console.error('Erreur loadUsers:', error);
             setError("Erreur lors du chargement des utilisateurs");
         }
     };
+    
 
     useEffect(() => {
         loadUsers();
@@ -212,15 +243,13 @@ const SignaturesManager = () => {
         const file = event.target.files[0];
         if (!file) return;
     
-        if (!userInfo || !userInfo._id) {
-            setError("Erreur : Utilisateur non identifié");
-            event.target.value = '';
-            return;
-        }
+        // Prendre la première entreprise du tableau userSignataire de l'utilisateur
+        const entrepriseFromSignataire = userInfo?.userSignataire?.[0];
     
         const formData = new FormData();
         formData.append('file', file);
-        formData.append('uploadedBy', userInfo._id);
+        formData.append('uploadedBy', userInfo?._id);
+        formData.append('entreprise', entrepriseFromSignataire);
     
         try {
             setLoading(true);
@@ -237,27 +266,24 @@ const SignaturesManager = () => {
             );
     
             if (response.data.success) {
-                // Ajouter le log
                 await logAction({
                     actionType: 'import',
-                    details: `Document a signé ajouté pour signature : ${file.name}`,
+                    details: `Document à signer ajouté pour signature : ${file.name}`,
                     entity: 'Signature',
                     entityId: response.data.document._id,
-                    entreprise: userInfo?.entreprise || 'N/A'
+                    entreprise: entrepriseFromSignataire
                 });
                 
                 await loadDocuments();
-            } else {
-                throw new Error(response.data.message || 'Erreur lors de l\'upload');
             }
         } catch (error) {
             console.error('Erreur upload:', error);
             setError(error.response?.data?.message || "Erreur lors de l'upload du document");
         } finally {
             setLoading(false);
+            event.target.value = '';
         }
     };
-    
 
     const deleteDocument = async (documentId) => {
         try {
