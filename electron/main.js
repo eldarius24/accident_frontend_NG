@@ -6,6 +6,9 @@ const cors = require('cors');
 const serverApp = express();
 serverApp.use(cors());
 serverApp.use(express.json({ limit: '50mb' }));
+// Ajouter un middleware pour les données binaires
+serverApp.use(express.raw({ type: 'application/octet-stream', limit: '50mb' }));
+
 const PORT = 3200;
 
 // Simulation du statut eID en mode développement
@@ -27,13 +30,25 @@ serverApp.get('/status', (req, res) => {
     res.json(mockEidStatus);
 });
 
-// Route de test pour la signature (simulation)
+// Route de signature modifiée pour gérer les données binaires
 serverApp.post('/sign', (req, res) => {
-    res.json({
-        success: true,
-        signature: 'simulation_signature_' + Date.now(),
-        certificate: 'simulation_certificate_' + Date.now()
-    });
+    try {
+        // En mode développement, on simule toujours une signature réussie
+        const simulatedSignature = Buffer.from('simulation_signature_' + Date.now()).toString('base64');
+        const simulatedCertificate = Buffer.from('simulation_certificate_' + Date.now()).toString('base64');
+
+        res.json({
+            success: true,
+            signature: simulatedSignature,
+            certificate: simulatedCertificate
+        });
+    } catch (error) {
+        console.error('Erreur lors de la signature:', error);
+        res.status(500).json({
+            success: false,
+            message: error.message || 'Erreur lors de la signature'
+        });
+    }
 });
 
 // Démarrage de l'application

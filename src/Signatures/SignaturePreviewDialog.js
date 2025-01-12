@@ -46,6 +46,7 @@ const SignaturePreviewDialog = ({
     const [previewKey, setPreviewKey] = useState(Date.now());
     const { isDeveloppeur } = useUserConnected();
     const [statusCheckInterval, setStatusCheckInterval] = useState(null);
+    const [signatureClient, setSignatureClient] = useState(null);
 
     const handleRefreshPreview = () => {
         setPreviewKey(Date.now());
@@ -102,27 +103,53 @@ const SignaturePreviewDialog = ({
     // Écouter les changements USB
     useEffect(() => {
         if (!open) return;
-    
-        // Initialiser le client de signature
-        const client = new SignatureClient();
-        client.initialize().then(() => {
-            setSignatureClient(client);
-            
-            // Écouter les changements d'état
-            client.on('status', (status) => {
-                setSystemStatus(status);
+
+        let client = null;
+
+        const setupClient = async () => {
+            try {
+                client = new SignatureClient();
+                setSignatureClient(client);
+
+                // Configurer les listeners d'événements
+                client.on('status', (status) => {
+                    setSystemStatus(status);
+                    setCheckingSystem(false);
+                });
+
+                client.on('error', (error) => {
+                    setError({
+                        title: "Erreur du système de signature",
+                        message: error.message,
+                        hint: "Veuillez vérifier que le service de signature est disponible"
+                    });
+                });
+
+                // Faire une première vérification du statut
+                await client.checkStatus();
+
+                // Démarrer le monitoring
+                client.startMonitoring(5000); // vérifie toutes les 5 secondes
+            } catch (error) {
+                console.error('Erreur lors de l\'initialisation du client:', error);
+                setSystemStatus({
+                    ready: false,
+                    message: 'Erreur lors de l\'initialisation du système de signature',
+                    details: ['❌ Service de signature non disponible']
+                });
                 setCheckingSystem(false);
-            });
-    
-            // Démarrer le monitoring
-            client.startMonitoring();
-        });
-    
+            }
+        };
+
+        setupClient();
+
         // Cleanup
         return () => {
-            if (signatureClient) {
-                signatureClient.stopMonitoring();
-                signatureClient.cleanup();
+            if (client) {
+                client.stopMonitoring();
+                // Supprimer tous les listeners
+                client.off('status');
+                client.off('error');
             }
         };
     }, [open]);
@@ -145,18 +172,27 @@ const SignaturePreviewDialog = ({
                 `http://${apiUrl}:3100/api/signatures/preview/${signatureDoc._id}`,
                 { responseType: 'arraybuffer' }
             );
-            const pdfBuffer = Buffer.from(pdfResponse.data);
+            
+            // Vérifier que le client est disponible
+            if (!signatureClient) {
+                throw new Error("Le système de signature n'est pas initialisé");
+            }
     
-            // Signer avec la carte eID
-            const signatureResult = await signatureClient.signData(pdfBuffer);
+            // Signer avec le client
+            const signatureResult = await signatureClient.signData(pdfResponse.data);
+    
+            // S'assurer que la signature a réussi
+            if (!signatureResult || !signatureResult.success) {
+                throw new Error(signatureResult?.message || "La signature a échoué");
+            }
     
             // Envoyer le document signé au serveur
             const response = await axios.post(
                 `http://${apiUrl}:3100/api/signatures/sign-only/${signatureDoc._id}`,
                 {
                     userId: userInfo._id,
-                    signature: signatureResult.signature.toString('base64'),
-                    certificate: signatureResult.certificate.toString('base64')
+                    signature: signatureResult.signature,
+                    certificate: signatureResult.certificate
                 }
             );
     
@@ -168,13 +204,15 @@ const SignaturePreviewDialog = ({
                         onSignatureComplete(false);
                     }
                 }, 1000);
+            } else {
+                throw new Error(response.data.message || "Erreur lors de l'enregistrement de la signature");
             }
         } catch (error) {
             console.error('Erreur lors de la signature:', error);
             setError({
                 title: "Erreur de signature",
                 message: error.message || "Une erreur est survenue lors de la signature",
-                hint: "Vérifiez que votre carte eID est bien insérée"
+                hint: "Vérifiez que votre carte eID est bien insérée et que le service de signature est disponible"
             });
         } finally {
             setLoading(false);
