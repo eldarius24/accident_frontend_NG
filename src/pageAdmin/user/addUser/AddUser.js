@@ -10,7 +10,6 @@ import Autocomplete from '@mui/material/Autocomplete';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import getUser from './_actions/get-user';
-import getEntreprises from './_actions/get-entreprises';
 import putUser from './_actions/put-user';
 import { useNavigate } from 'react-router-dom';
 import CustomSnackbar from '../../../_composants/CustomSnackbar';
@@ -24,9 +23,9 @@ import InfosUserPrev from './_actions/infosdroits/infosUserPrev';
 import InfosUserGetion from './_actions/infosdroits/infosUsergetio';
 import Infosusersignataire from './_actions/infosdroits/infosusersignataire';
 import CloseIcon from '@mui/icons-material/Close';
-import EmailSignataire from '../../../Signatures/EmailSignataire';
 import axios from 'axios';
 import config from '../../../config.json';
+import { useUserConnected } from '../../../Hook/userConnected.js';
 
 export default function AddUser() {
     const apiUrl = config.apiUrl;
@@ -42,6 +41,7 @@ export default function AddUser() {
     const [previewType, setPreviewType] = useState('');
     const [signatairesEmails, setSignatairesEmails] = useState({});
     const [entreprisesData, setEntreprisesData] = useState([]);
+    const { userInfo, isDeveloppeur } = useUserConnected();
 
     const handleOpenPreview = (type) => {
         setPreviewType(type);
@@ -175,8 +175,9 @@ export default function AddUser() {
                         emails[entrepriseName] = entreprise.AddEntrEmail;
                     }
                 });
-
-                console.log('Emails chargés pour l\'édition:', emails);
+                if (isDeveloppeur) {
+                    console.log('Emails chargés pour l\'édition:', emails);
+                }
                 setSignatairesEmails(emails);
             }
 
@@ -190,18 +191,26 @@ export default function AddUser() {
     // Modifiez la fonction getEntreprisesData pour utiliser axios et le bon endpoint
     const getEntreprisesData = async () => {
         try {
-            console.log('Tentative de récupération des entreprises...');
+            if (isDeveloppeur) {
+                console.log('Tentative de récupération des entreprises...');
+            }
             const response = await axios.get(`http://${apiUrl}:3100/api/entreprises`);
-            console.log('Réponse brute de l\'API:', response);
+            if (isDeveloppeur) {
+                console.log('Réponse brute de l\'API:', response);
+            }
 
             const entreprisesData = response.data;
-            console.log('Données des entreprises:', entreprisesData);
+            if (isDeveloppeur) {
+                console.log('Données des entreprises:', entreprisesData);
+            }
 
             if (!entreprisesData) throw new Error('Aucune entreprise trouvée');
 
             setEntreprisesData(entreprisesData);
             const entrepriseNames = entreprisesData.map(item => item.AddEntreName);
-            console.log('Noms des entreprises extraits:', entrepriseNames);
+            if (isDeveloppeur) {
+                console.log('Noms des entreprises extraits:', entrepriseNames);
+            }
 
             setEntreprises(entrepriseNames);
         } catch (error) {
@@ -216,11 +225,13 @@ export default function AddUser() {
     const updateEntrepriseEmail = async (entrepriseName, email) => {
         try {
             const entreprise = entreprisesData.find(e => e.AddEntreName === entrepriseName);
-            console.log('Mise à jour email pour entreprise:', {
-                entrepriseName,
-                email,
-                entrepriseData: entreprise
-            });
+            if (isDeveloppeur) {
+                console.log('Mise à jour email pour entreprise:', {
+                    entrepriseName,
+                    email,
+                    entrepriseData: entreprise
+                });
+            }
 
             if (!entreprise) {
                 console.warn('Entreprise non trouvée:', entrepriseName);
@@ -246,12 +257,14 @@ export default function AddUser() {
 
             // Ajouter ou mettre à jour l'email pour cette entreprise
             updatedData.signatairesEmails[entrepriseName] = email;
-
-            console.log('Données complètes à envoyer:', updatedData);
+            if (isDeveloppeur) {
+                console.log('Données complètes à envoyer:', updatedData);
+            }
 
             const response = await axios.put(`http://${apiUrl}:3100/api/entreprises/${entreprise._id}`, updatedData);
-
-            console.log('Réponse mise à jour email:', response.data);
+            if (isDeveloppeur) {
+                console.log('Réponse mise à jour email:', response.data);
+            }
 
             if (!response.data) {
                 throw new Error('Erreur lors de la mise à jour de l\'email');
