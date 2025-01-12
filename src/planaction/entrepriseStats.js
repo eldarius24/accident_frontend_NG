@@ -15,8 +15,8 @@ const DARK_MODE_COLORS = {
     100: '#90EE90',
     75: '#B7E4B7',
     50: '#FFE4B5',
-    25: '#FFB6B6',
-    0: '#FFCCCB'  
+    25: '#FFCCCB',
+    0: '#FFB6B6'  
   };
 
 
