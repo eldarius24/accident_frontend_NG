@@ -27,6 +27,7 @@ import WarningIcon from '@mui/icons-material/Warning';
 import PersonIcon from '@mui/icons-material/Person';
 import { useUserConnected } from '../Hook/userConnected.js';
 import { useLogger } from '../Hook/useLogger';
+import SignatureClient from './SignatureClient';
 
 const SignaturePreviewDialog = ({
     open,
@@ -101,139 +102,65 @@ const SignaturePreviewDialog = ({
     // Écouter les changements USB
     useEffect(() => {
         if (!open) return;
-
-        // Vérification initiale
-        checkSystem();
-        handleRefreshPreview();
-        setSigned(false);
-        setError(null);
-
-        // Établir la connexion SSE (Server-Sent Events)
-        const eventSource = new EventSource(`http://${apiUrl}:3100/api/signatures/subscribe-status`);
-
-        eventSource.onmessage = (event) => {
-            const status = JSON.parse(event.data);
-            setSystemStatus(status);
-            setCheckingSystem(false);
-        };
-
-        eventSource.onerror = () => {
-            console.error('Erreur de connexion SSE');
-            setCheckingSystem(false);
-        };
-
+    
+        // Initialiser le client de signature
+        const client = new SignatureClient();
+        client.initialize().then(() => {
+            setSignatureClient(client);
+            
+            // Écouter les changements d'état
+            client.on('status', (status) => {
+                setSystemStatus(status);
+                setCheckingSystem(false);
+            });
+    
+            // Démarrer le monitoring
+            client.startMonitoring();
+        });
+    
         // Cleanup
         return () => {
-            eventSource.close();
+            if (signatureClient) {
+                signatureClient.stopMonitoring();
+                signatureClient.cleanup();
+            }
         };
-    }, [open, document, apiUrl]);
+    }, [open]);
 
     const handleSign = async () => {
-        console.log("Current user:", userInfo);
-        console.log("Document signers:", signatureDoc?.signers);
-        console.log("Is authorized:", isUserAuthorizedToSign);
-
         if (!signatureDoc?._id) {
             setError({
                 title: "Erreur de signature",
-                message: "Document non trouvé",
-                hint: "Veuillez réessayer"
+                message: "Document non trouvé"
             });
             return;
         }
-
-        if (!isUserAuthorizedToSign) {
-            setError({
-                title: "Accès refusé",
-                message: "Vous n'êtes pas autorisé à signer ce document",
-                hint: "Veuillez contacter l'administrateur si vous pensez que c'est une erreur"
-            });
-            return;
-        }
-
-        if (!isUserAuthorizedToSign) {
-            setError({
-                title: "Accès refusé",
-                message: "Vous n'êtes pas autorisé à signer ce document",
-                hint: "Veuillez contacter l'administrateur si vous pensez que c'est une erreur"
-            });
-            return;
-        }
-
-        if (hasUserSigned) {
-            setError({
-                title: "Document déjà signé",
-                message: "Vous avez déjà signé ce document",
-                hint: "Un utilisateur ne peut signer qu'une seule fois"
-            });
-            return;
-        }
-
-        if (!systemStatus?.ready) {
-            setError({
-                title: "Système non prêt",
-                message: systemStatus?.message || "Le système de signature n'est pas prêt",
-                hint: "Veuillez vérifier les prérequis ci-dessous"
-            });
-            return;
-        }
-
+    
         try {
             setLoading(true);
             setError(null);
-
+    
+            // Récupérer le PDF
+            const pdfResponse = await axios.get(
+                `http://${apiUrl}:3100/api/signatures/preview/${signatureDoc._id}`,
+                { responseType: 'arraybuffer' }
+            );
+            const pdfBuffer = Buffer.from(pdfResponse.data);
+    
+            // Signer avec la carte eID
+            const signatureResult = await signatureClient.signData(pdfBuffer);
+    
+            // Envoyer le document signé au serveur
             const response = await axios.post(
                 `http://${apiUrl}:3100/api/signatures/sign-only/${signatureDoc._id}`,
                 {
                     userId: userInfo._id,
-                    userName: userInfo.userName || userInfo.userLogin
+                    signature: signatureResult.signature.toString('base64'),
+                    certificate: signatureResult.certificate.toString('base64')
                 }
             );
-
+    
             if (response.data.success) {
-                // Ajouter les logs détaillés pour la signature
-                const signerName = userInfo.userName || userInfo.userLogin;
-                
-                const documentName = signatureDoc?.filename || 'Document inconnu';
-                
-                // Nouveau calcul des signatures restantes
-                // On considère que la signature actuelle est déjà effectuée
-                const remainingSigners = signatureDoc?.signers?.filter(signer => {
-                    // Ne pas compter les signatures déjà faites
-                    if (signer.signed) return false;
-                    // Ne pas compter l'utilisateur actuel qui vient de signer
-                    if (signer.userId._id === userInfo._id || signer.userId === userInfo._id) return false;
-                    return true;
-                }).length || 0;
-            
-                // Log pour l'action de signature
-                await logAction({
-                    actionType: 'modification',
-                    details: `Document "${documentName}" signé par ${signerName} ${
-                        remainingSigners > 0
-                            ? `${remainingSigners} signature${remainingSigners > 1 ? 's' : ''} restante${remainingSigners > 1 ? 's' : ''}`
-                            : 'Dernière signature nécessaire'
-                    }`,
-                    entity: 'Signature',
-                    entityId: signatureDoc._id,
-                    userId: userInfo._id,
-                    userName: userInfo.userName || userInfo.userLogin,
-                    entreprise: userInfo?.entreprise || 'N/A'
-                });
-            
-                // Si c'est la dernière signature nécessaire, ajouter un log supplémentaire
-                if (remainingSigners === 0) {
-                    await logAction({
-                        actionType: 'modification',
-                        details: `Document "${documentName}" complètement signé. Toutes les signatures ont été obtenues.`,
-                        entity: 'Signature',
-                        entityId: signatureDoc._id,
-                        userId: userInfo._id,
-                        userName: userInfo.userName || userInfo.userLogin,
-                        entreprise: userInfo?.entreprise || 'N/A'
-                    });
-                }
-            
                 setSigned(true);
                 setTimeout(() => {
                     handleRefreshPreview();
@@ -244,11 +171,10 @@ const SignaturePreviewDialog = ({
             }
         } catch (error) {
             console.error('Erreur lors de la signature:', error);
-            const errorMessage = error.response?.data?.message || "Une erreur est survenue lors de la signature du document";
             setError({
                 title: "Erreur de signature",
-                message: errorMessage,
-                hint: "Veuillez vérifier que vous avez les droits nécessaires et que le système est bien configuré"
+                message: error.message || "Une erreur est survenue lors de la signature",
+                hint: "Vérifiez que votre carte eID est bien insérée"
             });
         } finally {
             setLoading(false);
