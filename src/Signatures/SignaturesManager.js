@@ -37,6 +37,8 @@ import { useTheme } from '../Hook/ThemeContext';
 import { TabletMac } from '@mui/icons-material';
 import AutoGraphIcon from '@mui/icons-material/AutoGraph';
 import { blueGrey } from '@mui/material/colors';
+import EditIcon from '@mui/icons-material/Edit';
+import RenameDialog from './RenameDialog';
 
 const SignaturesManager = () => {
     const [documents, setDocuments] = useState([]);
@@ -51,6 +53,7 @@ const SignaturesManager = () => {
     const [previewDialogOpen, setPreviewDialogOpen] = useState(false);
     const [selectedDocument, setSelectedDocument] = useState(null);
     const { darkMode } = useTheme();
+    const [renameDialogOpen, setRenameDialogOpen] = useState(false);
     const rowColors = useMemo(() =>
         darkMode
             ? ['#7a7a7a', '#979797']
@@ -210,6 +213,7 @@ const SignaturesManager = () => {
 
         if (!userInfo || !userInfo._id) {
             setError("Erreur : Utilisateur non identifié");
+            event.target.value = ''; // Réinitialiser l'input
             return;
         }
 
@@ -390,6 +394,7 @@ const SignaturesManager = () => {
                                 <TableCell style={{ fontWeight: 'bold' }}>Sélection des Signataires</TableCell>
                                 <TableCell style={{ fontWeight: 'bold' }}>Signataires</TableCell>
                                 <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>Signer</TableCell>
+                                <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>Modifier</TableCell>
                                 <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>Visualiser</TableCell>
                                 <TableCell style={{ fontWeight: 'bold', padding: 0, width: '70px' }}>Supprimer</TableCell>
                             </TableRow>
@@ -437,10 +442,10 @@ const SignaturesManager = () => {
                                                         Ajouter un signataire ({users.length} utilisateurs)
                                                     </MenuItem>
                                                     {users.map((user) => (
-                                                        <MenuItem 
-                                                        key={user._id} 
-                                                        value={user._id}
-                                                        sx={getMenuItemStyles(darkMode)}
+                                                        <MenuItem
+                                                            key={user._id}
+                                                            value={user._id}
+                                                            sx={getMenuItemStyles(darkMode)}
                                                         >
                                                             {user.userName}
                                                         </MenuItem>
@@ -461,29 +466,57 @@ const SignaturesManager = () => {
                                         ))}
                                     </TableCell>
                                     <TableCell style={{ padding: 0, width: '70px' }}>
-                                        {doc.status !== 'completed' && (
-                                            <Tooltip title="Signer le document">
-                                                <Button
-                                                    sx={{
-                                                        backgroundColor: darkMode ? blueGrey[700] : blueGrey[500],
-                                                        transition: 'all 0.1s ease-in-out',
-                                                        '&:hover': {
-                                                            backgroundColor: darkMode ? blueGrey[900] : blueGrey[700],
-                                                            transform: 'scale(1.08)',
-                                                            boxShadow: darkMode ? '0 6px 12px rgba(255,255,255,0.2)' : 6
-                                                        },
-                                                        '& .MuiSvgIcon-root': {
-                                                            color: darkMode ? '#fff' : 'inherit'
-                                                        }
-                                                    }}
-                                                    color="primary"
-                                                    variant="contained"
-                                                    onClick={() => handleSignClick(doc)}
-                                                >
-                                                    <AutoGraphIcon />
-                                                </Button>
-                                            </Tooltip>
+                                        {doc.status !== 'completed' && doc.signers.length > 0 && (
+                                            doc.signers.some(signer =>
+                                                // Vérifie si l'utilisateur est un signataire
+                                                (signer.userId._id === userInfo._id || signer.userId === userInfo._id) &&
+                                                // Vérifie si l'utilisateur n'a pas encore signé
+                                                !signer.signed
+                                            ) && (
+                                                <Tooltip title="Signer le document">
+                                                    <Button
+                                                        sx={{
+                                                            backgroundColor: darkMode ? '#947729' : '#ffbc03',
+                                                            transition: 'all 0.1s ease-in-out',
+                                                            '&:hover': {
+                                                                backgroundColor: darkMode ? '#b8982f' : '#cc9900',
+                                                                transform: 'scale(1.08)',
+                                                                boxShadow: darkMode ? '0 6px 12px rgba(255,255,255,0.2)' : 6
+                                                            },
+                                                            '& .MuiSvgIcon-root': {
+                                                                color: darkMode ? '#fff' : 'inherit'
+                                                            }
+                                                        }}
+                                                        variant="contained"
+                                                        onClick={() => handleSignClick(doc)}
+                                                    >
+                                                        <AutoGraphIcon />
+                                                    </Button>
+                                                </Tooltip>
+                                            )
                                         )}
+                                    </TableCell>
+                                    <TableCell style={{ padding: 0, width: '70px' }}>
+                                        <Tooltip title="Renommer le fichier" arrow>
+                                            <Button
+                                                sx={{
+                                                    backgroundColor: blueGrey[500],
+                                                    transition: 'all 0.1s ease-in-out',
+                                                    '&:hover': {
+                                                        backgroundColor: blueGrey[700],
+                                                        transform: 'scale(1.08)',
+                                                        boxShadow: 6
+                                                    }
+                                                }}
+                                                onClick={() => {
+                                                    setSelectedDocument(doc);
+                                                    setRenameDialogOpen(true);
+                                                }}
+                                                variant="contained"
+                                            >
+                                                <EditIcon />
+                                            </Button>
+                                        </Tooltip>
                                     </TableCell>
                                     <TableCell style={{ padding: 0, width: '70px' }}>
                                         <Tooltip title="Visualiser le fichier">
@@ -578,6 +611,28 @@ const SignaturesManager = () => {
                 }}
                 document={selectedDocument}
                 apiUrl={apiUrl}
+            />
+            <DocumentPreviewDialog
+                open={previewDialogOpen}
+                onClose={() => {
+                    setPreviewDialogOpen(false);
+                    setSelectedDocument(null);
+                }}
+                document={selectedDocument}
+                apiUrl={apiUrl}
+            />
+
+            <RenameDialog
+                open={renameDialogOpen}
+                onClose={() => {
+                    setRenameDialogOpen(false);
+                    setSelectedDocument(null);
+                }}
+                document={selectedDocument}
+                apiUrl={apiUrl}
+                onRenameComplete={() => {
+                    loadDocuments();
+                }}
             />
         </div>
     );

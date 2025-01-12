@@ -30,7 +30,7 @@ import { useUserConnected } from '../Hook/userConnected.js';
 const SignaturePreviewDialog = ({
     open,
     onClose,
-    document,
+    document: signatureDoc,
     apiUrl,
     userInfo,
     onSignatureComplete
@@ -48,14 +48,36 @@ const SignaturePreviewDialog = ({
         setPreviewKey(Date.now());
     };
 
-    // Vérifier si l'utilisateur actuel a déjà signé
+
+
+    const isUserAuthorizedToSign = useMemo(() => {
+        if (!signatureDoc?.signers || !userInfo?._id) return false;
+
+        return signatureDoc.signers.some(signer => {
+            // Vérifier toutes les formes possibles de l'ID utilisateur
+            const signerId = typeof signer.userId === 'object'
+                ? signer.userId._id?.toString()
+                : signer.userId?.toString();
+            const currentUserId = userInfo._id.toString();
+
+            return signerId === currentUserId;
+        });
+    }, [signatureDoc, userInfo]);
+
     const hasUserSigned = useMemo(() => {
-        if (!document || !document.signers || !userInfo) return false;
-        const userSigner = document.signers.find(signer =>
-            signer.userId._id === userInfo._id || signer.userId === userInfo._id
-        );
+        if (!signatureDoc?.signers || !userInfo?._id) return false;
+
+        const userSigner = signatureDoc.signers.find(signer => {
+            const signerId = typeof signer.userId === 'object'
+                ? signer.userId._id?.toString()
+                : signer.userId?.toString();
+            const currentUserId = userInfo._id.toString();
+
+            return signerId === currentUserId;
+        });
+
         return userSigner?.signed || false;
-    }, [document, userInfo]);
+    }, [signatureDoc, userInfo]);
 
     // Fonction de vérification du système
     const checkSystem = async () => {
@@ -105,6 +127,46 @@ const SignaturePreviewDialog = ({
     }, [open, document, apiUrl]);
 
     const handleSign = async () => {
+        console.log("Current user:", userInfo);
+        console.log("Document signers:", signatureDoc?.signers);
+        console.log("Is authorized:", isUserAuthorizedToSign);
+
+        if (!signatureDoc?._id) {
+            setError({
+                title: "Erreur de signature",
+                message: "Document non trouvé",
+                hint: "Veuillez réessayer"
+            });
+            return;
+        }
+
+        if (!isUserAuthorizedToSign) {
+            setError({
+                title: "Accès refusé",
+                message: "Vous n'êtes pas autorisé à signer ce document",
+                hint: "Veuillez contacter l'administrateur si vous pensez que c'est une erreur"
+            });
+            return;
+        }
+
+        if (!isUserAuthorizedToSign) {
+            setError({
+                title: "Accès refusé",
+                message: "Vous n'êtes pas autorisé à signer ce document",
+                hint: "Veuillez contacter l'administrateur si vous pensez que c'est une erreur"
+            });
+            return;
+        }
+
+        if (hasUserSigned) {
+            setError({
+                title: "Document déjà signé",
+                message: "Vous avez déjà signé ce document",
+                hint: "Un utilisateur ne peut signer qu'une seule fois"
+            });
+            return;
+        }
+
         if (!systemStatus?.ready) {
             setError({
                 title: "Système non prêt",
@@ -119,27 +181,29 @@ const SignaturePreviewDialog = ({
             setError(null);
 
             const response = await axios.post(
-                `http://${apiUrl}:3100/api/signatures/sign-only/${document._id}`,
-                { userId: userInfo._id }
+                `http://${apiUrl}:3100/api/signatures/sign-only/${signatureDoc._id}`,
+                {
+                    userId: userInfo._id,
+                    userName: userInfo.userName || userInfo.userLogin
+                }
             );
 
             if (response.data.success) {
                 setSigned(true);
-                // Attendre un peu pour que le serveur finisse de traiter le document
                 setTimeout(() => {
                     handleRefreshPreview();
                     if (onSignatureComplete) {
-                        // Mettre à jour la liste des documents sans fermer la dialog
                         onSignatureComplete(false);
                     }
                 }, 1000);
             }
         } catch (error) {
             console.error('Erreur lors de la signature:', error);
+            const errorMessage = error.response?.data?.message || "Une erreur est survenue lors de la signature du document";
             setError({
-                title: error.response?.data?.message || "Erreur de signature",
-                message: "Une erreur est survenue lors de la signature du document",
-                hint: "Veuillez réessayer ou vérifier l'état du système"
+                title: "Erreur de signature",
+                message: errorMessage,
+                hint: "Veuillez vérifier que vous avez les droits nécessaires et que le système est bien configuré"
             });
         } finally {
             setLoading(false);
@@ -147,25 +211,41 @@ const SignaturePreviewDialog = ({
     };
 
     const handleDownload = async () => {
+        if (!signatureDoc?._id) return;
+
         try {
             setLoading(true);
             const response = await axios.get(
-                `http://${apiUrl}:3100/api/signatures/download/${document._id}`,
-                { responseType: 'blob' }
+                `http://${apiUrl}:3100/api/signatures/download/${signatureDoc._id}`,
+                {
+                    responseType: 'blob',
+                    headers: {
+                        'Accept': 'application/pdf'
+                    }
+                }
             );
 
-            const url = window.URL.createObjectURL(new Blob([response.data]));
-            const link = document.createElement('a');
+            const blob = new Blob([response.data], { type: 'application/pdf' });
+            const url = window.URL.createObjectURL(blob);
+            const link = window.document.createElement('a');
             link.href = url;
-            link.setAttribute('download', `${document.filename}`);
-            document.body.appendChild(link);
+            const filename = signatureDoc.filename.toLowerCase().endsWith('.pdf')
+                ? signatureDoc.filename
+                : `${signatureDoc.filename}.pdf`;
+            link.setAttribute('download', filename);
+            window.document.body.appendChild(link);
             link.click();
-            link.remove();
-            window.URL.revokeObjectURL(url);
+
+            setTimeout(() => {
+                window.document.body.removeChild(link);
+                window.URL.revokeObjectURL(url);
+            }, 100);
         } catch (error) {
+            console.error('Erreur lors du téléchargement:', error);
             setError({
                 title: "Erreur lors du téléchargement",
-                message: "Impossible de télécharger le document"
+                message: error.response?.data?.message || "Impossible de télécharger le document",
+                hint: "Veuillez réessayer ultérieurement"
             });
         } finally {
             setLoading(false);
@@ -281,7 +361,7 @@ const SignaturePreviewDialog = ({
             fullWidth
         >
             <DialogTitle>
-                Signature du document : {document?.filename}
+                Signature du document : {signatureDoc?.filename}
             </DialogTitle>
             <DialogContent>
                 {error && (
@@ -317,7 +397,7 @@ const SignaturePreviewDialog = ({
                 <Box sx={{ height: '500px', width: '100%', mb: 2 }}>
                     <iframe
                         key={previewKey}
-                        src={`http://${apiUrl}:3100/api/signatures/preview/${document?._id}?t=${previewKey}`}
+                        src={`http://${apiUrl}:3100/api/signatures/preview/${signatureDoc?._id}?t=${previewKey}`}
                         style={{
                             width: '100%',
                             height: '100%',
