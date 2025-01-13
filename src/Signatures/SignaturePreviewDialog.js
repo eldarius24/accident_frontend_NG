@@ -153,30 +153,6 @@ const SignaturePreviewDialog = ({
         }
     };
 
-    const getStatusIssues = (status) => {
-        const issues = [];
-        if (!status.middleware) {
-            issues.push({
-                type: 'middleware',
-                message: 'Veuillez installer le middleware eID',
-                link: 'https://eid.belgium.be'
-            });
-        }
-        if (!status.reader) {
-            issues.push({
-                type: 'reader',
-                message: 'Veuillez connecter un lecteur de carte'
-            });
-        }
-        if (!status.card) {
-            issues.push({
-                type: 'card',
-                message: 'Veuillez insérer votre carte eID'
-            });
-        }
-        return issues;
-    };
-
     useEffect(() => {
         let intervalId;
         if (open) {
