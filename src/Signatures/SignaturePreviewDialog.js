@@ -22,10 +22,7 @@ import ErrorIcon from '@mui/icons-material/Error';
 import WarningIcon from '@mui/icons-material/Warning';
 import PersonIcon from '@mui/icons-material/Person';
 import axios from 'axios';
-<<<<<<< HEAD
 import { useUserConnected } from '../Hook/userConnected.js';
-=======
->>>>>>> ef77e7320ff76969b3a472a9b6f0bc76e1deb0ec
 
 const SignaturePreviewDialog = ({
     open,
@@ -41,7 +38,6 @@ const SignaturePreviewDialog = ({
     const [systemStatus, setSystemStatus] = useState(null);
     const [checkingSystem, setCheckingSystem] = useState(true);
     const [previewKey, setPreviewKey] = useState(Date.now());
-<<<<<<< HEAD
     const { isConseiller, isAdminOrDev, isAdminOrDevOrConseiller, isDeveloppeur } = useUserConnected();
 
     const checkEIDSystem = async () => {
@@ -77,27 +73,10 @@ const SignaturePreviewDialog = ({
                             script.src = 'https://beidpkcs11.belgium.be/js/beid.js';
                             script.onload = resolve;
                         };
-=======
-
-    const checkEIDSystem = async () => {
-        try {
-            // Utilisation de la librairie Belgium e-ID
-            if (typeof eID === 'undefined') {
-                console.log('Tentative de chargement de eID...');
-                // Attendez que l'API soit chargée
-                await new Promise((resolve) => {
-                    if (document.querySelector('script[src*="web-eid.js"]')) {
-                        resolve();
-                    } else {
-                        const script = document.createElement('script');
-                        script.src = 'https://belgium.eid.services/web-eid.js';
-                        script.onload = resolve;
->>>>>>> ef77e7320ff76969b3a472a9b6f0bc76e1deb0ec
                         document.head.appendChild(script);
                     }
                 });
             }
-<<<<<<< HEAD
 
             // Vérification de la présence du middleware et du lecteur
             let hasReader = false;
@@ -110,18 +89,6 @@ const SignaturePreviewDialog = ({
                         console.log('Middleware détecté via navigator.smartcard');
                     }
 
-=======
-    
-            // Vérification de la présence du middleware et du lecteur
-            let hasReader = false;
-            let hasCard = false;
-    
-            try {
-                // La présence de navigator.smartcard indique que le middleware est installé
-                if (navigator.smartcard || window.navigator.smartcard) {
-                    console.log('Middleware détecté via navigator.smartcard');
-                    
->>>>>>> ef77e7320ff76969b3a472a9b6f0bc76e1deb0ec
                     // Tenter de détecter le lecteur et la carte
                     const readers = await new Promise((resolve) => {
                         if (navigator.smartcard) {
@@ -132,11 +99,6 @@ const SignaturePreviewDialog = ({
                             resolve([]);
                         }
                     });
-<<<<<<< HEAD
-
-=======
-    
->>>>>>> ef77e7320ff76969b3a472a9b6f0bc76e1deb0ec
                     hasReader = readers.length > 0;
                     if (hasReader) {
                         // Vérifier si une carte est présente
@@ -151,21 +113,11 @@ const SignaturePreviewDialog = ({
             } catch (error) {
                 console.warn('Erreur lors de la détection smartcard:', error);
             }
-<<<<<<< HEAD
-
-=======
-    
->>>>>>> ef77e7320ff76969b3a472a9b6f0bc76e1deb0ec
             const details = [
                 '✅ Middleware eID détecté', // On suppose que si le script est chargé, le middleware est présent
                 hasReader ? '✅ Lecteur de carte détecté' : '❌ Lecteur de carte non détecté',
                 hasCard ? '✅ Carte eID détectée' : '❌ Carte eID non détectée'
             ];
-<<<<<<< HEAD
-
-=======
-    
->>>>>>> ef77e7320ff76969b3a472a9b6f0bc76e1deb0ec
             const issues = [];
             if (!hasReader) {
                 issues.push({
@@ -178,22 +130,12 @@ const SignaturePreviewDialog = ({
                     message: 'Veuillez insérer votre carte eID'
                 });
             }
-<<<<<<< HEAD
-
-=======
-    
->>>>>>> ef77e7320ff76969b3a472a9b6f0bc76e1deb0ec
             setSystemStatus({
                 success: hasReader && hasCard,
                 ready: hasReader && hasCard,
                 details,
                 issues
             });
-<<<<<<< HEAD
-
-=======
-    
->>>>>>> ef77e7320ff76969b3a472a9b6f0bc76e1deb0ec
         } catch (error) {
             console.error('Erreur vérification système:', error);
             setSystemStatus({
@@ -274,50 +216,25 @@ const SignaturePreviewDialog = ({
         try {
             setLoading(true);
             setError(null);
-<<<<<<< HEAD
-
-=======
-    
->>>>>>> ef77e7320ff76969b3a472a9b6f0bc76e1deb0ec
             // 1. Vérifier le système eID
             const beIDStatus = await window.beID?.getStatus();
             if (!beIDStatus?.card || !beIDStatus?.reader) {
                 throw new Error("Le système eID n'est pas prêt. Vérifiez votre lecteur et votre carte.");
             }
-<<<<<<< HEAD
-
-=======
-    
->>>>>>> ef77e7320ff76969b3a472a9b6f0bc76e1deb0ec
             // 2. Récupérer le PDF
             const pdfResponse = await axios.get(
                 `http://${apiUrl}:3100/api/signatures/preview/${signatureDoc._id}`,
                 { responseType: 'arraybuffer' }
             );
-<<<<<<< HEAD
-
-=======
-    
->>>>>>> ef77e7320ff76969b3a472a9b6f0bc76e1deb0ec
             // 3. Créer un hash du document
             const hashBuffer = await crypto.subtle.digest('SHA-256', pdfResponse.data);
             const hashArray = Array.from(new Uint8Array(hashBuffer));
             const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-<<<<<<< HEAD
-
-=======
-    
->>>>>>> ef77e7320ff76969b3a472a9b6f0bc76e1deb0ec
             // 4. Signer avec eID
             const signatureResult = await window.beID.sign({
                 algorithm: 'SHA256withRSA',
                 data: hashHex
             });
-<<<<<<< HEAD
-
-=======
-    
->>>>>>> ef77e7320ff76969b3a472a9b6f0bc76e1deb0ec
             // 5. Envoyer au serveur
             const signResponse = await axios.post(
                 `http://${apiUrl}:3100/api/signatures/sign/${signatureDoc._id}`,
@@ -329,11 +246,6 @@ const SignaturePreviewDialog = ({
                 },
                 { responseType: 'blob' } // Important pour recevoir le PDF signé
             );
-<<<<<<< HEAD
-
-=======
-    
->>>>>>> ef77e7320ff76969b3a472a9b6f0bc76e1deb0ec
             // 6. Traiter la réponse
             const contentType = signResponse.headers['content-type'];
             if (contentType.includes('application/json')) {
@@ -342,19 +254,11 @@ const SignaturePreviewDialog = ({
                 const errorData = JSON.parse(text);
                 throw new Error(errorData.message || 'Erreur lors de la signature');
             }
-<<<<<<< HEAD
 
             // 7. Succès
             setSigned(true);
             handleRefreshPreview();
 
-=======
-    
-            // 7. Succès
-            setSigned(true);
-            handleRefreshPreview();
-            
->>>>>>> ef77e7320ff76969b3a472a9b6f0bc76e1deb0ec
             // 8. Télécharger le PDF signé
             const blob = new Blob([signResponse.data], { type: 'application/pdf' });
             const url = window.URL.createObjectURL(blob);
@@ -365,31 +269,18 @@ const SignaturePreviewDialog = ({
             link.click();
             document.body.removeChild(link);
             window.URL.revokeObjectURL(url);
-<<<<<<< HEAD
 
             if (onSignatureComplete) {
                 onSignatureComplete(false);
             }
 
-=======
-    
-            if (onSignatureComplete) {
-                onSignatureComplete(false);
-            }
-    
->>>>>>> ef77e7320ff76969b3a472a9b6f0bc76e1deb0ec
         } catch (error) {
             console.error('Erreur lors de la signature:', error);
             setError({
                 title: "Erreur de signature",
                 message: error.message || "Une erreur est survenue lors de la signature",
-<<<<<<< HEAD
                 hint: error.message.includes('eID') ?
                     "Vérifiez que votre carte eID est bien insérée et que le middleware est installé" :
-=======
-                hint: error.message.includes('eID') ? 
-                    "Vérifiez que votre carte eID est bien insérée et que le middleware est installé" : 
->>>>>>> ef77e7320ff76969b3a472a9b6f0bc76e1deb0ec
                     "Une erreur technique est survenue"
             });
         } finally {
@@ -474,13 +365,8 @@ const SignaturePreviewDialog = ({
                         </ListItemIcon>
                         <ListItemText
                             primary={signer.userId?.userName || "Utilisateur inconnu"}
-<<<<<<< HEAD
                             secondary={signer.signed ?
                                 `Signé le ${new Date(signer.signedDate).toLocaleDateString()}` :
-=======
-                            secondary={signer.signed ? 
-                                `Signé le ${new Date(signer.signedDate).toLocaleDateString()}` : 
->>>>>>> ef77e7320ff76969b3a472a9b6f0bc76e1deb0ec
                                 "En attente de signature"
                             }
                         />
@@ -549,13 +435,8 @@ const SignaturePreviewDialog = ({
                 <Button onClick={handleClose} color="inherit">
                     Fermer
                 </Button>
-<<<<<<< HEAD
                 <Button
                     onClick={handleRefreshPreview}
-=======
-                <Button 
-                    onClick={handleRefreshPreview} 
->>>>>>> ef77e7320ff76969b3a472a9b6f0bc76e1deb0ec
                     color="info"
                     disabled={loading}
                 >
