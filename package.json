@@ -37,8 +37,6 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "start:all": "concurrently \"npm start\" \"npm run start:electron\"",
-    "start:electron": "cd electron && electron .",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",

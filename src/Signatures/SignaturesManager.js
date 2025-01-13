@@ -656,16 +656,6 @@ const SignaturesManager = () => {
                 onSignatureComplete={handleSignatureComplete}
             />
 
-            {/* Dialog de prévisualisation */}
-            <DocumentPreviewDialog
-                open={previewDialogOpen}
-                onClose={() => {
-                    setPreviewDialogOpen(false);
-                    setSelectedDocument(null);
-                }}
-                document={selectedDocument}
-                apiUrl={apiUrl}
-            />
             <DocumentPreviewDialog
                 open={previewDialogOpen}
                 onClose={() => {
