@@ -23,6 +23,9 @@ import WarningIcon from '@mui/icons-material/Warning';
 import PersonIcon from '@mui/icons-material/Person';
 import axios from 'axios';
 import { useUserConnected } from '../Hook/userConnected.js';
+import EIDSystemChecker from './EIDSystemChecker';
+import PDFSignatureService from './services/PDFSignatureService';
+
 
 const SignaturePreviewDialog = ({
     open,
@@ -39,7 +42,10 @@ const SignaturePreviewDialog = ({
     const [checkingSystem, setCheckingSystem] = useState(true);
     const [previewKey, setPreviewKey] = useState(Date.now());
     const { isConseiller, isAdminOrDev, isAdminOrDevOrConseiller, isDeveloppeur } = useUserConnected();
-
+    const handleSystemStatusChange = (newStatus) => {
+        setSystemStatus(newStatus);
+        setCheckingSystem(false);
+    };
     const checkEIDSystem = async () => {
         try {
             if (isDeveloppeur) {
@@ -190,6 +196,10 @@ const SignaturePreviewDialog = ({
         }
 
         try {
+            const signatureResult = await PDFSignatureService.signPDF(
+                pdfBuffer,
+                { userId: userInfo._id, userName: userInfo.userName }
+            );
             setLoading(true);
             setError(null);
             // 1. Vérifier le système eID
@@ -207,10 +217,7 @@ const SignaturePreviewDialog = ({
             const hashArray = Array.from(new Uint8Array(hashBuffer));
             const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
             // 4. Signer avec eID
-            const signatureResult = await window.beID.sign({
-                algorithm: 'SHA256withRSA',
-                data: hashHex
-            });
+
             // 5. Envoyer au serveur
             const signResponse = await axios.post(
                 `http://${apiUrl}:3100/api/signatures/sign/${signatureDoc._id}`,
@@ -363,6 +370,7 @@ const SignaturePreviewDialog = ({
                 Signature du document : {signatureDoc?.filename}
             </DialogTitle>
             <DialogContent>
+            <EIDSystemChecker onStatusChange={handleSystemStatusChange} />
                 {error && (
                     <Alert severity="error" sx={{ mb: 2 }}>
                         <AlertTitle>{error.title}</AlertTitle>
